@@ -17,7 +17,7 @@
       <table cellpadding="4" cellspacing="0" width="100%" class="details">
       <tr>
        <th>
-          <strong>Introduction</strong> <dhv:permission name="qa-edit">[<a href="javascript:popURL('QA.do?command=ModifyIntro&id=<%= Help.getId() %>&popup=true', 'QA_Intro','500','200','yes','yes');">Edit</a>]</dhv:permission>
+          <strong>Introduction</strong> <dhv:permission name="qa-edit">[<a href="javascript:popURL('QA.do?command=ModifyIntro&id=<%= Help.getId() %>&popup=true', 'QA_Intro','500','250','yes','yes');">Edit</a>]</dhv:permission>
        </th>
       </tr>
        <tr>

@@ -77,13 +77,13 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="196"  isSplitAllowed="true" >
+			<band height="482"  isSplitAllowed="true" >
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
 						x="3"
 						y="6"
-						width="530"
+						width="546"
 						height="6"
 						forecolor="#000000"
 						backcolor="#000000"
@@ -173,8 +173,8 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="4"
-						y="133"
+						x="6"
+						y="404"
 						width="119"
 						height="13"
 						forecolor="#000000"
@@ -192,8 +192,8 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="4"
-						y="166"
+						x="6"
+						y="451"
 						width="119"
 						height="13"
 						forecolor="#000000"
@@ -211,8 +211,8 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="4"
-						y="183"
+						x="6"
+						y="466"
 						width="119"
 						height="13"
 						forecolor="#000000"
@@ -225,13 +225,13 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[Notes]]></text>
+				<text><![CDATA[Follow-up Description]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="4"
-						y="149"
+						x="6"
+						y="420"
 						width="119"
 						height="13"
 						forecolor="#000000"
@@ -249,8 +249,8 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="4"
-						y="117"
+						x="6"
+						y="436"
 						width="119"
 						height="13"
 						forecolor="#000000"
@@ -265,6 +265,82 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					</textElement>
 				<text><![CDATA[Follow-up required?]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="85"
+						y="26"
+						width="47"
+						height="11"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Hrs]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="137"
+						y="26"
+						width="45"
+						height="11"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Mins]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="191"
+						y="27"
+						width="47"
+						height="11"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Hrs]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="243"
+						y="27"
+						width="45"
+						height="11"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Mins]]></text>
+				</staticText>
 			</band>
 			</groupFooter>
 		</group>
@@ -273,14 +349,14 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 			</band>
 		</background>
 		<title>
-			<band height="197"  isSplitAllowed="true" >
+			<band height="282"  isSplitAllowed="true" >
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
-						x="289"
-						y="143"
+						x="291"
+						y="215"
 						width="259"
-						height="50"
+						height="31"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -293,10 +369,10 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="292"
-						y="158"
-						width="119"
-						height="29"
+						x="294"
+						y="230"
+						width="113"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -307,30 +383,13 @@ WHERE ticketid = $P{ticketid}]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[Total Hours
-Remaining]]></text>
+				<text><![CDATA[Total Hours Remaining]]></text>
 				</staticText>
-				<rectangle radius="0" >
-					<reportElement
-						mode="Transparent"
-						x="3"
-						y="34"
-						width="280"
-						height="159"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="true"
-						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="RelativeToTallestObject" pen="Thin" fill="Solid" />
-				</rectangle>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="3"
 						y="2"
-						width="337"
+						width="145"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -364,9 +423,9 @@ Remaining]]></text>
 					<reportElement
 						mode="Opaque"
 						x="4"
-						y="34"
+						y="35"
 						width="148"
-						height="15"
+						height="13"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
 						positionType="FixRelativeToTop"
@@ -383,8 +442,8 @@ Remaining]]></text>
 					<reportElement
 						mode="Transparent"
 						x="6"
-						y="55"
-						width="119"
+						y="51"
+						width="102"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -402,8 +461,8 @@ Remaining]]></text>
 					<reportElement
 						mode="Transparent"
 						x="6"
-						y="76"
-						width="119"
+						y="69"
+						width="102"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -421,8 +480,8 @@ Remaining]]></text>
 					<reportElement
 						mode="Transparent"
 						x="6"
-						y="97"
-						width="119"
+						y="86"
+						width="102"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -440,8 +499,8 @@ Remaining]]></text>
 					<reportElement
 						mode="Transparent"
 						x="6"
-						y="118"
-						width="119"
+						y="104"
+						width="102"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -458,9 +517,9 @@ Remaining]]></text>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="6"
-						y="139"
-						width="119"
+						x="5"
+						y="122"
+						width="102"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -477,9 +536,9 @@ Remaining]]></text>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="6"
-						y="160"
-						width="119"
+						x="5"
+						y="140"
+						width="102"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -495,9 +554,9 @@ Remaining]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="133"
-						y="139"
-						width="145"
+						x="112"
+						y="122"
+						width="165"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -509,13 +568,13 @@ Remaining]]></text>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{lastname}, $F{firstname})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{lastname} + ", " + $F{firstname}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="132"
-						y="118"
-						width="145"
+						x="112"
+						y="104"
+						width="165"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -531,9 +590,9 @@ Remaining]]></text>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="132"
-						y="97"
-						width="145"
+						x="112"
+						y="86"
+						width="165"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -549,9 +608,9 @@ Remaining]]></text>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="133"
-						y="76"
-						width="145"
+						x="113"
+						y="69"
+						width="165"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -567,9 +626,9 @@ Remaining]]></text>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="133"
-						y="55"
-						width="145"
+						x="113"
+						y="51"
+						width="165"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -585,10 +644,10 @@ Remaining]]></text>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="134"
-						y="160"
-						width="145"
-						height="30"
+						x="113"
+						y="140"
+						width="165"
+						height="100"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -607,7 +666,7 @@ Remaining]]></text>
 						x="289"
 						y="36"
 						width="259"
-						height="99"
+						height="174"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -619,10 +678,10 @@ Remaining]]></text>
 				</rectangle>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="418"
-						y="71"
-						width="124"
-						height="15"
+						x="385"
+						y="89"
+						width="157"
+						height="35"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -639,8 +698,8 @@ Remaining]]></text>
 					<reportElement
 						mode="Transparent"
 						x="292"
-						y="71"
-						width="119"
+						y="89"
+						width="89"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -659,7 +718,7 @@ Remaining]]></text>
 						mode="Transparent"
 						x="292"
 						y="51"
-						width="119"
+						width="89"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -675,10 +734,10 @@ Remaining]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="418"
+						x="385"
 						y="51"
-						width="124"
-						height="14"
+						width="157"
+						height="35"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -711,9 +770,9 @@ Remaining]]></text>
 					<reportElement
 						mode="Opaque"
 						x="290"
-						y="35"
+						y="36"
 						width="148"
-						height="15"
+						height="13"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
 						positionType="FixRelativeToTop"
@@ -729,9 +788,9 @@ Remaining]]></text>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="292"
-						y="92"
-						width="119"
+						x="291"
+						y="128"
+						width="89"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -749,8 +808,8 @@ Remaining]]></text>
 					<reportElement
 						mode="Transparent"
 						x="292"
-						y="113"
-						width="119"
+						y="171"
+						width="89"
 						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -766,10 +825,10 @@ Remaining]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="419"
-						y="113"
-						width="124"
-						height="15"
+						x="386"
+						y="171"
+						width="157"
+						height="35"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -784,10 +843,10 @@ Remaining]]></text>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="419"
-						y="92"
-						width="124"
-						height="15"
+						x="385"
+						y="128"
+						width="157"
+						height="35"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -802,9 +861,9 @@ Remaining]]></text>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
-						x="418"
-						y="158"
-						width="124"
+						x="409"
+						y="230"
+						width="137"
 						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -821,8 +880,8 @@ Remaining]]></text>
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
-						x="289"
-						y="142"
+						x="291"
+						y="214"
 						width="259"
 						height="15"
 						forecolor="#000000"
@@ -837,10 +896,10 @@ Remaining]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="290"
-						y="142"
+						x="292"
+						y="215"
 						width="148"
-						height="15"
+						height="13"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
 						positionType="FixRelativeToTop"
@@ -890,6 +949,22 @@ Remaining]]></text>
 					</textElement>
 				<text><![CDATA[Ticket #]]></text>
 				</staticText>
+				<rectangle radius="0" >
+					<reportElement
+						mode="Transparent"
+						x="3"
+						y="34"
+						width="280"
+						height="211"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="true"
+						isPrintWhenDetailOverflows="true"/>
+					<graphicElement stretchType="RelativeToTallestObject" pen="Thin" fill="Solid" />
+				</rectangle>
 			</band>
 		</title>
 		<pageHeader>

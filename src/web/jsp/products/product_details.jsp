@@ -12,7 +12,7 @@
 <td>
 <a href="ProductsCatalog.do?command=ListAllProducts">Products</a> >
 <a href="ProductsCatalog.do?command=ListAllProducts">View Products</a> >
-Add Product
+Product Details
 </td>
 </tr>
 </table>

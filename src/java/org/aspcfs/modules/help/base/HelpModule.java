@@ -10,8 +10,8 @@ import java.util.*;
 import java.text.*;
 
 /**
- *  Help Module class to allow administrators to insert
- *  biref and detailed description of application modules
+ *  Help Module class to allow administrators to insert biref and detailed
+ *  description of application modules
  *
  *@author     kbhoopal
  *@created    December 10, 2003
@@ -50,7 +50,7 @@ public class HelpModule extends GenericBean {
       throw new SQLException("Module Id not specified");
     }
     PreparedStatement pst = db.prepareStatement(
-        "SELECT module_id, category, module_brief_description, module_detail_description " +
+        "SELECT module_id, hm.category_id as category_id, category, module_brief_description, module_detail_description " +
         "FROM help_module hm, permission_category pc " +
         "WHERE module_id = ? " +
         "AND hm.category_id = pc.category_id");
@@ -62,7 +62,7 @@ public class HelpModule extends GenericBean {
     }
     rs.close();
     pst.close();
-    if (thisId == -1) {
+    if (this.id == -1) {
       throw new SQLException("Module ID not found");
     }
   }
@@ -125,6 +125,26 @@ public class HelpModule extends GenericBean {
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the linkCategoryId attribute of the HelpModule object
+   *
+   *@param  tmp  The new linkCategoryId value
+   */
+  public void setLinkCategoryId(int tmp) {
+    this.linkCategoryId = tmp;
+  }
+
+
+  /**
+   *  Sets the linkCategoryId attribute of the HelpModule object
+   *
+   *@param  tmp  The new linkCategoryId value
+   */
+  public void setLinkCategoryId(String tmp) {
+    this.linkCategoryId = Integer.parseInt(tmp);
   }
 
 
@@ -241,10 +261,9 @@ public class HelpModule extends GenericBean {
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO help_module " +
-        "(module_id, category_id , module_brief_description , module_detail_description) " +
-        "VALUES (?, ?, ?, ?, ?) "
+        "(category_id , module_brief_description , module_detail_description) " +
+        "VALUES (?, ?, ?) "
         );
-    pst.setInt(++i, this.getId());
     pst.setInt(++i, this.getLinkCategoryId());
     pst.setString(++i, this.getBriefDescription());
     pst.setString(++i, this.getDetailDescription());
@@ -320,6 +339,7 @@ public class HelpModule extends GenericBean {
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("module_id");
+    linkCategoryId = rs.getInt("category_id");
     moduleName = rs.getString("category");
     briefDescription = rs.getString("module_brief_description");
     detailDescription = rs.getString("module_detail_description");

@@ -115,7 +115,9 @@ public final class ExternalContactsImports extends CFSModule {
     }
 
     Connection db = null;
-    boolean recordInserted = false;
+    boolean contactRecordInserted = false;
+    boolean fileRecordInserted = false;
+
     ContactImport thisImport = (ContactImport) context.getFormBean();
     try {
       db = getConnection(context);
@@ -137,9 +139,9 @@ public final class ExternalContactsImports extends CFSModule {
       thisImport.setType(Constants.IMPORT_CONTACTS);
       thisImport.setName(subject);
       thisImport.setDescription(description);
-      recordInserted = thisImport.insert(db);
+      contactRecordInserted = thisImport.insert(db);
 
-      if (recordInserted) {
+      if (contactRecordInserted) {
         if ((Object) parts.get("id") instanceof FileInfo) {
           //Update the database with the resulting file
           FileInfo newFileInfo = (FileInfo) parts.get("id");
@@ -154,22 +156,26 @@ public final class ExternalContactsImports extends CFSModule {
           thisItem.setFilename(newFileInfo.getRealFilename());
           thisItem.setVersion(Import.IMPORT_FILE_VERSION);
           thisItem.setSize(newFileInfo.getSize());
-          recordInserted = thisItem.insert(db);
-          if (!recordInserted) {
+          fileRecordInserted = thisItem.insert(db);
+          if (!fileRecordInserted) {
             processErrors(context, thisItem.getErrors());
           }
         } else {
-          recordInserted = false;
+          fileRecordInserted = false;
           HashMap errors = new HashMap();
           errors.put("actionError", "The file could not be sent by your computer, make sure the file exists");
           processErrors(context, errors);
           context.getRequest().setAttribute("name", subject);
         }
       }
-      if (recordInserted) {
+      if (contactRecordInserted && fileRecordInserted) {
         thisImport = new ContactImport(db, thisImport.getId());
         thisImport.buildFileDetails(db);
+      } else if (contactRecordInserted) {
+        thisImport.delete(db);
+        thisImport.setId(-1);
       }
+
       context.getRequest().setAttribute("ImportDetails", thisImport);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -178,10 +184,10 @@ public final class ExternalContactsImports extends CFSModule {
       freeConnection(context, db);
     }
 
-    if (recordInserted) {
+    if (fileRecordInserted && contactRecordInserted) {
       return this.getReturn(context, "Save");
     }
-    return this.getReturn(context, "Add");
+    return this.getReturn(context, "New");
   }
 
 
@@ -478,9 +484,9 @@ public final class ExternalContactsImports extends CFSModule {
     try {
       db = this.getConnection(context);
       ContactImport thisImport = new ContactImport(db, Integer.parseInt(importId));
-      boolean recordDeleted = thisImport.delete(db);
+      int recordDeleted = thisImport.updateStatus(db, Import.DELETED);
 
-      if (recordDeleted) {
+      if (recordDeleted > 0) {
         //delete the files
         FileItem importFile = new FileItem(db, thisImport.getId(), Constants.IMPORT_CONTACTS);
         importFile.delete(db, this.getPath(context, "contacts"));

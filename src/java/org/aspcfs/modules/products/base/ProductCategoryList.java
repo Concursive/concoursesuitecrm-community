@@ -580,7 +580,6 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
         " ON ( pctgy.type_id = pctgytype.code ) " +
         " WHERE pctgy.category_id > -1 "
         );
-    sqlOrder.append(" ORDER BY pctgy.category_name ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();

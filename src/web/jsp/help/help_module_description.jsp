@@ -8,7 +8,10 @@
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <%-- Title --%>
   <tr>
-  <td> <strong>Module Name:<%=helpModule.getModuleName()%></strong><dhv:permission name="qa-edit">[<a href="javascript:popURL('Help.do?command=ModifyDescription&id=<%= helpModule.getId() %>&action=<%= helpModule.getRelatedAction()%>&popup=true', 'Help_Description','700','500','yes','yes');">Edit</a>]</td></dhv:permission>
+  <td> <strong>Module Name:<%=((helpModule.getModuleName() == null) || ("".equals(helpModule.getModuleName())))? "Not Specified" : helpModule.getModuleName()%></strong>
+  <dhv:evaluate if="<%= hasText(helpModule.getModuleName()) %>">
+    <dhv:permission name="qa-edit">[<a href="javascript:popURL('Help.do?command=ModifyDescription&id=<%= helpModule.getId() %>&action=<%= helpModule.getRelatedAction()%>&popup=true', 'Help_Description','700','500','yes','yes');">Edit</a>]</td></dhv:permission>
+  </dhv:evaluate>
   </tr>
   <tr>
     <td>

@@ -9,7 +9,7 @@
     Name
   </td>
   <td class="containerBody">
-    <input type="text" name="name" value="<%= toString(ImportDetails.getName()) %>" size="65"><font color="red">*</font>
+    <input type="text" name="name" value="<%= toString(ImportDetails.getName()) %>" maxlength="250" size="65"><font color="red">*</font>
   </td>
   </tr>
   <tr class="containerBody">

@@ -1063,7 +1063,7 @@
     <forward name="FieldsOK" resource="/troubletickets/troubletickets_fields.jsp" layout="nav"/>
     <forward name="ModifyFieldsOK" resource="/troubletickets/troubletickets_fields_modify.jsp" layout="nav"/>
     <forward name="UpdateFieldsOK" resource="/troubletickets/troubletickets_fields.jsp" layout="nav"/>
-    <forward name="DeleteFieldsOK" resource="TroubleTickets.do?command=Fields"/>
+    <forward name="DeleteFieldsOK" resource="/TroubleTicketsFolders.do?command=Fields"/>
   </action>
   <!-- End Ticket Module -->
   <!-- Reports Module -->

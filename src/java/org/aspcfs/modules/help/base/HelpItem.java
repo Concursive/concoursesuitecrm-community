@@ -19,6 +19,7 @@ public class HelpItem extends GenericBean {
   public final static String fs = System.getProperty("file.separator");
   //help item properties
   private int id = -1;
+  private int categoryId = -1;
   private int moduleId = -1;
   private String module = null;
   private String section = null;
@@ -33,6 +34,7 @@ public class HelpItem extends GenericBean {
   private java.sql.Timestamp entered = null;
   private int modifiedBy = -1;
   private java.sql.Timestamp modified = null;
+
   //delay loading properties
   private boolean buildFeatures = false;
   private boolean buildRules = false;
@@ -243,15 +245,46 @@ public class HelpItem extends GenericBean {
     this.id = Integer.parseInt(tmp);
   }
 
-  
+
+  /**
+   *  Sets the categoryId attribute of the HelpItem object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(int tmp) {
+    this.categoryId = tmp;
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the HelpItem object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(String tmp) {
+    this.categoryId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the id attribute of the HelpItem object
+   *
+   *@param  tmp  The new module id value
+   */
+  public void setModuleId(int tmp) {
+    this.moduleId = tmp;
+  }
+
+
   /**
    *  Sets the id attribute of the HelpItem object
    *
    *@param  tmp  The new module id value
    */
   public void setModuleId(String tmp) {
-     this.moduleId = Integer.parseInt(tmp);
+    this.moduleId = Integer.parseInt(tmp);
   }
+
 
   /**
    *  Sets the module attribute of the HelpItem object
@@ -271,7 +304,7 @@ public class HelpItem extends GenericBean {
   public void setTitle(String tmp) {
     this.title = tmp;
   }
-  
+
 
   /**
    *  Sets the section attribute of the HelpItem object
@@ -413,6 +446,7 @@ public class HelpItem extends GenericBean {
     this.buildTips = buildTips;
   }
 
+
   /**
    *  Sets the notes attribute of the HelpItem object
    *
@@ -520,6 +554,16 @@ public class HelpItem extends GenericBean {
    */
   public int getId() {
     return id;
+  }
+
+
+  /**
+   *  Gets the categoryId attribute of the HelpItem object
+   *
+   *@return    The categoryId value
+   */
+  public int getCategoryId() {
+    return categoryId;
   }
 
 
@@ -632,7 +676,7 @@ public class HelpItem extends GenericBean {
     return modified;
   }
 
-  
+
   /**
    *  Description of the Method
    *
@@ -641,6 +685,7 @@ public class HelpItem extends GenericBean {
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("help_id");
+    categoryId = rs.getInt("category_id");
     moduleId = rs.getInt("link_module_id");
     module = rs.getString("module");
     section = rs.getString("section");
@@ -705,11 +750,27 @@ public class HelpItem extends GenericBean {
       this.insert(db);
       return 1;
     }
+    
+    // inserting categoryid into help_module if it does not exist
+    HelpModuleList hml = new HelpModuleList();
+    hml.setCategoryId(categoryId);
+    hml.buildList(db);
+    if (hml.size() == 0){
+     HelpModule hm = new HelpModule();
+     hm.setLinkCategoryId(categoryId);
+     hm.insert(db);
+     moduleId = hm.getId();
+    }else{
+     moduleId = ((HelpModule)hml.get(0)).getId(); 
+    }
+    
     PreparedStatement pst = db.prepareStatement(
         "UPDATE help_contents " +
-        "SET title = ?, description = ?, modifiedby = ?, modified = CURRENT_TIMESTAMP " +
+        "SET category_id = ? , link_module_id = ?, title = ?, description = ?, modifiedby = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE help_id = ? ");
     int i = 0;
+    pst.setInt(++i, categoryId);
+    pst.setInt(++i, moduleId);
     pst.setString(++i, title);
     pst.setString(++i, description);
     pst.setInt(++i, modifiedBy);

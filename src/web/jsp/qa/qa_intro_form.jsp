@@ -1,17 +1,24 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.help.base.*" %>
 <jsp:useBean id="Help" class="org.aspcfs.modules.help.base.HelpItem" scope="request"/>
+<jsp:useBean id="permissionCategoryList" class="org.aspcfs.modules.admin.base.PermissionCategoryList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body bgcolor='#FFFFFF' onLoad="document.inputForm.description.focus();">
 <script language="JavaScript">
   function checkForm(form) {
     var formTest = true;
+    var message = "";
     //Check required fields
+    if (form.categoryId.value == -1) {    
+      message += "Module is required\n";
+      formTest = false;
+    }
     if (form.description.value == "") {    
-      alert("Description is required.");
+      message += "Description is required\n";
       formTest = false;
     }
     if (formTest == false) {
+      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
     } else {
       return true;
@@ -24,6 +31,14 @@
   <th colspan="2">
     <strong>Help</strong>
   </th>
+</tr>
+<tr class="containerBody">
+  <td class="formLabel" valign="top">
+    Module
+  </td>
+  <td>
+      <%= permissionCategoryList.getHtmlSelect("categoryId", Help.getCategoryId() ) %>
+  </td>
 </tr>
 <tr class="containerBody">
   <td class="formLabel" valign="top">

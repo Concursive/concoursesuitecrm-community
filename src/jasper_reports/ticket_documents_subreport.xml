@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="dataline_ticket_documents"
+		 name="ticket_documents"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -23,8 +23,7 @@
 	<parameter name="moduleid" isForPrompting="false" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[new Integer(org.aspcfs.modules.base.Constants.DOCUMENTS_TICKETS)]]></defaultValueExpression>
 	</parameter>
-	<queryString><![CDATA[SELECT link_item_id, link_module_id, client_filename,
-subject, size
+	<queryString><![CDATA[SELECT *
 FROM project_files
 WHERE link_module_id = $P{moduleid}
 AND link_item_id = $P{ticketid}]]></queryString>

@@ -35,14 +35,22 @@
     
    var groupSelector = document.getElementById(field + 'groupId');
    groupSelector.options.selectedIndex = 0;
-   if(thisField.value != null && (thisField.value.indexOf('contactPhone.') > -1) || (thisField.value.indexOf('contactAddress.') > -1)){
+   if(thisField.value != null && ((thisField.value.indexOf('contactPhone.') > -1) || (thisField.value.indexOf('contactAddress.') > -1) || (thisField.value.indexOf('contactEmail.') > -1))){
+      
+    if(thisField.value.indexOf('contactAddress.') > -1 || thisField.value.indexOf('contactPhone.') > -1){
       showSpan(field + 'groupIdspan');
+    }else{
+      hideSpan(field + 'groupIdspan');
+    }
       
       /* get the next available group id if it is a new set of phone number or address*/
-      if(thisField.value == 'contactPhone.number' || thisField.value == 'contactAddress.streetAddressLine1'){
+      if(thisField.value == 'contactPhone.number' || thisField.value == 'contactAddress.streetAddressLine1' || thisField.value == 'contactEmail.email'){
         var dependency = 'contactAddress.streetAddressLine1';
         if(thisField.value == 'contactPhone.number'){
           dependency = 'contactPhone.number';
+        }
+        if(thisField.value == 'contactEmail.email'){
+          dependency = 'contactEmail.email';
         }
         
         availableGroupIds = new Array();
@@ -64,11 +72,14 @@
             break;
           }
         }
-      }
+       }
       /* change the drop down entries */
         var groupDisplay = "Address";
         if(thisField.value.indexOf('contactPhone.') > -1){
           groupDisplay = "Phone";
+        }
+        if(thisField.value.indexOf('contactEmail.') > -1){
+          groupDisplay = "Email";
         }
         for(i = 1; i < 11; i++){
           groupSelector.options[i-1].text = groupDisplay + i;

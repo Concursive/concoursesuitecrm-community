@@ -64,9 +64,6 @@ public class SystemStatus {
   //Cached access types
   private HashMap accessTypes = new HashMap();
 
-  //Cached access types
-  private ImportManager importManager = null;
-
 
   /**
    *  Constructor for the SystemStatus object
@@ -174,45 +171,14 @@ public class SystemStatus {
 
 
   /**
-   *  Sets the importManager attribute of the SystemStatus object
+   *  Gets the Import Manager for this Application Instance <br>
+   *NOTE: There is one Import Manager per application instance
    *
-   *@param  tmp  The new importManager value
-   */
-  public void setImportManager(ImportManager tmp) {
-    this.importManager = tmp;
-  }
-
-
-  /**
-   *  Gets the importManager attribute of the SystemStatus object
-   *
-   *@return    The importManager value
-   */
-  public ImportManager getImportManager() {
-    return importManager;
-  }
-
-
-  /**
-   *  Gets the importManager attribute of the SystemStatus object
-   *
-   *@param  context         Description of the Parameter
-   *@return                 The importManager value
+   *@param  context  Description of the Parameter
+   *@return          The importManager value
    */
   public ImportManager getImportManager(ActionContext context) {
-    if (importManager == null) {
-      //get pool
-      ConnectionPool connectionPool = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
-
-      //get the max imports that can be run concurrently
-      ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
-      if (prefs != null) {
-        String maxItems = prefs.get("IMPORT_QUEUE_MAX");
-        importManager = new ImportManager(connectionPool, Integer.parseInt(maxItems));
-      } else {
-        importManager = new ImportManager(connectionPool);
-      }
-    }
+    ImportManager importManager = (ImportManager) context.getServletContext().getAttribute("ImportManager");
     return importManager;
   }
 

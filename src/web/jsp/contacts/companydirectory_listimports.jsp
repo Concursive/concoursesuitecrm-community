@@ -118,7 +118,7 @@ View Imports
 <%}
 }else{%>
       <tr>
-        <td class="containerBody" colspan="5" valign="center">
+        <td class="containerBody" colspan="8" valign="center">
           No Imports found in this view.
         </td>
       </tr>

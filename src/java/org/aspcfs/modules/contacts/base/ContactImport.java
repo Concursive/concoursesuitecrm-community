@@ -642,13 +642,6 @@ public class ContactImport extends Import implements Runnable {
       //do not use stop to stop the thread, nullify it
       importThread = null;
 
-      //delete all imported contacts
-      deleteImportedRecords(db, this.getId());
-
-      //reset the imported and failed records
-      this.setTotalImportedRecords(0);
-      this.setTotalFailedRecords(0);
-
       //set the status to cancelled
       this.setStatusId(Import.CANCELLED);
 
@@ -795,7 +788,9 @@ public class ContactImport extends Import implements Runnable {
       db.setAutoCommit(false);
 
       //delete all imported records
-      deleteImportedRecords(db, this.getId());
+      if(this.getStatusId() != UNPROCESSED || this.getStatusId() != QUEUED){
+        deleteImportedRecords(db, this.getId());
+      }
 
       //delete import record
       PreparedStatement pst = db.prepareStatement(
@@ -833,21 +828,21 @@ public class ContactImport extends Import implements Runnable {
       }
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM contact_emailaddress " +
-          "WHERE contact_id IN (SELECT contact_id from contact c where import_id = ? AND c.contact_id = contact_emailaddress.contact_id) ");
+          "WHERE EXISTS (SELECT contact_id from contact c where c.contact_id = contact_emailaddress.contact_id AND import_id = ?) ");
       pst.setInt(1, thisImportId);
       pst.executeUpdate();
       pst.close();
 
       pst = db.prepareStatement(
           "DELETE FROM contact_phone " +
-          "WHERE contact_id IN (SELECT contact_id from contact c where import_id = ? AND c.contact_id = contact_phone.contact_id)");
+          "WHERE EXISTS (SELECT contact_id from contact c where c.contact_id = contact_phone.contact_id AND import_id = ?) ");
       pst.setInt(1, thisImportId);
       pst.executeUpdate();
       pst.close();
 
       pst = db.prepareStatement(
           "DELETE FROM contact_address " +
-          "WHERE contact_id IN (SELECT contact_id from contact c where import_id = ? AND c.contact_id = contact_address.contact_id) ");
+          "WHERE EXISTS (SELECT contact_id from contact c where c.contact_id = contact_address.contact_id AND import_id = ?) ");
       pst.setInt(1, thisImportId);
       pst.executeUpdate();
       pst.close();

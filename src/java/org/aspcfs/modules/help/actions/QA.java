@@ -5,6 +5,7 @@ import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.help.base.*;
+import org.aspcfs.modules.admin.base.*;
 import com.zeroio.webutils.*;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.LookupElement;
@@ -75,6 +76,11 @@ public final class QA extends CFSModule {
       db = this.getConnection(context);
       HelpItem thisItem = new HelpItem(db, Integer.parseInt(helpId));
       context.getRequest().setAttribute("Help", thisItem);
+      
+      PermissionCategoryList pcl = new  PermissionCategoryList();
+      pcl.setEmptyHtmlSelectRecord("-None-");
+      pcl.buildList(db);
+      context.getRequest().setAttribute("permissionCategoryList", pcl);
     } catch (Exception e) {
       e.printStackTrace(System.out);
       context.getRequest().setAttribute("Error", e);

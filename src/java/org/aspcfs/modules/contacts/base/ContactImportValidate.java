@@ -27,7 +27,7 @@ public class ContactImportValidate {
 
 
   /**
-   *Constructor for the ContactImportValidate object
+   *  Constructor for the ContactImportValidate object
    */
   public ContactImportValidate() { }
 
@@ -210,7 +210,7 @@ public class ContactImportValidate {
       while (fields.hasNext()) {
         ++fieldNumber;
         String field = (String) fields.next();
-        if("_ERROR".equals(field)){
+        if ("_ERROR".equals(field)) {
           continue;
         }
         if (!"".equals(StringUtils.toString(field))) {
@@ -291,7 +291,7 @@ public class ContactImportValidate {
       while (fields.hasNext()) {
         ++fieldNumber;
         String field = (String) fields.next();
-        if("_ERROR".equals(field)){
+        if ("_ERROR".equals(field)) {
           continue;
         }
         if (fieldMappings.containsKey(field)) {
@@ -306,10 +306,10 @@ public class ContactImportValidate {
             if (!"-1".equals(propertyName)) {
               Property thisProperty = propertyMap.getProperty(field, propertyName, groupId);
               if (thisProperty.getMappedColumn() > 0) {
-                if(thisProperty.getGroupId() > 0){
-                  addFieldError(field, "Multiple Property Map: The property \"" + thisProperty.getDisplayName() + "\" under Group" + thisProperty.getGroupId() + " has already been mapped to another field");
-                }else{
-                addFieldError(field, "Multiple Property Map: The property \"" + thisProperty.getDisplayName() + "\" has already been mapped to another field");
+                if (thisProperty.getGroupId() > 0) {
+                  addFieldError(field, "Multiple Property Map: The property \"" + thisProperty.getDisplayName() + " has already been mapped to another field");
+                } else {
+                  addFieldError(field, "Multiple Property Map: The property \"" + thisProperty.getDisplayName() + "\" has already been mapped to another field");
                 }
               } else {
                 thisProperty.setMappedColumn(fieldNumber);

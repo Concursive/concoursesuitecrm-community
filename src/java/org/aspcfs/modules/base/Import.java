@@ -27,7 +27,8 @@ public class Import extends GenericBean {
   public final static int CANCELLED = 5;
   public final static int PROCESSED_UNAPPROVED = 6;
   public final static int PROCESSED_APPROVED = 7;
-
+  public final static int DELETED = 8;
+  
   public final static int CUSTOM = 7;
   public final static int EXCEL_CSV = 8;
   public final static int ACT = 9;
@@ -783,9 +784,6 @@ public class Import extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public int updateStatus(Connection db, int status) throws SQLException {
-    if (status < UNPROCESSED || status > PROCESSED_APPROVED) {
-      return -1;
-    }
     int count = 0;
     boolean commit = true;
     int previousStatus = this.getStatusId();

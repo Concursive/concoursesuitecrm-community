@@ -52,6 +52,7 @@
     </td>
     <td valign="center">
       <%= toHtml(thisElt.getName()) %>
+    </td>
   </tr>
 <%
       } else {
@@ -82,7 +83,7 @@
   } else {
 %>
       <tr class="containerBody">
-        <td colspan="2">
+        <td colspan="3">
           No options matched query.
         </td>
       </tr>

@@ -14,7 +14,7 @@
 		 rightMargin="0"
 		 topMargin="0"
 		 bottomMargin="0"
-		 whenNoDataType="NoPages"
+		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<parameter name="ticketid" isForPrompting="false" class="java.lang.Integer">
@@ -58,14 +58,14 @@ AND tsf.link_ticket_id = $P{ticketid}]]></queryString>
 						x="116"
 						y="9"
 						width="414"
-						height="33"
+						height="39"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
+						isPrintWhenDetailOverflows="true"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
@@ -123,7 +123,7 @@ AND tsf.link_ticket_id = $P{ticketid}]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[Part#]]></text>
+				<text><![CDATA[No.]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -142,7 +142,7 @@ AND tsf.link_ticket_id = $P{ticketid}]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[Name]]></text>
+				<text><![CDATA[Part#/Name]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -161,7 +161,7 @@ AND tsf.link_ticket_id = $P{ticketid}]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[Desription]]></text>
+				<text><![CDATA[Description]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -186,9 +186,9 @@ of Service]]></text>
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
-						x="48"
+						x="72"
 						y="86"
-						width="480"
+						width="456"
 						height="0"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -240,7 +240,7 @@ of Service]]></text>
 					<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{counter}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{counter} + "."]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
@@ -265,35 +265,19 @@ of Service]]></text>
 						x="276"
 						y="3"
 						width="255"
-						height="13"
+						height="19"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="true"
+						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="true"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{partdesc}]]></textFieldExpression>
 				</textField>
-				<line direction="TopDown">
-					<reportElement
-						mode="Opaque"
-						x="75"
-						y="21"
-						width="453"
-						height="0"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						positionType="Float"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="1Point" fill="Solid" />
-				</line>
 			</band>
 		</detail>
 		<columnFooter>

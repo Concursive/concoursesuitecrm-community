@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="dataline_ticket_history"
+		 name="ticket_history"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -14,7 +14,7 @@
 		 rightMargin="10"
 		 topMargin="20"
 		 bottomMargin="20"
-		 whenNoDataType="NoPages"
+		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<parameter name="ticketid" isForPrompting="false" class="java.lang.Integer">
@@ -27,11 +27,11 @@ FROM ticketlog t
 LEFT JOIN access a ON (t.enteredby = a.user_id)
 LEFT JOIN contact c ON (a.contact_id = c.contact_id)
 WHERE t.ticketid = $P{ticketid} 
-AND t.comment NOT LIKE '']]></queryString>
+AND t.comment <> '']]></queryString>
+	<field name="firstname" class="java.lang.String"/>
+	<field name="lastname" class="java.lang.String"/>
 	<field name="comment" class="java.lang.String"/>
 	<field name="entered" class="java.sql.Timestamp"/>
-	<field name="lastname" class="java.lang.String"/>
-	<field name="firstname" class="java.lang.String"/>
 		<background>
 			<band height="0"  isSplitAllowed="true" >
 			</band>
@@ -66,9 +66,9 @@ AND t.comment NOT LIKE '']]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="5"
-						y="2"
+						y="3"
 						width="145"
-						height="15"
+						height="13"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
 						positionType="FixRelativeToTop"
@@ -174,7 +174,7 @@ AND t.comment NOT LIKE '']]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{lastname}, $F{firstname})]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{lastname} + ", " + $F{firstname}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"

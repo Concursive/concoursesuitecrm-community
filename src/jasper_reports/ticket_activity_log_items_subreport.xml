@@ -14,7 +14,7 @@
 		 rightMargin="0"
 		 topMargin="0"
 		 bottomMargin="0"
-		 whenNoDataType="NoPages"
+		 whenNoDataType="AllSectionsNoDetail"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<parameter name="ticketid" isForPrompting="false" class="java.lang.Integer">
@@ -64,7 +64,7 @@ ORDER BY tcf.form_id]]></queryString>
 						mode="Opaque"
 						x="1"
 						y="0"
-						width="530"
+						width="546"
 						height="6"
 						forecolor="#000000"
 						backcolor="#000000"
@@ -154,12 +154,12 @@ ORDER BY tcf.form_id]]></queryString>
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="122"  isSplitAllowed="true" >
+			<band height="127"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						mode="Transparent"
 						x="4"
-						y="27"
+						y="62"
 						width="119"
 						height="13"
 						forecolor="#000000"
@@ -177,7 +177,7 @@ ORDER BY tcf.form_id]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="activity_form"  hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="130"
-						y="27"
+						y="62"
 						width="139"
 						height="14"
 						forecolor="#000000"
@@ -190,13 +190,13 @@ ORDER BY tcf.form_id]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[(($F{followreq} == null || $F{followreq}.booleanValue() == false) ? "No" : "Yes")]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[(($F{followreq}.booleanValue() == true) ? "Yes" : "No")]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
 						mode="Transparent"
 						x="4"
-						y="73"
+						y="79"
 						width="119"
 						height="13"
 						forecolor="#000000"
@@ -214,7 +214,7 @@ ORDER BY tcf.form_id]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="activity_form"  hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="130"
-						y="73"
+						y="79"
 						width="139"
 						height="14"
 						forecolor="#000000"
@@ -232,8 +232,8 @@ ORDER BY tcf.form_id]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="activity_form"  hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="130"
-						y="89"
-						width="393"
+						y="95"
+						width="420"
 						height="31"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -251,7 +251,7 @@ ORDER BY tcf.form_id]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="4"
-						y="89"
+						y="95"
 						width="119"
 						height="13"
 						forecolor="#000000"
@@ -264,7 +264,7 @@ ORDER BY tcf.form_id]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[Notes]]></text>
+				<text><![CDATA[Follow-up Description]]></text>
 				</staticText>
 				<line direction="TopDown">
 					<reportElement
@@ -374,7 +374,7 @@ ORDER BY tcf.form_id]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="4"
-						y="42"
+						y="29"
 						width="119"
 						height="13"
 						forecolor="#000000"
@@ -393,7 +393,7 @@ ORDER BY tcf.form_id]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="4"
-						y="58"
+						y="46"
 						width="119"
 						height="13"
 						forecolor="#000000"
@@ -411,7 +411,7 @@ ORDER BY tcf.form_id]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="activity_form"  hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="130"
-						y="58"
+						y="46"
 						width="139"
 						height="14"
 						forecolor="#000000"
@@ -429,7 +429,7 @@ ORDER BY tcf.form_id]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="activity_form"  hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="130"
-						y="42"
+						y="29"
 						width="139"
 						height="14"
 						forecolor="#000000"
@@ -519,7 +519,7 @@ ORDER BY tcf.form_id]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{laborhours} + "hrs"]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None" >					<reportElement
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="295"
 						y="0"
@@ -531,7 +531,7 @@ ORDER BY tcf.form_id]]></queryString>
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
+						isPrintWhenDetailOverflows="true"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>

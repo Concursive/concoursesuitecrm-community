@@ -206,7 +206,7 @@ public class ImportList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM import m " +
-        "WHERE m.import_id > -1 ");
+        "WHERE m.import_id > -1 AND status_id != ? ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -251,7 +251,7 @@ public class ImportList extends ArrayList {
         "m.record_delimiter, m.column_delimiter, m.total_imported_records, m.total_failed_records, " +
         "m.status_id, m.file_type, m.entered, m.enteredby, m.modified, m.modifiedby " +
         "FROM import m " +
-        "WHERE m.import_id > -1 ");
+        "WHERE m.import_id > -1 AND status_id != ? ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -321,6 +321,7 @@ public class ImportList extends ArrayList {
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
 
+    pst.setInt(++i, Import.DELETED);
     if (enteredBy != -1) {
       pst.setInt(++i, enteredBy);
     }

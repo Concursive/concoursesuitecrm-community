@@ -1,4 +1,4 @@
-<%-- reusable contact form --%>
+<%-- reusable contract form --%>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContractHours.js"></script>

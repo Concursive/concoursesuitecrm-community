@@ -326,12 +326,12 @@ public class HelpModule {
     PreparedStatement pst = db.prepareStatement(
         "SELECT help_id, module, section, subsection, title, description, content_id, parent, contentlevel, contentorder " +
         "FROM help_contents hc, help_tableof_contents htc, help_tableofcontentitem_links hi " +
-        "WHERE link_module_id=? " +
+        "WHERE hc.category_id= ? " +
         "AND htc.content_id = hi.global_link_id " +
         "AND hi.linkto_content_id = hc.help_id " +
         "ORDER BY contentorder ASC ");
 
-    pst.setInt(1, getId());
+    pst.setInt(1, this.categoryId);
     ResultSet rs = pst.executeQuery();
 
     ArrayList itemsAtLevel3 = new ArrayList();
@@ -394,9 +394,9 @@ public class HelpModule {
     PreparedStatement pst = db.prepareStatement(
         "SELECT help_id, module, section, subsection, title, description " +
         "FROM help_contents hc " +
-        "WHERE link_module_id=? ");
+        "WHERE hc.category_id=? ");
 
-    pst.setInt(1, getId());
+    pst.setInt(1, this.categoryId);
     ResultSet rs = pst.executeQuery();
 
     ArrayList tempHelpContents = new ArrayList();

@@ -9,6 +9,7 @@ import com.darkhorseventures.database.ConnectionPool;
 import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.Import;
 import java.util.*;
 import java.io.File;
 import java.sql.*;
@@ -76,12 +77,15 @@ public final class ProcessSystem extends CFSModule {
    *  For every system, invalidates and deletes the day's graphing data since
    *  the graphs need to be rebuilt daily
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   *@param  context                    Description of the Parameter
+   *@return                            Description of the Return Value
+   *@exception  java.sql.SQLException  Description of the Exception
    */
-  public String executeCommandClearGraphData(ActionContext context) {
+  public String executeCommandClearGraphData(ActionContext context) throws java.sql.SQLException {
     clearGraphData(context);
     deleteGraphFiles(context);
+    // Also clear any deleted (trashed) import files
+    deleteImportedRecords(context);
     return "ProcessOK";
   }
 
@@ -222,6 +226,98 @@ public final class ProcessSystem extends CFSModule {
     } catch (Exception e) {
       return false;
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context           Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean deleteImportedRecords(ActionContext context) throws SQLException {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("ProcessSystem-> Checking imports for deletion");
+    }
+    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+    Connection db = null;
+    PreparedStatement pst = null;
+    Iterator i = this.getSystemIterator(context);
+    while (i.hasNext()) {
+      SystemStatus systemStatus = (SystemStatus) i.next();
+      try {
+        db = sqlDriver.getConnection(systemStatus.getConnectionElement());
+        if (db != null) {
+          db.setAutoCommit(false);
+          ResultSet rs = null;
+          ArrayList imports = new ArrayList();
+          pst = db.prepareStatement(
+              "SELECT import_id FROM import " +
+              "WHERE status_id = ? ");
+          pst.setInt(1, Import.DELETED);
+          rs = pst.executeQuery();
+          while (rs.next()) {
+            imports.add(String.valueOf(rs.getInt("import_id")));
+          }
+          rs.close();
+          pst.close();
+
+          Iterator j = imports.iterator();
+          while (j.hasNext()) {
+            int thisImportId = Integer.parseInt((String) j.next());
+            if (System.getProperty("DEBUG") != null) {
+              System.out.println("ProcessSystem-> Deleting import " + thisImportId);
+            }
+            pst = db.prepareStatement(
+                "DELETE FROM contact_emailaddress " +
+                "WHERE EXISTS (SELECT contact_id from contact c where c.contact_id = contact_emailaddress.contact_id AND import_id = ?) ");
+            pst.setInt(1, thisImportId);
+            pst.executeUpdate();
+            pst.close();
+
+            pst = db.prepareStatement(
+                "DELETE FROM contact_phone " +
+                "WHERE EXISTS (SELECT contact_id from contact c where c.contact_id = contact_phone.contact_id AND import_id = ?) ");
+            pst.setInt(1, thisImportId);
+            pst.executeUpdate();
+            pst.close();
+
+            pst = db.prepareStatement(
+                "DELETE FROM contact_address " +
+                "WHERE EXISTS (SELECT contact_id from contact c where c.contact_id = contact_address.contact_id AND import_id = ?) ");
+            pst.setInt(1, thisImportId);
+            pst.executeUpdate();
+            pst.close();
+
+            pst = db.prepareStatement(
+                "DELETE FROM contact " +
+                "WHERE import_id = ?");
+            pst.setInt(1, thisImportId);
+            pst.executeUpdate();
+            pst.close();
+
+            pst = db.prepareStatement(
+                "DELETE FROM import " +
+                "WHERE import_id = ?");
+            pst.setInt(1, thisImportId);
+            pst.executeUpdate();
+            pst.close();
+            db.commit();
+          }
+        }
+      } catch (Exception e) {
+        if (db != null) {
+          db.rollback();
+        }
+      } finally {
+        if (db != null) {
+          db.setAutoCommit(true);
+          sqlDriver.free(db);
+        }
+      }
+    }
+    return true;
   }
 }
 

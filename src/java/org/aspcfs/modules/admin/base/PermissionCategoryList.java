@@ -23,6 +23,7 @@ import org.aspcfs.modules.base.Constants;
 public class PermissionCategoryList extends Vector {
 
   private PagedListInfo pagedListInfo = null;
+  private String emptyHtmlSelectRecord = null;
 
   public final static String tableName = "permission_category";
   public final static String uniqueField = "category_id";
@@ -52,12 +53,34 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
+   *  Sets the emptyHtmlSelectRecord attribute of the PermissionCategoryList
+   *  object
+   *
+   *@param  tmp  The new emptyHtmlSelectRecord value
+   */
+  public void setEmptyHtmlSelectRecord(String tmp) {
+    this.emptyHtmlSelectRecord = tmp;
+  }
+
+
+  /**
    *  Gets the pagedListInfo attribute of the PermissionCategoryList object
    *
    *@return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
+  }
+
+
+  /**
+   *  Gets the emptyHtmlSelectRecord attribute of the PermissionCategoryList
+   *  object
+   *
+   *@return    The emptyHtmlSelectRecord value
+   */
+  public String getEmptyHtmlSelectRecord() {
+    return emptyHtmlSelectRecord;
   }
 
 
@@ -378,5 +401,38 @@ public class PermissionCategoryList extends Vector {
     return i;
   }
 
+
+  /**
+   *  Gets the htmlSelect attribute of the PermissionCategoryList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@return             The htmlSelect value
+   */
+  public String getHtmlSelect(String selectName) {
+    return getHtmlSelect(selectName, -1);
+  }
+
+
+  /**
+   *  Gets the htmlSelect attribute of the PermissionCategoryList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelect value
+   */
+  public String getHtmlSelect(String selectName, int defaultKey) {
+    HtmlSelect categoryListSelect = new HtmlSelect();
+    if (emptyHtmlSelectRecord != null) {
+      categoryListSelect.addItem(-1, emptyHtmlSelectRecord);
+    }
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      PermissionCategory thisCategory = (PermissionCategory) i.next();
+      categoryListSelect.addItem(
+          thisCategory.getId(),
+          thisCategory.getCategory());
+    }
+    return categoryListSelect.getHtml(selectName, defaultKey);
+  }
 }
 
