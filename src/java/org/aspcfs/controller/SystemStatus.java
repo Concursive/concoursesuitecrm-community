@@ -13,7 +13,6 @@ import org.aspcfs.controller.objectHookManager.*;
 import org.aspcfs.controller.SessionManager;
 import org.aspcfs.modules.contacts.base.Contact;
 
-
 /**
  *  System status maintains global values for a shared group of users. This is
  *  based on the database that the user is connecting to.<p>
@@ -211,6 +210,18 @@ public class SystemStatus {
 
 
   /**
+   *  Gets the userList attribute of the SystemStatus object
+   *
+   *@return    The userList value
+   */
+  public Hashtable getUserList() {
+    while (hierarchyUpdating) {
+    }
+    return userList;
+  }
+
+
+  /**
    *  Gets the label attribute of the SystemStatus object
    *
    *@param  thisLabel  Description of Parameter
@@ -260,29 +271,30 @@ public class SystemStatus {
    *@since                    1.3
    */
   public void buildHierarchyList(Connection db) throws SQLException {
+    //NOTE: The UserList does a joined query that gets the user and contact
+    //data at the same time.  That's why the buildContact is disabled.
     hierarchyList.clear();
     userList.clear();
-
     //Get the top level managers
     UserList tmpListA = new UserList();
     tmpListA.setBuildContact(false);
+    tmpListA.setBuildContactDetails(false);
     tmpListA.setBuildHierarchy(false);
     tmpListA.setTopLevel(true);
     tmpListA.buildList(db);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("SystemStatus-> buildHierarchyList: A " + tmpListA.size());
     }
-
     //Get everyone
     UserList tmpListB = new UserList();
     tmpListB.setBuildContact(false);
+    tmpListB.setBuildContactDetails(false);
     tmpListB.setBuildHierarchy(false);
     tmpListB.setTopLevel(false);
     tmpListB.buildList(db);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("SystemStatus-> buildHierarchyList: B " + tmpListB.size());
     }
-
     //Combine the lists
     Iterator listA = tmpListA.iterator();
     while (listA.hasNext()) {
@@ -297,7 +309,6 @@ public class SystemStatus {
         userList.put(new Integer(thisUser.getId()), thisUser);
       }
     }
-
     if (System.getProperty("DEBUG") != null) {
       System.out.println("SystemStatus-> Top Level Users added : " + hierarchyList.size());
     }
@@ -314,17 +325,17 @@ public class SystemStatus {
     java.util.Date checkDate = new java.util.Date();
     if (checkDate.after(this.getHierarchyCheck())) {
       synchronized (this) {
-        hierarchyUpdating = true;
-        if (checkDate.after(hierarchyCheck)) {
-          try {
+        try {
+          hierarchyUpdating = true;
+          if (checkDate.after(hierarchyCheck)) {
             this.buildHierarchyList(db);
-          } catch (SQLException e) {
-            hierarchyUpdating = false;
-            throw e;
+            this.setHierarchyCheck(new java.util.Date());
           }
-          this.setHierarchyCheck(new java.util.Date());
+        } catch (SQLException e) {
+          throw e;
+        } finally {
+          hierarchyUpdating = false;
         }
-        hierarchyUpdating = false;
       }
     }
   }
@@ -340,17 +351,17 @@ public class SystemStatus {
     java.util.Date checkDate = new java.util.Date();
     if (checkDate.after(this.getPermissionCheck())) {
       synchronized (this) {
-        permissionUpdating = true;
-        if (checkDate.after(permissionCheck)) {
-          try {
+        try {
+          permissionUpdating = true;
+          if (checkDate.after(permissionCheck)) {
             this.buildRolePermissions(db);
-          } catch (SQLException e) {
-            permissionUpdating = false;
-            throw e;
+            this.setPermissionCheck(new java.util.Date());
           }
-          this.setPermissionCheck(new java.util.Date());
+        } catch (SQLException e) {
+          throw e;
+        } finally {
+          permissionUpdating = false;
         }
-        permissionUpdating = false;
       }
     }
   }
@@ -544,6 +555,8 @@ public class SystemStatus {
    *@return     The user value
    */
   public User getUser(int id) {
+    while (hierarchyUpdating) {
+    }
     return (User) userList.get(new Integer(id));
   }
 
@@ -575,6 +588,23 @@ public class SystemStatus {
    */
   public boolean hasPermissions() {
     return rolePermissions.size() > 0;
+  }
+
+
+  /**
+   *  Forces the cached contact information to reload from the database
+   *
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void updateUserContact(Connection db, int id) throws SQLException {
+    synchronized (this) {
+      User thisUser = this.getUser(id);
+      if (thisUser != null) {
+        thisUser.getContact().build(db);
+      }
+    }
   }
 }
 
