@@ -263,7 +263,7 @@ determined user is ${USER}
       </fileset>
     </copy>
     <replace file="${DEST_BIN}/notifier.xml"
-             token="@FILELIBRARY@" value="${DEST_DOCROOT}/../fileLibrary"/>
+             token="@FILELIBRARY@" value="${DEST_DOCROOT}/WEB-INF/fileLibrary"/>
     <replace file="${DEST_BIN}/notifier.xml"
              token="@GKHOST@" value="${GKHOST}"/>
     <replace file="${DEST_BIN}/notifier.xml"

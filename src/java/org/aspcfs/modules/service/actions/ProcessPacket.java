@@ -33,22 +33,11 @@ public final class ProcessPacket extends CFSModule {
       xml.populateObject(auth, xml.getFirstChild("authentication"));
       db = auth.getConnection(context); 
       if (db != null) {
-        Hashtable objectMap = new Hashtable();
-        if (auth.getClient() == null || auth.getClient().equals("aspcfs")) {
-          objectMap.put("account", "com.darkhorseventures.cfsbase.Organization");
-          objectMap.put("organization", "com.darkhorseventures.cfsbase.Organization");
-          objectMap.put("contact", "com.darkhorseventures.cfsbase.Contact");
-          objectMap.put("ticket", "com.darkhorseventures.cfsbase.Ticket");
-          objectMap.put("folder", "com.darkhorseventures.cfsbase.CustomFieldCategory");
-        } else if (auth.getClient().equals("autoguide")) {
-          objectMap.put("user", "com.darkhorseventures.cfsbase.User");
-          objectMap.put("syncClient", "com.darkhorseventures.cfsbase.SyncClient");
-          objectMap.put("account", "com.darkhorseventures.cfsbase.Organization");
-          objectMap.put("accountList", "com.darkhorseventures.cfsbase.OrganizationList");
-          objectMap.put("make", "com.darkhorseventures.autoguide.base.Make");
-          objectMap.put("model", "com.darkhorseventures.autoguide.base.Model");
-          objectMap.put("vehicle", "com.darkhorseventures.autoguide.base.Vehicle");
+        if (auth.getSystemId() == -1) {
+          //For Vport
+          auth.setSystemId(1);
         }
+        Hashtable objectMap = this.getObjectMap(context, db, auth.getSystemId());
         ArrayList transactionList = new ArrayList();
         xml.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
         Iterator trans = transactionList.iterator();
@@ -146,6 +135,27 @@ public final class ProcessPacket extends CFSModule {
       pce.printStackTrace(System.out);
     }
     return ("PacketOK");
+  }
+  
+  private Hashtable getObjectMap(ActionContext context, Connection db, int systemId) {
+    SyncTableList systemObjectMap = (SyncTableList)context.getServletContext().getAttribute("SyncObjectMap");
+    if (systemObjectMap == null) {
+      synchronized (this) {
+        systemObjectMap = (SyncTableList)context.getServletContext().getAttribute("SyncObjectMap");
+        if (systemObjectMap == null) {
+          systemObjectMap = new SyncTableList();
+          systemObjectMap.setBuildTextFields(false);
+          try {
+            systemObjectMap.buildList(db);
+          } catch (SQLException e) {
+            e.printStackTrace(System.out);
+          }
+          context.getServletContext().setAttribute("SyncObjectMap", systemObjectMap);
+        }
+      }
+    }
+    Hashtable thisObjectMap = systemObjectMap.getObjectMapping(systemId);
+    return thisObjectMap;
   }
 }
 

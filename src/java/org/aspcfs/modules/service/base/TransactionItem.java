@@ -74,7 +74,9 @@ public class TransactionItem {
       thisProperty = thisProperty.substring(0, 1).toUpperCase() + thisProperty.substring(1);
       Method method = thisObject.getClass().getDeclaredMethod("get" + thisProperty, null);
       Object result = method.invoke(thisObject, null);
-      if (result instanceof String) {
+      if (result == null) {
+        return null;
+      } else if (result instanceof String) {
         return (String) result;
       } else {
         return String.valueOf(result);

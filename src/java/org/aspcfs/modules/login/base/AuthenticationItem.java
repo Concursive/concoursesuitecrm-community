@@ -7,7 +7,8 @@ public class AuthenticationItem {
 
   private String id = null;
   private String code = null;
-  private String client = null;
+  private String system = null;
+  private int systemId = -1;
   private int clientId = -1;
 
   public AuthenticationItem() { }
@@ -16,13 +17,18 @@ public class AuthenticationItem {
   public void setCode(String tmp) { code = tmp; }
   public void setClientId(int tmp) { clientId = tmp; }
   public void setClientId(String tmp) { clientId = Integer.parseInt(tmp); }
-  public void setClient(String tmp) { client = tmp; }
+  public void setClient(String tmp) { system = tmp; }
+  public void setSystem(String tmp) { this.system = tmp; }
+  public void setSystemId(int tmp) { this.systemId = tmp; }
+  public void setSystemId(String tmp) { this.systemId = Integer.parseInt(tmp); }
 
   public String getId() { return id; }
   public String getCode() { return code; }
   public int getClientId() { return clientId; }
-  public String getClient() { return client; }
-  
+  public String getClient() { return system; }
+  public String getSystem() { return system; }
+  public int getSystemId() { return systemId; }
+
   public Connection getConnection(ActionContext context) throws SQLException {
     String gkHost = (String)context.getServletContext().getAttribute("GKHOST");
     String gkUser = (String)context.getServletContext().getAttribute("GKUSER");
