@@ -252,6 +252,15 @@
       <property>entered</property>
       <property>enabled</property>
     </map>
+    <map class="org.aspcfs.modules.base.CustomFieldData" id="customFieldData">
+      <property alias="guid">id</property>
+      <property lookup="customFieldRecord">recordId</property>
+      <property>fieldId</property>
+      <property>selectedItemId</property>
+      <property>enteredValue</property>
+      <property>enteredNumber</property>
+      <property>enteredDouble</property>
+    </map>
     <map class="org.aspcfs.modules.contacts.base.Call" id="call">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
