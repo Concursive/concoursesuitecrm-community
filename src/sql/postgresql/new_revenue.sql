@@ -2,12 +2,12 @@
  *  PostgreSQL Table Creation
  *
  *@author     chris price
- *
  *@version    $Id$
  */
 
+CREATE SEQUENCE lookup_revenuedetail_t_code_seq;
 CREATE TABLE lookup_revenue_types (
-  code SERIAL PRIMARY KEY,
+  code INTEGER DEFAULT nextval('lookup_revenuedetail_t_code_seq') NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,

@@ -116,8 +116,9 @@ CREATE TABLE campaign_survey_link (
   survey_id INT REFERENCES survey(survey_id)
 );
 
+CREATE SEQUENCE survey_question_question_id_seq;
 CREATE TABLE survey_questions (
-  question_id serial PRIMARY KEY,
+  question_id INTEGER DEFAULT nextval('survey_question_question_id_seq') NOT NULL PRIMARY KEY,
   survey_id INT NOT NULL REFERENCES survey(survey_id),
   type INT NOT NULL REFERENCES lookup_survey_types(code),
   description VARCHAR(255),
@@ -132,9 +133,9 @@ CREATE TABLE survey_items (
   description VARCHAR(255)
 );
 
-
+CREATE SEQUENCE active_survey_active_survey_seq;
 CREATE TABLE active_survey (
-  active_survey_id serial PRIMARY KEY,
+  active_survey_id INTEGER DEFAULT nextval('active_survey_active_survey_seq') NOT NULL PRIMARY KEY,
   campaign_id INT NOT NULL REFERENCES campaign(campaign_id),
   name VARCHAR(80) NOT NULL,
   description VARCHAR(255),
@@ -149,8 +150,9 @@ CREATE TABLE active_survey (
   modifiedby INT NOT NULL REFERENCES access(user_id)
 );
 
+CREATE SEQUENCE active_survey_q_question_id_seq;
 CREATE TABLE active_survey_questions (
-  question_id SERIAL PRIMARY KEY,
+  question_id INTEGER DEFAULT nextval('active_survey_q_question_id_seq') NOT NULL PRIMARY KEY,
   active_survey_id INT REFERENCES active_survey(active_survey_id),
   type INT NOT NULL REFERENCES lookup_survey_types(code),
   description VARCHAR(255),
@@ -166,16 +168,17 @@ CREATE TABLE active_survey_questions (
   total7 int default 0
 );
 
+CREATE SEQUENCE active_survey_items_item_id_seq;
 CREATE TABLE active_survey_items (
-  item_id serial PRIMARY KEY,
+  item_id INTEGER DEFAULT nextval('active_survey_items_item_id_seq') NOT NULL PRIMARY KEY,
   question_id INT NOT NULL REFERENCES active_survey_questions(question_id),
   type INT DEFAULT -1,
   description VARCHAR(255)
 );
 
-
+CREATE SEQUENCE active_survey_r_response_id_seq;
 CREATE TABLE active_survey_responses (
-  response_id SERIAL PRIMARY KEY,
+  response_id INTEGER DEFAULT nextval('active_survey_r_response_id_seq') NOT NULL PRIMARY KEY,
   active_survey_id INT NOT NULL REFERENCES active_survey(active_survey_id),
   contact_id INT NOT NULL DEFAULT -1,
   unique_code VARCHAR(255),
@@ -183,8 +186,9 @@ CREATE TABLE active_survey_responses (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE SEQUENCE active_survey_ans_answer_id_seq;
 CREATE TABLE active_survey_answers (
-  answer_id SERIAL primary key,
+  answer_id INTEGER DEFAULT nextval('active_survey_ans_answer_id_seq') NOT NULL PRIMARY KEY,
   response_id INT NOT NULL REFERENCES active_survey_responses(response_id),
   question_id INT NOT NULL REFERENCES active_survey_questions(question_id),
   comments TEXT,
@@ -192,15 +196,17 @@ CREATE TABLE active_survey_answers (
   text_ans TEXT
 );
 
+CREATE SEQUENCE active_survey_answer_ite_id_seq;
 CREATE TABLE active_survey_answer_items (
-  id SERIAL primary key,
+  id INTEGER DEFAULT nextval('active_survey_answer_ite_id_seq') NOT NULL PRIMARY KEY,
   item_id INT NOT NULL REFERENCES active_survey_items(item_id),
   answer_id INT NOT NULL REFERENCES active_survey_answers(answer_id),
   comments TEXT
 );
 
+CREATE SEQUENCE active_survey_answer_avg_id_seq;
 CREATE TABLE active_survey_answer_avg (
-  id SERIAL primary key,
+  id INTEGER DEFAULT nextval('active_survey_answer_avg_id_seq') NOT NULL PRIMARY KEY,
   question_id INT NOT NULL REFERENCES active_survey_questions(question_id),
   item_id INT NOT NULL REFERENCES active_survey_items(item_id),
   total INT NOT NULL DEFAULT 0

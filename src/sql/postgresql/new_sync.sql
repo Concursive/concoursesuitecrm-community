@@ -61,8 +61,9 @@ CREATE TABLE sync_log (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE SEQUENCE sync_transact_transaction_i_seq;
 CREATE TABLE sync_transaction_log (
-  transaction_id SERIAL PRIMARY KEY,
+  transaction_id INTEGER DEFAULT nextval('sync_transact_transaction_i_seq') NOT NULL PRIMARY KEY,
   log_id INT NOT NULL REFERENCES sync_log(log_id),
   reference_id VARCHAR(50),
   element_name VARCHAR(255),

@@ -98,8 +98,9 @@ CREATE TABLE lookup_department (
   enabled BOOLEAN DEFAULT true
 );
 
+CREATE SEQUENCE lookup_orgaddress_type_code_seq;
 CREATE TABLE lookup_orgaddress_types (
-  code SERIAL PRIMARY KEY,
+  code INTEGER DEFAULT nextval('lookup_orgaddress_type_code_seq') NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
@@ -124,8 +125,9 @@ CREATE TABLE lookup_orgphone_types (
 )
 ;
 
+CREATE SEQUENCE lookup_instantmessenge_code_seq;
 CREATE TABLE lookup_instantmessenger_types (
-  code SERIAL PRIMARY KEY,
+  code INTEGER DEFAULT nextval('lookup_instantmessenge_code_seq') NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
@@ -133,8 +135,9 @@ CREATE TABLE lookup_instantmessenger_types (
 )
 ;
 
+CREATE SEQUENCE lookup_employment_type_code_seq;
 CREATE TABLE lookup_employment_types (
-  code SERIAL PRIMARY KEY,
+  code INTEGER DEFAULT nextval('lookup_employment_type_code_seq') NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
@@ -149,8 +152,9 @@ CREATE TABLE lookup_locale (
   enabled BOOLEAN DEFAULT true
 );
 
+CREATE SEQUENCE lookup_contactaddress__code_seq;
 CREATE TABLE lookup_contactaddress_types (
-  code SERIAL PRIMARY KEY,
+  code INTEGER DEFAULT nextval('lookup_contactaddress__code_seq') NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
@@ -158,8 +162,9 @@ CREATE TABLE lookup_contactaddress_types (
 )
 ;
 
+CREATE SEQUENCE lookup_contactemail_ty_code_seq;
 CREATE TABLE lookup_contactemail_types (
-  code SERIAL PRIMARY KEY,
+  code INTEGER DEFAULT nextval('lookup_contactemail_ty_code_seq') NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
@@ -167,8 +172,9 @@ CREATE TABLE lookup_contactemail_types (
 )
 ;
 
+CREATE SEQUENCE lookup_contactphone_ty_code_seq;
 CREATE TABLE lookup_contactphone_types (
-  code SERIAL PRIMARY KEY,
+  code INTEGER DEFAULT nextval('lookup_contactphone_ty_code_seq') NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
@@ -265,8 +271,9 @@ CREATE TABLE role (
   enabled boolean NOT NULL DEFAULT true
 );
 
+CREATE SEQUENCE permission_cate_category_id_seq;
 CREATE TABLE permission_category (
-  category_id SERIAL PRIMARY KEY,
+  category_id INTEGER DEFAULT nextval('permission_cate_category_id_seq') NOT NULL PRIMARY KEY,
   category VARCHAR(80),
   description VARCHAR(255),
   level INT NOT NULL DEFAULT 0,
@@ -311,8 +318,9 @@ CREATE TABLE lookup_stage (
 )
 ;
 
+CREATE SEQUENCE lookup_delivery_option_code_seq;
 CREATE TABLE lookup_delivery_options (
-  code SERIAL PRIMARY KEY,
+  code INTEGER DEFAULT nextval('lookup_delivery_option_code_seq') NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
@@ -332,8 +340,9 @@ CREATE TABLE news (
   created TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE SEQUENCE organization_add_address_id_seq;
 CREATE TABLE organization_address (
-  address_id SERIAL PRIMARY KEY,
+  address_id INTEGER DEFAULT nextval('organization_add_address_id_seq') NOT NULL PRIMARY KEY,
   org_id INT REFERENCES organization(org_id),
   address_type INT references lookup_orgaddress_types(code),
   addrline1 VARCHAR(80),
@@ -349,8 +358,9 @@ CREATE TABLE organization_address (
 )
 ;
 
+CREATE SEQUENCE organization__emailaddress__seq;
 CREATE TABLE organization_emailaddress (
-  emailaddress_id SERIAL PRIMARY KEY,
+  emailaddress_id INTEGER DEFAULT nextval('organization__emailaddress__seq') NOT NULL PRIMARY KEY,
   org_id INT REFERENCES organization(org_id),
   emailaddress_type INT references lookup_orgemail_types(code),
   email VARCHAR(256),
@@ -361,8 +371,9 @@ CREATE TABLE organization_emailaddress (
 )
 ;
 
+CREATE SEQUENCE organization_phone_phone_id_seq;
 CREATE TABLE organization_phone (
-  phone_id SERIAL PRIMARY KEY,
+  phone_id INTEGER DEFAULT nextval('organization_phone_phone_id_seq') NOT NULL PRIMARY KEY,
   org_id INT REFERENCES organization(org_id),
   phone_type INT references lookup_orgphone_types(code),
   number VARCHAR(20),
@@ -391,8 +402,9 @@ CREATE TABLE contact_address (
 )
 ;
 
+CREATE SEQUENCE contact_email_emailaddress__seq;
 CREATE TABLE contact_emailaddress (
-  emailaddress_id SERIAL PRIMARY KEY,
+  emailaddress_id INTEGER DEFAULT nextval('contact_email_emailaddress__seq') NOT NULL PRIMARY KEY,
   contact_id INT REFERENCES contact(contact_id),
   emailaddress_type INT references lookup_contactemail_types(code),
   email VARCHAR(256),
@@ -416,8 +428,9 @@ CREATE TABLE contact_phone (
 )
 ;
 
+CREATE SEQUENCE notification_notification_i_seq;
 CREATE TABLE notification (
-  notification_id SERIAL PRIMARY KEY,
+  notification_id INTEGER DEFAULT nextval('notification_notification_i_seq') NOT NULL PRIMARY KEY,
   notify_user INT NOT NULL,
   module VARCHAR(255) NOT NULL,
   item_id INT NOT NULL,

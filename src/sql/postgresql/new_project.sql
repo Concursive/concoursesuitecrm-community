@@ -6,8 +6,9 @@
  *@version    $Id$
  */
  
+CREATE SEQUENCE lookup_project_activit_code_seq;
 CREATE TABLE lookup_project_activity (
-  code SERIAL PRIMARY KEY,
+  code INTEGER DEFAULT nextval('lookup_project_activit_code_seq') NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
@@ -16,8 +17,9 @@ CREATE TABLE lookup_project_activity (
   template_id INTEGER DEFAULT 0
 );
 
+CREATE SEQUENCE lookup_project_priorit_code_seq;
 CREATE TABLE lookup_project_priority (
-  code SERIAL PRIMARY KEY,
+  code INTEGER DEFAULT nextval('lookup_project_priorit_code_seq') NOT NULL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
@@ -81,9 +83,9 @@ CREATE INDEX "projects_idx"
   ON "projects"
   USING btree ("group_id", "project_id");
 
-  
+CREATE SEQUENCE project_requi_requirement_i_seq;
 CREATE TABLE project_requirements (
-  requirement_id SERIAL PRIMARY KEY,
+  requirement_id INTEGER DEFAULT nextval('project_requi_requirement_i_seq') NOT NULL PRIMARY KEY,
   project_id INTEGER NOT NULL REFERENCES projects(project_id),
   submittedBy VARCHAR(50) NULL,
   departmentBy VARCHAR(30) NULL,
@@ -105,9 +107,9 @@ CREATE TABLE project_requirements (
   modifiedBy INTEGER NOT NULL REFERENCES access(user_id)
 );
 
-
+CREATE SEQUENCE project_assig_assignment_id_seq;
 CREATE TABLE project_assignments (
-  assignment_id SERIAL PRIMARY KEY,
+  assignment_id INTEGER DEFAULT nextval('project_assig_assignment_id_seq') NOT NULL PRIMARY KEY,
   project_id INTEGER NOT NULL REFERENCES projects(project_id),
   requirement_id INTEGER NULL REFERENCES project_requirements(requirement_id),
   assignedBy INTEGER REFERENCES access(user_id),
@@ -139,8 +141,9 @@ CREATE INDEX "project_assignments_idx" ON "project_assignments"
 CREATE INDEX "project_assignments_cidx" ON "project_assignments" 
   USING btree ("complete_date", "user_assign_id");
   
+CREATE SEQUENCE project_assignmen_status_id_seq;
 CREATE TABLE project_assignments_status (
-  status_id SERIAL PRIMARY KEY,
+  status_id INTEGER DEFAULT nextval('project_assignmen_status_id_seq') NOT NULL PRIMARY KEY,
   assignment_id INTEGER NOT NULL REFERENCES project_assignments,
   user_id INTEGER NOT NULL REFERENCES access(user_id),
   description TEXT NOT NULL,
@@ -169,9 +172,9 @@ CREATE INDEX "project_issues_idx"
   ON "project_issues"
   USING btree ("issue_id");  
   
-  
+CREATE SEQUENCE project_issue_repl_reply_id_seq;
 CREATE TABLE project_issue_replies (
-  reply_id SERIAL PRIMARY KEY ,
+  reply_id INTEGER DEFAULT nextval('project_issue_repl_reply_id_seq') NOT NULL PRIMARY KEY,
   issue_id INTEGER NOT NULL REFERENCES project_issues,
   reply_to INTEGER DEFAULT 0 ,
   subject VARCHAR(50) NOT NULL ,

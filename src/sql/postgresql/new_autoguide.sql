@@ -25,8 +25,9 @@ CREATE TABLE autoguide_model (
   modifiedby INT NOT NULL
 );
 
+CREATE SEQUENCE autoguide_vehicl_vehicle_id_seq;
 CREATE TABLE autoguide_vehicle (
-  vehicle_id SERIAL PRIMARY KEY,
+  vehicle_id INTEGER DEFAULT nextval('autoguide_vehicl_vehicle_id_seq') NOT NULL PRIMARY KEY,
   year VARCHAR(4) NOT NULL,
   make_id INTEGER NOT NULL REFERENCES autoguide_make(make_id),
   model_id INTEGER NOT NULL REFERENCES autoguide_model(model_id),
@@ -36,8 +37,9 @@ CREATE TABLE autoguide_vehicle (
   modifiedby INT NOT NULL
 );
 
+CREATE SEQUENCE autoguide_inve_inventory_id_seq;
 CREATE TABLE autoguide_inventory (
-  inventory_id SERIAL PRIMARY KEY,
+  inventory_id INTEGER DEFAULT nextval('autoguide_inve_inventory_id_seq') NOT NULL PRIMARY KEY,
   vehicle_id INTEGER NOT NULL REFERENCES autoguide_vehicle(vehicle_id),
   account_id INTEGER REFERENCES organization(org_id),
   vin VARCHAR(20),
@@ -58,8 +60,9 @@ CREATE TABLE autoguide_inventory (
   modifiedby INT NOT NULL
 );
 
+CREATE SEQUENCE autoguide_options_option_id_seq;
 CREATE TABLE autoguide_options (
-  option_id SERIAL PRIMARY KEY,
+  option_id INTEGER DEFAULT nextval('autoguide_options_option_id_seq') NOT NULL PRIMARY KEY,
   option_name VARCHAR(20) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
@@ -89,8 +92,9 @@ CREATE TABLE autoguide_ad_run (
   modifiedby INT NOT NULL
 );
 
+CREATE SEQUENCE autoguide_ad_run_types_code_seq;
 CREATE TABLE autoguide_ad_run_types (
-  code SERIAL PRIMARY KEY,
+  code INTEGER DEFAULT nextval('autoguide_ad_run_types_code_seq') NOT NULL PRIMARY KEY,
   description VARCHAR(20) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,

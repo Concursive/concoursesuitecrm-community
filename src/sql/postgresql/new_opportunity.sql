@@ -46,8 +46,9 @@ CREATE TABLE lookup_call_types (
 )
 ;
 
+CREATE SEQUENCE lookup_opportunity_typ_code_seq;
 CREATE TABLE lookup_opportunity_types (
-  code SERIAL PRIMARY KEY,
+  code INTEGER DEFAULT nextval('lookup_opportunity_typ_code_seq') NOT NULL PRIMARY KEY,
   order_id INT,
   description VARCHAR(50) NOT NULL,
   default_item BOOLEAN DEFAULT false,

@@ -7,8 +7,9 @@
  */
 
 /* The link between the field category & modules */
+CREATE SEQUENCE module_field_categorylin_id_seq;
 CREATE TABLE module_field_categorylink (
-  id SERIAL PRIMARY KEY,
+  id INTEGER DEFAULT nextval('module_field_categorylin_id_seq') NOT NULL PRIMARY KEY,
   module_id INTEGER NOT NULL REFERENCES permission_category(category_id),
   category_id INT UNIQUE NOT NULL,
   level INTEGER DEFAULT 0,
@@ -17,9 +18,10 @@ CREATE TABLE module_field_categorylink (
 );
  
 /* Each module can have multiple categories or folders of custom data */
+CREATE SEQUENCE custom_field_ca_category_id_seq;
 CREATE TABLE custom_field_category (
   module_id INTEGER NOT NULL REFERENCES module_field_categorylink(category_id),
-  category_id SERIAL PRIMARY KEY,
+  category_id INTEGER DEFAULT nextval('custom_field_ca_category_id_seq') NOT NULL PRIMARY KEY,
   category_name VARCHAR(255) NOT NULL,
   level INTEGER DEFAULT 0,
   description TEXT,
@@ -35,9 +37,10 @@ CREATE TABLE custom_field_category (
 CREATE INDEX "custom_field_cat_idx" ON "custom_field_category" USING btree ("module_id");
 
 /* Each category can have multiple groups of fields */
+CREATE SEQUENCE custom_field_group_group_id_seq;
 CREATE TABLE custom_field_group (
   category_id INTEGER NOT NULL REFERENCES custom_field_category(category_id),
-  group_id SERIAL PRIMARY KEY,
+  group_id INTEGER DEFAULT nextval('custom_field_group_group_id_seq') NOT NULL PRIMARY KEY,
   group_name VARCHAR(255) NOT NULL,
   level INTEGER DEFAULT 0,
   description TEXT,
@@ -83,11 +86,12 @@ CREATE TABLE custom_field_lookup (
 );
 
 /* The saved records in a folder associated with each category_id */
+CREATE SEQUENCE custom_field_reco_record_id_seq;
 CREATE TABLE custom_field_record (
   link_module_id INTEGER NOT NULL,
   link_item_id INTEGER NOT NULL,
   category_id INTEGER NOT NULL REFERENCES custom_field_category(category_id),
-  record_id SERIAL PRIMARY KEY,
+  record_id INTEGER DEFAULT nextval('custom_field_reco_record_id_seq') NOT NULL PRIMARY KEY,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
