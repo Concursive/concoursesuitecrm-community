@@ -1,6 +1,7 @@
 package org.aspcfs.utils.formatter;
 
 import org.aspcfs.modules.base.PhoneNumber;
+import java.util.Locale;
 
 /**
  *  Takes a phone number and formats the various fields to make the records
@@ -31,7 +32,22 @@ public class PhoneNumberFormatter {
 
 
   /**
-   *  Description of the Method
+   *  Tries to format phone number for the given Locale
+   *
+   *@param  thisNumber  Description of the Parameter
+   *@param  locale      Description of the Parameter
+   */
+  public void format(PhoneNumber thisNumber, Locale locale) {
+    if (locale != null) {
+      if (locale == Locale.US || locale == Locale.CANADA) {
+        format(thisNumber);
+      }
+    }
+  }
+
+
+  /**
+   *  Formats a phone number for US/Canada
    *
    *@param  thisNumber  Description of the Parameter
    */

@@ -6,6 +6,7 @@ import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.DateUtils;
+import java.util.Locale;
 
 /**
  *  Represents a mailing address to be used as a base class.
@@ -124,7 +125,7 @@ public class Address {
   /**
    *  Sets the otherState attribute of the Address object
    *
-   *@param  otherState  The new otherState value
+   *@param  tmp         The new otherState value
    */
   public void setOtherState(String tmp) {
     if (tmp != null) {
@@ -408,7 +409,7 @@ public class Address {
    *@since     1.5
    */
   public String getState() {
-    if("UNITED STATES".equals(country) || ("CANADA".equals(country))){ 
+    if ("UNITED STATES".equals(country) || ("CANADA".equals(country))) {
       return state;
     }
     if ("-1".equals(otherState)) {
@@ -618,8 +619,23 @@ public class Address {
     if (this.getCountry() != null && !this.getCountry().trim().equals("")) {
       thisAddress.append(this.getCountry().trim() + "\r\n");
     }
-
     return thisAddress.toString();
+  }
+
+
+  /**
+   *  Gets the locale attribute of the Address object
+   *
+   *@return    The locale value
+   */
+  public Locale getLocale() {
+    if ("UNITED STATES".equals(country)) {
+      return Locale.US;
+    }
+    if ("CANADA".equals(country)) {
+      return Locale.CANADA;
+    }
+    return null;
   }
 
 
@@ -696,6 +712,5 @@ public class Address {
       }
     }
   }
-
 }
 
