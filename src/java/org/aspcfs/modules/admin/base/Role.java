@@ -13,7 +13,7 @@ import com.darkhorseventures.utils.DatabaseUtils;
 /**
  *  Represents a Role (User Group)
  *
- *@author     mrajkowski
+ *@author     matt rajkowski
  *@created    September 19, 2001
  *@version    $Id$
  */
@@ -60,24 +60,21 @@ public class Role extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public Role(Connection db, int roleId) throws SQLException {
-    Statement st = null;
-    ResultSet rs = null;
-
-    String sql =
-        "SELECT * " +
-        "FROM role " +
-        "WHERE role_id = " + roleId + " ";
-    st = db.createStatement();
-    rs = st.executeQuery(sql);
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM role " +
+      "WHERE role_id = ? ");
+    pst.setInt(1, roleId);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     } else {
       rs.close();
-      st.close();
+      pst.close();
       throw new SQLException("Role record not found.");
     }
     rs.close();
-    st.close();
+    pst.close();
 
     buildResources(db);
   }
@@ -92,6 +89,14 @@ public class Role extends GenericBean {
     this.entered = tmp;
   }
 
+  /**
+   *  Sets the Entered attribute of the Role object
+   *
+   *@param  tmp  The new Entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
 
   /**
    *  Sets the Modified attribute of the Role object
@@ -102,25 +107,13 @@ public class Role extends GenericBean {
     this.modified = tmp;
   }
 
-
-  /**
-   *  Sets the Entered attribute of the Role object
-   *
-   *@param  tmp  The new Entered value
-   */
-  public void setEntered(String tmp) {
-    this.entered = java.sql.Timestamp.valueOf(tmp);
-  }
-
-
   /**
    *  Sets the Modified attribute of the Role object
    *
    *@param  tmp  The new Modified value
    */
   public void setModified(String tmp) {
-    this.modified = java.sql.Timestamp.valueOf(tmp);
-    ;
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
@@ -221,11 +214,7 @@ public class Role extends GenericBean {
    *@param  tmp  The new Enabled value
    */
   public void setEnabled(String tmp) {
-    if (tmp.toLowerCase().equals("false")) {
-      this.enabled = false;
-    } else {
-      this.enabled = true;
-    }
+    this.enabled = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -391,18 +380,18 @@ public class Role extends GenericBean {
 
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
-
       sql.append(
           "UPDATE role " +
           "SET role = ?, description = ?, modified = CURRENT_TIMESTAMP, " +
           "modifiedby = ? " +
-          "WHERE modified = ? AND role_id = " + id);
+          "WHERE modified = ? AND role_id = ? ");
       pst = db.prepareStatement(sql.toString());
       int i = 0;
       pst.setString(++i, this.getRole());
       pst.setString(++i, this.getDescription());
       pst.setInt(++i, this.getModifiedBy());
       pst.setTimestamp(++i, this.getModified());
+      pst.setInt(++i, id);
       resultCount = pst.executeUpdate();
       pst.close();
 
@@ -429,35 +418,47 @@ public class Role extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
-
     if (!isValid(db)) {
       return false;
     }
 
     try {
       db.setAutoCommit(false);
-
       StringBuffer sql = new StringBuffer();
-      sql.append(
-        "INSERT INTO role " +
-        "(role, description, " +
-        "enteredby, modifiedby ) " +
-        "VALUES (?, ?, " +
-        "?, ?) ");
-
+      sql.append("INSERT INTO role (role, description, ");
+      if (entered != null) {
+        sql.append("entered, ");
+      }
+      if (modified != null) {
+        sql.append("modified, ");
+      }
+      sql.append("enteredby, modifiedby, enabled ) " +
+        "VALUES (?, ?, ");
+      if (entered != null) {
+        sql.append("?, ");
+      }
+      if (modified != null) {
+        sql.append("?, ");
+      }
+      sql.append("?, ?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, getRole());
       pst.setString(++i, getDescription());
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
+      }
       pst.setInt(++i, getEnteredBy());
       pst.setInt(++i, getModifiedBy());
+      pst.setBoolean(++i, enabled);
       pst.execute();
       pst.close();
 
       id = DatabaseUtils.getCurrVal(db, "role_role_id_seq");
-
       insertPermissions(db);
-
       db.commit();
     } catch (SQLException e) {
       db.rollback();

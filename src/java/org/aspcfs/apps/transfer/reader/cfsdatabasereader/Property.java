@@ -20,6 +20,10 @@ public class Property {
   public String getAlias() { return alias; }
   public String getField() { return field; }
 
+  public boolean hasName() {
+    return (name != null && !"".equals(name));
+  }
+  
   public boolean hasLookupValue() {
     return (lookupValue != null && !"".equals(lookupValue));
   }

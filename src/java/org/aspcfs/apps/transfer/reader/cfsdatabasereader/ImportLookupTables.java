@@ -105,6 +105,8 @@ public class ImportLookupTables implements CFSDatabaseReaderImportModule {
             if ("guid".equals(thisProperty.getAlias())) {
               thisRecord.addField("guid", value);
             }
+          } else if (thisProperty.hasName()) {
+            thisRecord.addField(thisProperty.getName(), value);
           } else {
             thisRecord.addField("field", fieldName);
             thisRecord.addField("data", value);

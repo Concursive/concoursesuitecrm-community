@@ -6,6 +6,7 @@ import org.theseus.beans.*;
 import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Represents a Permission item
@@ -36,48 +37,45 @@ public class Permission extends GenericBean {
   }
   
   public Permission(Connection db, int permissionId) throws SQLException {
-    Statement st = null;
-    ResultSet rs = null;
-
-    String sql =
+    PreparedStatement pst = db.prepareStatement(
       "SELECT p.*, c.category " +
       "FROM permission p, permission_category c " +
       "WHERE p.category_id = c.category_id " +
-      "AND p.permission_id = " + permissionId + " ";
-    
-    st = db.createStatement();
-    rs = st.executeQuery(sql);
+      "AND p.permission_id = ? ");
+    pst.setInt(1, permissionId);
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     } else {
       rs.close();
-      st.close();
+      pst.close();
       throw new SQLException("Permission record not found.");
     }
     rs.close();
-    st.close();
+    pst.close();
   }
   
   public void setId(int tmp) { this.id = tmp; }
   public void setId(String tmp) { this.id = Integer.parseInt(tmp); }
   public void setCategoryId(int tmp) { this.categoryId = tmp; }
+  public void setCategoryId(String tmp) { this.categoryId = Integer.parseInt(tmp); }
   public void setCategoryName(String tmp) { this.categoryName = tmp; }
   public void setPermissionLevel(int tmp) { this.permissionLevel = tmp; }
+  public void setPermissionLevel(String tmp) { this.permissionLevel = Integer.parseInt(tmp); }
   public void setName(String tmp) { this.name = tmp; }
   public void setAdd(boolean tmp) { this.add = tmp; }
+  public void setAdd(String tmp) { this.add = DatabaseUtils.parseBoolean(tmp); }
   public void setView(boolean tmp) { this.view = tmp; }
+  public void setView(String tmp) { this.view = DatabaseUtils.parseBoolean(tmp); }
   public void setEdit(boolean tmp) { this.edit = tmp; }
+  public void setEdit(String tmp) { this.edit = DatabaseUtils.parseBoolean(tmp); }
   public void setDelete(boolean tmp) { this.delete = tmp; }
+  public void setDelete(String tmp) { this.delete = DatabaseUtils.parseBoolean(tmp); }
   public void setDescription(String tmp) { this.description = tmp; }
   public void setEnabled(boolean tmp) { this.enabled = tmp; }
-  public void setEnabled(String tmp) {
-    if (tmp.toLowerCase().equals("false")) {
-      this.enabled = false;
-    } else {
-      this.enabled = true;
-    }
-  }
+  public void setEnabled(String tmp) { this.enabled = DatabaseUtils.parseBoolean(tmp); }
   public void setActive(boolean tmp) { this.active = tmp; }
+  public void setActive(String tmp) { this.active = DatabaseUtils.parseBoolean(tmp); }
   public int getId() { return id; }
   public int getCategoryId() { return categoryId; }
   public String getCategoryName() { return categoryName; }
@@ -162,6 +160,27 @@ public class Permission extends GenericBean {
       this.setEnabled(true);
     }
   }
-
+  
+  public boolean insert(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+      "INSERT INTO permission (category_id, permission, permission_view, " +
+      "permission_add, permission_edit, permission_delete, " +
+      "description, level, enabled, active) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+    int i = 0;
+    pst.setInt(++i, categoryId);
+    pst.setString(++i, name);
+    pst.setBoolean(++i, view);
+    pst.setBoolean(++i, add);
+    pst.setBoolean(++i, edit);
+    pst.setBoolean(++i, delete);
+    pst.setString(++i, description);
+    pst.setInt(++i, permissionLevel);
+    pst.setBoolean(++i, enabled);
+    pst.setBoolean(++i, active);
+    pst.execute();
+    id = DatabaseUtils.getCurrVal(db, "permission_permission_id_seq");
+    return true;
+  }
 }
 

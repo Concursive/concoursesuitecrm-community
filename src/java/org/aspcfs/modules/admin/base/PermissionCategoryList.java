@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -6,52 +6,48 @@ import java.util.Vector;
 import java.util.Iterator;
 import java.sql.*;
 import com.darkhorseventures.webutils.PagedListInfo;
-import com.darkhorseventures.webutils.HtmlSelect;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
+import javax.servlet.http.*;
 
-public class RoleList extends Vector {
-  
+
+public class PermissionCategoryList extends Vector {
+
   private PagedListInfo pagedListInfo = null;
-  private String emptyHtmlSelectRecord = null;
-  private int enabledState = Constants.TRUE;
   
-  public RoleList() { }
+  public final static String tableName = "permission_category";
+  public final static String uniqueField = "category_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
+
+  private int enabledState = -1;
+  private int activeState = -1;
   
+  public PermissionCategoryList() { }
+
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
   
-  public void setEmptyHtmlSelectRecord(String tmp) {
-    this.emptyHtmlSelectRecord = tmp;
-  }
-  
-  public void setEnabledState(int booleanInt) {
-    enabledState = booleanInt;
-  }
-  
-  public String getHtmlSelect(String selectName) {
-    return getHtmlSelect(selectName, -1);
-  }
-  
-  public String getHtmlSelect(String selectName, int defaultKey) {
-    HtmlSelect roleListSelect = new HtmlSelect();
-    if (emptyHtmlSelectRecord != null) {
-      roleListSelect.addItem(-1, emptyHtmlSelectRecord);
-    }
-    Iterator i = this.iterator();
-    while (i.hasNext()) {
-      Role thisRole = (Role)i.next();
-      roleListSelect.addItem(
-          thisRole.getId(),
-          thisRole.getRole());
-    }
-    return roleListSelect.getHtml(selectName, defaultKey);
-  }
-  
-  public void buildList(Connection db) throws SQLException {
+  public PagedListInfo getPagedListInfo() {
+	return pagedListInfo;
+}
 
+  public String getTableName() { return tableName; }
+  public String getUniqueField() { return uniqueField; }
+  public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
+  public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
+  public int getSyncType() { return syncType; }
+  public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
+  public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
+  public void setSyncType(int tmp) { this.syncType = tmp; }
+
+  public void setEnabledState(int tmp) { this.enabledState = tmp; }
+  public void setActiveState(int tmp) { this.activeState = tmp; }
+  public int getEnabledState() { return enabledState; }
+  public int getActiveState() { return activeState; }
+
+  public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
@@ -63,11 +59,10 @@ public class RoleList extends Vector {
 
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-      "SELECT COUNT(*) AS recordcount " +
-      "FROM role r " +
-      "WHERE r.role_id > -1 ");
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM permission_category pc " +
+        "WHERE pc.category_id > 0 ");
     createFilter(sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() +
@@ -85,7 +80,7 @@ public class RoleList extends Vector {
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
             sqlFilter.toString() +
-            "AND role < ? ");
+            "AND pc.category < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -98,17 +93,22 @@ public class RoleList extends Vector {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("role", null);
+      pagedListInfo.setDefaultSort("pc.level, pc.category", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY role ");
+      sqlOrder.append("ORDER BY pc.level, pc.category ");
     }
 
     //Need to build a base SQL statement for returning records
+    if (pagedListInfo != null) {
+      pagedListInfo.appendSqlSelectHead(db, sqlSelect);
+    } else {
+      sqlSelect.append("SELECT ");
+    }
     sqlSelect.append(
-      "SELECT * " +
-      "FROM role r " +
-      "WHERE r.role_id > -1 ");
+        "* " +
+        "FROM permission_category pc " +
+        "WHERE pc.category_id > 0 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -125,35 +125,32 @@ public class RoleList extends Vector {
         break;
       }
       ++count;
-      Role thisRole = new Role(rs);
-      this.addElement(thisRole);
+      PermissionCategory thisCategory = new PermissionCategory(rs);
+      this.add(thisCategory);
     }
     rs.close();
     pst.close();
-    
-    Iterator i = this.iterator();
-    while (i.hasNext()) {
-      Role thisRole = (Role)i.next();
-      thisRole.buildUserList(db);
-    }
-
   }
-  
+
   private void createFilter(StringBuffer sqlFilter) {
-    if (sqlFilter == null) {
-      sqlFilter = new StringBuffer();
-    }
-    if (enabledState > -1) {
+    if (enabledState != -1) {
       sqlFilter.append("AND enabled = ? ");
     }
+    if (activeState != -1) {
+      sqlFilter.append("AND active = ? ");
+    }
   }
-  
+
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-    if (enabledState > -1) {
+    if (enabledState != -1) {
       pst.setBoolean(++i, enabledState == Constants.TRUE);
+    }
+    if (activeState != -1) {
+      pst.setBoolean(++i, activeState == Constants.TRUE);
     }
     return i;
   }
-  
+
 }
+

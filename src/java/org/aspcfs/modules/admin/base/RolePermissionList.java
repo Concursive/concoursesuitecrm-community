@@ -14,12 +14,13 @@ import javax.servlet.http.*;
 public class RolePermissionList extends Hashtable {
   
   private int roleId = -1;
+  private int enabledState = Constants.TRUE;
   
   public RolePermissionList() { }
   
   public RolePermissionList(Connection db, int roleId) throws SQLException {
     this.roleId = roleId;
-    buildList(db);
+    buildCombinedList(db);
   }
   
   public RolePermissionList(HttpServletRequest request) {
@@ -31,8 +32,10 @@ public class RolePermissionList extends Hashtable {
     }
   }
   
-  public void buildList(Connection db) throws SQLException {
-
+  public void setEnabledState(int tmp) { this.enabledState = tmp; }
+  public int getEnabledState() { return enabledState; }
+  
+  public void buildCombinedList(Connection db) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
@@ -46,12 +49,8 @@ public class RolePermissionList extends Hashtable {
         "SELECT p.*, c.category, role_add, role_view, role_edit, role_delete " +
         "FROM permission p, permission_category c, role_permission r " +
         "WHERE p.category_id = c.category_id " +
-        "AND p.permission_id = r.permission_id " +
-        "AND p.enabled = " + DatabaseUtils.getTrue(db) + " " +
-        "AND c.enabled = " + DatabaseUtils.getTrue(db) + " ");
-
+        "AND p.permission_id = r.permission_id ");
     sqlOrder.append("ORDER BY r.role_id, c.level, p.level ");
-        
     createFilter(sqlFilter);
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -73,6 +72,12 @@ public class RolePermissionList extends Hashtable {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
+    
+    if (enabledState != -1) {
+      sqlFilter.append("AND p.enabled = ? ");
+      sqlFilter.append("AND c.enabled = ? ");
+    }
+    
     if (roleId > -1) {
       sqlFilter.append("AND r.role_id = ? ");
     }
@@ -80,6 +85,12 @@ public class RolePermissionList extends Hashtable {
   
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    
+    if (enabledState != -1) {
+      pst.setBoolean(++i, enabledState == Constants.TRUE);
+      pst.setBoolean(++i, enabledState == Constants.TRUE);
+    }
+    
     if (roleId > -1) {
       pst.setInt(++i, roleId);
     }

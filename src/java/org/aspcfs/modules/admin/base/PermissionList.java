@@ -36,22 +36,10 @@ public class PermissionList extends Vector {
     sqlSelect.append(
         "SELECT p.*, c.category " +
         "FROM permission p, permission_category c " +
-        "WHERE p.category_id = c.category_id " +
-        "AND p.enabled = " + DatabaseUtils.getTrue(db) + " " +
-        "AND c.enabled = " + DatabaseUtils.getTrue(db) + " ");
-        
-
-    //Need to build a base SQL statement for counting records
-    sqlCount.append(
-        "SELECT COUNT(*) AS recordcount " +
-        "FROM permission p, permission_category c " +
-        "WHERE p.category_id = c.category_id " +
-        "AND p.enabled = " + DatabaseUtils.getTrue(db) + " " +
-        "AND c.enabled = " + DatabaseUtils.getTrue(db) + " ");
-
-    sqlSelect.append("ORDER BY c.level, p.level ");
-        
+        "WHERE p.category_id = c.category_id ");
     createFilter(sqlFilter);
+    sqlOrder.append("ORDER BY c.level, p.level ");
+    
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -62,17 +50,20 @@ public class PermissionList extends Vector {
     }
     rs.close();
     pst.close();
-
   }
   
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
+    sqlFilter.append("AND p.enabled = ? ");
+    sqlFilter.append("AND c.enabled = ? ");
   }
   
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
+    pst.setBoolean(++i, true);
+    pst.setBoolean(++i, true);
     return i;
   }
   
