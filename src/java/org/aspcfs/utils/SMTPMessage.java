@@ -68,7 +68,11 @@ public class SMTPMessage {
    */
   public void setTo(String tmp) {
     to.clear();
-    addTo(tmp);
+    if (tmp.indexOf(",") > -1) {
+      addMultiple(to, tmp);
+    } else {
+      addTo(tmp);
+    }
   }
 
 
@@ -80,7 +84,11 @@ public class SMTPMessage {
    */
   public void setCc(String tmp) {
     cc.clear();
-    addCc(tmp);
+    if (tmp.indexOf(",") > -1) {
+      addMultiple(cc, tmp);
+    } else {
+      addCc(tmp);
+    }
   }
 
 
@@ -351,6 +359,21 @@ public class SMTPMessage {
         attachmentBodyPart.setFileName(fileItem.getClientFilename());
         root.addBodyPart(attachmentBodyPart);
       }
+    }
+  }
+
+
+  /**
+   *  Adds multiple addresses that are comma separated to the email list
+   *
+   *@param  list    The feature to be added to the Multiple attribute
+   *@param  emails  The feature to be added to the Multiple attribute
+   */
+  private void addMultiple(ArrayList list, String emails) {
+    StringTokenizer st = new StringTokenizer(emails, ",");
+    while (st.hasMoreTokens()) {
+      String email = st.nextToken();
+      list.add(email);
     }
   }
 }
