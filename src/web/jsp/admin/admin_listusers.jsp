@@ -4,6 +4,9 @@
 <jsp:useBean id="UserListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
+<a href="/Admin.do">Setup</a> >
+View Users<br>
+<hr color="#BFBFBB" noshade>
 <dhv:permission name="admin-users-add"><a href="/Users.do?command=InsertUserForm">Add New User</a></dhv:permission>
 <center><%= UserListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">

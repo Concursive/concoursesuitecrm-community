@@ -9,6 +9,21 @@
 <body onLoad="javascript:document.forms[0].username.focus();">
 <form name="details" action="/Users.do?command=UpdateUser&auto-populate=true" method="post">
 
+<a href="Admin.do">Setup</a> > 
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<a href="Users.do?command=ListUsers">View Users</a> >
+  <%}%>
+<%} else {%>
+<a href="Users.do?command=ListUsers">View Users</a> >
+<a href="Users.do?command=UserDetails&id=<%=UserRecord.getId()%>">User Details</a> >
+<%}%>
+
+
+Modify User<br>
+<hr color="#BFBFBB" noshade>
+
 <% if (request.getParameter("return") != null) {%>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>

@@ -6,6 +6,9 @@
   ContactTypeList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
 %>
 <form name="addUser" action="/Users.do?command=InsertUserForm" method="post">
+<a href="/Admin.do">Setup</a> >
+Add User (Step 1)<br>
+<hr color="#BFBFBB" noshade>
 <table cellpadding=6 cellspacing=0 border=1 width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr>
     <td align="left" bgcolor="#DEE0FA">

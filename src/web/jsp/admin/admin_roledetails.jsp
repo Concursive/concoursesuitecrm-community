@@ -3,6 +3,10 @@
 <%@ include file="initPage.jsp" %>
 <jsp:useBean id="Role" class="com.darkhorseventures.cfsbase.Role" scope="request"/>
 <jsp:useBean id="PermissionList" class="com.darkhorseventures.cfsbase.PermissionList" scope="request"/>
+<a href="/Admin.do">Setup</a> >
+<a href="/Roles.do">View Roles</a> >
+Update Role
+<hr color="#BFBFBB" noshade>
 <a href="/Roles.do?command=ListRoles">Back to list</a><p>
 <form action='Roles.do?command=UpdateRole&auto-populate=true' method='post'>
 <input type="hidden" name="id" value="<%= Role.getId() %>">

@@ -4,6 +4,9 @@
 <jsp:useBean id="RoleListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<a href="/Admin.do">Setup</a> >
+View Roles<br>
+<hr color="#BFBFBB" noshade>
 <dhv:permission name="admin-roles-add"><a href="/Roles.do?command=InsertRoleForm">Add New Role</a></dhv:permission>
 <center><%= RoleListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="RoleListInfo"/>

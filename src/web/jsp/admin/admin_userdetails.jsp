@@ -3,9 +3,11 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <jsp:useBean id="UserRecord" class="com.darkhorseventures.cfsbase.User" scope="request"/>
-<a href="/Users.do?command=ListUsers">Back to List</a>
-<p>
 <form name="details" action="/Users.do?auto-populate=true" method="post">
+<a href="Admin.do">Setup</a> >
+<a href="Users.do?command=ListUsers">View Users</a> >
+User Details<br>
+<hr color="#BFBFBB" noshade>
 <input type=hidden name="id" value="<%= UserRecord.getId() %>">
 <dhv:permission name="admin-users-edit">
   <input type="button" name="action" value="Modify"	onClick="document.details.command.value='ModifyUser';document.details.submit()">
@@ -20,7 +22,7 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>
-	    <strong>User: <%= toHtml(UserRecord.getContact().getNameFirstLast()) %></strong>
+	    <strong>User: <%= toHtml(UserRecord.getContact().getNameFull()) %></strong>
 	  </td>
   </tr>
   <tr>

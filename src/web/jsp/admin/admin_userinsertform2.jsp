@@ -8,6 +8,10 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></SCRIPT>
 <body onLoad="javascript:document.forms[0].username.focus();">
 <form name="addUser" action="/Users.do?command=AddUser&auto-populate=true" method="post">
+<a href="/Admin.do">Setup</a> >
+<a href="/Users.do?command=InsertUserForm">Add User (Step 1)</a> > 
+Add User (Step 2)<br>
+<hr color="#BFBFBB" noshade>
 <input type="hidden" name="typeId" value="<%= request.getParameter("typeId") %>">
 <input type="hidden" name="contactId" value="<%= request.getParameter("contactId") %>">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -47,6 +51,7 @@
   
 
 </table>
+&nbsp;<br>
 <input type="button" value="< Back" onClick="javascript:this.form.action='/Users.do?command=InsertUserForm';this.form.submit()">
 <input type="submit" value="Add User">
 </form>
