@@ -100,30 +100,27 @@ Results
              <dhv:evaluate exp="<%=((type != SurveyQuestion.QUANT_NOCOMMENTS))%>">
                 <tr class="title">
                   <td colspan="8" valign="center" align="left">
-                    Most recent user comments &nbsp; <a href="javascript:popURLReturn('CampaignManager.do?command=ShowComments&surveyId=<%=SurveyQuestionList.getId()%>&questionId=<%=thisItem.getId()%>&type=<%=thisItem.getType()==1?"open":"quant"%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','500','400','yes','yes');">Show All...</a>
+                    Most recent user comments &nbsp; <a href="javascript:popURLReturn('CampaignManager.do?command=ShowComments&reset=true&surveyId=<%=SurveyQuestionList.getId()%>&questionId=<%=thisItem.getId()%>&type=<%=thisItem.getType()==1?"open":"quant"%>&popup=true','CampaignManager.do?command=Details&reset=true','Survey_Comments','500','400','yes','yes');">Show All...</a>
                   </td>
                 </tr>
                 <%
-                  LinkedHashMap comments = thisItem.getComments();
-                  Iterator k = comments.keySet().iterator();
-                  if(k.hasNext()){
-                    while(k.hasNext()){
-                    Integer user = (Integer)k.next();
-                    Iterator l = ((ArrayList)comments.get(user)).iterator();
-                    while(l.hasNext()){
+                  SurveyAnswerList commentList = thisItem.getAnswerList();
+                  HashMap contacts = (HashMap) commentList.getContacts();
+                  Iterator i = commentList.iterator();
+                  if (i.hasNext()) {
+                    while (i.hasNext()) {
+                      SurveyAnswer thisAnswer = (SurveyAnswer)i.next();
                  %>
                     <tr class="containerBody">
                       <td colspan="7" valign="center" align="left" width="85%">
-                        <%=(String)l.next()%>
+                        <%=toHtml(thisAnswer.getComments())%>
                       </td>
                       <td valign="center" align="left">
-                        <dhv:username id="<%=user.intValue()%>"/>
+                        <%=contacts.get(new Integer(thisAnswer.getContactId()))%>
                       </td>
                     </tr>
                  <%}
-                  }
-                 %>
-                 <%}else{
+                 }else{
                  %>
                     <tr>
                       <td colspan="8" valign="center" align="left">
