@@ -18,11 +18,11 @@ import java.text.*;
  */
 public class SearchCriteriaList extends Hashtable {
 
-  public static final int SOURCE_ALL = 1;
-  public static final int SOURCE_ACCOUNTS = 2;
-  public static final int SOURCE_CONTACTS = 3;
-  public static final int SOURCE_EMPLOYEES = 4;
-  public static final int SOURCE_ACCOUNTS_CONTACTS = 5;
+  public static final int SOURCE_ALL_ACCOUNTS = 1;
+  public static final int SOURCE_MY_ACCOUNTS = 2;
+  public static final int SOURCE_MY_ACCOUNT_HIERARCHY = 3;
+  public static final int SOURCE_MY_CONTACTS = 4;
+  public static final int SOURCE_EMPLOYEES = 5;
   
 	protected Hashtable errors = new Hashtable();
 	private int id = -1;

@@ -78,6 +78,13 @@ public class CFSModule {
   protected String getUserRange(ActionContext context) {
     return ((UserBean)context.getSession().getAttribute("User")).getIdRange();
   }
+  
+  protected String getUserRange(ActionContext context, int userId) {
+    User userRecord = this.getUser(context, userId);
+    UserList shortChildList = userRecord.getShortChildList();
+    UserList fullChildList = userRecord.getFullChildList(shortChildList, new UserList());
+    return fullChildList.getUserListIds(userRecord.getId());
+  }
 
 
   /**

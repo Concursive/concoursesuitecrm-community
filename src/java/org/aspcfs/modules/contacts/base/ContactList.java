@@ -31,7 +31,6 @@ public class ContactList extends Vector {
   private String middleName = null;
   private String lastName = null;
   private String title = null;
-  private String contactType = null;
   private String company = null;
   private boolean emailNotNull = false;
   private Vector ignoreTypeIdList = new Vector();
@@ -41,6 +40,7 @@ public class ContactList extends Vector {
   private int owner = -1;
   private String ownerIdRange = null;
   private String accountOwnerIdRange = null;
+  private boolean withAccountsOnly = false;
 
   //ranges
   private String companyRange = null;
@@ -150,6 +150,10 @@ public class ContactList extends Vector {
   public void setAccountOwnerIdRange(String tmp) {
     this.accountOwnerIdRange = tmp;
   }
+  
+  public void setWithAccountsOnly(boolean tmp) {
+    this.withAccountsOnly = tmp;
+  }
 
 
   /**
@@ -202,9 +206,9 @@ public class ContactList extends Vector {
    *@param  scl  The new Scl value
    *@since
    */
-  public void setScl(SearchCriteriaList scl) {
+  public void setScl(SearchCriteriaList scl, int thisOwnerId, String thisUserRange) {
     this.scl = scl;
-    buildQuery();
+    buildQuery(thisOwnerId, thisUserRange);
   }
 
 
@@ -459,6 +463,10 @@ public class ContactList extends Vector {
   public String getAccountOwnerIdRange() {
     return accountOwnerIdRange;
   }
+  
+  public boolean getWithAccountsOnly() {
+    return withAccountsOnly;
+  }
 
 
   /**
@@ -647,22 +655,31 @@ public class ContactList extends Vector {
    *
    *@since
    */
-  public void buildQuery() {
+  public void buildQuery(int thisOwnerId, String thisUserRange) {
     
     switch(scl.getContactSource()) {
-      case SearchCriteriaList.SOURCE_ACCOUNTS:
+      case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
         this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        this.setWithAccountsOnly(true);
         break;
         
-      case SearchCriteriaList.SOURCE_CONTACTS:
+      case SearchCriteriaList.SOURCE_MY_ACCOUNTS:
+        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        this.setAccountOwnerIdRange("" + thisOwnerId);
+        break;
+        
+      case SearchCriteriaList.SOURCE_MY_ACCOUNT_HIERARCHY:
+        this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        this.setAccountOwnerIdRange(thisUserRange);
+        break;
+        
+      case SearchCriteriaList.SOURCE_MY_CONTACTS:
+        this.setOwner(thisOwnerId);
         this.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         break;
         
       case SearchCriteriaList.SOURCE_EMPLOYEES:
-        
-        break;
-        
-      case SearchCriteriaList.SOURCE_ACCOUNTS_CONTACTS:
+        this.setTypeId(Contact.EMPLOYEE_TYPE);
         break;
         
       default:
@@ -1067,6 +1084,10 @@ public class ContactList extends Vector {
 
       if (ownerIdRange != null) {
         sqlFilter.append("AND c.owner IN (" + ownerIdRange + ") ");
+      }
+      
+      if (withAccountsOnly) {
+        sqlFilter.append("AND c.org_id > 0 ");
       }
       
       if (accountOwnerIdRange != null) {

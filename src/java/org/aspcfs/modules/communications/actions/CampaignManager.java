@@ -295,10 +295,8 @@ public final class CampaignManager extends CFSModule {
       pagedListInfo.setLink("/CampaignManager.do?command=PreviewGroups&id=" + thisSCL.getId());
 
       ContactList contacts = new ContactList();
-      contacts.setScl(thisSCL);
+      contacts.setScl(thisSCL, campaign.getEnteredBy(), this.getUserRange(context, campaign.getEnteredBy()));
       contacts.setPagedListInfo(pagedListInfo);
-      contacts.setOwner(campaign.getEnteredBy());
-      contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
       contacts.setCheckExcludedFromCampaign(campaign.getId());
       contacts.buildList(db);
       context.getRequest().setAttribute("ContactList", contacts);
@@ -800,7 +798,7 @@ public final class CampaignManager extends CFSModule {
       campaign = new Campaign(db, id);
       campaign.setModifiedBy(getUserId(context));
       campaign.setModified(modified);
-      resultCount = campaign.activate(db);
+      resultCount = campaign.activate(db, campaign.getEnteredBy(), this.getUserRange(context, campaign.getEnteredBy()));
     } catch (Exception e) {
       errorMessage = e;
     } finally {

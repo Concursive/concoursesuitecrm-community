@@ -217,10 +217,8 @@ public final class CampaignManagerGroup extends CFSModule {
         pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
 
         ContactList contacts = new ContactList();
-        contacts.setScl(thisSCL);
+        contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
         contacts.setPagedListInfo(pagedListInfo);
-        contacts.setOwner(this.getUserId(context));
-        contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         contacts.buildList(db);
         context.getRequest().setAttribute("ContactList", contacts);
       }
@@ -348,10 +346,8 @@ public final class CampaignManagerGroup extends CFSModule {
         pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
 
         ContactList contacts = new ContactList();
-        contacts.setScl(thisSCL);
+        contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
         contacts.setPagedListInfo(pagedListInfo);
-        contacts.setOwner(this.getUserId(context));
-        contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
         contacts.buildList(db);
         context.getRequest().setAttribute("ContactList", contacts);
       }
@@ -402,10 +398,8 @@ public final class CampaignManagerGroup extends CFSModule {
       pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
 
       ContactList contacts = new ContactList();
-      contacts.setScl(thisSCL);
+      contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
       contacts.setPagedListInfo(pagedListInfo);
-      contacts.setOwner(this.getUserId(context));
-      contacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
       contacts.buildList(db);
       context.getRequest().setAttribute("ContactList", contacts);
 
@@ -427,11 +421,11 @@ public final class CampaignManagerGroup extends CFSModule {
   
   public void buildContactSource(ActionContext context) {
     HtmlSelect contactSource = new HtmlSelect();
-    contactSource.addItem(SearchCriteriaList.SOURCE_ALL, "All");
-    contactSource.addItem(SearchCriteriaList.SOURCE_ACCOUNTS, "Accounts");
-    contactSource.addItem(SearchCriteriaList.SOURCE_CONTACTS, "Contacts & Resources");
+    contactSource.addItem(SearchCriteriaList.SOURCE_ALL_ACCOUNTS, "All Accounts");
+    contactSource.addItem(SearchCriteriaList.SOURCE_MY_ACCOUNTS, "My Accounts");
+    contactSource.addItem(SearchCriteriaList.SOURCE_MY_ACCOUNT_HIERARCHY, "My Account Hierarchy");
+    contactSource.addItem(SearchCriteriaList.SOURCE_MY_CONTACTS, "My Contacts");
     contactSource.addItem(SearchCriteriaList.SOURCE_EMPLOYEES, "Employees");
-    contactSource.addItem(SearchCriteriaList.SOURCE_ACCOUNTS_CONTACTS, "Accounts/Contacts & Resources");
     context.getRequest().setAttribute("ContactSource", contactSource);
   }
 

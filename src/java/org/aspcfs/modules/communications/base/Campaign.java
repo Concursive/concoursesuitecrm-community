@@ -16,6 +16,20 @@ import javax.servlet.http.*;
  */
 public class Campaign extends GenericBean {
 
+  public final static int IDLE = 1;
+  public final static int QUEUE = 2;
+  public final static int STARTED = 3;
+  public final static int FINISHED = 4;
+  public final static int ERROR = 5;
+  public final static int CANCELLED = 6;
+
+  public final static String IDLE_TEXT = "Idle";
+  public final static String QUEUE_TEXT = "In Queue";
+  public final static String STARTED_TEXT = "Sending Messages";
+  public final static String FINISHED_TEXT = "Messages Sent";
+  public final static String ERROR_TEXT = "Error in Campaign";
+  public final static String CANCELLED_TEXT = "Cancelled";
+
   private int id = -1;
   private String name = null;
   private String description = null;
@@ -38,26 +52,12 @@ public class Campaign extends GenericBean {
   private int recipientCount = -1;
   private int sentCount = -1;
   private ContactList contactList = null;
-	private String replyTo = null;
-	private String subject = null;
-	private String message = null;
-	private int sendMethodId = -1;
-	private String deliveryName = null;
+  private String replyTo = null;
+  private String subject = null;
+  private String message = null;
+  private int sendMethodId = -1;
+  private String deliveryName = null;
   private int files = 0;
-
-  public final static int IDLE = 1;
-  public final static int QUEUE = 2;
-  public final static int STARTED = 3;
-  public final static int FINISHED = 4;
-  public final static int ERROR = 5;
-  public final static int CANCELLED = 6;
-
-  public final static String IDLE_TEXT = "Idle";
-  public final static String QUEUE_TEXT = "In Queue";
-  public final static String STARTED_TEXT = "Sending Messages";
-  public final static String FINISHED_TEXT = "Messages Sent";
-  public final static String ERROR_TEXT = "Error in Campaign";
-  public final static String CANCELLED_TEXT = "Cancelled";
 
 
   /**
@@ -167,9 +167,6 @@ public class Campaign extends GenericBean {
     this.sentCount = tmp;
   }
 
-  public int getSendMethodId() {
-    return sendMethodId;
-  }
 
   /**
    *  Sets the MessageName attribute of the Campaign object
@@ -466,10 +463,13 @@ public class Campaign extends GenericBean {
       this.enabled = true;
     }
   }
-  
-  public String getDeliveryName() {
-    return deliveryName;
-  }
+
+
+  /**
+   *  Sets the deliveryName attribute of the Campaign object
+   *
+   *@param  deliveryName  The new deliveryName value
+   */
   public void setDeliveryName(String deliveryName) {
     this.deliveryName = deliveryName;
   }
@@ -487,7 +487,7 @@ public class Campaign extends GenericBean {
     Enumeration parameters = request.getParameterNames();
 
     while (parameters.hasMoreElements()) {
-      String param = (String)parameters.nextElement();
+      String param = (String) parameters.nextElement();
 
       if (request.getParameter(param).equalsIgnoreCase("on")) {
         if (sb != null || sb.length() > 0) {
@@ -535,13 +535,46 @@ public class Campaign extends GenericBean {
     st.close();
   }
 
-	public void setSendMethodId(int tmp) {
-		sendMethodId = tmp;
-	}
-	
-	public void setSendMethodId(String tmp) {
-		sendMethodId = Integer.parseInt(tmp);
-	}
+
+  /**
+   *  Sets the sendMethodId attribute of the Campaign object
+   *
+   *@param  tmp  The new sendMethodId value
+   */
+  public void setSendMethodId(int tmp) {
+    sendMethodId = tmp;
+  }
+
+
+  /**
+   *  Sets the sendMethodId attribute of the Campaign object
+   *
+   *@param  tmp  The new sendMethodId value
+   */
+  public void setSendMethodId(String tmp) {
+    sendMethodId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the sendMethodId attribute of the Campaign object
+   *
+   *@return    The sendMethodId value
+   */
+  public int getSendMethodId() {
+    return sendMethodId;
+  }
+
+
+  /**
+   *  Gets the deliveryName attribute of the Campaign object
+   *
+   *@return    The deliveryName value
+   */
+  public String getDeliveryName() {
+    return deliveryName;
+  }
+
 
   /**
    *  Gets the RecipientCount attribute of the Campaign object
@@ -736,17 +769,36 @@ public class Campaign extends GenericBean {
     return messageId;
   }
 
-	public String getReplyTo() {
-		return replyTo;
-	}
-	
-	public String getMessage() {
-		return message;
-	}
-	
-	public String getSubject() {
-		return subject;
-	}
+
+  /**
+   *  Gets the replyTo attribute of the Campaign object
+   *
+   *@return    The replyTo value
+   */
+  public String getReplyTo() {
+    return replyTo;
+  }
+
+
+  /**
+   *  Gets the message attribute of the Campaign object
+   *
+   *@return    The message value
+   */
+  public String getMessage() {
+    return message;
+  }
+
+
+  /**
+   *  Gets the subject attribute of the Campaign object
+   *
+   *@return    The subject value
+   */
+  public String getSubject() {
+    return subject;
+  }
+
 
   /**
    *  Gets the groupId attribute of the Campaign object
@@ -891,7 +943,7 @@ public class Campaign extends GenericBean {
     boolean b = true;
 
     while (strt.hasMoreTokens()) {
-      String tmpString = (String)strt.nextToken();
+      String tmpString = (String) strt.nextToken();
 
       if (b == true) {
         range = range + tmpString;
@@ -933,7 +985,7 @@ public class Campaign extends GenericBean {
       StringTokenizer st = new StringTokenizer(groupList, "*");
 
       while (st.hasMoreTokens()) {
-        String tmpString = (String)st.nextToken();
+        String tmpString = (String) st.nextToken();
         if (tmpString.equals(String.valueOf(tmp))) {
           return "checked";
         }
@@ -996,7 +1048,13 @@ public class Campaign extends GenericBean {
   public boolean hasRun() {
     return (statusId == FINISHED);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Returned Value
+   */
   public boolean hasFiles() {
     return (files > 0);
   }
@@ -1022,7 +1080,14 @@ public class Campaign extends GenericBean {
     rs.close();
     st.close();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public void buildFileCount(Connection db) throws SQLException {
     Statement st = db.createStatement();
     ResultSet rs = st.executeQuery(
@@ -1040,41 +1105,27 @@ public class Campaign extends GenericBean {
   }
 
 
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of Parameter
-   *@param  range             Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.10
+  /*
+   *  public void buildContactList(Connection db, String range) throws SQLException {
+   *  StringBuffer searchCriteriaText = new StringBuffer();
+   *  Statement st = db.createStatement();
+   *  ResultSet rs = st.executeQuery(
+   *  "SELECT s.field, s.operatorid, s.value " +
+   *  "FROM saved_criteriaelement s " +
+   *  "WHERE s.id IN ( " + range + " )");
+   *  while (rs.next()) {
+   *  searchCriteriaText.append(
+   *  rs.getString("field") + "|" +
+   *  rs.getInt("operatorid") + "|" +
+   *  rs.getString("value") + "^");
+   *  }
+   *  rs.close();
+   *  st.close();
+   *  SearchCriteriaList scl = new SearchCriteriaList(searchCriteriaText.toString());
+   *  contactList.setScl(scl);
+   *  contactList.buildList(db);
+   *  }
    */
-  public void buildContactList(Connection db, String range) throws SQLException {
-    StringBuffer searchCriteriaText = new StringBuffer();
-
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
-        "SELECT s.field, s.operatorid, s.value " +
-        "FROM saved_criteriaelement s " +
-        "WHERE s.id IN ( " + range + " )");
-
-    while (rs.next()) {
-      searchCriteriaText.append(
-        rs.getString("field") + "|" +
-        rs.getInt("operatorid") + "|" +
-        rs.getString("value") + "^");
-    }
-
-    rs.close();
-    st.close();
-
-    SearchCriteriaList scl = new SearchCriteriaList(searchCriteriaText.toString());
-    //scl.buildData(db);
-
-    contactList.setScl(scl);
-    contactList.buildList(db);
-  }
-
-
   /**
    *  Gets the ContactList attribute of the Campaign object
    *
@@ -1085,43 +1136,44 @@ public class Campaign extends GenericBean {
   public void insertContactList(Connection db) throws SQLException {
     Iterator j = contactList.iterator();
     while (j.hasNext()) {
-      Contact thisContact = (Contact)j.next();
+      Contact thisContact = (Contact) j.next();
       Recipient thisRecipient = new Recipient();
       thisRecipient.setCampaignId(this.getId());
       thisRecipient.setContactId(thisContact.getId());
       thisRecipient.insert(db);
     }
   }
-  
-  public void insertRecipients(Connection db) throws SQLException {
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void insertRecipients(Connection db, int userId, String userRangeId) throws SQLException {
     SearchCriteriaListList groupData = new SearchCriteriaListList();
     groupData.setCampaignId(this.id);
     groupData.buildList(db);
     Iterator i = groupData.iterator();
     while (i.hasNext()) {
-      SearchCriteriaList thisGroup = (SearchCriteriaList)i.next();
+      SearchCriteriaList thisGroup = (SearchCriteriaList) i.next();
       ContactList groupContacts = new ContactList();
-      
-      groupContacts.setOwner(this.getEnteredBy());
-      groupContacts.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
-      
-      //groupContacts.setTypeId(Contact.EMPLOYEE_TYPE);
-      
-      groupContacts.setScl(thisGroup);
+      groupContacts.setScl(thisGroup, userId, userRangeId);
       groupContacts.setBuildDetails(false);
       groupContacts.setCheckExcludedFromCampaign(this.getId());
       groupContacts.buildList(db);
-      
+
       System.out.println("Campaign-> GroupContacts has " + groupContacts.size() + " items");
       Iterator j = groupContacts.iterator();
       while (j.hasNext()) {
-        Contact thisContact = (Contact)j.next();
-		if (thisContact.excludedFromCampaign() == false) {
-			Recipient thisRecipient = new Recipient();
-			thisRecipient.setCampaignId(this.getId());
-			thisRecipient.setContactId(thisContact.getId());
-			thisRecipient.insert(db);
-		}
+        Contact thisContact = (Contact) j.next();
+        if (thisContact.excludedFromCampaign() == false) {
+          Recipient thisRecipient = new Recipient();
+          thisRecipient.setCampaignId(this.getId());
+          thisRecipient.setContactId(thisContact.getId());
+          thisRecipient.insert(db);
+        }
       }
     }
   }
@@ -1178,12 +1230,12 @@ public class Campaign extends GenericBean {
         PreparedStatement pstx = null;
 
         while (strt.hasMoreTokens()) {
-          String tmpString = (String)strt.nextToken();
+          String tmpString = (String) strt.nextToken();
 
           groupSql.append(
-            "INSERT INTO campaign_list_groups " +
-            "(campaign_id, group_id ) " +
-            "VALUES (?, ?) ");
+              "INSERT INTO campaign_list_groups " +
+              "(campaign_id, group_id ) " +
+              "VALUES (?, ?) ");
 
           int j = 0;
           pstx = db.prepareStatement(groupSql.toString());
@@ -1223,7 +1275,7 @@ public class Campaign extends GenericBean {
         StringTokenizer strt = new StringTokenizer(this.getGroupList(), "*");
 
         while (strt.hasMoreTokens()) {
-          String tmpString = (String)strt.nextToken();
+          String tmpString = (String) strt.nextToken();
 
           boolean doInsert = true;
           Statement st = db.createStatement();
@@ -1291,7 +1343,7 @@ public class Campaign extends GenericBean {
         StringTokenizer strt = new StringTokenizer(this.getGroupList(), "*");
 
         while (strt.hasMoreTokens()) {
-          String tmpString = (String)strt.nextToken();
+          String tmpString = (String) strt.nextToken();
 
           PreparedStatement pstx = null;
           StringBuffer groupSql = new StringBuffer();
@@ -1418,13 +1470,13 @@ public class Campaign extends GenericBean {
     pst.setString(++i, CANCELLED_TEXT);
     resultCount = pst.executeUpdate();
     pst.close();
-    
+
     if (resultCount == 1) {
       Statement st = db.createStatement();
       st.executeUpdate(
-        "DELETE FROM scheduled_recipient " +
-        "WHERE campaign_id = " + id + " " +
-        "AND sent_date IS NULL ");
+          "DELETE FROM scheduled_recipient " +
+          "WHERE campaign_id = " + id + " " +
+          "AND sent_date IS NULL ");
       st.close();
     }
 
@@ -1440,40 +1492,40 @@ public class Campaign extends GenericBean {
    *@exception  SQLException  Description of Exception
    *@since                    1.17
    */
-  public int activate(Connection db) throws SQLException {
+  public int activate(Connection db, int userId, String userRangeId) throws SQLException {
     int resultCount = 0;
 
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
-		
-		String thisMessageReplyTo = null;
-		String thisMessageSubject = null;
-		String thisMessageText = null;
-		
+
+    String thisMessageReplyTo = null;
+    String thisMessageSubject = null;
+    String thisMessageText = null;
+
     PreparedStatement pst = null;
-		pst = db.prepareStatement(
-		  "SELECT subject, body, reply_addr " +
-			"FROM message " +
-			"WHERE id = ? ");
-		pst.setInt(1, this.getMessageId());
-		ResultSet rs = pst.executeQuery();
-		if (rs.next()) {
-			thisMessageReplyTo = rs.getString("reply_addr");
-			thisMessageSubject = rs.getString("subject");
-			thisMessageText = rs.getString("body");
-		}
-		rs.close();
-		pst.close();
-		
+    pst = db.prepareStatement(
+        "SELECT subject, body, reply_addr " +
+        "FROM message " +
+        "WHERE id = ? ");
+    pst.setInt(1, this.getMessageId());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      thisMessageReplyTo = rs.getString("reply_addr");
+      thisMessageSubject = rs.getString("subject");
+      thisMessageText = rs.getString("body");
+    }
+    rs.close();
+    pst.close();
+
     pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET status_id = ?, " +
         "status = ?, " +
         "active = true, " +
-				"reply_addr = ?, " +
-				"subject = ?, " +
-				"message = ?, " +
+        "reply_addr = ?, " +
+        "subject = ?, " +
+        "message = ?, " +
         "modifiedby = " + modifiedBy + ", " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE id = " + id + " " +
@@ -1481,17 +1533,17 @@ public class Campaign extends GenericBean {
     int i = 0;
     pst.setInt(++i, QUEUE);
     pst.setString(++i, QUEUE_TEXT);
-		pst.setString(++i, thisMessageReplyTo);
-		pst.setString(++i, thisMessageSubject);
-		pst.setString(++i, thisMessageText);
+    pst.setString(++i, thisMessageReplyTo);
+    pst.setString(++i, thisMessageSubject);
+    pst.setString(++i, thisMessageText);
     pst.setTimestamp(++i, modified);
     resultCount = pst.executeUpdate();
     pst.close();
 
     if (resultCount == 1) {
-      insertRecipients(db);
+      insertRecipients(db, userId, userRangeId);
     }
-    
+
     return resultCount;
   }
 
@@ -1525,7 +1577,7 @@ public class Campaign extends GenericBean {
     pst.setInt(++i, this.getSentCount());
     pst.execute();
     pst.close();
-    
+
     Statement st = db.createStatement();
     ResultSet rs = st.executeQuery("SELECT currval('campaign_run_id_seq')");
     if (rs.next()) {
@@ -1591,9 +1643,9 @@ public class Campaign extends GenericBean {
     pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET message_id = " + messageId + ", " +
-				"reply_addr = null, " +
-				"subject = null, " +
-				"message = null, " +
+        "reply_addr = null, " +
+        "subject = null, " +
+        "message = null, " +
         "modifiedby = " + modifiedBy + ", " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE id = " + id);
@@ -1625,7 +1677,7 @@ public class Campaign extends GenericBean {
         "UPDATE campaign " +
         "SET message_id = " + messageId + ", " +
         "active_date = ?, " +
-				"send_method_id = ?, " +
+        "send_method_id = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE id = " + id);
     pst.setDate(++i, activeDate);
@@ -1734,10 +1786,10 @@ public class Campaign extends GenericBean {
     name = rs.getString("name");
     description = rs.getString("description");
     messageId = rs.getInt("message_id");
-		replyTo = rs.getString("reply_addr");
-		subject = rs.getString("subject");
-		message = rs.getString("message");
-		sendMethodId = rs.getInt("send_method_id");
+    replyTo = rs.getString("reply_addr");
+    subject = rs.getString("subject");
+    message = rs.getString("message");
+    sendMethodId = rs.getInt("send_method_id");
     groupId = rs.getInt("list_id");
     statusId = rs.getInt("status_id");
     enabled = rs.getBoolean("enabled");
