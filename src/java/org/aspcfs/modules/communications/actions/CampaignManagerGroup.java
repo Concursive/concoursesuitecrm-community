@@ -543,6 +543,7 @@ public final class CampaignManagerGroup extends CFSModule {
 
     ContactTypeList typeList = new ContactTypeList();
     PagedListInfo contactTypeInfo = new PagedListInfo();
+    contactTypeInfo.setItemsPerPage(0);
     typeList.setPagedListInfo(contactTypeInfo);
     typeList.buildList(db);
     LookupList ctl = typeList.getLookupList("typeId", 0);
