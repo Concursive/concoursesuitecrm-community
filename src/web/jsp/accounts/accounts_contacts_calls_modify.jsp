@@ -4,6 +4,8 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<body onLoad="javascript:document.forms[0].subject.focus();">
+<form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails">
@@ -23,11 +25,9 @@ Update Call
 </tr>
 </table>
 <%-- End Trails --%>
-<body onLoad="javascript:document.forms[0].subject.focus();">
 </dhv:evaluate>
 <%@ include file="accounts_details_header_include.jsp" %>
 <dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-<form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
@@ -71,5 +71,4 @@ Update Call
   </tr>
 </table>
 </form>
-
-      
+</body>
