@@ -8,7 +8,36 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></SCRIPT>
 <body>
-<form name="addUser" action="Users.do?command=AddUser&auto-populate=true" method="post">
+<script type="text/javascript">
+function checkForm(form) {
+    formTest = true;
+    message = "";
+    if ((form.contactId.value == "-1")) { 
+      message += "- Check that a Contact is selected\r\n";
+      formTest = false;
+    }
+    if ((form.username.value == "")) { 
+      message += "- Check that a User Name is entered\r\n";
+      formTest = false;
+    }
+    if ((form.password1.value == "") || (form.password2.value == "")) { 
+      message += "- Check that both Passwords are entered correctly\r\n";
+      formTest = false;
+    }
+    if (form.roleId.value == "-1") { 
+      message += "- Check that a Role is selected\r\n";
+      formTest = false;
+    }
+    if (formTest == false) {
+      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      return false;
+    } else {
+      return true;
+    }
+  }
+</script>
+
+<form name="addUser" action="Users.do?command=AddUser&auto-populate=true" onSubmit="return checkForm(this);" method="post">
 <a href="Admin.do">Setup</a> >
 Add User<br>
 <hr color="#BFBFBB" noshade>
@@ -29,12 +58,12 @@ Add User<br>
       <table border="0" cellspacing="0" cellpadding="4">
         <tr>
           <td valign="top" nowrap>
-            <div id="changecontact">None Selected</div>
+            <div id="changecontact"><%= UserRecord.getContactId() == -1 ? "None Selected" : UserRecord.getContact().getNameLastFirst() %></div>
           </td>
           <td valign="top" width="100%" nowrap>
             <font color="red">*</font>
             [<a href="javascript:popContactsListSingle('contactLink','changecontact','nonUsersOnly=true&reset=true&filters=accountcontacts|employees');">Select Contact</a>]
-            <input type="hidden" name="contactId" id="contactLink">
+            <input type="hidden" name="contactId" id="contactLink" value="<%= UserRecord.getContactId() %>">
             [<a href="javascript:popURL('ExternalContacts.do?command=InsertContactForm&popup=true&source=adduser', 'New_Contact','500','600','yes','yes');">Create new contact</a>]
           <%if (request.getAttribute("contactIdError") != null) {%>
             <br><%= showAttribute(request, "contactIdError") %>
@@ -109,8 +138,8 @@ Add User<br>
     </td>
   </tr>
 </table>
-<br>
 <input type="submit" value="Add User">
 <input type="button" value="Cancel" onClick="javascript:this.form.action='Users.do?command=ListUsers';this.form.submit()">
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </form>
+
