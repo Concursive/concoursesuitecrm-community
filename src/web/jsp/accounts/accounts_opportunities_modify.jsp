@@ -10,7 +10,7 @@
 <a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
 
 <% if (request.getParameter("return") == null) {%>
-	<a href="Opportunities.do?command=Details&oppId=<%=HeaderDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Opportunity Details</a> >
+	<a href="Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= OrgDetails.getOrgId() %>">Opportunity Details</a> >
 <%}%>
 
 Modify Opportunity<br>
@@ -30,7 +30,7 @@ Modify Opportunity<br>
   <tr>
     <td class="containerBack">
     
-<input type="hidden" name="oppId" value="<%= HeaderDetails.getId() %>">
+<input type="hidden" name="headerId" value="<%= HeaderDetails.getId() %>">
 <input type="hidden" name="modified" value="<%= HeaderDetails.getModified() %>">
 
 <% if (request.getParameter("return") != null) {%>
@@ -44,7 +44,7 @@ Modify Opportunity<br>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&oppId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
 <%}%>
 
 <input type="reset" value="Reset">
@@ -53,7 +53,7 @@ Modify Opportunity<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
   <td colspan=2 valign=center align=left>
-    <strong><%=HeaderDetails.getDescription()%></strong>
+    <strong><%= HeaderDetails.getDescription() %></strong>
   </td>     
 </tr>
 
@@ -76,7 +76,7 @@ Modify Opportunity<br>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&oppId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';this.form.dosubmit.value='false';">
 <%}%>
 
 <input type="reset" value="Reset">

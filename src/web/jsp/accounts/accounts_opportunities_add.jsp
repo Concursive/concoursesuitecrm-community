@@ -5,6 +5,7 @@
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].header_description.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
@@ -105,6 +106,15 @@ Add Opportunity<br>
     </td>     
   </tr>
 
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Assign To
+    </td>
+    <td valign="center">
+      <%= UserList.getHtmlSelect("component_owner") %>
+    </td>
+  </tr>
+  
   <tr class="containerBody">
   <td nowrap class="formLabel" valign="top">
     Component<br>Type(s)

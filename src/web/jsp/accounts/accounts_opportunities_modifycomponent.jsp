@@ -60,11 +60,11 @@
 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	  <a href="Opportunities.do?command=Details&oppId=<%=OppComponentDetails.getOppId()%>&orgId=<%=OrgDetails.getId()%>">Opportunity Details</a> >
+	  <a href="Opportunities.do?command=Details&headerId=<%= OppComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>">Opportunity Details</a> >
   <%}%>
 <%} else {%>
-<a href="Opportunities.do?command=Details&oppId=<%=OppComponentDetails.getOppId()%>&orgId=<%=OrgDetails.getId()%>">Opportunity Details</a> >
-<a href="OpportunitiesComponents.do?command=DetailsComponent&id=<%=OppComponentDetails.getId()%>&orgId=<%=OrgDetails.getId()%>">Component Details</a> >
+<a href="Opportunities.do?command=Details&headerId=<%= OppComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>">Opportunity Details</a> >
+<a href="OpportunitiesComponents.do?command=DetailsComponent&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>">Component Details</a> >
 <%}%>
 Modify Component<br>
 <hr color="#BFBFBB" noshade>
@@ -84,20 +84,17 @@ Modify Component<br>
     <td class="containerBack">
     
 <input type="hidden" name="id" value="<%= OppComponentDetails.getId() %>">
-<input type="hidden" name="oppId" value="<%= OppComponentDetails.getOppId() %>">
+<input type="hidden" name="headerId" value="<%= OppComponentDetails.getHeaderId() %>">
 <input type="hidden" name="modified" value="<%= OppComponentDetails.getModified() %>">
 
-<% if (request.getParameter("return") != null) {%>
-  <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
-<%}%>
-
+<dhv:evaluate if="<%= request.getParameter("return") != null %>">
+  <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
+</dhv:evaluate>
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-<% if (request.getParameter("return") != null) {%>
-	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
-	<%}%>
-<%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+<% if ("list".equals(request.getParameter("return"))) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= OppComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+<%} else if (request.getParameter("return") != null) {%>
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=DetailsComponent&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="reset" value="Reset">
 <br>
@@ -106,7 +103,7 @@ Modify Component<br>
 
 <tr class="title">
   <td colspan=2 valign=center align=left>
-    <strong><%=OppComponentDetails.getDescription()%></strong>
+    <strong><%= OppComponentDetails.getDescription() %></strong>
   </td>     
 </tr>
 
@@ -123,18 +120,15 @@ Modify Component<br>
     <td nowrap class="formLabel" valign="top">
       Opportunity<br>Type(s)
     </td>
-  
   	<td valign=center>
-      
       <select multiple name="selectedList" id="selectedList" size="5">
-      <dhv:evaluate exp="<%=OppComponentDetails.getTypes().isEmpty()%>">
-      <option value="-1">None Selected</option>
+      <dhv:evaluate exp="<%= OppComponentDetails.getTypes().isEmpty() %>">
+        <option value="-1">None Selected</option>
       </dhv:evaluate>
       
-      <dhv:evaluate exp="<%=!(OppComponentDetails.getTypes().isEmpty())%>">
+      <dhv:evaluate exp="<%= !(OppComponentDetails.getTypes().isEmpty()) %>">
        <%
         Iterator i = OppComponentDetails.getTypes().iterator();
-        
         while (i.hasNext()) {
           LookupElement thisElt = (LookupElement)i.next();
       %>
@@ -142,7 +136,6 @@ Modify Component<br>
       <%}%>
       </dhv:evaluate>      
       </select>
-      
       <input type="hidden" name="previousSelection" value="">
       <a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_opportunity_types');">Select</a>
   </td>
@@ -160,7 +153,7 @@ Modify Component<br>
 
   <tr class="containerBody">
     <td valign="top" nowrap class="formLabel">Additional Notes</td>
-    <td><TEXTAREA NAME='notes' ROWS=3 COLS=50><%= toString(OppComponentDetails.getNotes()) %></TEXTAREA></td>
+    <td><TEXTAREA NAME="notes" ROWS=3 COLS=50><%= toString(OppComponentDetails.getNotes()) %></TEXTAREA></td>
   </tr>
 
 <tr class="containerBody">
@@ -237,13 +230,11 @@ Modify Component<br>
     Current Stage
   </td>
   <td valign=center>
-     <%=StageList.getHtmlSelect("stage",OppComponentDetails.getStage())%>
-          <input type=checkbox name="closeNow"
-      
-      <% if (OppComponentDetails.getClosed() != null) {%>
-       		checked
-      <%}%>
-      
+    <%= StageList.getHtmlSelect("stage", OppComponentDetails.getStage()) %>
+    <input type=checkbox name="closeNow"
+<% if (OppComponentDetails.getClosed() != null) {%>
+      checked
+<%}%>
       >Closed 
   </td>
 </tr>
@@ -254,17 +245,15 @@ Modify Component<br>
   </td>
   <td valign=center>
     <input type=text size=5 name="commission" value="<%= OppComponentDetails.getCommissionValue() %>">%
-    <input type=hidden name="accountLink" value="<%=request.getParameter("orgId")%>">
-    <input type=hidden name="orgId" value="<%=request.getParameter("orgId")%>">
+    <input type=hidden name="accountLink" value="<%= request.getParameter("orgId") %>">
+    <input type=hidden name="orgId" value="<%= request.getParameter("orgId") %>">
   </td>
 </tr>
-
-
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Alert Description
     </td>
-    <td valign=center colspan=1>
+    <td valign=center>
       <input type=text size=50 name="alertText" value="<%= toHtmlValue(OppComponentDetails.getAlertText()) %>"><br>
     </td>
   </tr>
@@ -274,7 +263,7 @@ Modify Component<br>
       Alert Date
     </td>
     <td valign=center colspan=1>
-              <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OppComponentDetails.getAlertDateStringLongYear()) %>">
+      <input type=text size=10 name="alertDate" value="<%= toHtmlValue(OppComponentDetails.getAlertDateStringLongYear()) %>">
       <a href="javascript:popCalendar('updateOpp', 'alertDate');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>
@@ -282,12 +271,10 @@ Modify Component<br>
 &nbsp;
 <br>
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-<% if (request.getParameter("return") != null) {%>
-	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
-	<%}%>
+<% if ("list".equals(request.getParameter("return"))) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= OppComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=DetailsComponent&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">

@@ -24,11 +24,11 @@ Opportunities<br>
   </tr>
   <tr>
     <td class="containerBack">
-<dhv:permission name="accounts-accounts-opportunities-add"><a href="Opportunities.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add an Opportunity</a></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-add"><a href="Opportunities.do?command=Add&orgId=<%= request.getParameter("orgId") %>">Add an Opportunity</a></dhv:permission>
 <center><%= OpportunityPagedInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
-    <form name="listView" method="post" action="Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">
+    <form name="listView" method="post" action="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
         <option <%= OpportunityPagedInfo.getOptionValue("my") %>>My Open Opportunities </option>
@@ -51,8 +51,8 @@ Opportunities<br>
     </td>
     </dhv:permission>
     <td valign=center align=left width="100%">
-      <strong><a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>&column=description">Opportunity Name</a></strong>
-      <%= OpportunityPagedInfo.getSortIcon("description") %>
+      <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.description">Opportunity Name</a></strong>
+      <%= OpportunityPagedInfo.getSortIcon("x.description") %>
     </td>
     
     <td valign=center align=left nowrap>
@@ -60,52 +60,45 @@ Opportunities<br>
     </td>
     
     <td valign=center align=left nowrap>
-      <strong><a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>&column=modified">Last Modified</a></strong>
-      <%= OpportunityPagedInfo.getSortIcon("modified") %>
+      <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.modified">Last Modified</a></strong>
+      <%= OpportunityPagedInfo.getSortIcon("x.modified") %>
     </td>
   </tr>
 
 <%
 	Iterator j = OpportunityList.iterator();
   FileItem thisFile = new FileItem();
-	
 	if ( j.hasNext() ) {
 		int rowid = 0;
 	    while (j.hasNext()) {
-		
-        if (rowid != 1) {
-          rowid = 1;
-        } else {
-          rowid = 2;
-        }
-		
-		OpportunityHeader thisOpp = (OpportunityHeader)j.next();
+		    rowid = (rowid != 1?1:2);
+        OpportunityHeader oppHeader = (OpportunityHeader)j.next();
 %>      
   <tr class="containerBody">
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
     <td width="8" valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="accounts-accounts-opportunities-edit"><a href="Opportunities.do?command=Modify&oppId=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=thisOpp.getId()%>','Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>&popup=true', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+          <dhv:permission name="accounts-accounts-opportunities-edit"><a href="Opportunities.do?command=Modify&headerId=<%= oppHeader.getId() %>&orgId=<%= oppHeader.getAccountLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%= OrgDetails.getId() %>&headerId=<%= oppHeader.getId() %>','Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&popup=true', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
       <td width=100% valign=center class="row<%= rowid %>">
-        <a href="Opportunities.do?command=Details&oppId=<%=thisOpp.getOppId()%>&orgId=<%= OrgDetails.getId() %>&reset=true">
-        <%= toHtml(thisOpp.getDescription()) %></a>
-        (<%=thisOpp.getComponentCount()%>)
-        <% if (thisOpp.hasFiles()) {%>
+        <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true">
+        <%= toHtml(oppHeader.getDescription()) %></a>
+        (<%= oppHeader.getComponentCount() %>)
+<dhv:evaluate if="<%= oppHeader.hasFiles() %>">
         <%= thisFile.getImageTag() %>
-        <%}%>        
+</dhv:evaluate>
       </td>  
       <td valign=center class="row<%= rowid %>" nowrap>
-        $<%= toHtml(thisOpp.getTotalValueCurrency()) %>
+        $<%= toHtml(oppHeader.getTotalValueCurrency()) %>
       </td>      
       <td valign=center class="row<%= rowid %>" nowrap>
-        <%= toHtml(thisOpp.getModifiedString()) %>
+        <%= toHtml(oppHeader.getModifiedString()) %>
       </td>   
   </tr>
 <%}%>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan=5 valign=center>
+    <td colspan="5">
       No opportunities found.
     </td>
   </tr>

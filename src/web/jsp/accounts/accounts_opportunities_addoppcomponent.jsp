@@ -5,6 +5,7 @@
 <jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].description.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
@@ -57,7 +58,7 @@
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
-<a href="Opportunities.do?command=Details&oppId=<%=OpportunityHeader.getOppId()%>&orgId=<%=OrgDetails.getId()%>">Opportunity Details</a> >
+<a href="Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>">Opportunity Details</a> >
 Add Component<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -75,7 +76,7 @@ Add Component<br>
   <tr>
     <td class="containerBack">
   <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&oppId=<%=OpportunityHeader.getOppId()%>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>  
@@ -87,6 +88,14 @@ Add Component<br>
     </td>     
   </tr>
   
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Assign To
+    </td>
+    <td valign="center">
+      <%= UserList.getHtmlSelect("owner", OppComponentDetails.getOwner() ) %>
+    </td>
+  </tr>
   
   <tr class="containerBody">
   <td class="formLabel" valign="top">
@@ -190,7 +199,7 @@ Add Component<br>
       Current Stage
     </td>
     <td>
-      <%=StageList.getHtmlSelect("stage",OppComponentDetails.getStage())%>
+      <%= StageList.getHtmlSelect("stage", OppComponentDetails.getStage()) %>
       <input type=checkbox name="closeNow">Close this component
     </td>
   </tr>
@@ -202,8 +211,8 @@ Add Component<br>
     <td>
       <input type=text size=5 name="commission" value="<%= OppComponentDetails.getCommissionValue() %>">%
       <input type=hidden name="accountLink" value="<%=request.getParameter("orgId")%>">
-      <input type=hidden name="oppId" value="<%=OpportunityHeader.getOppId()%>">
-      <input type=hidden name="id" value="<%=OpportunityHeader.getOppId()%>">
+      <input type=hidden name="headerId" value="<%= OpportunityHeader.getId() %>">
+      <input type=hidden name="id" value="<%= OpportunityHeader.getId() %>">
       <input type=hidden name="orgId" value="<%=request.getParameter("orgId")%>">
     </td>
   </tr>
@@ -212,7 +221,7 @@ Add Component<br>
     <td nowrap class="formLabel">
       Alert Description
     </td>
-    <td valign=center colspan=1>
+    <td valign=center>
       <input type=text size=50 name="alertText" value="<%= toHtmlValue(OppComponentDetails.getAlertText()) %>"><br>
     </td>
   </tr>
@@ -231,7 +240,7 @@ Add Component<br>
 &nbsp;
 <br>
   <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&oppId=<%=OpportunityHeader.getOppId()%>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= OpportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
   <input type="reset" value="Reset">
   <input type="hidden" name="dosubmit" value="true">
   </td>

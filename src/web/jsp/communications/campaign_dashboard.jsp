@@ -71,7 +71,7 @@ Dashboard
       <%= (campaign.hasFiles()?"<a href=\"CampaignManager.do?command=PrepareDownload&id=" + campaign.getId() + "\">Download<br>Available</a>":"") %>
     </td>
 
-    <td valign="center" width="100%" nowrap class="row<%= rowid %>">
+    <td valign="center" width="100%" class="row<%= rowid %>">
       <a href="CampaignManager.do?command=Details&id=<%=campaign.getId()%>&reset=true"><%=toHtml(campaign.getName())%></a>
       <%= ("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id"))?" <font color=\"red\">(Added)</font>":"") %>
     </td>

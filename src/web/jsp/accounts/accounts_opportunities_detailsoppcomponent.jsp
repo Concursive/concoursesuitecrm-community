@@ -4,12 +4,12 @@
 <jsp:useBean id="OppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
-<form name="componentDetails" action="Opportunities.do?command=ModifyComponent&id=<%=OppComponentDetails.getId()%>" method="post">
+<form name="componentDetails" action="Opportunities.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>" method="post">
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
-<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
-<a href="Opportunities.do?command=Details&oppId=<%=OppComponentDetails.getOppId()%>&orgId=<%=OrgDetails.getId()%>&reset=true">Opportunity Details</a> >
+<a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
+<a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Opportunities</a> >
+<a href="Opportunities.do?command=Details&headerId=<%= OppComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>&reset=true">Opportunity Details</a> >
 Component Details
 <br>
 <hr color="#BFBFBB" noshade>
@@ -27,33 +27,28 @@ Component Details
   </tr>
   <tr>
     <td class="containerBack">
-    
-<input type=hidden name="oppId" value="<%= OppComponentDetails.getOppId() %>">
+<input type=hidden name="headerId" value="<%= OppComponentDetails.getHeaderId() %>">
 <input type=hidden name="id" value="<%= OppComponentDetails.getId() %>">
 <input type=hidden name="orgId" value="<%= OrgDetails.getId() %>">
-
-<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=ModifyComponent&id=<%=OppComponentDetails.getId()%>&orgId=<%=OrgDetails.getId()%>';submit();"></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%=OrgDetails.getId()%>&oppId=<%=OppComponentDetails.getId()%>&popup=true','Opportunities.do?command=DetailsOpp&orgId=<%=OrgDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%= OrgDetails.getId() %>&id=<%= OppComponentDetails.getId() %>&popup=true','Opportunities.do?command=DetailsOpp&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"></dhv:permission>
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  
   <tr class="title">
     <td colspan=2 valign=center align=left>
       <strong><%= toHtml(OppComponentDetails.getDescription()) %></strong>
     </td>
   </tr>  
-  
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Owner
     </td>
     <td valign=center width=100%>
       <%= OppComponentDetails.getOwnerName() %>
-      <dhv:evaluate exp="<%=!(OppComponentDetails.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
+      <dhv:evaluate exp="<%= !(OppComponentDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
-  
   <dhv:evaluate exp="<%= hasText(OppComponentDetails.getTypes().valuesAsString()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -64,14 +59,12 @@ Component Details
      </td>
   </tr>
   </dhv:evaluate>  
-  
   <dhv:evaluate exp="<%= hasText(OppComponentDetails.getNotes()) %>">
   <tr class="containerBody">
     <td valign="top" nowrap class="formLabel">Additional Notes</td>
     <td valign="top"><%= toHtml(OppComponentDetails.getNotes()) %></td>
   </tr>
   </dhv:evaluate>
-  
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Prob. of Close
@@ -112,16 +105,14 @@ Component Details
       $<%= OppComponentDetails.getHighCurrency() %>&nbsp;
     </td>
   </tr>  
-  
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Est. Term (months)
+      Est. Term
     </td>
     <td>
-      <%= OppComponentDetails.getTerms() %>
+      <%= OppComponentDetails.getTerms() %> months
     </td>
   </tr>  
-  
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Current Stage
@@ -151,7 +142,7 @@ Component Details
     <td nowrap class="formLabel">
       Alert Description
     </td>
-    <td valign=center colspan=1>
+    <td valign=center>
        <%= toHtml(OppComponentDetails.getAlertText()) %>
     </td>
   </tr>
@@ -162,12 +153,11 @@ Component Details
     <td nowrap class="formLabel">
       Alert Date
     </td>
-    <td valign=center colspan=1>
+    <td valign=center>
        <%= OppComponentDetails.getAlertDateStringLongYear() %>
     </td>
   </tr>
 </dhv:evaluate>  
-  
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Entered
@@ -176,8 +166,7 @@ Component Details
       <%= OppComponentDetails.getEnteredByName() %>&nbsp;-&nbsp;<%= OppComponentDetails.getEnteredString() %>
     </td>
   </tr>
-  
-      <tr class="containerBody">
+  <tr class="containerBody">
     <td nowrap class="formLabel">
       Modified
     </td>
@@ -185,11 +174,10 @@ Component Details
       <%= OppComponentDetails.getModifiedByName() %>&nbsp;-&nbsp;<%= OppComponentDetails.getModifiedString() %>
     </td>
   </tr>  
-
 </table>  
 <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"><br></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=ModifyComponent&id=<%=OppComponentDetails.getId()%>&orgId=<%=OrgDetails.getId()%>';submit();"></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%=OrgDetails.getId()%>&oppId=<%=OppComponentDetails.getId()%>&popup=true','Opportunities.do?command=DetailsOpp&orgId=<%=OrgDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=ModifyComponent&id=<%= OppComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%=OrgDetails.getId()%>&id=<%= OppComponentDetails.getId() %>&popup=true','Opportunities.do?command=DetailsOpp&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"></dhv:permission></td>
 </td></tr>
 </table>

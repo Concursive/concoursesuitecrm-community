@@ -11,7 +11,7 @@
 <a href="CampaignManager.do">Communications Manager</a> >
 Campaign List
 <hr color="#BFBFBB" noshade>
-<dhv:permission name="campaign-campaigns-add"><a href="CampaignManager.do?command=Add">Add a Campaign</a></dhv:permission>
+<dhv:permission name="campaign-campaigns-add"><a href="CampaignManager.do?command=Add&source=list">Add a Campaign</a></dhv:permission>
 <center><%= CampaignListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
@@ -78,24 +78,24 @@ Campaign List
       <dhv:permission name="campaign-campaigns-edit"><a href="CampaignManager.do?command=ViewDetails&id=<%= campaign.getId() %>&reset=true">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-edit,campaign-campaigns-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-delete"><a href="javascript:confirmDelete('CampaignManager.do?command=Delete&id=<%= campaign.getId() %>');">Del</a></dhv:permission>
       </td>
     	</dhv:permission>
-    <td valign=center nowrap class="row<%= rowid %>">
+    <td valign="center" width="100%" class="row<%= rowid %>">
       <a href="CampaignManager.do?command=ViewDetails&id=<%= campaign.getId() %>&reset=true"><%= toHtml(campaign.getName()) %></a>
-      <%= (("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id")))?" <font color=\"red\">(Cancelled)</font>":"") %>
+      <%= (("true".equals(request.getParameter("notify")) && (String.valueOf(campaign.getId())).equals(request.getParameter("id")))?" <font color=\"red\">(Cancelled)</font>":"") %>
     </td>
-    <td valign=center align="center" nowrap class="row<%= rowid %>">
+    <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <dhv:permission name="campaign-campaigns-groups-edit"><a href="CampaignManager.do?command=AddGroups&id=<%= campaign.getId() %>"></dhv:permission><%= (campaign.hasGroups()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %><dhv:permission name="campaign-campaigns-groups-view"></a></dhv:permission>
     </td>
-    <td valign=center align="center" nowrap class="row<%= rowid %>">
+    <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <dhv:permission name="campaign-campaigns-messages-view"><a href="CampaignManager.do?command=ViewMessage&id=<%= campaign.getId() %>"></dhv:permission><%= (campaign.hasMessage()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %><dhv:permission name="campaign-campaigns-messages-view"></a></dhv:permission>
     </td>
-    <td valign=center align="center" nowrap class="row<%= rowid %>">
+    <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <dhv:permission name="campaign-campaigns-view"><a href="CampaignManager.do?command=ViewSchedule&id=<%= campaign.getId() %>"></dhv:permission><%= (campaign.hasDetails()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %><dhv:permission name="campaign-campaigns-view"></a></dhv:permission>
     </td>
-    <td valign=center align="center" nowrap class="row<%= rowid %>">
+    <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <%=toHtml(campaign.getActiveDateString())%>
     </td>
     <dhv:permission name="campaign-campaigns-edit">
-    <td valign=center align="center" nowrap class="row<%= rowid %>">
+    <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <%= (campaign.isReadyToActivate()?"<a href=\"javascript:confirmForward('CampaignManager.do?command=Activate&id=" + campaign.getId() + "&notify=true&modified=" + campaign.getModified() + "');\"><font color=\"red\">Activate</font></a>":"&nbsp;") %>
     </td>
     </dhv:permission>

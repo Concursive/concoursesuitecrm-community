@@ -1,9 +1,10 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
-<jsp:useBean id="OppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
-<jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
-<jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="contactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="oppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>
+<jsp:useBean id="stageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="busTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="unitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
+<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].header_description.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
@@ -51,29 +52,29 @@
       }
     }
 </script>
-<form name="addOpportunity" action="ExternalContactsOpps.do?command=InsertOpp&contactId=<%= ContactDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<form name="addOpportunity" action="ExternalContactsOpps.do?command=InsertOpp&contactId=<%= contactDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
-<a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
-<a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%=ContactDetails.getId()%>">Opportunities</a> >
+<a href="ExternalContacts.do?command=ContactDetails&id=<%= contactDetails.getId() %>">Contact Details</a> >
+<a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>">Opportunities</a> >
 Add Opportunity<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(ContactDetails.getNameFull()) %></strong>
+      <strong><%= toHtml(contactDetails.getNameFull()) %></strong>
     </td>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + ContactDetails.getId(); %>      
+      <% String param1 = "id=" + contactDetails.getId(); %>      
       <dhv:container name="contacts" selected="opportunities" param="<%= param1 %>" />
     </td>
   </tr>
   <tr>
     <td class="containerBack">
   <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>  
@@ -89,7 +90,7 @@ Add Opportunity<br>
       Description
     </td>
     <td width="100%">
-      <input type=text size=50 name="header_description" value="<%= toHtmlValue(OppDetails.getHeader().getDescription()) %>">
+      <input type=text size=50 name="header_description" value="<%= toHtmlValue(oppDetails.getHeader().getDescription()) %>">
       <font color=red>*</font> <%= showAttribute(request, "descriptionError") %>
     </td>
   </tr>
@@ -103,6 +104,14 @@ Add Opportunity<br>
     </td>     
   </tr>
   
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Assign To
+    </td>
+    <td valign="center">
+      <%= UserList.getHtmlSelect("component_owner") %>
+    </td>
+  </tr>
   
   <tr class="containerBody">
   <td class="formLabel" valign="top">
@@ -122,14 +131,14 @@ Add Opportunity<br>
       Component Description
     </td>
     <td width="100%">
-      <input type=text size=50 name="component_description" value="<%= toHtmlValue(OppDetails.getComponent().getDescription()) %>">
+      <input type=text size=50 name="component_description" value="<%= toHtmlValue(oppDetails.getComponent().getDescription()) %>">
       <font color=red>*</font> <%= showAttribute(request, "componentDescriptionError") %>
     </td>
   </tr>  
   
   <tr class="containerBody">
     <td valign="top" nowrap class="formLabel">Additional Notes</td>
-    <td><TEXTAREA NAME='component_notes' ROWS=3 COLS=50><%= toString(OppDetails.getComponent().getNotes()) %></TEXTAREA></td>
+    <td><TEXTAREA NAME='component_notes' ROWS=3 COLS=50><%= toString(oppDetails.getComponent().getNotes()) %></TEXTAREA></td>
   </tr>  
 
   <tr class="containerBody">
@@ -137,8 +146,8 @@ Add Opportunity<br>
       Source
     </td>
     <td>
-      <% BusTypeList.setSelectName("component_type");%>
-      <%= BusTypeList.getHtml() %>
+      <% busTypeList.setSelectName("component_type");%>
+      <%= busTypeList.getHtml() %>
     </td>
   </tr>
 
@@ -147,7 +156,7 @@ Add Opportunity<br>
       Prob. of Close
     </td>
     <td>
-      <input type=text size=5 name="component_closeProb" value="<%= OppDetails.getComponent().getCloseProbValue() %>">%
+      <input type=text size=5 name="component_closeProb" value="<%= oppDetails.getComponent().getCloseProbValue() %>">%
       <font color=red>*</font> <%= showAttribute(request, "closeProbError") %>
     </td>
   </tr>
@@ -157,7 +166,7 @@ Add Opportunity<br>
       Est. Close Date
     </td>
     <td>
-      <input type=text size=10 name="component_closeDate" value="<%= toHtmlValue(OppDetails.getComponent().getCloseDateString()) %>">
+      <input type=text size=10 name="component_closeDate" value="<%= toHtmlValue(oppDetails.getComponent().getCloseDateString()) %>">
       <a href="javascript:popCalendar('addOpportunity', 'component_closeDate');">Date</a> (mm/dd/yyyy)
       <font color=red>*</font> <%= showAttribute(request, "closeDateError") %>
     </td>
@@ -168,7 +177,7 @@ Add Opportunity<br>
       Low Estimate
     </td>
     <td>
-      <input type=text size=10 name="component_low" value="<%= toHtmlValue(OppDetails.getComponent().getLowAmount()) %>">
+      <input type=text size=10 name="component_low" value="<%= toHtmlValue(oppDetails.getComponent().getLowAmount()) %>">
     </td>
   </tr>
   
@@ -177,7 +186,7 @@ Add Opportunity<br>
       Best Guess Estimate
     </td>
     <td>
-      <input type=text size=10 name="component_guess" value="<%= toHtmlValue(OppDetails.getComponent().getGuessAmount()) %>">
+      <input type=text size=10 name="component_guess" value="<%= toHtmlValue(oppDetails.getComponent().getGuessAmount()) %>">
       <font color=red>*</font> <%= showAttribute(request, "guessError") %>
     </td>
   </tr>
@@ -187,7 +196,7 @@ Add Opportunity<br>
       High Estimate
     </td>
     <td>
-      <input type=text size=10 name="component_high" value="<%= toHtmlValue(OppDetails.getComponent().getHighAmount()) %>">
+      <input type=text size=10 name="component_high" value="<%= toHtmlValue(oppDetails.getComponent().getHighAmount()) %>">
     </td>
   </tr>
   
@@ -196,9 +205,9 @@ Add Opportunity<br>
       Est. Term
     </td>
     <td>
-      <input type=text size=5 name="component_terms" value="<%= toHtmlValue(OppDetails.getComponent().getTermsString()) %>">
-      <% UnitTypeList.setSelectName("component_units");%>
-      <%= UnitTypeList.getHtml() %>
+      <input type="text" size="5" name="component_terms" value="<%= toHtmlValue(oppDetails.getComponent().getTermsString()) %>">
+      <% unitTypeList.setSelectName("component_units");%>
+      <%= unitTypeList.getHtml() %>
       <font color="red">*</font> <%= showAttribute(request, "termsError") %>
     </td>
   </tr>
@@ -208,7 +217,7 @@ Add Opportunity<br>
       Current Stage
     </td>
     <td>
-      <%=StageList.getHtmlSelect("component_stage",OppDetails.getComponent().getStage())%>
+      <%= stageList.getHtmlSelect("component_stage", oppDetails.getComponent().getStage()) %>
       <input type=checkbox name="closeNow">Close this component
     </td>
   </tr>
@@ -218,7 +227,7 @@ Add Opportunity<br>
       Est. Commission
     </td>
     <td>
-      <input type=text size=5 name="component_commission" value="<%= OppDetails.getComponent().getCommissionValue() %>">%
+      <input type=text size=5 name="component_commission" value="<%= oppDetails.getComponent().getCommissionValue() %>">%
       <input type=hidden name="header_contactLink" value="<%=request.getParameter("contactId")%>">
       <input type=hidden name="contactId" value="<%=request.getParameter("contactId")%>">
     </td>
@@ -228,8 +237,8 @@ Add Opportunity<br>
     <td nowrap class="formLabel">
       Alert Description
     </td>
-    <td valign=center colspan=1>
-      <input type=text size=50 name="component_alertText" value="<%= toHtmlValue(OppDetails.getComponent().getAlertText()) %>"><br>
+    <td valign=center>
+      <input type=text size=50 name="component_alertText" value="<%= toHtmlValue(oppDetails.getComponent().getAlertText()) %>"><br>
     </td>
   </tr>
   
@@ -237,17 +246,16 @@ Add Opportunity<br>
     <td nowrap class="formLabel">
       Alert Date
     </td>
-    <td valign=center colspan=1>
-      <input type=text size=10 name="component_alertDate" value="<%= toHtmlValue(OppDetails.getComponent().getAlertDateString()) %>">
+    <td valign=center>
+      <input type="text" size="10" name="component_alertDate" value="<%= toHtmlValue(oppDetails.getComponent().getAlertDateString()) %>">
       <a href="javascript:popCalendar('addOpportunity', 'component_alertDate');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>
-
 </table>
 &nbsp;
 <br>
   <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>';this.form.dosubmit.value='false';">
   <input type="reset" value="Reset">
   <input type="hidden" name="dosubmit" value="true">
   </td>

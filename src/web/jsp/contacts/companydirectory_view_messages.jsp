@@ -10,7 +10,6 @@
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 Messages<br>
 <hr color="#BFBFBB" noshade>
-<form name="listView" method="post" action="ExternalContacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%>">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
@@ -27,6 +26,7 @@ Messages<br>
     <td class="containerBack">
 <br>
 <center><%= ContactMessageListInfo.getAlphabeticalPageLinks() %></center>
+<form name="listView" method="post" action="ExternalContacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%>">
 <table width="100%" border="0">
   <tr>
     <td align="left">
@@ -40,6 +40,7 @@ Messages<br>
     </td>
   </tr>
 </table>
+</form>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td width=8 valign=center align=left>
@@ -98,4 +99,3 @@ Messages<br>
 <br>
 </td></tr>
 </table>
-</form>
