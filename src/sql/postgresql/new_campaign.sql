@@ -87,14 +87,14 @@ CREATE TABLE campaign (
   description VARCHAR(255),
   list_id int,
   message_id int DEFAULT -1,
-	reply_addr VARCHAR(255) DEFAULT NULL,
-	subject VARCHAR(255) DEFAULT NULL,
-	message TEXT DEFAULT NULL,
+  reply_addr VARCHAR(255) DEFAULT NULL,
+  subject VARCHAR(255) DEFAULT NULL,
+  message TEXT DEFAULT NULL,
   status_id INT DEFAULT 0,
   status VARCHAR(255),
   active BOOLEAN DEFAULT false,
   active_date DATE DEFAULT NULL,
-	send_method_id INT DEFAULT -1 NOT NULL,
+  send_method_id INT DEFAULT -1 NOT NULL,
   inactive_date DATE DEFAULT NULL,
   approval_date TIMESTAMP DEFAULT NULL,
   approvedby INT DEFAULT -1,
@@ -103,7 +103,7 @@ CREATE TABLE campaign (
   enteredby INT NOT NULL,
   modified TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL,
-  survey_id int
+  survey_id INT NOT NULL DEFAULT -1
 );
 
 
@@ -203,5 +203,4 @@ CREATE TABLE survey_answer (
   text_ans VARCHAR(100) DEFAULT null,
   enteredby int not null
 );
-
 
