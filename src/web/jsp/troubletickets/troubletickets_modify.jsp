@@ -88,6 +88,22 @@ function ShowSpan(thisID)
 
 <body onLoad="HideSpans();">
 <form name="details" action="/TroubleTickets.do?command=Update&auto-populate=true" method="post">
+
+<a href="/TroubleTickets.do">Tickets</a> > 
+
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<a href="/TroubleTickets.do?command=Home">View Tickets</a> >
+  <%}%>
+<%} else {%>
+<a href="/TroubleTickets.do?command=Home">View Tickets</a> >
+<a href="/TroubleTickets.do?command=Details&id=<%=TicketDetails.getId()%>">Ticket Details</a> >
+<%}%>
+
+
+Modify Ticket<br>
+<hr color="#BFBFBB" noshade>
+
 <a href="TroubleTickets.do?command=Home">Back to Ticket List</a><br>&nbsp;
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

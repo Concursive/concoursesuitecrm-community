@@ -4,7 +4,11 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="details" action="/TroubleTickets.do?command=Modify&auto-populate=true" method="post">
-<a href="TroubleTickets.do?command=Home">Back to Ticket List</a><br>&nbsp;
+<a href="/TroubleTickets.do">Tickets</a> > 
+<a href="/TroubleTickets.do?command=Home">View Tickets</a> >
+Ticket Details<br>
+<hr color="#BFBFBB" noshade>
+<!--a href="TroubleTickets.do?command=Home">Back to Ticket List</a><br>&nbsp;-->
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>

@@ -63,6 +63,9 @@
   }
 </script>
 <form name="addticket" action="/TroubleTickets.do?command=Insert&auto-populate=true" method="post">
+<a href="/TroubleTickets.do">Tickets</a> > 
+Add Ticket<br>
+<hr color="#BFBFBB" noshade>
 <% if (request.getParameter("contact") != null) {%>
 <input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
 <%} else {%>

@@ -129,7 +129,6 @@ public void setDoSystemMessages(boolean doSystemMessages) {
         this.addElement(tempLog);
       }
       
-
       if (current.getClosed() && !prev.getClosed()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);

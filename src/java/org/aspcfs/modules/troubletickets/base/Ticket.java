@@ -1634,7 +1634,6 @@ public class Ticket extends GenericBean {
       thisEntry.setAssignedTo(this.getAssignedTo());
       thisEntry.setPriorityCode(this.getPriorityCode());
       thisEntry.setSeverityCode(this.getSeverityCode());
-      //thisEntry.setEntryText("Solution: " + this.getSolution());
       thisEntry.setTicketId(this.getId());
       thisEntry.setClosed(true);
       thisEntry.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
@@ -1744,26 +1743,21 @@ public class Ticket extends GenericBean {
     try {
       db.setAutoCommit(false);
       i = this.update(db, false);
-      
-      //insert a new entry into the ticket log only if there is a comment entered
-      //TODO: OR when a ticket is being re-assigned, re-prioritized, or re-severitized
-      
-      //if (this.getComment() != null && !(this.getComment().equals(""))) {
-        TicketLog thisEntry = new TicketLog();
-        thisEntry.setEnteredBy(this.getModifiedBy());
-        thisEntry.setDepartmentCode(this.getDepartmentCode());
-        thisEntry.setAssignedTo(this.getAssignedTo());
-        thisEntry.setEntryText(this.getComment());
-        thisEntry.setTicketId(this.getId());
-        thisEntry.setPriorityCode(this.getPriorityCode());
-        thisEntry.setSeverityCode(this.getSeverityCode());
+    
+      TicketLog thisEntry = new TicketLog();
+      thisEntry.setEnteredBy(this.getModifiedBy());
+      thisEntry.setDepartmentCode(this.getDepartmentCode());
+      thisEntry.setAssignedTo(this.getAssignedTo());
+      thisEntry.setEntryText(this.getComment());
+      thisEntry.setTicketId(this.getId());
+      thisEntry.setPriorityCode(this.getPriorityCode());
+      thisEntry.setSeverityCode(this.getSeverityCode());
 
-        if (this.getCloseIt() == true) {
-          thisEntry.setClosed(true);
-        }
+      if (this.getCloseIt() == true) {
+        thisEntry.setClosed(true);
+      }
 
-        history.addElement(thisEntry);
-      //}
+      history.addElement(thisEntry);
 
       Iterator hist = history.iterator();
       while (hist.hasNext()) {

@@ -8,16 +8,20 @@
 <jsp:useBean id="OpenInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<dhv:permission name="tickets-tickets-add"><a href="/TroubleTickets.do?command=Add">Add a Ticket</a></dhv:permission>
-<br>
-<%= showAttribute(request, "actionError") %>
+
+<a href="/TroubleTickets.do">Tickets</a> > 
+  View Tickets<br>
+<hr color="#BFBFBB" noshade>
+
+<!--dhv:permission name="tickets-tickets-add"><a href="/TroubleTickets.do?command=Add">Add a Ticket</a></dhv:permission-->
+<!--br-->
+<!--%= showAttribute(request, "actionError") %-->
+
+<% if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
+
+<dhv:pagedListStatus showExpandLink="true" title="Tickets Assigned to Me" object="AssignedToMeInfo"/>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td align="left" colspan="7">
-      <strong>Tickets Assigned to Me (Open)</strong>
-    </td>
-  </tr>
   <tr class="title">
     <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<td valign="center" align="left">
@@ -91,22 +95,24 @@
   </tr>
 	<%}%>
 	</table>
-	<br>
+  
+  <% if (AssignedToMeInfo.getExpandedSelection()) {%>
+  <br>
   <dhv:pagedListControl object="AssignedToMeInfo" tdClass="row1"/>
+  <%}%>
   
 	<%} else {%>
 		<tr bgcolor="white"><td colspan="7" valign="center">No tickets found.</td></tr>
 		</table>
 	<%}%>
-  
 <br>
+<%}%>
+
+<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || OpenInfo.getExpandedSelection()) { %>
+
+<dhv:pagedListStatus showExpandLink="true" title="Tickets in My Department" object="OpenInfo"/>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td align="left" colspan="7">
-      <strong>Tickets in My Department (Open)</strong>
-    </td>
-  </tr>
   <tr class="title">
   <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<td valign="center" align="left">
@@ -185,8 +191,11 @@
   </tr>
 	<%}%>
 	</table>
-	<br>
+  
+  <% if (OpenInfo.getExpandedSelection()) {%>
+  <br>
   <dhv:pagedListControl object="OpenInfo" tdClass="row1"/>
+  <%}%>
   
 	<%} else {%>
 		<tr bgcolor="white"><td colspan="7" valign="center">No tickets found.</td></tr>
@@ -194,14 +203,13 @@
 	<%}%>
   
 <br>
+<%}%>
+
+<% if ( (request.getParameter("pagedListSectionId") == null && !(AssignedToMeInfo.getExpandedSelection()) && !(OpenInfo.getExpandedSelection())) || CreatedByMeInfo.getExpandedSelection()) { %>
+
+<dhv:pagedListStatus showExpandLink="true" title="Tickets Created by Me" object="CreatedByMeInfo"/>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="containerHeader">
-    <td align="left" colspan="7">
-      <strong>Tickets Created by Me (Open)</strong>
-    </td>
-  </tr>
-
   <tr class="title">
   <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<td valign="center" align="left">
@@ -241,7 +249,7 @@
 		<td width=50 valign="top" nowrap class="row<%= rowid %>">
 			<a href="/TroubleTickets.do?command=Details&id=<%=thisTic.getId()%>"><%=thisTic.getPaddedId()%></a>
 		</td>
-		<td width=75 valign="top" nowrap class="row<%= rowid %>">
+		<td width="10" valign="top" nowrap class="row<%= rowid %>">
 			<%=toHtml(thisTic.getPriorityName())%>
 		</td>
 		<td width=30 valign="top" nowrap class="row<%= rowid %>">
@@ -281,11 +289,15 @@
   
 	<%}%>
 	</table>
-	<br>
+  
+  <% if (CreatedByMeInfo.getExpandedSelection()) {%>
+  <br>
   <dhv:pagedListControl object="CreatedByMeInfo" tdClass="row1"/>
+  <%}%>
   
 	<%} else {%>
 		<tr bgcolor="white"><td colspan="7" valign="center">No tickets found.</td></tr>
 		</table>
 	<%}%>
   
+  <%}%>

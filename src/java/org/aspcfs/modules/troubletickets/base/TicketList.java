@@ -16,7 +16,7 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *@version    $Id$
  */
 public class TicketList extends Vector {
-        
+  
   public static final String tableName = "ticket";
   public static final String uniqueField = "ticketid";
   private java.sql.Timestamp lastAnchor = null;

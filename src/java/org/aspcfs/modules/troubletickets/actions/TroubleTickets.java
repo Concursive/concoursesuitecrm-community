@@ -510,56 +510,117 @@ public final class TroubleTickets extends CFSModule {
     int errorCode = 0;
     Exception errorMessage = null;
     Connection db = null;
-
+    
+    TicketList assignedToMeList = new TicketList();
+    TicketList openList = new TicketList();
+    TicketList createdByMeList = new TicketList();
+    String sectionId = null;
+    
+    if (context.getRequest().getParameter("pagedListSectionId") != null) {
+      sectionId = context.getRequest().getParameter("pagedListSectionId");
+    } 
+    
+    //reset the paged lists
+    if (context.getRequest().getParameter("resetList") != null && context.getRequest().getParameter("resetList").equals("true")) {
+      context.getSession().removeAttribute("AssignedToMeInfo");
+      context.getSession().removeAttribute("OpenInfo");
+      context.getSession().removeAttribute("CreatedByMeInfo");
+    }
+    
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     
     PagedListInfo assignedToMeInfo = this.getPagedListInfo(context, "AssignedToMeInfo");
     assignedToMeInfo.setLink("/TroubleTickets.do?command=Home");
-    TicketList assignedToMeList = new TicketList();
-    assignedToMeList.setPagedListInfo(assignedToMeInfo);
-    assignedToMeList.setAssignedTo(getUserId(context));
-    assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
-    assignedToMeList.setOnlyOpen(true);
     
-    PagedListInfo openInfo = this.getPagedListInfo(context, "OpenInfo");
-    openInfo.setLink("/TroubleTickets.do?command=Home");
-    TicketList openList = new TicketList();
-    openList.setPagedListInfo(openInfo);
-    openList.setUnassignedToo(true);
-    openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
-    openList.setOnlyOpen(true);
+    if (sectionId == null) {
+      if (!assignedToMeInfo.getExpandedSelection()) {
+        assignedToMeInfo.setItemsPerPage(6);
+      } else {
+        assignedToMeInfo.setItemsPerPage(10);
+      }
+    } else if (sectionId.equals(assignedToMeInfo.getId())) {
+      assignedToMeInfo.setExpandedSelection(true);
+    }
     
-    PagedListInfo createdByMeInfo = this.getPagedListInfo(context, "CreatedByMeInfo");
-    createdByMeInfo.setLink("/TroubleTickets.do?command=Home");
-    TicketList createdByMeList = new TicketList();
-    createdByMeList.setPagedListInfo(createdByMeInfo);
-    createdByMeList.setUnassignedToo(true);
-    createdByMeList.setEnteredBy(getUserId(context));
-    createdByMeList.setOnlyOpen(true);
-
-    try {
-      db = this.getConnection(context);
-
+    if (sectionId == null || assignedToMeInfo.getExpandedSelection() == true) {
+      assignedToMeList.setPagedListInfo(assignedToMeInfo);
+      assignedToMeList.setAssignedTo(getUserId(context));
+      assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+      assignedToMeList.setOnlyOpen(true);
+      
       if ("assignedToMe".equals(assignedToMeInfo.getListView())) {
         assignedToMeList.setAssignedTo(getUserId(context));
         assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       }
-
+    }
+    
+    PagedListInfo openInfo = this.getPagedListInfo(context, "OpenInfo");
+    openInfo.setLink("/TroubleTickets.do?command=Home");
+    
+    if (sectionId == null) {
+      if (!openInfo.getExpandedSelection()) {
+        openInfo.setItemsPerPage(6);
+      } else {
+        openInfo.setItemsPerPage(10);
+      }
+    } else if (sectionId.equals(openInfo.getId())) {
+      openInfo.setExpandedSelection(true);
+    }
+    
+    if (sectionId == null || openInfo.getExpandedSelection() == true) {
+      openList.setPagedListInfo(openInfo);
+      openList.setUnassignedToo(true);
+      openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+      openList.setOnlyOpen(true);
+      
       if ("unassigned".equals(openInfo.getListView())) {
         openList.setUnassignedToo(true);
         openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       }
+    }
+    
+    PagedListInfo createdByMeInfo = this.getPagedListInfo(context, "CreatedByMeInfo");
+    createdByMeInfo.setLink("/TroubleTickets.do?command=Home");
+    
+    if (sectionId == null) {
+      if (!createdByMeInfo.getExpandedSelection()) {
+        createdByMeInfo.setItemsPerPage(6);
+      } else {
+        createdByMeInfo.setItemsPerPage(10);
+      }
+    } else if (sectionId.equals(createdByMeInfo.getId())) {
+      createdByMeInfo.setExpandedSelection(true);
+    }
+    
+    if (sectionId == null || createdByMeInfo.getExpandedSelection() == true) {
+      createdByMeList.setPagedListInfo(createdByMeInfo);
+      createdByMeList.setUnassignedToo(true);
+      createdByMeList.setEnteredBy(getUserId(context));
+      createdByMeList.setOnlyOpen(true);
+    }
 
-      assignedToMeList.buildList(db);
-      openList.buildList(db);
-      createdByMeList.buildList(db);
+    try {
+      db = this.getConnection(context);
 
+      if (sectionId == null || assignedToMeInfo.getExpandedSelection() == true) {
+        assignedToMeList.buildList(db);
+      }
+      
+      if (sectionId == null || openInfo.getExpandedSelection() == true) {
+        openList.buildList(db);
+      }
+      
+      if (sectionId == null || createdByMeInfo.getExpandedSelection() == true) {
+        createdByMeList.buildList(db);
+      }
+    
     } catch (Exception e) {
       errorCode = 1;
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
+    
     addModuleBean(context, "ViewTickets", "View Tickets");
     context.getRequest().setAttribute("CreatedByMeList", createdByMeList);
     context.getRequest().setAttribute("AssignedToMeList", assignedToMeList);
