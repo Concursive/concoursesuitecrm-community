@@ -21,7 +21,6 @@ Modify Action List<br>
 <hr color="#BFBFBB" noshade>
 <%-- Navigating the contact list, not the final submit --%>
 <form name="contactListView" method="post" action="MyActionContacts.do?command=Modify&doBuild=false">
-  <br>
   <center><%= ContactListInfo.getAlphabeticalPageLinks("setFieldSubmit","contactListView") %></center>
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
   <input type="hidden" name="letter">

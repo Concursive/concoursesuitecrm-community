@@ -25,12 +25,9 @@ Add Contacts<br>
 <input type="button" value="Cancel" onClick="javascript:window.location.href='<%= returnURL %>'">
 <input type="button" value="Preview" onClick="javascript:popPreview()">
 <br>
-&nbsp;<br>
-
 <%-- include jsp for contact criteria --%>
 <%@ include file="../communications/group_criteria_form.jsp" %>
-
-&nbsp;<br>
+<br>
 <input type="hidden" name="actionId" value="<%= ActionList.getId() %>">
 <input type="submit" value="Save">
 <input type="button" value="Cancel" onClick="javascript:window.location.href='<%= returnURL %>'">
