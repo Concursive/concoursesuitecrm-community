@@ -3,6 +3,7 @@
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
 <%@ include file="initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="oppdet" action="/Opportunities.do?id=<%=OppDetails.getId()%>&orgId=<%= OppDetails.getAccountLink() %>&contactId=<%= OppDetails.getContactLink() %>" method="post">
 <a href="/Accounts.do">Account Management</a> > 
@@ -27,7 +28,7 @@ Opportunity Details<br>
     <td class="containerBack">
 <input type=hidden name="command" value="<%= OppDetails.getId() %>">
 <dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" name="action" value="Modify" onClick="document.oppdet.command.value='Modify';document.oppdet.submit()"></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='Delete';confirmSubmit(this.form);"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" name="action" value="Delete" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=OppDetails.getId()%>','Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -44,6 +45,17 @@ Opportunity Details<br>
       <dhv:evaluate exp="<%=!(OppDetails.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
+  
+  <dhv:evaluate exp="<%= hasText(OppDetails.getTypes().valuesAsString()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Opportunity Type(s)
+    </td>
+    <td>  
+      <%= toHtml(OppDetails.getTypes().valuesAsString()) %>
+     </td>
+  </tr>
+  </dhv:evaluate>  
   
   <dhv:evaluate exp="<%= hasText(OppDetails.getNotes()) %>">
   <tr class="containerBody">
@@ -166,7 +178,7 @@ Opportunity Details<br>
 </table>
 <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">&nbsp;<br></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" name="action" value="Modify" onClick="document.oppdet.command.value='Modify';document.oppdet.submit()"></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" name="action" value="Delete" onClick="document.oppdet.command.value='Delete';confirmSubmit(this.form);"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" name="action" value="Delete" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=OppDetails.getId()%>','Opportunities.do?command=View&orgId=<%=OrgDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 </td>
   </tr>
 </table>

@@ -123,6 +123,8 @@ public final class Leads extends CFSModule {
     String association = context.getRequest().getParameter("opp_type");
     
     Opportunity newOpp = (Opportunity) context.getFormBean();
+    //set types
+    newOpp.setTypeList(context.getRequest().getParameterValues("selectedList"));
     newOpp.setEnteredBy(getUserId(context));
     newOpp.setOwner(getUserId(context));
     newOpp.setModifiedBy(getUserId(context));
@@ -619,7 +621,7 @@ public final class Leads extends CFSModule {
 		      //TODO: these may have different options later
 		      newOpp.setCallsDelete(true);
 		      newOpp.setDocumentDelete(true);
-	      	      recordDeleted = newOpp.delete(db, context, this.getPath(context, "leads", newOpp.getId()));
+	      	recordDeleted = newOpp.delete(db, context, this.getPath(context, "leads", newOpp.getId()));
 	      } else if ( ((String)context.getRequest().getParameter("action")).equals("disable") ) {
 		      recordDeleted = newOpp.disable(db);
 	      }
@@ -1106,6 +1108,8 @@ public final class Leads extends CFSModule {
     Connection db = null;
     int resultCount = 0;
     Opportunity newOpp = (Opportunity) context.getFormBean();
+    newOpp.setTypeList(context.getRequest().getParameterValues("selectedList"));
+
     try {
       db = this.getConnection(context);
       newOpp.setModifiedBy(getUserId(context));

@@ -3,7 +3,7 @@
 <jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <jsp:useBean id="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
 <form name="oppdet" action="/ExternalContactsOpps.do?command=ModifyOpp&id=<%=OppDetails.getId()%>&orgId=<%= OppDetails.getAccountLink() %>&contactId=<%= OppDetails.getContactLink() %>" method="post">
 
 <a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
@@ -32,7 +32,7 @@ Opportunity Details<br>
 <input type=hidden name="command" value="<%= OppDetails.getId() %>">
 
 <dhv:permission name="contacts-external_contacts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='/ExternalContactsOpps.do?command=ModifyOpp&id=<%=OppDetails.getId()%>&orgId=<%= OppDetails.getAccountLink() %>&contactId=<%= OppDetails.getContactLink() %>';submit();"></dhv:permission>
-<dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='/ExternalContactsOpps.do?command=DeleteOpp&id=<%= OppDetails.getId() %>&orgId=<%= OppDetails.getAccountLink() %>&contactId=<%= OppDetails.getContactLink() %>';confirmSubmit(this.form);"></dhv:permission>
+<dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%=ContactDetails.getId()%>&id=<%=OppDetails.getId()%>','ExternalContactsOpps.do?command=ViewOpps&contactId=<%=ContactDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"><br>&nbsp;</dhv:permission>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -51,6 +51,17 @@ Opportunity Details<br>
       <dhv:evaluate exp="<%=!(OppDetails.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
+  
+  <dhv:evaluate exp="<%= hasText(OppDetails.getTypes().valuesAsString()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Opportunity Type(s)
+    </td>
+    <td>  
+      <%= toHtml(OppDetails.getTypes().valuesAsString()) %>
+     </td>
+  </tr>
+  </dhv:evaluate>    
   
   <dhv:evaluate exp="<%= hasText(OppDetails.getNotes()) %>">
   <tr class="containerBody">
@@ -170,7 +181,7 @@ Opportunity Details<br>
 </table>
 <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"><br></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='/ExternalContactsOpps.do?command=ModifyOpp&id=<%=OppDetails.getId()%>&orgId=<%= OppDetails.getAccountLink() %>&contactId=<%= OppDetails.getContactLink() %>';submit();"></dhv:permission>
-<dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='/ExternalContactsOpps.do?command=DeleteOpp&id=<%= OppDetails.getId() %>&orgId=<%= OppDetails.getAccountLink() %>&contactId=<%= OppDetails.getContactLink() %>';confirmSubmit(this.form);"></dhv:permission>
+<dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%=ContactDetails.getId()%>&id=<%=OppDetails.getId()%>','ExternalContactsOpps.do?command=ViewOpps&contactId=<%=ContactDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 </td>
 </tr>
 </table>

@@ -164,6 +164,8 @@ public final class Opportunities extends CFSModule {
     boolean recordInserted = false;
 
     Opportunity newOpp = (Opportunity) context.getRequest().getAttribute("OppDetails");
+    //set types
+    newOpp.setTypeList(context.getRequest().getParameterValues("selectedList"));
     newOpp.setEnteredBy(getUserId(context));
     newOpp.setOwner(getUserId(context));
     newOpp.setModifiedBy(getUserId(context));
@@ -272,8 +274,6 @@ public final class Opportunities extends CFSModule {
     Organization thisOrganization = null;
 
     String orgId = context.getRequest().getParameter("orgId");
-    String tempcontact = context.getRequest().getParameter("contactLink");
-    String tempaccount = context.getRequest().getParameter("accountLink");
 
     Connection db = null;
     try {
@@ -291,6 +291,7 @@ public final class Opportunities extends CFSModule {
     addModuleBean(context, "View Accounts", "Delete an opportunity");
     if (errorMessage == null) {
       if (recordDeleted) {
+        context.getRequest().setAttribute("refreshUrl","Opportunities.do?command=View&orgId="+thisOrganization.getId());
         deleteRecentItem(context, newOpp);
         return ("DeleteOK");
       } else {
@@ -389,7 +390,48 @@ public final class Opportunities extends CFSModule {
       return ("SystemError");
     }
   }
+  
+  public String executeCommandConfirmDelete(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    Opportunity thisOpp = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+    String id = null;
+    String orgId = null;
 
+      if (!(hasPermission(context, "accounts-accounts-opportunities-delete"))) {
+              return ("PermissionError");
+      }
+
+    if (context.getRequest().getParameter("id") != null) {
+      id = context.getRequest().getParameter("id");
+    }
+    if (context.getRequest().getParameter("orgId") != null) {
+      orgId = context.getRequest().getParameter("orgId");
+    } 
+    
+    try {
+      db = this.getConnection(context);
+      thisOpp = new Opportunity(db, id);
+      htmlDialog.setRelationships(thisOpp.processDependencies(db));
+      
+        htmlDialog.setTitle("CFS: Confirm Delete");
+        htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='Opportunities.do?command=Delete&orgId=" + orgId + "&id=" + id + "'");
+        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }  
 
   /**
    *  Description of the Method
@@ -407,6 +449,7 @@ public final class Opportunities extends CFSModule {
     Exception errorMessage = null;
 
     Opportunity newOpp = (Opportunity) context.getFormBean();
+    newOpp.setTypeList(context.getRequest().getParameterValues("selectedList"));
 
     String orgId = context.getRequest().getParameter("orgId");
     Organization thisOrganization = null;

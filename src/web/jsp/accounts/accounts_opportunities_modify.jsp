@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.*" %>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
 <jsp:useBean id="BusTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
@@ -9,6 +9,7 @@
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popCalendar.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popLookupSelect.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -44,7 +45,10 @@
         alert("Form could not be saved, please check the following:\r\n\r\n" + message);
         return false;
       } else {
-        return true;
+        var test = document.updateOpp.selectedList;
+        if (test != null) {
+          return selectAllOptions(document.updateOpp.selectedList);
+        }
       }
     }
 </script>
@@ -108,6 +112,37 @@ Modify Opportunity<br>
       <%= UserList.getHtmlSelect("owner", OppDetails.getOwner() ) %>
     </td>
   </tr>
+  
+  <tr class="containerBody">
+    <td nowrap class="formLabel" valign="top">
+      Opportunity Type(s)
+    </td>
+  
+  	<td valign=center>
+      
+      <select multiple name="selectedList" id="selectedList" size="5">
+      <dhv:evaluate exp="<%=OppDetails.getTypes().isEmpty()%>">
+      <option value="-1">None Selected</option>
+      </dhv:evaluate>
+      
+      <dhv:evaluate exp="<%=!(OppDetails.getTypes().isEmpty())%>">
+       <%
+        Iterator i = OppDetails.getTypes().iterator();
+        
+        while (i.hasNext()) {
+          LookupElement thisElt = (LookupElement)i.next();
+      %>
+        <option value="<%=thisElt.getCode()%>"><%=thisElt.getDescription()%></option>
+      <%}%>
+      </dhv:evaluate>      
+      </select>
+      
+      <input type="hidden" name="previousSelection" value="">
+      <a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_opportunity_types');">Select</a>
+  </td>
+  </tr>  
+  
+  
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Description

@@ -13,6 +13,8 @@ import com.darkhorseventures.controller.*;
 import com.darkhorseventures.utils.*;
 import com.zeroio.iteam.base.FileItemList;
 import com.darkhorseventures.utils.DateUtils;
+import com.darkhorseventures.webutils.LookupList;
+import com.darkhorseventures.webutils.LookupElement;
 
 /**
  *  Description of the Class
@@ -69,7 +71,10 @@ public class Opportunity extends GenericBean {
   private boolean documentDelete = false;
 
   private boolean hasEnabledOwnerAccount = true;
-
+  private ArrayList typeList = null;
+  private LookupList types = new LookupList();
+  
+  
   /**
    *  Constructor for the Opportunity object
    *
@@ -133,6 +138,7 @@ public class Opportunity extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
+      buildTypes(db);
     } else {
       rs.close();
       pst.close();
@@ -167,7 +173,26 @@ public class Opportunity extends GenericBean {
     this.enteredByName = enteredByName;
   }
 
+  public void setTypeList(ArrayList typeList) {
+    this.typeList = typeList;
+  }
+  
+  public void setTypeList(String[] criteriaString) {
+    if (criteriaString != null) {
+      String[] params = criteriaString;
+      typeList = new ArrayList(Arrays.asList(params));
+    }
+    else {
+      typeList = new ArrayList();
+    }
 
+    this.typeList = typeList;
+  }  
+  
+  public ArrayList getTypeList() {
+    return typeList;
+  }
+  
   /**
    *  Gets the alertText attribute of the Opportunity object
    *
@@ -204,7 +229,14 @@ public class Opportunity extends GenericBean {
     this.openIt = openIt;
   }
 
-
+  public void setTypes(LookupList types) {
+    this.types = types;
+  }
+  
+  public LookupList getTypes() {
+    return types;
+  }  
+  
   /**
    *  Sets the alertDate attribute of the Opportunity object
    *
@@ -1788,6 +1820,7 @@ public class Opportunity extends GenericBean {
 
     try {
       db.setAutoCommit(false);
+      this.resetType(db);
 
       st = db.createStatement();
       st.executeUpdate(
@@ -1823,6 +1856,7 @@ public class Opportunity extends GenericBean {
     try {
 
       db.setAutoCommit(false);
+      this.resetType(db);
 
       if (callsDelete) {
         CallList callList = new CallList();
@@ -1857,6 +1891,26 @@ public class Opportunity extends GenericBean {
     return true;
   }
 
+  public void buildTypes(Connection db) throws SQLException {
+    ResultSet rs = null;
+
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT otl.type_id " +
+        "FROM opportunity_type_levels otl " +
+        "WHERE otl.opp_id = ? ORDER BY otl.level ");
+
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    int i=0;
+    pst.setInt(++i, id);    
+    rs = pst.executeQuery();
+
+    while (rs.next()) {
+      types.add(new LookupElement(db, rs.getInt("type_id"), "lookup_opportunity_types"));
+    }
+
+    rs.close();
+  }
 
   /**
    *  Populates this object from a result set
@@ -2043,12 +2097,60 @@ public class Opportunity extends GenericBean {
       System.out.println("Opportunity-> ResultCount: " + resultCount);
     }
     pst.close();
+    
+    //Remove all opp types, add new list
+    if (typeList != null) {
+      resetType(db);
+      int lvlcount = 0;
+      for (int k = 0; k < typeList.size(); k++) {
+        String val = (String) typeList.get(k);
+        if (val != null && !(val.equals(""))) {
+          int type_id = Integer.parseInt((String) typeList.get(k));
+          lvlcount++;
+          insertType(db, type_id, lvlcount);
+        }
+        else {
+          lvlcount--;
+        }
+      }
+    }    
+    
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity-> Closing PreparedStatement");
     }
     return resultCount;
   }
-
+  
+  public boolean resetType(Connection db) throws SQLException {
+    if (id == -1) {
+      throw new SQLException("ID not specified");
+    }
+    String sql = "DELETE FROM opportunity_type_levels WHERE opp_id = ? ";
+    int i=0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, this.getId());
+    pst.execute();
+    pst.close();
+    return true;
+  }  
+  
+  public boolean insertType(Connection db, int type_id, int level) throws SQLException {
+    if (id == -1) {
+      throw new SQLException("ID not specified");
+    }
+    String sql =
+        "INSERT INTO opportunity_type_levels " +
+        "(opp_id, type_id, level) " +
+        "VALUES (?, ?, ?) ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, this.getId());
+    pst.setInt(++i, type_id);
+    pst.setInt(++i, level);
+    pst.execute();
+    pst.close();
+    return true;
+  }  
 
   /**
    *  Description of the Method

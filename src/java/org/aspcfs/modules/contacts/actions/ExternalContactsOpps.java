@@ -149,6 +149,8 @@ public final class ExternalContactsOpps extends CFSModule {
     boolean recordInserted = false;
 
     Opportunity newOpp = (Opportunity) context.getRequest().getAttribute("OppDetails");
+    //set types
+    newOpp.setTypeList(context.getRequest().getParameterValues("selectedList"));
     newOpp.setOwner(getUserId(context));
     newOpp.setEnteredBy(getUserId(context));
     newOpp.setModifiedBy(getUserId(context));
@@ -235,6 +237,47 @@ public final class ExternalContactsOpps extends CFSModule {
       return ("SystemError");
     }
   }
+  
+  public String executeCommandConfirmDelete(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    Opportunity thisOpp = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+    String id = null;
+    String contactId = null;
+
+    if (!(hasPermission(context, "contacts-external_contacts-opportunities-delete"))) {
+            return ("PermissionError");
+    }
+
+    if (context.getRequest().getParameter("id") != null) {
+      id = context.getRequest().getParameter("id");
+    }
+    if (context.getRequest().getParameter("contactId") != null) {
+      contactId = context.getRequest().getParameter("contactId");
+    } 
+    
+    try {
+      db = this.getConnection(context);
+      thisOpp = new Opportunity(db, id);
+      htmlDialog.setRelationships(thisOpp.processDependencies(db));
+      htmlDialog.setTitle("CFS: Confirm Delete");
+      htmlDialog.setHeader("The object you are requesting to delete has the following dependencies within CFS:");
+      htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContactsOpps.do?command=DeleteOpp&contactId=" + contactId + "&id=" + id + "'");
+      htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      context.getSession().setAttribute("Dialog", htmlDialog);
+      return ("ConfirmDeleteOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }  
 
 
   /**
@@ -253,9 +296,11 @@ public final class ExternalContactsOpps extends CFSModule {
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Opportunity newOpp = null;
+    String contactId = null;
 
-    String tempcontact = context.getRequest().getParameter("contactLink");
-    String tempaccount = context.getRequest().getParameter("accountLink");
+    if (context.getRequest().getParameter("contactId") != null) {
+      contactId = context.getRequest().getParameter("contactId");
+    }
 
     Connection db = null;
     try {
@@ -270,7 +315,8 @@ public final class ExternalContactsOpps extends CFSModule {
 
     if (errorMessage == null) {
       if (recordDeleted) {
-        context.getRequest().setAttribute("contactId", tempcontact);
+        context.getRequest().setAttribute("contactId", contactId);
+        context.getRequest().setAttribute("refreshUrl","ExternalContactsOpps.do?command=ViewOpps&contactId="+contactId);
         deleteRecentItem(context, newOpp);
         return ("OppDeleteOK");
       } else {
@@ -387,6 +433,7 @@ public final class ExternalContactsOpps extends CFSModule {
     Exception errorMessage = null;
 
     Opportunity newOpp = (Opportunity) context.getFormBean();
+    newOpp.setTypeList(context.getRequest().getParameterValues("selectedList"));
     Opportunity oldOpp = null;
 
     Connection db = null;

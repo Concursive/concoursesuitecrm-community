@@ -11,6 +11,7 @@
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
 <script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popLookupSelect.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -57,7 +58,10 @@
         alert("Form could not be saved, please check the following:\r\n\r\n" + message);
         return false;
       } else {
-        return true;
+        var test = document.addOpportunity.selectedList;
+        if (test != null) {
+          return selectAllOptions(document.addOpportunity.selectedList);
+        }
       }
     }
 </script>
@@ -79,6 +83,20 @@ Add Opportunity<br>
       <strong>Add a New Opportunity</strong>
     </td>     
   </tr>
+  
+  <tr class="containerBody">
+  <td nowrap class="formLabel" valign="top">
+    Opportunity Type(s)
+  </td>
+  <td valign=center>
+    <select multiple name="selectedList" id="selectedList" size="5">
+    <option value="-1">None Selected</option>
+    </select>
+    <input type="hidden" name="previousSelection" value="">
+    <a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_opportunity_types');">Select</a>
+  </td>
+  </tr> 
+  
   <tr class="containerBody">
     <td nowrap valign="center" class="formLabel">
       Associate With
@@ -100,7 +118,7 @@ Add Opportunity<br>
   
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <a href="javascript:popContactsListSingle('contactLink','changecontact');">Contact</a>
+      <a href="javascript:popContactsListSingle('contactLink','changecontact','true');">Contact</a>
     </td>
     <td width="100%">
       <table>

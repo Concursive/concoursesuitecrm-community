@@ -4,7 +4,7 @@
 <jsp:useBean id="OpportunityList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
 <jsp:useBean id="OpportunityPagedListInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
 <a href="/ExternalContacts.do">Contacts &amp; Resources</a> > 
 <a href="/ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="/ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
@@ -70,7 +70,7 @@ Opportunities<br>
     <tr class="containerBody">
       <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
       <td width=8 valign=center nowrap class="row<%= rowid %>">
-      <dhv:permission name="contacts-external_contacts-opportunities-edit"><a href="/ExternalContactsOpps.do?command=ModifyOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink()%>&contactId=<%= thisOpp.getContactLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete"><a href="javascript:confirmDelete('/ExternalContactsOpps.do?command=DeleteOpp&id=<%=thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink() %>');">Del</a></dhv:permission>
+      <dhv:permission name="contacts-external_contacts-opportunities-edit"><a href="/ExternalContactsOpps.do?command=ModifyOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink()%>&contactId=<%= thisOpp.getContactLink() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete"><a href="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%=ContactDetails.getId()%>&id=<%=thisOpp.getId()%>','ExternalContactsOpps.do?command=ViewOpps&contactId=<%=ContactDetails.getId()%>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
       </td>
       </dhv:permission>
       <td width=40% valign=center class="row<%= rowid %>">

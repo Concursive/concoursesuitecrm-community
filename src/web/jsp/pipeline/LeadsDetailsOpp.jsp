@@ -72,6 +72,17 @@ Opportunity Details<br>
     </td>
   </tr>
   
+  <dhv:evaluate exp="<%= hasText(OpportunityDetails.getTypes().valuesAsString()) %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Opportunity Type(s)
+    </td>
+    <td>  
+      <%= toHtml(OpportunityDetails.getTypes().valuesAsString()) %>
+     </td>
+  </tr>
+  </dhv:evaluate>    
+  
   <dhv:evaluate exp="<%= hasText(OpportunityDetails.getNotes()) %>">
   <tr class="containerBody">
     <td valign="top" nowrap class="formLabel">Additional Notes</td>

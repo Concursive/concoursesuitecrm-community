@@ -11,6 +11,7 @@
 <jsp:useBean id="PriorityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="SeverityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="StageList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="OpportunityTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="PermissionCategory" class="com.darkhorseventures.cfsbase.PermissionCategory" scope="request"/>
 
 <a href="/Admin.do">Setup</a> >
@@ -43,6 +44,13 @@ Lookup Lists<br>
     <td width="35" valign="center" align="center"><%=StageList.getEnabledElementCount()%></td>
     <td valign="center"><%= StageList.getHtmlSelect("stage",0) %></td>
   </tr>
+  
+  <tr>
+    <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="/Admin.do?command=ModifyList&module=<%=PermissionCategory.getId()%>&sublist=2">Edit</a></td></dhv:permission>
+    <td valign="center" width=200>Opportunity Type</td>
+    <td width="35" valign="center" align="center"><%=OpportunityTypeList.getEnabledElementCount()%></td>
+    <td valign="center"><%= OpportunityTypeList.getHtmlSelect("oppTypeList",0) %></td>
+  </tr>  
   
 <%} else if (PermissionCategory.getId() == PermissionCategory.PERMISSION_CAT_ACCOUNTS) { %>
   <tr>

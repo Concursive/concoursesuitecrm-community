@@ -46,6 +46,15 @@ CREATE TABLE lookup_call_types (
 )
 ;
 
+CREATE TABLE lookup_opportunity_types (
+  code SERIAL PRIMARY KEY,
+  order_id INT,
+  description VARCHAR(50) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
+
 CREATE TABLE call_log (
   call_id SERIAL PRIMARY KEY,
   org_id INT REFERENCES organization(org_id),
