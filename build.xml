@@ -39,9 +39,11 @@
   <!-- classpath as both object and a property -->
   <path id="cfs2.classpath">
     <pathelement path="${SRC_CLASSES}"/>
+<!-- No longer needed with latest Tomcat
     <fileset dir="${env.TOMCAT_HOME}/lib">
       <include name="**/*.jar"/>
     </fileset>
+-->
     <fileset dir="${env.TOMCAT_HOME}/common/lib">
       <include name="**/*.jar"/>
     </fileset>
@@ -153,10 +155,12 @@ determined user is ${USER}
     <jar jarfile="${SRC_LIB}/theseus.jar"
           basedir="${SRC_CLASSES}"
           includes="org/theseus/**/*.class"/>
+<!-- No longer needed
     <exec executable="chown" os="Linux" failonerror="true">
       <arg value="${USER}.${CFSGRP}"/>
       <arg value="${SRC_LIB}/theseus.jar"/>
     </exec>
+-->
     <delete>
         <fileset dir= "${SRC_CLASSES}/org/theseus" includes="**/*.class"/>
     </delete>
@@ -180,10 +184,12 @@ determined user is ${USER}
     <jar jarfile="${SRC_LIB}/zeroio-iteam.jar"
           basedir="${SRC_CLASSES}"
           includes="com/zeroio/**/*.class"/>
+<!-- No longer needed
     <exec executable="chown" os="Linux" failonerror="true">
       <arg value="${USER}.${CFSGRP}"/>
       <arg value="${SRC_LIB}/zeroio-iteam.jar"/>
     </exec>
+-->
     <delete>
       <fileset dir= "${SRC_CLASSES}/com/zeroio" includes="**/*.class"/>
     </delete>
@@ -201,10 +207,12 @@ determined user is ${USER}
     <jar jarfile="${SRC_LIB}/isavvix.jar"
           basedir="${SRC_CLASSES}"
           includes="com/isavvix/**/*.class"/>
+<!-- No longer needed
     <exec executable="chown" os="Linux" failonerror="true">
       <arg value="${USER}.${CFSGRP}"/>
       <arg value="${SRC_LIB}/isavvix.jar"/>
     </exec>
+-->
     <delete>
       <fileset dir= "${SRC_CLASSES}/com/isavvix" includes="**/*.class"/>
     </delete>
@@ -228,10 +236,12 @@ determined user is ${USER}
     <jar jarfile="${SRC_LIB}/darkhorseventures.jar"
           basedir="${SRC_CLASSES}"
           includes="com/darkhorseventures/**/*.class"/>
+<!-- No longer needed
     <exec executable="chown" os="Linux" failonerror="true">
       <arg value="${USER}.${CFSGRP}"/>
       <arg value="${SRC_LIB}/darkhorseventures.jar"/>
     </exec>
+-->
     <delete>
       <fileset dir= "${SRC_CLASSES}/com/darkhorseventures" includes="**/*.class"/>
     </delete>
@@ -243,10 +253,12 @@ determined user is ${USER}
               else this will most likely fail -->
       <delete includeEmptyDirs="true" dir="${DEST}"/>
       <mkdir dir="${DEST}"/>
+<!-- No longer needed
       <exec executable="chmod" os="Linux" failonerror="true">
         <arg value="2775"/>
         <arg value="${DEST}"/>
       </exec>
+-->
       <mkdir dir="${DEST_BIN}"/>
       <mkdir dir="${DEST_LOGS}"/>
       <mkdir dir="${DEST_DOCROOT}"/>
@@ -394,7 +406,7 @@ determined user is ${USER}
 
     <mkdir dir="${DEST_DOCROOT}/graphs"/>
     <!--delete dir="${DEST_DOCROOT}/bin"/-->
-    
+<!-- No longer needed    
     <exec executable="chown" os="Linux" >
       <arg value="-R"/>
       <arg value="${WEBUSER}.${CFSGRP}"/>
@@ -406,7 +418,7 @@ determined user is ${USER}
       <arg value="g+w"/>
       <arg value="${DEST}"/>
     </exec>
-
+-->
   </target>
 
   <target name="lib" description="Install library files to site." 
