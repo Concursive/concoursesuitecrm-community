@@ -28,23 +28,25 @@
     <td><img src="images/dhv3.gif" width="339" height="11"></td>
     <td width="100%"><img src="images/spaceg1.gif" width="100%" height="11"></td>
   </tr>
-</table>
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="100%">
-<% String includeModule = (String) request.getAttribute("IncludeModule"); %>
-<jsp:include page="<%= includeModule %>" flush="true"/>
+    <td colspan="2">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="100%">
+      <% String includeModule = (String) request.getAttribute("IncludeModule"); %>
+      <jsp:include page="<%= includeModule %>" flush="true"/>
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
-</table>
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td>
+    <td colspan="2">
       &nbsp;
     </td>
   </tr>
   <tr>
-    <td valign="bottom" width="100%">
+    <td valign="bottom" width="100%" colspan="2">
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td><img src="images/bottom.gif" width="120" height="35"></td>
