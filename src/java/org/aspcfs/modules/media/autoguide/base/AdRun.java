@@ -195,7 +195,7 @@ public class AdRun {
    *@param  tmp  The new includePhoto value
    */
   public void setIncludePhoto(String tmp) {
-    this.includePhoto = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    this.includePhoto = ("1".equals(tmp) || "on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -309,7 +309,7 @@ public class AdRun {
    *@param  tmp  The new remove value
    */
   public void setRemove(String tmp) {
-    this.remove = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    this.remove = ("1".equals(tmp) || "on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 

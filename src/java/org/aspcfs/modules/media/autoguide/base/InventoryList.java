@@ -142,7 +142,7 @@ public class InventoryList extends ArrayList {
   
   public void setBuildOrganizationInfo(String tmp) {
     this.buildOrganizationInfo = 
-     ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+     ("1".equals(tmp) || "on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 

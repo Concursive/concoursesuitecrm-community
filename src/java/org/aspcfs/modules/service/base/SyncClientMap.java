@@ -359,6 +359,9 @@ public class SyncClientMap {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       statusDate = rs.getTimestamp("status_date");
+      System.out.println("SyncClientMap-> Retrieved status date: " + statusDate);
+    } else {
+      System.out.println(this.toString());
     }
     rs.close();
     pst.close();
@@ -527,5 +530,16 @@ public class SyncClientMap {
     statusDate = rs.getTimestamp("status_date");
   }
 
+  public String toString() {
+    String lf = System.getProperty("line.separator");
+    StringBuffer tmp = new StringBuffer();
+    tmp.append("SyncClientMap=============" + lf);
+    tmp.append(" clientId: " + clientId + lf);
+    tmp.append(" tableId: " + tableId + lf);
+    tmp.append(" recordId: " + recordId + lf);
+    tmp.append(" cuid: " + clientUniqueId + lf);
+    tmp.append(" statusDate: " + statusDate + lf);
+    return tmp.toString();
+  }
 }
 

@@ -395,7 +395,16 @@ public class TransactionItem {
           //newly inserted id, so set the syncMap before the insert
           if (ignoredProperties != null && ignoredProperties.containsKey("guid")) {
             syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
-            syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
+            
+            //The client requested an object, but the mapping is stored as the objectList
+            SyncTable referencedTable = (SyncTable) mapping.get(name + "List");
+            if (referencedTable != null) {
+              syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
+              syncClientMap.setTableId(referencedTable.getId());
+            } else {
+              //TODO:Error
+            }
+            
             //Need to log the date/time of the new record for later approval of updates
             //Reload the newly inserted object to get its insert/modified date
             Object insertedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
