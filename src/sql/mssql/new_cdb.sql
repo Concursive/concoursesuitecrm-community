@@ -577,7 +577,7 @@ CREATE TABLE message (
   name VARCHAR(80) NOT NULL,
   description VARCHAR(255),
   template_id INT,
-	subject VARCHAR(255) DEFAULT NULL,
+  subject VARCHAR(255) DEFAULT NULL,
   body TEXT,
   reply_addr VARCHAR(100),
   url VARCHAR(100),

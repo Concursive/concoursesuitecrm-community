@@ -8,6 +8,7 @@ import java.sql.*;
 import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Description of the Class
@@ -23,8 +24,8 @@ public class Message extends GenericBean {
   private String description = "";
   private int templateId = -1;
   private String replyTo = "";
-	private String messageSubject = "";
-	private String messageText = "";
+  private String messageSubject = "";
+  private String messageText = "";
   private String url = "";
   private String image = "";
   private int enteredBy = -1;
@@ -37,7 +38,6 @@ public class Message extends GenericBean {
   /**
    *  Constructor for the Message object
    *
-   *@since
    */
   public Message() { }
 
@@ -47,7 +47,6 @@ public class Message extends GenericBean {
    *
    *@param  rs                Description of Parameter
    *@exception  SQLException  Description of Exception
-   *@since
    */
   public Message(ResultSet rs) throws SQLException {
     buildRecord(rs);
@@ -60,7 +59,6 @@ public class Message extends GenericBean {
    *@param  db                Description of Parameter
    *@param  messageId         Description of Parameter
    *@exception  SQLException  Description of Exception
-   *@since
    */
   public Message(Connection db, String messageId) throws SQLException {
 
@@ -69,10 +67,11 @@ public class Message extends GenericBean {
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "SELECT m.*  FROM message m " +
-      "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
-      "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
-      "WHERE m.id > -1 ");
+        "SELECT m.* " +
+        "FROM message m " +
+        "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
+        "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
+        "WHERE m.id > -1 ");
 
     if (messageId != null && !messageId.equals("")) {
       sql.append("AND m.id = " + messageId + " ");
@@ -92,7 +91,15 @@ public class Message extends GenericBean {
     rs.close();
     st.close();
   }
-  
+
+
+  /**
+   *  Constructor for the Message object
+   *
+   *@param  db                Description of Parameter
+   *@param  messageId         Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public Message(Connection db, int messageId) throws SQLException {
 
     Statement st = null;
@@ -100,10 +107,10 @@ public class Message extends GenericBean {
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-      "SELECT m.*  FROM message m " +
-      "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
-      "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
-      "WHERE m.id > -1 ");
+        "SELECT m.*  FROM message m " +
+        "LEFT JOIN contact ct_eb ON (m.enteredby = ct_eb.user_id) " +
+        "LEFT JOIN contact ct_mb ON (m.modifiedby = ct_mb.user_id) " +
+        "WHERE m.id > -1 ");
 
     if (messageId > -1) {
       sql.append("AND m.id = " + messageId + " ");
@@ -130,7 +137,6 @@ public class Message extends GenericBean {
    *  Sets the id attribute of the Message object
    *
    *@param  tmp  The new id value
-   *@since
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -141,7 +147,6 @@ public class Message extends GenericBean {
    *  Sets the id attribute of the Message object
    *
    *@param  tmp  The new id value
-   *@since
    */
   public void setId(String tmp) {
     this.setId(Integer.parseInt(tmp));
@@ -152,7 +157,6 @@ public class Message extends GenericBean {
    *  Sets the name attribute of the Message object
    *
    *@param  tmp  The new name value
-   *@since
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -163,7 +167,6 @@ public class Message extends GenericBean {
    *  Sets the description attribute of the Message object
    *
    *@param  tmp  The new description value
-   *@since
    */
   public void setDescription(String tmp) {
     this.description = tmp;
@@ -174,7 +177,6 @@ public class Message extends GenericBean {
    *  Sets the templateId attribute of the Message object
    *
    *@param  tmp  The new templateId value
-   *@since
    */
   public void setTemplateId(int tmp) {
     this.templateId = tmp;
@@ -185,15 +187,21 @@ public class Message extends GenericBean {
    *  Sets the templateId attribute of the Message object
    *
    *@param  tmp  The new templateId value
-   *@since
    */
   public void setTemplateId(String tmp) {
     this.setTemplateId(Integer.parseInt(tmp));
   }
 
-	public void setMessageSubject(String tmp) {
-		this.messageSubject = tmp;
-	}
+
+  /**
+   *  Sets the messageSubject attribute of the Message object
+   *
+   *@param  tmp  The new messageSubject value
+   */
+  public void setMessageSubject(String tmp) {
+    this.messageSubject = tmp;
+  }
+
 
   /**
    *  Sets the text attribute of the Message object
@@ -210,7 +218,6 @@ public class Message extends GenericBean {
    *  Sets the replyTo attribute of the Message object
    *
    *@param  tmp  The new replyTo value
-   *@since
    */
   public void setReplyTo(String tmp) {
     this.replyTo = tmp;
@@ -221,7 +228,6 @@ public class Message extends GenericBean {
    *  Sets the url attribute of the Message object
    *
    *@param  tmp  The new url value
-   *@since
    */
   public void setUrl(String tmp) {
     this.url = tmp;
@@ -232,25 +238,48 @@ public class Message extends GenericBean {
    *  Sets the image attribute of the Message object
    *
    *@param  tmp  The new image value
-   *@since
    */
   public void setImage(String tmp) {
     this.image = tmp;
   }
 
-  public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
-  public void setModified(String tmp) { 
+
+  /**
+   *  Sets the modified attribute of the Message object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(java.sql.Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the Message object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
     java.util.Date tmpDate = new java.util.Date();
     modified = new java.sql.Timestamp(tmpDate.getTime());
     modified = modified.valueOf(tmp);
   }
-  public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
+
+
+  /**
+   *  Sets the entered attribute of the Message object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp tmp) {
+    this.entered = tmp;
+  }
+
 
   /**
    *  Sets the enteredBy attribute of the Message object
    *
    *@param  tmp  The new enteredBy value
-   *@since
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -261,7 +290,6 @@ public class Message extends GenericBean {
    *  Sets the modifiedBy attribute of the Message object
    *
    *@param  tmp  The new modifiedBy value
-   *@since
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -272,7 +300,6 @@ public class Message extends GenericBean {
    *  Sets the enabled attribute of the Message object
    *
    *@param  tmp  The new enabled value
-   *@since
    */
   public void setEnabled(String tmp) {
     if (tmp.toLowerCase().equals("false")) {
@@ -287,7 +314,6 @@ public class Message extends GenericBean {
    *  Gets the id attribute of the Message object
    *
    *@return    The id value
-   *@since
    */
   public int getId() {
     return id;
@@ -298,7 +324,6 @@ public class Message extends GenericBean {
    *  Gets the name attribute of the Message object
    *
    *@return    The name value
-   *@since
    */
   public String getName() {
     return name;
@@ -309,7 +334,6 @@ public class Message extends GenericBean {
    *  Gets the description attribute of the Message object
    *
    *@return    The description value
-   *@since
    */
   public String getDescription() {
     return description;
@@ -320,22 +344,26 @@ public class Message extends GenericBean {
    *  Gets the templateId attribute of the Message object
    *
    *@return    The templateId value
-   *@since
    */
   public int getTemplateId() {
     return templateId;
   }
-	
-	public String getMessageSubject() {
-		return messageSubject;
-	}
+
+
+  /**
+   *  Gets the messageSubject attribute of the Message object
+   *
+   *@return    The messageSubject value
+   */
+  public String getMessageSubject() {
+    return messageSubject;
+  }
 
 
   /**
    *  Gets the text attribute of the Message object
    *
    *@return    The text value
-   *@since
    */
   public String getMessageText() {
     return messageText;
@@ -346,7 +374,6 @@ public class Message extends GenericBean {
    *  Gets the replyTo attribute of the Message object
    *
    *@return    The replyTo value
-   *@since
    */
   public String getReplyTo() {
     return replyTo;
@@ -357,7 +384,6 @@ public class Message extends GenericBean {
    *  Gets the url attribute of the Message object
    *
    *@return    The url value
-   *@since
    */
   public String getUrl() {
     return url;
@@ -368,14 +394,27 @@ public class Message extends GenericBean {
    *  Gets the image attribute of the Message object
    *
    *@return    The image value
-   *@since
    */
   public String getImage() {
     return image;
   }
 
 
-  public java.sql.Timestamp getEntered() { return entered; }
+  /**
+   *  Gets the entered attribute of the Message object
+   *
+   *@return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Gets the enteredString attribute of the Message object
+   *
+   *@return    The enteredString value
+   */
   public String getEnteredString() {
     try {
       return DateFormat.getDateInstance(DateFormat.SHORT).format(entered);
@@ -383,6 +422,13 @@ public class Message extends GenericBean {
     }
     return ("");
   }
+
+
+  /**
+   *  Gets the enteredDateTimeString attribute of the Message object
+   *
+   *@return    The enteredDateTimeString value
+   */
   public String getEnteredDateTimeString() {
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(entered);
@@ -390,18 +436,38 @@ public class Message extends GenericBean {
     }
     return ("");
   }
-  
-  public String getModified() { 
+
+
+  /**
+   *  Gets the modified attribute of the Message object
+   *
+   *@return    The modified value
+   */
+  public String getModified() {
     return modified.toString();
   }
-  public String getModifiedString() { 
+
+
+  /**
+   *  Gets the modifiedString attribute of the Message object
+   *
+   *@return    The modifiedString value
+   */
+  public String getModifiedString() {
     try {
       return DateFormat.getDateInstance(DateFormat.SHORT).format(modified);
     } catch (NullPointerException e) {
     }
     return ("");
   }
-  public String getModifiedDateTimeString() { 
+
+
+  /**
+   *  Gets the modifiedDateTimeString attribute of the Message object
+   *
+   *@return    The modifiedDateTimeString value
+   */
+  public String getModifiedDateTimeString() {
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT).format(modified);
     } catch (NullPointerException e) {
@@ -414,7 +480,6 @@ public class Message extends GenericBean {
    *  Gets the enteredBy attribute of the Message object
    *
    *@return    The enteredBy value
-   *@since
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -425,7 +490,6 @@ public class Message extends GenericBean {
    *  Gets the modifiedBy attribute of the Message object
    *
    *@return    The modifiedBy value
-   *@since
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -436,7 +500,6 @@ public class Message extends GenericBean {
    *  Gets the enabled attribute of the Message object
    *
    *@return    The enabled value
-   *@since
    */
   public boolean getEnabled() {
     return enabled;
@@ -449,7 +512,6 @@ public class Message extends GenericBean {
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
-   *@since
    */
   public boolean insert(Connection db) throws SQLException {
 
@@ -471,18 +533,10 @@ public class Message extends GenericBean {
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getName());
-
       pst.execute();
       pst.close();
 
-      Statement st = db.createStatement();
-      //ResultSet rs = st.executeQuery();
-      ResultSet rs = st.executeQuery("select currval('message_id_seq')");
-      if (rs.next()) {
-        this.setId(rs.getInt(1));
-      }
-      rs.close();
-      st.close();
+      id = DatabaseUtils.getCurrVal(db, "message_id_seq");
 
       this.update(db, true);
       db.commit();
@@ -505,7 +559,6 @@ public class Message extends GenericBean {
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
-   *@since
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
@@ -570,12 +623,12 @@ public class Message extends GenericBean {
     if (name == null || name.trim().equals("")) {
       errors.put("nameError", "Message name is required");
     }
-		
-		if (messageSubject == null || messageSubject.trim().equals("")) {
+
+    if (messageSubject == null || messageSubject.trim().equals("")) {
       errors.put("messageSubjectError", "Message subject is required");
     }
-		
-		if (replyTo == null || replyTo.trim().equals("")) {
+
+    if (replyTo == null || replyTo.trim().equals("")) {
       errors.put("replyToError", "Email address is required");
     }
 
@@ -609,7 +662,7 @@ public class Message extends GenericBean {
     sql.append(
         "UPDATE message " +
         "SET name=?, description = ?, template_id = ?, subject = ?, " +
-				"body = ?, reply_addr = ?, url = ?, img = ?, " +
+        "body = ?, reply_addr = ?, url = ?, img = ?, " +
         "enabled = ?, " +
         "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
         "WHERE id = ? ");
@@ -623,12 +676,11 @@ public class Message extends GenericBean {
     pst.setString(++i, this.getDescription());
     pst.setInt(++i, this.getTemplateId());
     pst.setString(++i, this.getMessageSubject());
-		pst.setString(++i, this.getMessageText());
+    pst.setString(++i, this.getMessageText());
     pst.setString(++i, this.getReplyTo());
     pst.setString(++i, this.getUrl());
     pst.setString(++i, this.getImage());
     pst.setBoolean(++i, this.getEnabled());
-
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
 
@@ -648,23 +700,21 @@ public class Message extends GenericBean {
    *
    *@param  rs                Description of Parameter
    *@exception  SQLException  Description of Exception
-   *@since
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
+    //message table
     this.setId(rs.getInt("id"));
     name = rs.getString("name");
     description = rs.getString("description");
     templateId = rs.getInt("template_id");
     messageSubject = rs.getString("subject");
-		messageText = rs.getString("body");
+    messageText = rs.getString("body");
     replyTo = rs.getString("reply_addr");
     url = rs.getString("url");
     image = rs.getString("img");
     enabled = rs.getBoolean("enabled");
-
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
-
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
   }

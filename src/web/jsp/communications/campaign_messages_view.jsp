@@ -32,12 +32,12 @@
       <%= CampaignMessageListInfo.getSortIcon("description") %>
     </td>
     <td valign=center align=left nowrap>
-      <a href="/CampaignManagerMessage.do?command=View&column=enteredby"><strong>Entered By</strong></a>
-      <%= CampaignMessageListInfo.getSortIcon("enteredby") %>
+      <a href="/CampaignManagerMessage.do?command=View&column=m.enteredby"><strong>Entered By</strong></a>
+      <%= CampaignMessageListInfo.getSortIcon("m.enteredby") %>
     </td>
     <td valign=center align=left>
-      <a href="/CampaignManagerMessage.do?command=View&column=modified"><strong>Last Modified</strong></a>
-      <%= CampaignMessageListInfo.getSortIcon("modified") %>
+      <a href="/CampaignManagerMessage.do?command=View&column=m.modified"><strong>Last Modified</strong></a>
+      <%= CampaignMessageListInfo.getSortIcon("m.modified") %>
     </td>
   </tr>
 <%
