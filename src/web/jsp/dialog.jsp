@@ -44,7 +44,7 @@ else{%>
       <tr><td>&nbsp;</td></tr>
       <tr align="center">
         <td>
-          <input type="button" value="Ok" onClick="<%=toHtml(Dialog.getDeleteUrl())%>">
+          <input type="button" value="Ok" onClick="<%=Dialog.getDeleteUrl()%>">
           <input type="button" value="Cancel" onClick="javascript:window.close();">
         </td>
       </tr>
