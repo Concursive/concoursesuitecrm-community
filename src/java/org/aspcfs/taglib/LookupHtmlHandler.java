@@ -7,6 +7,7 @@ import org.aspcfs.controller.*;
 import java.util.*;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.LookupElement;
+import java.lang.reflect.*;
 
 /**
  *  Converts a list specified to a html dropdown based on the LookupList
@@ -14,12 +15,14 @@ import org.aspcfs.utils.web.LookupElement;
  *
  *@author     Mathur
  *@created    March 17, 2003
- *@version    $Id$
+ *@version    $Id: LookupHtmlHandler.java,v 1.2 2003/03/21 13:53:27 mrajkowski
+ *      Exp $
  */
 public class LookupHtmlHandler extends TagSupport {
   private String listType = null;
   private String listName = null;
   private String lookupName = null;
+  private String lookupElementClass = "org.aspcfs.utils.web.LookupElement";
 
 
   /**
@@ -49,6 +52,26 @@ public class LookupHtmlHandler extends TagSupport {
    */
   public void setListType(String listType) {
     this.listType = listType;
+  }
+
+
+  /**
+   *  Sets the lookupElementClass attribute of the LookupHtmlHandler object
+   *
+   *@param  lookupElementClass  The new lookupElementClass value
+   */
+  public void setLookupElementClass(String lookupElementClass) {
+    this.lookupElementClass = lookupElementClass;
+  }
+
+
+  /**
+   *  Gets the lookupElementClass attribute of the LookupHtmlHandler object
+   *
+   *@return    The lookupElementClass value
+   */
+  public String getLookupElementClass() {
+    return lookupElementClass;
   }
 
 
@@ -100,9 +123,16 @@ public class LookupHtmlHandler extends TagSupport {
             int val = Integer.parseInt((String) i.next());
             Iterator j = lookupList.iterator();
             while (j.hasNext()) {
-              LookupElement thisElt = (LookupElement) j.next();
-              if (thisElt.getCode() == val) {
-                this.pageContext.getOut().write("<option value=\"" + thisElt.getCode() + "\">" + thisElt.getDescription() + "</option>");
+              Object thisElt = (Object) j.next();
+              Class[] rsClass = new Class[]{Class.forName(lookupElementClass)};
+              Method method = thisElt.getClass().getMethod("getCodeString", null);
+              Object result = method.invoke(thisElt, null);
+              int code = Integer.parseInt((String) result);
+              if (code == val) {
+                method = thisElt.getClass().getMethod("getDescription", null);
+                result = method.invoke(thisElt, null);
+                String description = (String) result;
+                this.pageContext.getOut().write("<option value=\"" + code + "\">" + description + "</option>");
               }
             }
           }
