@@ -13,7 +13,7 @@ import com.darkhorseventures.utils.StringUtils;
 import com.darkhorseventures.utils.DateUtils;
 
 /**
- *  Represents an HTML message than can be emailed, faxed, or printed.  Messages
+ *  Represents an HTML message than can be emailed, faxed, or printed. Messages
  *  are intended to be used with Campaigns.
  *
  *@author     Wesley_S_Gillette
@@ -36,8 +36,14 @@ public class Message extends GenericBean {
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp entered = null;
   private boolean enabled = true;
-  
+
+  /**
+   *  Description of the Field
+   */
   public final static String tableName = "message";
+  /**
+   *  Description of the Field
+   */
   public final static String uniqueField = "id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
@@ -46,7 +52,6 @@ public class Message extends GenericBean {
 
   /**
    *  Constructor for the Message object
-   *
    */
   public Message() { }
 
@@ -70,9 +75,10 @@ public class Message extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public Message(Connection db, String messageId) throws SQLException {
-          queryRecord(db, Integer.parseInt(messageId));
+    queryRecord(db, Integer.parseInt(messageId));
   }
-  
+
+
   /**
    *  Constructor for the Message object
    *
@@ -81,9 +87,17 @@ public class Message extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public Message(Connection db, int messageId) throws SQLException {
-          queryRecord(db, messageId);
+    queryRecord(db, messageId);
   }
-          
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  messageId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void queryRecord(Connection db, int messageId) throws SQLException {
 
     Statement st = null;
@@ -146,14 +160,86 @@ public class Message extends GenericBean {
     this.name = tmp;
   }
 
-public String getTableName() { return tableName; }
-public String getUniqueField() { return uniqueField; }
-public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
-public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
-public int getSyncType() { return syncType; }
-public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
-public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
-public void setSyncType(int tmp) { this.syncType = tmp; }
+
+  /**
+   *  Gets the tableName attribute of the Message object
+   *
+   *@return    The tableName value
+   */
+  public String getTableName() {
+    return tableName;
+  }
+
+
+  /**
+   *  Gets the uniqueField attribute of the Message object
+   *
+   *@return    The uniqueField value
+   */
+  public String getUniqueField() {
+    return uniqueField;
+  }
+
+
+  /**
+   *  Gets the lastAnchor attribute of the Message object
+   *
+   *@return    The lastAnchor value
+   */
+  public java.sql.Timestamp getLastAnchor() {
+    return lastAnchor;
+  }
+
+
+  /**
+   *  Gets the nextAnchor attribute of the Message object
+   *
+   *@return    The nextAnchor value
+   */
+  public java.sql.Timestamp getNextAnchor() {
+    return nextAnchor;
+  }
+
+
+  /**
+   *  Gets the syncType attribute of the Message object
+   *
+   *@return    The syncType value
+   */
+  public int getSyncType() {
+    return syncType;
+  }
+
+
+  /**
+   *  Sets the lastAnchor attribute of the Message object
+   *
+   *@param  tmp  The new lastAnchor value
+   */
+  public void setLastAnchor(java.sql.Timestamp tmp) {
+    this.lastAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the nextAnchor attribute of the Message object
+   *
+   *@param  tmp  The new nextAnchor value
+   */
+  public void setNextAnchor(java.sql.Timestamp tmp) {
+    this.nextAnchor = tmp;
+  }
+
+
+  /**
+   *  Sets the syncType attribute of the Message object
+   *
+   *@param  tmp  The new syncType value
+   */
+  public void setSyncType(int tmp) {
+    this.syncType = tmp;
+  }
+
 
   /**
    *  Sets the description attribute of the Message object
@@ -202,12 +288,19 @@ public void setSyncType(int tmp) { this.syncType = tmp; }
    *@since
    */
   public void setMessageText(String tmp) {
-    this.messageText = StringUtils.toHtmlText(tmp);
+    this.messageText = tmp;
   }
 
-public java.sql.Timestamp getModified() {
-	return modified;
-}
+
+  /**
+   *  Gets the modified attribute of the Message object
+   *
+   *@return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
+
 
   /**
    *  Sets the replyTo attribute of the Message object
@@ -248,10 +341,22 @@ public java.sql.Timestamp getModified() {
     this.modified = tmp;
   }
 
+
+  /**
+   *  Sets the entered attribute of the Message object
+   *
+   *@param  tmp  The new entered value
+   */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
   }
-  
+
+
+  /**
+   *  Sets the modified attribute of the Message object
+   *
+   *@param  tmp  The new modified value
+   */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
   }
@@ -276,10 +381,17 @@ public java.sql.Timestamp getModified() {
     this.enteredBy = tmp;
   }
 
+
+  /**
+   *  Sets the enteredBy attribute of the Message object
+   *
+   *@param  tmp  The new enteredBy value
+   */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
   }
-  
+
+
   /**
    *  Sets the modifiedBy attribute of the Message object
    *
@@ -289,10 +401,17 @@ public java.sql.Timestamp getModified() {
     this.modifiedBy = tmp;
   }
 
+
+  /**
+   *  Sets the modifiedBy attribute of the Message object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
   }
-  
+
+
   /**
    *  Sets the enabled attribute of the Message object
    *
@@ -510,34 +629,34 @@ public java.sql.Timestamp getModified() {
           "INSERT INTO MESSAGE " +
           "(name, ");
       if (entered != null) {
-          sql.append("entered, ");
+        sql.append("entered, ");
       }
       if (modified != null) {
-          sql.append("modified, ");
+        sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ");
-        if (entered != null) {
-                sql.append("?, ");
-        }
-        if (modified != null) {
-                sql.append("?, ");
-        }
+      if (entered != null) {
+        sql.append("?, ");
+      }
+      if (modified != null) {
+        sql.append("?, ");
+      }
       sql.append("?, ?) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, this.getName());
-      
-        if (entered != null) {
-                pst.setTimestamp(++i, entered);
-        }
-        if (modified != null) {
-                pst.setTimestamp(++i, modified);
-        }
+
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
+      }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
-      
+
       pst.execute();
       pst.close();
 
@@ -599,33 +718,33 @@ public java.sql.Timestamp getModified() {
     boolean commit = true;
     Statement st = null;
     ResultSet rs = null;
-    
+
     try {
       commit = db.getAutoCommit();
-      
+
       //Check to see if a message is being used by any unfinished campaigns
       //If so, the message can't be deleted
       int inactiveCount = 0;
       st = db.createStatement();
       rs = st.executeQuery(
-        "SELECT COUNT(*) AS message_count " +
-        "FROM campaign " +
-        "WHERE message_id = " + this.getId() + " " +
-        "AND status_id <> " + Campaign.FINISHED);
+          "SELECT COUNT(*) AS message_count " +
+          "FROM campaign " +
+          "WHERE message_id = " + this.getId() + " " +
+          "AND status_id <> " + Campaign.FINISHED);
       rs.next();
       inactiveCount = rs.getInt("message_count");
       rs.close();
       if (inactiveCount > 0) {
         st.close();
         errors.put("actionError", "Message could not be deleted because " +
-          inactiveCount + " " +
-          (inactiveCount == 1?"campaign is":"campaigns are") +
-          " being built that " +
-          (inactiveCount == 1?"uses":"use") +
-          " this message.");
+            inactiveCount + " " +
+            (inactiveCount == 1 ? "campaign is" : "campaigns are") +
+            " being built that " +
+            (inactiveCount == 1 ? "uses" : "use") +
+            " this message.");
         return false;
       }
-      
+
       //If not, then the message can be deleted because a copy is made for
       //activated campaigns
       if (commit) {
@@ -644,7 +763,15 @@ public java.sql.Timestamp getModified() {
     }
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public HashMap processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
     String sql = "";
@@ -652,9 +779,9 @@ public java.sql.Timestamp getModified() {
     try {
       db.setAutoCommit(false);
       sql = "SELECT COUNT(*) AS message_count " +
-        "FROM campaign " +
-        "WHERE message_id = ? " +
-        "AND status_id <> " + Campaign.FINISHED + " ";
+          "FROM campaign " +
+          "WHERE message_id = ? " +
+          "AND status_id <> " + Campaign.FINISHED + " ";
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
@@ -662,7 +789,7 @@ public java.sql.Timestamp getModified() {
       rs = pst.executeQuery();
       if (rs.next()) {
         if (rs.getInt("message_count") != 0) {
-                dependencyList.put("Campaigns", new Integer(rs.getInt("message_count")));
+          dependencyList.put("Campaigns", new Integer(rs.getInt("message_count")));
         }
       }
 
@@ -698,7 +825,7 @@ public java.sql.Timestamp getModified() {
       errors.put("messageSubjectError", "Message subject is required");
     }
 
-    if (replyTo == null || replyTo.trim().equals("") || 
+    if (replyTo == null || replyTo.trim().equals("") ||
         replyTo.indexOf("@") == -1 || replyTo.indexOf("@") == replyTo.length() - 1) {
       errors.put("replyToError", "Full email address is required");
     }
@@ -735,13 +862,13 @@ public java.sql.Timestamp getModified() {
         "SET name=?, description = ?, template_id = ?, subject = ?, " +
         "body = ?, reply_addr = ?, url = ?, img = ?, " +
         "enabled = ?, ");
-        
-        if (override == false) {
-                sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
-        }
-        
-        sql.append("modifiedby = ? " +
-            "WHERE id = ? ");
+
+    if (override == false) {
+      sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+    }
+
+    sql.append("modifiedby = ? " +
+        "WHERE id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
     }
@@ -784,12 +911,12 @@ public java.sql.Timestamp getModified() {
     description = rs.getString("description");
     templateId = rs.getInt("template_id");
     messageSubject = rs.getString("subject");
-    
+
     //when importing data, somehow several messages had null subjects
     if (rs.wasNull()) {
-            messageSubject = "(no subject)";
+      messageSubject = "(no subject)";
     }
-    
+
     messageText = rs.getString("body");
     replyTo = rs.getString("reply_addr");
     url = rs.getString("url");
