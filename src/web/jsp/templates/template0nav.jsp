@@ -45,14 +45,17 @@
     </th>
   </tr>
 </table>
+</div>
 <!-- Main Menu -->
+<div class="menutabs" id="topmenutabs">
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <%= request.getAttribute("MainMenu") %>
-    <td width="100%" nowrap><img border="0" src="images/menu-edge.gif" width="100%" height="36"></td>
   </tr>
 </table>
+</div>
 <!-- Sub Menu -->
+<div id="header">
 <table border="0" width="100%" cellspacing="0" bgcolor="#006699">
   <tr>
     <td>

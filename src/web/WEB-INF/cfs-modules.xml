@@ -30,7 +30,7 @@
     <page title="My Home Page"/>
     <permission value="myhomepage-view"/>
     <long_html value="My Home Page"/>
-    <short_html value="My Home Page"/>
+    <short_html value="My&lt;br&gt;Home Page"/>
     <link value="MyCFS.do?command=Home"/>
     <graphic width="83" height="36" on="menu-myhome-on.gif" off="menu-myhome-off.gif" rollover=""/>
     
@@ -107,7 +107,7 @@
     <page title="General Contacts"/>
     <permission value="contacts-view"/>
     <long_html value="General Contacts"/>
-    <short_html value="General Contacts"/>
+    <short_html value="General&lt;br&gt;&amp;nbsp;Contacts&amp;nbsp;"/>
     <link value="ExternalContacts.do"/>
     <graphic width="83" height="36" on="menu-general-contacts-on.gif" off="menu-general-contacts-off.gif" rollover=""/>
     
@@ -171,7 +171,7 @@
     <page title="Pipeline Management"/>
     <permission value="pipeline-view"/>
     <long_html value="Pipeline"/>
-    <short_html value="Pipeline"/>
+    <short_html value="Pipeline&lt;br&gt;Management"/>
     <link value="Leads.do?command=Dashboard"/>
     <graphic width="83" height="36" on="menu-pipeline-on.gif" off="menu-pipeline-off.gif" rollover=""/>
     
@@ -246,7 +246,7 @@
     <page title="Account Management"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>
-    <short_html value="Accounts"/>
+    <short_html value="Account&lt;br&gt;Management"/>
     <link value="Accounts.do?command=Dashboard"/>
     <graphic width="83" height="36" on="menu-accounts-on.gif" off="menu-accounts-off.gif" rollover=""/>
     
@@ -347,7 +347,7 @@
     <page title="Communications Manager"/>
     <permission value="campaign-view"/>
     <long_html value="Communications"/>
-    <short_html value="Communications"/>
+    <short_html value="Communications&lt;br&gt;Manager"/>
     <link value="CampaignManager.do"/>
     <graphic width="83" height="36" on="menu-comm-on.gif" off="menu-comm-off.gif" rollover=""/>
     
@@ -453,7 +453,7 @@
     <page title="Project Management"/>
     <permission value="projects-view"/>
     <long_html value="Projects"/>
-    <short_html value="Projects"/>
+    <short_html value="Project&lt;br&gt;Management"/>
     <link value="ProjectManagement.do"/>
     <graphic width="83" height="36" on="menu-project-on.gif" off="menu-project-off.gif" rollover=""/>
     
@@ -493,7 +493,7 @@
     <page title="Tickets"/>
     <permission value="tickets-view"/>
     <long_html value="Tickets"/>
-    <short_html value="Tickets"/>
+    <short_html value="&amp;nbsp;Tickets&amp;nbsp;"/>
     <link value="TroubleTickets.do?command=Home"/>
     <graphic width="83" height="36" on="menu-tickets-on.gif" off="menu-tickets-off.gif" rollover=""/>
     
@@ -547,7 +547,7 @@
     <page title="System Administration"/>
     <permission value="admin-view"/>
     <long_html value="System Administration"/>
-    <short_html value="System Administration"/>
+    <short_html value="System&lt;br&gt;Administration"/>
     <link value="Admin.do"/>
     <graphic width="83" height="36" on="menu-sysadmin-on.gif" off="menu-sysadmin-off.gif" rollover=""/>
     

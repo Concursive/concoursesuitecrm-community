@@ -33,14 +33,13 @@ A:visited:hover{color:#FF3300;}
 .containerOff:visited{color:#000000;}
 .containerOff:hover{color:#FF3300;text-decoration:underline;}
 .containerOff:visited:hover{color:#FF3300;text-decoration:underline;}
-
+/* Global Items */
 .globalItem {
   color: #fff;
   margin: 0;
 	padding: 0;
   padding-bottom: 5px;
 }
-
 .globalItem th {
   color: #FFF;
   text-align: left;
@@ -61,4 +60,44 @@ A:visited:hover{color:#FF3300;}
 .globalItem td {
   color: #000;
   background-color: #E7E9EB;
+}
+/* Main Menu */
+.menutabs {
+	background-color: #fff;
+  color: #fff;
+  margin: 0;
+	padding-top: 0px;
+	padding-left: 0px;
+}
+.menutabs td, .menutabs th {
+  text-align: center;
+  vertical-align: middle;
+  font-weight: bold;
+  font-style: italic;
+  padding: 3px 3px 1px 3px;
+  background-repeat: no-repeat;
+  background-position: top left;
+  cursor: pointer;
+}
+/* selected tab */
+.menutabs th {
+	background-image: url(../images/tabs/topleft-sel.gif);
+	background-color: #006699;
+  border-right: 1px solid #000;
+}
+.menutabs th, .menutabs th a:link, .menutabs th a:visited {
+	color: #FFFF00;
+}
+/* unselected tab */
+.menutabs td {
+	background-image: url(../images/tabs/topleft-unsel.gif);
+  background-color: #fffbde;
+  border-right: 1px solid #41413a;
+  border-bottom: 1px #000 solid;
+}
+.menutabs td, .menutabs td a:link, .menutabs td a:visited {
+	color: #006699;
+}
+.menutabs a {
+	text-decoration: none;
 }

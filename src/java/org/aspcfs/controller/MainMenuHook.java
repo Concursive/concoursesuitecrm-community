@@ -12,12 +12,13 @@ import com.darkhorseventures.framework.servlets.ControllerMainMenuHook;
 import org.aspcfs.modules.beans.ModuleBean;
 import org.aspcfs.modules.login.beans.UserBean;
 
-
 /**
  *  When a template requiring navigation is requested, this class generates the
  *  HTML for the navigation. <p>
  *
- *  The configuration is stored in XML
+ *  - 3 types of menus are generated: a tabbed version, a graphic version, and a
+ *  text version. Each is placed in the request for later retrieval.<br>
+ *  - The configuration is stored in XML
  *
  *@author     mrajkowski
  *@created    July 12, 2001
@@ -47,7 +48,11 @@ public class MainMenuHook implements ControllerMainMenuHook {
     }
     return ("");
   }
-  
+
+
+  /**
+   *  Description of the Method
+   */
   public void reload() {
     if (menuItems != null) {
       menuItems.clear();
@@ -86,16 +91,15 @@ public class MainMenuHook implements ControllerMainMenuHook {
    *@since              1.1
    */
   public void generateMenu(HttpServletRequest request, String actionPath) {
-
-    UserBean thisUser = (UserBean)request.getSession().getAttribute("User");
+    UserBean thisUser = (UserBean) request.getSession().getAttribute("User");
     if (thisUser == null) {
       return;
     }
-    
+
     ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute("ConnectionElement");
     SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getAttribute("SystemStatus")).get(ce.getUrl());
 
-    ModuleBean thisModule = (ModuleBean)request.getAttribute("ModuleBean");
+    ModuleBean thisModule = (ModuleBean) request.getAttribute("ModuleBean");
     if (thisModule == null) {
       thisModule = new ModuleBean();
       request.setAttribute("ModuleBean", thisModule);
@@ -104,26 +108,29 @@ public class MainMenuHook implements ControllerMainMenuHook {
     //Build the menus
     int menuWidth = 0;
     StringBuffer menu = new StringBuffer();
+    StringBuffer graphicMenu = new StringBuffer();
     StringBuffer smallMenu = new StringBuffer();
     ArrayList smallMenuList = new ArrayList();
 
     //Build the graphic menu and the module submenu
     Iterator menuItemsList = menuItems.iterator();
     while (menuItemsList.hasNext()) {
-      MainMenuItem thisMenu = (MainMenuItem)menuItemsList.next();
+      MainMenuItem thisMenu = (MainMenuItem) menuItemsList.next();
       if ("".equals(thisMenu.getPermission()) || systemStatus.hasPermission(thisUser.getUserId(), thisMenu.getPermission())) {
         if (thisMenu.hasActionName(actionPath)) {
           //The user is on this link/module
           thisModule.setName(thisMenu.getPageTitle());
-  
           //Set the on state of the menu
-          menu.append("<a href='" + thisMenu.getLink() + "'><img border='0' src='images/" + thisMenu.getGraphicOn() + "' width='" + thisMenu.getGraphicWidth() + "' height='" + thisMenu.getGraphicHeight() + "'></a>");
+          menu.append("<th nowrap onClick=\"javascript:window.location.href='" + thisMenu.getLink() + "'\">");
+          menu.append(thisMenu.getShortHtml());
+          menu.append("</th>");
+          graphicMenu.append("<a href='" + thisMenu.getLink() + "'><img border='0' src='images/" + thisMenu.getGraphicOn() + "' width='" + thisMenu.getGraphicWidth() + "' height='" + thisMenu.getGraphicHeight() + "'></a>");
           smallMenuList.add("<a href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
 
           //Build the submenu
           Iterator j = thisMenu.getSubmenuItems().iterator();
           while (j.hasNext()) {
-            SubmenuItem thisItem = (SubmenuItem)j.next();
+            SubmenuItem thisItem = (SubmenuItem) j.next();
             //If user has permission then...
             SubmenuItem newItem = new SubmenuItem(thisItem);
             if (newItem.getName().equals(thisModule.getSubmenuKey())) {
@@ -135,19 +142,24 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
         } else {
           //The user is not on this link, set the off state of the menu
-          menu.append("<a href='" + thisMenu.getLink() + "'");
+          menu.append("<td nowrap onClick=\"javascript:window.location.href='" + thisMenu.getLink() + "'\">");
+          menu.append(thisMenu.getShortHtml());
+          //menu.append("<a href='" + thisMenu.getLink() + "'>" + thisMenu.getShortHtml() + "</a>");
+          menu.append("</td>");
+
+          graphicMenu.append("<a href='" + thisMenu.getLink() + "'");
           if (thisMenu.hasRollover()) {
-            menu.append(" onMouseOut=\"MM_swapImgRestore()\" onMouseOver=\"MM_swapImage('" + thisMenu.getShortHtml() + "','','images/" + thisMenu.getGraphicRollover() + "',1)\"");
+            graphicMenu.append(" onMouseOut=\"MM_swapImgRestore()\" onMouseOver=\"MM_swapImage('" + thisMenu.getShortHtml() + "','','images/" + thisMenu.getGraphicRollover() + "',1)\"");
           }
-          menu.append(">");
-          menu.append("<img ");
-          menu.append("border='0' ");
-          menu.append("src='images/" + thisMenu.getGraphicOff() + "' ");
-          menu.append("width='" + thisMenu.getGraphicWidth() + "' ");
-          menu.append("height='" + thisMenu.getGraphicHeight() + "' ");
-          
-          menu.append(">");
-          menu.append("</a>");
+          graphicMenu.append(">");
+          graphicMenu.append("<img ");
+          graphicMenu.append("border='0' ");
+          graphicMenu.append("src='images/" + thisMenu.getGraphicOff() + "' ");
+          graphicMenu.append("width='" + thisMenu.getGraphicWidth() + "' ");
+          graphicMenu.append("height='" + thisMenu.getGraphicHeight() + "' ");
+
+          graphicMenu.append(">");
+          graphicMenu.append("</a>");
           smallMenuList.add("<a href='" + thisMenu.getLink() + "'>" + thisMenu.getLongHtml() + "</a>");
         }
         menuWidth += Integer.parseInt(thisMenu.getGraphicWidth());
@@ -157,7 +169,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
     //Build the small menu
     Iterator i = smallMenuList.iterator();
     while (i.hasNext()) {
-      String tmp = (String)i.next();
+      String tmp = (String) i.next();
       if (i.hasNext()) {
         smallMenu.append(tmp + " | ");
       } else {
@@ -166,14 +178,14 @@ public class MainMenuHook implements ControllerMainMenuHook {
     }
 
     //Output the menus
-    String[] theMenus = new String[2];
-    //TODO: Update the CFS templates to work with the following commented out line instead
-    //theMenus[0] = menu.toString();
-    theMenus[0] = "<td width=\"" + menuWidth + "\" nowrap>" + menu.toString() + "</td>";
-    theMenus[1] = smallMenu.toString();
+    String[] theMenus = new String[3];
+    theMenus[0] = menu.toString() + "<td width='100%' style='border: 0px; background: #fff;  border-bottom: 1px #000 solid; cursor: default'>&nbsp;</td>";
+    theMenus[1] = "<td width=\"" + menuWidth + "\" nowrap>" + graphicMenu.toString() + "</td>";
+    theMenus[2] = smallMenu.toString();
     request.setAttribute("MainMenu", theMenus[0]);
+    request.setAttribute("MainMenuGraphic", theMenus[1]);
     request.setAttribute("MainMenuWidth", String.valueOf(menuWidth));
-    request.setAttribute("MainMenuSmall", theMenus[1]);
+    request.setAttribute("MainMenuSmall", theMenus[2]);
   }
 
 
@@ -206,7 +218,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
     menuItems.clear();
     NodeList menuTags = document.getElementsByTagName("menu");
     for (int i = 0; i < menuTags.getLength(); i++) {
-      Element menuTag = (Element)menuTags.item(i);
+      Element menuTag = (Element) menuTags.item(i);
       MainMenuItem thisMenu = parseMenu(menuTag);
       menuItems.add(thisMenu);
     }
@@ -217,9 +229,9 @@ public class MainMenuHook implements ControllerMainMenuHook {
    *  Once the in-memory document has split out the module items using
    *  parseAllMenus(), each menu is processed for items and submenu items.
    *
-   *@param  e                                 Description of Parameter
-   *@return                                   Description of the Returned Value
-   *@since                                    1.17
+   *@param  e  Description of Parameter
+   *@return    Description of the Returned Value
+   *@since     1.17
    */
   private MainMenuItem parseMenu(Element e) {
     MainMenuItem mainItem = new MainMenuItem();
@@ -232,7 +244,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
       if (children.item(i).getNodeType() != Element.ELEMENT_NODE) {
         continue;
       }
-      Element child = (Element)children.item(i);
+      Element child = (Element) children.item(i);
       String childName = child.getTagName();
 
       if (childName.equals("action")) {
@@ -262,7 +274,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
           if (submenu.item(j).getNodeType() != Element.ELEMENT_NODE) {
             continue;
           }
-          Element submenuChild = (Element)submenu.item(j);
+          Element submenuChild = (Element) submenu.item(j);
           String tagName = submenuChild.getTagName();
 
           if (tagName.equals("permission")) {
@@ -279,7 +291,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
             submenuItem.setGraphicOn(submenuChild.getAttribute("on"));
             submenuItem.setGraphicOff(submenuChild.getAttribute("off"));
             submenuItem.setGraphicRollover(submenuChild.getAttribute("rollover"));
-      	  }
+          }
         }
         submenuTable.add(submenuItem);
       }
