@@ -58,7 +58,7 @@ public final class AccountTicketActivityLog extends CFSModule {
       // Build activity list
       TicketActivityLogList thisList = new TicketActivityLogList();
       PagedListInfo tmListInfo = this.getPagedListInfo(context, "TMListInfo");
-      tmListInfo.setLink("AccountTicketActivityLog.do?command=ListMaintenance&id=" + thisTicket.getId());
+      tmListInfo.setLink("AccountTicketActivityLog.do?command=List&id=" + thisTicket.getId());
       thisList.setPagedListInfo(tmListInfo);
       thisList.setTicketId(thisTicket.getId());
       thisList.buildList(db);
