@@ -666,7 +666,7 @@ public final class CampaignManager extends CFSModule {
         db = this.getConnection(context);
         campaign = new Campaign(db, campaignId);
         campaign.setMessageId(Integer.parseInt(messageId));
-	campaign.setSurveyId(Integer.parseInt(surveyId));
+	campaign.setSurveyId(surveyId);
         campaign.setModifiedBy(this.getUserId(context));
         resultCount = campaign.updateMessage(db);
       } catch (Exception e) {
