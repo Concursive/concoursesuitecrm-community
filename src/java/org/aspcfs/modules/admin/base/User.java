@@ -294,7 +294,7 @@ public class User extends GenericBean {
           "<br />" +
           "Please login with the following information:<br />" +
           "<br />" +
-          "User Name: " + modUser.getUsername() + "<br />" +
+          "User Name: " + this.username + "<br />" +
           "Password: " + newPassword + "<br />" +
           "<br />" +
           "It is recomended that you change your password the next time you login to Dark Horse CRM.<br />" +
