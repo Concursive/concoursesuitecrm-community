@@ -39,22 +39,6 @@ function check(form) {
     CustomFormTab thisTab = (CustomFormTab)tabs.next();
     if (pg == thisTab.getId()) {
     		CustomFormInfo.setSelectedTabName(thisTab.getName());
-%>   
-<%-- 1st set of buttons --%>
-
-<%=thisTab.getButtonString()%>
-
-<%=CustomFormInfo.displayButtons()%>
-<br>&nbsp;
-  <dhv:group object="CustomFormInfo" page="<%= pg %>" />
-<%-- 2nd set of buttons --%>
-<br>
-<%=thisTab.getButtonString()%>
-
-<%=CustomFormInfo.displayButtons()%>
-<br>
-<%}%>
-<%}%>
         if (thisTab.getReturnLinkText() != null && !(thisTab.getReturnLinkText().equals(""))) {
     %>
         <%-- Draw Trails --%>
