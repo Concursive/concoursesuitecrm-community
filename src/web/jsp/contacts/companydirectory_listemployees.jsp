@@ -5,7 +5,7 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
-<a href="/ExternalContacts.do">General Contacts</a> > 
+<a href="MyCFS.do?command=Home">My Home Page</a> >
 View Employees<br>
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="contacts-internal_contacts-add"><a href="/CompanyDirectory.do?command=InsertEmployeeForm">Add an Employee</a></dhv:permission>

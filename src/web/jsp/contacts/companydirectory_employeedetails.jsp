@@ -4,7 +4,7 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="details" action="CompanyDirectory.do?command=EmployeeDetails&empid=<%= EmployeeBean.getId() %>&action=modify" method="post">
-<a href="ExternalContacts.do">General Contacts</a> > 
+<a href="MyCFS.do?command=Home">My Home Page</a> >
 <a href="CompanyDirectory.do?command=ListEmployees">View Employees</a> >
 Employee Details<br>
 <hr color="#BFBFBB" noshade>

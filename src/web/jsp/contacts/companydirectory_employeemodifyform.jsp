@@ -44,7 +44,7 @@
 
 <form action='CompanyDirectory.do?command=UpdateEmployee&auto-populate=true' onSubmit="return doCheck(this);" method='post'>
 
-<a href="ExternalContacts.do">General Contacts</a> > 
+<a href="MyCFS.do?command=Home">My Home Page</a> > 
 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
