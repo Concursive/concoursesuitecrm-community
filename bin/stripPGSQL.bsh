@@ -1,0 +1,36 @@
+#!/bin/sh
+//bin/true; exec java -classpath .:lib/bsh.jar:lib/bcprov-jdk14-121.jar:build/lib/aspcfs.jar bsh.Interpreter "$0" "$@"
+
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.StringUtils;
+
+String CRLF = System.getProperty("line.separator");
+
+try {
+  File checkFile = new File("crm.sql");
+  if (!checkFile.exists()) {
+    print("Usage:");
+    print("  StripPGSQL");
+    print("");
+    print("  * The file crm.sql must exist, crm2.sql will be created");
+    System.exit(0);
+  }
+
+  //Open file for writing
+  BufferedWriter out = new BufferedWriter(new FileWriter(
+      "crm2.sql"));
+  
+  //Read the file
+  BufferedReader in = new BufferedReader(
+      new FileReader("crm.sql"));
+  String line = null;
+  while ((line = in.readLine()) != null) {
+    if (!line.startsWith("--")) {
+      out.write(line + CRLF);
+    }
+  }
+  out.close();
+  in.close();
+} catch (Exception e) {
+  e.printStackTrace(System.out);
+}
