@@ -56,7 +56,7 @@ public final class MyCFS extends CFSModule {
 			if ("old".equals(inboxInfo.getListView())) {
 				noteList.setOldMessagesOnly(true);
 			}
-	
+			
 			noteList.buildList(db);
 	} catch (Exception e) {
 		errorMessage = e;

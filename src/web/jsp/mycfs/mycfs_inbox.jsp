@@ -13,7 +13,7 @@
   <tr>
     <td align="left">
       <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= InboxInfo.getOptionValue("new") %>>Messages</option>
+        <option <%= InboxInfo.getOptionValue("new") %>>Messages (Inbox)</option>
         <option <%= InboxInfo.getOptionValue("old") %>>Archive</option>
       </select>
       <%= showAttribute(request, "actionError") %>
