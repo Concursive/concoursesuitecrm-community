@@ -48,6 +48,9 @@ public class TicketList extends ArrayList implements SyncableList {
   private String accountOwnerIdRange = null;
   private String description = null;
   private int minutesOlderThan = -1;
+  private int productId = -1;
+  private int customerProductId = -1;
+  private boolean onlyWithProducts = false;
   //search filters
   private String searchText = "";
 
@@ -258,6 +261,46 @@ public class TicketList extends ArrayList implements SyncableList {
    */
   public void setSeverity(String tmp) {
     this.severity = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the customerProductId attribute of the TicketList object
+   *
+   *@param  tmp  The new customerProductId value
+   */
+  public void setCustomerProductId(int tmp) {
+    this.customerProductId = tmp;
+  }
+
+
+  /**
+   *  Sets the customerProductId attribute of the TicketList object
+   *
+   *@param  tmp  The new customerProductId value
+   */
+  public void setCustomerProductId(String tmp) {
+    this.customerProductId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the customerProductId attribute of the TicketList object
+   *
+   *@return    The customerProductId value
+   */
+  public int getCustomerProductId() {
+    return customerProductId;
+  }
+
+
+  /**
+   *  Sets the onlyWithProducts attribute of the TicketList object
+   *
+   *@param  tmp  The new onlyWithProducts value
+   */
+  public void setOnlyWithProducts(boolean tmp) {
+    this.onlyWithProducts = tmp;
   }
 
 
@@ -862,6 +905,15 @@ public class TicketList extends ArrayList implements SyncableList {
     if (accountOwnerIdRange != null) {
       sqlFilter.append("AND t.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
     }
+    if (productId != -1) {
+      sqlFilter.append("AND t.product_id = ? ");
+    }
+    if (customerProductId != -1) {
+      sqlFilter.append("AND t.customer_product_id = ? ");
+    }
+    if (onlyWithProducts == true) {
+      sqlFilter.append("AND t.product_id IS NOT NULL ");
+    }
     //Sync API
     if (syncType == Constants.SYNC_INSERTS) {
       if (lastAnchor != null) {
@@ -944,6 +996,12 @@ public class TicketList extends ArrayList implements SyncableList {
     }
     if (priority > 0) {
       pst.setInt(++i, priority);
+    }
+    if (productId > 0) {
+      pst.setInt(++i, productId);
+    }
+    if (customerProductId > 0) {
+      pst.setInt(++i, customerProductId);
     }
     //Sync API
     if (syncType == Constants.SYNC_INSERTS) {

@@ -23,6 +23,7 @@ import org.aspcfs.modules.login.beans.UserBean;
 import com.zeroio.iteam.base.*;
 import com.zeroio.webutils.*;
 import java.text.*;
+import org.aspcfs.modules.products.base.*;
 
 /**
  *  Description of the Class
@@ -523,6 +524,20 @@ public final class TroubleTickets extends CFSModule {
       // Load the ticket
       newTic = new Ticket();
       newTic.queryRecord(db, Integer.parseInt(ticketId));
+      
+      // check wether or not the product id exists
+      if (newTic.getProductId() != -1){
+        ProductCatalog product = new ProductCatalog(db, newTic.getProductId());
+        context.getRequest().setAttribute("product", product);
+      }
+      
+      // check wether of not the customer product id exists
+      if (newTic.getCustomerProductId() != -1){
+        CustomerProduct customerProduct = new CustomerProduct(db, newTic.getCustomerProductId());
+        customerProduct.buildFileList(db);
+        context.getRequest().setAttribute("customerProduct", customerProduct);
+      }
+      
       // check whether or not the owner is an active User
       if (newTic.getAssignedTo() > -1) {
         newTic.checkEnabledOwnerAccount(db);
@@ -1048,6 +1063,10 @@ public final class TroubleTickets extends CFSModule {
       newTic.setModifiedBy(getUserId(context));
       //Get the previousTicket, update the ticket, then send both to a hook
       Ticket previousTicket = new Ticket(db, newTic.getId());
+      if(previousTicket.getProductId() > -1){
+        newTic.setProductId(previousTicket.getProductId());
+      }
+      System.out.println("Inside th update method.. in TroubleTickets.java .. productId is "+newTic.getProductId());
       resultCount = newTic.update(db);
       if (resultCount == 1) {
         processUpdateHook(context, previousTicket, newTic);

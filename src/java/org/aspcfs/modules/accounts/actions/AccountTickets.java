@@ -14,6 +14,7 @@ import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.modules.products.base.*;
 
 /**
  *  Maintains Tickets related to an Account
@@ -240,8 +241,18 @@ public final class AccountTickets extends CFSModule {
       if (!isRecordAccessPermitted(context,newTic.getOrgId())){
         return ("PermissionError");
       }
+      if (newTic.getProductId() != -1){
+        ProductCatalog product = new ProductCatalog(db, newTic.getProductId());
+        context.getRequest().setAttribute("product", product);
+      }
       
-      
+      // check wether or not the customer product id exists
+      if (newTic.getCustomerProductId() != -1){
+        CustomerProduct customerProduct = new CustomerProduct(db, newTic.getCustomerProductId());
+        customerProduct.buildFileList(db);
+        context.getRequest().setAttribute("customerProduct", customerProduct);
+      }
+
       if (newTic.getAssignedTo() > 0) {
         newTic.checkEnabledOwnerAccount(db);
       }

@@ -18,9 +18,11 @@ import java.util.Locale;
 public class Address {
 
   protected boolean isContact = false;
+  protected boolean isOrder = false;
   private int id = -1;
   private int orgId = -1;
   private int contactId = -1;
+  private int orderId = -1;
   private String streetAddressLine1 = "";
   private String streetAddressLine2 = "";
   private String streetAddressLine3 = "";
@@ -490,6 +492,36 @@ public class Address {
 
 
   /**
+   *  Sets the orderId attribute of the Address object
+   *
+   * @param  tmp  The new orderId value
+   */
+  public void setOrderId(int tmp) {
+    this.orderId = tmp;
+  }
+
+
+  /**
+   *  Sets the orderId attribute of the Address object
+   *
+   * @param  tmp  The new orderId value
+   */
+  public void setOrderId(String tmp) {
+    this.orderId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the orderId attribute of the Address object
+   *
+   * @return    The orderId value
+   */
+  public int getOrderId() {
+    return orderId;
+  }
+
+
+  /**
    *  If any of the information for an address is filled in, then the address is
    *  valid
    *
@@ -651,15 +683,22 @@ public class Address {
    */
   public void buildRecord(ResultSet rs) throws SQLException {
     this.setId(rs.getInt("address_id"));
-    if (!isContact) {
-      this.setOrgId(rs.getInt("org_id"));
+    if (isOrder) {
+      this.setOrderId(rs.getInt("order_id"));
       if (rs.wasNull()) {
-        this.setOrgId(-1);
+        this.setOrderId(-1);
       }
     } else {
-      this.setContactId(rs.getInt("contact_id"));
-      if (rs.wasNull()) {
-        this.setContactId(-1);
+      if (!isContact) {
+        this.setOrgId(rs.getInt("org_id"));
+        if (rs.wasNull()) {
+          this.setOrgId(-1);
+        }
+      } else {
+        this.setContactId(rs.getInt("contact_id"));
+        if (rs.wasNull()) {
+          this.setContactId(-1);
+        }
       }
     }
     this.setType(rs.getInt("address_type"));

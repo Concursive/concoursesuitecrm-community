@@ -50,6 +50,8 @@ public class TicketLog extends GenericBean {
   private String assignedToName = "";
   private String priorityName = "";
   private String severityName = "";
+  private int productId = -1;
+  private int customerProductId = -1;
 
 
   /**
@@ -493,6 +495,66 @@ public class TicketLog extends GenericBean {
 
 
   /**
+   *  Sets the productId attribute of the TicketLog object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(int tmp) {
+    this.productId = tmp;
+  }
+
+
+  /**
+   *  Sets the productId attribute of the TicketLog object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(String tmp) {
+    this.productId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the customerProductId attribute of the TicketLog object
+   *
+   *@param  tmp  The new customerProductId value
+   */
+  public void setCustomerProductId(int tmp) {
+    this.customerProductId = tmp;
+  }
+
+
+  /**
+   *  Sets the customerProductId attribute of the TicketLog object
+   *
+   *@param  tmp  The new customerProductId value
+   */
+  public void setCustomerProductId(String tmp) {
+    this.customerProductId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the customerProductId attribute of the TicketLog object
+   *
+   *@return    The customerProductId value
+   */
+  public int getCustomerProductId() {
+    return customerProductId;
+  }
+
+
+  /**
+   *  Gets the productId attribute of the TicketLog object
+   *
+   *@return    The productId value
+   */
+  public int getProductId() {
+    return productId;
+  }
+
+
+  /**
    *  Gets the priorityName attribute of the TicketLog object
    *
    *@return    The priorityName value
@@ -786,7 +848,7 @@ public class TicketLog extends GenericBean {
     try {
       db.setAutoCommit(false);
       sql.append(
-          "INSERT INTO TICKETLOG (pri_code, level_code, department_code, cat_code, scode, ticketid, comment, closed, ");
+          "INSERT INTO TICKETLOG (pri_code, level_code, department_code, cat_code, scode, ticketid, comment, closed, product_id, customer_product_id, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -794,7 +856,7 @@ public class TicketLog extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -816,6 +878,8 @@ public class TicketLog extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, this.getTicketId());
       pst.setString(++i, this.getEntryText());
       pst.setBoolean(++i, this.getClosed());
+      DatabaseUtils.setInt(pst, ++i, this.getProductId());
+      DatabaseUtils.setInt(pst, ++i, this.getCustomerProductId());
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }

@@ -77,6 +77,8 @@ public class Ticket extends GenericBean {
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
   private java.sql.Timestamp closed = null;
+  private int productId = -1;
+  private int customerProductId = -1;
   private int expectation = -1;
   //Related descriptions
   private String companyName = "";
@@ -267,6 +269,36 @@ public class Ticket extends GenericBean {
       pst.close();
     }
     return contactFound;
+  }
+
+
+  /**
+   *  Sets the productId attribute of the Ticket object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(int tmp) {
+    this.productId = tmp;
+  }
+
+
+  /**
+   *  Sets the productId attribute of the Ticket object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(String tmp) {
+    this.productId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the productId attribute of the Ticket object
+   *
+   *@return    The productId value
+   */
+  public int getProductId() {
+    return productId;
   }
 
 
@@ -940,6 +972,36 @@ public class Ticket extends GenericBean {
    */
   public void setBuildHistory(boolean buildHistory) {
     this.buildHistory = buildHistory;
+  }
+
+
+  /**
+   *  Sets the customerProductId attribute of the Ticket object
+   *
+   *@param  tmp  The new customerProductId value
+   */
+  public void setCustomerProductId(int tmp) {
+    this.customerProductId = tmp;
+  }
+
+
+  /**
+   *  Sets the customerProductId attribute of the Ticket object
+   *
+   *@param  tmp  The new customerProductId value
+   */
+  public void setCustomerProductId(String tmp) {
+    this.customerProductId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the customerProductId attribute of the Ticket object
+   *
+   *@return    The customerProductId value
+   */
+  public int getCustomerProductId() {
+    return customerProductId;
   }
 
 
@@ -2077,7 +2139,8 @@ public class Ticket extends GenericBean {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO ticket (contact_id, problem, pri_code, " +
-          "department_code, cat_code, scode, org_id, link_contract_id, link_asset_id, expectation, ");
+          "department_code, cat_code, scode, org_id, link_contract_id, link_asset_id, expectation, product_id, ");
+      sql.append("customer_product_id, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -2085,7 +2148,8 @@ public class Ticket extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -2121,6 +2185,8 @@ public class Ticket extends GenericBean {
       DatabaseUtils.setInt(pst, ++i, contractId);
       DatabaseUtils.setInt(pst, ++i, assetId);
       DatabaseUtils.setInt(pst, ++i, expectation);
+      DatabaseUtils.setInt(pst, ++i, productId);
+      DatabaseUtils.setInt(pst, ++i, customerProductId);
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -2222,7 +2288,7 @@ public class Ticket extends GenericBean {
       }
     }
     sql.append("solution = ?, location = ?, assigned_date = ?, " +
-        "est_resolution_date = ?, resolution_date = ?, cause = ?, expectation = ? " +
+        "est_resolution_date = ?, resolution_date = ?, cause = ?, expectation = ?, product_id = ?, customer_product_id = ? " +
         "WHERE ticketid = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
@@ -2291,6 +2357,8 @@ public class Ticket extends GenericBean {
     DatabaseUtils.setTimestamp(pst, ++i, resolutionDate);
     pst.setString(++i, cause);
     DatabaseUtils.setInt(pst, ++i, expectation);
+    DatabaseUtils.setInt(pst, ++i, productId);
+    DatabaseUtils.setInt(pst, ++i, customerProductId);
     pst.setInt(++i, id);
     if (!override) {
       pst.setTimestamp(++i, this.getModified());
@@ -2306,6 +2374,7 @@ public class Ticket extends GenericBean {
       thisEntry.setSeverityCode(this.getSeverityCode());
       thisEntry.setTicketId(this.getId());
       thisEntry.setClosed(true);
+      thisEntry.setProductId(this.getProductId());
       thisEntry.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
     }
     return resultCount;
@@ -2363,6 +2432,7 @@ public class Ticket extends GenericBean {
       thisEntry.setSeverityCode(this.getSeverityCode());
       thisEntry.setEntryText(this.getComment());
       thisEntry.setTicketId(this.getId());
+      thisEntry.setProductId(this.getProductId());
       thisEntry.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
       db.commit();
     } catch (SQLException e) {
@@ -2603,6 +2673,7 @@ public class Ticket extends GenericBean {
       thisEntry.setTicketId(this.getId());
       thisEntry.setPriorityCode(this.getPriorityCode());
       thisEntry.setSeverityCode(this.getSeverityCode());
+      thisEntry.setProductId(this.getProductId());
       if (this.getCloseIt() == true) {
         thisEntry.setClosed(true);
       }
@@ -2689,6 +2760,8 @@ public class Ticket extends GenericBean {
     cause = rs.getString("cause");
     contractId = DatabaseUtils.getInt(rs, "link_contract_id");
     assetId = DatabaseUtils.getInt(rs, "link_asset_id");
+    productId = DatabaseUtils.getInt(rs, "product_id");
+    customerProductId = DatabaseUtils.getInt(rs, "customer_product_id");
     expectation = DatabaseUtils.getInt(rs, "expectation");
     //organization table
     companyName = rs.getString("orgname");

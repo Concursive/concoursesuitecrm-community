@@ -30,6 +30,8 @@ public class TicketLogList extends ArrayList {
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
   private boolean doSystemMessages = true;
+  private int productId = -1;
+  private int customerProductId = -1;
 
 
   /**
@@ -76,6 +78,66 @@ public class TicketLogList extends ArrayList {
    */
   public void setTicketId(int tmp) {
     this.ticketId = tmp;
+  }
+
+
+  /**
+   *  Sets the productId attribute of the TicketLogList object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(int tmp) {
+    this.productId = tmp;
+  }
+
+
+  /**
+   *  Sets the productId attribute of the TicketLogList object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(String tmp) {
+    this.productId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the customerProductId attribute of the TicketLogList object
+   *
+   *@param  tmp  The new customerProductId value
+   */
+  public void setCustomerProductId(int tmp) {
+    this.customerProductId = tmp;
+  }
+
+
+  /**
+   *  Sets the customerProductId attribute of the TicketLogList object
+   *
+   *@param  tmp  The new customerProductId value
+   */
+  public void setCustomerProductId(String tmp) {
+    this.customerProductId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the customerProductId attribute of the TicketLogList object
+   *
+   *@return    The customerProductId value
+   */
+  public int getCustomerProductId() {
+    return customerProductId;
+  }
+
+
+  /**
+   *  Gets the productId attribute of the TicketLogList object
+   *
+   *@return    The productId value
+   */
+  public int getProductId() {
+    return productId;
   }
 
 
