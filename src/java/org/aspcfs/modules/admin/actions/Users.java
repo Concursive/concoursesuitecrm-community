@@ -14,6 +14,7 @@ import org.aspcfs.modules.contacts.base.ContactTypeList;
 import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.modules.base.Constants;
 
 
 /**
@@ -44,32 +45,30 @@ public final class Users extends CFSModule {
    *@since           1.6
    */
   public String executeCommandListUsers(ActionContext context) {
-
-    if (!(hasPermission(context, "admin-users-view"))) {
+    if (!hasPermission(context, "admin-users-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
-    PagedListInfo listInfo = getPagedListInfo(context, "UserListInfo");
-    listInfo.setLink("Users.do?command=ListUsers");
-
     Connection db = null;
     UserList list = new UserList();
-
+    //Configure the pagedList
+    PagedListInfo listInfo = getPagedListInfo(context, "UserListInfo");
+    listInfo.setLink("Users.do?command=ListUsers");
     try {
       db = getConnection(context);
-
       if ("disabled".equals(listInfo.getListView())) {
         list.setEnabled(UserList.FALSE);
+        list.setIncludeAliases(Constants.UNDEFINED);
       } else if ("aliases".equals(listInfo.getListView())) {
-        list.setIncludeAliases(true);
         list.setEnabled(UserList.TRUE);
+        list.setIncludeAliases(Constants.TRUE);
       } else {
         list.setEnabled(UserList.TRUE);
+        list.setIncludeAliases(Constants.UNDEFINED);
       }
       list.setPagedListInfo(listInfo);
       list.setBuildContact(false);
+      list.setBuildContactDetails(false);
       list.setBuildHierarchy(false);
       list.buildList(db);
     } catch (Exception e) {
@@ -77,7 +76,6 @@ public final class Users extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "Users", "User List");
     if (errorMessage == null) {
       context.getRequest().setAttribute("UserList", list);
