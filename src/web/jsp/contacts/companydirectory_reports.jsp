@@ -5,10 +5,10 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
-<form name="listView" method="post" action="/ExternalContacts.do?command=Reports">
 <a href="ExternalContacts.do">General Contacts</a> > 
 Reports<br>
 <hr color="#BFBFBB" noshade>
+<form name="listView" method="post" action="/ExternalContacts.do?command=Reports">
 <dhv:permission name="contacts-external_contacts-reports-add"><a href="ExternalContacts.do?command=GenerateForm">Generate new report</a></dhv:permission>
 <dhv:permission name="contacts-external_contacts-reports-add" none="true"><br></dhv:permission>
 <center><%= ContactRptListInfo.getAlphabeticalPageLinks() %></center>
@@ -25,7 +25,7 @@ Reports<br>
     </td>
   </tr>
 </table>
-
+</form>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <dhv:permission name="contacts-external_contacts-reports-view,contacts-external_contacts-reports-delete">
@@ -95,4 +95,4 @@ Reports<br>
   <tr bgcolor="white"><td colspan=6 valign=center>No reports found.</td></tr>
 </table>
 <%}%>
-</form>
+
