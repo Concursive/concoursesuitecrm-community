@@ -18,7 +18,7 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.login.beans.UserBean;
 
 /**
- *  Description of the Class
+ *  Represents Tasks created for a Ticket
  *
  *@author     akhi_m
  *@created    May 14, 2003
