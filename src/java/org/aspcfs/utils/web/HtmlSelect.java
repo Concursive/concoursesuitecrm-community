@@ -15,6 +15,7 @@ public class HtmlSelect extends ArrayList {
 
   protected String selectName = "";
   protected int selectSize = 1;
+  protected String selectStyle = null;
 
   protected String firstEntry = "";
   protected String firstKey = "";
@@ -56,6 +57,7 @@ public class HtmlSelect extends ArrayList {
    *  stateSelect.setSelectName("state"); <br>
    *  stateSelect.build(); <br>
    *  context.getRequest().setAttribute("StateSelect", stateSelect); <br>
+   *
    *
    *@since    1.0
    */
@@ -164,6 +166,16 @@ public class HtmlSelect extends ArrayList {
    */
   public void setSelectSize(int tmp) {
     this.selectSize = tmp;
+  }
+
+
+  /**
+   *  Sets the selectStyle attribute of the HtmlSelect object
+   *
+   *@param  tmp  The new selectStyle value
+   */
+  public void setSelectStyle(String tmp) {
+    this.selectStyle = tmp;
   }
 
 
@@ -537,7 +549,14 @@ public class HtmlSelect extends ArrayList {
     }
     StringBuffer outputHtml = new StringBuffer();
     if (!checkboxOutput) {
-      outputHtml.append("<select size='" + this.selectSize + "' name='" + this.selectName + "'" + (jsEvent != null ? " " + this.jsEvent : "") + (idName != null ? " " + "id='" + this.idName + "' " : "") + (multiple != false ? " multiple " : "") + this.getAttributeList() + ">");
+      outputHtml.append(
+          "<select size='" + this.selectSize + "' " + 
+          (selectStyle == null ? "" : "style='" + selectStyle + "' ") +
+          "name='" + this.selectName + "'" + 
+          (jsEvent != null ? " " + this.jsEvent : "") + 
+          (idName != null ? " " + "id='" + this.idName + "' " : "") + 
+          (multiple != false ? " multiple " : "") + 
+          this.getAttributeList() + ">");
     }
 
     //Process the rows
