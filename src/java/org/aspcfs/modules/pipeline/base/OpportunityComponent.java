@@ -17,12 +17,13 @@ import com.darkhorseventures.webutils.LookupElement;
 import com.zeroio.iteam.base.FileItemList;
 
 /**
- *  OpportunityComponent: A component related to an Opportunity ( = OpportunityHeader + OpportunityComponent(s))
+ *  OpportunityComponent: A component related to an Opportunity ( =
+ *  OpportunityHeader + OpportunityComponent(s))
  *
  *@author     chris
  *@created    September 13, 2001
  */
- 
+
 public class OpportunityComponent extends GenericBean {
   protected int id = -1;
   protected int oppId = -1;
@@ -39,7 +40,7 @@ public class OpportunityComponent extends GenericBean {
   protected String stageName = null;
   protected java.sql.Date stageDate = null;
   protected double commission = 0;
-  protected String type = null;  
+  protected String type = null;
   protected java.sql.Date alertDate = null;
   protected String alertText = null;
   protected String notes = null;
@@ -48,7 +49,7 @@ public class OpportunityComponent extends GenericBean {
   protected int enteredBy = -1;
   protected int modifiedBy = -1;
   protected boolean enabled = true;
-  
+
   protected boolean stageChange = false;
   protected boolean closeIt = false;
   protected boolean openIt = false;
@@ -56,63 +57,78 @@ public class OpportunityComponent extends GenericBean {
   protected String ownerName = null;
   protected String enteredByName = null;
   protected String modifiedByName = null;
-  
+
   protected boolean hasEnabledOwnerAccount = true;
   protected ArrayList typeList = null;
   protected LookupList types = new LookupList();
-  
+
+
+  /**
+   *  Constructor for the OpportunityComponent object
+   */
   public OpportunityComponent() { }
 
+
+  /**
+   *  Constructor for the OpportunityComponent object
+   *
+   *@param  rs                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public OpportunityComponent(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-  
+
+
+  /**
+   *  Constructor for the OpportunityComponent object
+   *
+   *@param  db                Description of Parameter
+   *@param  id                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public OpportunityComponent(Connection db, int id) throws SQLException {
     queryRecord(db, id);
   }
-  
-  public void queryRecord(Connection db, int id) throws SQLException {
-    if (id == -1) {
-      throw new SQLException("Opportunity Component ID not specified.");
-    }
-    PreparedStatement pst=db.prepareStatement(
-        "SELECT oc.*, y.description as stagename, " +
-        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
-        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
-        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst " +
-        "FROM opportunity_component oc " +
-        "LEFT JOIN contact ct_owner ON (oc.owner = ct_owner.user_id) " +
-        "LEFT JOIN contact ct_eb ON (oc.enteredby = ct_eb.user_id) " +
-        "LEFT JOIN contact ct_mb ON (oc.modifiedby = ct_mb.user_id), " +
-        "lookup_stage y " +
-        "WHERE y.code = oc.stage " +
-        "AND id = ? ");
-    pst.setInt(1, id);
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      buildRecord(rs);
-      buildTypes(db);
-    } else {
-      rs.close();
-      pst.close();
-      throw new SQLException("Opportunity Component record not found.");
-    }
-    rs.close();
-    pst.close();
-  }
-  
+
+
+  /**
+   *  Constructor for the OpportunityComponent object
+   *
+   *@param  db                Description of Parameter
+   *@param  id                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
   public OpportunityComponent(Connection db, String id) throws SQLException {
     queryRecord(db, Integer.parseInt(id));
   }
 
+
+  /**
+   *  Sets the EnteredByName attribute of the OpportunityComponent object
+   *
+   *@param  enteredByName  The new EnteredByName value
+   */
   public void setEnteredByName(String enteredByName) {
     this.enteredByName = enteredByName;
   }
 
+
+  /**
+   *  Sets the TypeList attribute of the OpportunityComponent object
+   *
+   *@param  typeList  The new TypeList value
+   */
   public void setTypeList(ArrayList typeList) {
     this.typeList = typeList;
   }
-  
+
+
+  /**
+   *  Sets the TypeList attribute of the OpportunityComponent object
+   *
+   *@param  criteriaString  The new TypeList value
+   */
   public void setTypeList(String[] criteriaString) {
     if (criteriaString != null) {
       String[] params = criteriaString;
@@ -123,30 +139,28 @@ public class OpportunityComponent extends GenericBean {
     }
 
     this.typeList = typeList;
-  }  
-  
-  public ArrayList getTypeList() {
-    return typeList;
   }
-  
+
+
   /**
-   *  Gets the alertText attribute of the Opportunity object
+   *  Sets the OppId attribute of the OpportunityComponent object
    *
-   *@return    The alertText value
+   *@param  oppId  The new OppId value
    */
-  public String getAlertText() {
-    return alertText;
-  }
-  
-  public int getOppId() {
-    return oppId;
-  }
   public void setOppId(int oppId) {
     this.oppId = oppId;
   }
+
+
+  /**
+   *  Sets the OppId attribute of the OpportunityComponent object
+   *
+   *@param  oppId  The new OppId value
+   */
   public void setOppId(String oppId) {
     this.oppId = Integer.parseInt(oppId);
   }
+
 
   /**
    *  Sets the alertText attribute of the Opportunity object
@@ -157,12 +171,17 @@ public class OpportunityComponent extends GenericBean {
     this.alertText = alertText;
   }
 
+
+  /**
+   *  Sets the HasEnabledOwnerAccount attribute of the OpportunityComponent
+   *  object
+   *
+   *@param  hasEnabledOwnerAccount  The new HasEnabledOwnerAccount value
+   */
   public void setHasEnabledOwnerAccount(boolean hasEnabledOwnerAccount) {
     this.hasEnabledOwnerAccount = hasEnabledOwnerAccount;
   }
-  public boolean getHasEnabledOwnerAccount() {
-    return hasEnabledOwnerAccount;
-  }
+
 
   /**
    *  Sets the OpenIt attribute of the Opportunity object
@@ -174,14 +193,17 @@ public class OpportunityComponent extends GenericBean {
     this.openIt = openIt;
   }
 
+
+  /**
+   *  Sets the Types attribute of the OpportunityComponent object
+   *
+   *@param  types  The new Types value
+   */
   public void setTypes(LookupList types) {
     this.types = types;
   }
-  
-  public LookupList getTypes() {
-    return types;
-  }  
-  
+
+
   /**
    *  Sets the alertDate attribute of the Opportunity object
    *
@@ -201,12 +223,16 @@ public class OpportunityComponent extends GenericBean {
     this.alertDate = DateUtils.parseDateString(tmp);
   }
 
-  public String getNotes() {
-    return notes;
-  }
+
+  /**
+   *  Sets the Notes attribute of the OpportunityComponent object
+   *
+   *@param  notes  The new Notes value
+   */
   public void setNotes(String notes) {
     this.notes = notes;
   }
+
 
   /**
    *  Sets the closeDate attribute of the Opportunity object
@@ -226,6 +252,7 @@ public class OpportunityComponent extends GenericBean {
   public void setStageDate(java.sql.Date tmp) {
     this.stageDate = tmp;
   }
+
 
   /**
    *  Sets the enabled attribute of the Opportunity object
@@ -265,6 +292,7 @@ public class OpportunityComponent extends GenericBean {
   public void setStageDate(String tmp) {
     this.stageDate = DateUtils.parseDateString(tmp);
   }
+
 
   /**
    *  Sets the Entered attribute of the Opportunity object
@@ -351,6 +379,7 @@ public class OpportunityComponent extends GenericBean {
     this.owner = owner;
   }
 
+
   /**
    *  Sets the Id attribute of the Opportunity object
    *
@@ -392,10 +421,11 @@ public class OpportunityComponent extends GenericBean {
   public void setTerms(String terms) {
     try {
       this.terms = Double.parseDouble(terms);
-    } catch (NumberFormatException ne) {
-      errors.put("termsError", terms+" is invalid input for this field");
-    }    
-    
+    }
+    catch (NumberFormatException ne) {
+      errors.put("termsError", terms + " is invalid input for this field");
+    }
+
   }
 
 
@@ -472,7 +502,7 @@ public class OpportunityComponent extends GenericBean {
   public void setLow(String low) {
     low = replace(low, ",", "");
     low = replace(low, "$", "");
-    
+
     this.low = Double.parseDouble(low);
   }
 
@@ -486,11 +516,12 @@ public class OpportunityComponent extends GenericBean {
   public void setGuess(String guess) {
     guess = replace(guess, ",", "");
     guess = replace(guess, "$", "");
-    
+
     try {
       this.guess = Double.parseDouble(guess);
-    } catch (NumberFormatException ne) {
-      errors.put("guessError", guess+" is invalid input for this field");
+    }
+    catch (NumberFormatException ne) {
+      errors.put("guessError", guess + " is invalid input for this field");
     }
   }
 
@@ -504,7 +535,7 @@ public class OpportunityComponent extends GenericBean {
   public void setHigh(String high) {
     high = replace(high, ",", "");
     high = replace(high, "$", "");
-    
+
     this.high = Double.parseDouble(high);
   }
 
@@ -541,6 +572,7 @@ public class OpportunityComponent extends GenericBean {
     this.units = units;
   }
 
+
   /**
    *  Sets the CloseProb attribute of the Opportunity object
    *
@@ -551,13 +583,14 @@ public class OpportunityComponent extends GenericBean {
     if (closeProb != null && closeProb.endsWith("%")) {
       closeProb = closeProb.substring(0, closeProb.length() - 1);
     }
-    
+
     try {
       this.closeProb = ((Double.parseDouble(closeProb)) / 100);
-    } catch (NumberFormatException ne) {
-      errors.put("closeProbError", closeProb+" is invalid input for this field");
     }
-    
+    catch (NumberFormatException ne) {
+      errors.put("closeProbError", closeProb + " is invalid input for this field");
+    }
+
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity-> Close prob: " + closeProb);
     }
@@ -576,6 +609,7 @@ public class OpportunityComponent extends GenericBean {
     }
     this.commission = ((Double.parseDouble(commission)) / 100);
   }
+
 
   /**
    *  Sets the Stage attribute of the Opportunity object
@@ -606,6 +640,67 @@ public class OpportunityComponent extends GenericBean {
    */
   public void setCloseNow(String tmp) {
     this.closeIt = ("ON".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+  }
+
+
+  /**
+   *  Gets the TypeList attribute of the OpportunityComponent object
+   *
+   *@return    The TypeList value
+   */
+  public ArrayList getTypeList() {
+    return typeList;
+  }
+
+
+  /**
+   *  Gets the alertText attribute of the Opportunity object
+   *
+   *@return    The alertText value
+   */
+  public String getAlertText() {
+    return alertText;
+  }
+
+
+  /**
+   *  Gets the OppId attribute of the OpportunityComponent object
+   *
+   *@return    The OppId value
+   */
+  public int getOppId() {
+    return oppId;
+  }
+
+
+  /**
+   *  Gets the HasEnabledOwnerAccount attribute of the OpportunityComponent
+   *  object
+   *
+   *@return    The HasEnabledOwnerAccount value
+   */
+  public boolean getHasEnabledOwnerAccount() {
+    return hasEnabledOwnerAccount;
+  }
+
+
+  /**
+   *  Gets the Types attribute of the OpportunityComponent object
+   *
+   *@return    The Types value
+   */
+  public LookupList getTypes() {
+    return types;
+  }
+
+
+  /**
+   *  Gets the Notes attribute of the OpportunityComponent object
+   *
+   *@return    The Notes value
+   */
+  public String getNotes() {
+    return notes;
   }
 
 
@@ -648,7 +743,8 @@ public class OpportunityComponent extends GenericBean {
     String tmp = "";
     try {
       return DateFormat.getDateInstance(3).format(alertDate);
-    } catch (NullPointerException e) {
+    }
+    catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -665,7 +761,8 @@ public class OpportunityComponent extends GenericBean {
       SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
       formatter.applyPattern("M/d/yyyy");
       return formatter.format(alertDate);
-    } catch (NullPointerException e) {
+    }
+    catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -680,7 +777,8 @@ public class OpportunityComponent extends GenericBean {
     String tmp = "";
     try {
       return DateFormat.getDateInstance(3).format(closeDate);
-    } catch (NullPointerException e) {
+    }
+    catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -695,7 +793,8 @@ public class OpportunityComponent extends GenericBean {
     String tmp = "";
     try {
       return DateFormat.getDateInstance(3).format(stageDate);
-    } catch (NullPointerException e) {
+    }
+    catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -710,6 +809,7 @@ public class OpportunityComponent extends GenericBean {
   public boolean getOpenIt() {
     return openIt;
   }
+
 
   /**
    *  Gets the Entered attribute of the Opportunity object
@@ -743,7 +843,8 @@ public class OpportunityComponent extends GenericBean {
     String tmp = "";
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
-    } catch (NullPointerException e) {
+    }
+    catch (NullPointerException e) {
     }
     return tmp;
   }
@@ -759,32 +860,12 @@ public class OpportunityComponent extends GenericBean {
     String tmp = "";
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
-    } catch (NullPointerException e) {
+    }
+    catch (NullPointerException e) {
     }
     return tmp;
   }
-  
-  public void checkEnabledOwnerAccount(Connection db) throws SQLException {
-    if (this.getOwner() == -1) {
-      throw new SQLException("ID not specified for lookup.");
-    }
 
-    PreparedStatement pst = db.prepareStatement(
-      "SELECT * " +
-      "FROM access " +
-      "WHERE user_id = ? AND enabled = ? ");
-    pst.setInt(1, this.getOwner());
-    pst.setBoolean(2, true);
-    System.out.println(pst.toString());
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      this.setHasEnabledOwnerAccount(true);
-    } else {
-      this.setHasEnabledOwnerAccount(false);
-    }
-    rs.close();
-    pst.close();
-  }  
 
   /**
    *  Gets the Closed attribute of the Opportunity object
@@ -840,6 +921,7 @@ public class OpportunityComponent extends GenericBean {
     return ownerName;
   }
 
+
   /**
    *  Gets the Units attribute of the Opportunity object
    *
@@ -873,7 +955,8 @@ public class OpportunityComponent extends GenericBean {
     String toReturn = "" + tmp;
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
-    } else {
+    }
+    else {
       return toReturn;
     }
   }
@@ -992,7 +1075,8 @@ public class OpportunityComponent extends GenericBean {
   public String getShortDescription() {
     if (description.length() <= 40) {
       return description;
-    } else {
+    }
+    else {
       return description.substring(0, 40) + "...";
     }
   }
@@ -1020,7 +1104,8 @@ public class OpportunityComponent extends GenericBean {
     String toReturn = "" + thisAmount;
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
-    } else {
+    }
+    else {
       return toReturn;
     }
   }
@@ -1061,7 +1146,8 @@ public class OpportunityComponent extends GenericBean {
     String toReturn = "" + thisAmount;
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
-    } else {
+    }
+    else {
       return toReturn;
     }
   }
@@ -1093,7 +1179,8 @@ public class OpportunityComponent extends GenericBean {
 
     if (tempValue < 1) {
       amountOut = "<1";
-    } else {
+    }
+    else {
       amountOut = numberFormatter.format(tempValue);
     }
 
@@ -1123,7 +1210,8 @@ public class OpportunityComponent extends GenericBean {
     String toReturn = "" + thisAmount;
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
-    } else {
+    }
+    else {
       return toReturn;
     }
   }
@@ -1140,6 +1228,7 @@ public class OpportunityComponent extends GenericBean {
     String amountOut = numberFormatter.format(high);
     return amountOut;
   }
+
 
   /**
    *  Gets the CloseProb attribute of the Opportunity object
@@ -1177,7 +1266,8 @@ public class OpportunityComponent extends GenericBean {
     String toReturn = "" + value_2dp;
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
-    } else {
+    }
+    else {
       return toReturn;
     }
   }
@@ -1194,6 +1284,7 @@ public class OpportunityComponent extends GenericBean {
     String percentOut = percentFormatter.format(closeProb);
     return percentOut;
   }
+
 
   /**
    *  Gets the Commission attribute of the Opportunity object
@@ -1241,10 +1332,81 @@ public class OpportunityComponent extends GenericBean {
     String toReturn = "" + value_2dp;
     if (toReturn.endsWith(".0")) {
       return (toReturn.substring(0, toReturn.length() - 2));
-    } else {
+    }
+    else {
       return toReturn;
     }
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  id                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void queryRecord(Connection db, int id) throws SQLException {
+    if (id == -1) {
+      throw new SQLException("Opportunity Component ID not specified.");
+    }
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT oc.*, y.description as stagename, " +
+        "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
+        "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
+        "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst " +
+        "FROM opportunity_component oc " +
+        "LEFT JOIN contact ct_owner ON (oc.owner = ct_owner.user_id) " +
+        "LEFT JOIN contact ct_eb ON (oc.enteredby = ct_eb.user_id) " +
+        "LEFT JOIN contact ct_mb ON (oc.modifiedby = ct_mb.user_id), " +
+        "lookup_stage y " +
+        "WHERE y.code = oc.stage " +
+        "AND id = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+      buildTypes(db);
+    }
+    else {
+      rs.close();
+      pst.close();
+      throw new SQLException("Opportunity Component record not found.");
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void checkEnabledOwnerAccount(Connection db) throws SQLException {
+    if (this.getOwner() == -1) {
+      throw new SQLException("ID not specified for lookup.");
+    }
+
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * " +
+        "FROM access " +
+        "WHERE user_id = ? AND enabled = ? ");
+    pst.setInt(1, this.getOwner());
+    pst.setBoolean(2, true);
+    System.out.println(pst.toString());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setHasEnabledOwnerAccount(true);
+    }
+    else {
+      this.setHasEnabledOwnerAccount(false);
+    }
+    rs.close();
+    pst.close();
+  }
+
 
   /**
    *  Description of the Method
@@ -1259,7 +1421,8 @@ public class OpportunityComponent extends GenericBean {
     if (insert(db)) {
       invalidateUserData(context);
       return true;
-    } else {
+    }
+    else {
       return false;
     }
   }
@@ -1310,7 +1473,8 @@ public class OpportunityComponent extends GenericBean {
     if (delete(db)) {
       invalidateUserData(context);
       return true;
-    } else {
+    }
+    else {
       return false;
     }
   }
@@ -1329,7 +1493,8 @@ public class OpportunityComponent extends GenericBean {
     if (delete(db, baseFilePath)) {
       invalidateUserData(context);
       return true;
-    } else {
+    }
+    else {
       return false;
     }
   }
@@ -1372,7 +1537,15 @@ public class OpportunityComponent extends GenericBean {
 
     return success;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
   public int updateHeaderModified(Connection db) throws SQLException {
     if (this.getOppId() == -1) {
       throw new SQLException("Opportunity Header ID not specified");
@@ -1393,7 +1566,8 @@ public class OpportunityComponent extends GenericBean {
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;
-  }  
+  }
+
 
   /**
    *  Description of the Method
@@ -1416,58 +1590,6 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Valid attribute of the Opportunity object
-   *
-   *@param  db                Description of Parameter
-   *@return                   The Valid value
-   *@exception  SQLException  Description of Exception
-   *@since
-   */
-  protected boolean isValid(Connection db) throws SQLException {
-    //errors.clear();
-
-    if (description == null || description.trim().equals("")) {
-      errors.put("componentDescriptionError", "Description cannot be left blank");
-    }
-
-    if (closeProb == 0 && !(errors.containsKey("closeProbError"))) {
-      errors.put("closeProbError", "Close Probability cannot be left blank");
-    } else {
-      if (closeProb > 100) {
-        errors.put("closeProbError", "Close Probability cannot be greater than 100%");
-      } else if (closeProb < 0) {
-        errors.put("closeProbError", "Close Probability cannot be less than 0%");
-      }
-    }
-
-    if (closeDate == null || getCloseDateString().trim().equals("")) {
-      errors.put("closeDateError", "Close Date cannot be left blank");
-    }
-
-    if (guess == 0 && !(errors.containsKey("guessError"))) {
-      errors.put("guessError", "Amount needs to be entered");
-    }
-
-    if (terms == 0 && !(errors.containsKey("termsError"))) {
-      errors.put("termsError", "Terms needs to be entered");
-    } else {
-      if (terms < 0) {
-        errors.put("termsError", "Terms cannot be less than 0");
-      }
-    }
-
-    if (hasErrors()) {
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Opportunity Component-> Cannot insert: object is not valid");
-      }
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-
-  /**
    *  Inserts this object into the database, and populates this Id. For
    *  maintenance, only the required fields are inserted, then an update is
    *  executed to finish the record.
@@ -1484,13 +1606,13 @@ public class OpportunityComponent extends GenericBean {
     if (this.getOppId() == -1) {
       throw new SQLException("You must associate an opportunity component with an opportunity.");
     }
-    
+
     try {
       db.setAutoCommit(false);
       StringBuffer sql = new StringBuffer();
       sql.append(
-        "INSERT INTO opportunity_component " +
-        "(owner, closedate, stage, description, opp_id, ");
+          "INSERT INTO opportunity_component " +
+          "(owner, closedate, stage, description, opp_id, ");
       if (stageDate != null) {
         sql.append("stagedate, ");
       }
@@ -1537,13 +1659,246 @@ public class OpportunityComponent extends GenericBean {
       id = DatabaseUtils.getCurrVal(db, "opportunity_component_id_seq");
       this.update(db, true);
       db.commit();
-    } catch (SQLException e) {
+    }
+    catch (SQLException e) {
       db.rollback();
       db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
     }
     db.setAutoCommit(true);
     return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@exception  SQLException  Description of Exception
+   */
+  public void buildTypes(Connection db) throws SQLException {
+    ResultSet rs = null;
+
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT otl.type_id " +
+        "FROM opportunity_component_levels otl " +
+        "WHERE otl.opp_id = ? ORDER BY otl.level ");
+
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    int i = 0;
+    pst.setInt(++i, id);
+    rs = pst.executeQuery();
+
+    while (rs.next()) {
+      types.add(new LookupElement(db, rs.getInt("type_id"), "lookup_opportunity_types"));
+    }
+
+    rs.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public boolean resetType(Connection db) throws SQLException {
+    if (id == -1) {
+      throw new SQLException("ID not specified");
+    }
+    String sql = "DELETE FROM opportunity_component_levels WHERE opp_id = ? ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, this.getId());
+    pst.execute();
+    pst.close();
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  type_id           Description of Parameter
+   *@param  level             Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public boolean insertType(Connection db, int type_id, int level) throws SQLException {
+    if (id == -1) {
+      throw new SQLException("ID not specified");
+    }
+    String sql =
+        "INSERT INTO opportunity_component_levels " +
+        "(opp_id, type_id, level) " +
+        "VALUES (?, ?, ?) ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, this.getId());
+    pst.setInt(++i, type_id);
+    pst.setInt(++i, level);
+    pst.execute();
+    pst.close();
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@since
+   */
+  public void invalidateUserData(ActionContext context) {
+    invalidateUserData(context, owner);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@param  newOwner          Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public boolean reassign(Connection db, int newOwner) throws SQLException {
+    int result = -1;
+    this.setOwner(newOwner);
+    result = this.update(db);
+
+    if (result == -1) {
+      return false;
+    }
+
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of Parameter
+   *@param  userId   Description of Parameter
+   *@since
+   */
+  public void invalidateUserData(ActionContext context, int userId) {
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    systemStatus.getHierarchyList().getUser(userId).setIsValid(false, true);
+
+
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   */
+  public HashMap processDependencies(Connection db) throws SQLException {
+    ResultSet rs = null;
+    String sql = "";
+    HashMap dependencyList = new HashMap();
+
+    try {
+      db.setAutoCommit(false);
+      sql = "SELECT COUNT(*) as callcount FROM call_log c WHERE c.opp_id = ? ";
+
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        dependencyList.put("Calls", new Integer(rs.getInt("callcount")));
+      }
+
+      sql = "SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = ? and pf.link_item_id = ? ";
+
+      i = 0;
+      pst = db.prepareStatement(sql);
+      pst.setInt(++i, Constants.PIPELINE);
+      pst.setInt(++i, this.getId());
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        dependencyList.put("Documents", new Integer(rs.getInt("documentcount")));
+      }
+
+      pst.close();
+      db.commit();
+
+    }
+    catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    }
+    finally {
+      db.setAutoCommit(true);
+    }
+    return dependencyList;
+  }
+
+
+  /**
+   *  Gets the Valid attribute of the Opportunity object
+   *
+   *@param  db                Description of Parameter
+   *@return                   The Valid value
+   *@exception  SQLException  Description of Exception
+   *@since
+   */
+  protected boolean isValid(Connection db) throws SQLException {
+    //errors.clear();
+
+    if (description == null || description.trim().equals("")) {
+      errors.put("componentDescriptionError", "Description cannot be left blank");
+    }
+
+    if (closeProb == 0 && !(errors.containsKey("closeProbError"))) {
+      errors.put("closeProbError", "Close Probability cannot be left blank");
+    }
+    else {
+      if (closeProb > 100) {
+        errors.put("closeProbError", "Close Probability cannot be greater than 100%");
+      }
+      else if (closeProb < 0) {
+        errors.put("closeProbError", "Close Probability cannot be less than 0%");
+      }
+    }
+
+    if (closeDate == null || getCloseDateString().trim().equals("")) {
+      errors.put("closeDateError", "Close Date cannot be left blank");
+    }
+
+    if (guess == 0 && !(errors.containsKey("guessError"))) {
+      errors.put("guessError", "Amount needs to be entered");
+    }
+
+    if (terms == 0 && !(errors.containsKey("termsError"))) {
+      errors.put("termsError", "Terms needs to be entered");
+    }
+    else {
+      if (terms < 0) {
+        errors.put("termsError", "Terms cannot be less than 0");
+      }
+    }
+
+    if (hasErrors()) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Opportunity Component-> Cannot insert: object is not valid");
+      }
+      return false;
+    }
+    else {
+      return true;
+    }
   }
 
 
@@ -1570,7 +1925,8 @@ public class OpportunityComponent extends GenericBean {
       db.setAutoCommit(false);
       resultCount = this.update(db, false);
       db.commit();
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       db.rollback();
       db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
@@ -1606,9 +1962,11 @@ public class OpportunityComponent extends GenericBean {
       st.close();
 
       db.commit();
-    } catch (SQLException e) {
+    }
+    catch (SQLException e) {
       db.rollback();
-    } finally {
+    }
+    finally {
       db.setAutoCommit(true);
       st.close();
     }
@@ -1617,7 +1975,7 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  Deletes an opportunity component, and its associated documents and calls
    *
    *@param  db                Description of the Parameter
    *@param  baseFilePath      Description of the Parameter
@@ -1634,19 +1992,19 @@ public class OpportunityComponent extends GenericBean {
     try {
       db.setAutoCommit(false);
       this.resetType(db);
-      
+
       CallList callList = new CallList();
       callList.setOppId(this.getId());
       callList.buildList(db);
       callList.delete(db);
-      callList = null;      
-      
+      callList = null;
+
       FileItemList fileList = new FileItemList();
       fileList.setLinkModuleId(Constants.PIPELINE);
       fileList.setLinkItemId(this.getId());
       fileList.buildList(db);
       fileList.delete(db, baseFilePath);
-      fileList = null;      
+      fileList = null;
 
       st = db.createStatement();
       st.executeUpdate(
@@ -1654,35 +2012,17 @@ public class OpportunityComponent extends GenericBean {
       st.close();
       this.updateHeaderModified(db);
       db.commit();
-    } catch (SQLException e) {
+    }
+    catch (SQLException e) {
       db.rollback();
-    } finally {
+    }
+    finally {
       db.setAutoCommit(true);
       st.close();
     }
     return true;
   }
 
-  public void buildTypes(Connection db) throws SQLException {
-    ResultSet rs = null;
-
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT otl.type_id " +
-        "FROM opportunity_component_levels otl " +
-        "WHERE otl.opp_id = ? ORDER BY otl.level ");
-
-    PreparedStatement pst = db.prepareStatement(sql.toString());
-    int i=0;
-    pst.setInt(++i, id);    
-    rs = pst.executeQuery();
-
-    while (rs.next()) {
-      types.add(new LookupElement(db, rs.getInt("type_id"), "lookup_opportunity_types"));
-    }
-
-    rs.close();
-  }
 
   /**
    *  Populates this object from a result set
@@ -1729,7 +2069,7 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Update the database with changes to this Opportunity
+   *  Update the database with changes to this Opportunity Component
    *
    *@param  db                Opened database connection
    *@param  override          Set to true on an Insert only
@@ -1758,7 +2098,8 @@ public class OpportunityComponent extends GenericBean {
         int currentStage = rs.getInt("stage");
         if (currentStage != stage || this.getCloseIt()) {
           this.setStageChange(true);
-        } else {
+        }
+        else {
           this.setStageChange(false);
         }
       }
@@ -1775,7 +2116,7 @@ public class OpportunityComponent extends GenericBean {
         "SET lowvalue = ?, guessvalue = ?, highvalue = ?, closeprob = ?, " +
         "commission = ?, ");
 
-    if ( (this.getStageChange() == true && override == false) ) {
+    if ((this.getStageChange() == true && override == false)) {
       sql.append("stagedate = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
     }
 
@@ -1791,7 +2132,8 @@ public class OpportunityComponent extends GenericBean {
     if (this.getCloseIt() == true) {
       sql.append(
           ", closed = CURRENT_TIMESTAMP ");
-    } else if (this.getOpenIt() == true) {
+    }
+    else if (this.getOpenIt() == true) {
       sql.append(
           ", closed = ? ");
     }
@@ -1815,13 +2157,15 @@ public class OpportunityComponent extends GenericBean {
 
     if (closeDate == null) {
       pst.setNull(++i, java.sql.Types.DATE);
-    } else {
+    }
+    else {
       pst.setDate(++i, this.getCloseDate());
     }
 
     if (alertDate == null) {
       pst.setNull(++i, java.sql.Types.DATE);
-    } else {
+    }
+    else {
       pst.setDate(++i, this.getAlertDate());
     }
 
@@ -1847,7 +2191,7 @@ public class OpportunityComponent extends GenericBean {
       System.out.println("Opportunity Component-> ResultCount: " + resultCount);
     }
     pst.close();
-    
+
     if (resultCount == 1) {
       //Remove all opp types, add new list
       if (typeList != null) {
@@ -1865,126 +2209,14 @@ public class OpportunityComponent extends GenericBean {
           }
         }
       }
-      
+
       this.updateHeaderModified(db);
     }
-    
+
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity Component-> Closing PreparedStatement");
     }
     return resultCount;
-  }
-  
-  public boolean resetType(Connection db) throws SQLException {
-    if (id == -1) {
-      throw new SQLException("ID not specified");
-    }
-    String sql = "DELETE FROM opportunity_component_levels WHERE opp_id = ? ";
-    int i=0;
-    PreparedStatement pst = db.prepareStatement(sql);
-    pst.setInt(++i, this.getId());
-    pst.execute();
-    pst.close();
-    return true;
-  }  
-  
-  public boolean insertType(Connection db, int type_id, int level) throws SQLException {
-    if (id == -1) {
-      throw new SQLException("ID not specified");
-    }
-    String sql =
-        "INSERT INTO opportunity_component_levels " +
-        "(opp_id, type_id, level) " +
-        "VALUES (?, ?, ?) ";
-    int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql);
-    pst.setInt(++i, this.getId());
-    pst.setInt(++i, type_id);
-    pst.setInt(++i, level);
-    pst.execute();
-    pst.close();
-    return true;
-  }  
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of Parameter
-   *@since
-   */
-  public void invalidateUserData(ActionContext context) {
-    invalidateUserData(context, owner);
-  }
-  
-  public boolean reassign(Connection db, int newOwner) throws SQLException {
-    int result = -1;
-    this.setOwner(newOwner);
-    result = this.update(db);
-    
-    if (result == -1) {
-      return false;
-    }
-    
-    return true;
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of Parameter
-   *@param  userId   Description of Parameter
-   *@since
-   */
-  public void invalidateUserData(ActionContext context, int userId) {
-    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
-    SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-    systemStatus.getHierarchyList().getUser(userId).setIsValid(false, true);
-    
-    
-    
-  }
-  
-  public HashMap processDependencies(Connection db) throws SQLException {
-    ResultSet rs = null;
-    String sql = "";
-    HashMap dependencyList = new HashMap();
-
-    try {
-      db.setAutoCommit(false);
-      sql = "SELECT COUNT(*) as callcount FROM call_log c WHERE c.opp_id = ? ";
-
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        dependencyList.put("Calls", new Integer(rs.getInt("callcount")));
-      }
-
-      sql = "SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = ? and pf.link_item_id = ? ";
-
-      i = 0;
-      pst = db.prepareStatement(sql);
-      pst.setInt(++i, Constants.PIPELINE);
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        dependencyList.put("Documents", new Integer(rs.getInt("documentcount")));
-      }
-      
-
-    pst.close();
-    db.commit();
-    
-    } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
-    }
-    return dependencyList;
   }
 
 }
