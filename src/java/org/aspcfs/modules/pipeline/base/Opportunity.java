@@ -42,7 +42,7 @@ public class Opportunity extends GenericBean {
 
   private java.sql.Date alertDate = null;
   private String alertText = "";
-  
+
   private java.sql.Date closeDate = null;
   private java.sql.Date stageDate = null;
 
@@ -62,7 +62,7 @@ public class Opportunity extends GenericBean {
   private String ownerName = "";
   private String enteredByName = "";
   private String modifiedByName = "";
-  
+
   private boolean accountEnabled = true;
   private boolean callsDelete = false;
   private boolean documentDelete = false;
@@ -86,11 +86,27 @@ public class Opportunity extends GenericBean {
   public Opportunity(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-  
+
+
+  /**
+   *  Constructor for the Opportunity object
+   *
+   *@param  db                Description of the Parameter
+   *@param  oppId             Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public Opportunity(Connection db, int oppId) throws SQLException {
-          queryRecord(db, oppId);
+    queryRecord(db, oppId);
   }
-          
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  oppId             Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void queryRecord(Connection db, int oppId) throws SQLException {
 
     Statement st = null;
@@ -133,7 +149,8 @@ public class Opportunity extends GenericBean {
     st.close();
 
   }
-  
+
+
   /**
    *  Constructor for the Employee object, populates all attributes by
    *  performing a SQL query based on the employeeId parameter
@@ -144,7 +161,7 @@ public class Opportunity extends GenericBean {
    *@since                    1.1
    */
   public Opportunity(Connection db, String oppId) throws SQLException {
-          queryRecord(db, Integer.parseInt(oppId));
+    queryRecord(db, Integer.parseInt(oppId));
   }
 
 
@@ -158,12 +175,26 @@ public class Opportunity extends GenericBean {
     this.enteredByName = enteredByName;
   }
 
-public String getAlertText() {
-	return alertText;
-}
-public void setAlertText(String alertText) {
-	this.alertText = alertText;
-}
+
+  /**
+   *  Gets the alertText attribute of the Opportunity object
+   *
+   *@return    The alertText value
+   */
+  public String getAlertText() {
+    return alertText;
+  }
+
+
+  /**
+   *  Sets the alertText attribute of the Opportunity object
+   *
+   *@param  alertText  The new alertText value
+   */
+  public void setAlertText(String alertText) {
+    this.alertText = alertText;
+  }
+
 
   /**
    *  Sets the OpenIt attribute of the Opportunity object
@@ -184,7 +215,8 @@ public void setAlertText(String alertText) {
   public void setAlertDate(java.sql.Date tmp) {
     this.alertDate = tmp;
   }
-  
+
+
   /**
    *  Sets the alertDate attribute of the Opportunity object
    *
@@ -193,13 +225,26 @@ public void setAlertText(String alertText) {
   public void setAlertDate(String tmp) {
     this.alertDate = DateUtils.parseDateString(tmp);
   }
-  
+
+
+  /**
+   *  Gets the accountEnabled attribute of the Opportunity object
+   *
+   *@return    The accountEnabled value
+   */
   public boolean getAccountEnabled() {
-	return accountEnabled;
-}
-public void setAccountEnabled(boolean accountEnabled) {
-	this.accountEnabled = accountEnabled;
-}
+    return accountEnabled;
+  }
+
+
+  /**
+   *  Sets the accountEnabled attribute of the Opportunity object
+   *
+   *@param  accountEnabled  The new accountEnabled value
+   */
+  public void setAccountEnabled(boolean accountEnabled) {
+    this.accountEnabled = accountEnabled;
+  }
 
 
   /**
@@ -220,16 +265,63 @@ public void setAccountEnabled(boolean accountEnabled) {
   public void setStageDate(java.sql.Date tmp) {
     this.stageDate = tmp;
   }
-  
-public boolean getCallsDelete() { return callsDelete; }
-public boolean getDocumentDelete() { return documentDelete; }
-public void setCallsDelete(boolean tmp) { this.callsDelete = tmp; }
-public void setDocumentDelete(boolean tmp) { this.documentDelete = tmp; }
 
-public void setEnabled(boolean enabled) {
-	this.enabled = enabled;
-}
 
+  /**
+   *  Gets the callsDelete attribute of the Opportunity object
+   *
+   *@return    The callsDelete value
+   */
+  public boolean getCallsDelete() {
+    return callsDelete;
+  }
+
+
+  /**
+   *  Gets the documentDelete attribute of the Opportunity object
+   *
+   *@return    The documentDelete value
+   */
+  public boolean getDocumentDelete() {
+    return documentDelete;
+  }
+
+
+  /**
+   *  Sets the callsDelete attribute of the Opportunity object
+   *
+   *@param  tmp  The new callsDelete value
+   */
+  public void setCallsDelete(boolean tmp) {
+    this.callsDelete = tmp;
+  }
+
+
+  /**
+   *  Sets the documentDelete attribute of the Opportunity object
+   *
+   *@param  tmp  The new documentDelete value
+   */
+  public void setDocumentDelete(boolean tmp) {
+    this.documentDelete = tmp;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the Opportunity object
+   *
+   *@param  enabled  The new enabled value
+   */
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the Opportunity object
+   *
+   *@param  tmp  The new enabled value
+   */
   public void setEnabled(String tmp) {
     enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
@@ -372,7 +464,13 @@ public void setEnabled(boolean enabled) {
   public void setId(int id) {
     this.id = id;
   }
-  
+
+
+  /**
+   *  Sets the id attribute of the Opportunity object
+   *
+   *@param  tmp  The new id value
+   */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
   }
@@ -409,7 +507,13 @@ public void setEnabled(boolean enabled) {
   public void setModifiedBy(int modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
-  
+
+
+  /**
+   *  Sets the modifiedBy attribute of the Opportunity object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
   }
@@ -424,6 +528,13 @@ public void setEnabled(boolean enabled) {
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
   }
+
+
+  /**
+   *  Sets the enteredBy attribute of the Opportunity object
+   *
+   *@param  tmp  The new enteredBy value
+   */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
   }
@@ -551,7 +662,7 @@ public void setEnabled(boolean enabled) {
   /**
    *  Sets the ContactLink attribute of the Opportunity object
    *
-   *@param  contactLink  The new ContactLink value
+   *@param  tmp          The new contactLink value
    *@since
    */
   public void setContactLink(String tmp) {
@@ -562,7 +673,7 @@ public void setEnabled(boolean enabled) {
   /**
    *  Sets the AccountLink attribute of the Opportunity object
    *
-   *@param  accountLink  The new AccountLink value
+   *@param  tmp          The new accountLink value
    *@since
    */
   public void setAccountLink(String tmp) {
@@ -590,7 +701,13 @@ public void setEnabled(boolean enabled) {
   public void setCloseIt(boolean closeIt) {
     this.closeIt = closeIt;
   }
-  
+
+
+  /**
+   *  Sets the closeNow attribute of the Opportunity object
+   *
+   *@param  tmp  The new closeNow value
+   */
   public void setCloseNow(String tmp) {
     this.closeIt = ("ON".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
@@ -1068,20 +1185,28 @@ public void setEnabled(boolean enabled) {
     String amountOut = numberFormatter.format(guess);
     return amountOut;
   }
-  
+
+
+  /**
+   *  Gets the guessCurrency attribute of the Opportunity object
+   *
+   *@param  divisor  Description of the Parameter
+   *@return          The guessCurrency value
+   */
   public String getGuessCurrency(int divisor) {
-	NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-	double tempValue = (guess/divisor);
-	String amountOut = "";
-	
-	if (tempValue < 1) {
-		amountOut = "<1";
-        } else {
-		amountOut = numberFormatter.format(tempValue);
-	}
-	
-	return amountOut; 
+    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+    double tempValue = (guess / divisor);
+    String amountOut = "";
+
+    if (tempValue < 1) {
+      amountOut = "<1";
+    } else {
+      amountOut = numberFormatter.format(tempValue);
+    }
+
+    return amountOut;
   }
+
 
   /**
    *  Gets the High attribute of the Opportunity object
@@ -1324,9 +1449,9 @@ public void setEnabled(boolean enabled) {
     int oldId = -1;
     Statement st = db.createStatement();
     ResultSet rs = st.executeQuery(
-      "SELECT owner " +
-      "FROM opportunity " +
-      "WHERE opp_id = " + this.getId());
+        "SELECT owner " +
+        "FROM opportunity " +
+        "WHERE opp_id = " + this.getId());
     if (rs.next()) {
       oldId = rs.getInt("owner");
     }
@@ -1360,7 +1485,17 @@ public void setEnabled(boolean enabled) {
       return false;
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
+   *@param  baseFilePath      Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean delete(Connection db, ActionContext context, String baseFilePath) throws SQLException {
     if (delete(db, baseFilePath)) {
       invalidateUserData(context);
@@ -1369,35 +1504,44 @@ public void setEnabled(boolean enabled) {
       return false;
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean disable(Connection db) throws SQLException {
-	if (this.getId() == -1) {
-		throw new SQLException("Opportunity ID not specified");
-	}
-	
-	PreparedStatement pst = null;
-	StringBuffer sql = new StringBuffer();
-	boolean success = false;
-	
-	sql.append(
-		"UPDATE opportunity set enabled = " + DatabaseUtils.getFalse(db) + " " +
-		"WHERE opp_id = ? ");
+    if (this.getId() == -1) {
+      throw new SQLException("Opportunity ID not specified");
+    }
 
-	sql.append("AND modified = ? ");
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    boolean success = false;
 
-	int i = 0;
-	pst = db.prepareStatement(sql.toString());
-	pst.setInt(++i, id);
-	
-	pst.setTimestamp(++i, this.getModified());
-	
-	int resultCount = pst.executeUpdate();
-	pst.close();
-	
-	if (resultCount == 1) 
-		success = true;
-	
-	return success;
+    sql.append(
+        "UPDATE opportunity set enabled = " + DatabaseUtils.getFalse(db) + " " +
+        "WHERE opp_id = ? ");
+
+    sql.append("AND modified = ? ");
+
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, id);
+
+    pst.setTimestamp(++i, this.getModified());
+
+    int resultCount = pst.executeUpdate();
+    pst.close();
+
+    if (resultCount == 1) {
+      success = true;
+    }
+
+    return success;
   }
 
 
@@ -1484,77 +1628,71 @@ public void setEnabled(boolean enabled) {
    *@since                    1.1
    */
   public boolean insert(Connection db) throws SQLException {
-
     if (!isValid(db)) {
       return false;
     }
-    
     if (this.getAccountLink() == -1 && this.getContactLink() == -1) {
       throw new SQLException("You must associate an opportunity with an account or contact.");
     }
-
     this.setStageChange(true);
-
     try {
       db.setAutoCommit(false);
-
       StringBuffer sql = new StringBuffer();
-      
       sql.append(
         "INSERT INTO opportunity " +
         "(acctlink, contactlink, owner, closedate, stage, description, ");
-              if (stageDate != null) {
-                      sql.append("stagedate, ");
-              }
-              if (entered != null) {
-                      sql.append("entered, ");
-              }
-              if (modified != null) {
-                      sql.append("modified, ");
-              }  
-        sql.append("enteredBy, modifiedBy ) ");
-        sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
-              if (entered != null) {
-                      sql.append("?, ");
-              }
-              if (modified != null) {
-                      sql.append("?, ");
-              }
-        sql.append("?, ?) ");
-        
+      if (stageDate != null) {
+        sql.append("stagedate, ");
+      }
+      if (entered != null) {
+        sql.append("entered, ");
+      }
+      if (modified != null) {
+        sql.append("modified, ");
+      }
+      sql.append("enteredBy, modifiedBy ) ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+      if (stageDate != null) {
+        sql.append("?, ");
+      }
+      if (entered != null) {
+        sql.append("?, ");
+      }
+      if (modified != null) {
+        sql.append("?, ");
+      }
+      sql.append("?, ?) ");
+
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-      
       if (accountLink > -1) {
-	      pst.setInt(++i, this.getAccountLink());
+        pst.setInt(++i, this.getAccountLink());
       } else {
-	      pst.setNull(++i, java.sql.Types.INTEGER);
+        pst.setNull(++i, java.sql.Types.INTEGER);
       }
-      
       if (contactLink > -1) {
-	      pst.setInt(++i, this.getContactLink());
+        pst.setInt(++i, this.getContactLink());
       } else {
-	      pst.setNull(++i, java.sql.Types.INTEGER);
+        pst.setNull(++i, java.sql.Types.INTEGER);
       }
-      
       pst.setInt(++i, this.getOwner());
       pst.setDate(++i, this.getCloseDate());
       pst.setInt(++i, this.getStage());
       pst.setString(++i, this.getDescription());
-        if (stageDate != null) {
-                pst.setDate(++i, stageDate);
-        }      
-        if (entered != null) {
-                pst.setTimestamp(++i, entered);
-        }
-        if (modified != null) {
-                pst.setTimestamp(++i, modified);
-        }
+      if (stageDate != null) {
+        pst.setDate(++i, stageDate);
+      }
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
+      }
       pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getModifiedBy());        
+      pst.setInt(++i, this.getModifiedBy());
       pst.execute();
       pst.close();
-      
+
       id = DatabaseUtils.getCurrVal(db, "opportunity_opp_id_seq");
       this.update(db, true);
       db.commit();
@@ -1614,7 +1752,7 @@ public void setEnabled(boolean enabled) {
     if (this.getId() == -1) {
       throw new SQLException("The Opportunity could not be found.");
     }
-    
+
     Statement st = null;
 
     try {
@@ -1624,7 +1762,7 @@ public void setEnabled(boolean enabled) {
       st.executeUpdate(
           "DELETE FROM opportunity WHERE opp_id = " + this.getId());
       st.close();
-      
+
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1634,41 +1772,50 @@ public void setEnabled(boolean enabled) {
     }
     return true;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  baseFilePath      Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   protected boolean delete(Connection db, String baseFilePath) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("The Opportunity could not be found.");
     }
-    
+
     Statement st = null;
 
     try {
-	    
+
       db.setAutoCommit(false);
 
       if (callsDelete) {
-	      CallList callList = new CallList();
-	      callList.setOppId(this.getId());
-	      callList.buildList(db);
-	      callList.delete(db);
-	      callList = null;
+        CallList callList = new CallList();
+        callList.setOppId(this.getId());
+        callList.buildList(db);
+        callList.delete(db);
+        callList = null;
       }
 
       if (documentDelete) {
-	      FileItemList fileList = new FileItemList();
-	      fileList.setLinkModuleId(Constants.PIPELINE);
-	      fileList.setLinkItemId(this.getId());
-	      fileList.buildList(db);
-	      fileList.delete(db, baseFilePath);
-	      fileList = null;
+        FileItemList fileList = new FileItemList();
+        fileList.setLinkModuleId(Constants.PIPELINE);
+        fileList.setLinkItemId(this.getId());
+        fileList.buildList(db);
+        fileList.delete(db, baseFilePath);
+        fileList = null;
       }
 
       st = db.createStatement();
       st.executeUpdate(
           "DELETE FROM opportunity WHERE opp_id = " + this.getId());
-          
+
       st.close();
-      
+
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1693,17 +1840,17 @@ public void setEnabled(boolean enabled) {
     owner = rs.getInt("owner");
     description = rs.getString("description");
     accountLink = rs.getInt("acctLink");
-    
+
     if (rs.wasNull()) {
-	    accountLink = -1; 
+      accountLink = -1;
     }
-    
+
     contactLink = rs.getInt("contactLink");
-    
+
     if (rs.wasNull()) {
-	    contactLink = -1; 
+      contactLink = -1;
     }
-    
+
     closeDate = rs.getDate("closedate");
     closeProb = rs.getDouble("closeprob");
     if (System.getProperty("DEBUG") != null) {
@@ -1726,14 +1873,14 @@ public void setEnabled(boolean enabled) {
     modifiedBy = rs.getInt("modifiedby");
     closed = rs.getString("closed");
     enabled = rs.getBoolean("enabled");
-    
+
     //table
     stageName = rs.getString("stagename");
-    
+
     //table
     accountName = rs.getString("acct_name");
     accountEnabled = rs.getBoolean("accountenabled");
-    
+
     //contact table
     String contactNameLast = rs.getString("last_name");
     String contactNameFirst = rs.getString("first_name");
@@ -1759,15 +1906,15 @@ public void setEnabled(boolean enabled) {
 
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-    
+
     if (!override) {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Opportunity-> Retrieving values from previous Opportunity");
       }
       sql.append(
-        "SELECT stage " +
-        "FROM opportunity " +
-        "WHERE opp_id = ? ");
+          "SELECT stage " +
+          "FROM opportunity " +
+          "WHERE opp_id = ? ");
       pst = db.prepareStatement(sql.toString());
       pst.setInt(1, this.getId());
       ResultSet rs = pst.executeQuery();
@@ -1798,11 +1945,11 @@ public void setEnabled(boolean enabled) {
 
     sql.append("type = ?, stage = ?, description = ?, " +
         "closedate = ?, alertdate = ?, alert = ?, terms = ?, units = ?, owner = ?, ");
-        
-        if (override == false) {
-                sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
-        }
-        
+
+    if (override == false) {
+      sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+    }
+
     sql.append("modifiedby = ? ");
 
     if (this.getCloseIt() == true) {
@@ -1857,7 +2004,7 @@ public void setEnabled(boolean enabled) {
     if (!override) {
       pst.setTimestamp(++i, this.getModified());
     }
-    
+
     resultCount = pst.executeUpdate();
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Opportunity-> ResultCount: " + resultCount);
@@ -1868,7 +2015,8 @@ public void setEnabled(boolean enabled) {
     }
     return resultCount;
   }
-  
+
+
   /**
    *  Description of the Method
    *
@@ -1878,9 +2026,9 @@ public void setEnabled(boolean enabled) {
   public void invalidateUserData(ActionContext context) {
     invalidateUserData(context, owner);
   }
-  
-    
-    /**
+
+
+  /**
    *  Description of the Method
    *
    *@param  context  Description of Parameter
@@ -1892,45 +2040,53 @@ public void setEnabled(boolean enabled) {
     SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     systemStatus.getHierarchyList().getUser(userId).setIsValid(false, true);
   }
-  
-    public HashMap canDelete(Connection db)  throws SQLException {
-	  StringBuffer sqlCount = new StringBuffer();
-	  ResultSet rs = null;
-	  PreparedStatement pst = null;
-	  HashMap dependencies = new HashMap();
-	  
-	  dependencies.put(new String("calls"), new Integer(0));
-	  dependencies.put(new String("documents"), new Integer(0));
-	  
-	  //get number of calls
-	  sqlCount.append(
-	  	"SELECT COUNT(*) as callcount FROM call_log c WHERE c.opp_id = " + this.getId() + " ");
-	
-	  pst = db.prepareStatement(sqlCount.toString());
-	  rs = pst.executeQuery();
-	  if (rs.next()) {
-		  dependencies.put(new String("calls"), new Integer(rs.getInt("callcount")));
-          }
-	  
-	  rs.close();
-	  pst.close();
-	  
-	  sqlCount = new StringBuffer();
-	  
-	  //get number of docs
-	  sqlCount.append(
-	  	"SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = " + Constants.PIPELINE + " and pf.link_item_id = " + this.getId() + " ");
-	
-	  pst = db.prepareStatement(sqlCount.toString());
-	  rs = pst.executeQuery();
-	  if (rs.next()) {
-		  dependencies.put(new String("documents"), new Integer(rs.getInt("documentcount")));
-          }
-	  
-	  rs.close();
-	  pst.close();
-	  
-	  return dependencies;
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public HashMap canDelete(Connection db) throws SQLException {
+    StringBuffer sqlCount = new StringBuffer();
+    ResultSet rs = null;
+    PreparedStatement pst = null;
+    HashMap dependencies = new HashMap();
+
+    dependencies.put(new String("calls"), new Integer(0));
+    dependencies.put(new String("documents"), new Integer(0));
+
+    //get number of calls
+    sqlCount.append(
+        "SELECT COUNT(*) as callcount FROM call_log c WHERE c.opp_id = " + this.getId() + " ");
+
+    pst = db.prepareStatement(sqlCount.toString());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      dependencies.put(new String("calls"), new Integer(rs.getInt("callcount")));
+    }
+
+    rs.close();
+    pst.close();
+
+    sqlCount = new StringBuffer();
+
+    //get number of docs
+    sqlCount.append(
+        "SELECT COUNT(*) as documentcount FROM project_files pf WHERE pf.link_module_id = " + Constants.PIPELINE + " and pf.link_item_id = " + this.getId() + " ");
+
+    pst = db.prepareStatement(sqlCount.toString());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      dependencies.put(new String("documents"), new Integer(rs.getInt("documentcount")));
+    }
+
+    rs.close();
+    pst.close();
+
+    return dependencies;
   }
 
 }

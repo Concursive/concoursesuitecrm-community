@@ -102,11 +102,27 @@ public class Contact extends GenericBean {
   public Contact(Connection db, String contactId) throws SQLException {
     queryRecord(db, Integer.parseInt(contactId));
   }
-  
+
+
+  /**
+   *  Constructor for the Contact object
+   *
+   *@param  db                Description of the Parameter
+   *@param  contactId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public Contact(Connection db, int contactId) throws SQLException {
     queryRecord(db, contactId);
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  contactId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   private void queryRecord(Connection db, int contactId) throws SQLException {
     Statement st = null;
     ResultSet rs = null;
@@ -277,6 +293,7 @@ public class Contact extends GenericBean {
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
   }
+
 
   /**
    *  Sets the Owner attribute of the Opportunity object
@@ -719,7 +736,13 @@ public class Contact extends GenericBean {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
-  
+
+
+  /**
+   *  Sets the enteredBy attribute of the Contact object
+   *
+   *@param  tmp  The new enteredBy value
+   */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
   }
@@ -735,9 +758,16 @@ public class Contact extends GenericBean {
     this.modifiedBy = tmp;
   }
 
+
+  /**
+   *  Sets the modifiedBy attribute of the Contact object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
   }
+
 
   /**
    *  Sets the HasAccount attribute of the Contact object
@@ -793,11 +823,23 @@ public class Contact extends GenericBean {
   public int getUserId() {
     return userId;
   }
-  
+
+
+  /**
+   *  Sets the userId attribute of the Contact object
+   *
+   *@param  tmp  The new userId value
+   */
   public void setUserId(int tmp) {
     userId = tmp;
   }
-  
+
+
+  /**
+   *  Sets the userId attribute of the Contact object
+   *
+   *@param  tmp  The new userId value
+   */
   public void setUserId(String tmp) {
     userId = Integer.parseInt(tmp);
   }
@@ -1392,8 +1434,8 @@ public class Contact extends GenericBean {
    */
   public String getCampaignMessageRange(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-      "SELECT campaign_id from scheduled_recipient " +
-      "WHERE contact_id = ? ");
+        "SELECT campaign_id from scheduled_recipient " +
+        "WHERE contact_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     StringBuffer r = new StringBuffer();
@@ -1488,22 +1530,22 @@ public class Contact extends GenericBean {
       sql.append(
           "INSERT INTO contact " +
           "(user_id, type_id, namefirst, namelast, owner, ");
-                if (entered != null) {
-                        sql.append("entered, ");
-                }
-                if (modified != null) {
-                        sql.append("modified, ");
-                }
+      if (entered != null) {
+        sql.append("entered, ");
+      }
+      if (modified != null) {
+        sql.append("modified, ");
+      }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ");
-                if (entered != null) {
-                        sql.append("?, ");
-                }
-                if (modified != null) {
-                        sql.append("?, ");
-                }
+      if (entered != null) {
+        sql.append("?, ");
+      }
+      if (modified != null) {
+        sql.append("?, ");
+      }
       sql.append("?, ?) ");
-    
+
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       if (userId > -1) {
@@ -1516,7 +1558,7 @@ public class Contact extends GenericBean {
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
-      
+
       pst.setString(++i, this.getNameFirst());
       pst.setString(++i, this.getNameLast());
       if (owner > -1) {
@@ -1524,15 +1566,15 @@ public class Contact extends GenericBean {
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
-        if (entered != null) {
-                pst.setTimestamp(++i, entered);
-        }
-        if (modified != null) {
-                pst.setTimestamp(++i, modified);
-        }
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
+      }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
-      
+
       pst.execute();
       pst.close();
 
@@ -1667,13 +1709,13 @@ public class Contact extends GenericBean {
     } else {
       try {
         db.setAutoCommit(false);
-        
+
         OpportunityList oppList = new OpportunityList();
         oppList.setContactId(this.getId() + "");
         oppList.buildList(db);
         oppList.delete(db);
         oppList = null;
-        
+
         CustomFieldRecordList folderList = new CustomFieldRecordList();
         folderList.setLinkModuleId(Constants.CONTACTS);
         folderList.setLinkItemId(this.getId());
@@ -1690,18 +1732,18 @@ public class Contact extends GenericBean {
         st.executeUpdate("DELETE FROM contact_phone WHERE contact_id = " + this.getId());
         st.executeUpdate("DELETE FROM contact_emailaddress WHERE contact_id = " + this.getId());
         st.executeUpdate("DELETE FROM contact_address WHERE contact_id = " + this.getId());
-        
+
         if (this.getCampaignMessageRange(db).equals("") || this.getCampaignMessageRange(db) == null) {
-                errors.put("actionError", "Contact disabled from view, since it has related message records");
-                st.executeUpdate(
-                  "UPDATE contact " +
-                  "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
-                  "WHERE contact_id = " + this.getId());
-                st.close();
-                db.commit();
-                return true;
+          errors.put("actionError", "Contact disabled from view, since it has related message records");
+          st.executeUpdate(
+              "UPDATE contact " +
+              "SET enabled = " + DatabaseUtils.getFalse(db) + " " +
+              "WHERE contact_id = " + this.getId());
+          st.close();
+          db.commit();
+          return true;
         }
-                
+
         st.executeUpdate("DELETE FROM contact WHERE contact_id = " + this.getId());
         db.commit();
       } catch (SQLException e) {
@@ -1835,11 +1877,11 @@ public class Contact extends GenericBean {
     }
     sql.append(
         "startofday = ?, endofday = ?, ");
-        
-        if (!override) {
-                sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
-        }
-        
+
+    if (!override) {
+      sql.append("modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+    }
+
     sql.append("modifiedby = ? WHERE contact_id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
@@ -2088,7 +2130,15 @@ public class Contact extends GenericBean {
     }
     return out.toString().trim();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public HashMap processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
     String sql = "";
@@ -2104,11 +2154,11 @@ public class Contact extends GenericBean {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-          //if (rs.getInt("oppcount") != 0) {    
-                  dependencyList.put("Opportunities", new Integer(rs.getInt("oppcount")));
-         // }
+        //if (rs.getInt("oppcount") != 0) {
+        dependencyList.put("Opportunities", new Integer(rs.getInt("oppcount")));
+        // }
       }
-      
+
       sql = "SELECT count(*) as callcount " +
           "FROM call_log " +
           "WHERE call_log.contact_id = ? ";
@@ -2119,12 +2169,12 @@ public class Contact extends GenericBean {
       rs = pst.executeQuery();
       if (rs.next()) {
         //if (rs.getInt("callcount") != 0) {
-          dependencyList.put("Calls", new Integer(rs.getInt("callcount")));
+        dependencyList.put("Calls", new Integer(rs.getInt("callcount")));
         //}
       }
-      
+
       sql = "SELECT count(*) as foldercount " +
-          "FROM custom_field_record cfr WHERE cfr.link_module_id = " + Constants.CONTACTS + 
+          "FROM custom_field_record cfr WHERE cfr.link_module_id = " + Constants.CONTACTS +
           " and cfr.link_item_id = ? ";
 
       i = 0;
@@ -2132,11 +2182,11 @@ public class Contact extends GenericBean {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-       // if (rs.getInt("foldercount") != 0) {
-          dependencyList.put("Folders", new Integer(rs.getInt("foldercount")));
-       // }
+        // if (rs.getInt("foldercount") != 0) {
+        dependencyList.put("Folders", new Integer(rs.getInt("foldercount")));
+        // }
       }
-      
+
       pst.close();
       db.commit();
     } catch (SQLException e) {
@@ -2148,6 +2198,6 @@ public class Contact extends GenericBean {
     }
     return dependencyList;
   }
-    
+
 }
 

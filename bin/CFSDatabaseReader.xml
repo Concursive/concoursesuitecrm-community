@@ -48,6 +48,7 @@
       <property lookup="account">orgId</property>
       <property>title</property>
       <property lookup="lookupDepartment">department</property>
+      <property>company</property>
       <property>nameSalutation</property>
       <property>nameFirst</property>
       <property>nameMiddle</property>

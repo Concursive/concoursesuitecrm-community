@@ -169,10 +169,21 @@ public class TicketLog extends GenericBean {
   }
 
 
+  /**
+   *  Sets the entered attribute of the TicketLog object
+   *
+   *@param  tmp  The new entered value
+   */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
   }
-  
+
+
+  /**
+   *  Sets the modified attribute of the TicketLog object
+   *
+   *@param  tmp  The new modified value
+   */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
   }
@@ -265,6 +276,16 @@ public class TicketLog extends GenericBean {
 
 
   /**
+   *  Sets the assignedTo attribute of the TicketLog object
+   *
+   *@param  tmp  The new assignedTo value
+   */
+  public void setAssignedTo(String tmp) {
+    this.assignedTo = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the AssignedTo attribute of the TicketLog object
    *
    *@param  tmp  The new AssignedTo value
@@ -295,7 +316,13 @@ public class TicketLog extends GenericBean {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
-  
+
+
+  /**
+   *  Sets the enteredBy attribute of the TicketLog object
+   *
+   *@param  tmp  The new enteredBy value
+   */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
   }
@@ -311,10 +338,17 @@ public class TicketLog extends GenericBean {
     this.modifiedBy = tmp;
   }
 
+
+  /**
+   *  Sets the modifiedBy attribute of the TicketLog object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
   }
-  
+
+
   /**
    *  Sets the PriorityCode attribute of the TicketLog object
    *
@@ -324,7 +358,13 @@ public class TicketLog extends GenericBean {
   public void setPriorityCode(int tmp) {
     this.priorityCode = tmp;
   }
-  
+
+
+  /**
+   *  Sets the priorityCode attribute of the TicketLog object
+   *
+   *@param  tmp  The new priorityCode value
+   */
   public void setPriorityCode(String tmp) {
     this.priorityCode = Integer.parseInt(tmp);
   }
@@ -340,9 +380,16 @@ public class TicketLog extends GenericBean {
     this.levelCode = tmp;
   }
 
+
+  /**
+   *  Sets the levelCode attribute of the TicketLog object
+   *
+   *@param  tmp  The new levelCode value
+   */
   public void setLevelCode(String tmp) {
     this.levelCode = Integer.parseInt(tmp);
   }
+
 
   /**
    *  Sets the DepartmentCode attribute of the TicketLog object
@@ -354,9 +401,16 @@ public class TicketLog extends GenericBean {
     this.departmentCode = tmp;
   }
 
+
+  /**
+   *  Sets the departmentCode attribute of the TicketLog object
+   *
+   *@param  tmp  The new departmentCode value
+   */
   public void setDepartmentCode(String tmp) {
     this.departmentCode = Integer.parseInt(tmp);
   }
+
 
   /**
    *  Sets the CatCode attribute of the TicketLog object
@@ -367,7 +421,13 @@ public class TicketLog extends GenericBean {
   public void setCatCode(int tmp) {
     this.catCode = tmp;
   }
-  
+
+
+  /**
+   *  Sets the catCode attribute of the TicketLog object
+   *
+   *@param  tmp  The new catCode value
+   */
   public void setCatCode(String tmp) {
     this.catCode = Integer.parseInt(tmp);
   }
@@ -382,7 +442,13 @@ public class TicketLog extends GenericBean {
   public void setSeverityCode(int tmp) {
     this.severityCode = tmp;
   }
-  
+
+
+  /**
+   *  Sets the severityCode attribute of the TicketLog object
+   *
+   *@param  tmp  The new severityCode value
+   */
   public void setSeverityCode(String tmp) {
     this.severityCode = Integer.parseInt(tmp);
   }
@@ -732,60 +798,60 @@ public class TicketLog extends GenericBean {
 
       sql.append(
           "INSERT INTO TICKETLOG (pri_code, level_code, department_code, cat_code, scode, ticketid, comment, closed, ");
-                if (entered != null) {
-                        sql.append("entered, ");
-                }
-                if (modified != null) {
-                        sql.append("modified, ");
-                }
+      if (entered != null) {
+        sql.append("entered, ");
+      }
+      if (modified != null) {
+        sql.append("modified, ");
+      }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ");
-                if (entered != null) {
-                        sql.append("?, ");
-                }
-                if (modified != null) {
-                        sql.append("?, ");
-                }
+      if (entered != null) {
+        sql.append("?, ");
+      }
+      if (modified != null) {
+        sql.append("?, ");
+      }
       sql.append("?, ?) ");
-      
+
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-        if (this.getPriorityCode() > -1) {
-                pst.setInt(++i, this.getPriorityCode());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-      pst.setInt(++i, this.getLevelCode());
-        if (this.getDepartmentCode() > -1) {
-                pst.setInt(++i, this.getDepartmentCode());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-        if (this.getCatCode() > -1) {
-                pst.setInt(++i, this.getCatCode());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-      if (this.getSeverityCode() > -1) {
-                pst.setInt(++i, this.getSeverityCode());
+      if (this.getPriorityCode() > -1) {
+        pst.setInt(++i, this.getPriorityCode());
       } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+      pst.setInt(++i, this.getLevelCode());
+      if (this.getDepartmentCode() > -1) {
+        pst.setInt(++i, this.getDepartmentCode());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+      if (this.getCatCode() > -1) {
+        pst.setInt(++i, this.getCatCode());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+      if (this.getSeverityCode() > -1) {
+        pst.setInt(++i, this.getSeverityCode());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
       }
       if (ticketId > -1) {
-	      pst.setInt(++i, this.getTicketId());
+        pst.setInt(++i, this.getTicketId());
       } else {
-	      pst.setNull(++i, java.sql.Types.INTEGER);
+        pst.setNull(++i, java.sql.Types.INTEGER);
       }
       pst.setString(++i, this.getEntryText());
       pst.setBoolean(++i, this.getClosed());
-        if (entered != null) {
-                pst.setTimestamp(++i, entered);
-        }
-        if (modified != null) {
-                pst.setTimestamp(++i, modified);
-        }
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
+      }
       pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getModifiedBy());      
+      pst.setInt(++i, this.getModifiedBy());
       pst.execute();
       pst.close();
 
@@ -844,11 +910,11 @@ public class TicketLog extends GenericBean {
     sql.append(
         "UPDATE ticketlog " +
         "SET assigned_to = ? ");
-        
-        if (override == false) {
-                sql.append(", modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
-        }
-        
+
+    if (override == false) {
+      sql.append(", modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
+    }
+
     sql.append("WHERE id = ? ");
     if (!override) {
       sql.append("AND modified = ? ");
@@ -856,11 +922,11 @@ public class TicketLog extends GenericBean {
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
-        if (this.getAssignedTo() > -1) {
-                pst.setInt(++i, this.getAssignedTo());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
+    if (this.getAssignedTo() > -1) {
+      pst.setInt(++i, this.getAssignedTo());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setInt(++i, id);
     if (!override) {
       pst.setTimestamp(++i, this.getModified());
@@ -954,45 +1020,45 @@ public class TicketLog extends GenericBean {
     this.setId(rs.getInt("id"));
     ticketId = rs.getInt("ticketid");
     if (rs.wasNull()) {
-            ticketId = -1;
+      ticketId = -1;
     }
     assignedTo = rs.getInt("assigned_to");
     if (rs.wasNull()) {
-            assignedTo = 0;
+      assignedTo = 0;
     }
     entryText = rs.getString("comment");
     closed = rs.getBoolean("closed");
     priorityCode = rs.getInt("pri_code");
     if (rs.wasNull()) {
-            priorityCode = -1;
+      priorityCode = -1;
     }
     levelCode = rs.getInt("level_code");
     departmentCode = rs.getInt("department_code");
     if (rs.wasNull()) {
-            departmentCode = -1;
+      departmentCode = -1;
     }
     catCode = rs.getInt("cat_code");
-    if(rs.wasNull()) {
-            catCode = -1;
+    if (rs.wasNull()) {
+      catCode = -1;
     }
     severityCode = rs.getInt("scode");
-    if(rs.wasNull()) {
-            severityCode = -1;
+    if (rs.wasNull()) {
+      severityCode = -1;
     }
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
-    
+
     //lookup_department table
     departmentName = rs.getString("deptname");
-   
+
     //ticket_priority table
     priorityName = rs.getString("priorityname");
-    
+
     //ticket_severity table
     severityName = rs.getString("severityname");
-   
+
     //contact table
     enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
     assignedToName = Contact.getNameLastFirst(rs.getString("at_namelast"), rs.getString("at_namefirst"));

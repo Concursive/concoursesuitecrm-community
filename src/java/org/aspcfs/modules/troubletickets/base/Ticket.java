@@ -154,17 +154,36 @@ public class Ticket extends GenericBean {
     history.buildList(db);
   }
 
+
+  /**
+   *  Gets the sendNotification attribute of the Ticket object
+   *
+   *@return    The sendNotification value
+   */
   public boolean getSendNotification() {
-          return sendNotification;
+    return sendNotification;
   }
-  
+
+
+  /**
+   *  Sets the sendNotification attribute of the Ticket object
+   *
+   *@param  sendNotification  The new sendNotification value
+   */
   public void setSendNotification(boolean sendNotification) {
-          this.sendNotification = sendNotification;
+    this.sendNotification = sendNotification;
   }
-  
+
+
+  /**
+   *  Sets the sendNotification attribute of the Ticket object
+   *
+   *@param  tmp  The new sendNotification value
+   */
   public void setSendNotification(String tmp) {
     sendNotification = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
+
 
   /**
    *  Description of the Method
@@ -231,13 +250,26 @@ public class Ticket extends GenericBean {
   public void setThisContact(Contact thisContact) {
     this.thisContact = thisContact;
   }
-  
-public boolean getCompanyEnabled() {
-	return companyEnabled;
-}
-public void setCompanyEnabled(boolean companyEnabled) {
-	this.companyEnabled = companyEnabled;
-}
+
+
+  /**
+   *  Gets the companyEnabled attribute of the Ticket object
+   *
+   *@return    The companyEnabled value
+   */
+  public boolean getCompanyEnabled() {
+    return companyEnabled;
+  }
+
+
+  /**
+   *  Sets the companyEnabled attribute of the Ticket object
+   *
+   *@param  companyEnabled  The new companyEnabled value
+   */
+  public void setCompanyEnabled(boolean companyEnabled) {
+    this.companyEnabled = companyEnabled;
+  }
 
 
   /**
@@ -653,7 +685,13 @@ public void setCompanyEnabled(boolean companyEnabled) {
   public void setLevelCode(int tmp) {
     this.levelCode = tmp;
   }
-  
+
+
+  /**
+   *  Sets the levelCode attribute of the Ticket object
+   *
+   *@param  tmp  The new levelCode value
+   */
   public void setLevelCode(String tmp) {
     this.levelCode = Integer.parseInt(tmp);
   }
@@ -924,7 +962,13 @@ public void setCompanyEnabled(boolean companyEnabled) {
     }
     return tmp;
   }
-  
+
+
+  /**
+   *  Gets the modifiedDateTimeString attribute of the Ticket object
+   *
+   *@return    The modifiedDateTimeString value
+   */
   public String getModifiedDateTimeString() {
     String tmp = "";
     try {
@@ -1164,7 +1208,13 @@ public void setCompanyEnabled(boolean companyEnabled) {
   public String getProblem() {
     return problem;
   }
-  
+
+
+  /**
+   *  Gets the problemHeader attribute of the Ticket object
+   *
+   *@return    The problemHeader value
+   */
   public String getProblemHeader() {
     if (problem.trim().length() > 100) {
       return (problem.substring(0, 100) + "...");
@@ -1260,7 +1310,13 @@ public void setCompanyEnabled(boolean companyEnabled) {
   public int getSeverityCode() {
     return severityCode;
   }
-  
+
+
+  /**
+   *  Gets the closedDateTimeString attribute of the Ticket object
+   *
+   *@return    The closedDateTimeString value
+   */
   public String getClosedDateTimeString() {
     String tmp = "";
     try {
@@ -1362,74 +1418,73 @@ public void setCompanyEnabled(boolean companyEnabled) {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO TICKET (org_id, contact_id, problem, pri_code, department_code, cat_code, scode, ");
-                if (entered != null) {
-                        sql.append("entered, ");
-                }
-                if (modified != null) {
-                        sql.append("modified, ");
-                }        
+      if (entered != null) {
+        sql.append("entered, ");
+      }
+      if (modified != null) {
+        sql.append("modified, ");
+      }
       sql.append("enteredBy, modifiedBy ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
-                if (entered != null) {
-                        sql.append("?, ");
-                }
-                if (modified != null) {
-                        sql.append("?, ");
-                }      
+      if (entered != null) {
+        sql.append("?, ");
+      }
+      if (modified != null) {
+        sql.append("?, ");
+      }
       sql.append("?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getOrgId());
       if (contactId > -1) {
-	      pst.setInt(++i, this.getContactId());
+        pst.setInt(++i, this.getContactId());
       } else {
-	      pst.setNull(++i, java.sql.Types.INTEGER);
+        pst.setNull(++i, java.sql.Types.INTEGER);
       }
       pst.setString(++i, this.getProblem());
-      
-        if (this.getPriorityCode() > 0) {
-                pst.setInt(++i, this.getPriorityCode());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-    
-        if (this.getDepartmentCode() > 0) {
-                pst.setInt(++i, this.getDepartmentCode());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-        
-      
-        if (this.getCatCode() > 0) {
-                pst.setInt(++i, this.getCatCode());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-        
-      if (this.getSeverityCode() > 0) {
-                pst.setInt(++i, this.getSeverityCode());
+
+      if (this.getPriorityCode() > 0) {
+        pst.setInt(++i, this.getPriorityCode());
       } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
+        pst.setNull(++i, java.sql.Types.INTEGER);
       }
-      
-        if (entered != null) {
-                pst.setTimestamp(++i, entered);
-        }
-        if (modified != null) {
-                pst.setTimestamp(++i, modified);
-        }
+
+      if (this.getDepartmentCode() > 0) {
+        pst.setInt(++i, this.getDepartmentCode());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+
+      if (this.getCatCode() > 0) {
+        pst.setInt(++i, this.getCatCode());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+
+      if (this.getSeverityCode() > 0) {
+        pst.setInt(++i, this.getSeverityCode());
+      } else {
+        pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
+      }
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
-        
+
       pst.execute();
       pst.close();
 
       id = DatabaseUtils.getCurrVal(db, "ticket_ticketid_seq");
 
       if (this.getEntered() == null) {
-              this.update(db);
+        this.update(db);
       } else {
-              this.update(db, true);
+        this.update(db, true);
       }
 
       if (this.getAssignedTo() > 0 && !this.getCloseIt() && this.getSendNotification()) {
@@ -1484,10 +1539,10 @@ public void setCompanyEnabled(boolean companyEnabled) {
     sql.append(
         "UPDATE ticket SET department_code = ?, pri_code = ?, scode = ?, cat_code = ?, assigned_to = ?, " +
         "subcat_code1 = ?, subcat_code2 = ?, subcat_code3 = ?, source_code = ?, contact_id = ?, problem = ? ");
-        
-        if (override == false) {
-                sql.append(", modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
-        }
+
+    if (override == false) {
+      sql.append(", modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
+    }
 
     if (this.getCloseIt() == true) {
       sql.append(
@@ -1503,57 +1558,60 @@ public void setCompanyEnabled(boolean companyEnabled) {
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
-        
-        if (this.getDepartmentCode() > 0) {
-                pst.setInt(++i, this.getDepartmentCode());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-        
-        if (this.getPriorityCode() > 0) {
-                pst.setInt(++i, this.getPriorityCode());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-    
-        if (this.getSeverityCode() > 0) {
-                pst.setInt(++i, this.getSeverityCode());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-        
-        if (this.getCatCode() > 0) {
-                pst.setInt(++i, this.getCatCode());
-        } else {
-                pst.setNull(++i, java.sql.Types.INTEGER);
-        }
-        
-    pst.setInt(++i, assignedTo);
-    if (this.getSubCat1() > 0) {
-            pst.setInt(++i, this.getSubCat1());
+
+    if (this.getDepartmentCode() > 0) {
+      pst.setInt(++i, this.getDepartmentCode());
     } else {
-            pst.setNull(++i, java.sql.Types.INTEGER);
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+
+    if (this.getPriorityCode() > 0) {
+      pst.setInt(++i, this.getPriorityCode());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+
+    if (this.getSeverityCode() > 0) {
+      pst.setInt(++i, this.getSeverityCode());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+
+    if (this.getCatCode() > 0) {
+      pst.setInt(++i, this.getCatCode());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    if (assignedTo > -1) {
+      pst.setInt(++i, assignedTo);
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    if (this.getSubCat1() > 0) {
+      pst.setInt(++i, this.getSubCat1());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
     }
     if (this.getSubCat2() > 0) {
-            pst.setInt(++i, this.getSubCat2());
+      pst.setInt(++i, this.getSubCat2());
     } else {
-            pst.setNull(++i, java.sql.Types.INTEGER);
+      pst.setNull(++i, java.sql.Types.INTEGER);
     }
     if (this.getSubCat3() > 0) {
-            pst.setInt(++i, this.getSubCat3());
+      pst.setInt(++i, this.getSubCat3());
     } else {
-            pst.setNull(++i, java.sql.Types.INTEGER);
+      pst.setNull(++i, java.sql.Types.INTEGER);
     }
     if (this.getSourceCode() > 0) {
-            pst.setInt(++i, this.getSourceCode());
+      pst.setInt(++i, this.getSourceCode());
     } else {
-            pst.setNull(++i, java.sql.Types.INTEGER);
+      pst.setNull(++i, java.sql.Types.INTEGER);
     }
-      
+
     if (contactId > -1) {
-	      pst.setInt(++i, this.getContactId());
+      pst.setInt(++i, this.getContactId());
     } else {
-	      pst.setNull(++i, java.sql.Types.INTEGER);
+      pst.setNull(++i, java.sql.Types.INTEGER);
     }
     pst.setString(++i, this.getProblem());
 
@@ -1627,23 +1685,23 @@ public void setCompanyEnabled(boolean companyEnabled) {
       //insert a new entry into the ticket log only if there is a comment entered
       //this should only happen upon initial ticket entry.
       if (this.getComment() != null && !(this.getComment().equals(""))) {
-              TicketLog thisEntry = new TicketLog();
-              thisEntry.setEnteredBy(this.getModifiedBy());
-              thisEntry.setDepartmentCode(this.getDepartmentCode());
-              thisEntry.setAssignedTo(this.getAssignedTo());
-              thisEntry.setEntryText(this.getComment());
-        
-              thisEntry.setTicketId(this.getId());
-              thisEntry.setPriorityCode(this.getPriorityCode());
-              thisEntry.setSeverityCode(this.getSeverityCode());
-        
-              if (this.getCloseIt() == true) {
-                thisEntry.setClosed(true);
-              }
-        
-              history.addElement(thisEntry);
+        TicketLog thisEntry = new TicketLog();
+        thisEntry.setEnteredBy(this.getModifiedBy());
+        thisEntry.setDepartmentCode(this.getDepartmentCode());
+        thisEntry.setAssignedTo(this.getAssignedTo());
+        thisEntry.setEntryText(this.getComment());
+
+        thisEntry.setTicketId(this.getId());
+        thisEntry.setPriorityCode(this.getPriorityCode());
+        thisEntry.setSeverityCode(this.getSeverityCode());
+
+        if (this.getCloseIt() == true) {
+          thisEntry.setClosed(true);
+        }
+
+        history.addElement(thisEntry);
       }
-      
+
       Iterator hist = history.iterator();
       while (hist.hasNext()) {
         TicketLog thisLog = (TicketLog) hist.next();
@@ -1675,17 +1733,17 @@ public void setCompanyEnabled(boolean companyEnabled) {
 
     if (problem == null || problem.trim().equals("")) {
       errors.put("problemError", "An issue is required");
-    } 
+    }
     if (closeIt == true && (solution == null || solution.trim().equals(""))) {
       errors.put("closedError", "A solution is required when closing a ticket");
-    } 
+    }
     if (orgId == -1) {
       errors.put("orgIdError", "You must associate an Account with a Ticket");
-    } 
+    }
     if (contactId == -1) {
       errors.put("contactIdError", "You must associate a Contact with a Ticket");
     }
-    
+
     if (hasErrors()) {
       return false;
     } else {
@@ -1706,11 +1764,11 @@ public void setCompanyEnabled(boolean companyEnabled) {
     this.setId(rs.getInt("ticketid"));
     orgId = rs.getInt("org_id");
     if (rs.wasNull()) {
-            orgId = -1;
+      orgId = -1;
     }
     contactId = rs.getInt("contact_id");
     if (rs.wasNull()) {
-            contactId = -1;
+      contactId = -1;
     }
     problem = rs.getString("problem");
     entered = rs.getTimestamp("entered");
@@ -1721,40 +1779,36 @@ public void setCompanyEnabled(boolean companyEnabled) {
     closed = rs.getTimestamp("closed");
     priorityCode = rs.getInt("pri_code");
     if (rs.wasNull()) {
-            priorityCode = -1;
+      priorityCode = -1;
     }
     levelCode = DatabaseUtils.getInt(rs, "level_code");
     departmentCode = rs.getInt("department_code");
     if (rs.wasNull()) {
-            departmentCode = -1;
+      departmentCode = -1;
     }
     sourceCode = rs.getInt("source_code");
     if (rs.wasNull()) {
-            sourceCode = -1;
+      sourceCode = -1;
     }
     catCode = rs.getInt("cat_code");
-    if(rs.wasNull()) {
-            catCode = 0;
+    if (rs.wasNull()) {
+      catCode = 0;
     }
     subCat1 = rs.getInt("subcat_code1");
-    if(rs.wasNull()) {
-            subCat1 = 0;
+    if (rs.wasNull()) {
+      subCat1 = 0;
     }
     subCat2 = rs.getInt("subcat_code2");
-    if(rs.wasNull()) {
-            subCat2 = 0;
+    if (rs.wasNull()) {
+      subCat2 = 0;
     }
     subCat3 = rs.getInt("subcat_code3");
-    if(rs.wasNull()) {
-            subCat3 = 0;
+    if (rs.wasNull()) {
+      subCat3 = 0;
     }
-    assignedTo = rs.getInt("assigned_to");
+    assignedTo = DatabaseUtils.getInt(rs, "assigned_to");
     solution = rs.getString("solution");
-    severityCode = rs.getInt("scode");
-    
-    if(rs.wasNull()) {
-            severityCode = -1;
-    }
+    severityCode = DatabaseUtils.getInt(rs, "scode");
 
     //organization table
     companyName = rs.getString("orgname");
