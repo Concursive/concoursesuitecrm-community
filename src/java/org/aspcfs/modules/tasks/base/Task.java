@@ -10,6 +10,7 @@ import com.darkhorseventures.framework.beans.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.troubletickets.base.*;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.base.*;
 
 /**
@@ -17,7 +18,6 @@ import org.aspcfs.modules.base.*;
  *
  *@author     akhi_m
  *@created    August 15, 2002
- *@version    $Id$
  *@version    $Id$
  */
 public class Task extends GenericBean {
@@ -35,6 +35,7 @@ public class Task extends GenericBean {
   private double estimatedLOE = -1;
   private int estimatedLOEType = -1;
   private int owner = -1;
+  private int ownerContactId = -1;
   private int categoryId = -1;
   private int age = -1;
   private String notes = null;
@@ -96,6 +97,7 @@ public class Task extends GenericBean {
     if (thisId == -1) {
       throw new SQLException("Task ID not found");
     }
+    this.setOwnerContactId(db);
     buildResources(db);
   }
 
@@ -140,6 +142,63 @@ public class Task extends GenericBean {
    */
   public void setEnteredBy(int enteredBy) {
     this.enteredBy = enteredBy;
+  }
+
+
+  /**
+   *  Sets the ownerContactId attribute of the Task object
+   *
+   *@param  ownerContactId  The new ownerContactId value
+   */
+  public void setOwnerContactId(int ownerContactId) {
+    this.ownerContactId = ownerContactId;
+  }
+
+
+  public void setOwnerContactId(String ownerContactId) {
+    this.ownerContactId = Integer.parseInt(ownerContactId);
+  }
+  
+  
+  /**
+   *  Sets the ownerContactId attribute of the Task object
+   *
+   *@param  db                The new ownerContactId value
+   *@exception  SQLException  Description of the Exception
+   */
+  public void setOwnerContactId(Connection db) throws SQLException {
+    if (owner != -1 && ownerContactId == -1) {
+      this.setOwnerContactId(User.getContactId(db, owner));
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean isOwnerValid(Connection db) throws SQLException {
+    if (owner == -1 && ownerContactId != -1) {
+      Contact thisContact = new Contact(db, ownerContactId);
+      this.setOwner(thisContact.getUserId());
+    }
+    if (owner == -1) {
+      return false;
+    }
+    return true;
+  }
+
+
+  /**
+   *  Gets the ownerContactId attribute of the Task object
+   *
+   *@return    The ownerContactId value
+   */
+  public int getOwnerContactId() {
+    return ownerContactId;
   }
 
 
@@ -730,28 +789,25 @@ public class Task extends GenericBean {
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public int checkEnabledOwnerAccount(Connection db) throws SQLException {
+  public void checkEnabledOwnerAccount(Connection db) throws SQLException {
     if (this.getOwner() == -1) {
       throw new SQLException("ID not specified for lookup.");
     }
-    int ownerUserId = -1;
-    
+
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
         "FROM access " +
-        "WHERE contact_id = ? AND enabled = ? ");
+        "WHERE user_id = ? AND enabled = ? ");
     pst.setInt(1, this.getOwner());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      ownerUserId = rs.getInt("user_id");
       this.setHasEnabledOwnerAccount(true);
     } else {
       this.setHasEnabledOwnerAccount(false);
     }
     rs.close();
     pst.close();
-    return ownerUserId;
   }
 
 
@@ -954,7 +1010,7 @@ public class Task extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     String sql = null;
 
-    if (!isValid()) {
+    if (!isValid(db)) {
       return false;
     }
 
@@ -1023,7 +1079,7 @@ public class Task extends GenericBean {
     if (id == -1) {
       throw new SQLException("Task ID not specified");
     }
-    if (!isValid()) {
+    if (!isValid(db)) {
       return -1;
     }
 
@@ -1144,7 +1200,7 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-         int linkcount = rs.getInt("linkcount");
+        int linkcount = rs.getInt("linkcount");
         if (linkcount != 0) {
           Dependency thisDependency = new Dependency();
           thisDependency.setName("Contacts");
@@ -1164,7 +1220,7 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        int linkcount = rs.getInt("linkcount") ;
+        int linkcount = rs.getInt("linkcount");
         if (linkcount != 0) {
           Dependency thisDependency = new Dependency();
           thisDependency.setName("Tickets");
@@ -1184,7 +1240,7 @@ public class Task extends GenericBean {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-         int linkcount = rs.getInt("linkcount") ;
+        int linkcount = rs.getInt("linkcount");
         if (linkcount != 0) {
           Dependency thisDependency = new Dependency();
           thisDependency.setName("Projects");
@@ -1311,15 +1367,21 @@ public class Task extends GenericBean {
         contactId = rs.getInt("contact_id");
         hasLinks = true;
       }
+      rs.close();
+      pst.close();
+
       if (contactId > 0) {
         contact = new Contact(db, contactId);
         contactName = contact.getNameLastFirst();
       }
+
       //Build the owner info
       if (owner > 0) {
-        Contact ownerContact = new Contact(db, owner);
+        int contactId = User.getContactId(db, owner);
+        Contact ownerContact = new Contact(db, contactId);
         ownerName = ownerContact.getNameLastFirst();
       }
+
       //build the linked ticket info
       sql = "SELECT ticket_id " +
           "FROM tasklink_ticket " +
@@ -1378,17 +1440,18 @@ public class Task extends GenericBean {
   /**
    *  Gets the valid attribute of the Task object
    *
+   *@param  db                Description of the Parameter
    *@return                   The valid value
    *@exception  SQLException  Description of the Exception
    */
-  protected boolean isValid() throws SQLException {
+  protected boolean isValid(Connection db) throws SQLException {
     errors.clear();
 
     if (this.getDescription() == null || this.getDescription().equals("")) {
       errors.put("descriptionError", "Task Description is required");
     }
-    if (this.getCategoryId() == -1 && this.getOwner() == -1) {
-      errors.put("ownerError", "Owner name is required");
+    if (this.getCategoryId() == -1 && !this.isOwnerValid(db)) {
+      errors.put("ownerError", "Owner is required");
     }
     if (hasErrors()) {
       return false;

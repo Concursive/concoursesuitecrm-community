@@ -66,7 +66,7 @@ public final class MyTasks extends CFSModule {
       if ("tasksbyme".equals(taskListInfo.getFilterValue("listFilter1"))) {
         taskList.setTasksAssignedByUser(this.getUserId(context));
       } else {
-        taskList.setOwner(contactId);
+        taskList.setOwner(this.getUserId(context));
       }
       //Configure the second filter
       if ("all".equals(taskListInfo.getFilterValue("listFilter2"))) {
@@ -84,8 +84,8 @@ public final class MyTasks extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (!hasAuthority(context, thisContact.getOwner())) {
-        return ("PermissionError");
+      if(!(hasAuthority(context, thisContact.getOwner()))){
+        return "PermissionError";
       }
       context.getRequest().setAttribute("TaskList", taskList);
       addModuleBean(context, "My Tasks", "Task Home");
@@ -152,16 +152,10 @@ public final class MyTasks extends CFSModule {
     if (context.getRequest().getParameter("id") != null) {
       id = Integer.parseInt(context.getRequest().getParameter("id"));
     }
-    int ownerUserId = -1;
     try {
       db = this.getConnection(context);
       thisTask = new Task(db, id);
-      if (!hasAuthority(context, thisTask.getOwner())) {
-        return ("PermissionError");
-      }
-      if (thisTask.getOwner() > -1) {
-        ownerUserId = thisTask.checkEnabledOwnerAccount(db);
-      }
+      thisTask.checkEnabledOwnerAccount(db);
       if (thisTask.getContactId() > -1) {
         thisTask.checkEnabledLinkAccount(db);
       }
@@ -179,7 +173,7 @@ public final class MyTasks extends CFSModule {
     }
 
     if (errorMessage == null) {
-      if (!hasAuthority(context, ownerUserId)) {
+      if (!hasAuthority(context, thisTask.getOwner())) {
         return ("PermissionError");
       }
 
@@ -252,16 +246,18 @@ public final class MyTasks extends CFSModule {
   public String executeCommandUpdate(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
-    int id = -1;
     if (!(hasPermission(context, "myhomepage-tasks-view"))) {
       return ("DefaultError");
     }
+
+    String id = context.getRequest().getParameter("id");
 
     try {
       db = this.getConnection(context);
       Task thisTask = (Task) context.getFormBean();
       thisTask.setModifiedBy(getUserId(context));
-      if (!hasAuthority(context, thisTask.getOwner())) {
+      Task oldTask = new Task(db, Integer.parseInt(id));
+      if (!hasAuthority(context, oldTask.getOwner())) {
         return ("PermissionError");
       }
       int count = thisTask.update(db);
