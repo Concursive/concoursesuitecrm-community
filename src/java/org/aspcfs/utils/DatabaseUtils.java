@@ -160,9 +160,9 @@ public class DatabaseUtils {
    *@return      Description of the Return Value
    */
   public static boolean parseBoolean(String tmp) {
-    return (tmp.equalsIgnoreCase("ON") ||
-        tmp.equalsIgnoreCase("TRUE") ||
-        tmp.equals("1"));
+    return ("ON".equalsIgnoreCase(tmp) ||
+        "TRUE".equalsIgnoreCase(tmp) ||
+        "1".equals(tmp));
   }
 
 
