@@ -27,6 +27,11 @@ public final class Contacts extends CFSModule {
    *@since
    */
   public String executeCommandAdd(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "View Accounts", "Add Contact to Account");
     Exception errorMessage = null;
     Connection db = null;
@@ -64,6 +69,11 @@ public final class Contacts extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "View Accounts", "Add Contact to Account");
     Exception errorMessage = null;
     boolean recordInserted = false;
@@ -116,6 +126,11 @@ public final class Contacts extends CFSModule {
    *@since
    */
   public String executeCommandDetails(ActionContext context) {
+	  
+ 	if (!(hasPermission(context, "accounts-accounts-contacts-view"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "View Accounts", "View Contact Details");
     Exception errorMessage = null;
 
@@ -164,6 +179,11 @@ public final class Contacts extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-contacts-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordDeleted = false;
     
@@ -209,6 +229,11 @@ public final class Contacts extends CFSModule {
    *@since
    */
   public String executeCommandModify(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-contacts-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "View Accounts", "Modify Contact");
     Exception errorMessage = null;
 
@@ -252,6 +277,11 @@ public final class Contacts extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-contacts-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     Contact newContact = (Contact)context.getFormBean();
@@ -306,6 +336,11 @@ public final class Contacts extends CFSModule {
    */
 
   public String executeCommandView(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-contacts-view"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "View Accounts", "View Contact Details");
     Exception errorMessage = null;
 

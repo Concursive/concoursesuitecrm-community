@@ -44,6 +44,11 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandAddTicket(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-tickets-add"))) {
+	    return ("PermissionError");
+    	}
+	
     int errorCode = 0;
     Exception errorMessage = null;
     Connection db = null;
@@ -95,6 +100,11 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandInsertTicket(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-tickets-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
@@ -185,6 +195,11 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandTicketDetails(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-tickets-view"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     Ticket newTic = null;
@@ -227,6 +242,11 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandDeleteTicket(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-tickets-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -275,6 +295,11 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandModifyTicket(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     Connection db = null;
     Ticket newTic = null;
@@ -415,6 +440,11 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandUpdateTicket(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-tickets-edit"))) {
+	    return ("PermissionError");
+    	}
+	
 
     Exception errorMessage = null;
     Connection db = null;

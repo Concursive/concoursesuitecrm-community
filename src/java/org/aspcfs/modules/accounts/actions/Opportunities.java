@@ -41,6 +41,11 @@ public final class Opportunities extends CFSModule {
    */
 
   public String executeCommandView(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-opportunities-view"))) {
+	    return ("PermissionError");
+    	}
+	
 
     Exception errorMessage = null;
 
@@ -88,6 +93,11 @@ public final class Opportunities extends CFSModule {
    */
 
   public String executeCommandAdd(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-opportunities-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     HtmlSelect busTypeSelect = new HtmlSelect();
@@ -145,6 +155,11 @@ public final class Opportunities extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-opportunities-add"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordInserted = false;
 
@@ -197,6 +212,11 @@ public final class Opportunities extends CFSModule {
    *@since
    */
   public String executeCommandDetails(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-opportunities-view"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "View Accounts", "View Opportunity Details");
     Exception errorMessage = null;
 
@@ -237,6 +257,11 @@ public final class Opportunities extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-opportunities-delete"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Opportunity newOpp = null;
@@ -283,6 +308,11 @@ public final class Opportunities extends CFSModule {
    *@since
    */
   public String executeCommandModify(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-opportunities-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     addModuleBean(context, "View Accounts", "Modify an Opportunity");
     Exception errorMessage = null;
 
@@ -364,6 +394,11 @@ public final class Opportunities extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
+	  
+	if (!(hasPermission(context, "accounts-accounts-opportunities-edit"))) {
+	    return ("PermissionError");
+    	}
+	
     Exception errorMessage = null;
 
     Opportunity newOpp = (Opportunity) context.getFormBean();

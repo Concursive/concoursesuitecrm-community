@@ -216,6 +216,7 @@
   <!-- Accounts Module -->  
   <action name="Accounts" class="com.darkhorseventures.cfsmodule.Accounts">
     <bean name="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -243,6 +244,7 @@
   </action>
   <action name="Contacts" class="com.darkhorseventures.cfsmodule.Contacts">
     <bean name="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -257,6 +259,7 @@
   </action>
   <action name="Opportunities" class="com.darkhorseventures.cfsmodule.Opportunities">
     <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
@@ -270,6 +273,7 @@
   </action>
   <action name="AccountTickets" class="com.darkhorseventures.cfsmodule.AccountTickets">
     <bean name="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="AddTicketOK" resource="/accounts_tickets_add.jsp" layout="nav"/>
     <forward name="InsertTicketOK" resource="/accounts_tickets_details.jsp" layout="nav"/>
     <forward name="DeleteTicketOK" resource="/Accounts.do?command=ViewTickets"/>
@@ -282,6 +286,7 @@
   </action>
   <action name="AccountsDocuments" class="com.darkhorseventures.cfsmodule.AccountsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
+    <forward name="PermissionError" resource="/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
