@@ -39,7 +39,12 @@ public class UserBean extends GenericBean {
     userId = newUserId;
     updateUserRecord();
   }
-
+  
+  public UserBean(int newUserId) { 
+    systemStatus = new SystemStatus();
+    userId = newUserId;
+    System.out.println("HERE!");
+  }
 
   /**
    *  Sets the CssFile attribute of the userBean object

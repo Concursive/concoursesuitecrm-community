@@ -108,8 +108,7 @@ public class User extends GenericBean {
     buildRecord(db, Integer.parseInt(userId));
     buildResources(db);
   }
-
-
+  
   /**
    *  Constructor for the User object
    *
@@ -222,6 +221,13 @@ public class User extends GenericBean {
   public void setAlias(String tmp) {
     alias = Integer.parseInt(tmp);
   }
+  
+public Vector getPermissions() {
+	return permissions;
+}
+public void setPermissions(Vector permissions) {
+	this.permissions = permissions;
+}
 
 
   /**
@@ -1508,7 +1514,7 @@ public class User extends GenericBean {
     }
 
     if (!password1.equals(password2)) {
-      errors.put("password2Error", "Verification password does not match the password");
+      errors.put("password2Error", "Verification password does not match");
     }
 
     if (hasErrors()) {
@@ -1672,7 +1678,6 @@ public class User extends GenericBean {
     pst.close();
     return duplicate;
   }
-
 
   /**
    *  Updates this user's permissions from the database
