@@ -98,7 +98,7 @@ public class UsernameHandler extends TagSupport {
         }
       } else {
         //NOTE: the default text will already be in the output format
-        this.pageContext.getOut().write(defaultText);
+        this.pageContext.getOut().write(StringUtils.toHtml(defaultText));
       }
     } catch (Exception e) {
       e.printStackTrace(System.out);
