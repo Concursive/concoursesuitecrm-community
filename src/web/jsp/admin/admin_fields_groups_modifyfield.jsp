@@ -10,14 +10,17 @@
 <script language="JavaScript" type="text/javascript" src="/javascript/editListForm.js"></script>
 <script language="JavaScript" type="text/javascript">
   function doCheck() {
+    if (document.modifyList.dosubmit.value == "false") {
+      return true;
+    }
     var test = document.modifyList.selectedList;
     if (test != null) {
-      selectAllOptions(document.modifyList.selectedList);
+      return selectAllOptions(document.modifyList.selectedList);
     }
   }
 </script>
 <body<% if (CustomField.getName() == null) { %> onLoad="document.forms[0].name.focus();"<%}%>>
-<form name="modifyList" action="/AdminFields.do?command=ModifyField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true" method="post">
+<form name="modifyList" action="/AdminFields.do?command=ModifyField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true" onSubmit="return doCheck();" method="post">
 <a href="/Admin.do">Setup</a> >
 <a href="/Admin.do?command=Config">System Configuration</a> >
 <a href="/AdminFieldsFolder.do?command=ListFolders&modId=<%= ModuleList.getSelectedKey() %>">Custom Folders</a> > 
@@ -25,7 +28,7 @@
 Existing Field<br>
 &nbsp;<br>
 <%
-  CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
+  CategoryList.setJsEvent("ONCHANGE=\"javascript:this.form.dosubmit.value='false';document.forms[0].submit();\"");
 %>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -125,7 +128,6 @@ Existing Field<br>
                 </td>
                 <td width=50%><%= SelectedList.getHtmlSelect("selectedList",0) %></td>
                 <input type=hidden name="selectNames" value="">
-                <input type=hidden name="listid" value="<%= request.getParameter("listId") %>">
               </tr>
             </table>
           </td>
@@ -155,8 +157,9 @@ Existing Field<br>
       &nbsp;<br>
       <input type="hidden" name="id" value="<%= (String)request.getParameter("id") %>">
       <input type="hidden" name="groupId" value="<%= (String)request.getParameter("grpId") %>">
-      <input type="submit" value="Update" onClick="javascript:this.form.action='/AdminFields.do?command=UpdateField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true';doCheck();">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>'">
+      <input type="hidden" name="dosubmit" value="false">
+      <input type="submit" value="Update" onClick="javascript:this.form.action='/AdminFields.do?command=UpdateField&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true';this.form.dosubmit.value='true';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AdminFieldsGroup.do?command=ListGroups&modId=<%= ModuleList.getSelectedKey() %>&catId=<%= Category.getId() %>';this.form.dosubmit.value='false';">
     </td>
   </tr>
 </table>

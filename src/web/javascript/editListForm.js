@@ -17,18 +17,7 @@ function addValues(){
 	
 	var newOption = searchText;
 	
-	if (searchList.length == 0 || searchList.options[0].value == "-1"){
-		searchList.options[0] = new Option(newOption);
-	}	else {
-			//if (searchCriteria.length == 0) {
-			//	for (count=0; count<(searchList.length); count++) {
-			//		searchCriteria[count] = searchList.options[count].value;
-			//	}
-			//	
-			//}
-			
-			searchList.options[searchList.length] = new Option(newOption, ("*" + searchText));
-		}
+  searchList.options[searchList.options.length] = new Option(newOption, ("*" + searchText));
 		
 	//searchCriteria[searchCriteria.length] = newCriteria;
 	//reset(this.form)
@@ -116,7 +105,7 @@ function selectAllOptions(obj) {
 		document.modifyList.selectNames.value = document.modifyList.selectNames.value + "^" + obj.options[i].text;
 	}
 	
-	document.modifyList.submit();
+	//document.modifyList.submit();
 	return true;
 }
 	

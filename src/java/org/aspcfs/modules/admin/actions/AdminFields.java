@@ -441,6 +441,7 @@ public final class AdminFields extends CFSModule {
         
         while (st.hasMoreTokens()) {
           names[j] = (String) st.nextToken();
+          if (System.getProperty("DEBUG") != null) System.out.println(names[j]);
           j++;
         }
         
@@ -453,10 +454,11 @@ public final class AdminFields extends CFSModule {
           LookupElement thisElement = (LookupElement) i.next();
   
           //still there, stay enabled, don't re-insert it
-          System.out.println("Here: " + thisElement.getCode() + " " + newList.getSelectedValue(thisElement.getCode()));
+          if (System.getProperty("DEBUG") != null) System.out.println("Here: " + thisElement.getCode() + " " + newList.getSelectedValue(thisElement.getCode()));
   
           //not there, disable it, leave it
-          if (newList.getSelectedValue(thisElement.getCode()).equals("") || newList.getSelectedValue(thisElement.getCode()) == null) {
+          if (newList.getSelectedValue(thisElement.getCode()).equals("") || 
+              newList.getSelectedValue(thisElement.getCode()) == null) {
             thisElement.disableElement(db, "custom_field_lookup");
           }
         }
@@ -478,6 +480,7 @@ public final class AdminFields extends CFSModule {
     } catch (Exception e) {
       errorMessage = e;
       System.out.println(e.toString());
+      e.printStackTrace(System.out);
     } finally {
       this.freeConnection(context, db);
     }

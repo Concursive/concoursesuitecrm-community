@@ -371,7 +371,7 @@ public class ControllerServlet extends HttpServlet
     String actionPath = getActionPath(request);
     Object beanRef = null;
 
-    System.out.println("Requested action: " + actionPath);
+    if (System.getProperty("DEBUG") != null) System.out.println("** Requested action: " + actionPath);
 
     // we have the action name derived from the action path passed in, so now we need to
     // look it up in our list of Actions to see if there is a Action for this action.
@@ -392,7 +392,7 @@ public class ControllerServlet extends HttpServlet
 
       String res = hook.securityCheck(this, request);
       if (res != null && res.length() > 0) {
-        System.out.println("Security redirect: " + res);
+        if (System.getProperty("DEBUG") != null) System.out.println("> Security redirect: " + res);
         forward(res, action, request, response);
         return;
       }
@@ -463,7 +463,7 @@ public class ControllerServlet extends HttpServlet
         // interface.
         if (request.getParameter(populateAttribute) != null) {
           if (populateClassInstance != null) {
-            System.out.println("Auto populating a bean");
+            if (System.getProperty("DEBUG") != null) System.out.println("> Auto populating a bean");
             populateClassInstance.populateObject(beanRef, request, nestedAttribute, indexAttribute);
           }
         }
@@ -520,7 +520,7 @@ public class ControllerServlet extends HttpServlet
         forward(result, action, request, response);
       }
     } else {
-      System.out.println("It appears there is no mapping");
+      System.out.println("** It appears there is no mapping");
       try {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
@@ -550,7 +550,7 @@ public class ControllerServlet extends HttpServlet
 
     // get the JSP page that will be dynamically created via the
     // javabean populated by the action class
-    System.out.println("Looking up resource: " + lookup);
+    if (System.getProperty("DEBUG") != null) System.out.println("> Looking up resource: " + lookup);
     Resource resource = action.getResource(lookup);
     if (resource != null) {
       if ((resource.getXSL() != null) && (resource.getXSL().length() > 0)) {
@@ -654,11 +654,11 @@ public class ControllerServlet extends HttpServlet
       }
     } else {
       // no Action, so forward back to the original page
-      System.out.println("No Action found, so doing nothing.");
+      System.out.println("> No Action found, so doing nothing.");
       try {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        out.println("The requested page was not found.");
+        out.println("<font color=\"red\">The requested page was not found.</font>");
       } catch (IOException e) {
       }
     }

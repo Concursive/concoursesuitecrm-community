@@ -121,17 +121,18 @@ public final class Admin extends CFSModule {
 			//begin for all lookup lists
 			LookupList compareList = new LookupList(db, tblName);
 			LookupList newList = new LookupList(params, names);
-			newList.printVals();
+			if (System.getProperty("DEBUG") != null) newList.printVals();
 
 			Iterator i = compareList.iterator();
 			while (i.hasNext()) {
 				LookupElement thisElement = (LookupElement) i.next();
 
 				//still there, stay enabled, don't re-insert it
-				System.out.println("Here: " + thisElement.getCode() + " " + newList.getSelectedValue(thisElement.getCode()));
+				if (System.getProperty("DEBUG") != null) System.out.println("Here: " + thisElement.getCode() + " " + newList.getSelectedValue(thisElement.getCode()));
 
 				//not there, disable it, leave it
-				if (newList.getSelectedValue(thisElement.getCode()).equals("") || newList.getSelectedValue(thisElement.getCode()) == null) {
+				if (newList.getSelectedValue(thisElement.getCode()).equals("") || 
+            newList.getSelectedValue(thisElement.getCode()) == null) {
 					thisElement.disableElement(db, tblName);
 				}
 			}

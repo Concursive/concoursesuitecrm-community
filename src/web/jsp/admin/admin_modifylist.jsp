@@ -1,6 +1,17 @@
 <jsp:useBean id="SelectedList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <script language="JavaScript" type="text/javascript" src="/javascript/editListForm.js"></script>
-<form name="modifyList" method=POST action="/Admin.do?command=UpdateList">
+<script language="JavaScript" type="text/javascript">
+  function doCheck() {
+    if (document.modifyList.dosubmit.value == "false") {
+      return true;
+    }
+    var test = document.modifyList.selectedList;
+    if (test != null) {
+      return selectAllOptions(document.modifyList.selectedList);
+    }
+  }
+</script>
+<form name="modifyList" method="post" action="/Admin.do?command=UpdateList" onSubmit="return doCheck();">
 <a href="/Admin.do">Setup</a> >
 <a href="/Admin.do?command=Config">System Configuration</a> >
 <a href="/Admin.do?command=EditLists">Lookup Lists</a> > 
@@ -61,9 +72,10 @@ Edit List<br>
   <tr>
   <td colspan=3 valign=center>
   <input type=hidden name="selectNames" value="">
+  <input type="hidden" name="dosubmit" value="false">
   <input type=hidden name="listid" value="<%=request.getParameter("listId")%>">
-  <input type=button value="Save Changes" onclick="javascript:selectAllOptions(document.modifyList.selectedList)">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Admin.do?command=EditLists'">
+  <input type="submit" value="Save Changes" onClick="javascript:this.form.dosubmit.value='true';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='/Admin.do?command=EditLists'">
   </td>
   </tr>
     
