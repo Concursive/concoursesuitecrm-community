@@ -113,8 +113,6 @@ public class ContactPhoneNumber extends PhoneNumber {
         "VALUES " +
         "(?, ?, ?, ?, ?, ?) ");
     int i = 0;
-    System.out.println("ContactPhoneNumber-> contactId:" + contactId);
-    System.out.println("ContactPhoneNumber-> enteredby:" + enteredBy);
     pst.setInt(++i, contactId);
     pst.setInt(++i, this.getType());
     pst.setString(++i, this.getNumber());
@@ -169,15 +167,5 @@ public class ContactPhoneNumber extends PhoneNumber {
     pst.execute();
     pst.close();
   }
-/*   
-  public String toString() {
-    return (
-      "ContactPhoneNumber \r\n" +
-      "===================\r\n" +
-      "ContactId: " + contactId + "\r\n" +
-      "EnteredBy: " + ent
-    );
-  }
- */
 }
 

@@ -69,6 +69,7 @@ if [ -n "`grep -i ERROR ${LOG}`" ] ; then echo "Database error"; exit 2; fi
 
 (
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/postgresql/new_cdb.sql "
+
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/code_tables.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/access.init " 
 su - $SUDO_USER -c "psql ${DB} -af ${BASE}/database/organization.init "
