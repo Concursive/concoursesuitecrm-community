@@ -121,6 +121,12 @@ public class DatabaseUtils {
     st.close();
     return id;
   }
+  
+  public static boolean parseBoolean(String tmp) {
+    return (tmp.equalsIgnoreCase("ON") || 
+           tmp.equalsIgnoreCase("TRUE") ||
+           tmp.equals("1"));
+  }
 
   public static java.sql.Date parseDate(String tmp) {
     java.sql.Date dateValue = null;
