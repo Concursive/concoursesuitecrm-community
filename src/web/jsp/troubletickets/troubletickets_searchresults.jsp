@@ -27,43 +27,36 @@ Search Results
   
   <%
 	Iterator j = TicList.iterator();
-	
 	if ( j.hasNext() ) {
 		int rowid = 0;
 		while (j.hasNext()) {
-		if (rowid != 1) {
-			rowid = 1;
-		} else {
-			rowid = 2;
-		}
-	
-		Ticket thisTic = (Ticket)j.next();
+      rowid = (rowid != 1?1:2);
+      Ticket thisTic = (Ticket)j.next();
 %>   
 	<tr>
 	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
-    <td rowspan=2 width="8" valign="top" nowrap class="row<%= rowid %>">
+    <td rowspan="2" width="8" valign="top" nowrap class="row<%= rowid %>">
       <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= thisTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('/TroubleTickets.do?command=Delete&id=<%= thisTic.getId() %>');">Del</a></dhv:permission>
     </td>
-    	</dhv:permission>
+  </dhv:permission>
 		<td width="15" valign="top" nowrap class="row<%= rowid %>">
-			<a href="TroubleTickets.do?command=Details&id=<%=thisTic.getId()%>"><%=thisTic.getPaddedId()%></a>
+			<a href="TroubleTickets.do?command=Details&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
 		</td>
 		<td width="10" valign="top" nowrap class="row<%= rowid %>">
-			<%=toHtml(thisTic.getPriorityName())%>
+			<%= toHtml(thisTic.getPriorityName()) %>
 		</td>
 		<td width="8%" valign="top" nowrap class="row<%= rowid %>">
-			<%=thisTic.getAgeOf()%>
+			<%= thisTic.getAgeOf() %>
 		</td>
 		<td width="90%" valign="top" class="row<%= rowid %>">
-			<%=toHtml(thisTic.getCompanyName())%><dhv:evaluate exp="<%=!(thisTic.getCompanyEnabled())%>">&nbsp;<font color="red">*</font></dhv:evaluate>
+			<%= toHtml(thisTic.getCompanyName()) %><dhv:evaluate exp="<%= !(thisTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
-		<td width=150 nowrap valign="top" class="row<%= rowid %>">
-			<%=toHtml(thisTic.getOwnerName())%>
+		<td width="150" nowrap valign="top" class="row<%= rowid %>">
+			<%= toHtml(thisTic.getOwnerName()) %>
 		</td>
 	</tr>
-  
-    <tr>
-  <td colspan=6 valign="top" class="row<%= rowid %>">
+  <tr>
+    <td colspan="6" valign="top" class="row<%= rowid %>">
 <%
   if (1==1) {
     Iterator files = thisTic.getFiles().iterator();
@@ -77,18 +70,18 @@ Search Results
     }
   }
 %>
-    <%= toHtml(thisTic.getProblemHeader()) %>
-  </td>
+      <%= toHtml(thisTic.getProblemHeader()) %>
+    </td>
   </tr>
-  
-	<%}%>
-	</table>
-	<br>
-  <dhv:pagedListControl object="TicListInfo" tdClass="row1"/>
-  
+<%}%>
+</table>
+<br>
+<dhv:pagedListControl object="TicListInfo" tdClass="row1"/>
 	<%} else {%>
-		<tr bgcolor="white"><td colspan="7" valign="center">No tickets found.</td></tr>
-		</table>
-	<%}%>
-
-  
+		<tr class="containerBody">
+      <td colspan="7">
+        No tickets found.
+      </td>
+    </tr>
+  </table>
+<%}%>

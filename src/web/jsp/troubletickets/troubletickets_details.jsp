@@ -11,20 +11,18 @@ Ticket Details<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-    <strong>Ticket # <%=TicketDetails.getPaddedId()%><br>
-    <%=toHtml(TicketDetails.getCompanyName())%></strong>
-    <dhv:evaluate exp="<%=!(TicketDetails.getCompanyEnabled())%>"><font color="red">(account disabled)</font></dhv:evaluate>
+    <strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
+    <%= toHtml(TicketDetails.getCompanyName()) %></strong>
+    <dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>
     </td>
   </tr>
-  
-<% if (TicketDetails.getClosed() != null) { %>  
+<dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
   <tr class="containerMenu">
     <td bgColor="#F1F0E0">
-      <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
+      <font color="red">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></font>
     </td>
   </tr>
-<%}%>
-  
+</dhv:evaluate>
   <tr>
 		<td class="containerBack">
       <% if (TicketDetails.getClosed() != null) { %>
@@ -36,17 +34,8 @@ Ticket Details<br>
 <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete"><br>&nbsp;<br></dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan=2 valign=top align=left>
+    <td colspan="2">
       <strong>Ticket Information</strong>
-<%--
-<dhv:evaluate exp="<%= TicketDetails.getFiles().hasFileType(".none") %>">
-      <embed src="TroubleTicketsDocuments.do?command=Download&tId=23&fid=12"
-        align="absmiddle" border="0" width="0" height="0"
-        autostart="true" loop="false" playcount="1"></embed>
-      <noembed><A HREF="TroubleTicketsDocuments.do?command=Download&tId=23&fid=12">Recorded message</A></noembed>
-      <A HREF="TroubleTicketsDocuments.do?command=Download&tId=23&fid=12">Recorded message</A>
-</dhv:evaluate>
---%>
     </td>     
   </tr>
   <tr class="containerBody">
@@ -54,14 +43,14 @@ Ticket Details<br>
       Ticket Source
 		</td>
 		<td>
-      <%=toHtml(TicketDetails.getSourceName())%>
+      <%= toHtml(TicketDetails.getSourceName()) %>
 		</td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel" valign="top">
+    <td class="formLabel" valign="top">
       <dhv:label name="tickets-problem">Issue</dhv:label>
     </td>
-    <td valign=top>
+    <td valign="top">
 <%
   Iterator files = TicketDetails.getFiles().iterator();
   while (files.hasNext()) {
@@ -85,33 +74,30 @@ Ticket Details<br>
       Category
 		</td>
 		<td>
-      <%=toHtml(TicketDetails.getCategoryName())%>
+      <%= toHtml(TicketDetails.getCategoryName()) %>
 		</td>
   </tr>
 </dhv:include>
-		
 <dhv:include name="tickets-severity" none="true">
   <tr class="containerBody">
 		<td class="formLabel">
       Severity
     </td>
-		<td valign=top bgColor="white">
-      <%=toHtml(TicketDetails.getSeverityName())%>
+		<td>
+      <%= toHtml(TicketDetails.getSeverityName()) %>
 		</td>
   </tr>
 </dhv:include>
-	
 <dhv:include name="tickets-priority" none="true">
   <tr class="containerBody">
 		<td class="formLabel">
       Priority
     </td>
-		<td valign=top bgColor="white">
-      <%=toHtml(TicketDetails.getPriorityName())%>
+		<td>
+      <%= toHtml(TicketDetails.getPriorityName()) %>
 		</td>
   </tr>
 </dhv:include>
-    
   <tr class="containerBody">
 		<td class="formLabel">
       Department
@@ -120,17 +106,15 @@ Ticket Details<br>
       <%= toHtml(TicketDetails.getDepartmentName()) %>
 		</td>
   </tr>
-				
   <tr class="containerBody">
 		<td class="formLabel">
       Assigned To
 		</td>
 		<td>
       <%= toHtml(TicketDetails.getOwnerName()) %>
-      <dhv:evaluate exp="<%=!(TicketDetails.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
+      <dhv:evaluate if="<%= !(TicketDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
 		</td>
   </tr>
-		
   <tr class="containerBody">
 		<td class="formLabel" valign="top">
       Solution
@@ -139,34 +123,28 @@ Ticket Details<br>
       <%= toHtml(TicketDetails.getSolution()) %>
 		</td>
   </tr>
-				
   <tr class="containerBody">
 		<td class="formLabel">
       Entered
     </td>
-		
-		<td valign=top>
-      <%=toHtml(TicketDetails.getEnteredByName())%> - <%=TicketDetails.getEnteredString()%>
+		<td>
+      <%= toHtml(TicketDetails.getEnteredByName()) %> - <%= TicketDetails.getEnteredString() %>
 		</td>
   </tr>
-		
-		<tr class="containerBody">
+  <tr class="containerBody">
 		<td class="formLabel">
       Modified
     </td>
-		
-		<td valign="top">
-      <%=toHtml(TicketDetails.getModifiedByName())%> - <%=TicketDetails.getModifiedString()%>
+		<td>
+      <%= toHtml(TicketDetails.getModifiedByName()) %> - <%= TicketDetails.getModifiedString() %>
 		</td>
   </tr>
 </table>
 &nbsp;
-<%
-  if (TicketDetails.getThisContact() != null ) {
-%>
+<dhv:evaluate if="<%= TicketDetails.getThisContact() != null %>">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-    <td colspan="2" valign="center" align="left">
+    <td colspan="2">
       <strong>Primary Contact</strong>
     </td>     
   </tr>
@@ -175,7 +153,7 @@ Ticket Details<br>
       Name
     </td>
     <td>
-      <%=toHtml(TicketDetails.getThisContact().getNameLastFirst())%>
+      <%= toHtml(TicketDetails.getThisContact().getNameLastFirst()) %>
     </td>
   </tr>
 	<tr class="containerBody">
@@ -183,7 +161,7 @@ Ticket Details<br>
       Title
     </td>
     <td>
-      <%=toHtml(TicketDetails.getThisContact().getTitle())%>
+      <%= toHtml(TicketDetails.getThisContact().getTitle()) %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -204,53 +182,52 @@ Ticket Details<br>
   </tr>
 </table>
 &nbsp;
-<%}%>
+</dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
-		<td colspan="3" valign="center" align="left">
+		<td colspan="3">
       <strong>Ticket Log History</strong>
 		</td>     
   </tr>
-	
-	<%  
+<%  
 		Iterator hist = TicketDetails.getHistory().iterator();
 		if (hist.hasNext()) {
 			while (hist.hasNext()) {
 				TicketLog thisEntry = (TicketLog)hist.next();
-	%>    
+%>
 			<% if (thisEntry.getSystemMessage() == true) {%>
     <tr bgColor="#F1F0E0">
 			<% } else { %>
     <tr class="containerBody">
 			<%}%>
-			<td nowrap valign="top" width="100" class="formLabel">
-        <%=toHtml(thisEntry.getEnteredByName())%>
+			<td nowrap valign="top" class="formLabel">
+        <%= toHtml(thisEntry.getEnteredByName()) %>
 			</td>
-			<td nowrap valign="top" width="150">
-        <%=thisEntry.getEnteredString()%>
+			<td nowrap valign="top">
+        <%= thisEntry.getEnteredString() %>
 			</td>
-			<td valign="top">
-        <%=toHtml(thisEntry.getEntryText())%>
+			<td valign="top" width="100%">
+        <%= toHtml(thisEntry.getEntryText()) %>
 			</td>
     </tr>
-	<%    
+<%
 			}
 		} else {
 	%>
-    <tr>
-      <td bgcolor="white">
+    <tr class="containerBody">
+      <td>
         <font color="#9E9E9E" colspan="3">No Log Entries.</font>
 			</td>
     </tr>
   <%}%>
 </table>
 &nbsp;<br>
-		<% if (TicketDetails.getClosed() != null) { %>
-      <dhv:permission name="tickets-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();"></dhv:permission>
-		<%} else {%>
-      <dhv:permission name="tickets-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='TroubleTickets.do?command=Modify&auto-populate=true';submit();"></dhv:permission>
-        <dhv:permission name="tickets-tickets-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='TroubleTickets.do?command=Delete&id=<%= TicketDetails.getId()%>';confirmSubmit(this.form);"></dhv:permission>
-		<%}%>
+<% if (TicketDetails.getClosed() != null) { %>
+  <dhv:permission name="tickets-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();"></dhv:permission>
+<%} else {%>
+  <dhv:permission name="tickets-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='TroubleTickets.do?command=Modify&auto-populate=true';submit();"></dhv:permission>
+  <dhv:permission name="tickets-tickets-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='TroubleTickets.do?command=Delete&id=<%= TicketDetails.getId()%>';confirmSubmit(this.form);"></dhv:permission>
+<%}%>
 	</td>
   </tr>
 </table>
