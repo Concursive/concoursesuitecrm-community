@@ -1,5 +1,5 @@
 /*
- *  Copyright 2002 Dark Horse Ventures
+ *  Copyright 2002-2003 Dark Horse Ventures
  *  Uses iteam objects from matt@zeroio.com http://www.mavininteractive.com
  */
 package org.aspcfs.modules.communications.actions;
@@ -19,7 +19,7 @@ import com.isavvix.tools.*;
 import java.io.*;
 
 /**
- *  Description of the Class
+ *  CFS Campaign/Document actions
  *
  *@author     mrajkowski
  *@created    January 15, 2003
@@ -34,14 +34,11 @@ public final class CampaignDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-dashboard-view"))) {
+    if (!hasPermission(context, "campaign-dashboard-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
-
     try {
       db = getConnection(context);
       Campaign thisCampaign = addCampaign(context, db);
@@ -51,15 +48,12 @@ public final class CampaignDocuments extends CFSModule {
       FileItemList documents = new FileItemList();
       documents.setLinkModuleId(Constants.COMMUNICATIONS_DOCUMENTS);
       documents.setLinkItemId(thisCampaign.getId());
-
       PagedListInfo CampaignDocListInfo = this.getPagedListInfo(context, "CampaignDocListInfo");
       CampaignDocListInfo.setLink("/CampaignDocuments.do?command=View&id=" + thisCampaign.getId());
-
       //TODO: Not implemented in the JSP, so not implemented here
       //PagedListInfo documentListInfo = this.getPagedListInfo(context, "AccountDocumentInfo");
       //documentListInfo.setLink("CampaignDocuments.do?command=View&id=" + id);
       //documents.setPagedListInfo(documentListInfo);
-
       documents.setPagedListInfo(CampaignDocListInfo);
       documents.buildList(db);
       context.getRequest().setAttribute("FileItemList", documents);
@@ -68,7 +62,6 @@ public final class CampaignDocuments extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "Dashboard", "View Documents");
     if (errorMessage == null) {
       return ("ViewOK");
@@ -86,14 +79,11 @@ public final class CampaignDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+    if (!hasPermission(context, "campaign-campaigns-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
-
     try {
       db = getConnection(context);
       Campaign thisCampaign = addCampaign(context, db);
@@ -109,7 +99,6 @@ public final class CampaignDocuments extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "Dashboard", "Upload Document");
     if (errorMessage == null) {
       return ("AddOK");
@@ -127,43 +116,33 @@ public final class CampaignDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpload(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+    if (!hasPermission(context, "campaign-campaigns-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
-
     boolean recordInserted = false;
     try {
       String filePath = this.getPath(context, "campaign");
-
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
       multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-
       HashMap parts = multiPart.parseData(
           context.getRequest().getInputStream(), "---------------------------", filePath);
-
-      db = getConnection(context);
-
       String id = (String) parts.get("id");
       String subject = (String) parts.get("subject");
       String folderId = (String) parts.get("folderId");
-      Campaign thisCampaign = addCampaign(context, db);
+      db = getConnection(context);
+      Campaign thisCampaign = addCampaign(context, db, id);
       if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
         return "PermissionError";
       }
-
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
-
         //Update the database with the resulting file
         FileInfo newFileInfo = (FileInfo) parts.get("id" + thisCampaign.getId());
-
         FileItem thisItem = new FileItem();
         thisItem.setLinkModuleId(Constants.COMMUNICATIONS_DOCUMENTS);
         thisItem.setLinkItemId(thisCampaign.getId());
@@ -175,7 +154,6 @@ public final class CampaignDocuments extends CFSModule {
         thisItem.setFilename(newFileInfo.getRealFilename());
         thisItem.setVersion(1.0);
         thisItem.setSize(newFileInfo.getSize());
-
         recordInserted = thisItem.insert(db);
         if (!recordInserted) {
           processErrors(context, thisItem.getErrors());
@@ -193,7 +171,6 @@ public final class CampaignDocuments extends CFSModule {
     } finally {
       freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (recordInserted) {
         return ("UploadOK");
@@ -214,23 +191,18 @@ public final class CampaignDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAddVersion(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+    if (!hasPermission(context, "campaign-campaigns-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
     String itemId = (String) context.getRequest().getParameter("fid");
     if (itemId == null) {
       itemId = (String) context.getRequest().getAttribute("fid");
     }
-
     String folderId = context.getRequest().getParameter("folderId");
     if (folderId != null) {
       context.getRequest().setAttribute("folderId", folderId);
     }
-
     Connection db = null;
     try {
       db = getConnection(context);
@@ -238,7 +210,6 @@ public final class CampaignDocuments extends CFSModule {
       if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
         return "PermissionError";
       }
-
       FileItem thisFile = new FileItem(db, Integer.parseInt(itemId), thisCampaign.getId(), Constants.COMMUNICATIONS_DOCUMENTS);
       context.getRequest().setAttribute("FileItem", thisFile);
     } catch (Exception e) {
@@ -246,7 +217,6 @@ public final class CampaignDocuments extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "Dashboard", "Upload New Document Version");
     if (errorMessage == null) {
       return ("AddVersionOK");
@@ -264,30 +234,23 @@ public final class CampaignDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUploadVersion(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+    if (!hasPermission(context, "campaign-campaigns-edit")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
-
     boolean recordInserted = false;
     try {
       String filePath = this.getPath(context, "campaign");
-
       //Process the form data
       HttpMultiPartParser multiPart = new HttpMultiPartParser();
       multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(true);
       multiPart.setExtensionId(getUserId(context));
-
       HashMap parts = multiPart.parseData(
           context.getRequest().getInputStream(), "---------------------------", filePath);
-
       db = getConnection(context);
-
       String id = (String) parts.get("id");
       String itemId = (String) parts.get("fid");
       String subject = (String) parts.get("subject");
@@ -296,11 +259,9 @@ public final class CampaignDocuments extends CFSModule {
       if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
         return "PermissionError";
       }
-
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
         //Update the database with the resulting file
         FileInfo newFileInfo = (FileInfo) parts.get("id" + id);
-
         FileItem thisItem = new FileItem();
         thisItem.setLinkModuleId(Constants.COMMUNICATIONS_DOCUMENTS);
         thisItem.setLinkItemId(thisCampaign.getId());
@@ -312,7 +273,6 @@ public final class CampaignDocuments extends CFSModule {
         thisItem.setFilename(newFileInfo.getRealFilename());
         thisItem.setVersion(Double.parseDouble(versionId));
         thisItem.setSize(newFileInfo.getSize());
-
         recordInserted = thisItem.insertVersion(db);
         if (!recordInserted) {
           processErrors(context, thisItem.getErrors());
@@ -330,7 +290,6 @@ public final class CampaignDocuments extends CFSModule {
     } finally {
       freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (recordInserted) {
         return ("UploadOK");
@@ -672,6 +631,5 @@ public final class CampaignDocuments extends CFSModule {
     context.getRequest().setAttribute("Campaign", thisCampaign);
     return thisCampaign;
   }
-
 }
 
