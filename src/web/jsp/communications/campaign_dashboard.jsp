@@ -58,7 +58,7 @@ Dashboard
       <a href="CampaignManager.do?command=Dashboard&column=status"><strong>Status</strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("status") %>
     </th>
-    <th width="10" align="left" nowrap>
+    <th align="left" nowrap>
       <a href="CampaignManager.do?command=Dashboard&column=active"><strong>Active?</strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("active") %>
     </th>
