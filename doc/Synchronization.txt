@@ -501,7 +501,7 @@ SYNC'D ALL TABLES FIRST):
       <runDate>2002-05-10</runDate>
       <adTypeGuid>3</adTypeGuid>
       <includePhoto>true</includePhoto>
-      <enteredBy>10</enteredBy>
+      <enteredBy lookup="user">10</enteredBy>
     </adRun>
     <adRun action="insert">
       <guid>2</guid>
@@ -509,7 +509,7 @@ SYNC'D ALL TABLES FIRST):
       <runDate>2002-05-17</runDate>
       <adTypeGuid>3</adTypeGuid>
       <includePhoto>false</includePhoto>
-      <enteredBy>10</enteredBy>
+      <enteredBy lookup="user">10</enteredBy>
     </adRun>
   </transaction>
 </app>

@@ -929,18 +929,15 @@ public class Inventory {
     try {
       db.setAutoCommit(false);
       PreparedStatement pst = null;
-      StringBuffer sql = new StringBuffer();
-
-      sql.append(
+      String sql =
           "UPDATE autoguide_inventory " +
           "SET vehicle_id = ?, vin = ?, mileage = ?, is_new = ?, condition = ?, comments = ?, " +
           "stock_no = ?, ext_color = ?, int_color = ?, invoice_price = ?, selling_price = ?, sold = ?, status = ?, " +
-          "modifiedby = ?, modified = CURRENT_TIMESTAMP ");
-      sql.append("WHERE inventory_id = ? ");
-      sql.append("AND modified = ? ");
-
+          "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
+          "WHERE inventory_id = ? " +
+          "AND modified = ? ";
       int i = 0;
-      pst = db.prepareStatement(sql.toString());
+      pst = db.prepareStatement(sql);
       pst.setInt(++i, this.getVehicleId());
       pst.setString(++i, this.getVin());
       pst.setInt(++i, this.getMileage());
@@ -964,14 +961,22 @@ public class Inventory {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Inventory-> Vehicle updated, updating options...");
         }
+
+        if (options == null) {
+          options = new OptionList();
+        }
         options.setInventoryId(id);
         options.update(db);
 
         if (System.getProperty("DEBUG") != null) {
           System.out.println("Inventory-> Options updated, updating ad runs...");
         }
-        adRuns.setInventoryId(id);
-        adRuns.update(db);
+
+        if (adRuns != null) {
+          //AdRuns can be updated independently, but might have been included with this object
+          adRuns.setInventoryId(id);
+          adRuns.update(db);
+        }
       } else {
         System.out.println("Inventory-> Not updated...");
         System.out.println("Inventory-> Inventory Id: " + id);
@@ -980,6 +985,7 @@ public class Inventory {
 
       db.commit();
     } catch (Exception e) {
+      e.printStackTrace(System.out);
       db.rollback();
       db.setAutoCommit(true);
       throw new SQLException(e.getMessage());
