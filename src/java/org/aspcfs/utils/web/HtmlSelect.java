@@ -168,6 +168,16 @@ public class HtmlSelect extends ArrayList {
 
 
   /**
+   *  Gets the selectSize attribute of the HtmlSelect object
+   *
+   *@return    The selectSize value
+   */
+  public int getSelectSize() {
+    return selectSize;
+  }
+
+
+  /**
    *  Sets the built attribute of the HtmlSelect object
    *
    *@param  built  The new built value
@@ -697,11 +707,10 @@ public class HtmlSelect extends ArrayList {
     //Process a Vector
     for (int i = 0; i < this.size(); i++) {
       ++processedRowCount;
-      HtmlOption thisOption = (HtmlOption) this.get(i);;
+      HtmlOption thisOption = (HtmlOption) this.get(i);
       String tmp1 = thisOption.getValue();
       String tmp2 = thisOption.getText();
       String attributes = thisOption.getAttributes();
-      
 
       String optionChecked = "";
       String optionSelected = "";
