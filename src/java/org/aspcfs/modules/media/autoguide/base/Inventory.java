@@ -112,7 +112,11 @@ public class Inventory {
     }
     rs.close();
     pst.close();
-    this.buildOrganizationInfo(db);
+    //NOTE:Backwards compatibility issue until MSSQL is upgraded
+    try {
+      this.buildOrganizationInfo(db);
+    } catch (Exception e) {
+    }
     this.buildOptions(db);
     this.buildAdRuns(db);
     this.buildPicture(db);
