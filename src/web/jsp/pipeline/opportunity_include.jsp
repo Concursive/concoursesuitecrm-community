@@ -35,9 +35,18 @@
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan="2">
-      <strong>Add a Component</strong>
-    </td>     
-  </tr>  
+      <strong><%= (ComponentDetails.getId() > 0 ? "Update" : "Add") %> a Component</strong>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Component Description
+    </td>
+    <td>
+      <input type="text" size="50" name="<%= opportunityHeader.getId() > 0 ? "description" : "component_description" %>" value="<%= toHtmlValue(ComponentDetails.getDescription()) %>">
+      <font color="red">*</font> <%= showAttribute(request, "componentDescriptionError") %>
+    </td>
+  </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Assign To
@@ -130,15 +139,6 @@
   <% }else if("account".equals(entity)){ %>
     <input type="hidden" name="<%= opportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink" %>" value="<%= OrgDetails.getOrgId() %>">
   <% } %>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Component Description
-    </td>
-    <td>
-      <input type="text" size="50" name="<%= opportunityHeader.getId() > 0 ? "description" : "component_description" %>" value="<%= toHtmlValue(ComponentDetails.getDescription()) %>">
-      <font color="red">*</font> <%= showAttribute(request, "componentDescriptionError") %>
-    </td>
-  </tr>  
   <tr class="containerBody">
     <td valign="top" nowrap class="formLabel">Additional Notes</td>
     <td><TEXTAREA NAME="<%= opportunityHeader.getId() > 0 ? "notes" : "component_notes" %>" ROWS="3" COLS="50"><%= toString(ComponentDetails.getNotes()) %></TEXTAREA></td>

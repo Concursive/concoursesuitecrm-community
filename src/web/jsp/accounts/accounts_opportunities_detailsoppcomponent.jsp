@@ -1,6 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="OppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
@@ -27,6 +28,15 @@ Component Details
   </tr>
   <tr>
     <td class="containerBack">
+      <%-- Begin container content --%>
+      <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
+      <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
+      <% FileItem thisFile = new FileItem(); %>
+      <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
+        <%= thisFile.getImageTag() %>
+      </dhv:evaluate>
+      <br>
+      <br>
 <input type="hidden" name="headerId" value="<%= OppComponentDetails.getHeaderId() %>">
 <input type="hidden" name="id" value="<%= OppComponentDetails.getId() %>">
 <input type="hidden" name="orgId" value="<%= OrgDetails.getId() %>">

@@ -196,12 +196,11 @@ public final class Opportunities extends CFSModule {
    * @return          Description of the Returned Value
    */
   public String executeCommandPrepare(ActionContext context) {
-    Exception errorMessage = null;
+    //Parameters
     String orgId = context.getRequest().getParameter("orgId");
     String headerId = context.getRequest().getParameter("headerId");
     Organization thisOrganization = null;
     Connection db = null;
-
     if (context.getRequest().getParameter("UserList") == null) {
       UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
       User thisRec = thisUser.getUserRecord();
@@ -225,22 +224,18 @@ public final class Opportunities extends CFSModule {
         thisOrganization = new Organization(db, Integer.parseInt(orgId));
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
       }
-      //get the header info
+      //Load the header
       if (headerId != null && !"-1".equals(headerId)) {
         OpportunityHeader oppHeader = new OpportunityHeader(db, headerId);
         context.getRequest().setAttribute("opportunityHeader", oppHeader);
       }
-    } catch (Exception e) {
-      errorMessage = e;
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      return ("PrepareOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("PrepareOK");
   }
 
 
@@ -345,35 +340,35 @@ public final class Opportunities extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-opportunities-view")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     addModuleBean(context, "View Accounts", "View Opportunity Component Details");
+    OpportunityComponent thisComponent = null;
+    Connection db = null;
+    //Parameters
     String componentId = context.getRequest().getParameter("id");
     String orgId = context.getRequest().getParameter("orgId");
-    OpportunityComponent thisComponent = null;
-
-    Connection db = null;
     try {
       db = this.getConnection(context);
+      //Load the organization
       Organization thisOrg = new Organization(db, Integer.parseInt(orgId));
+      context.getRequest().setAttribute("OrgDetails", thisOrg);
+      //Load the component
       thisComponent = new OpportunityComponent(db, Integer.parseInt(componentId));
       thisComponent.checkEnabledOwnerAccount(db);
-      context.getRequest().setAttribute("OrgDetails", thisOrg);
-    } catch (Exception e) {
-      errorMessage = e;
+      //Load the header
+      OpportunityHeader oppHeader = new OpportunityHeader(db, thisComponent.getHeaderId());
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (!hasAuthority(context, thisComponent.getOwner())) {
-        return ("PermissionError");
-      }
-      context.getRequest().setAttribute("OppComponentDetails", thisComponent);
-      addRecentItem(context, thisComponent);
-      return ("DetailsComponentOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (!hasAuthority(context, thisComponent.getOwner())) {
+      return ("PermissionError");
     }
+    context.getRequest().setAttribute("OppComponentDetails", thisComponent);
+    addRecentItem(context, thisComponent);
+    return ("DetailsComponentOK");
   }
 
 
@@ -665,32 +660,30 @@ public final class Opportunities extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-opportunities-edit")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     OpportunityComponent component = null;
     addModuleBean(context, "View Accounts", "Modify a Component");
-
+    //Parameters
     String componentId = context.getRequest().getParameter("id");
-
     try {
       db = this.getConnection(context);
+      //Load the component
       component = new OpportunityComponent(db, componentId);
-    } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("ComponentDetails", component);
+      //Load the header
+      OpportunityHeader oppHeader = new OpportunityHeader(db, component.getHeaderId());
+      context.getRequest().setAttribute("opportunityHeader", oppHeader);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (!hasAuthority(context, component.getOwner())) {
-        return ("PermissionError");
-      }
-      context.getRequest().setAttribute("ComponentDetails", component);
-      addRecentItem(context, component);
-      return executeCommandPrepare(context);
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (!hasAuthority(context, component.getOwner())) {
+      return ("PermissionError");
     }
+    addRecentItem(context, component);
+    return executeCommandPrepare(context);
   }
 
 

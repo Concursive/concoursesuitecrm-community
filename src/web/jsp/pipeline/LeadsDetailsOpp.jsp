@@ -43,9 +43,6 @@ Opportunity Details<br>
       <dhv:permission name="pipeline-opportunities-add">
         <a href="LeadsComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %>">Add a Component</a><br>
       </dhv:permission>
-      <dhv:evaluate if="<%= request.getParameter("return") != null %>">
-        <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
-      </dhv:evaluate>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsComponentListInfo"/>
  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -73,7 +70,10 @@ Opportunity Details<br>
     <td nowrap>
       <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=stage">Current Stage</a></strong>
       <%= LeadsComponentListInfo.getSortIcon("stage") %>
-    </td>  
+    </td>
+    <td>
+      <strong>Owner</strong>
+    </td>
   </tr>
 <%
 	Iterator j = ComponentList.iterator();
@@ -83,33 +83,36 @@ Opportunity Details<br>
         rowid = (rowid != 1?1:2);
         OpportunityComponent thisComponent = (OpportunityComponent)j.next();
 %>      
-  <tr class="containerBody">
+  <tr class="row<%= rowid %>">
     <dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete">
-    <td width="8" valign="top" align="center" nowrap class="row<%= rowid %>">
+    <td width="8" valign="top" align="center" nowrap>
       <dhv:permission name="pipeline-opportunities-edit"><a href="LeadsComponents.do?command=ModifyComponent&id=<%= thisComponent.getId() %>&return=details">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-delete"><a href="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=<%= thisComponent.getId() %>&popup=true','Leads.do?command=ViewOpps', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
-    <td width="100%" valign="top" class="row<%= rowid %>">
+    <td width="100%" valign="top">
       <a href="LeadsComponents.do?command=DetailsComponent&id=<%= thisComponent.getId() %>">
       <%= toHtml(thisComponent.getDescription()) %></a>
     </td>
-    <td valign="top" align="center" nowrap class="row<%= rowid %>">
+    <td valign="top" align="center" nowrap>
       <%= thisComponent.getClosed() != null ? "<font color=\"red\">closed</font>" : "<font color=\"green\">open</font>" %>
     </td>
-    <td valign="top" align="right" nowrap class="row<%= rowid %>">
+    <td valign="top" align="right" nowrap>
       $<%= thisComponent.getGuessCurrency() %>
     </td>
-    <td valign="top" align="center" nowrap class="row<%= rowid %>">
+    <td valign="top" align="center" nowrap>
       <%= toHtml(thisComponent.getCloseDateString()) %>
     </td>
-    <td valign="top" align="center" nowrap class="row<%= rowid %>">
+    <td valign="top" align="center" nowrap>
       <%= toHtml(thisComponent.getStageName()) %>
-    </td>		
+    </td>
+    <td valign="top" align="center" nowrap>
+      <dhv:username id="<%= thisComponent.getOwner() %>"/>
+    </td>
   </tr>
 <%}%>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="6">
+    <td colspan="7">
       No opportunity components found.
     </td>
   </tr>

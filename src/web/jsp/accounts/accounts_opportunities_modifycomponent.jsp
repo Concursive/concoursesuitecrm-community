@@ -86,6 +86,15 @@ Modify Component<br>
   </tr>
   <tr>
     <td class="containerBack">
+      <%-- Begin container content --%>
+      <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
+      <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
+      <% FileItem thisFile = new FileItem(); %>
+      <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
+        <%= thisFile.getImageTag() %>
+      </dhv:evaluate>
+      <br>
+      <br>
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 <% if ("list".equals(request.getParameter("return"))) {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= ComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
