@@ -410,14 +410,14 @@ public class FolderInsertRecord extends GenericBean {
    *@param  oldVals  Description of the Parameter
    */
   public void updateTotals(ArrayList oldVals) {
-    eligibility = this.getEligibility() + Integer.parseInt((String) oldVals.get(0));
-    claimStatus = this.getClaimStatus() + Integer.parseInt((String) oldVals.get(1));
-    referral = this.getReferral() + Integer.parseInt((String) oldVals.get(2));
-    advice = this.getAdvice() + Integer.parseInt((String) oldVals.get(3));
-    dental = this.getDental() + Integer.parseInt((String) oldVals.get(4));
-    professional = this.getProfessional() + Integer.parseInt((String) oldVals.get(5));
-    institutional = this.getInstitutional() + Integer.parseInt((String) oldVals.get(6));
-    claimRemittance = this.getClaimRemittance() + Integer.parseInt((String) oldVals.get(7));
+    eligibility = this.getEligibility() + StringUtils.parseInt((String) oldVals.get(0), 0);
+    claimStatus = this.getClaimStatus() + StringUtils.parseInt((String) oldVals.get(1), 0);
+    referral = this.getReferral() + StringUtils.parseInt((String) oldVals.get(2), 0);
+    advice = this.getAdvice() + StringUtils.parseInt((String) oldVals.get(3), 0);
+    dental = this.getDental() + StringUtils.parseInt((String) oldVals.get(4), 0);
+    professional = this.getProfessional() + StringUtils.parseInt((String) oldVals.get(5), 0);
+    institutional = this.getInstitutional() + StringUtils.parseInt((String) oldVals.get(6), 0);
+    claimRemittance = this.getClaimRemittance() + StringUtils.parseInt((String) oldVals.get(7), 0);
   }
 }
 
