@@ -40,7 +40,7 @@
        %>
           <tr>
             <td align="left">
-            <table class="empty">
+            <table cellpadding="0" cellspacing="0" class="empty">
               <tr>
                  <td valign="top" nowrap>
                   <a href="javascript:popURL('HelpFeatures.do?command=ModifyFeature&id=<%= thisFeature.getId() %>&linkHelpId=<%= Help.getId() %>&popup=true', 'QA_Feature_Add','600','240','yes','yes');">Edit</a>&nbsp;<a href="javascript:confirmDelete('HelpFeatures.do?command=DeleteFeature&id=<%= thisFeature.getId() %>')">Del</a>&nbsp;
@@ -78,13 +78,16 @@
          %>
             <tr>
               <td align="left">
-              <table class="empty">
+              <table cellpadding="0" cellspacing="0" class="empty">
                 <tr>
                  <td valign="top"  nowrap>
                   <a href="javascript:popURL('HelpRules.do?command=ModifyRule&id=<%= thisRule.getId() %>&linkHelpId=<%= Help.getId() %>&popup=true', 'QA_Rule_Add','600','175','yes','yes');">Edit</a>&nbsp;<a href="javascript:confirmDelete('HelpRules.do?command=DeleteRule&id=<%= thisRule.getId() %>')">Del</a>&nbsp;
-                  <a href="javascript:changeImages('rule<%= thisRule.getId() %>','QA.do?command=ProcessRule&id=box.gif|gif|'+<%= thisRule.getId() %>+'|<%= thisRule.getComplete() ? "0" : "1" %>','QA.do?command=ProcessRule&id=box-checked.gif|gif|'+<%= thisRule.getId() %>+'|1');"  onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/<%= thisRule.getComplete() ? "box-checked.gif" : "box.gif" %>" name="rule<%= thisRule.getId() %>" id="<%= thisRule.getComplete() ? "1" : "0" %>" border="0" title="Click to change"></a><%= toHtml(thisRule.getDescription()) %>
-                </td>
-               </tr>
+                  <a href="javascript:changeImages('rule<%= thisRule.getId() %>','QA.do?command=ProcessRule&id=box.gif|gif|'+<%= thisRule.getId() %>+'|<%= thisRule.getComplete() ? "0" : "1" %>','QA.do?command=ProcessRule&id=box-checked.gif|gif|'+<%= thisRule.getId() %>+'|1');"  onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/<%= thisRule.getComplete() ? "box-checked.gif" : "box.gif" %>" name="rule<%= thisRule.getId() %>" id="<%= thisRule.getComplete() ? "1" : "0" %>" border="0" title="Click to change"></a>
+                  </td>
+                  <td>
+                    <%= toHtml(thisRule.getDescription()) %>
+                  </td>
+                </tr>
               </table>
               </td>
             </tr>
@@ -113,11 +116,14 @@
          %>
             <tr>
               <td align="left">
-              <table class="empty">
+              <table class="empty" cellpadding="0" cellspacing="0">
                <tr>
                 <td valign="top" nowrap>
                   <a href="javascript:popURL('HelpNotes.do?command=ModifyNote&id=<%= thisNote.getId() %>&linkHelpId=<%= Help.getId() %>&popup=true', 'QA_Note_Add','600','175','yes','yes');">Edit</a>&nbsp;<a href="javascript:confirmDelete('HelpNotes.do?command=DeleteNote&id=<%= thisNote.getId() %>')">Del</a>&nbsp;
-                  <a href="javascript:changeImages('note<%= thisNote.getId() %>','QA.do?command=ProcessNote&id=box.gif|gif|'+<%= thisNote.getId() %>+'|<%= thisNote.getComplete() ? "0" : "1" %>','QA.do?command=ProcessNote&id=box-checked.gif|gif|'+<%= thisNote.getId() %>+'|1');"  onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/<%= thisNote.getComplete() ? "box-checked.gif" : "box.gif" %>" name="note<%= thisNote.getId() %>" id="<%= thisNote.getComplete() ? "1" : "0" %>" border="0" title="Click to change"></a><%= toHtml(thisNote.getDescription()) %>
+                  <a href="javascript:changeImages('note<%= thisNote.getId() %>','QA.do?command=ProcessNote&id=box.gif|gif|'+<%= thisNote.getId() %>+'|<%= thisNote.getComplete() ? "0" : "1" %>','QA.do?command=ProcessNote&id=box-checked.gif|gif|'+<%= thisNote.getId() %>+'|1');"  onMouseOver="this.style.color='blue';window.status='Change Status';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/<%= thisNote.getComplete() ? "box-checked.gif" : "box.gif" %>" name="note<%= thisNote.getId() %>" id="<%= thisNote.getComplete() ? "1" : "0" %>" border="0" title="Click to change"></a>
+                  </td>
+                  <td>
+                    <%= toHtml(thisNote.getDescription()) %>
                  </td>
                 </tr>
                </table>
