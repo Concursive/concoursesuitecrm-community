@@ -228,7 +228,11 @@ public class ComponentContext extends HashMap {
    *@return                The attribute value
    */
   public Object getAttribute(String parameterName) {
-    return (Object) this.get(parameterName);
+    if (this.containsKey(parameterName)) {
+      return (Object) this.get(parameterName);
+    } else {
+      return null;
+    }
   }
 
 
