@@ -1648,13 +1648,14 @@ public void setCompanyEnabled(boolean companyEnabled) {
     if (closeIt == true && (solution == null || solution.trim().equals(""))) {
       errors.put("closedError", "A solution is required when closing a ticket");
     } 
+    /**
     if (orgId == -1) {
       errors.put("orgIdError", "You must associate an Account with a Ticket");
     } 
     if (contactId == -1) {
       errors.put("contactIdError", "You must associate a Contact with a Ticket");
     }
-
+    */
     if (hasErrors()) {
       return false;
     } else {
