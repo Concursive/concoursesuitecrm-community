@@ -61,7 +61,7 @@ public class LookupElement {
 
     sql.append(
         "UPDATE " + tableName + " " +
-        "SET enabled = 'f' " +
+        "SET enabled = false " +
         "WHERE code = ? ");
 	
     int i = 0;
@@ -74,19 +74,25 @@ public class LookupElement {
   }
   
   public boolean insertElement(Connection db, String tableName) throws SQLException {
+    return insertElement(db, tableName, -1);
+  }
+  
+  public boolean insertElement(Connection db, String tableName, int fieldId) throws SQLException {
     StringBuffer sql = new StringBuffer();
     int i=0;
 
     sql.append(
     "INSERT INTO " + tableName + " " +
-    "(description, level, enabled) " +
-    "VALUES (?, ?, ?) ");
-  
+    "(description, level, enabled" + (fieldId > -1?", field_id":"") + ") " +
+    "VALUES (?, ?, ?" + (fieldId > -1?", ?":"") + ") ");
     i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getDescription());
     pst.setInt(++i, this.getLevel());
     pst.setBoolean(++i, true);
+    if (fieldId > -1) {
+      pst.setInt(++i, fieldId);
+    }
     pst.execute();
     pst.close();
 			
