@@ -18,13 +18,14 @@
 <title>Dark Horse CRM</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
+<link rel="stylesheet" href="css/template-login.css" type="text/css">
 <script language="JavaScript">
   function focusForm(form) {
       form.username.focus();
       return false;
   }
 </script>
-<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onLoad="<%
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onLoad="<%
   if (request.getParameter("popup") != null) {
     out.println("window.opener.location='MyCFS.do?command=Home'; window.close();");
   } else if (request.getParameter("inline") != null) {
@@ -75,7 +76,7 @@
               </tr>
               <tr>
                 <td align="center" valign="center" colspan="4">
-                  <font face="Arial, Helvetica, sans-serif" size="2"><strong>Dark Horse CRM <%= ("https".equals(request.getScheme())?"Secure ":"") %>Login</strong><br>
+                  <font size="2"><strong>Dark Horse CRM <%= ("https".equals(request.getScheme())?"Secure ":"") %>Login</strong><br>
                   <%= toHtml(APP_TEXT) %><dhv:evaluate if="<%= hasText(APP_ORGANIZATION) %>"><br>Licensed To: <%= toHtml(APP_ORGANIZATION) %></dhv:evaluate></font>
                 </td>
               </tr>
@@ -86,38 +87,39 @@
 %>              
               <tr> 
                 <td align="center" colspan="4">
-                  <font face="Arial, Helvetica, sans-serif" size="2">This site is configured for secure connections only</font><br>
-                  <font face="Arial, Helvetica, sans-serif" size="2"><a href="https://<%= getServerUrl(request) %>">Go to Secure Login</a></font>
+                  <font size="2">This site is configured for secure connections only</font><br>
+                  <font size="2"><a href="https://<%= getServerUrl(request) %>">Go to Secure Login</a></font>
                 </td>
               </tr>
 <%} else {%>
               <tr>
                 <td align="center" colspan="4">
-                  <center><font face="Arial, Helvetica, sans-serif" size="2" color='red'><%= LoginBean.getMessage() %></font></center>
-                </td>
-              </tr>
-              <tr>
-                <td align="center" colspan="4">
                 
               <table style="border:1px #EFEFEF solid" align="center" width="50%">
               <tr><td colspan="2">&nbsp;</td></tr>
+<dhv:evaluate if="<%= hasText(LoginBean.getMessage()) %>">
+              <tr>
+                <td align="center" colspan="2">
+                  <center><font size="2" color='red'><%= LoginBean.getMessage() %></font></center>
+                </td>
+              </tr>
+</dhv:evaluate>
               <tr><td align="center">
-                
               <table border="0">
               <tr>
                 <td align="right">
-                  <font face="Arial, Helvetica, sans-serif" size="2">Username:</font>
+                  <font size="2">Username:</font>
                 </td>
                 <td>
-                  <font face="Arial, Helvetica, sans-serif" size="2"><input type="text" name="username" value="<%= LoginBean.getUsername() %>" size="20">&nbsp;</font>
+                  <font size="2"><input type="text" name="username" value="<%= LoginBean.getUsername() %>" size="20">&nbsp;</font>
                 </td>
               </tr>
               <tr>
                 <td align="right">
-                  <font face="Arial, Helvetica, sans-serif" size="2">Password:</font>
+                  <font size="2">Password:</font>
                 </td>
                 <td>
-                  <font face="Arial, Helvetica, sans-serif" size="2"><input type="password" name="password" size="20"></font>
+                  <font size="2"><input type="password" name="password" size="20"></font>
                 </td>
               </tr>
               <tr>

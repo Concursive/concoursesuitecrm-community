@@ -4,7 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <%@ include file="initPage.jsp" %>
 </head>
-<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<link rel="stylesheet" href="css/template-login.css" type="text/css">
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
   <tr>
     <td height="10%" valign="top" width="100%">
@@ -53,12 +54,7 @@
                 <td width="63%"><img border=0 src="images/pixhp2.gif" width="300" height="210"></td>
               </tr>
             </table>
-            <font face="Arial, Helvetica, sans-serif">
-            <p><font face="Arial, Helvetica, sans-serif"><font color="#333333" size="3"> </font></font><font face="Arial, Helvetica, sans-serif" color="#333333" size="3"><br>
-            </font><font face="Arial, Helvetica, sans-serif"><font color="#333333" size="3"> </font></font></p>
-            </font><font face="Arial, Helvetica, sans-serif"> <p><font face="Arial, Helvetica, sans-serif" color="#333333" size="3"><br>
-            </font></p>
-            </font>
+            <p><br><br></p>
           </td>
           <td width="15%" valign="top" height="266"> 
             <table width="200" border="0" cellspacing="2" cellpadding="2">
@@ -70,13 +66,13 @@
               </tr>
               <tr> 
                 <td valign="center">
-                  <font face="Arial, Helvetica, sans-serif" size="2">Welcome to Dark Horse CRM!</font><br>
+                  <font size="2">Welcome to Dark Horse CRM!</font><br>
                   <img border=0 src="images/prline.gif" width="200" height="5">
                 </td>
               </tr>
               <tr> 
                 <td valign="center">
-                  <font face="Arial, Helvetica, sans-serif" size="2"><a href="https://<%= getServerUrl(request) %>">Go to Secure Login</a></font>
+                  <font size="2"><a href="https://<%= getServerUrl(request) %>">Go to Secure Login</a></font>
                 </td>
               </tr>
             </table>

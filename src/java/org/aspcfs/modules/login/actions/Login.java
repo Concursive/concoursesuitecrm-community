@@ -13,6 +13,7 @@ import org.aspcfs.modules.system.base.Site;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.login.beans.LoginBean;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.utils.StringUtils;
 
 
 /**
@@ -102,7 +103,9 @@ public final class Login extends CFSModule {
     UserBean thisUser = null;
     int userId = -1;
     int aliasId = -1;
+    String userId2 = null;
     java.util.Date now = new java.util.Date();
+    boolean continueId = false;
     try {
       db = sqlDriver.getConnection(ce);
       //A good place to initialize this SystemStatus, must be done before getting a user
@@ -110,33 +113,60 @@ public final class Login extends CFSModule {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Login-> Retrieved SystemStatus from memory : " + ((thisSystem == null) ? "false" : "true"));
       }
-      //Query the user record
-      PreparedStatement pst = db.prepareStatement(
-          "SELECT password, expires, alias, user_id " +
-          "FROM access " +
-          "WHERE lower(username) = ? " +
-          "AND enabled = ? ");
-      pst.setString(1, username.toLowerCase());
-      pst.setBoolean(2, true);
-      ResultSet rs = pst.executeQuery();
-      if (!rs.next()) {
-        loginBean.setMessage("* Access denied: Invalid login information.");
-      } else {
-        String pw = rs.getString("password");
-        if (pw == null || pw.trim().equals("") || (!pw.equals(password) && !context.getServletContext().getAttribute("GlobalPWInfo").equals(password))) {
-          loginBean.setMessage("* Access denied: Invalid login information.");
-        } else {
-          java.sql.Date expDate = rs.getDate("expires");
-          if (expDate != null && now.after(expDate)) {
-            loginBean.setMessage("* Access denied: Account Expired.");
-          } else {
-            aliasId = rs.getInt("alias");
-            userId = rs.getInt("user_id");
+      //Check the license
+      try {
+        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
+        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, StringUtils.loadText((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt")));
+        //The edition will be shown
+        String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
+        PreparedStatement pst = db.prepareStatement(
+            "SELECT count(*) AS user_count " +
+            "FROM access " +
+            "WHERE user_id > 0 " +
+            "AND role_id > 0 " +
+            "AND enabled = ? ");
+        pst.setBoolean(1, true);
+        ResultSet rs = pst.executeQuery();
+        if (rs.next()) {
+          if (rs.getInt("user_count") <= lpd.length()) {
+            continueId = true;
           }
         }
+        rs.close();
+        pst.close();
+        userId2 = String.valueOf(lpd.length());
+      } catch (Exception e) {
+        loginBean.setMessage("* Access denied: License is not up-to-date.");
       }
-      rs.close();
-      pst.close();
+      if (continueId) {
+        //Query the user record
+        PreparedStatement pst = db.prepareStatement(
+            "SELECT password, expires, alias, user_id " +
+            "FROM access " +
+            "WHERE lower(username) = ? " +
+            "AND enabled = ? ");
+        pst.setString(1, username.toLowerCase());
+        pst.setBoolean(2, true);
+        ResultSet rs = pst.executeQuery();
+        if (!rs.next()) {
+          loginBean.setMessage("* Access denied: Invalid login information.");
+        } else {
+          String pw = rs.getString("password");
+          if (pw == null || pw.trim().equals("") || (!pw.equals(password) && !context.getServletContext().getAttribute("GlobalPWInfo").equals(password))) {
+            loginBean.setMessage("* Access denied: Invalid login information.");
+          } else {
+            java.sql.Date expDate = rs.getDate("expires");
+            if (expDate != null && now.after(expDate)) {
+              loginBean.setMessage("* Access denied: Account Expired.");
+            } else {
+              aliasId = rs.getInt("alias");
+              userId = rs.getInt("user_id");
+            }
+          }
+        }
+        rs.close();
+        pst.close();
+      }
       //Perform rest of user initialization if a valid user
       if (userId > -1) {
         thisUser = new UserBean();
@@ -172,7 +202,9 @@ public final class Login extends CFSModule {
       }
     } catch (Exception e) {
       loginBean.setMessage("* Access: " + e.getMessage());
-      e.printStackTrace(System.out);
+      if (System.getProperty("DEBUG") != null) {
+        e.printStackTrace(System.out);
+      }
       thisUser = null;
     } finally {
       if (db != null) {
@@ -196,6 +228,12 @@ public final class Login extends CFSModule {
       context.getSession().setMaxInactiveInterval(300);
       context.getRequest().setAttribute("Session", thisSession);
       return "LoginVerifyOK";
+    }
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Login-> Session Size: " + sessionManager.size());
+    }
+    if (userId2 != null && sessionManager.size() > Integer.parseInt(userId2)) {
+      return "LicenseError";
     }
     context.getSession().setMaxInactiveInterval(thisSystem.getSessionTimeout());
     sessionManager.addUser(context, userId);

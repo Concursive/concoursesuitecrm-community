@@ -204,11 +204,32 @@ public final class Users extends CFSModule {
     if (!hasPermission(context, "admin-users-add")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     addModuleBean(context, "Add User", "Add New User");
     try {
+      //Load the license and see how many users can be added
+      java.security.Key key = org.aspcfs.utils.PrivateString.loadKey((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
+      org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt")));
+      String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
       db = this.getConnection(context);
+      //Check the license
+      PreparedStatement pst = db.prepareStatement(
+          "SELECT count(*) AS user_count " +
+          "FROM access " +
+          "WHERE user_id > 0 " +
+          "AND role_id > 0 " +
+          "AND enabled = ? ");
+      pst.setBoolean(1, true);
+      ResultSet rs = pst.executeQuery();
+      int current = 0;
+      if (rs.next()) {
+        current = rs.getInt("user_count");
+      }
+      if (current >= lpd.length()) {
+        return ("LicenseError");
+      }
+      rs.close();
+      pst.close();
       //Prepare the role drop-down
       RoleList roleList = new RoleList();
       roleList.setBuildUsers(false);
@@ -223,16 +244,12 @@ public final class Users extends CFSModule {
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      return ("UserInsertFormOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("UserInsertFormOK");
   }
 
 
@@ -251,28 +268,53 @@ public final class Users extends CFSModule {
     boolean recordInserted = false;
     User insertedUser = null;
     try {
-      db = getConnection(context);
-      User thisUser = (User) context.getFormBean();
-      if (context.getRequest().getParameter("typeId") != null) {
-        ((Contact) thisUser.getContact()).addType(context.getRequest().getParameter("typeId"));
-      }
-      thisUser.setEnteredBy(getUserId(context));
-      thisUser.setModifiedBy(getUserId(context));
-      thisUser.setTimeZone((String) context.getServletContext().getAttribute("SYSTEM.TIMEZONE"));
-      recordInserted = thisUser.insert(db, context);
-      if (recordInserted) {
-        insertedUser = new User();
-        insertedUser.setBuildContact(true);
-        insertedUser.buildRecord(db, thisUser.getId());
-        addRecentItem(context, insertedUser);
-        context.getRequest().setAttribute("UserRecord", insertedUser);
-        updateSystemHierarchyCheck(db, context);
-      } else {
-        if (thisUser.getContactId() != -1) {
-          thisUser.setContact(new Contact(db, thisUser.getContactId()));
+      synchronized(this) {
+        //Load the license and see how many users can be added
+        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
+        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt")));
+        String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
+        db = this.getConnection(context);
+        //Check the license
+        PreparedStatement pst = db.prepareStatement(
+            "SELECT count(*) AS user_count " +
+            "FROM access " +
+            "WHERE user_id > 0 " +
+            "AND role_id > 0 " +
+            "AND enabled = ? ");
+        pst.setBoolean(1, true);
+        ResultSet rs = pst.executeQuery();
+        int current = 0;
+        if (rs.next()) {
+          current = rs.getInt("user_count");
         }
-        context.getRequest().setAttribute("UserRecord", thisUser);
-        processErrors(context, thisUser.getErrors());
+        if (current >= lpd.length()) {
+          return ("LicenseError");
+        }
+        rs.close();
+        pst.close();
+        //Process the user request form
+        User thisUser = (User) context.getFormBean();
+        if (context.getRequest().getParameter("typeId") != null) {
+          ((Contact) thisUser.getContact()).addType(context.getRequest().getParameter("typeId"));
+        }
+        thisUser.setEnteredBy(getUserId(context));
+        thisUser.setModifiedBy(getUserId(context));
+        thisUser.setTimeZone((String) context.getServletContext().getAttribute("SYSTEM.TIMEZONE"));
+        recordInserted = thisUser.insert(db, context);
+        if (recordInserted) {
+          insertedUser = new User();
+          insertedUser.setBuildContact(true);
+          insertedUser.buildRecord(db, thisUser.getId());
+          addRecentItem(context, insertedUser);
+          context.getRequest().setAttribute("UserRecord", insertedUser);
+          updateSystemHierarchyCheck(db, context);
+        } else {
+          if (thisUser.getContactId() != -1) {
+            thisUser.setContact(new Contact(db, thisUser.getContactId()));
+          }
+          context.getRequest().setAttribute("UserRecord", thisUser);
+          processErrors(context, thisUser.getErrors());
+        }
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -298,37 +340,28 @@ public final class Users extends CFSModule {
    *@deprecated
    */
   public String executeCommandDeleteUser(ActionContext context) {
-
-    if (!(hasPermission(context, "admin-users-delete"))) {
+    if (!hasPermission(context, "admin-users-delete")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     boolean recordDeleted = false;
     User thisUser = null;
-
     Connection db = null;
     try {
       db = this.getConnection(context);
       thisUser = new User(db, context.getRequest().getParameter("id"));
       recordDeleted = thisUser.delete(db);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "View Users", "Delete User");
-    if (errorMessage == null) {
-      if (recordDeleted) {
-        return ("UserDeleteOK");
-      } else {
-        processErrors(context, thisUser.getErrors());
-        return (executeCommandListUsers(context));
-      }
+    if (recordDeleted) {
+      return ("UserDeleteOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      processErrors(context, thisUser.getErrors());
+      return (executeCommandListUsers(context));
     }
   }
 
@@ -340,19 +373,14 @@ public final class Users extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDisableUser(ActionContext context) {
-
-    if (!(hasPermission(context, "admin-users-delete"))) {
+    if (!hasPermission(context, "admin-users-delete")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     boolean recordDisabled = false;
     User thisUser = null;
     Ticket thisTicket = null;
-
     User thisRec = ((UserBean) context.getSession().getAttribute("User")).getUserRecord();
     User managerUser = null;
-
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -362,10 +390,10 @@ public final class Users extends CFSModule {
         thisContact.disable(db);
       }
       recordDisabled = thisUser.delete(db);
-
       if (recordDisabled) {
         thisTicket = new Ticket();
-        thisTicket.setProblem("Dark Horse CRM user " + thisUser.getUsername() + " has been disabled by " + thisRec.getUsername() +
+        thisTicket.setProblem(
+            "Dark Horse CRM user " + thisUser.getUsername() + " has been disabled by " + thisRec.getUsername() +
             ".  Since you are the direct manager of " + thisUser.getUsername() + ", you have been notified.  It is essential that " +
             "any data still directly associated with this disabled user gets re-assigned as soon as possible.");
         thisTicket.setEnteredBy(thisRec.getId());
@@ -374,7 +402,6 @@ public final class Users extends CFSModule {
         thisTicket.setContactId(thisUser.getContactId());
         thisTicket.setSeverityCode(3);
         thisTicket.setPriorityCode(3);
-
         if (thisUser.getManagerId() > -1) {
           managerUser = new User();
           managerUser.setBuildContact(true);
@@ -385,26 +412,21 @@ public final class Users extends CFSModule {
         } else {
           thisTicket.setDepartmentCode(thisUser.getContact().getDepartment());
         }
-
         thisTicket.insert(db);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
 
     addModuleBean(context, "View Users", "Delete User");
-    if (errorMessage == null) {
-      if (recordDisabled) {
-        return ("UserDeleteOK");
-      } else {
-        processErrors(context, thisUser.getErrors());
-        return (executeCommandListUsers(context));
-      }
+    if (recordDisabled) {
+      return ("UserDeleteOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      processErrors(context, thisUser.getErrors());
+      return (executeCommandListUsers(context));
     }
   }
 
@@ -416,45 +438,61 @@ public final class Users extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandEnableUser(ActionContext context) {
-
-    if (!(hasPermission(context, "admin-users-edit"))) {
+    if (!hasPermission(context, "admin-users-edit")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     boolean recordEnabled = false;
     User thisUser = null;
     User managerUser = null;
-
     Connection db = null;
     try {
-      db = this.getConnection(context);
-      thisUser = new User(db, context.getRequest().getParameter("id"));
-      Contact thisContact = new Contact(db, thisUser.getContactId());
-      if (!thisContact.getEnabled()) {
-        thisContact.enable(db);
-      }
-      recordEnabled = thisUser.enable(db);
-
-      if (recordEnabled) {
-        updateSystemHierarchyCheck(db, context);
+      synchronized(this) {
+        //Load the license and see how many users can be added
+        java.security.Key key = org.aspcfs.utils.PrivateString.loadKey((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "zlib.jar");
+        org.aspcfs.utils.XMLUtils xml = new org.aspcfs.utils.XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key, org.aspcfs.utils.StringUtils.loadText((String) context.getServletContext().getAttribute("FileLibrary") + "init" + fs + "input.txt")));
+        String lpd = org.aspcfs.utils.XMLUtils.getNodeText(xml.getFirstChild("text2"));
+        db = this.getConnection(context);
+        //Check the license
+        PreparedStatement pst = db.prepareStatement(
+            "SELECT count(*) AS user_count " +
+            "FROM access " +
+            "WHERE user_id > 0 " +
+            "AND role_id > 0 " +
+            "AND enabled = ? ");
+        pst.setBoolean(1, true);
+        ResultSet rs = pst.executeQuery();
+        int current = 0;
+        if (rs.next()) {
+          current = rs.getInt("user_count");
+        }
+        if (current >= lpd.length()) {
+          return ("LicenseError");
+        }
+        rs.close();
+        pst.close();
+        //Activate the user
+        thisUser = new User(db, context.getRequest().getParameter("id"));
+        //Re-activate the contact if it was previously de-activated
+        Contact thisContact = new Contact(db, thisUser.getContactId());
+        if (!thisContact.getEnabled()) {
+          thisContact.enable(db);
+        }
+        recordEnabled = thisUser.enable(db);
+        if (recordEnabled) {
+          updateSystemHierarchyCheck(db, context);
+        }
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "View Users", "Enable User");
-    if (errorMessage == null) {
-      if (!recordEnabled) {
-        processErrors(context, thisUser.getErrors());
-      }
-      return (executeCommandListUsers(context));
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (!recordEnabled) {
+      processErrors(context, thisUser.getErrors());
     }
+    return (executeCommandListUsers(context));
   }
 
 
@@ -465,43 +503,33 @@ public final class Users extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDisableUserConfirm(ActionContext context) {
-
-    if (!(hasPermission(context, "admin-users-delete"))) {
+    if (!hasPermission(context, "admin-users-delete")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     User thisUser = null;
     User managerUser = null;
-
     Connection db = null;
     try {
       db = this.getConnection(context);
       thisUser = new User();
       thisUser.setBuildContact(true);
       thisUser.buildRecord(db, Integer.parseInt(context.getRequest().getParameter("id")));
-
       if (thisUser.getManagerId() > -1) {
         managerUser = new User();
         managerUser.setBuildContact(true);
         managerUser.buildRecord(db, thisUser.getManagerId());
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
 
     addModuleBean(context, "Users", "Disable User");
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("User", thisUser);
-      context.getRequest().setAttribute("ManagerUser", managerUser);
-      return ("UserDisableConfirmOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
-
+    context.getRequest().setAttribute("User", thisUser);
+    context.getRequest().setAttribute("ManagerUser", managerUser);
+    return ("UserDisableConfirmOK");
   }
 
 
@@ -517,7 +545,6 @@ public final class Users extends CFSModule {
       return ("PermissionError");
     }
     addModuleBean(context, "View Users", "Modify User");
-    Exception errorMessage = null;
     Connection db = null;
     User newUser = null;
     //Process the request items
@@ -544,18 +571,13 @@ public final class Users extends CFSModule {
       roleList.buildList(db);
       context.getRequest().setAttribute("RoleList", roleList);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("UserRecord", newUser);
-      return ("UserModifyOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("UserRecord", newUser);
+    return ("UserModifyOK");
   }
 
 

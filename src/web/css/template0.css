@@ -63,8 +63,9 @@ A:visited:hover{color:#FF3300;}
 }
 /* trails */
 .trails {
-  padding-bottom: 10px;
   width: 100%;
+  border-spacing: 0px;
+  padding-bottom: 10px;
 }
 .trails td {
   color: #000;
@@ -353,3 +354,12 @@ A:visited:hover{color:#FF3300;}
 .list { background-color: #D4D4D4 }
 .pulldown { background-color: #EEF3FB; border-left: 2px solid #FFFFFF; border-top: 2px solid #FFFFFF; border-right: 2px solid #B6C7E5; border-bottom: 2px solid #B6C7E5}
 .menu { visibility:hidden; left:0px; top:0px; position:absolute }
+.note {
+  width: 100%;
+  border-spacing: 0px;
+  padding-bottom: 10px;
+}
+.note td {
+  border: 1px solid #333;
+  background-color: #FFFDED;
+}

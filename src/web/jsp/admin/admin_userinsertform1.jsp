@@ -3,6 +3,7 @@
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="RoleList" class="org.aspcfs.modules.admin.base.RoleList" scope="request"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="APP_SIZE" class="java.lang.String" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
@@ -49,6 +50,13 @@ Add User
 </tr>
 </table>
 <%-- End Trails --%>
+<%-- License info --%>
+<dhv:evaluate if="<%= hasText(APP_SIZE) %>">
+<table class="note">
+  <tr><td><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/>The installed Dark Horse CRM license limits this system to <%= APP_SIZE %> active users.</td></tr>
+</table>
+</dhv:evaluate>
+<%-- End license info --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 <% if (request.getAttribute("actionError") != null) { %>
   <%= showError(request, "actionError") %>

@@ -1,0 +1,10 @@
+BODY { 
+  font-family: verdana, arial, sans-serif;
+  background: white;
+  color: #000000;
+}
+TABLE, TD, TH, LI, P, UL, OL, TEXTAREA, INPUT, SELECT, A { 
+  font-family: verdana, arial, sans-serif; 
+  color: #000000;
+}
+

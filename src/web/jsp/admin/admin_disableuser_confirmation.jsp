@@ -36,15 +36,18 @@ Disable User Account
       <p>
       If you click "Proceed", the following actions will occur:
       <ul>
-      <li><b><%= User.getUsername() %></b> will be immediately disabled.
-      <li>A Ticket will be created and assigned to the direct manager (<%= ManagerUser.getContact().getNameLastFirst() %>) of the newly disabled User in reference to any data re-assignment that needs to occur.
-      <li>The direct manager will be notified via email.
+      <li><b><%= User.getUsername() %></b> will be immediately disabled</li>
+      <li>A Ticket will be created and assigned to the direct manager, if there is one, of the newly disabled User in reference to any data re-assignment that needs to occur</li>
+      <li>The direct manager will be notified via email</li>
+    <dhv:evaluate if="<%= ManagerUser.getId() > 0 %>">
+      <li>This user's direct manager is listed as: <%= ManagerUser.getContact().getNameFirstLast() %></li>
+    </dhv:evaluate>
       </ul>
 <dhv:permission name="myhomepage-reassign-edit">
       If you are also responsible for the data re-assignments of this user, you can go to "Re-Assignments" in My Home Page, or just <a href="Reassignments.do?command=Reassign&userId=<%=User.getId()%>">click here</a> to go to
       that module and make those changes.<br><br>
 </dhv:permission>
-      <input type="checkbox" name="disablecontact"> Check this box if you want to archive the contact associated with this user.<br>&nbsp;
+      <input type="checkbox" name="disablecontact"> Check this box if you want to archive the contact associated with this user so that the information no longer displays in the Contact/Employee modules.<br>&nbsp;
     </td>
   </tr>
 </table>

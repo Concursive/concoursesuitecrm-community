@@ -6,7 +6,6 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-
 /**
  *  Handles all sessions running on the web server
  *
@@ -77,7 +76,7 @@ public class SessionManager {
       synchUpdate(thisSession, userId, ADD);
     } else {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("SessionManager -- > User " + userId + " already has a session");
+        System.out.println("SessionManager-> User " + userId + " already has a session");
       }
     }
   }
@@ -95,12 +94,12 @@ public class SessionManager {
       if (action == ADD) {
         sessions.put(new Integer(userId), thisSession);
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("SessionManager -- > User " + userId + " Added");
+          System.out.println("SessionManager-> User " + userId + " Added");
         }
       } else if (action == REMOVE) {
         sessions.remove(new Integer(userId));
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("SessionManager -- > User " + userId + " Removed");
+          System.out.println("SessionManager-> User " + userId + " Removed");
         }
       }
     }
@@ -157,6 +156,17 @@ public class SessionManager {
     removeUser(userId);
     addUser(context, userId);
     return getUserSession(userId);
+  }
+
+
+  /**
+   *  Returns the number of active sessions<br>
+   *  NOTE: Not sure if expired sessions are removed
+   *
+   *@return    Description of the Return Value
+   */
+  public int size() {
+    return sessions.size();
   }
 }
 

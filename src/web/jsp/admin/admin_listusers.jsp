@@ -2,6 +2,7 @@
 <%@ page import="java.util.*,org.aspcfs.modules.admin.base.*,org.aspcfs.modules.contacts.base.Contact" %>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="UserListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="APP_SIZE" class="java.lang.String" scope="application"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -21,6 +22,13 @@ View Users
 </tr>
 </table>
 <%-- End Trails --%>
+<%-- License info --%>
+<dhv:evaluate if="<%= hasText(APP_SIZE) %>">
+<table class="note">
+  <tr><td><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/>The installed Dark Horse CRM license limits this system to <%= APP_SIZE %> active users.</td></tr>
+</table>
+</dhv:evaluate>
+<%-- End license info --%>
 <dhv:permission name="admin-users-add"><a href="Users.do?command=InsertUserForm">Add New User</a></dhv:permission>
 <center><%= UserListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
