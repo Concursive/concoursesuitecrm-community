@@ -1455,12 +1455,13 @@ public void setPermissions(Vector permissions) {
 			StringBuffer sql = new StringBuffer();
 			sql.append(
 			"INSERT INTO access_log " +
-			"(username, ip) " +
-			"VALUES (?, ?) ");
+			"(user_id, username, ip) " +
+			"VALUES (?, ?, ?) ");
 		
 			int i = 0;
 			PreparedStatement pst = db.prepareStatement(sql.toString());
-			pst.setString(++i, getUsername());
+			pst.setInt(++i, id);
+      pst.setString(++i, getUsername());
 			pst.setString(++i, getIp());
 			pst.execute();
 			pst.close();
