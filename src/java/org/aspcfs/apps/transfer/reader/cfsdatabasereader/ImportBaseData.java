@@ -50,7 +50,6 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     //TODO: update all user managers, update all user contact_ids
 
     //Copy Accounts
-    /**
     logger.info("ImportBaseData-> Inserting accounts");
     writer.setAutoCommit(false);
     OrganizationList accounts = new OrganizationList();
@@ -58,8 +57,34 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     accounts.setIncludeEnabled(-1);
     accounts.buildList(db);
     mappings.saveList(writer, accounts, "insert");
-    */
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
     
+    //Organization Phone?
+    logger.info("ImportBaseData-> Inserting account phone numbers");
+    writer.setAutoCommit(false);
+    OrganizationPhoneNumberList phoneList = new OrganizationPhoneNumberList();
+    phoneList.buildList(db);
+    mappings.saveList(writer, phoneList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+    
+    //Organization email
+    logger.info("ImportBaseData-> Inserting account emails");
+    writer.setAutoCommit(false);
+    OrganizationEmailAddressList emailList = new OrganizationEmailAddressList();
+    emailList.buildList(db);
+    mappings.saveList(writer, emailList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }    
+    
+    /**
     logger.info("ImportBaseData-> Inserting accounts");
     writer.setAutoCommit(false);
     OrganizationList accounts = new OrganizationList();
@@ -72,6 +97,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
     if (!processOK) {
       return false;
     }
+    */
     
     //Iterate and get emails, addresses
     
