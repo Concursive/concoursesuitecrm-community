@@ -172,7 +172,7 @@ Modify Opportunity<br>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Est. Terms
+      Est. Term
     </td>
     <td valign=center>
       <input type=text size=5 name="terms" value="<%= OppDetails.getTermsString() %>">

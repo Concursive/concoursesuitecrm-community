@@ -181,7 +181,7 @@ Reassign To
 
 <tr class="containerBody">
   <td nowrap class="formLabel">
-    Est. Terms
+    Est. Term
   </td>
   <td colspan=1 valign=center>
     <input type=text size=5 name="terms" value="<%= OpportunityDetails.getTerms() %>">

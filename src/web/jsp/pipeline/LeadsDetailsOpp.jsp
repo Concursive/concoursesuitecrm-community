@@ -118,6 +118,15 @@ Opportunity Details<br>
   
   <tr class="containerBody">
     <td nowrap class="formLabel">
+        Est. Term (months)
+    </td>
+    <td>
+      <%= OpportunityDetails.getTerms() %>
+    </td>
+  </tr>  
+  
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       Current Stage
     </td>
     <td>

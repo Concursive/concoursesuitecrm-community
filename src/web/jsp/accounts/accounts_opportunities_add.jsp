@@ -142,7 +142,7 @@ Add Opportunity<br>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Est. Terms
+      Est. Term
     </td>
     <td>
       <input type=text size=5 name="terms" value="<%= toHtmlValue(OppDetails.getTermsString()) %>">

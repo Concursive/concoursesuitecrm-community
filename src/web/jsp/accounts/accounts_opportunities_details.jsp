@@ -83,6 +83,16 @@ Opportunity Details<br>
       $<%= OppDetails.getHighCurrency() %>&nbsp;
     </td>
   </tr>
+  
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Est. Term (months)
+    </td>
+    <td>
+      <%= OppDetails.getTerms() %>
+    </td>
+  </tr>  
+  
   <tr class="containerBody">
     <td nowrap class="formLabel">
       Current Stage
