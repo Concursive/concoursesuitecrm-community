@@ -44,7 +44,7 @@ public final class ProcessPacket extends CFSModule {
    */
   public String executeCommandDefault(ActionContext context) {
     Exception errorMessage = null;
-    LinkedList statusMessages = new LinkedList();
+    TransactionStatusList statusMessages = new TransactionStatusList();
     Connection db = null;
     Connection dbLookup = null;
     String encoding = "UTF-8";
@@ -185,58 +185,8 @@ public final class ProcessPacket extends CFSModule {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ProcessPacket-> Processing StatusMessages for output: " + statusMessages.size());
       }
-      Iterator messages = statusMessages.iterator();
-      while (messages.hasNext()) {
-        TransactionStatus thisMessage = (TransactionStatus) messages.next();
-        //Append the response
-        Element response = document.createElement("response");
-        if (thisMessage.getId() > -1) {
-          response.setAttribute("id", String.valueOf(thisMessage.getId()));
-        }
-        app.appendChild(response);
-        //Append the status code (0=OK, 1=Error)
-        Element status = document.createElement("status");
-        status.appendChild(document.createTextNode(String.valueOf(thisMessage.getStatusCode())));
-        response.appendChild(status);
-        //Append the errorText
-        Element errorText = document.createElement("errorText");
-        if (thisMessage.getStatusCode() > 0) {
-          errorText.appendChild(document.createTextNode(thisMessage.getMessage()));
-        }
-        response.appendChild(errorText);
-        //Append any record lists to be returned
-        if (!thisMessage.hasError() && thisMessage.hasRecordList()) {
-          Element recordSet = document.createElement("recordSet");
-          recordSet.setAttribute("name", thisMessage.getRecordList().getName());
-          recordSet.setAttribute("count", String.valueOf(thisMessage.getRecordList().size()));
-          if (thisMessage.getRecordList().getTotalRecords() > -1) {
-            recordSet.setAttribute("total", String.valueOf(thisMessage.getRecordList().getTotalRecords()));
-          }
-          response.appendChild(recordSet);
-          returnedRecordCount += thisMessage.getRecordList().size();
-          Iterator recordList = thisMessage.getRecordList().iterator();
-          while (recordList.hasNext()) {
-            Element record = document.createElement("record");
-            recordSet.appendChild(record);
-            Record thisRecord = (Record) recordList.next();
-            if (thisRecord.hasAction()) {
-              record.setAttribute("action", thisRecord.getAction());
-            }
-            Iterator fields = thisRecord.keySet().iterator();
-            while (fields.hasNext()) {
-              String fieldName = (String) fields.next();
-              String fieldValue = (String) thisRecord.get(fieldName);
-              if (fieldValue == null) {
-                fieldValue = "";
-              }
-              Element field = document.createElement(fieldName);
-              field.appendChild(document.createTextNode(fieldValue));
-              record.appendChild(field);
-            }
-          }
-
-        }
-      }
+      //Process the status messages for output
+      returnedRecordCount = statusMessages.appendResponse(document, app);
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ProcessPacket-> Total Records: " + returnedRecordCount);
       }

@@ -15,6 +15,7 @@ import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.modules.setup.beans.UpdateBean;
 import sun.misc.*;
 import org.w3c.dom.*;
+import org.aspcfs.modules.service.base.*;
 
 /**
  *  Description of the Class
@@ -201,15 +202,15 @@ public final class AdminConfig extends CFSModule {
         if (response == null) {
           context.getRequest().setAttribute("actionError",
               "Unspecified Error: Dark Horse CRM Server did not respond ");
-          return "SendRegERROR";
+          return "LicenseCheckERROR";
         }
         XMLUtils responseXML = new XMLUtils(response);
-        Element responseNode = responseXML.getFirstChild("response");
-        if (!"0".equals(XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "status")))) {
+        TransactionStatus thisStatus = new TransactionStatus(responseXML.getFirstChild("response"));
+        if (thisStatus.getStatusCode() != 0) {
           context.getRequest().setAttribute("actionError",
               "Unspecified Error: Dark Horse CRM Server rejected request " +
-              XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "errorText")));
-          return "SendRegERROR";
+              thisStatus.getMessage());
+          return "LicenseCheckERROR";
         }
         //Response is good so save the new license
         
@@ -222,6 +223,7 @@ public final class AdminConfig extends CFSModule {
       }
     } catch (Exception e) {
       e.printStackTrace(System.out);
+      return "LicenseCheckERROR";
     }
     return "LicenseCheckOK";
   }

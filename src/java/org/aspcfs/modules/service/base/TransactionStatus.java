@@ -1,9 +1,12 @@
 package org.aspcfs.modules.service.base;
 
+import org.w3c.dom.*;
+import org.aspcfs.utils.XMLUtils;
+
 /**
- *  Description of the Class
+ *  Represents the status for a processed or attempted to process transaction
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    April 10, 2002
  *@version    $Id: TransactionStatus.java,v 1.1 2002/04/10 19:38:29 mrajkowski
  *      Exp $
@@ -55,6 +58,21 @@ public class TransactionStatus {
 
 
   /**
+   *  Constructor for the TransactionStatus object
+   *
+   *@param  responseNode  Description of the Parameter
+   */
+  public TransactionStatus(Element responseNode) {
+    this.setId(responseNode.getAttribute("id"));
+    this.setStatusCode(XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "status")));
+    this.setMessage(XMLUtils.getNodeText(XMLUtils.getFirstChild(responseNode, "errorText")));
+    //TODO: Process the record list if there is one
+    
+
+  }
+
+
+  /**
    *  Sets the id attribute of the TransactionStatus object
    *
    *@param  tmp  The new id value
@@ -65,12 +83,40 @@ public class TransactionStatus {
 
 
   /**
+   *  Sets the id attribute of the TransactionStatus object
+   *
+   *@param  tmp  The new id value
+   */
+  public void setId(String tmp) {
+    try {
+      id = Integer.parseInt(tmp);
+    } catch (Exception e) {
+      id = -1;
+    }
+  }
+
+
+  /**
    *  Sets the statusCode attribute of the TransactionStatus object
    *
    *@param  tmp  The new statusCode value
    */
   public void setStatusCode(int tmp) {
     statusCode = tmp;
+  }
+
+
+  /**
+   *  Sets the statusCode attribute of the TransactionStatus object
+   *
+   *@param  tmp  The new statusCode value
+   */
+  public void setStatusCode(String tmp) {
+    try {
+      statusCode = Integer.parseInt(tmp);
+    } catch (Exception e) {
+      statusCode = -1;
+    }
   }
 
 

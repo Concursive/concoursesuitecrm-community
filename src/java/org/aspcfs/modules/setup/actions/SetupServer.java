@@ -14,6 +14,7 @@ import org.aspcfs.modules.setup.base.*;
 import java.sql.Connection;
 import org.aspcfs.modules.login.base.AuthenticationItem;
 import org.aspcfs.utils.StringUtils;
+import org.aspcfs.modules.service.base.*;
 
 public class SetupServer extends CFSModule {
 
@@ -36,12 +37,9 @@ public class SetupServer extends CFSModule {
       Document document = builder.newDocument();
       Element app = document.createElement("aspcfs");
       document.appendChild(app);
-      Element response = document.createElement("response");
-      app.appendChild(response);
-      //Append the status code
-      Element status = document.createElement("status");
-      //Append the error text
-      Element errorText = document.createElement("errorText");
+      //Prepare the status response, with possibly a new record
+      TransactionStatusList statusList = new TransactionStatusList();
+      TransactionStatus thisStatus = new TransactionStatus();
       if (license.isValid()) {
         //Store the license information in the database
         Connection db = null;
@@ -81,13 +79,13 @@ public class SetupServer extends CFSModule {
           registration.setEdition(license.getEdition());
           registration.setText2(license.getText2());
           registration.insert(db);
-          status.appendChild(document.createTextNode("0"));
-          errorText.appendChild(document.createTextNode("SUCCESS"));
+          thisStatus.setStatusCode(0);
+          thisStatus.setMessage("SUCCESS");
           db.commit();
           sendReg = true;
         } catch (Exception e) {
-          status.appendChild(document.createTextNode("1"));
-          errorText.appendChild(document.createTextNode("FAILURE"));
+          thisStatus.setStatusCode(1);
+          thisStatus.setMessage("FAILURE");
           db.rollback();
           e.printStackTrace(System.out);
         } finally {
@@ -101,11 +99,11 @@ public class SetupServer extends CFSModule {
           license.sendEmailRegistration();
         }
       } else {
-        status.appendChild(document.createTextNode("1"));
-        errorText.appendChild(document.createTextNode("FAILURE"));
+        thisStatus.setStatusCode(1);
+        thisStatus.setMessage("FAILURE");
       }
-      response.appendChild(status);
-      response.appendChild(errorText);
+      statusList.add(thisStatus);
+      statusList.appendResponse(document, app);
       context.getRequest().setAttribute("statusXML", XMLUtils.toString(document, "UTF-8"));
     } catch (Exception e) {
       e.printStackTrace(System.out);
@@ -125,12 +123,8 @@ public class SetupServer extends CFSModule {
       Document document = builder.newDocument();
       Element app = document.createElement("aspcfs");
       document.appendChild(app);
-      Element response = document.createElement("response");
-      app.appendChild(response);
-      //Append the status code
-      Element status = document.createElement("status");
-      //Append the error text
-      Element errorText = document.createElement("errorText");
+      TransactionStatusList statusList = new TransactionStatusList();
+      TransactionStatus thisStatus = new TransactionStatus();
       if (license.isValid()) {
         //Load the license information from the database
         Connection db = null;
@@ -145,13 +139,13 @@ public class SetupServer extends CFSModule {
           Registration previousRegistration = RegistrationList.locate(db, license.getEmail(), license.getProfile(), true);
           //If not found send back error message
           if (previousRegistration == null) {
-            status.appendChild(document.createTextNode("1"));
-            errorText.appendChild(document.createTextNode("FAILURE"));
+            thisStatus.setStatusCode(1);
+            thisStatus.setMessage("FAILURE");
           }
           //If found then see if it is new
           if (previousRegistration != null) {
-            status.appendChild(document.createTextNode("0"));
-            errorText.appendChild(document.createTextNode("SUCCESS"));
+            thisStatus.setStatusCode(0);
+            thisStatus.setMessage("SUCCESS");
             if (!previousRegistration.getText2().equals(license.getText2())) {
               //New license to send back...
               license.setNameFirst(previousRegistration.getNameFirst());
@@ -160,22 +154,26 @@ public class SetupServer extends CFSModule {
               license.setEdition(previousRegistration.getEdition());
               license.setText(previousRegistration.getText());
               license.setText2(previousRegistration.getText2());
-              //TODO: Package it up with
-              System.out.println(license.getCode());
+              //Send the license back as a new status record
+              RecordList recordList = new RecordList("license");
+              Record record = new Record("update");
+              record.put("license", license.getCode());
+              recordList.add(record);
+              thisStatus.setRecordList(recordList);
             }
           }
         } catch (Exception e) {
-          status.appendChild(document.createTextNode("1"));
-          errorText.appendChild(document.createTextNode("FAILURE"));
+          thisStatus.setStatusCode(1);
+          thisStatus.setMessage("FAILURE");
         } finally {
           freeConnection(context, db);
         }
       } else {
-        status.appendChild(document.createTextNode("1"));
-        errorText.appendChild(document.createTextNode("FAILURE"));
+        thisStatus.setStatusCode(1);
+        thisStatus.setMessage("FAILURE");
       }
-      response.appendChild(status);
-      response.appendChild(errorText);
+      statusList.add(thisStatus);
+      statusList.appendResponse(document, app);
       context.getRequest().setAttribute("statusXML", XMLUtils.toString(document, "UTF-8"));
     } catch (Exception e) {
       e.printStackTrace(System.out);
