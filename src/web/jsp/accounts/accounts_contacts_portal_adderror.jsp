@@ -5,7 +5,6 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
-<form name="viewContactPortal" action="ContactsPortal.do?command=Modify&contactId=<%= ContactDetails.getId() %>" method="post">
 <%-- Trails --%>
 <table class="trails">
 <tr>
@@ -21,7 +20,6 @@ Contact Details
 <%-- End Trails --%>
 <%@ include file="accounts_details_header_include.jsp" %>
 <dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
@@ -40,4 +38,3 @@ Contact Details
     <td>An Email address is required for the contact before portal access information can be granted or modified.</td>
   </tr>
 </table>
-</form>
