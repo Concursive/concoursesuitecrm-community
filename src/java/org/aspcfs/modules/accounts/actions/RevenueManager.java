@@ -54,19 +54,19 @@ public final class RevenueManager extends CFSModule {
     //Check if the list is being reset
     if (context.getRequest().getParameter("reset") != null) {
       overrideId = -1;
-      context.getSession().removeAttribute("override");
-      context.getSession().removeAttribute("othername");
-      context.getSession().removeAttribute("previousId");
+      context.getSession().removeAttribute("revenueoverride");
+      context.getSession().removeAttribute("revenueothername");
+      context.getSession().removeAttribute("revenuepreviousId");
     }
     //Determine the user whose data is being shown, by default it's the current user
     if (overrideId > -1) {
       if (overrideId == getUserId(context)) {
-        context.getSession().removeAttribute("override");
-        context.getSession().removeAttribute("othername");
-        context.getSession().removeAttribute("previousId");
+        context.getSession().removeAttribute("revenueoverride");
+        context.getSession().removeAttribute("revenueothername");
+        context.getSession().removeAttribute("revenuepreviousId");
       }
-    } else if (context.getSession().getAttribute("override") != null) {
-      overrideId = StringUtils.parseInt((String) context.getSession().getAttribute("override"), -1);
+    } else if (context.getSession().getAttribute("revenueoverride") != null) {
+      overrideId = StringUtils.parseInt((String) context.getSession().getAttribute("revenueoverride"), -1);
     } else {
       overrideId = thisUser.getUserId();
     }
@@ -81,9 +81,9 @@ public final class RevenueManager extends CFSModule {
     
     //Track the id in the request and the session
     if (idToUse > -1 && idToUse != getUserId(context)) {
-      context.getSession().setAttribute("override", String.valueOf(overrideId));
-      context.getSession().setAttribute("othername", thisRec.getContact().getNameFull());
-      context.getSession().setAttribute("previousId", String.valueOf(thisRec.getManagerId()));
+      context.getSession().setAttribute("revenueoverride", String.valueOf(overrideId));
+      context.getSession().setAttribute("revenueothername", thisRec.getContact().getNameFull());
+      context.getSession().setAttribute("revenuepreviousId", String.valueOf(thisRec.getManagerId()));
     }
     
     //Check the cache and see if the current graph exists and is valid
@@ -99,12 +99,12 @@ public final class RevenueManager extends CFSModule {
     int year = cal.get(Calendar.YEAR);
     String yearParam = context.getRequest().getParameter("year");
     if (yearParam == null) {
-      yearParam = (String) context.getSession().getAttribute("year");
+      yearParam = (String) context.getSession().getAttribute("revenueyear");
     }
     if (yearParam != null) {
       year = Integer.parseInt(yearParam);
       cal.set(Calendar.YEAR, year);
-      context.getSession().setAttribute("year", yearParam);
+      context.getSession().setAttribute("revenueyear", yearParam);
     }
     if (System.getProperty("DEBUG") != null) {
       System.out.println("RevenueManager-> YEAR: " + year);
@@ -113,7 +113,7 @@ public final class RevenueManager extends CFSModule {
     //Determine the type to show
     String revenueType = context.getRequest().getParameter("type");
     if (revenueType == null) {
-      revenueType = (String) context.getSession().getAttribute("type");
+      revenueType = (String) context.getSession().getAttribute("revenuetype");
     }
     
     UserList fullChildList = new UserList();
@@ -142,7 +142,7 @@ public final class RevenueManager extends CFSModule {
         shortChildList.setRevenueType(Integer.parseInt(revenueType));
         realFullRevList.setType(Integer.parseInt(revenueType));
         displayList.setRevenueType(Integer.parseInt(revenueType));
-        context.getSession().setAttribute("type", revenueType);
+        context.getSession().setAttribute("revenuetype", revenueType);
       }
       displayList.setRevenueYear(year);
       displayList.setBuildRevenueYTD(true);
@@ -827,10 +827,8 @@ public final class RevenueManager extends CFSModule {
       return createEmptyCategoryDataset();
     }
     Object[][][] data;
-
     Calendar iteratorDate = Calendar.getInstance();
     iteratorDate.set(Calendar.YEAR, year);
-    
     data = new Object[passedList.size()][12][2];
     int x = 0;
     Iterator n = passedList.iterator();
