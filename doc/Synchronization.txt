@@ -1,0 +1,252 @@
+/**
+ *  Client/Server Synchronization (DRAFT)
+ *
+ *@author     mrajkowski
+ *@created    April 16, 2002
+ *@version    $Id$
+ */
+
+This protocol requires that the server and each client are able to keep 
+track of changes that have happened between synchronizations. 
+
+To specify the changed data items, unique identifiers are used (GUID). The GUID 
+will consist of the YEAR+MONTH+DAY+HOUR+MINUTE+SECOND+CLIENT_ID 
+when the record is created.
+** A systemId field will need to be added to each CFS table to identify
+   the system that modified the record.  The server is systemId 0, then
+   each client's pdaId is the client systemId.  This will prevent updates
+   the client sends from being sent back.
+
+To indicate the type of modification, different actions are specified within
+a transaction.  Actions include: insert, update, and delete.
+
+Sync anchors are used to enable sanity checks of synchronization. A sync anchor 
+is a date/time when the last synchronization was completed, stored on both 
+the client and server.  These must match for the systems to be in sync.
+
+In this approach, the client drives the whole synchronization process.
+
+Unanswered Questions:
+- Should the client or server be responsible for specifying the order of 
+  synchronization events?
+- Will the client request the specific tables to be synchronized, or will the
+  server use a map to control which tables are processed for changed data?
+- Will all of the changes be rolled into a single transaction, or will they
+  be sent in chunks?
+  
+
+The synchronization process:
+
+---[ INITIATE DATA SYNCHRONIZATION ]---
+
+Client #1 Prepares for Synchronization
+- Client reads local Sync Anchor (Last Anchor)
+- Client sends transaction and command in body
+   <syncClient action="prepare">
+     <anchor/>
+   </syncClient>
+  Initially the anchor is null, but will be a date/time in future syncs
+- Server compares, if not a match then a previous synchronization error
+  may have occurred, returns Slow Sync response
+- Client generates new sync anchor (Next Anchor) in memory, to be saved later
+- The Sync Anchor is the current date/time
+
+---[ BEGIN CLIENT DATA SYNCHRONIZATION ]---
+All changes can be requested and sent in a single transaction, or separated.  
+The order in which tables are processed is important for referential data.
+
+Client #1 Sends records for insert with GUID... one or all records
+- Client sends transaction and command in body
+- Server looks in mapping table, if GUID does not exist then continues
+- Server inserts item into corresponding table
+- Server inserts GUID, tableId, and recordId into client mapping table
+   clientId | GUID | tableId | RecordId
+- Server responds with success
+
+Client #1 Sends records for update with GUID... one or all records
+- Client sends transaction and command in body
+- Server looks up ClientId and GUID to get RecordId to be updated
+- Server sets the RecordId of the record
+- Server updates the record
+- Server responds with success
+
+Client #1 Sends records for delete with GUID...
+- Client sends transaction and command in body
+- Server looks up ClientId and GUID to get RecordId to be deleted
+- Server sets the RecordId of the record
+- Server deletes the record
+- Server deletes the ClientId/GUID record in client mapping table
+- Server responds with success
+
+---[ BEGIN SERVER DATA SYNCHRONIZATION ]---
+All changes can be requested and sent in a single transaction, or separated.  
+The order in which tables are processed is important for referential data.
+
+Client #1 Requests new Inserts
+- Client sends transaction and command in body
+- Client sends Last Anchor and Next Anchor to server in transaction
+- Server determines records to be inserted
+   Criteria: Date entered after Last Anchor and before Next Anchor,
+   and record is not in client mapping table
+   ** This prevents records just inserted by this client
+- Server sends record(s) to client with insert command
+- Server inserts GUID into client mapping table (if not already there) 
+
+Client #1 Requests new Updates
+- Client sends transaction and command in body
+- Client sends Last Anchor and Next Anchor to server in transaction
+- Server determines records to be updated
+   Criteria: Date modified after Last Anchor and date entered before Last Anchor,
+   and date modified before Next Anchor, and systemId <> clientId
+   ** This prevents records just updated by this client
+- Server sends record(s) to client with update command
+
+Client #1 Requests new Deletes
+- Client sends transaction and command in body
+- Client sends Last Anchor and Next Anchor to server in transaction
+- Server determines records to be deleted
+   Criteria: Records that can no longer be mapped in the client mapping table
+- Server sends record(s) to client with delete command
+- Server flags deleted items in client mapping table (to be cleaned up later)
+
+---[ FINALIZE DATA SYNCHRONIZATION ]---
+
+Client #1 Ends Synchronization
+- Client sets Sync Anchor to Next Anchor in local System table
+- Client updates Anchor on Server with Next Anchor command
+- Server deletes records flagged in client mapping table since they should
+  no longer be on the client
+
+  
+Sync protocol examples:
+
+...Client verifies sync mode:
+
+<?xml version="1.0" standalone="yes"?> 
+<app>
+  <authentication>
+    <id>ds21.darkhorseventures.com</id> 
+    <code>BZTST27A</code> 
+    <client>autoguide</client> 
+    <clientId>*PUT YOUR ID HERE*</clientId>
+  </authentication>
+  <meta>
+    <property>sync_mode</property>
+  </meta>
+  <transaction id="10">
+    <syncClient action="select">
+      <anchor/>
+    </syncClient>
+  </transaction>
+</app>
+
+...Client sends changes:
+
+<?xml version="1.0" standalone="yes"?> 
+<app>
+  <authentication>
+    <id>ds21.darkhorseventures.com</id> 
+    <code>BZTST27A</code> 
+    <client>autoguide</client> 
+    <clientId>*PUT YOUR ID HERE*</clientId>
+  </authentication>
+  <transaction id="11">
+    <vehicle action="insert">
+      <guid>200204151112105</guid>
+      <entered>4/4/2002</entered>
+      <enteredBy>2</enteredBy>
+      <modified></modified>
+      <modifiedBy></modifiedBy>
+      <VIN>12ABCVDGDFAGSFDH</VIN>
+      <adType>2</adType>
+      <year>2000</year>
+      <makeNo>8</makeNo>
+      <modelNo>50</modelNo>
+      <mileage>34233</mileage>
+      <status></status>
+      <comments></comments>
+      <stockNo></stockNo>
+      <extColor></extColor>
+      <intColor></intColor>
+      <sellingPrice></sellingPrice>
+      <recordStatusNo></recordStatusNo>
+      <recordStatusDate></recordStatusDate>
+    </vehicle>
+    <vehicle action="update">
+      <guid>200204131317115</guid>
+      <entered>4/4/2002</entered>
+      <enteredBy>2</enteredBy>
+      <modified></modified>
+      <modifiedBy></modifiedBy>
+      <VIN>12ABCVDGDFAGSFDH</VIN>
+      <adType>2</adType>
+      <year>1999</year>
+      <makeNo>4</makeNo>
+      <modelNo>46</modelNo>
+      <mileage>44237</mileage>
+      <status></status>
+      <comments></comments>
+      <stockNo></stockNo>
+      <extColor></extColor>
+      <intColor></intColor>
+      <sellingPrice></sellingPrice>
+      <recordStatusNo></recordStatusNo>
+      <recordStatusDate></recordStatusDate>
+    </vehicle>
+  </transaction>
+</app>
+  
+...Client requests changes:
+
+<?xml version="1.0" standalone="yes"?> 
+<app>
+  <authentication>
+    <id>ds21.darkhorseventures.com</id> 
+    <code>BZTST27A</code> 
+    <client>autoguide</client> 
+    <clientId>*PUT YOUR ID HERE*</clientId>
+  </authentication>
+  <transaction id="12">
+    <meta>
+      <property>guid</property>
+      <property>make_id</property>
+      <property>make_name</property>
+      <property>etc..</property>
+    </meta>
+    <makeList action="select">
+      <lastSyncAnchor/>
+      <nextSyncAnchor>2002-04-16 15:30:30</nextSyncAnchor>
+    </vehicleList>
+  </transaction>
+  <transaction id="13">
+    <meta>
+      <property>guid</property>
+      <property>vehicle_id</property>
+      <property>make_id</property>
+      <property>etc..</property>
+    </meta>
+    <vehicleList action="select">
+      <lastSyncAnchor/>
+      <nextSyncAnchor>2002-04-16 15:30:30</nextSyncAnchor>
+    </vehicleList>
+  </transaction>
+</app>
+
+...Client finalizes sync:
+
+<?xml version="1.0" standalone="yes"?> 
+<app>
+  <authentication>
+    <id>ds21.darkhorseventures.com</id> 
+    <code>BZTST27A</code> 
+    <client>autoguide</client> 
+    <clientId>*PUT YOUR ID HERE*</clientId>
+  </authentication>
+  <transaction id="14">
+    <syncClient action="update">
+      <id>*PUT YOUR ID HERE*</id>
+      <anchor>20020416155045</anchor>
+    </syncClient>
+  </transaction>
+</app>
+
