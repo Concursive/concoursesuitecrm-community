@@ -1,11 +1,5 @@
 -- Script (C) 2004 Dark Horse Ventures, all rights reserved
 -- Database upgrade v2.8 (2004-06-15)
--- NOT FINISHED YET
--- TODO: Compare with postgresql for anything that might have been missed
---       X Tables
---       - Constraints
---       X Foreign Keys
---       - Inserts
 
 ALTER TABLE organization ADD [import_id] [int] NULL;
 
