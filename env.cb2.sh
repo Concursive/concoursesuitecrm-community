@@ -15,3 +15,5 @@ export CLASSPATH=.:${TOMCAT_HOME}/common/lib/servlet.jar:${TOMCAT_HOME}/common/l
 GKHOST="jdbc:postgresql://127.0.0.1:5432/cfs2gk"
 SITECODE="cfs"
 SITEHOME="/home"
+FORCESSL="true"
+

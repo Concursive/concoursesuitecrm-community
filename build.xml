@@ -27,6 +27,7 @@
   <property name="GKUSER" value="gatekeeper"/>
   <property name="GKUSERPW" value=""/>
   <property name="MAILSERVER" value="127.0.0.1"/>
+  <property name="FORCESSL" value="false"/>
 
   <!-- computed properties -->
   <property name="SRC" value="${basedir}"/>
@@ -107,11 +108,6 @@
         <srcfiles dir="${SRC_CLASSES}/com/zeroio" includes="**/*.java"/>
     </uptodate-->
     
-    <!--uptodate property="ChartServlet-uptodate" 
-                targetfile="${DEST_DOCROOT}/WEB-INF/classes/ChartServlet.class">
-        <srcfiles dir="${SRC_APP}" includes="WEB-INF/classes/ChartServlet.class"/>
-    </uptodate-->
-
     <uptodate property="site-uptodate" >
         <srcfiles dir="${SRC_APP}" >
           <include name="*" />
@@ -359,6 +355,8 @@ determined user is ${USER}
              token="@MAILSERVER@" value="${MAILSERVER}"/>
     <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
              token="@KEYSTORE@" value="${DEST_DOCROOT}/WEB-INF/keystore"/>
+    <replace file="${DEST_DOCROOT}/WEB-INF/web.xml"
+             token="@FORCESSL@" value="${FORCESSL}"/>
   </target>
 
   <target name="site" description="Install files to site" 
@@ -409,23 +407,8 @@ determined user is ${USER}
 
   </target>
 
-  <target name="ChartServlet" description="Install special class."
-          depends="init,site" unless="ChartServlet-uptodate">
-    <echo message="Installing ChartServlet"/>
-    <echo message=" Site code: ${SITECODE}"/>
-    <echo message=" Destination: ${DEST}"/>
-    <echo message=" Source: ${SRC_APP}"/>
-
-    <!-- ChartServlet.class needs to be integrated into JAR  -->
-    <copy todir="${DEST_DOCROOT}" >
-      <fileset dir="${SRC_APP}">
-        <include name="WEB-INF/classes/ChartServlet.class" />
-      </fileset>
-    </copy>
-  </target>
-
   <target name="lib" description="Install library files to site." 
-        depends="init,site,darkhorseventures,theseus,apps">
+        depends="init,darkhorseventures,theseus,apps,site">
     <echo message="Installing JAR files"/>
     <echo message=" Site code: ${SITECODE}"/>
     <echo message=" Destination: ${DEST_DOCROOT}"/>

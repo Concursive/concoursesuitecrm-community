@@ -88,7 +88,7 @@ Replaceable parameter  typical value / description
     </init-param>
     <init-param>
         <param-name>ForceSSL</param-name>
-        <param-value>false</param-value>
+        <param-value>@FORCESSL@</param-value>
     </init-param>
     <init-param>
         <param-name>SiteCode</param-name>
