@@ -47,7 +47,6 @@ public class CFSModule {
     return tmpInfo;
   }
 
-
   /**
    *  Retrieves a connection from the connection pool
    *

@@ -7,6 +7,8 @@ import com.darkhorseventures.utils.DatabaseUtils;
 import com.darkhorseventures.webutils.HtmlSelect;
 import java.util.StringTokenizer;
 import java.util.Enumeration;
+import com.darkhorseventures.utils.ObjectUtils;
+import java.util.Iterator;
 
 /**
  *  Allows information to be stored in an object for the pagedlist. <p>
@@ -366,6 +368,31 @@ public void setSavedCriteria(HashMap savedCriteria) {
 		}
 		
 	}
+  }
+  
+    
+  public boolean setSearchCriteria(Object obj) {
+	if (("search".equals(this.getListView())) && !(this.getSavedCriteria().isEmpty()) ) {
+	    
+	Iterator hashIterator = this.getSavedCriteria().keySet().iterator();
+	
+		while(hashIterator.hasNext()) {
+			String tempKey = (String)hashIterator.next();
+			
+			if (this.getCriteriaValue(tempKey) != null && !(this.getCriteriaValue(tempKey).trim().equals(""))) {
+				
+				//its an int
+				if (tempKey.startsWith("searchcode")) {
+					ObjectUtils.setParam(obj, tempKey.substring(10), this.getCriteriaValue(tempKey));
+				} else {
+					ObjectUtils.setParam(obj, tempKey.substring(6), "%" + this.getCriteriaValue(tempKey) + "%");
+				}
+			}
+		}
+	    
+    }
+	
+	return true;
   }
 
 

@@ -698,12 +698,9 @@ public final class Accounts extends CFSModule {
     try {
       db = this.getConnection(context);
       
-      if ("search".equals(orgListInfo.getListView())) {
-	      organizationList.setApplyPagedSearch(true);
-      }
-	    
       organizationList.setPagedListInfo(orgListInfo);
       organizationList.setMinerOnly(false);
+      orgListInfo.setSearchCriteria(organizationList);
 
       if ("my".equals(orgListInfo.getListView())) {
         organizationList.setOwnerId(this.getUserId(context));

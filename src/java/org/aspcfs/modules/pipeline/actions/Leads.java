@@ -618,11 +618,8 @@ public final class Leads extends CFSModule {
     try {
       db = this.getConnection(context);
       
-      if ("search".equals(oppListInfo.getListView())) {
-	      oppList.setApplyPagedSearch(true);
-      }
-      
       oppList.setPagedListInfo(oppListInfo);
+      oppListInfo.setSearchCriteria(oppList);
 
       if ("my".equals(oppListInfo.getListView())) {
 	oppList.setOwner(this.getUserId(context));
