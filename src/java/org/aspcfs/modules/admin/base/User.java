@@ -260,6 +260,8 @@ public class User extends GenericBean {
   public int generateRandomPassword(Connection db, ActionContext context) throws SQLException {
       int resultCount = -1;
       User modUser = null;
+      Contact targetContact = null;
+      
       String newPassword = randomstring(6,8);
       this.setPassword1(newPassword);
       this.setPassword2(newPassword);
@@ -270,15 +272,14 @@ public class User extends GenericBean {
           modUser.setBuildContact(true);
           modUser.buildRecord(db, modifiedBy);
           
-          this.setBuildContact(true);
-          this.buildResources(db);
-          
+          targetContact = new Contact(db, this.getContactId());
+                    
           //send email
           SMTPMessage mail = new SMTPMessage();
           mail.setHost("127.0.0.1");
           mail.setFrom("cfs-root@darkhorseventures.com");
           mail.setType("text/html");      
-          mail.setTo(this.getContact().getEmailAddress("Business"));
+          mail.setTo(targetContact.getEmailAddress("Business"));
           mail.setSubject("CFS password changed");
           mail.setBody("Your CFS User account password has been changed by " + modUser.getUsername() + " (" + modUser.getContact().getNameLastFirst() + ").<br><br>" +
             " Your new CFS password is the following:<br>" + newPassword + "<br><br>" +
@@ -1900,7 +1901,6 @@ public class User extends GenericBean {
     ResultSet rs = null;
 
     String range = ((UserList) this.getFullChildList(this.getShortChildList(), new UserList())).getUserListIds(this.getId());
-    System.out.println("Using: " + range);
 
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -1951,7 +1951,7 @@ public class User extends GenericBean {
         "UPDATE access " +
         "SET password = ? ");
     if (modifiedBy > -1) {
-      sql.append(", modifiedby = ? ");
+      sql.append(", modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
     }
     sql.append(" WHERE user_id = ? ");
     int i = 0;

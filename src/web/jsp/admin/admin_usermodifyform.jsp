@@ -41,6 +41,7 @@ Modify User<br>
 <br>
 &nbsp;
 <input type="hidden" name="id" value="<%= UserRecord.getId() %>">
+<input type="hidden" name="contactId" value="<%= UserRecord.getContactId() %>">
 
 <input type="hidden" name="previousUsername" value="<%= ((UserRecord.getPreviousUsername() == null)?UserRecord.getUsername():UserRecord.getPreviousUsername()) %>">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
