@@ -74,8 +74,10 @@
     <record name="${base.dir}/build.log" append="no"/>
     <fail unless="env.CATALINA_HOME">Initialization aborted ${lf}${lf}Environment variable CATALINA_HOME is not defined.</fail>
     <property name="CATALINA_HOME" value="${env.CATALINA_HOME}"/>
-    <fail unless="env.CFS_HOME">Initialization aborted ${lf}${lf}Environment variable CFS_HOME is not defined and should point to a Tomcat CFS web folder.</fail>
+    <!-- Check the current directory for a CFS_HOME, else use the global variable -->
+    <property file="${basedir}/home.properties"/>
     <property name="CFS_HOME" value="${env.CFS_HOME}"/>
+    <fail unless="CFS_HOME">Initialization aborted ${lf}${lf}Environment variable CFS_HOME is not defined and should point to a Tomcat CFS web folder.</fail>
   </target>
   
   <!-- See if servlet API file exists -->
