@@ -270,7 +270,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
 
         //Default no items
         if (myItems == 0) {
-          items.append("No Items Found<br>&nbsp;<br>");
+          items.append("No items found<br>&nbsp;<br>");
         }
       } catch (Exception e) {
         System.out.println("GlobalItemsHook Error-> " + e.toString());
