@@ -16,6 +16,7 @@ export TOMCAT_HOME=/usr/local/java/jwsdp-1_0
 export CLASSPATH=.:${TOMCAT_HOME}/common/lib/servlet.jar:${TOMCAT_HOME}/common/lib/mail.jar:${TOMCAT_HOME}/common/lib/mailapi.jar:${TOMCAT_HOME}/common/lib/smtp.jar:${TOMCAT_HOME}/common/lib/xerces.jar:${SITE_LIB}/darkhorseventures.jar:${SITE_LIB}/theseus.jar:${SITE_LIB}/zeroio-iteam.jar:${TOMCAT_HOME}/common/lib/activation.jar:${TOMCAT_HOME}/common/lib/pgjdbc2.jar
 
 # Site specific variables during installation
+GKDRIVER="org.postgresql.Driver"
 GKHOST="jdbc:postgresql://216.54.81.101:5432/cfs2gk"
 SITECODE="cfs"
 SITEHOME="/home/matt/webapps"
