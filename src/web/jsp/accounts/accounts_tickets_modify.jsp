@@ -333,8 +333,7 @@ Modify Ticket<br>
         <strong>Ticket Log History</strong>
       </td>     
     </tr>
-	
-	<%  
+<%  
 		Iterator hist = TicketDetails.getHistory().iterator();
 		if (hist.hasNext()) {
 			while (hist.hasNext()) {

@@ -4,10 +4,10 @@
 <jsp:useBean id="TicList" class="com.darkhorseventures.cfsbase.TicketList" scope="request"/>
 <jsp:useBean id="AccountTicketInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 Tickets<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -24,7 +24,7 @@ Tickets<br>
   </tr>
   <tr>
     <td class="containerBack">
-<dhv:permission name="accounts-accounts-tickets-add"><a href="/AccountTickets.do?command=AddTicket&orgId=<%= OrgDetails.getOrgId() %>">Add New Ticket</a>
+<dhv:permission name="accounts-accounts-tickets-add"><a href="AccountTickets.do?command=AddTicket&orgId=<%= OrgDetails.getOrgId() %>">Add New Ticket</a>
 <input type=hidden name="orgId" value="<%= OrgDetails.getOrgId() %>">
 <br>
 </dhv:permission>
@@ -41,16 +41,16 @@ Tickets<br>
       	<strong>Status</strong>
     </td>
     <td>
-      <strong><dhv:label name="tickets-problem"><a href="/Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=problem">Issue</a></dhv:label></strong>&nbsp;<%= AccountTicketInfo.getSortIcon("problem") %>
+      <strong><dhv:label name="tickets-problem"><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=problem">Issue</a></dhv:label></strong>&nbsp;<%= AccountTicketInfo.getSortIcon("problem") %>
     </td>
     <td>
-      <strong><a href="/Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=pri_code">Priority</a></strong>&nbsp;<%= AccountTicketInfo.getSortIcon("pri_code") %>
+      <strong><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=pri_code">Priority</a></strong>&nbsp;<%= AccountTicketInfo.getSortIcon("pri_code") %>
     </td>
     <td>
-      <strong><a href="/Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=entered">Age</a></strong>&nbsp;<%= AccountTicketInfo.getSortIcon("entered") %>
+      <strong><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=entered">Age</a></strong>&nbsp;<%= AccountTicketInfo.getSortIcon("entered") %>
     </td>
     <td valign=center align=left>
-      <strong><a href="/Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=modified">Last Modified</a></strong>&nbsp;<%= AccountTicketInfo.getSortIcon("modified") %>
+      <strong><a href="Accounts.do?command=ViewTickets&orgId=<%= OrgDetails.getOrgId() %>&column=modified">Last Modified</a></strong>&nbsp;<%= AccountTicketInfo.getSortIcon("modified") %>
     </td>
   </tr>
 <%
@@ -69,7 +69,7 @@ Tickets<br>
 	<tr class="containerBody">
     <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete">
     <td width=8 valign=center nowrap class="row<%= rowid %>">
-      <dhv:permission name="accounts-accounts-tickets-edit"><a href="/AccountTickets.do?command=ModifyTicket&id=<%=thisTic.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-tickets-delete"><a href="javascript:confirmDelete('/AccountTickets.do?command=DeleteTicket&orgId=<%=OrgDetails.getOrgId()%>&id=<%=thisTic.getId()%>');">Del</a></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-edit"><a href="AccountTickets.do?command=ModifyTicket&id=<%=thisTic.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-tickets-delete"><a href="javascript:confirmDelete('AccountTickets.do?command=DeleteTicket&orgId=<%=OrgDetails.getOrgId()%>&id=<%=thisTic.getId()%>');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
     <td width=8 nowrap valign=center class="row<%= rowid %>">
@@ -80,7 +80,7 @@ Tickets<br>
 <%}%>
     </td>
     <td  valign=center class="row<%= rowid %>">
-      <a href="/AccountTickets.do?command=TicketDetails&id=<%=thisTic.getId()%>">
+      <a href="AccountTickets.do?command=TicketDetails&id=<%=thisTic.getId()%>">
 	<%= toHtml(thisTic.getProblemHeader()) %>
 	</a>&nbsp;
 	<% if (thisTic.getCategoryName() != null) { %>

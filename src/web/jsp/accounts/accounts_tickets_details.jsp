@@ -2,13 +2,12 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <form name="details" action="AccountTickets.do?command=ModifyTicket&auto-populate=true" method="post">
-
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>">Account Details</a> >
-<a href="/Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>">Tickets</a> >
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>">Tickets</a> >
 Ticket Details<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -196,13 +195,13 @@ Ticket Details<br>
 <% } else { %>
   <tr class="containerBody">
 <%}%>
-    <td nowrap valign=center width=100 class="formLabel">
+    <td nowrap valign="top" width=100 class="formLabel">
       <%=toHtml(thisEntry.getEnteredByName())%>
     </td>
-    <td nowrap valign=center width=150>
+    <td nowrap valign="top" width=150>
 			<%=thisEntry.getEnteredString()%>
     </td>
-    <td valign=center>
+    <td valign="top">
 			<%=toHtml(thisEntry.getEntryText())%>
     </td>
   </tr>
@@ -222,7 +221,7 @@ Ticket Details<br>
       <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Reopen" onClick="javascript:this.form.action='AccountTickets.do?command=ReopenTicket&id=<%=TicketDetails.getId()%>';submit();"></dhv:permission>
 <%} else {%>
       <dhv:permission name="accounts-accounts-tickets-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='AccountTickets.do?command=ModifyTicket&id=<%=TicketDetails.getId()%>';submit();"></dhv:permission>
-      <dhv:permission name="accounts-accounts-tickets-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='/AccountTickets.do?command=DeleteTicket&id=<%=TicketDetails.getId() %>';confirmSubmit(this.form);"></dhv:permission>
+      <dhv:permission name="accounts-accounts-tickets-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='AccountTickets.do?command=DeleteTicket&id=<%=TicketDetails.getId() %>';confirmSubmit(this.form);"></dhv:permission>
 <%}%>
 
 </td></tr>

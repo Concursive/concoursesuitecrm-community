@@ -13,7 +13,7 @@
 <jsp:useBean id="ContactList" class="com.darkhorseventures.cfsbase.ContactList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
   <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -70,10 +70,10 @@
   }
   
   </script>
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>">Tickets</a> >
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>">Tickets</a> >
 Add Ticket<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -90,14 +90,14 @@ Add Ticket<br>
   </tr>
   <tr>
     <td class="containerBack">
-<form name="addticket" action="/AccountTickets.do?command=InsertTicket&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<form name="addticket" action="AccountTickets.do?command=InsertTicket&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <% if (request.getParameter("contact") != null) {%>
 <input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
 <%} else {%>
 <input type="submit" value="Insert" name="Save">
 <%}%>
 
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
 
 <input type="reset" value="Reset">	
 <%= showAttribute(request, "closedError") %>
@@ -143,7 +143,7 @@ Add Ticket<br>
 <% if ( request.getParameter("contact") != null ) {%>
       checked
 <%}%>
-      onClick="javascript:this.form.action='/AccountTickets.do?command=AddTicket&auto-populate=true#newcontact';this.form.submit()">Add new
+      onClick="javascript:this.form.action='AccountTickets.do?command=AddTicket&auto-populate=true#newcontact';this.form.submit()">Add new
       <a name="newcontact"></a> 
     </td>
 	</tr>
@@ -351,7 +351,7 @@ Add Ticket<br>
 <input type="submit" value="Insert" name="Save">
 <%}%>
 
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 </td>
