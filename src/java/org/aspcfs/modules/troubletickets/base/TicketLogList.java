@@ -20,6 +20,12 @@ public class TicketLogList extends Vector {
 
   private PagedListInfo pagedListInfo = null;
   private int ticketId = -1;
+  
+  public final static String tableName = "ticketlog";
+  public final static String uniqueField = "id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
 
   /**
@@ -129,6 +135,15 @@ public class TicketLogList extends Vector {
       return true;
     }
   }
+  
+public String getTableName() { return tableName; }
+public String getUniqueField() { return uniqueField; }
+public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
+public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
+public int getSyncType() { return syncType; }
+public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
+public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
+public void setSyncType(int tmp) { this.syncType = tmp; }
 
 
   /**

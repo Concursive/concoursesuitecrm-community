@@ -358,5 +358,19 @@
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
     </map>
+    <map class="com.darkhorseventures.cfsbase.TicketLog" id="ticketLog">
+      <property alias="guid">id</property>
+      <property lookup="ticket">ticketId</property>
+      <property>entryText</property>
+      <property lookup="user">assignedTo</property>
+      <property lookup="ticketPriority">priorityCode</property>
+      <property>levelCode</property>
+      <property lookup="lookupDepartment">departmentCode</property>
+      <property>catCode</property>
+      <property lookup="ticketSeverity">severityCode</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>closed</property>
+    </map>
   </mappings>
 </CFSDatabaseReader>

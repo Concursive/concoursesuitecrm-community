@@ -9,6 +9,7 @@ import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.utils.DateUtils;
 
 /**
  *  Description of the Class
@@ -168,23 +169,12 @@ public class TicketLog extends GenericBean {
   }
 
 
-  /**
-   *  Sets the entered attribute of the TicketLog object
-   *
-   *@param  tmp  The new entered value
-   */
   public void setEntered(String tmp) {
-    this.entered = java.sql.Timestamp.valueOf(tmp);
+    this.entered = DateUtils.parseTimestampString(tmp);
   }
-
-
-  /**
-   *  Sets the modified attribute of the TicketLog object
-   *
-   *@param  tmp  The new modified value
-   */
+  
   public void setModified(String tmp) {
-    this.modified = java.sql.Timestamp.valueOf(tmp);
+    this.modified = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -305,6 +295,10 @@ public class TicketLog extends GenericBean {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
+  
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -317,7 +311,10 @@ public class TicketLog extends GenericBean {
     this.modifiedBy = tmp;
   }
 
-
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
+  
   /**
    *  Sets the PriorityCode attribute of the TicketLog object
    *
@@ -326,6 +323,10 @@ public class TicketLog extends GenericBean {
    */
   public void setPriorityCode(int tmp) {
     this.priorityCode = tmp;
+  }
+  
+  public void setPriorityCode(String tmp) {
+    this.priorityCode = Integer.parseInt(tmp);
   }
 
 
@@ -339,6 +340,9 @@ public class TicketLog extends GenericBean {
     this.levelCode = tmp;
   }
 
+  public void setLevelCode(String tmp) {
+    this.levelCode = Integer.parseInt(tmp);
+  }
 
   /**
    *  Sets the DepartmentCode attribute of the TicketLog object
@@ -350,6 +354,9 @@ public class TicketLog extends GenericBean {
     this.departmentCode = tmp;
   }
 
+  public void setDepartmentCode(String tmp) {
+    this.departmentCode = Integer.parseInt(tmp);
+  }
 
   /**
    *  Sets the CatCode attribute of the TicketLog object
@@ -359,6 +366,10 @@ public class TicketLog extends GenericBean {
    */
   public void setCatCode(int tmp) {
     this.catCode = tmp;
+  }
+  
+  public void setCatCode(String tmp) {
+    this.catCode = Integer.parseInt(tmp);
   }
 
 
@@ -370,6 +381,10 @@ public class TicketLog extends GenericBean {
    */
   public void setSeverityCode(int tmp) {
     this.severityCode = tmp;
+  }
+  
+  public void setSeverityCode(String tmp) {
+    this.severityCode = Integer.parseInt(tmp);
   }
 
 
@@ -723,11 +738,27 @@ public class TicketLog extends GenericBean {
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
-      pst.setInt(++i, this.getPriorityCode());
+        if (this.getPriorityCode() > -1) {
+                pst.setInt(++i, this.getPriorityCode());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
       pst.setInt(++i, this.getLevelCode());
-      pst.setInt(++i, this.getDepartmentCode());
-      pst.setInt(++i, this.getCatCode());
-      pst.setInt(++i, this.getSeverityCode());
+        if (this.getDepartmentCode() > -1) {
+                pst.setInt(++i, this.getDepartmentCode());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
+        if (this.getCatCode() > -1) {
+                pst.setInt(++i, this.getCatCode());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
+      if (this.getSeverityCode() > -1) {
+                pst.setInt(++i, this.getSeverityCode());
+      } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+      }
       pst.setInt(++i, this.getTicketId());
       pst.setString(++i, this.getEntryText());
       pst.setBoolean(++i, this.getClosed());
@@ -894,10 +925,22 @@ public class TicketLog extends GenericBean {
     entryText = rs.getString("comment");
     closed = rs.getBoolean("closed");
     priorityCode = rs.getInt("pri_code");
+    if (rs.wasNull()) {
+            priorityCode = -1;
+    }
     levelCode = rs.getInt("level_code");
     departmentCode = rs.getInt("department_code");
+    if (rs.wasNull()) {
+            departmentCode = -1;
+    }
     catCode = rs.getInt("cat_code");
+    if(rs.wasNull()) {
+            catCode = -1;
+    }
     severityCode = rs.getInt("scode");
+    if(rs.wasNull()) {
+            severityCode = -1;
+    }
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");

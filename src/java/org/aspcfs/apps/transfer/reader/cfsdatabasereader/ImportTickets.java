@@ -24,14 +24,28 @@ public class ImportTickets implements CFSDatabaseReaderImportModule {
   public boolean process(DataWriter writer, Connection db, PropertyMapList mappings) throws SQLException {
     this.writer = writer; 
     this.mappings = mappings;
+    boolean processOK = true;
     
     logger.info("ImportTickets-> Inserting Tickets");
-    //writer.setAutoCommit(true);
+    writer.setAutoCommit(false);
     TicketList ticList = new TicketList();
     ticList.setSendNotification(false);
     ticList.buildList(db);
     mappings.saveList(writer, ticList, "insert");
-    //writer.commit();
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }
+    
+    logger.info("ImportTickets-> Inserting Ticket Log");
+    writer.setAutoCommit(false);
+    TicketLogList ticketLogList = new TicketLogList();
+    ticketLogList.buildList(db);
+    mappings.saveList(writer, ticketLogList, "insert");
+    processOK = writer.commit();
+    if (!processOK) {
+      return false;
+    }    
     
     //update owners
     
