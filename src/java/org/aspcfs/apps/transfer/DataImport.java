@@ -25,7 +25,6 @@ public class DataImport {
    *@param  args  Description of the Parameter
    */
   public static void main(String args[]) {
-    System.setProperty("DEBUG", "1");
     //Initialize app from the config file
     if (args.length == 0) {
       System.out.println("Usage: DataImport [config file]");
@@ -60,6 +59,14 @@ public class DataImport {
       //Provide info about the config
       logger.info("Description: " + xml.getNodeText(xml.getFirstElement(xml.getDocumentElement(), "description")).trim());
 
+      try {
+        String debug = xml.getNodeText(xml.getFirstElement(xml.getDocumentElement(), "debug"));
+        if (debug != null) {
+          System.setProperty("DEBUG", debug);
+        }
+      } catch (NullPointerException nl) {
+      }
+      
       //Make sure the config has valid entries
       String readerClass = (String) xml.getFirstElement(xml.getDocumentElement(), "reader").getAttribute("class");
       String writerClass = (String) xml.getFirstElement(xml.getDocumentElement(), "writer").getAttribute("class");
