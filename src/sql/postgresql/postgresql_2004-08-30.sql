@@ -321,7 +321,9 @@ CREATE TABLE project_news (
     read_count integer DEFAULT 0 NOT NULL,
     enabled boolean DEFAULT true,
     status integer,
-    html boolean DEFAULT true NOT NULL
+    html boolean DEFAULT true NOT NULL,
+    start_date_timezone VARCHAR(255),
+    end_date_timezone VARCHAR(255)
 );
 
 
