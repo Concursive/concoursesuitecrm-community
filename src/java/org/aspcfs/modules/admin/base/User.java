@@ -1681,14 +1681,13 @@ public void setRevenueLock(boolean revenueLock) {
     sql.append(
         "SELECT sum(rv.amount) as s " +
         "FROM revenue rv " +
-        "WHERE rv.owner in (?) AND rv.year = ? ");
+        "WHERE rv.owner IN (" + childUsers.getUserListIds(id) + ") AND rv.year = ? ");
 	
     if (type > 0) {
 	sql.append("AND rv.type = ? ");
     }
     pst = db.prepareStatement(sql.toString());
     int i = 0;
-    pst.setString(++i, childUsers.getUserListIds(id));
     pst.setInt(++i, year);
     if (type > 0) {
 	    pst.setInt(++i, type);
