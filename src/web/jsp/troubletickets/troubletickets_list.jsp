@@ -39,7 +39,7 @@ View Tickets<br>
 	<tr class="row<%= rowid %>">
   <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
     <td rowspan="2" width="8" valign="top" nowrap>
-      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= assignedTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('TroubleTickets.do?command=Delete&id=<%= assignedTic.getId() %>');">Del</a></dhv:permission>
+      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= assignedTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= assignedTic.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');">Del</a></dhv:permission>
     </td>
   </dhv:permission>
 		<td width="15" valign="top" nowrap>
@@ -120,7 +120,7 @@ View Tickets<br>
 	<tr>
 	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
     <td rowspan="2" width="8" valign="top" nowrap class="row<%= rowid %>">
-      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= openTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('TroubleTickets.do?command=Delete&id=<%= openTic.getId() %>');">Del</a></dhv:permission>
+      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= openTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= openTic.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     	</dhv:permission>
 		<td width="15" valign="top" nowrap class="row<%= rowid %>">
@@ -207,7 +207,7 @@ View Tickets<br>
 	<tr class="row<%= rowid %>">
 	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
     <td rowspan="2" width="8" valign="top" nowrap>
-      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= thisTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:confirmDelete('TroubleTickets.do?command=Delete&id=<%= thisTic.getId() %>');">Del</a></dhv:permission>
+      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= thisTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= thisTic.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     	</dhv:permission>
 		<td width="15" valign="top" nowrap>
