@@ -30,7 +30,6 @@ Response Details
         <tr>
             <td>
 <%
-        System.out.println("1");
         Iterator z = ResponseDetails.iterator();
         
         if ( z.hasNext() ) {
@@ -62,12 +61,11 @@ Response Details
                    <td class="containerBody">
                     <table cellpadding="4" cellspacing="0" border="<%= border %>" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
                     <dhv:evaluate exp="<%= (type == SurveyQuestion.QUANT_COMMENTS) %>">
-                      <tr><td align="left" width="4">Answer</td><td align="left">Comment</td></tr>
+                      <tr><td align="left" width="4">Answer</td><td align="left">Comments</td></tr>
                     </dhv:evaluate>
                     <dhv:evaluate exp="<%= (type == SurveyQuestion.ITEMLIST) %>">
                       <tr><td width="100%" align="left">Item</td><td align="left">Selection</td></tr>
                       <% 
-                        System.out.println("2");
                         HashMap itemListResponse = thisItem.getItemListResponse(answers);
                         Iterator i = itemListResponse.keySet().iterator();
                         if(i.hasNext()){
@@ -83,7 +81,6 @@ Response Details
                     </dhv:evaluate>
                     <dhv:evaluate exp="<%= (type != SurveyQuestion.ITEMLIST) %>">
                       <%
-                      System.out.println("3");
                          Iterator answerList = answers.iterator();
                          if(answerList.hasNext()){
                           while(answerList.hasNext()){
@@ -91,20 +88,19 @@ Response Details
                        %>
                             
                             <dhv:evaluate exp="<%= (type == SurveyQuestion.OPEN_ENDED) %>">
-                              <tr><td width="100%" align="left"><li><%= thisAnswer.getComments() %></li></td></tr>
+                              <tr><td width="100%" align="left"><li><%= (thisAnswer.getComments() != null && !"".equals(thisAnswer.getComments())) ? "No comments provided" : thisAnswer.getComments() %></li></td></tr>
                             </dhv:evaluate>
                             <dhv:evaluate exp="<%= (type == SurveyQuestion.QUANT_NOCOMMENTS) %>">
-                              <tr><td width="100%" align="left"><li><%= thisAnswer.getQuantAns() %></li></td></tr>
+                              <tr><td width="100%" align="left"><li><%= thisAnswer.getQuantAns() != -1 ? thisAnswer.getQuantAns() : "No answer provided" %></li></td></tr>
                             </dhv:evaluate>
                             <dhv:evaluate exp="<%= (type == SurveyQuestion.QUANT_COMMENTS) %>">
-                              <tr><td width="4" align="left"><%= thisAnswer.getQuantAns() %></td><td align="left"><%= thisAnswer.getComments() %></td></tr>
+                              <tr><td width="4" align="center"><%= thisAnswer.getQuantAns()!= -1 ? thisAnswer.getQuantAns() : "-" %></td><td align="left"><%= (thisAnswer.getComments() != null && !"".thisAnswer.getComments()) ? thisAnswer.getComments() : "No comments provided" %></td></tr>
                             </dhv:evaluate>
                        <% }
                          }else{
                        %>
                           <tr><td width="100%" align="left">No Answers Found.</td></tr>
                        <%}
-                        System.out.println("4");
                         %>
                      </dhv:evaluate>
                     </table>
