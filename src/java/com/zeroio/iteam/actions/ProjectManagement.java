@@ -38,7 +38,7 @@ import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DateUtils;
 
 /**
- *  Project Management module for CFS
+ *  Project Management module
  *
  *@author     matt rajkowski
  *@created    November 6, 2001
