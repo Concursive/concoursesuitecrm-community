@@ -17,7 +17,7 @@ function checkForm(form) {
       formTest = false;
     }
     if ((form.username.value == "")) { 
-      message += "- Check that a User Name is entered\r\n";
+      message += "- Check that a Username is entered\r\n";
       formTest = false;
     }
     if ((form.password1.value == "") || (form.password2.value == "")) { 
@@ -61,13 +61,10 @@ Add User<br>
             <div id="changecontact"><%= UserRecord.getContactId() == -1 ? "None Selected" : UserRecord.getContact().getNameLastFirst() %></div>
           </td>
           <td valign="top" width="100%" nowrap>
-            <font color="red">*</font>
+            <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
             [<a href="javascript:popContactsListSingle('contactLink','changecontact','nonUsersOnly=true&reset=true&filters=accountcontacts|employees');">Select Contact</a>]
             <input type="hidden" name="contactId" id="contactLink" value="<%= UserRecord.getContactId() %>">
             [<a href="javascript:popURL('ExternalContacts.do?command=InsertContactForm&popup=true&source=adduser', 'New_Contact','500','600','yes','yes');">Create new contact</a>]
-          <%if (request.getAttribute("contactIdError") != null) {%>
-            <br><%= showAttribute(request, "contactIdError") %>
-          <%}%>
           </td>
         </tr>
       </table>
