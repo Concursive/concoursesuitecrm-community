@@ -53,6 +53,9 @@ public static String replace(String str, String o, String n) {
       htmlReady = replace(htmlReady, "\"", "&quot;");
       htmlReady = replace(htmlReady, "<", "&lt;");
       htmlReady = replace(htmlReady, ">", "&gt;");
+      htmlReady = replace(htmlReady, "\r\n", "<br>");
+      htmlReady = replace(htmlReady, "\n\r", "<br>");
+      htmlReady = replace(htmlReady, "\n", "<br>");
       htmlReady = replace(htmlReady, "\r", "<br>");
       htmlReady = replace(htmlReady, "/&lt;", "<");
       htmlReady = replace(htmlReady, "/&gt;", ">");

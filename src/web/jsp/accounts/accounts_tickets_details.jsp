@@ -51,7 +51,7 @@
       <dhv:label name="tickets-problem">Problem</dhv:label>
     </td>
 		<td valign=top>
-      <%=toHtml(TicketDetails.getProblem())%>
+      <%= toHtml(TicketDetails.getProblem()) %>
       <input type=hidden name=problem value="<%=toHtml(TicketDetails.getProblem())%>">
       <input type=hidden name=orgId value="<%=TicketDetails.getOrgId()%>">
       <input type=hidden name=id value="<%=TicketDetails.getId()%>">

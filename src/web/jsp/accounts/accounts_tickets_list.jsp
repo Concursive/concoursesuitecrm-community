@@ -89,7 +89,7 @@
       <%=thisTic.getAgeOf()%>
     </td>
     <td width=50% valign=center class="row<%= rowid %>">
-      <%=toHtml(thisTic.getProblem())%> <% if (thisTic.getCategoryName() != null) { %>[<%=toHtml(thisTic.getCategoryName())%>]<%}%>
+      <%= toHtml(thisTic.getProblem()) %> <% if (thisTic.getCategoryName() != null) { %>[<%=toHtml(thisTic.getCategoryName())%>]<%}%>
     </td>
 	</tr>
 <%}%>

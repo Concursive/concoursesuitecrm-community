@@ -24,14 +24,17 @@ public class XMLUtils {
     BufferedReader br = request.getReader();
     String line = null;
     if (System.getProperty("DEBUG") != null) System.out.println("XMLUtils->Reading XML from request");
+    boolean startElement = true;
+    boolean endElement = true;
     while ((line = br.readLine()) != null) {
-      data.append(line);
+      data.append(line.trim() + System.getProperty("line.separator"));
       if (System.getProperty("DEBUG") != null) System.out.println("  ++Line: " + line);
       if (cacheXML) {
         if (XMLString == null) XMLString = new StringBuffer();
         XMLString.append(line);
       }
     }
+    if (System.getProperty("DEBUG") != null) System.out.println("  XML: " + data.toString());
     this.parseXML(data.toString());
   }
   
@@ -49,6 +52,7 @@ public class XMLUtils {
     StringReader strXML = new StringReader(xmlToParse);
     InputSource isXML = new InputSource(strXML);
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    //factory.setIgnoringElementContentWhitespace(true);
     DocumentBuilder builder = factory.newDocumentBuilder();
     this.document = builder.parse(isXML);
   }
@@ -130,14 +134,23 @@ public class XMLUtils {
   }
 
   public static String getNodeText(Node element) {
+    String nodeText = null;
     NodeList nodeList = element.getChildNodes();
     for (int i = 0; i < nodeList.getLength(); i++) {
       Node thisNode = nodeList.item(i);
       if (thisNode.getNodeType() == Node.TEXT_NODE) {
-        return thisNode.getNodeValue();
+        nodeText = thisNode.getNodeValue();
       }
     }
-    return null;
+    int begin = 0;
+    int end = nodeText.length();
+    if (nodeText.startsWith(System.getProperty("line.separator"))) {
+      begin = (System.getProperty("line.separator").length());
+    }
+    if (nodeText.endsWith(System.getProperty("line.separator"))) {
+      end = end - (System.getProperty("line.separator").length());
+    }
+    return nodeText.substring(begin, end);
   }
   
   public static void populateObject(Object target, Element element) {
