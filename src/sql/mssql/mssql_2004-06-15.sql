@@ -1,6 +1,23 @@
 -- Database upgrade v2.8 (2004-06-15)
 -- NOT FINISHED YET
 -- TODO: Compare with postgresql for anything that might have been missed
+--       - Tables (ok)
+--       - Constaints
+--       - Foreign Keys
+
+ALTER TABLE organization ADD [import_id] [int] NULL;
+
+ALTER TABLE contact ADD [status_id] [int] NULL;
+ALTER TABLE contact ADD [import_id] [int] NULL;
+
+ALTER TABLE role ADD [role_type] [int] NULL;
+
+ALTER TABLE permission_category ADD [products] [bit] NOT NULL;
+
+ALTER TABLE contact_emailaddress ADD [primary_email] [bit] NOT NULL;
+
+ALTER TABLE sync_client ADD [enabled] [bit] NULL;
+ALTER TABLE sync_client ADD [code] [varchar] (255) NULL;
 
 CREATE TABLE [asset_category] (
 	[id] [int] IDENTITY (1, 1) NOT NULL ,
@@ -48,15 +65,6 @@ GO
 CREATE TABLE [lookup_currency] (
 	[code] [int] IDENTITY (1, 1) NOT NULL ,
 	[description] [varchar] (300) NOT NULL ,
-	[default_item] [bit] NULL ,
-	[level] [int] NULL ,
-	[enabled] [bit] NULL 
-) ON [PRIMARY]
-GO
-
-CREATE TABLE [lookup_delivery_options] (
-	[code] [int] IDENTITY (1, 1) NOT NULL ,
-	[description] [varchar] (50) NOT NULL ,
 	[default_item] [bit] NULL ,
 	[level] [int] NULL ,
 	[enabled] [bit] NULL 
@@ -297,9 +305,6 @@ CREATE TABLE [lookup_sc_type] (
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE permission_category ADD [products] [bit] NOT NULL;
-ALTER TABLE sync_client ADD [code] [varchar] (255) NULL;
-
 CREATE TABLE [category_editor_lookup] (
 	[id] [int] IDENTITY (1, 1) NOT NULL ,
 	[module_id] [int] NOT NULL ,
@@ -333,7 +338,14 @@ CREATE TABLE [import] (
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
-ALTER TABLE contact ADD [import_id] [int] NULL;
+CREATE TABLE [product_option_configurator] (
+	[configurator_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[short_description] [text] NULL ,
+	[long_description] [text] NULL ,
+	[class_name] [varchar] (255) NULL ,
+	[result_type] [int] NOT NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
 
 CREATE TABLE [product_catalog] (
 	[product_id] [int] IDENTITY (1, 1) NOT NULL ,
@@ -615,4 +627,2811 @@ CREATE TABLE [service_contract_products] (
 ) ON [PRIMARY]
 GO
 
+CREATE TABLE [customer_product] (
+	[customer_product_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[org_id] [int] NOT NULL ,
+	[order_id] [int] NULL ,
+	[order_item_id] [int] NULL ,
+	[description] [varchar] (2048) NULL ,
+	[status_id] [int] NULL ,
+	[status_date] [datetime] NULL ,
+	[entered] [datetime] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[enabled] [bit] NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [customer_product_history] (
+	[history_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[customer_product_id] [int] NOT NULL ,
+	[org_id] [int] NOT NULL ,
+	[order_id] [int] NULL ,
+	[product_start_date] [datetime] NULL ,
+	[product_end_date] [datetime] NULL ,
+	[entered] [datetime] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [order_address] (
+	[address_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[order_id] [int] NOT NULL ,
+	[address_type] [int] NULL ,
+	[addrline1] [varchar] (300) NULL ,
+	[addrline2] [varchar] (300) NULL ,
+	[addrline3] [varchar] (300) NULL ,
+	[city] [varchar] (300) NULL ,
+	[state] [varchar] (300) NULL ,
+	[country] [varchar] (300) NULL ,
+	[postalcode] [varchar] (40) NULL ,
+	[entered] [datetime] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [order_entry] (
+	[order_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[parent_id] [int] NULL ,
+	[org_id] [int] NOT NULL ,
+	[quote_id] [int] NULL ,
+	[sales_id] [int] NULL ,
+	[orderedby] [int] NULL ,
+	[billing_contact_id] [int] NULL ,
+	[source_id] [int] NULL ,
+	[grand_total] [float] NULL ,
+	[status_id] [int] NULL ,
+	[status_date] [datetime] NULL ,
+	[contract_date] [datetime] NULL ,
+	[expiration_date] [datetime] NULL ,
+	[order_terms_id] [int] NULL ,
+	[order_type_id] [int] NULL ,
+	[description] [varchar] (2048) NULL ,
+	[notes] [text] NULL ,
+	[entered] [datetime] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+CREATE TABLE [order_payment] (
+	[payment_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[order_id] [int] NOT NULL ,
+	[payment_method_id] [int] NOT NULL ,
+	[payment_amount] [float] NULL ,
+	[authorization_ref_number] [varchar] (30) NULL ,
+	[authorization_code] [varchar] (30) NULL ,
+	[authorization_date] [datetime] NULL ,
+	[entered] [datetime] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [order_product] (
+	[item_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[order_id] [int] NOT NULL ,
+	[product_id] [int] NOT NULL ,
+	[quantity] [int] NOT NULL ,
+	[msrp_currency] [int] NULL ,
+	[msrp_amount] [float] NOT NULL ,
+	[price_currency] [int] NULL ,
+	[price_amount] [float] NOT NULL ,
+	[recurring_currency] [int] NULL ,
+	[recurring_amount] [float] NOT NULL ,
+	[recurring_type] [int] NULL ,
+	[extended_price] [float] NOT NULL ,
+	[total_price] [float] NOT NULL ,
+	[status_id] [int] NULL ,
+	[status_date] [datetime] NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [order_product_option_boolean] (
+	[order_product_option_id] [int] NULL ,
+	[value] [bit] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [order_product_option_float] (
+	[order_product_option_id] [int] NULL ,
+	[value] [float] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [order_product_option_integer] (
+	[order_product_option_id] [int] NULL ,
+	[value] [int] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [order_product_option_text] (
+	[order_product_option_id] [int] NULL ,
+	[value] [text] NOT NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+CREATE TABLE [order_product_option_timestamp] (
+	[order_product_option_id] [int] NULL ,
+	[value] [datetime] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [order_product_options] (
+	[order_product_option_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[item_id] [int] NOT NULL ,
+	[product_option_id] [int] NOT NULL ,
+	[quantity] [int] NOT NULL ,
+	[price_currency] [int] NULL ,
+	[price_amount] [float] NOT NULL ,
+	[recurring_currency] [int] NULL ,
+	[recurring_amount] [float] NOT NULL ,
+	[recurring_type] [int] NULL ,
+	[extended_price] [float] NOT NULL ,
+	[total_price] [float] NOT NULL ,
+	[status_id] [int] NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [order_product_status] (
+	[order_product_status_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[order_id] [int] NOT NULL ,
+	[item_id] [int] NOT NULL ,
+	[status_id] [int] NULL ,
+	[entered] [datetime] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [payment_creditcard] (
+	[creditcard_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[payment_id] [int] NOT NULL ,
+	[card_type] [int] NULL ,
+	[card_number] [varchar] (300) NULL ,
+	[card_security_code] [varchar] (300) NULL ,
+	[expiration_month] [int] NULL ,
+	[expiration_year] [int] NULL ,
+	[name_on_card] [varchar] (300) NULL ,
+	[company_name_on_card] [varchar] (300) NULL ,
+	[entered] [datetime] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [payment_eft] (
+	[bank_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[payment_id] [int] NOT NULL ,
+	[bank_name] [varchar] (300) NULL ,
+	[routing_number] [varchar] (300) NULL ,
+	[account_number] [varchar] (300) NULL ,
+	[name_on_account] [varchar] (300) NULL ,
+	[company_name_on_account] [varchar] (300) NULL ,
+	[entered] [datetime] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [quote_entry] (
+	[quote_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[parent_id] [int] NULL ,
+	[org_id] [int] NOT NULL ,
+	[contact_id] [int] NULL ,
+	[source_id] [int] NULL ,
+	[grand_total] [float] NULL ,
+	[status_id] [int] NULL ,
+	[status_date] [datetime] NULL ,
+	[expiration_date] [datetime] NULL ,
+	[quote_terms_id] [int] NULL ,
+	[quote_type_id] [int] NULL ,
+	[issued] [datetime] NULL ,
+	[short_description] [text] NULL ,
+	[notes] [text] NULL ,
+	[ticketid] [int] NULL ,
+	[entered] [datetime] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[product_id] [int] NULL ,
+	[customer_product_id] [int] NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+CREATE TABLE [quote_notes] (
+	[notes_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[quote_id] [int] NULL ,
+	[notes] [text] NULL ,
+	[enteredby] [int] NOT NULL ,
+	[entered] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+CREATE TABLE [quote_product] (
+	[item_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[quote_id] [int] NOT NULL ,
+	[product_id] [int] NOT NULL ,
+	[quantity] [int] NOT NULL ,
+	[price_currency] [int] NULL ,
+	[price_amount] [float] NOT NULL ,
+	[recurring_currency] [int] NULL ,
+	[recurring_amount] [float] NOT NULL ,
+	[recurring_type] [int] NULL ,
+	[extended_price] [float] NOT NULL ,
+	[total_price] [float] NOT NULL ,
+	[estimated_delivery_date] [datetime] NULL ,
+	[status_id] [int] NULL ,
+	[status_date] [datetime] NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [quote_product_option_boolean] (
+	[quote_product_option_id] [int] NULL ,
+	[value] [bit] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [quote_product_option_float] (
+	[quote_product_option_id] [int] NULL ,
+	[value] [float] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [quote_product_option_integer] (
+	[quote_product_option_id] [int] NULL ,
+	[value] [int] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [quote_product_option_text] (
+	[quote_product_option_id] [int] NULL ,
+	[value] [text] NOT NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+CREATE TABLE [quote_product_option_timestamp] (
+	[quote_product_option_id] [int] NULL ,
+	[value] [datetime] NOT NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [quote_product_options] (
+	[quote_product_option_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[item_id] [int] NOT NULL ,
+	[product_option_id] [int] NOT NULL ,
+	[quantity] [int] NOT NULL ,
+	[price_currency] [int] NULL ,
+	[price_amount] [float] NOT NULL ,
+	[recurring_currency] [int] NULL ,
+	[recurring_amount] [float] NOT NULL ,
+	[recurring_type] [int] NULL ,
+	[extended_price] [float] NOT NULL ,
+	[total_price] [float] NOT NULL ,
+	[status_id] [int] NULL 
+) ON [PRIMARY]
+GO
+
+ALTER TABLE ticket ADD [link_contract_id] [int] NULL;
+ALTER TABLE ticket ADD [link_asset_id] [int] NULL;
+ALTER TABLE ticket ADD [product_id] [int] NULL;
+ALTER TABLE ticket ADD [customer_product_id] [int] NULL;
+ALTER TABLE ticket ADD [expectation] [int] NULL;
+
+CREATE TABLE [ticket_csstm_form] (
+	[form_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[link_ticket_id] [int] NULL ,
+	[phone_response_time] [varchar] (10) NULL ,
+	[engineer_response_time] [varchar] (10) NULL ,
+	[follow_up_required] [bit] NULL ,
+	[follow_up_description] [varchar] (2048) NULL ,
+	[alert_date] [datetime] NULL ,
+	[entered] [datetime] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[enabled] [bit] NULL ,
+	[travel_towards_sc] [bit] NULL ,
+	[labor_towards_sc] [bit] NULL 
+) ON [PRIMARY]
+GO
+
+CREATE TABLE [ticket_activity_item] (
+	[item_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[link_form_id] [int] NULL ,
+	[activity_date] [datetime] NULL ,
+	[description] [text] NULL ,
+	[travel_hours] [int] NULL ,
+	[travel_minutes] [int] NULL ,
+	[labor_hours] [int] NULL ,
+	[labor_minutes] [int] NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+CREATE TABLE [ticket_sun_form] (
+	[form_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[link_ticket_id] [int] NULL ,
+	[description_of_service] [text] NULL ,
+	[entered] [datetime] NOT NULL ,
+	[enteredby] [int] NOT NULL ,
+	[modified] [datetime] NOT NULL ,
+	[modifiedby] [int] NOT NULL ,
+	[enabled] [bit] NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+CREATE TABLE [trouble_asset_replacement] (
+	[replacement_id] [int] IDENTITY (1, 1) NOT NULL ,
+	[link_form_id] [int] NULL ,
+	[part_number] [varchar] (256) NULL ,
+	[part_description] [text] NULL 
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [asset_category] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [asset_category_draft] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_asset_status] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_creditcard_types] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_currency] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_delivery_options] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_email_model] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_hours_reason] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_onsite_model] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_order_source] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_order_status] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_order_terms] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_order_type] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_orderaddress_types] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_payment_methods] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_phone_model] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_product_category_type] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_product_conf_result] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_product_format] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_product_keyword] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_product_ship_time] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_product_shipping] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_product_tax] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_product_type] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_quote_source] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_quote_status] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_quote_terms] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_quote_type] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_recurring_type] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_response_model] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_sc_category] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [lookup_sc_type] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[code]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [category_editor_lookup] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [import] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[import_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [product_option_configurator] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[configurator_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [product_catalog] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[product_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [product_category] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[category_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [product_option] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[option_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [package] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[package_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [product_catalog_category_map] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [product_catalog_pricing] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[price_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [product_category_map] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [product_option_values] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[value_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [service_contract] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[contract_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [asset] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[asset_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [package_products_map] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [product_option_map] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[product_option_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [service_contract_hours] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[history_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [service_contract_products] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [customer_product] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[customer_product_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [customer_product_history] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[history_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [order_address] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[address_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [order_entry] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[order_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [order_payment] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[payment_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [order_product] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[item_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [order_product_options] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[order_product_option_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [order_product_status] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[order_product_status_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [payment_creditcard] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[creditcard_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [payment_eft] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[bank_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [quote_entry] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[quote_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [quote_notes] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[notes_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [quote_product] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[item_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [quote_product_options] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[quote_product_option_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [ticket_activity_item] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[item_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [ticket_csstm_form] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[form_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [ticket_sun_form] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[form_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [trouble_asset_replacement] WITH NOCHECK ADD 
+	 PRIMARY KEY  CLUSTERED 
+	(
+		[replacement_id]
+	)  ON [PRIMARY] 
+GO
+
+ALTER TABLE [asset_category] WITH NOCHECK ADD 
+	CONSTRAINT [DF__asset_cat__cat_l__542C7691] DEFAULT (0) FOR [cat_level],
+	CONSTRAINT [DF__asset_cat__full___55209ACA] DEFAULT ('') FOR [full_description],
+	CONSTRAINT [DF__asset_cat__defau__5614BF03] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__asset_cat__level__5708E33C] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__asset_cat__enabl__57FD0775] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [asset_category_draft] WITH NOCHECK ADD 
+	CONSTRAINT [DF__asset_cat__link___5AD97420] DEFAULT ((-1)) FOR [link_id],
+	CONSTRAINT [DF__asset_cat__cat_l__5BCD9859] DEFAULT (0) FOR [cat_level],
+	CONSTRAINT [DF__asset_cat__full___5CC1BC92] DEFAULT ('') FOR [full_description],
+	CONSTRAINT [DF__asset_cat__defau__5DB5E0CB] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__asset_cat__level__5EAA0504] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__asset_cat__enabl__5F9E293D] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_asset_status] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_as__defau__1BE81D6E] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_as__enabl__1CDC41A7] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_creditcard_types] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_cr__defau__7ADC2F5E] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_cr__level__7BD05397] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_cr__enabl__7CC477D0] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_currency] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_cu__defau__7226EDCC] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_cu__level__731B1205] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_cu__enabl__740F363E] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_email_model] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_em__defau__32CB82C6] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_em__enabl__33BFA6FF] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_hours_reason] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_ho__defau__369C13AA] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_ho__enabl__379037E3] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_onsite_model] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_on__defau__2EFAF1E2] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_on__enabl__2FEF161B] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_order_source] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_or__defau__25077354] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_or__level__25FB978D] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_or__enabl__26EFBBC6] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_order_status] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_or__defau__16B953FD] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_or__level__17AD7836] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_or__enabl__18A19C6F] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_order_terms] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_or__defau__2042BE37] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_or__level__2136E270] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_or__enabl__222B06A9] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_order_type] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_or__defau__1B7E091A] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_or__level__1C722D53] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_or__enabl__1D66518C] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_orderaddress_types] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_or__defau__69B1A35C] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_or__level__6AA5C795] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_or__enabl__6B99EBCE] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_payment_methods] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_pa__defau__76177A41] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_pa__level__770B9E7A] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_pa__enabl__77FFC2B3] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_phone_model] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_ph__defau__2B2A60FE] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_ph__enabl__2C1E8537] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_product_category_type] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_pr__defau__76EBA2E9] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_pr__level__77DFC722] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_pr__enabl__78D3EB5B] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_product_conf_result] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_pr__defau__6B44E613] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_pr__level__6C390A4C] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_pr__enabl__6D2D2E85] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_product_format] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_pr__defau__1293BD5E] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_pr__level__1387E197] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_pr__enabl__147C05D0] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_product_keyword] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_pr__defau__1446FBA6] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_pr__level__153B1FDF] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_pr__enabl__162F4418] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_product_ship_time] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_pr__defau__1C1D2798] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_pr__level__1D114BD1] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_pr__enabl__1E05700A] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_product_shipping] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_pr__defau__1758727B] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_pr__level__184C96B4] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_pr__enabl__1940BAED] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_product_tax] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_pr__defau__20E1DCB5] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_pr__level__21D600EE] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_pr__enabl__22CA2527] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_product_type] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_pr__defau__0DCF0841] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_pr__level__0EC32C7A] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_pr__enabl__0FB750B3] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_quote_source] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_qu__defau__5E74FADA] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_qu__level__5F691F13] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_qu__enabl__605D434C] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_quote_status] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_qu__defau__5026DB83] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_qu__level__511AFFBC] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_qu__enabl__520F23F5] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_quote_terms] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_qu__defau__59B045BD] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_qu__level__5AA469F6] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_qu__enabl__5B988E2F] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_quote_type] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_qu__defau__54EB90A0] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_qu__level__55DFB4D9] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_qu__enabl__56D3D912] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_recurring_type] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_re__defau__25A691D2] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_re__level__269AB60B] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__lookup_re__enabl__278EDA44] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_response_model] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_re__defau__2759D01A] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_re__enabl__284DF453] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_sc_category] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_sc__defau__1FB8AE52] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_sc__enabl__20ACD28B] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [lookup_sc_type] WITH NOCHECK ADD 
+	CONSTRAINT [DF__lookup_sc__defau__23893F36] DEFAULT (0) FOR [default_item],
+	CONSTRAINT [DF__lookup_sc__enabl__247D636F] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [permission_category] WITH NOCHECK ADD 
+	CONSTRAINT [DF__permissio__produ__03F0984C] DEFAULT (0) FOR [products]
+GO
+
+ALTER TABLE [category_editor_lookup] WITH NOCHECK ADD 
+	CONSTRAINT [DF__category___level__793DFFAF] DEFAULT (0) FOR [level],
+	CONSTRAINT [DF__category___enter__7A3223E8] DEFAULT (getdate()) FOR [entered]
+GO
+
+ALTER TABLE [import] WITH NOCHECK ADD 
+	CONSTRAINT [DF__import__entered__4589517F] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__import__modified__477199F1] DEFAULT (getdate()) FOR [modified]
+GO
+
+ALTER TABLE [product_catalog] WITH NOCHECK ADD 
+	CONSTRAINT [DF__product_c__in_st__2C538F61] DEFAULT (1) FOR [in_stock],
+	CONSTRAINT [DF__product_c__list___33008CF0] DEFAULT (10) FOR [list_order],
+	CONSTRAINT [DF__product_c__enter__34E8D562] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__product_c__modif__36D11DD4] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__product_c__start__37C5420D] DEFAULT (null) FOR [start_date],
+	CONSTRAINT [DF__product_c__expir__38B96646] DEFAULT (null) FOR [expiration_date],
+	CONSTRAINT [DF__product_c__enabl__39AD8A7F] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [product_category] WITH NOCHECK ADD 
+	CONSTRAINT [DF__product_c__list___00750D23] DEFAULT (10) FOR [list_order],
+	CONSTRAINT [DF__product_c__enter__025D5595] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__product_c__modif__04459E07] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__product_c__start__0539C240] DEFAULT (null) FOR [start_date],
+	CONSTRAINT [DF__product_c__expir__062DE679] DEFAULT (null) FOR [expiration_date],
+	CONSTRAINT [DF__product_c__enabl__07220AB2] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [product_option] WITH NOCHECK ADD 
+	CONSTRAINT [DF__product_o__allow__74CE504D] DEFAULT (0) FOR [allow_customer_configure],
+	CONSTRAINT [DF__product_o__allow__75C27486] DEFAULT (0) FOR [allow_user_configure],
+	CONSTRAINT [DF__product_o__requi__76B698BF] DEFAULT (0) FOR [required],
+	CONSTRAINT [DF__product_o__start__77AABCF8] DEFAULT (null) FOR [start_date],
+	CONSTRAINT [DF__product_o__end_d__789EE131] DEFAULT (null) FOR [end_date],
+	CONSTRAINT [DF__product_o__enabl__7993056A] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [contact_emailaddress] WITH NOCHECK ADD 
+	CONSTRAINT [DF__contact_e__prima__4A8310C6] DEFAULT (0) FOR [primary_email]
+GO
+
+ALTER TABLE [package] WITH NOCHECK ADD 
+	CONSTRAINT [DF__package__list_or__5090EFD7] DEFAULT (10) FOR [list_order],
+	CONSTRAINT [DF__package__entered__52793849] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__package__modifie__546180BB] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__package__start_d__5555A4F4] DEFAULT (null) FOR [start_date],
+	CONSTRAINT [DF__package__expirat__5649C92D] DEFAULT (null) FOR [expiration_date],
+	CONSTRAINT [DF__package__enabled__573DED66] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [product_catalog_pricing] WITH NOCHECK ADD 
+	CONSTRAINT [DF__product_c__msrp___3F6663D5] DEFAULT (0) FOR [msrp_amount],
+	CONSTRAINT [DF__product_c__price__414EAC47] DEFAULT (0) FOR [price_amount],
+	CONSTRAINT [DF__product_c__recur__4336F4B9] DEFAULT (0) FOR [recurring_amount],
+	CONSTRAINT [DF__product_c__enter__46136164] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__product_c__modif__47FBA9D6] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__product_c__start__48EFCE0F] DEFAULT (null) FOR [start_date],
+	CONSTRAINT [DF__product_c__expir__49E3F248] DEFAULT (null) FOR [expiration_date]
+GO
+
+ALTER TABLE [product_option_values] WITH NOCHECK ADD 
+	CONSTRAINT [DF__product_o__msrp___7E57BA87] DEFAULT (0) FOR [msrp_amount],
+	CONSTRAINT [DF__product_o__price__004002F9] DEFAULT (0) FOR [price_amount],
+	CONSTRAINT [DF__product_o__recur__02284B6B] DEFAULT (0) FOR [recurring_amount]
+GO
+
+ALTER TABLE [service_contract] WITH NOCHECK ADD 
+	CONSTRAINT [DF__service_c__enter__420DC656] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__service_c__modif__43F60EC8] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__service_c__enabl__45DE573A] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [asset] WITH NOCHECK ADD 
+	CONSTRAINT [DF__asset__entered__6C040022] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__asset__modified__6DEC4894] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__asset__enabled__6FD49106] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [package_products_map] WITH NOCHECK ADD 
+	CONSTRAINT [DF__package_p__msrp___5CF6C6BC] DEFAULT (0) FOR [msrp_amount],
+	CONSTRAINT [DF__package_p__price__5EDF0F2E] DEFAULT (0) FOR [price_amount],
+	CONSTRAINT [DF__package_p__enter__60C757A0] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__package_p__modif__62AFA012] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__package_p__start__63A3C44B] DEFAULT (null) FOR [start_date],
+	CONSTRAINT [DF__package_p__expir__6497E884] DEFAULT (null) FOR [expiration_date]
+GO
+
+ALTER TABLE [service_contract_hours] WITH NOCHECK ADD 
+	CONSTRAINT [DF__service_c__enter__4AA30C57] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__service_c__modif__4C8B54C9] DEFAULT (getdate()) FOR [modified]
+GO
+
+ALTER TABLE [customer_product] WITH NOCHECK ADD 
+	CONSTRAINT [DF__customer___statu__1960B67E] DEFAULT (getdate()) FOR [status_date],
+	CONSTRAINT [DF__customer___enter__1A54DAB7] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__customer___modif__1C3D2329] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__customer___enabl__1E256B9B] DEFAULT (1) FOR [enabled]
+GO
+
+ALTER TABLE [customer_product_history] WITH NOCHECK ADD 
+	CONSTRAINT [DF__customer___enter__23DE44F1] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__customer___modif__25C68D63] DEFAULT (getdate()) FOR [modified]
+GO
+
+ALTER TABLE [order_address] WITH NOCHECK ADD 
+	CONSTRAINT [DF__order_add__enter__705EA0EB] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__order_add__modif__7246E95D] DEFAULT (getdate()) FOR [modified]
+GO
+
+ALTER TABLE [order_entry] WITH NOCHECK ADD 
+	CONSTRAINT [DF__order_ent__statu__316D4A39] DEFAULT (getdate()) FOR [status_date],
+	CONSTRAINT [DF__order_ent__contr__32616E72] DEFAULT (null) FOR [contract_date],
+	CONSTRAINT [DF__order_ent__expir__335592AB] DEFAULT (null) FOR [expiration_date],
+	CONSTRAINT [DF__order_ent__enter__3631FF56] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__order_ent__modif__381A47C8] DEFAULT (getdate()) FOR [modified]
+GO
+
+ALTER TABLE [order_payment] WITH NOCHECK ADD 
+	CONSTRAINT [DF__order_pay__enter__01892CED] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__order_pay__modif__0371755F] DEFAULT (getdate()) FOR [modified]
+GO
+
+ALTER TABLE [order_product] WITH NOCHECK ADD 
+	CONSTRAINT [DF__order_pro__quant__3DD3211E] DEFAULT (0) FOR [quantity],
+	CONSTRAINT [DF__order_pro__msrp___3FBB6990] DEFAULT (0) FOR [msrp_amount],
+	CONSTRAINT [DF__order_pro__price__41A3B202] DEFAULT (0) FOR [price_amount],
+	CONSTRAINT [DF__order_pro__recur__438BFA74] DEFAULT (0) FOR [recurring_amount],
+	CONSTRAINT [DF__order_pro__exten__457442E6] DEFAULT (0) FOR [extended_price],
+	CONSTRAINT [DF__order_pro__total__4668671F] DEFAULT (0) FOR [total_price],
+	CONSTRAINT [DF__order_pro__statu__4850AF91] DEFAULT (getdate()) FOR [status_date]
+GO
+
+ALTER TABLE [order_product_options] WITH NOCHECK ADD 
+	CONSTRAINT [DF__order_pro__quant__55AAAAAF] DEFAULT (0) FOR [quantity],
+	CONSTRAINT [DF__order_pro__price__5792F321] DEFAULT (0) FOR [price_amount],
+	CONSTRAINT [DF__order_pro__recur__597B3B93] DEFAULT (0) FOR [recurring_amount],
+	CONSTRAINT [DF__order_pro__exten__5B638405] DEFAULT (0) FOR [extended_price],
+	CONSTRAINT [DF__order_pro__total__5C57A83E] DEFAULT (0) FOR [total_price]
+GO
+
+ALTER TABLE [order_product_status] WITH NOCHECK ADD 
+	CONSTRAINT [DF__order_pro__enter__4E0988E7] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__order_pro__modif__4FF1D159] DEFAULT (getdate()) FOR [modified]
+GO
+
+ALTER TABLE [payment_creditcard] WITH NOCHECK ADD 
+	CONSTRAINT [DF__payment_c__enter__092A4EB5] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__payment_c__modif__0B129727] DEFAULT (getdate()) FOR [modified]
+GO
+
+ALTER TABLE [payment_eft] WITH NOCHECK ADD 
+	CONSTRAINT [DF__payment_e__enter__0FD74C44] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__payment_e__modif__11BF94B6] DEFAULT (getdate()) FOR [modified]
+GO
+
+ALTER TABLE [quote_entry] WITH NOCHECK ADD 
+	CONSTRAINT [DF__quote_ent__statu__67FE6514] DEFAULT (getdate()) FOR [status_date],
+	CONSTRAINT [DF__quote_ent__expir__68F2894D] DEFAULT (null) FOR [expiration_date],
+	CONSTRAINT [DF__quote_ent__issue__6BCEF5F8] DEFAULT (getdate()) FOR [issued],
+	CONSTRAINT [DF__quote_ent__enter__6DB73E6A] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__quote_ent__modif__6F9F86DC] DEFAULT (getdate()) FOR [modified]
+GO
+
+ALTER TABLE [quote_notes] WITH NOCHECK ADD 
+	CONSTRAINT [DF__quote_not__enter__25E688F4] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__quote_not__modif__27CED166] DEFAULT (getdate()) FOR [modified]
+GO
+
+ALTER TABLE [quote_product] WITH NOCHECK ADD 
+	CONSTRAINT [DF__quote_pro__quant__75586032] DEFAULT (0) FOR [quantity],
+	CONSTRAINT [DF__quote_pro__price__7740A8A4] DEFAULT (0) FOR [price_amount],
+	CONSTRAINT [DF__quote_pro__recur__7928F116] DEFAULT (0) FOR [recurring_amount],
+	CONSTRAINT [DF__quote_pro__exten__7B113988] DEFAULT (0) FOR [extended_price],
+	CONSTRAINT [DF__quote_pro__total__7C055DC1] DEFAULT (0) FOR [total_price],
+	CONSTRAINT [DF__quote_pro__statu__7DEDA633] DEFAULT (getdate()) FOR [status_date]
+GO
+
+ALTER TABLE [quote_product_options] WITH NOCHECK ADD 
+	CONSTRAINT [DF__quote_pro__quant__02B25B50] DEFAULT (0) FOR [quantity],
+	CONSTRAINT [DF__quote_pro__price__049AA3C2] DEFAULT (0) FOR [price_amount],
+	CONSTRAINT [DF__quote_pro__recur__0682EC34] DEFAULT (0) FOR [recurring_amount],
+	CONSTRAINT [DF__quote_pro__exten__086B34A6] DEFAULT (0) FOR [extended_price],
+	CONSTRAINT [DF__quote_pro__total__095F58DF] DEFAULT (0) FOR [total_price]
+GO
+
+ALTER TABLE [ticket_csstm_form] WITH NOCHECK ADD 
+	CONSTRAINT [DF__ticket_cs__follo__3943762B] DEFAULT (0) FOR [follow_up_required],
+	CONSTRAINT [DF__ticket_cs__enter__3A379A64] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__ticket_cs__modif__3C1FE2D6] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__ticket_cs__enabl__3E082B48] DEFAULT (1) FOR [enabled],
+	CONSTRAINT [DF__ticket_cs__trave__3EFC4F81] DEFAULT (1) FOR [travel_towards_sc],
+	CONSTRAINT [DF__ticket_cs__labor__3FF073BA] DEFAULT (1) FOR [labor_towards_sc]
+GO
+
+ALTER TABLE [ticket_sun_form] WITH NOCHECK ADD 
+	CONSTRAINT [DF__ticket_su__enter__469D7149] DEFAULT (getdate()) FOR [entered],
+	CONSTRAINT [DF__ticket_su__modif__4885B9BB] DEFAULT (getdate()) FOR [modified],
+	CONSTRAINT [DF__ticket_su__enabl__4A6E022D] DEFAULT (1) FOR [enabled]
+GO
+
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(18,1,'accounts-service-contracts',1,1,1,1,'Service Contracts',180,1,1,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(19,1,'accounts-assets',1,1,1,1,'Assets',190,1,1,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(20,1,'accounts-accounts-tickets-maintenance-report',1,1,1,1,'Ticket Maintenance Notes',200,1,1,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(21,1,'accounts-accounts-tickets-activity-log',1,1,1,1,'Ticket Activities',210,1,1,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(22,1,'portal-user',1,1,1,1,'Customer Portal User',220,1,1,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(23,1,'accounts-quotes',1,1,1,1,'Quotes',230,0,0,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(24,1,'accounts-orders',1,1,1,1,'Orders',240,0,0,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(25,1,'accounts-products',1,1,1,1,'Products and Services',250,0,0,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(33,2,'contacts-external_contacts-imports',1,1,1,1,'Imports',80,1,1,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(57,8,'tickets-maintenance-report',1,1,1,1,'Maintenance Notes',50,1,1,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(58,8,'tickets-activity-log',1,1,1,1,'Activities',60,1,1,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(68,9,'admin-sysconfig-products',1,1,1,1,'Labor Category Editor',100,1,1,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(86,17,'product-catalog',1,0,0,0,'Access to Product Catalog module',10,0,0,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(87,17,'product-catalog-product',1,1,1,1,'Products',20,0,0,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(88,18,'products',1,0,0,0,'Access to Products and Services module',10,1,1,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(89,19,'quotes',1,1,1,1,'Access to Quotes module',10,1,1,0)
+INSERT [permission] ([permission_id],[category_id],[permission],[permission_view],[permission_add],[permission_edit],[permission_delete],[description],[level],[enabled],[active],[viewpoints])VALUES(90,20,'orders',1,1,1,1,'Access to Orders module',10,1,1,0)
+
+INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(16,8,NULL,'open_calls_report.xml',1,'Open Calls','Which tickets are open?','Jun 15 2004  8:49:59:000AM',0,'Jun 15 2004  8:49:59:000AM',0,1,0)
+INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(17,8,NULL,'contract_review_report.xml',1,'Contract Review','What is the expiration date for each contract?','Jun 15 2004  8:49:59:000AM',0,'Jun 15 2004  8:49:59:000AM',0,1,0)
+INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(18,8,NULL,'call_history_report.xml',1,'Call History','How have tickets been resolved?','Jun 15 2004  8:49:59:010AM',0,'Jun 15 2004  8:49:59:010AM',0,1,0)
+INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(19,8,NULL,'assets_under_contract_report.xml',1,'Assets Under Contract','Which assets are covered by contracts?','Jun 15 2004  8:49:59:010AM',0,'Jun 15 2004  8:49:59:010AM',0,1,0)
+INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(20,8,NULL,'activity_log_report.xml',1,'Contract Activity Summary','What is the hourly summary for each contract?','Jun 15 2004  8:49:59:010AM',0,'Jun 15 2004  8:49:59:010AM',0,1,0)
+INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(21,8,NULL,'callvolume_day_assignee.xml',1,'Call Volume by Assignee per Day','How many tickets are there by assignee per day?','Jun 15 2004  8:49:59:020AM',0,'Jun 15 2004  8:49:59:020AM',0,1,0)
+INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(22,8,NULL,'callvolume_month_assignee.xml',1,'Call Volume by Assignee per Month','How many tickets are there by assignee per month?','Jun 15 2004  8:49:59:020AM',0,'Jun 15 2004  8:49:59:020AM',0,1,0)
+INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(23,8,NULL,'callvolume_day_cat.xml',1,'Call Volume by Category per Day','How many tickets are there by category per day?','Jun 15 2004  8:49:59:020AM',0,'Jun 15 2004  8:49:59:020AM',0,1,0)
+INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(24,8,NULL,'callvolume_month_cat.xml',1,'Call Volume by Category per Month','How many tickets are there by category per month?','Jun 15 2004  8:49:59:020AM',0,'Jun 15 2004  8:49:59:020AM',0,1,0)
+INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(25,8,NULL,'callvolume_day_enteredby.xml',1,'Call Volume by User Entered per Day','How many tickets are there by user who entered the ticket per day?','Jun 15 2004  8:49:59:030AM',0,'Jun 15 2004  8:49:59:030AM',0,1,0)
+INSERT [report] ([report_id],[category_id],[permission_id],[filename],[type],[title],[description],[entered],[enteredby],[modified],[modifiedby],[enabled],[custom])VALUES(26,8,NULL,'callvolume_month_ent.xml',1,'Call Volume by User Entered per Month','How many tickets are there by user who entered the ticket per month?','Jun 15 2004  8:49:59:030AM',0,'Jun 15 2004  8:49:59:030AM',0,1,0)
+
+-- Insert default lookup_order_status
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_order_status] ON
+GO
+INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Pending',0,0,1)
+INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(2,'In Progress',0,0,1)
+INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Cancelled',0,0,1)
+INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Rejected',0,0,1)
+INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Complete',0,0,1)
+INSERT [lookup_order_status] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Closed',0,0,1)
+
+SET IDENTITY_INSERT [lookup_order_status] OFF
+GO
+SET NOCOUNT OFF
+ 
+-- Insert default lookup_order_type
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_order_type] ON
+GO
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(1,'New',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Change',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Upgrade',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Downgrade',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Disconnect',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Move',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(7,'Return',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(8,'Suspend',0,0,1)
+INSERT [lookup_order_type] ([code],[description],[default_item],[level],[enabled])VALUES(9,'Unsuspend',0,0,1)
+
+SET IDENTITY_INSERT [lookup_order_type] OFF
+GO
+SET NOCOUNT OFF
+ 
+-- Insert default lookup_asset_status
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_asset_status] ON
+GO
+INSERT [lookup_asset_status] ([code],[description],[default_item],[level],[enabled])VALUES(1,'In use',0,10,1)
+INSERT [lookup_asset_status] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Not in use',0,20,1)
+INSERT [lookup_asset_status] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Requires maintenance',0,30,1)
+INSERT [lookup_asset_status] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Retired',0,40,1)
+
+SET IDENTITY_INSERT [lookup_asset_status] OFF
+GO
+SET NOCOUNT OFF
+ 
+-- Insert default lookup_sc_category
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_sc_category] ON
+GO
+INSERT [lookup_sc_category] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Consulting',0,10,1)
+INSERT [lookup_sc_category] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Hardware Maintenance',0,20,1)
+INSERT [lookup_sc_category] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Manufacturer''s Maintenance',0,30,1)
+INSERT [lookup_sc_category] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Monitoring',0,40,1)
+INSERT [lookup_sc_category] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Time and Materials',0,50,1)
+INSERT [lookup_sc_category] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Warranty',0,60,1)
+
+SET IDENTITY_INSERT [lookup_sc_category] OFF
+GO
+SET NOCOUNT OFF
+ 
+-- Insert default lookup_response_model
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_response_model] ON
+GO
+INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(1,'M-F 8AM-5PM 8 hours',0,10,1)
+INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(2,'M-F 8AM-5PM 6 hours',0,20,1)
+INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(3,'M-F 8AM-5PM 4 hours',0,30,1)
+INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(4,'M-F 8AM-5PM same day',0,40,1)
+INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(5,'M-F 8AM-5PM next business day',0,50,1)
+INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(6,'M-F 8AM-8PM 4 hours',0,60,1)
+INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(7,'M-F 8AM-8PM 2 hours',0,70,1)
+INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(8,'24x7 8 hours',0,80,1)
+INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(9,'24x7 4 hours',0,90,1)
+INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(10,'24x7 2 hours',0,100,1)
+INSERT [lookup_response_model] ([code],[description],[default_item],[level],[enabled])VALUES(11,'No response time guaranteed',0,110,1)
+
+SET IDENTITY_INSERT [lookup_response_model] OFF
+GO
+SET NOCOUNT OFF
+ 
+INSERT [module_field_categorylink] ([id],[module_id],[category_id],[level],[description],[entered])VALUES(4,17,200403192,10,'Product Catalog Categories','Jun 15 2004  8:49:59:710AM')
+
+-- Insert default lookup_phone_model
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_phone_model] ON
+GO
+INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(1,'< 15 minutes',0,10,1)
+INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(2,'< 5 minutes',0,20,1)
+INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(3,'M-F 7AM-4PM',0,30,1)
+INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(4,'M-F 8AM-5PM',0,40,1)
+INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(5,'M-F 8AM-8PM',0,50,1)
+INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(6,'24x7',0,60,1)
+INSERT [lookup_phone_model] ([code],[description],[default_item],[level],[enabled])VALUES(7,'No phone support',0,70,1)
+
+SET IDENTITY_INSERT [lookup_phone_model] OFF
+GO
+SET NOCOUNT OFF
+ 
+-- Insert default lookup_onsite_model
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_onsite_model] ON
+GO
+INSERT [lookup_onsite_model] ([code],[description],[default_item],[level],[enabled])VALUES(1,'M-F 7AM-4PM',0,10,1)
+INSERT [lookup_onsite_model] ([code],[description],[default_item],[level],[enabled])VALUES(2,'M-F 8AM-5PM',0,20,1)
+INSERT [lookup_onsite_model] ([code],[description],[default_item],[level],[enabled])VALUES(3,'M-F 8AM-8PM',0,30,1)
+INSERT [lookup_onsite_model] ([code],[description],[default_item],[level],[enabled])VALUES(4,'24x7',0,40,1)
+INSERT [lookup_onsite_model] ([code],[description],[default_item],[level],[enabled])VALUES(5,'No onsite service',0,50,1)
+
+SET IDENTITY_INSERT [lookup_onsite_model] OFF
+GO
+SET NOCOUNT OFF
+ 
+-- Insert default lookup_email_model
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_email_model] ON
+GO
+INSERT [lookup_email_model] ([code],[description],[default_item],[level],[enabled])VALUES(1,'2 hours',0,10,1)
+INSERT [lookup_email_model] ([code],[description],[default_item],[level],[enabled])VALUES(2,'4 hours',0,20,1)
+INSERT [lookup_email_model] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Same day',0,30,1)
+INSERT [lookup_email_model] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Next business day',0,40,1)
+
+SET IDENTITY_INSERT [lookup_email_model] OFF
+GO
+SET NOCOUNT OFF
+ 
+-- Insert default lookup_hours_reason
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_hours_reason] ON
+GO
+INSERT [lookup_hours_reason] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Purchase',0,10,1)
+INSERT [lookup_hours_reason] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Renewal',0,20,1)
+INSERT [lookup_hours_reason] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Correction',0,30,1)
+
+SET IDENTITY_INSERT [lookup_hours_reason] OFF
+GO
+SET NOCOUNT OFF
+ 
+INSERT [database_version] ([version_id],[script_filename],[script_version],[entered])VALUES(1,'mssql.sql','2004-06-15','Jun 15 2004  8:50:20:450AM')
+
+-- Insert default lookup_quote_status
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_quote_status] ON
+GO
+INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Incomplete',0,0,1)
+INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Pending internal approval',0,0,1)
+INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Approved internally',0,0,1)
+INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Unapproved internally',0,0,1)
+INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Pending customer acceptance',0,0,1)
+INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(6,'Accepted by customer',0,0,1)
+INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(7,'Rejected by customer',0,0,1)
+INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(8,'Changes requested by customer',0,0,1)
+INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(9,'Cancelled',0,0,1)
+INSERT [lookup_quote_status] ([code],[description],[default_item],[level],[enabled])VALUES(10,'Complete',0,0,1)
+
+SET IDENTITY_INSERT [lookup_quote_status] OFF
+GO
+SET NOCOUNT OFF
+ 
+-- Insert default lookup_orderaddress_types
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_orderaddress_types] ON
+GO
+INSERT [lookup_orderaddress_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Billing',0,0,1)
+INSERT [lookup_orderaddress_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Shipping',0,0,1)
+
+SET IDENTITY_INSERT [lookup_orderaddress_types] OFF
+GO
+SET NOCOUNT OFF
+ 
+INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(10,'Customer','Customer portal user',0,'Jun 15 2004  8:50:05:890AM',0,'Jun 15 2004  8:50:05:890AM',1,1)
+INSERT [role] ([role_id],[role],[description],[enteredby],[entered],[modifiedby],[modified],[enabled],[role_type])VALUES(11,'Products and Services Customer','Products and Services portal user',0,'Jun 15 2004  8:50:05:950AM',0,'Jun 15 2004  8:50:05:950AM',0,420041011)
+
+INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(13,15,130041304,'lookupList','lookup_asset_status',10,'Asset Status','Jun 15 2004  8:49:59:480AM',130041000)
+INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(14,16,130041305,'lookupList','lookup_sc_category',10,'Service Contract Category','Jun 15 2004  8:49:59:500AM',130041100)
+INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(15,16,130041306,'lookupList','lookup_sc_type',20,'Service Contract Type','Jun 15 2004  8:49:59:640AM',130041100)
+INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(16,16,116041409,'lookupList','lookup_response_model',30,'Response Time Model','Jun 15 2004  8:49:59:640AM',130041100)
+INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(17,16,116041410,'lookupList','lookup_phone_model',40,'Phone Service Model','Jun 15 2004  8:49:59:650AM',130041100)
+INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(18,16,116041411,'lookupList','lookup_onsite_model',50,'Onsite Service Model','Jun 15 2004  8:49:59:650AM',130041100)
+INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(19,16,116041412,'lookupList','lookup_email_model',60,'Email Service Model','Jun 15 2004  8:49:59:670AM',130041100)
+INSERT [lookup_lists_lookup] ([id],[module_id],[lookup_id],[class_name],[table_name],[level],[description],[entered],[category_id])VALUES(20,16,308041546,'lookupList','lookup_hours_reason',70,'Contract Hours Adjustment Reason','Jun 15 2004  8:49:59:680AM',130041100)
+
+-- Insert default lookup_payment_methods
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_payment_methods] ON
+GO
+INSERT [lookup_payment_methods] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Cash',0,0,1)
+INSERT [lookup_payment_methods] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Credit Card',0,0,1)
+INSERT [lookup_payment_methods] ([code],[description],[default_item],[level],[enabled])VALUES(3,'Personal Check',0,0,1)
+INSERT [lookup_payment_methods] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Money Order',0,0,1)
+INSERT [lookup_payment_methods] ([code],[description],[default_item],[level],[enabled])VALUES(5,'Certified Check',0,0,1)
+
+SET IDENTITY_INSERT [lookup_payment_methods] OFF
+GO
+SET NOCOUNT OFF
+ 
+-- Insert default category_editor_lookup
+SET NOCOUNT ON
+SET IDENTITY_INSERT [category_editor_lookup] ON
+GO
+INSERT [category_editor_lookup] ([id],[module_id],[constant_id],[table_name],[level],[description],[entered],[category_id],[max_levels])VALUES(1,8,202041401,'ticket_category',10,'Ticket Categories','Jun 15 2004  8:49:59:040AM',8,4)
+INSERT [category_editor_lookup] ([id],[module_id],[constant_id],[table_name],[level],[description],[entered],[category_id],[max_levels])VALUES(2,15,202041400,'asset_category',10,'Asset Categories','Jun 15 2004  8:49:59:490AM',130041000,3)
+
+SET IDENTITY_INSERT [category_editor_lookup] OFF
+GO
+SET NOCOUNT OFF
+ 
+INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products])VALUES(15,'Assets',NULL,1500,1,1,0,1,0,1,0,0,0,0)
+INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products])VALUES(16,'Service Contracts',NULL,1400,1,1,0,1,0,0,0,0,0,0)
+INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products])VALUES(17,'Product Catalog',NULL,1100,1,1,1,0,0,0,0,0,0,1)
+INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products])VALUES(18,'Products and Services',NULL,300,0,0,0,0,0,0,0,0,0,0)
+INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products])VALUES(19,'Quotes',NULL,900,0,0,0,0,0,0,0,0,0,0)
+INSERT [permission_category] ([category_id],[category],[description],[level],[enabled],[active],[folders],[lookups],[viewpoints],[categories],[scheduled_events],[object_events],[reports],[products])VALUES(20,'Orders',NULL,1000,0,0,0,0,0,0,0,0,1,0)
+
+-- Insert default lookup_creditcard_types
+SET NOCOUNT ON
+SET IDENTITY_INSERT [lookup_creditcard_types] ON
+GO
+INSERT [lookup_creditcard_types] ([code],[description],[default_item],[level],[enabled])VALUES(1,'Visa',0,0,1)
+INSERT [lookup_creditcard_types] ([code],[description],[default_item],[level],[enabled])VALUES(2,'Master Card',0,0,1)
+INSERT [lookup_creditcard_types] ([code],[description],[default_item],[level],[enabled])VALUES(3,'American Express',0,0,1)
+INSERT [lookup_creditcard_types] ([code],[description],[default_item],[level],[enabled])VALUES(4,'Discover',0,0,1)
+
+SET IDENTITY_INSERT [lookup_creditcard_types] OFF
+GO
+SET NOCOUNT OFF
+ 
+ CREATE  INDEX [import_entered_idx] ON [import]([entered]) ON [PRIMARY]
+GO
+
+ CREATE  INDEX [import_name_idx] ON [import]([name]) ON [PRIMARY]
+GO
+
+ CREATE  INDEX [contact_import_id_idx] ON [contact]([import_id]) ON [PRIMARY]
+GO
+
+ CREATE  UNIQUE  INDEX [idx_pr_key_map] ON [product_keyword_map]([product_id], [keyword_id]) ON [PRIMARY]
+GO
+
+ CREATE  UNIQUE  INDEX [idx_pr_opt_val] ON [product_option_values]([option_id], [result_id]) ON [PRIMARY]
+GO
+
+ALTER TABLE [category_editor_lookup] ADD 
+	 FOREIGN KEY 
+	(
+		[module_id]
+	) REFERENCES [permission_category] (
+		[category_id]
+	)
+GO
+
+ALTER TABLE [import] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	)
+GO
+
+ALTER TABLE [product_option_configurator] ADD 
+	 FOREIGN KEY 
+	(
+		[result_type]
+	) REFERENCES [lookup_product_conf_result] (
+		[code]
+	)
+GO
+
+ALTER TABLE [product_catalog] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[estimated_ship_time]
+	) REFERENCES [lookup_product_ship_time] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[format_id]
+	) REFERENCES [lookup_product_format] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[large_image_id]
+	) REFERENCES [project_files] (
+		[item_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[parent_id]
+	) REFERENCES [product_catalog] (
+		[product_id]
+	),
+	 FOREIGN KEY 
+	(
+		[shipping_id]
+	) REFERENCES [lookup_product_shipping] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[small_image_id]
+	) REFERENCES [project_files] (
+		[item_id]
+	),
+	 FOREIGN KEY 
+	(
+		[thumbnail_image_id]
+	) REFERENCES [project_files] (
+		[item_id]
+	),
+	 FOREIGN KEY 
+	(
+		[type_id]
+	) REFERENCES [lookup_product_type] (
+		[code]
+	)
+GO
+
+ALTER TABLE [product_category] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[large_image_id]
+	) REFERENCES [project_files] (
+		[item_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[parent_id]
+	) REFERENCES [product_category] (
+		[category_id]
+	),
+	 FOREIGN KEY 
+	(
+		[small_image_id]
+	) REFERENCES [project_files] (
+		[item_id]
+	),
+	 FOREIGN KEY 
+	(
+		[thumbnail_image_id]
+	) REFERENCES [project_files] (
+		[item_id]
+	),
+	 FOREIGN KEY 
+	(
+		[type_id]
+	) REFERENCES [lookup_product_category_type] (
+		[code]
+	)
+GO
+
+ALTER TABLE [product_option] ADD 
+	 FOREIGN KEY 
+	(
+		[configurator_id]
+	) REFERENCES [product_option_configurator] (
+		[configurator_id]
+	),
+	 FOREIGN KEY 
+	(
+		[parent_id]
+	) REFERENCES [product_option] (
+		[option_id]
+	)
+GO
+
+ALTER TABLE [package] ADD 
+	 FOREIGN KEY 
+	(
+		[category_id]
+	) REFERENCES [product_category] (
+		[category_id]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[large_image_id]
+	) REFERENCES [project_files] (
+		[item_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[small_image_id]
+	) REFERENCES [project_files] (
+		[item_id]
+	),
+	 FOREIGN KEY 
+	(
+		[thumbnail_image_id]
+	) REFERENCES [project_files] (
+		[item_id]
+	)
+GO
+
+ALTER TABLE [product_catalog_category_map] ADD 
+	 FOREIGN KEY 
+	(
+		[category_id]
+	) REFERENCES [product_category] (
+		[category_id]
+	),
+	 FOREIGN KEY 
+	(
+		[product_id]
+	) REFERENCES [product_catalog] (
+		[product_id]
+	)
+GO
+
+ALTER TABLE [product_catalog_pricing] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[msrp_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[price_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[product_id]
+	) REFERENCES [product_catalog] (
+		[product_id]
+	),
+	 FOREIGN KEY 
+	(
+		[recurring_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[recurring_type]
+	) REFERENCES [lookup_recurring_type] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[tax_id]
+	) REFERENCES [lookup_product_tax] (
+		[code]
+	)
+GO
+
+ALTER TABLE [product_category_map] ADD 
+	 FOREIGN KEY 
+	(
+		[category1_id]
+	) REFERENCES [product_category] (
+		[category_id]
+	),
+	 FOREIGN KEY 
+	(
+		[category2_id]
+	) REFERENCES [product_category] (
+		[category_id]
+	)
+GO
+
+ALTER TABLE [product_keyword_map] ADD 
+	 FOREIGN KEY 
+	(
+		[keyword_id]
+	) REFERENCES [lookup_product_keyword] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[product_id]
+	) REFERENCES [product_catalog] (
+		[product_id]
+	)
+GO
+
+ALTER TABLE [product_option_boolean] ADD 
+	 FOREIGN KEY 
+	(
+		[product_option_id]
+	) REFERENCES [product_option] (
+		[option_id]
+	)
+GO
+
+ALTER TABLE [product_option_float] ADD 
+	 FOREIGN KEY 
+	(
+		[product_option_id]
+	) REFERENCES [product_option] (
+		[option_id]
+	)
+GO
+
+ALTER TABLE [product_option_integer] ADD 
+	 FOREIGN KEY 
+	(
+		[product_option_id]
+	) REFERENCES [product_option] (
+		[option_id]
+	)
+GO
+
+ALTER TABLE [product_option_text] ADD 
+	 FOREIGN KEY 
+	(
+		[product_option_id]
+	) REFERENCES [product_option] (
+		[option_id]
+	)
+GO
+
+ALTER TABLE [product_option_timestamp] ADD 
+	 FOREIGN KEY 
+	(
+		[product_option_id]
+	) REFERENCES [product_option] (
+		[option_id]
+	)
+GO
+
+ALTER TABLE [product_option_values] ADD 
+	 FOREIGN KEY 
+	(
+		[msrp_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[option_id]
+	) REFERENCES [product_option] (
+		[option_id]
+	),
+	 FOREIGN KEY 
+	(
+		[price_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[recurring_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[recurring_type]
+	) REFERENCES [lookup_recurring_type] (
+		[code]
+	)
+GO
+
+ALTER TABLE [service_contract] ADD 
+	 FOREIGN KEY 
+	(
+		[account_id]
+	) REFERENCES [organization] (
+		[org_id]
+	),
+	 FOREIGN KEY 
+	(
+		[category]
+	) REFERENCES [lookup_sc_category] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[contact_id]
+	) REFERENCES [contact] (
+		[contact_id]
+	),
+	 FOREIGN KEY 
+	(
+		[email_service_model]
+	) REFERENCES [lookup_email_model] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[onsite_service_model]
+	) REFERENCES [lookup_onsite_model] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[response_time]
+	) REFERENCES [lookup_response_model] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[telephone_service_model]
+	) REFERENCES [lookup_phone_model] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[type]
+	) REFERENCES [lookup_sc_type] (
+		[code]
+	)
+GO
+
+ALTER TABLE [asset] ADD 
+	 FOREIGN KEY 
+	(
+		[account_id]
+	) REFERENCES [organization] (
+		[org_id]
+	),
+	 FOREIGN KEY 
+	(
+		[contact_id]
+	) REFERENCES [contact] (
+		[contact_id]
+	),
+	 FOREIGN KEY 
+	(
+		[contract_id]
+	) REFERENCES [service_contract] (
+		[contract_id]
+	),
+	 FOREIGN KEY 
+	(
+		[email_service_model]
+	) REFERENCES [lookup_email_model] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[level1]
+	) REFERENCES [asset_category] (
+		[id]
+	),
+	 FOREIGN KEY 
+	(
+		[level2]
+	) REFERENCES [asset_category] (
+		[id]
+	),
+	 FOREIGN KEY 
+	(
+		[level3]
+	) REFERENCES [asset_category] (
+		[id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[onsite_service_model]
+	) REFERENCES [lookup_onsite_model] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[response_time]
+	) REFERENCES [lookup_response_model] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[telephone_service_model]
+	) REFERENCES [lookup_phone_model] (
+		[code]
+	)
+GO
+
+ALTER TABLE [package_products_map] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[msrp_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[package_id]
+	) REFERENCES [package] (
+		[package_id]
+	),
+	 FOREIGN KEY 
+	(
+		[price_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[product_id]
+	) REFERENCES [product_catalog] (
+		[product_id]
+	)
+GO
+
+ALTER TABLE [product_option_map] ADD 
+	 FOREIGN KEY 
+	(
+		[option_id]
+	) REFERENCES [product_option] (
+		[option_id]
+	),
+	 FOREIGN KEY 
+	(
+		[product_id]
+	) REFERENCES [product_catalog] (
+		[product_id]
+	),
+	 FOREIGN KEY 
+	(
+		[value_id]
+	) REFERENCES [product_option_values] (
+		[value_id]
+	)
+GO
+
+ALTER TABLE [service_contract_hours] ADD 
+	 FOREIGN KEY 
+	(
+		[adjustment_reason]
+	) REFERENCES [lookup_hours_reason] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[link_contract_id]
+	) REFERENCES [service_contract] (
+		[contract_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	)
+GO
+
+ALTER TABLE [service_contract_products] ADD 
+	 FOREIGN KEY 
+	(
+		[link_contract_id]
+	) REFERENCES [service_contract] (
+		[contract_id]
+	),
+	 FOREIGN KEY 
+	(
+		[link_product_id]
+	) REFERENCES [product_catalog] (
+		[product_id]
+	)
+GO
+
+ALTER TABLE [customer_product] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[order_id]
+	) REFERENCES [order_entry] (
+		[order_id]
+	),
+	 FOREIGN KEY 
+	(
+		[order_item_id]
+	) REFERENCES [order_product] (
+		[item_id]
+	),
+	 FOREIGN KEY 
+	(
+		[org_id]
+	) REFERENCES [organization] (
+		[org_id]
+	),
+	 FOREIGN KEY 
+	(
+		[status_id]
+	) REFERENCES [lookup_order_status] (
+		[code]
+	)
+GO
+
+ALTER TABLE [customer_product_history] ADD 
+	 FOREIGN KEY 
+	(
+		[customer_product_id]
+	) REFERENCES [customer_product] (
+		[customer_product_id]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[order_id]
+	) REFERENCES [order_entry] (
+		[order_id]
+	),
+	 FOREIGN KEY 
+	(
+		[org_id]
+	) REFERENCES [organization] (
+		[org_id]
+	)
+GO
+
+ALTER TABLE [order_address] ADD 
+	 FOREIGN KEY 
+	(
+		[address_type]
+	) REFERENCES [lookup_orderaddress_types] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[order_id]
+	) REFERENCES [order_entry] (
+		[order_id]
+	)
+GO
+
+ALTER TABLE [order_entry] ADD 
+	 FOREIGN KEY 
+	(
+		[billing_contact_id]
+	) REFERENCES [contact] (
+		[contact_id]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[orderedby]
+	) REFERENCES [contact] (
+		[contact_id]
+	),
+	 FOREIGN KEY 
+	(
+		[order_terms_id]
+	) REFERENCES [lookup_order_terms] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[order_type_id]
+	) REFERENCES [lookup_order_type] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[org_id]
+	) REFERENCES [organization] (
+		[org_id]
+	),
+	 FOREIGN KEY 
+	(
+		[parent_id]
+	) REFERENCES [order_entry] (
+		[order_id]
+	),
+	 FOREIGN KEY 
+	(
+		[quote_id]
+	) REFERENCES [quote_entry] (
+		[quote_id]
+	),
+	 FOREIGN KEY 
+	(
+		[sales_id]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[source_id]
+	) REFERENCES [lookup_order_source] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[status_id]
+	) REFERENCES [lookup_order_status] (
+		[code]
+	)
+GO
+
+ALTER TABLE [order_payment] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[order_id]
+	) REFERENCES [order_entry] (
+		[order_id]
+	),
+	 FOREIGN KEY 
+	(
+		[payment_method_id]
+	) REFERENCES [lookup_payment_methods] (
+		[code]
+	)
+GO
+
+ALTER TABLE [order_product] ADD 
+	 FOREIGN KEY 
+	(
+		[msrp_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[order_id]
+	) REFERENCES [order_entry] (
+		[order_id]
+	),
+	 FOREIGN KEY 
+	(
+		[price_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[product_id]
+	) REFERENCES [product_catalog] (
+		[product_id]
+	),
+	 FOREIGN KEY 
+	(
+		[recurring_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[recurring_type]
+	) REFERENCES [lookup_recurring_type] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[status_id]
+	) REFERENCES [lookup_order_status] (
+		[code]
+	)
+GO
+
+ALTER TABLE [order_product_option_boolean] ADD 
+	 FOREIGN KEY 
+	(
+		[order_product_option_id]
+	) REFERENCES [order_product_options] (
+		[order_product_option_id]
+	)
+GO
+
+ALTER TABLE [order_product_option_float] ADD 
+	 FOREIGN KEY 
+	(
+		[order_product_option_id]
+	) REFERENCES [order_product_options] (
+		[order_product_option_id]
+	)
+GO
+
+ALTER TABLE [order_product_option_integer] ADD 
+	 FOREIGN KEY 
+	(
+		[order_product_option_id]
+	) REFERENCES [order_product_options] (
+		[order_product_option_id]
+	)
+GO
+
+ALTER TABLE [order_product_option_text] ADD 
+	 FOREIGN KEY 
+	(
+		[order_product_option_id]
+	) REFERENCES [order_product_options] (
+		[order_product_option_id]
+	)
+GO
+
+ALTER TABLE [order_product_option_timestamp] ADD 
+	 FOREIGN KEY 
+	(
+		[order_product_option_id]
+	) REFERENCES [order_product_options] (
+		[order_product_option_id]
+	)
+GO
+
+ALTER TABLE [order_product_options] ADD 
+	 FOREIGN KEY 
+	(
+		[item_id]
+	) REFERENCES [order_product] (
+		[item_id]
+	),
+	 FOREIGN KEY 
+	(
+		[price_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[product_option_id]
+	) REFERENCES [product_option_map] (
+		[product_option_id]
+	),
+	 FOREIGN KEY 
+	(
+		[recurring_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[recurring_type]
+	) REFERENCES [lookup_recurring_type] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[status_id]
+	) REFERENCES [lookup_order_status] (
+		[code]
+	)
+GO
+
+ALTER TABLE [order_product_status] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[item_id]
+	) REFERENCES [order_product] (
+		[item_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[order_id]
+	) REFERENCES [order_entry] (
+		[order_id]
+	),
+	 FOREIGN KEY 
+	(
+		[status_id]
+	) REFERENCES [lookup_order_status] (
+		[code]
+	)
+GO
+
+ALTER TABLE [payment_creditcard] ADD 
+	 FOREIGN KEY 
+	(
+		[card_type]
+	) REFERENCES [lookup_creditcard_types] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[payment_id]
+	) REFERENCES [order_payment] (
+		[payment_id]
+	)
+GO
+
+ALTER TABLE [payment_eft] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[payment_id]
+	) REFERENCES [order_payment] (
+		[payment_id]
+	)
+GO
+
+ALTER TABLE [quote_entry] ADD 
+	 FOREIGN KEY 
+	(
+		[contact_id]
+	) REFERENCES [contact] (
+		[contact_id]
+	),
+	 FOREIGN KEY 
+	(
+		[customer_product_id]
+	) REFERENCES [customer_product] (
+		[customer_product_id]
+	),
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[org_id]
+	) REFERENCES [organization] (
+		[org_id]
+	),
+	 FOREIGN KEY 
+	(
+		[parent_id]
+	) REFERENCES [quote_entry] (
+		[quote_id]
+	),
+	 FOREIGN KEY 
+	(
+		[product_id]
+	) REFERENCES [product_catalog] (
+		[product_id]
+	),
+	 FOREIGN KEY 
+	(
+		[quote_terms_id]
+	) REFERENCES [lookup_quote_terms] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[quote_type_id]
+	) REFERENCES [lookup_quote_type] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[source_id]
+	) REFERENCES [lookup_quote_source] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[status_id]
+	) REFERENCES [lookup_quote_status] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[ticketid]
+	) REFERENCES [ticket] (
+		[ticketid]
+	)
+GO
+
+ALTER TABLE [quote_notes] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[quote_id]
+	) REFERENCES [quote_entry] (
+		[quote_id]
+	)
+GO
+
+ALTER TABLE [quote_product] ADD 
+	 FOREIGN KEY 
+	(
+		[price_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[product_id]
+	) REFERENCES [product_catalog] (
+		[product_id]
+	),
+	 FOREIGN KEY 
+	(
+		[quote_id]
+	) REFERENCES [quote_entry] (
+		[quote_id]
+	),
+	 FOREIGN KEY 
+	(
+		[recurring_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[recurring_type]
+	) REFERENCES [lookup_recurring_type] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[status_id]
+	) REFERENCES [lookup_quote_status] (
+		[code]
+	)
+GO
+
+ALTER TABLE [quote_product_option_boolean] ADD 
+	 FOREIGN KEY 
+	(
+		[quote_product_option_id]
+	) REFERENCES [quote_product_options] (
+		[quote_product_option_id]
+	)
+GO
+
+ALTER TABLE [quote_product_option_float] ADD 
+	 FOREIGN KEY 
+	(
+		[quote_product_option_id]
+	) REFERENCES [quote_product_options] (
+		[quote_product_option_id]
+	)
+GO
+
+ALTER TABLE [quote_product_option_integer] ADD 
+	 FOREIGN KEY 
+	(
+		[quote_product_option_id]
+	) REFERENCES [quote_product_options] (
+		[quote_product_option_id]
+	)
+GO
+
+ALTER TABLE [quote_product_option_text] ADD 
+	 FOREIGN KEY 
+	(
+		[quote_product_option_id]
+	) REFERENCES [quote_product_options] (
+		[quote_product_option_id]
+	)
+GO
+
+ALTER TABLE [quote_product_option_timestamp] ADD 
+	 FOREIGN KEY 
+	(
+		[quote_product_option_id]
+	) REFERENCES [quote_product_options] (
+		[quote_product_option_id]
+	)
+GO
+
+ALTER TABLE [quote_product_options] ADD 
+	 FOREIGN KEY 
+	(
+		[item_id]
+	) REFERENCES [quote_product] (
+		[item_id]
+	),
+	 FOREIGN KEY 
+	(
+		[price_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[product_option_id]
+	) REFERENCES [product_option_map] (
+		[product_option_id]
+	),
+	 FOREIGN KEY 
+	(
+		[recurring_currency]
+	) REFERENCES [lookup_currency] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[recurring_type]
+	) REFERENCES [lookup_recurring_type] (
+		[code]
+	),
+	 FOREIGN KEY 
+	(
+		[status_id]
+	) REFERENCES [lookup_quote_status] (
+		[code]
+	)
+GO
+
+ALTER TABLE [ticket] ADD 
+	 FOREIGN KEY 
+	(
+		[customer_product_id]
+	) REFERENCES [customer_product] (
+		[customer_product_id]
+	),
+	 FOREIGN KEY 
+	(
+		[link_asset_id]
+	) REFERENCES [asset] (
+		[asset_id]
+	),
+	 FOREIGN KEY 
+	(
+		[link_contract_id]
+	) REFERENCES [service_contract] (
+		[contract_id]
+	),
+	 FOREIGN KEY 
+	(
+		[product_id]
+	) REFERENCES [product_catalog] (
+		[product_id]
+	)
+GO
+
+ALTER TABLE [ticket_activity_item] ADD 
+	 FOREIGN KEY 
+	(
+		[link_form_id]
+	) REFERENCES [ticket_csstm_form] (
+		[form_id]
+	)
+GO
+
+ALTER TABLE [ticket_csstm_form] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[link_ticket_id]
+	) REFERENCES [ticket] (
+		[ticketid]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	)
+GO
+
+ALTER TABLE [ticket_sun_form] ADD 
+	 FOREIGN KEY 
+	(
+		[enteredby]
+	) REFERENCES [access] (
+		[user_id]
+	),
+	 FOREIGN KEY 
+	(
+		[link_ticket_id]
+	) REFERENCES [ticket] (
+		[ticketid]
+	),
+	 FOREIGN KEY 
+	(
+		[modifiedby]
+	) REFERENCES [access] (
+		[user_id]
+	)
+GO
+
+ALTER TABLE [trouble_asset_replacement] ADD 
+	 FOREIGN KEY 
+	(
+		[link_form_id]
+	) REFERENCES [ticket_sun_form] (
+		[form_id]
+	)
+GO
 
