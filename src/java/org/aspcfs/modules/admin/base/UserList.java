@@ -477,7 +477,7 @@ public class UserList extends Vector {
     }
     return userListSelect.getHtml(selectName, defaultKey);
   }
-<<<<<<< UserList.java
+
   
   
   public HtmlSelect getHtmlSelectObj(String selectName, int defaultKey) {
@@ -502,10 +502,7 @@ public class UserList extends Vector {
   }
 
 
-=======
-  
-  
->>>>>>> 1.22
+
   /**
    *  Gets the UserListIds attribute of the UserList object
    *
