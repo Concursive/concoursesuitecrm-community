@@ -178,6 +178,7 @@ public final class ContactsPortal extends CFSModule {
       db = this.getConnection(context);
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
+      setOrganization(context, db, thisContact.getOrgId());
 
       //Cannot change portal login information if the
       //user contact does not have email
@@ -192,8 +193,6 @@ public final class ContactsPortal extends CFSModule {
         thisPortalUser = new User();
         thisPortalUser.buildRecord(db, thisContact.getUserId());
       }
-
-      setOrganization(context, db, thisContact.getOrgId());
 
       RoleList roleList = new RoleList();
       roleList.setExcludeRoleType(Constants.ROLETYPE_REGULAR);
