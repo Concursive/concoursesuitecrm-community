@@ -51,6 +51,9 @@ public class ImportDocuments implements CFSDatabaseReaderImportModule {
           case 3:
             thisRecord.addField("linkItemId", String.valueOf(thisItem.getLinkItemId()), "opportunity", null);
             break;
+          case 5:
+            thisRecord.addField("linkItemId", String.valueOf(thisItem.getLinkItemId()), "campaign", null);
+            break;
           default:
             thisRecord.addField("linkItemId", String.valueOf(thisItem.getLinkItemId()), null, null);
             break;
