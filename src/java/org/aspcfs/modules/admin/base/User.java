@@ -1587,32 +1587,11 @@ public void setRevenueLock(boolean revenueLock) {
    *@exception  SQLException  Description of Exception
    */
   public void insertLogRecord(Connection db) throws SQLException {
-    if (this.id > -1) {
-      try {
-        db.setAutoCommit(false);
-
-        StringBuffer sql = new StringBuffer();
-        sql.append(
-            "INSERT INTO access_log " +
-            "(user_id, username, ip) " +
-            "VALUES (?, ?, ?) ");
-
-        int i = 0;
-        PreparedStatement pst = db.prepareStatement(sql.toString());
-        pst.setInt(++i, id);
-        pst.setString(++i, getUsername());
-        pst.setString(++i, getIp());
-        pst.execute();
-        pst.close();
-        db.commit();
-      } catch (SQLException e) {
-        db.rollback();
-        db.setAutoCommit(true);
-        throw new SQLException(e.getMessage());
-      }
-    }
-
-    db.setAutoCommit(true);
+    AccessLog thisLog = new AccessLog();
+    thisLog.setUserId(this.getId());
+    thisLog.setUsername(this.getUsername());
+    thisLog.setIp(this.getIp());
+    thisLog.insert(db);
   }
 
 
