@@ -1,4 +1,3 @@
-<jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <script language="JavaScript">
   function checkFileForm(form) {
     if (form.dosubmit.value == "false") {
