@@ -192,6 +192,21 @@ A:visited:hover{color:#FF3300;}
 }
 .warning { background: #FF3300 !important; font-weight: bold; color: #FFFFFF }
 
+/* sectionTitle */
+.sectionTitle {
+  border: 1px solid #000;
+}
+.sectionTitle th {
+  text-align: left;
+  border-bottom: 1px solid #000;
+  /* border-right: 1px solid #666;
+  background-color: #d9ebdc; */
+}
+.sectionTitle td {
+  border-bottom: 1px solid #666 !important;
+  border-right: 1px solid #666 !important;
+}
+
 .highlight { color: #006699; font-weight: bold; }
 
 .title { background: #DEE0FA; }
