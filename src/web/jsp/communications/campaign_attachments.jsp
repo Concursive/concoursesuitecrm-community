@@ -13,7 +13,8 @@ Customize and configure your Campaigns with the following attachments:<br>
   </tr>
   <tr class="containerBody">
     <td>
-      Create interactive ads &amp; special deals in the form of lists &amp; associate them with a campaign and handle responses within CFS.
+      Create interactive surveys using quantitative, qualitative and open-ended questions.
+      Once associated with a campaign, the responses can be reviewed and analyzed.
     </td>
   </tr>
 </table>
