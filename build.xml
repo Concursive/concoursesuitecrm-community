@@ -385,7 +385,9 @@
     <!-- Ask for the database name -->
     <input message="Enter database name: " addproperty="DATABASE.NAME"/>
     <!-- Display all information about database here, except password -->
-  
+    <echo message="Driver: ${SITE.DRIVER}"/>
+    <echo message="URL: ${SITE.URL}${DATABASE.NAME}"/>
+    <echo message="Username: ${SITE.USER}"/>
   </target>
   
   <!-- Ask about gatekeeper record -->
