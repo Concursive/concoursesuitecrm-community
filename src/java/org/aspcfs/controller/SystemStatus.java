@@ -30,6 +30,7 @@ public class SystemStatus {
   private ArrayList ignoredFields = new ArrayList();
   private Hashtable fieldLabels = new Hashtable();
   private ObjectHookManager hookManager = new ObjectHookManager();
+  private ConnectionElement connectionElement = null;
   private String fileLibraryPath = null;
 
   /**
@@ -77,6 +78,7 @@ public class SystemStatus {
     this.hierarchyCheck = tmp;
   }
 
+  public void setConnectionElement(ConnectionElement tmp) { this.connectionElement = tmp; }
   public void setFileLibraryPath(String tmp) { this.fileLibraryPath = tmp; }
 
   /**
@@ -125,6 +127,7 @@ public class SystemStatus {
     return ((String) fieldLabels.get(thisLabel));
   }
   
+  public ConnectionElement getConnectionElement() { return connectionElement; }
   public String getFileLibraryPath() { return fileLibraryPath; }
 
 
