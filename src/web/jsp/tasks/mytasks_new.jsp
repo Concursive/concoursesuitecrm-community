@@ -102,12 +102,12 @@
       <table>
         <tr>
           <td>
-            <div id="changeowner"><%= Task.getOwnerName()==null?toHtml(User.getUserRecord().getContact().getNameLastFirst()):""%><%=Task.getOwnerName()!=null?Task.getOwnerName():"" %>
+            <div id="changeowner"><%= Task.getOwnerName()==null?toHtml(User.getUserRecord().getContact().getNameLastFirst()):""%><%= Task.getOwnerName()!=null ? Task.getOwnerName():"" %>
             <dhv:evaluate exp="<%=!(Task.getHasEnabledOwnerAccount())%>"><font color="red">*</font></dhv:evaluate>
             </div>
           </td>
           <td>
-            <input type="hidden" name="owner" id="ownerid" value="<%=(Task.getOwner() == -1)?User.getUserRecord().getContact().getId():Task.getOwner()%>">
+            <input type="hidden" name="ownerContactId" id="ownerid" value="<%= Task.getOwner() == -1 ? User.getUserRecord().getContactId() : Task.getOwnerContactId() %>">
             &nbsp;<a href="javascript:popContactsListSingle('ownerid','changeowner');">Change Owner</a>
           </td>
         </tr>

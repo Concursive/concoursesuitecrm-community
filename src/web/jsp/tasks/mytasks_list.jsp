@@ -22,7 +22,7 @@
       Description&nbsp;
       <input type=text name="description" value="" size=30>
       <font color="red">*</font>
-      <input type=hidden name="owner" value="<%=User.getUserRecord().getContact().getId()%>">
+      <input type=hidden name="owner" value="<%= User.getUserRecord().getId() %>">
       <input type="hidden" name="priority" value="1">
       </td>
       <td nowrap align="left" width="20%">

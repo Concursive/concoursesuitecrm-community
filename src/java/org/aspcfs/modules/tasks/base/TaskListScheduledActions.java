@@ -63,7 +63,7 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
       }
 
       // Add Tasks to calendar
-      this.setOwner(User.getContactId(db, this.getUserId()));
+      this.setOwner(this.getUserId());
       this.buildShortList(db);
       Iterator taskList = this.iterator();
       int taskCount = 0;
