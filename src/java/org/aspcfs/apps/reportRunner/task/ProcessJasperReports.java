@@ -42,6 +42,13 @@ public class ProcessJasperReports {
       ReportQueue thisQueue = (ReportQueue) list.next();
       if (queue.lockReport(thisQueue, db)) {
         try {
+          String reportDir = "";
+          if (((String) config.get("FILELIBRARY")).indexOf("WEB-INF") > 0) {
+            reportDir = (String) config.get("FILELIBRARY") + ".." + fs + "reports" + fs;
+          }
+          if (config.containsKey("WEB-INF")) {
+            reportDir = (String) config.get("WEB-INF") + "reports" + fs;
+          }
           //Load from the repository, save to the user's site
           String destDir =
               (String) config.get("FILELIBRARY") +
@@ -54,7 +61,7 @@ public class ProcessJasperReports {
           long size = processReport(
               thisQueue,
               db,
-              (String) config.get("FILELIBRARY") + "reports" + fs,
+              reportDir,
               destDir + filename);
           thisQueue.setFilename(filename);
           thisQueue.setSize(size);

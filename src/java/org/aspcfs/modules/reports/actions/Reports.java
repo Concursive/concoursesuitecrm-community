@@ -236,7 +236,7 @@ public final class Reports extends CFSModule {
       Report report = new Report(db, Integer.parseInt(reportId));
       context.getRequest().setAttribute("report", report);
       //Read in the Jasper Report and return the parameters to the user
-      String reportPath = getPath(context) + "reports" + fs;
+      String reportPath = getWebInfPath(context, "reports");
       JasperReport jasperReport = JasperReportUtils.getReport(reportPath + report.getFilename());
       //Generate the allowable parameter list
       ParameterList params = new ParameterList();
@@ -294,7 +294,7 @@ public final class Reports extends CFSModule {
       Report report = new Report(db, Integer.parseInt(reportId));
       context.getRequest().setAttribute("report", report);
       //Read in the Jasper Report and set the parameters
-      String reportPath = getPath(context) + "reports" + fs;
+      String reportPath = getWebInfPath(context, "reports");
       JasperReport jasperReport = JasperReportUtils.getReport(reportPath + report.getFilename());
       //Determine the parameters that need to be saved from the jasper report
       ParameterList params = new ParameterList();
