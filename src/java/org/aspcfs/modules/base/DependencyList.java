@@ -61,20 +61,28 @@ public class DependencyList extends ArrayList {
     boolean canDelete = this.canDelete();
     Iterator i = this.iterator();
     StringBuffer html = new StringBuffer();
-    html.append("<br>");
+    html.append("<br />");
+    int count = 0;
     while (i.hasNext()) {
       Dependency thisDependency = (Dependency) i.next();
       if (canDelete) {
-        html.append("&nbsp;&nbsp;");
-        html.append("- ");
-        html.append(thisDependency.getName() + " (" + thisDependency.getCount() + ")");
-        html.append("<br>");
+        if (thisDependency.getCount() > 0) {
+          ++count;
+          html.append("&nbsp;&nbsp;");
+          html.append("- ");
+          html.append(thisDependency.getName() + " (" + thisDependency.getCount() + ")");
+          html.append("<br />");
+        }
       } else if (!thisDependency.getCanDelete()) {
+        ++count;
         html.append("&nbsp;&nbsp;");
         html.append("- ");
         html.append(thisDependency.getName() + " (" + thisDependency.getCount() + ")");
-        html.append("<br>");
+        html.append("<br />");
       }
+    }
+    if (count == 0) {
+      html.append("&nbsp;&nbsp;There are no dependencies for this action.<br />");
     }
     return html.toString();
   }
