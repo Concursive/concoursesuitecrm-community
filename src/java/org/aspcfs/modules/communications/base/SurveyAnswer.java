@@ -76,8 +76,8 @@ public class SurveyAnswer {
     pst.close();
     buildItems(db, passedId);
   }
-  
-  
+
+
   /**
    *  Description of the Method
    *
@@ -188,6 +188,26 @@ public class SurveyAnswer {
    */
   public void setContactId(int contactId) {
     this.contactId = contactId;
+  }
+
+
+  /**
+   *  Sets the itemList attribute of the SurveyAnswer object
+   *
+   *@param  itemList  The new itemList value
+   */
+  public void setItemList(ArrayList itemList) {
+    this.itemList = itemList;
+  }
+
+
+  /**
+   *  Gets the itemList attribute of the SurveyAnswer object
+   *
+   *@return    The itemList value
+   */
+  public ArrayList getItemList() {
+    return itemList;
   }
 
 
@@ -309,8 +329,8 @@ public class SurveyAnswer {
   public void setQuantAns(String tmp) {
     this.quantAns = Integer.parseInt(tmp);
   }
-  
-  
+
+
   /**
    *  Description of the Method
    *
@@ -353,6 +373,12 @@ public class SurveyAnswer {
       }
       rs.close();
       pst.close();
+
+      Iterator i = itemList.iterator();
+      while (i.hasNext()) {
+        SurveyAnswerItem thisItem = (SurveyAnswerItem) i.next();
+        thisItem.buildItemDetails(db);
+      }
     } catch (SQLException e) {
       throw new SQLException(e.getMessage());
     }
