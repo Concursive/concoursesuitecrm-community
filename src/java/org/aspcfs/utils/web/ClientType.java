@@ -14,15 +14,15 @@ import java.io.*;
  *@version    $Id$
  */
 public class ClientType implements Serializable {
-  
+  //Client Browser Products
   public static final int NETSCAPE = 1;
   public static final int IE = 2;
   public static final int POCKETIE = 3;
   public static final int OPERA = 4;
-  
+  //Client Browser Types
   public static final int HTML_BROWSER = 1;
   public static final int WAP_BROWSER = 2;
-  
+  //Client OS
   public static final int WINDOWS = 1;
   public static final int MAC = 2;
   public static final int LINUX = 3;
@@ -57,6 +57,8 @@ public class ClientType implements Serializable {
       //Determine OS
       if (header.indexOf("linux") > -1) {
         os = LINUX;
+      } else if (header.indexOf("mac_powerpc") > -1) {
+        os = MAC;
       }
       
       if (header.indexOf("opera") > -1) {
@@ -178,6 +180,19 @@ public class ClientType implements Serializable {
   
   public double getBrowserVersion() {
     return version;
+  }
+  
+  public String getOsString() {
+    switch (os) {
+      case LINUX:
+        return "linux";
+      case MAC:
+        return "mac";
+      case WINDOWS:
+        return "win";
+      default:
+        return "win";
+    }
   }
 }
 

@@ -11,13 +11,13 @@ import javax.servlet.*;
 /**
  *  User Session record -- maintained while the user is logged in
  *
- *@author     matt
+ *@author     matt rajkowski
  *@created    September 21, 2001
  *@version    $Id$
  */
 public class UserBean extends GenericBean {
   private int userId = -1;
-  
+
   private SystemStatus systemStatus = null;
   private User userRecord = null;
   private String template = null;
@@ -27,24 +27,34 @@ public class UserBean extends GenericBean {
   private String idRange = "";
   private ClientType clientType = null;
 
+
   /**
    *  Builds the userbean from the passed in User Record to speed up the login
    *
-   *@param  thisUser  Description of Parameter
-   *@since            1.10
+   *@param  thisSystem  Description of the Parameter
+   *@param  newUserId   Description of the Parameter
+   *@since              1.10
    */
   public UserBean(SystemStatus thisSystem, int newUserId) {
-    if (thisSystem == null) { System.out.println("UserBean -> SystemStatus is null error"); }
+    if (thisSystem == null) {
+      System.out.println("UserBean -> SystemStatus is null error");
+    }
     systemStatus = thisSystem;
     userId = newUserId;
     updateUserRecord();
   }
-  
-  public UserBean(int newUserId) { 
+
+
+  /**
+   *  Constructor for the UserBean object
+   *
+   *@param  newUserId  Description of the Parameter
+   */
+  public UserBean(int newUserId) {
     systemStatus = new SystemStatus();
     userId = newUserId;
-    System.out.println("HERE!");
   }
+
 
   /**
    *  Sets the CssFile attribute of the userBean object
@@ -100,10 +110,17 @@ public class UserBean extends GenericBean {
   public void setUserRecord(User tmp) {
     this.userRecord = tmp;
   }
-  
+
+
+  /**
+   *  Sets the clientType attribute of the UserBean object
+   *
+   *@param  request  The new clientType value
+   */
   public void setClientType(HttpServletRequest request) {
     this.clientType = new ClientType(request);
   }
+
 
   /**
    *  Gets the User attribute of the User object
@@ -142,18 +159,35 @@ public class UserBean extends GenericBean {
   }
 
 
+  /**
+   *  Gets the browserId attribute of the UserBean object
+   *
+   *@return    The browserId value
+   */
   public String getBrowserId() {
     return clientType.getBrowserId();
   }
-	
-	public double getBrowserVersion() {
-		return clientType.getBrowserVersion();
-	}
-  
+
+
+  /**
+   *  Gets the browserVersion attribute of the UserBean object
+   *
+   *@return    The browserVersion value
+   */
+  public double getBrowserVersion() {
+    return clientType.getBrowserVersion();
+  }
+
+
+  /**
+   *  Gets the browserIdAndOS attribute of the UserBean object
+   *
+   *@return    The browserIdAndOS value
+   */
   public String getBrowserIdAndOS() {
     return clientType.getBrowserIdAndOS();
   }
-  
+
 
   /**
    *  Gets the Role attribute of the userBean object
@@ -235,6 +269,16 @@ public class UserBean extends GenericBean {
 
 
   /**
+   *  Gets the clientType attribute of the UserBean object
+   *
+   *@return    The clientType value
+   */
+  public ClientType getClientType() {
+    return clientType;
+  }
+
+
+  /**
    *  Gets the PermissionCheck attribute of the User object
    *
    *@return    The PermissionCheck value
@@ -266,7 +310,11 @@ public class UserBean extends GenericBean {
   public boolean hasPermission(String thisPermission) {
     return (getUserRecord().hasPermission(thisPermission));
   }
-  
+
+
+  /**
+   *  Description of the Method
+   */
   public void updateUserRecord() {
     System.out.println("UserBean-> Check 0");
     userRecord = systemStatus.getHierarchyList().getUser(userId);
