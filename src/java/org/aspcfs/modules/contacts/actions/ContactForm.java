@@ -8,6 +8,7 @@ import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.*;
 
 /**
@@ -32,13 +33,15 @@ public final class ContactForm extends CFSModule {
     Contact newContact = (Contact) context.getRequest().getAttribute("ContactDetails");
     try {
       db = this.getConnection(context);
-      LookupList phoneTypeList = new LookupList(db, "lookup_contactphone_types");
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      
+      LookupList phoneTypeList = systemStatus.getLookupList(db, "lookup_contactphone_types");
       context.getRequest().setAttribute("ContactPhoneTypeList", phoneTypeList);
 
-      LookupList emailTypeList = new LookupList(db, "lookup_contactemail_types");
+      LookupList emailTypeList = systemStatus.getLookupList(db, "lookup_contactemail_types");
       context.getRequest().setAttribute("ContactEmailTypeList", emailTypeList);
 
-      LookupList addressTypeList = new LookupList(db, "lookup_contactaddress_types");
+      LookupList addressTypeList = systemStatus.getLookupList(db, "lookup_contactaddress_types");
       context.getRequest().setAttribute("ContactAddressTypeList", addressTypeList);
     } catch (SQLException e) {
       errorMessage = e;
@@ -46,19 +49,12 @@ public final class ContactForm extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
-      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
       if (newContact != null && newContact.getId() > 0) {
-        if (popup) {
-          return "PrepareModifyPopupOK";
-        }
-        return "PrepareModifyOK";
+        return this.getReturn(context, "PrepareModify");
       } else {
-        if (popup) {
-          return "PrepareAddPopupOK";
-        }
-        return "PrepareAddOK";
+        return this.getReturn(context, "PrepareAdd");
       }
-    } else {
+    }else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
