@@ -44,11 +44,13 @@
       <permission value="accounts-accounts-documents-view"/>
       <link value="AccountsDocuments.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
+<!--
     <submenu name="relationships">
       <long_html value="Relationships"/>
       <permission value="demo-view"/>
       <link value="AccountsPrototype.do?module=Accounts&amp;include=accounts_relationships_view.jsp&amp;orgId=${orgId}"/>
     </submenu>
+-->
   </container>
   
   <!-- Submenu used in the Contacts module -->
@@ -108,11 +110,13 @@
       <permission value="pipeline-opportunities-documents-view"/>
       <link value="LeadsDocuments.do?command=View&amp;oppId=${id}"/>
     </submenu>
+<!--
     <submenu name="relationships">
       <long_html value="Relationships"/>
       <permission value="demo-view"/>
       <link value="LeadsPrototype.do?module=Leads&amp;include=pipeline_relationships_view.jsp&amp;oppId=${id}"/>
     </submenu>
+-->
   </container>
   
   <!-- Submenu used in the Communications module -->
