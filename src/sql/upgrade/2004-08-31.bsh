@@ -1,0 +1,218 @@
+import java.sql.*;
+import java.util.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.controller.ApplicationPrefs;
+
+PreparedStatement pst = null;
+ResultSet rs = null;
+int result = 0;
+
+// Retrieve the timezone from the build.properties file
+String fs = System.getProperty("file.separator");
+ApplicationPrefs prefs = new ApplicationPrefs(dbFileLibraryPath + fs + "build.properties");
+String systemTimeZone = prefs.get("SYSTEM.TIMEZONE");
+
+if (systemTimeZone != null) {
+  //ALTER TABLE opportunity_component ADD COLUMN closedate_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE opportunity_component SET closedate_timezone = ? " +
+    " WHERE closedate_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE service_contract ADD COLUMN initial_start_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE service_contract SET initial_start_date_timezone = ? " +
+    " WHERE initial_start_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE service_contract ADD COLUMN current_start_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE service_contract SET current_start_date_timezone = ? " +
+    " WHERE current_start_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE service_contract ADD COLUMN current_end_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE service_contract SET current_end_date_timezone = ? " +
+    " WHERE current_end_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE asset ADD COLUMN date_listed_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE asset SET date_listed_timezone = ? " +
+    " WHERE date_listed_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE asset ADD COLUMN expiration_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE asset SET expiration_date_timezone = ? " +
+    " WHERE expiration_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE asset ADD COLUMN purchase_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE asset SET purchase_date_timezone = ? " +
+    " WHERE purchase_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE ticket ADD COLUMN assigned_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE ticket SET assigned_date_timezone = ? " +
+    " WHERE assigned_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE ticket ADD COLUMN resolution_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE ticket SET resolution_date_timezone = ? " +
+    " WHERE resolution_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE ticket_activity_item ADD COLUMN activity_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE ticket_activity_item SET activity_date_timezone = ? " +
+    " WHERE activity_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE campaign ADD COLUMN active_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE campaign SET active_date_timezone = ? " +
+    " WHERE active_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE project_news ADD COLUMN start_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE project_news SET start_date_timezone = ? " +
+    " WHERE start_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE project_news ADD COLUMN end_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE project_news SET end_date_timezone = ? " +
+    " WHERE end_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE project_requirements ADD COLUMN startdate_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE project_requirements SET startdate_timezone = ? " +
+    " WHERE startdate_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE project_requirements ADD COLUMN deadline_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE project_requirements SET deadline_timezone = ? " +
+    " WHERE deadline_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE project_assignments ADD COLUMN due_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE project_assignments SET due_date_timezone = ? " +
+    " WHERE due_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE projects ADD COLUMN requestDate_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE projects SET requestDate_timezone = ? " +
+    " WHERE requestDate_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE projects ADD COLUMN est_closedate_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE projects SET est_closedate_timezone = ? " +
+    " WHERE est_closedate_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE ticket_csstm_form ADD COLUMN alert_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE ticket_csstm_form SET alert_date_timezone = ? " +
+    " WHERE alert_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE organization ADD COLUMN alertdate_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE organization SET alertdate_timezone = ? " +
+    " WHERE alertdate_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE organization ADD COLUMN contract_end_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE organization SET contract_end_timezone = ? " +
+    " WHERE contract_end_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE task ADD COLUMN duedate_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE task SET duedate_timezone = ? " +
+    " WHERE duedate_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE ticket ADD COLUMN est_resolution_date_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE ticket SET est_resolution_date_timezone = ? " +
+    " WHERE est_resolution_date_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER TABLE opportunity_component ADD COLUMN alertdate_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE opportunity_component SET alertdate_timezone = ? " +
+    " WHERE alertdate_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  //ALTER table call_log ADD COLUMN alertdate_timezone VARCHAR(255);
+  pst = db.prepareStatement(
+    " UPDATE call_log SET alertdate_timezone = ? " +
+    " WHERE alertdate_timezone IS NULL ");
+  pst.setString(1, systemTimeZone);
+  result = pst.executeUpdate();
+  pst.close();
+  
+  print("Updated timezone fields to: " + systemTimeZone);
+}
