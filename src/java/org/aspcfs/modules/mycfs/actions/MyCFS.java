@@ -424,27 +424,34 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
-    String returnUrl = "";
-    String sendUrl = "";
     Exception errorMessage = null;
     Connection db = null;
-    context.getSession().removeAttribute("selectedContacts");
-    context.getSession().removeAttribute("finalContacts");
-    context.getSession().removeAttribute("contactListInfo");
+
     try {
       db = this.getConnection(context);
       CFSNote newNote = new CFSNote();
       context.getRequest().setAttribute("Note", newNote);
-      returnUrl = context.getRequest().getParameter("return");
-      sendUrl = context.getRequest().getParameter("sendUrl");
+
+      //check if there are any recipients specified
+      //Uncomment when action lists send message needs to be implemented
+      /*
+       *  if(recipients != null){
+       *  recipientList = new ContactList();
+       *  StringTokenizer tokens = new StringTokenizer(recipients, "|");
+       *  while(tokens.hasMoreTokens()){
+       *  String recipient = (String) tokens.nextToken();
+       *  Contact thisRecipient = new Contact(db, Integer.parseInt(recipient));
+       *  recipientList.add(thisRecipient);
+       *  }
+       *  }
+       */
+      context.getSession().removeAttribute("selectedContacts");
+      context.getSession().removeAttribute("finalContacts");
+      context.getSession().removeAttribute("contactListInfo");
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
-    }
-    if (returnUrl != null) {
-      context.getRequest().setAttribute("returnUrl", returnUrl);
-      context.getRequest().setAttribute("sendUrl", sendUrl);
     }
     addModuleBean(context, "MyInbox", "");
     return ("CFSNewMessageOK");
@@ -465,6 +472,7 @@ public final class MyCFS extends CFSModule {
     boolean savecopy = false;
     boolean copyrecipients = false;
     HashMap selectedList = (HashMap) context.getSession().getAttribute("finalContacts");
+    HashMap errors = null;
     if (selectedList == null) {
       selectedList = new HashMap();
     }
@@ -483,6 +491,9 @@ public final class MyCFS extends CFSModule {
       thisNote.setBody(context.getRequest().getParameter("body"));
     } else {
       thisNote.setBody("error");
+    }
+    if (context.getRequest().getParameter("actionId") != null) {
+      thisNote.setActionId(context.getRequest().getParameter("actionId"));
     }
     if (context.getRequest().getParameter("savecopy") != null) {
       savecopy = true;
@@ -549,11 +560,20 @@ public final class MyCFS extends CFSModule {
                 System.out.println("MyCFS-> Send error: " + mail.getErrorMsg() + "<br><br>");
               }
               System.err.println(mail.getErrorMsg());
+              if (errors == null) {
+                errors = new HashMap();
+              }
+              errors.put("contact" + thisContact.getId(), "Following error occured while sending to this contact " + mail.getErrorMsg());
             } else {
               if (System.getProperty("DEBUG") != null) {
                 System.out.println("MyCFS-> Sending message to " + email);
               }
             }
+          } else if (email.startsWith("P:") && !thisContact.hasAccount()) {
+            if (errors == null) {
+              errors = new HashMap();
+            }
+            errors.put("contact" + thisContact.getId(), "Message could not be sent since contact does not have an email address");
           }
         }
       }
@@ -574,7 +594,9 @@ public final class MyCFS extends CFSModule {
     }
 
     if (errorMessage == null) {
-      context.getRequest().setAttribute("returnUrl", context.getRequest().getParameter("return"));
+      if (errors != null) {
+        processErrors(context, errors);
+      }
       return ("SendMessageOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -598,8 +620,6 @@ public final class MyCFS extends CFSModule {
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
-    String returnUrl = context.getRequest().getParameter("return");
-    String sendUrl = context.getRequest().getParameter("sendUrl");
 
     context.getSession().removeAttribute("selectedContacts");
     context.getSession().removeAttribute("finalContacts");
@@ -628,9 +648,9 @@ public final class MyCFS extends CFSModule {
       }
       newNote = new CFSNote();
       if (noteType == Constants.CFSNOTE) {
-        
+
         //For a sent message myId is a user_id else its a contactId
-        
+
         if (inboxInfo.getListView().equals("sent")) {
           myId = getUserId(context);
         } else {
@@ -690,14 +710,12 @@ public final class MyCFS extends CFSModule {
         addModuleBean(context, "External Contacts", "");
       } else if (context.getAction().getActionName().equals("MyCFSInbox")) {
         addModuleBean(context, "My Inbox", "");
-      }else if (context.getAction().getActionName().equals("LeadsCallsForward")) {
+      } else if (context.getAction().getActionName().equals("LeadsCallsForward")) {
         addModuleBean(context, "View Opportunities", "Opportunity Calls");
       } else {
         addModuleBean(context, "My Tasks", "");
       }
       context.getRequest().setAttribute("Note", newNote);
-      context.getRequest().setAttribute("returnUrl", returnUrl);
-      context.getRequest().setAttribute("sendUrl", sendUrl);
       return ("ForwardMessageOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -840,7 +858,7 @@ public final class MyCFS extends CFSModule {
       String param2 = "java.sql.Connection";
       ArrayList alertTypes = calendarInfo.getAlertTypes();
       for (int i = 0; i < alertTypes.size(); i++) {
-        AlertType thisAlert = (AlertType)alertTypes.get(i);
+        AlertType thisAlert = (AlertType) alertTypes.get(i);
         Object thisInstance = Class.forName(thisAlert.getClassName()).newInstance();
         if (selectedAlertType.equalsIgnoreCase("all") || selectedAlertType.toLowerCase().startsWith(((thisAlert.getName()).toLowerCase()))) {
           //set UserId
@@ -912,7 +930,7 @@ public final class MyCFS extends CFSModule {
       String param2 = "java.sql.Connection";
       ArrayList alertTypes = calendarInfo.getAlertTypes();
       for (int i = 0; i < alertTypes.size(); i++) {
-        AlertType thisAlert = (AlertType)alertTypes.get(i);
+        AlertType thisAlert = (AlertType) alertTypes.get(i);
         Object thisInstance = Class.forName(thisAlert.getClassName()).newInstance();
 
         //set UserId
@@ -1029,7 +1047,7 @@ public final class MyCFS extends CFSModule {
     CalendarBean calendarInfo = null;
     String returnPage = context.getRequest().getParameter("return");
     calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
-    
+
     try {
       db = this.getConnection(context);
       calendarInfo.update(db, context);
