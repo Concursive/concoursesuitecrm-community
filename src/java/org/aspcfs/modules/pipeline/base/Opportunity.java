@@ -285,13 +285,7 @@ public void setEnabled(boolean enabled) {
    *@param  tmp  The new closeDate value
    */
   public void setCloseDate(String tmp) {
-    try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
-      closeDate = new java.sql.Date(new java.util.Date().getTime());
-      closeDate.setTime(tmpDate.getTime());
-    } catch (Exception e) {
-      closeDate = null;
-    }
+    closeDate = DateUtils.parseDateString(tmp);
   }
 
 
@@ -351,7 +345,7 @@ public void setEnabled(boolean enabled) {
    *@since
    */
   public void setEntered(String tmp) {
-    this.entered = java.sql.Timestamp.valueOf(tmp);
+    this.entered = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -362,7 +356,7 @@ public void setEnabled(boolean enabled) {
    *@since
    */
   public void setModified(String tmp) {
-    this.modified = java.sql.Timestamp.valueOf(tmp);
+    this.modified = DateUtils.parseTimestampString(tmp);
   }
 
 
