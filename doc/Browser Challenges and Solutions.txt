@@ -14,6 +14,7 @@ Supported and tested browsers:
 - Internet Explorer 5.5 (Windows)
 - Internet Explorer 6.0 (Windows)
 - Internet Explorer 5.2 4609 (Macintosh OSX)
+- Internet Explorer 5.2.2 5010.1 (Macintosh OSX)
 - Mozilla 1.2 (Windows/Linux/Macintosh)
 - Mozilla 1.3 (Windows/Linux/Macintosh)
 - Netscape 6 (Windows)
