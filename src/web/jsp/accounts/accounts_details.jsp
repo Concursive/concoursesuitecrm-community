@@ -52,16 +52,6 @@ Account Details
       <dhv:evaluate exp="<%= !(OrgDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
-<dhv:evaluate exp="<%= hasText(OrgDetails.getTypes().valuesAsString()) %>">
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Account Type(s)
-    </td>
-    <td>  
-      <%= toHtml(OrgDetails.getTypes().valuesAsString()) %>
-     </td>
-  </tr>
-</dhv:evaluate>
 <dhv:evaluate exp="<%= hasText(OrgDetails.getAccountNumber()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -156,26 +146,6 @@ Account Details
     </td>
   </tr>
 </dhv:evaluate>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Entered
-    </td>
-    <td>
-      <%= toHtml(OrgDetails.getEnteredByName()) %>
-      -
-      <dhv:tz timestamp="<%= OrgDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Modified
-    </td>
-    <td>
-      <%= toHtml(OrgDetails.getModifiedByName()) %>
-      -
-      <dhv:tz timestamp="<%= OrgDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
-    </td>
-  </tr>
 </table>
 &nbsp;
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -370,6 +340,34 @@ Account Details
     </td>
     <td>
       <%=toHtml(OrgDetails.getNotes()) %>&nbsp;
+    </td>
+  </tr>
+</table>
+&nbsp;
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong>Record Information</strong>
+    </th>     
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Entered
+    </td>
+    <td>
+      <%= toHtml(OrgDetails.getEnteredByName()) %>
+      -
+      <dhv:tz timestamp="<%= OrgDetails.getEntered() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Modified
+    </td>
+    <td>
+      <%= toHtml(OrgDetails.getModifiedByName()) %>
+      -
+      <dhv:tz timestamp="<%= OrgDetails.getModified() %>" dateFormat="<%= DateFormat.SHORT %>" timeFormat="<%= DateFormat.LONG %>"/>
     </td>
   </tr>
 </table>

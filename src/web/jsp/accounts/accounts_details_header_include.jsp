@@ -7,7 +7,7 @@
     </td>
     <%-- more header info... --%>
     <td align="right" valign="top" nowrap>
-      &nbsp;
+      <%= toHtml(OrgDetails.getTypes().valuesAsString()) %>
     </td>
   </tr>
 </table>
