@@ -369,7 +369,6 @@ public class Notifier extends ReportBuilder {
           template.addParseElement("${company}", StringUtils.toHtml(thisContact.getCompany()));
           template.addParseElement("${department}", StringUtils.toHtml(thisContact.getDepartmentName()));
           thisNotification.setMessageToSend(template.getParsedText());
-          //thisNotification.setMessageToSend(thisCampaign.getMessage());
           thisNotification.setType(thisCampaign.getSendMethodId());
           thisNotification.notifyContact(db);
           if (thisNotification.getType() == Notification.EMAIL) {
