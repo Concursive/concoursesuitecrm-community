@@ -887,26 +887,25 @@ public final class CampaignManager extends CFSModule {
    *@since           1.26
    */
   public String executeCommandAddGroups(ActionContext context) {
-
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     addModuleBean(context, "ManageCampaigns", "Campaign: Add Groups");
-
+    if (context.getRequest().getParameter("listView") == null) {
+      //TODO... reset the list somehow....
+      //context.getRequest().setAttribute("resetList", "true");
+    }
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignCenterGroupInfo");
     pagedListInfo.setLink("CampaignManager.do?command=AddGroups");
-    pagedListInfo.setItemsPerPage(0);
+    pagedListInfo.setEnableJavaScript(true);
     String campaignId = context.getRequest().getParameter("id");
     Campaign campaign = null;
-
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
       context.getRequest().setAttribute("Campaign", campaign);
-
       //Complete List
       SearchCriteriaListList sclList = new SearchCriteriaListList();
       if ("all".equals(pagedListInfo.getListView())) {
@@ -914,22 +913,20 @@ public final class CampaignManager extends CFSModule {
       } else {
         sclList.setOwner(getUserId(context));
       }
+      sclList.setPagedListInfo(pagedListInfo);
       sclList.buildList(db);
       context.getRequest().setAttribute("sclList", sclList);
-
       //Selected List
       SearchCriteriaListList selectedList = new SearchCriteriaListList();
       selectedList.setCampaignId(campaignId);
       selectedList.buildList(db);
       processListCheckBoxes(selectedList, context);
       context.getRequest().setAttribute("selectedList", selectedList);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
@@ -1996,7 +1993,9 @@ public final class CampaignManager extends CFSModule {
       SearchCriteriaList scl = new SearchCriteriaList();
       scl.setId(context.getRequest().getParameter("select" + count));
       if ("on".equalsIgnoreCase(context.getRequest().getParameter("select" + count + "check"))) {
-        selectedList.add(scl);
+        if (!selectedList.containsItem(scl)) {
+          selectedList.add(scl);
+        }
       } else {
         selectedList.removeItem(scl);
       }
@@ -2011,46 +2010,36 @@ public final class CampaignManager extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandViewAttachmentsOverview(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-view"))) {
+    if (!hasPermission(context, "campaign-campaigns-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     addModuleBean(context, "ManageCampaigns", "Build New Campaign");
     Connection db = null;
-
     String campaignId = context.getRequest().getParameter("id");
     Campaign campaign = null;
-
     try {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
-
       context.getRequest().setAttribute("Campaign", campaign);
       if (campaign.hasSurvey()) {
         Survey survey = new Survey(db, campaign.getSurveyId());
         context.getRequest().setAttribute("Survey", survey);
       }
-
       FileItemList files = new FileItemList();
       files.setLinkModuleId(Constants.COMMUNICATIONS_FILE_ATTACHMENTS);
       files.setLinkItemId(campaign.getId());
       files.buildList(db);
       context.getRequest().setAttribute("fileItemList", files);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
-
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
       }
-
       return ("ViewAttachmentsOverviewOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
