@@ -55,7 +55,7 @@
       <dhv:permission name="campaign-campaigns-messages-add">
       <tr>
         <td>
-          &nbsp;
+          <img src="images/icons/stock_copy-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </td>
         <td width="100%">
           <a href="javascript:clone()">Clone</a>
