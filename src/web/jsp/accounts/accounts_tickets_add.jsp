@@ -58,9 +58,14 @@
     var url = "TroubleTickets.do?command=OrganizationJSList&orgId=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
-  function checkForm(form) {
+  function checkForm(form){
     formTest = true;
     message = "";
+    
+    if (form.contactId.value == "-1") { 
+      message += "- Check that a Contact is selected\r\n";
+      formTest = false;
+    }
     if (form.problem.value == "") { 
       message += "- Check that <dhv:label name="ticket.issue">Issue</dhv:label> is entered\r\n";
       formTest = false;
