@@ -10,7 +10,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
 
-
 /**
  *  Represents a copied survey that can have questions and answers and belongs
  *  to an active Campaign
@@ -78,15 +77,12 @@ public class ActiveSurvey extends SurveyBase {
     if (surveyId < 1) {
       throw new SQLException("ActiveSurvey ID not specified.");
     }
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-    String sql =
+    PreparedStatement pst = db.prepareStatement(
         "SELECT s.* " +
         "FROM active_survey s " +
-        "WHERE s.active_survey_id = ? ";
-    pst = db.prepareStatement(sql);
+        "WHERE s.active_survey_id = ? ");
     pst.setInt(1, surveyId);
-    rs = pst.executeQuery();
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     }
@@ -160,17 +156,17 @@ public class ActiveSurvey extends SurveyBase {
    */
   public static int getId(Connection db, int activeCampaignId) throws SQLException {
     int surveyId = -1;
-    String sql =
+    PreparedStatement pst = db.prepareStatement(
         "SELECT active_survey_id " +
         "FROM active_survey " +
-        "WHERE campaign_id = ? ";
-    PreparedStatement pst = db.prepareStatement(sql);
+        "WHERE campaign_id = ? ");
     pst.setInt(1, activeCampaignId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       surveyId = rs.getInt("active_survey_id");
     }
     rs.close();
+    pst.close();
     return surveyId;
   }
 
@@ -381,15 +377,18 @@ public class ActiveSurvey extends SurveyBase {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    String sql =
-        "INSERT INTO active_survey " +
-        "(campaign_id, name, description, intro, outro, itemLength, type, " +
-        "enteredBy, modifiedBy) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+    boolean commit = true;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql);
+      PreparedStatement pst = db.prepareStatement(
+          "INSERT INTO active_survey " +
+          "(campaign_id, name, description, intro, outro, itemLength, type, " +
+          "enteredBy, modifiedBy) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ");
       pst.setInt(++i, campaignId);
       pst.setString(++i, name);
       pst.setString(++i, description);
@@ -401,24 +400,26 @@ public class ActiveSurvey extends SurveyBase {
       pst.setInt(++i, modifiedBy);
       pst.execute();
       pst.close();
-
       id = DatabaseUtils.getCurrVal(db, "active_survey_active_survey_seq");
-
       //Insert the questions
       Iterator x = questions.iterator();
       while (x.hasNext()) {
         ActiveSurveyQuestion thisQuestion = (ActiveSurveyQuestion) x.next();
         thisQuestion.insert(db, this.getId());
       }
-
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
-
     return true;
   }
 
@@ -453,7 +454,6 @@ public class ActiveSurvey extends SurveyBase {
       if (commit) {
         db.rollback();
       }
-      System.out.println(e.toString());
       throw new SQLException(e.toString());
     } finally {
       if (commit) {
@@ -509,17 +509,14 @@ public class ActiveSurvey extends SurveyBase {
     if (this.getId() == -1) {
       throw new SQLException("ActiveSurvey ID was not specified");
     }
-
-    PreparedStatement pst = null;
-    String sql =
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(
         "UPDATE active_survey " +
         "SET campaign_id = ?, name = ?, description = ?, intro = ?, outro = ?, itemlength = ?, " +
         "type = ?, " +
         "enabled = ?, " +
         "modified = CURRENT_TIMESTAMP, modifiedby = ? " +
-        "WHERE active_survey_id = ? ";
-    int i = 0;
-    pst = db.prepareStatement(sql);
+        "WHERE active_survey_id = ? ");
     pst.setInt(++i, campaignId);
     pst.setString(++i, this.getName());
     pst.setString(++i, this.getDescription());
@@ -532,7 +529,6 @@ public class ActiveSurvey extends SurveyBase {
     pst.setInt(++i, this.getId());
     resultCount = pst.executeUpdate();
     pst.close();
-
     return resultCount;
   }
 
