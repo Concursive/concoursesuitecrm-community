@@ -573,6 +573,18 @@
   
   
   <!-- MISC STUFF TO GO THROUGH -->
+  <!-- Install permissions -->
+  <target name="nd" depends="init">
+    <echo message="ND Code"/>
+    <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
+        <pathelement location="${CFS_HOME}/WEB-INF/lib/darkhorseventures.jar"/>
+      </classpath>
+      <arg value="${bin.dir}${fs}netDesc-loadAccounts.xml"/>
+    </java>
+  </target>
   
   
   
