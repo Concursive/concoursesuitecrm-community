@@ -47,7 +47,7 @@ public final class ProjectManagementLists extends CFSModule {
       if (categoryId == null) {
         categoryId = context.getRequest().getParameter("categoryId");
       }
-      LookupElement thisCategory = new LookupElement(db, Integer.parseInt(categoryId), "lookup_task_category");
+      TaskCategory thisCategory = new TaskCategory(db, Integer.parseInt(categoryId));
       context.getRequest().setAttribute("category", thisCategory);
 
       LookupList priorityList = new LookupList(db, "lookup_task_priority");
@@ -93,6 +93,7 @@ public final class ProjectManagementLists extends CFSModule {
 
       Task newTask = (Task) context.getFormBean();
       newTask.setEnteredBy(getUserId(context));
+      //TODO: Need to do this in a transaction, but in the object
       recordInserted = newTask.insert(db);
       if (!recordInserted) {
         processErrors(context, newTask.getErrors());
@@ -118,5 +119,136 @@ public final class ProjectManagementLists extends CFSModule {
     }
   }
 
+  public String executeCommandAddCategory(ActionContext context) {
+    /*
+     *  if (!(hasPermission(context, "projects-issues-add"))) {
+     *  return ("PermissionError");
+     *  }
+     */
+    Exception errorMessage = null;
+    String projectId = (String) context.getRequest().getParameter("pid");
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      context.getRequest().setAttribute("Project", thisProject);
+      context.getRequest().setAttribute("IncludeSection", "lists_categories_add");
+      
+      String categoryId = context.getParameter("cid");
+      if (categoryId != null && !"".equals(categoryId)) {
+        TaskCategory thisCategory = new TaskCategory(db, Integer.parseInt(categoryId));
+        context.getRequest().setAttribute("category", thisCategory);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "AddItem", "");
+    if (errorMessage == null) {
+      return ("ProjectCenterOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Action to insert a new list category
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandInsertCategory(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    boolean recordInserted = false;
+    /*
+     *  if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+     *  return ("DefaultError");
+     *  }
+     */
+    String projectId = (String) context.getRequest().getParameter("pid");
+
+    try {
+      db = this.getConnection(context);
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      context.getRequest().setAttribute("Project", thisProject);
+      context.getRequest().setAttribute("IncludeSection", ("lists_categories_add").toLowerCase());
+
+      TaskCategory newCategory = (TaskCategory) context.getFormBean();
+      newCategory.setLinkModuleId(Constants.PROJECTS);
+      newCategory.setLinkItemId(thisProject.getId());
+      recordInserted = newCategory.insert(db);
+      if (!recordInserted) {
+        processErrors(context, newCategory.getErrors());
+      } else {
+        context.getRequest().setAttribute("pid", projectId);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (recordInserted) {
+        return ("AddCategoryOK");
+      } else {
+        return executeCommandAddCategory(context);
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandUpdateCategory(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    int resultCount = 0;
+    /*
+     *  if (!(hasPermission(context, "myhomepage-inbox-view"))) {
+     *  return ("DefaultError");
+     *  }
+     */
+    String projectId = (String) context.getRequest().getParameter("pid");
+
+    try {
+      db = this.getConnection(context);
+      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      context.getRequest().setAttribute("Project", thisProject);
+      context.getRequest().setAttribute("IncludeSection", ("lists_categories_add").toLowerCase());
+
+      TaskCategory updatedCategory = (TaskCategory) context.getFormBean();
+      updatedCategory.setLinkModuleId(Constants.PROJECTS);
+      updatedCategory.setLinkItemId(thisProject.getId());
+      resultCount = updatedCategory.update(db);
+      if (resultCount == -1) {
+        processErrors(context, updatedCategory.getErrors());
+      }
+      context.getRequest().setAttribute("category", updatedCategory);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      if (resultCount == -1) {
+        return executeCommandAddCategory(context);
+      } else if (resultCount == 1) {
+        return ("UpdateCategoryOK");
+      } else {
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+        return ("UserError");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
 }
 
