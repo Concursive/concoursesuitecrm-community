@@ -278,5 +278,20 @@
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
     </map>
+    <map class="com.darkhorseventures.cfsbase.OrganizationAddress" id="organizationAddress">
+      <property alias="guid">id</property>
+      <property lookup="account">orgId</property>
+      <property>streetAddressLine1</property>
+      <property>streetAddressLine2</property>
+      <property>city</property>
+      <property>state</property>
+      <property>zip</property>
+      <property>country</property>
+      <property lookup="lookupOrgAddressTypes">type</property>
+      <property>email</property>
+      <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
+      <property>enabled</property>
+    </map>
   </mappings>
 </CFSDatabaseReader>

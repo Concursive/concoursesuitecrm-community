@@ -19,6 +19,12 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *@version    $Id$
  */
 public class OrganizationAddressList extends AddressList {
+        
+  public final static String tableName = "organization_address";
+  public final static String uniqueField = "address_id";
+  private java.sql.Timestamp lastAnchor = null;
+  private java.sql.Timestamp nextAnchor = null;
+  private int syncType = Constants.NO_SYNC;
 
   /**
    *  Constructor for the OrganizationAddressList object
@@ -38,6 +44,14 @@ public class OrganizationAddressList extends AddressList {
     }
   }
 
+public String getTableName() { return tableName; }
+public String getUniqueField() { return uniqueField; }
+public java.sql.Timestamp getLastAnchor() { return lastAnchor; }
+public java.sql.Timestamp getNextAnchor() { return nextAnchor; }
+public int getSyncType() { return syncType; }
+public void setLastAnchor(java.sql.Timestamp tmp) { this.lastAnchor = tmp; }
+public void setNextAnchor(java.sql.Timestamp tmp) { this.nextAnchor = tmp; }
+public void setSyncType(int tmp) { this.syncType = tmp; }
 
   /**
    *  Builds a list of addresses based on several parameters. The parameters are

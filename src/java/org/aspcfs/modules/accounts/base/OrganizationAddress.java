@@ -44,6 +44,14 @@ public class OrganizationAddress extends Address {
    *@since                    1.1
    */
   public OrganizationAddress(Connection db, String addressId) throws SQLException {
+          queryRecord(db, Integer.parseInt(addressId));
+  }
+  
+  public OrganizationAddress(Connection db, int addressId) throws SQLException {
+          queryRecord(db, addressId);
+  }
+          
+  public void queryRecord(Connection db, int addressId) throws SQLException {
     Statement st = null;
     ResultSet rs = null;
     StringBuffer sql = new StringBuffer();
@@ -85,8 +93,16 @@ public class OrganizationAddress extends Address {
         "VALUES " +
         "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
-    pst.setInt(++i, orgId);
-    pst.setInt(++i, this.getType());
+    if (this.getOrgId() > -1) {
+      pst.setInt(++i, this.getOrgId());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    if (this.getType() > -1) {
+      pst.setInt(++i, this.getType());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getStreetAddressLine1());
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getCity());
@@ -117,7 +133,11 @@ public class OrganizationAddress extends Address {
         "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE address_id = ? ");
     int i = 0;
-    pst.setInt(++i, this.getType());
+    if (this.getType() > -1) {
+      pst.setInt(++i, this.getType());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
     pst.setString(++i, this.getStreetAddressLine1());
     pst.setString(++i, this.getStreetAddressLine2());
     pst.setString(++i, this.getCity());

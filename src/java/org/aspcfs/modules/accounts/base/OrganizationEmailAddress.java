@@ -26,8 +26,8 @@ public class OrganizationEmailAddress extends EmailAddress {
           
   public void queryRecord(Connection db, int emailAddressId) throws SQLException {
     isContact = false;
-    if (emailAddressId == null) {
-      throw new SQLException("Email Address ID not specified.");
+    if (emailAddressId <= 0) {
+      throw new SQLException("Valid Email Address ID specified.");
     }
 
     Statement st = null;

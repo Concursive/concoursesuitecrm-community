@@ -700,4 +700,9 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'organizationEmailAddress', 'com.darkhorseventures.cfsbase.OrganizationEmailAddress');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'organizationEmailAddressList', 'com.darkhorseventures.cfsbase.OrganizationEmailAddressList');
+ 
+    INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'organizationAddress', 'com.darkhorseventures.cfsbase.OrganizationAddress');
+INSERT INTO sync_table (system_id, element_name, mapped_class_name)
+ VALUES (4, 'organizationAddressList', 'com.darkhorseventures.cfsbase.OrganizationAddressList');
 
