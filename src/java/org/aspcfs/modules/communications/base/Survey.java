@@ -19,26 +19,28 @@ import com.darkhorseventures.utils.DatabaseUtils;
  */
 public class Survey extends GenericBean {
 
-  private int id = -1;
-  private String name = "";
-  private String description = "";
-  private String intro = "";
-  private int itemLength = -1;
-  private int type = -1;
-  private int itemsId = -1;
-  private int messageId = -1;
+  protected int id = -1;
+  protected String name = "";
+  protected String description = "";
+  protected String intro = "";
+  protected int itemLength = -1;
+  protected int type = -1;
+  protected int itemsId = -1;
+  protected int messageId = -1;
 
-  private SurveyItemList items = new SurveyItemList();
-  private SurveyAnswerList answers = new SurveyAnswerList();
+  //TODO: Change to SurveyQuestionList
+  protected SurveyItemList items = new SurveyItemList();
+  //TODO: Remove answers from Survey
+  protected SurveyAnswerList answers = new SurveyAnswerList();
 
-  private int enteredBy = -1;
-  private int modifiedBy = -1;
-  private java.sql.Timestamp modified = null;
-  private java.sql.Timestamp entered = null;
-  private boolean enabled = true;
-  private String enteredByName = "";
-  private String modifiedByName = "";
-  private String typeName = "";
+  protected int enteredBy = -1;
+  protected int modifiedBy = -1;
+  protected java.sql.Timestamp modified = null;
+  protected java.sql.Timestamp entered = null;
+  protected boolean enabled = true;
+  protected String enteredByName = "";
+  protected String modifiedByName = "";
+  protected String typeName = "";
 
 
   /**

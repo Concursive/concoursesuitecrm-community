@@ -1508,6 +1508,9 @@ public class Campaign extends GenericBean {
           "DELETE FROM excluded_recipient WHERE campaign_id = " + this.getId());
       st.executeUpdate(
           "DELETE FROM campaign WHERE id = " + this.getId());
+      //TODO: Remove reference to any surveys if this campaign is inactive
+      //TODO: If campaign was active, then delete the related active_survey if it has one
+      
       //After the campaign is deleted, check to see if the attached survey can be deleted
       Survey thisSurvey = new Survey(db, this.getSurveyId());
       if (!thisSurvey.getEnabled()) {
@@ -1612,6 +1615,7 @@ public class Campaign extends GenericBean {
     template.setText(thisMessageText);
     template.addParseElement("${survey_url}", "<a href=\"http://" + this.getServerName() + "/ProcessSurvey.do?id=" + this.getSurveyId() + "\">http://" + this.getServerName() + "/ProcessSurvey.do?id=" + this.getSurveyId() + "</a>");
 
+    //TODO: setAutoCommit(false);
     pst = db.prepareStatement(
         "UPDATE campaign " +
         "SET status_id = ?, " +
@@ -1622,23 +1626,29 @@ public class Campaign extends GenericBean {
         "message = ?, " +
         "modifiedby = " + modifiedBy + ", " +
         "modified = CURRENT_TIMESTAMP " +
-        "WHERE id = " + id + " " +
-        "AND modified = ? ");
+        "WHERE id = ? " + 
+        "AND modified = ? " +
+        "AND active = " + DatabaseUtils.getFalse(db));
     int i = 0;
     pst.setInt(++i, QUEUE);
     pst.setString(++i, QUEUE_TEXT);
     pst.setString(++i, thisMessageReplyTo);
     pst.setString(++i, thisMessageSubject);
-    //pst.setString(++i, thisMessageText);
     pst.setString(++i, template.getParsedText());
+    pst.setInt(++i, id);
     pst.setTimestamp(++i, modified);
     resultCount = pst.executeUpdate();
     pst.close();
 
     if (resultCount == 1) {
       insertRecipients(db, userId, userRangeId);
+      //TODO: Copy the survey if it has one
+      
+      //TODO: commit();
+    } else {
+      //TODO: rollback();
     }
-
+    //TODO: setAutoCommit(true);
     return resultCount;
   }
 
