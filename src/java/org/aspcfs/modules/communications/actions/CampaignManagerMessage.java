@@ -25,14 +25,13 @@ public final class CampaignManagerMessage extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandView(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
 
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignMessageListInfo");
@@ -58,7 +57,7 @@ public final class CampaignManagerMessage extends CFSModule {
 
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
-      submenu = (String)context.getRequest().getAttribute("submenu");
+      submenu = (String) context.getRequest().getAttribute("submenu");
     }
     if (submenu == null) {
       submenu = "ManageMessages";
@@ -84,11 +83,11 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandModify(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-messages-edit"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-messages-edit"))) {
+      return ("PermissionError");
+    }
+
     addModuleBean(context, "View Messages", "Modify Message");
     Exception errorMessage = null;
 
@@ -107,7 +106,7 @@ public final class CampaignManagerMessage extends CFSModule {
 
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
-      submenu = (String)context.getRequest().getAttribute("submenu");
+      submenu = (String) context.getRequest().getAttribute("submenu");
     }
     if (submenu == null) {
       submenu = "ManageMessages";
@@ -133,16 +132,16 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandUpdate(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-messages-edit"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-messages-edit"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     addModuleBean(context, "ManageMessages", "Message Details");
 
     MessageList messageList = null;
-    Message newMessage = (Message)context.getFormBean();
+    Message newMessage = (Message) context.getFormBean();
 
     Connection db = null;
     int resultCount = 0;
@@ -166,11 +165,11 @@ public final class CampaignManagerMessage extends CFSModule {
         return ("ModifyOK");
       } else if (resultCount == 1) {
         context.getRequest().setAttribute("MessageDetails", newMessage);
-              if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-		      return (executeCommandView(context));
-	      } else {
-		      return ("UpdateOK");
-	      }
+        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
+          return (executeCommandView(context));
+        } else {
+          return ("UpdateOK");
+        }
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
@@ -190,11 +189,11 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandDetails(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
+      return ("PermissionError");
+    }
+
     addModuleBean(context, "ManageMessages", "View Message Details");
     Exception errorMessage = null;
 
@@ -231,14 +230,14 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandAdd(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-messages-add"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-messages-add"))) {
+      return ("PermissionError");
+    }
+
     String submenu = context.getRequest().getParameter("submenu");
     if (submenu == null) {
-      submenu = (String)context.getRequest().getAttribute("submenu");
+      submenu = (String) context.getRequest().getAttribute("submenu");
     }
     if (submenu == null) {
       submenu = "ManageMessages";
@@ -257,16 +256,16 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-messages-add"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-messages-add"))) {
+      return ("PermissionError");
+    }
+
     addModuleBean(context, "BuildNew", "Add New Message");
     Exception errorMessage = null;
     boolean recordInserted = false;
 
-    Message newMessage = (Message)context.getFormBean();
+    Message newMessage = (Message) context.getFormBean();
     newMessage.setEnteredBy(getUserId(context));
     newMessage.setModifiedBy(getUserId(context));
 
@@ -307,11 +306,11 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-messages-delete"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-messages-delete"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
@@ -353,11 +352,11 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandPreviewMessage(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+    if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     addModuleBean(context, "ManageCampaigns", "Build New Campaign");
     Connection db = null;
@@ -381,27 +380,35 @@ public final class CampaignManagerMessage extends CFSModule {
       return ("PreviewOK");
     }
   }
-  
-    public String executeCommandPreviewSurvey(ActionContext context) {
-	  
-	  	if (!(hasPermission(context, "campaign-campaigns-surveys-view"))) {
-	    		return ("PermissionError");
-    		}
-		
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandPreviewSurvey(ActionContext context) {
+
+    if (!(hasPermission(context, "campaign-campaigns-surveys-view"))) {
+      return ("PermissionError");
+    }
+
     Exception errorMessage = null;
     addModuleBean(context, "ManageCampaigns", "Build New Campaign");
     Connection db = null;
-    
+
     CustomForm thisForm = getDynamicForm(context, "surveyview");
     String surveyId = context.getRequest().getParameter("id");
 
     try {
       db = this.getConnection(context);
       Survey thisSurvey = new Survey(db, surveyId);
-      
-      if (thisSurvey == null) 
-	      thisSurvey = new Survey();
-	      
+
+      if (thisSurvey == null) {
+        thisSurvey = new Survey();
+      }
+
       thisForm.populate(thisSurvey);
       context.getRequest().setAttribute("CustomFormInfo", thisForm);
       context.getRequest().setAttribute("Survey", thisSurvey);

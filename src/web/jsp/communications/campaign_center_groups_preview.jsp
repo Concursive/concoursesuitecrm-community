@@ -73,10 +73,12 @@
       <dhv:permission name="campaign-campaigns-edit"><a href="/CampaignManager.do?command=ToggleRecipient&scl=<%=SCL.getId()%>&id=<%= Campaign.getId() %>&contactId=<%= thisContact.getId()%>"></dhv:permission><%= (thisContact.excludedFromCampaign()? "No" : "Yes") %><dhv:permission name="campaign-campaigns-edit"></a></dhv:permission>
     </td>
   </tr>
+  <input type="hidden" name="id" value="<%= Campaign.getId() %>">
+  <input type="hidden" name="scl" value="<%= SCL.getId() %>">
   <%}%>
 </table>
 <br>
-<dhv:pagedListControl object="CampaignCenterPreviewInfo" tdClass="row1"/>
+<dhv:pagedListControl object="CampaignCenterPreviewInfo"/>
 <%} else {%>
   <tr class="containerBody">
     <td colspan="4" valign="center">

@@ -5,7 +5,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
 <form name="modForm" action="/CampaignManager.do?command=Modify&id=<%= Campaign.getId() %>" method="post">
 <a href="CampaignManager.do">Communications Manager</a> > 
-<a href="/CampaignManager.do?command=View">Campaign List</a> >
+<a href="CampaignManager.do?command=View">Campaign List</a> >
 Campaign Details
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -120,7 +120,7 @@ Campaign Details
   <dhv:permission name="campaign-campaigns-edit">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="containerBack">
-      <td class="formLabel">
+      <td class="formLabel" colspan="4">
         <center>
           This campaign has been configured and can now be activated.<br>
           Once active, today's campaigns will begin processing in under 5 minutes and cannot be cancelled.<br>
