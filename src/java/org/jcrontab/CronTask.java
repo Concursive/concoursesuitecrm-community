@@ -38,7 +38,7 @@ import org.jcrontab.log.Log;
  * Crontab.
  * If a new kind of task is desired, this class should be extended and the
  * abstract method runTask should be overwritten.
- * @author $Author$
+ * @author iolalla
  * @version $Revision$
  */
 public class CronTask
@@ -113,7 +113,8 @@ public class CronTask
         // Check if we have a Method
         if (!("".equals(strMethodName))) {
             try {
-                Class cl = Class.forName(strClassName);
+                Class cl = CronTask.class.getClassLoader().loadClass(strClassName);
+                //Class cl = Class.forName(strClassName);
                 Class[] argTypes = {String[].class};
                 Object[] arg = {strExtraInfo};
 
@@ -146,7 +147,8 @@ public class CronTask
             // No method given
         } else {
             try {
-                Class cl = Class.forName(strClassName);
+                Class cl = CronTask.class.getClassLoader().loadClass(strClassName);
+                //Class cl = Class.forName(strClassName);
                 Class[] argTypes = {String[].class};
                 Object[] arg = {strExtraInfo};
 
