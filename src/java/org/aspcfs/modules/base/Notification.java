@@ -8,6 +8,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.theseus.actions.*;
 import com.zeroio.iteam.base.*;
+import com.darkhorseventures.controller.ComponentContext;
 
 /**
  *  A logged message sent to a person using 1 of several transports:
@@ -66,7 +67,7 @@ public class Notification extends Thread {
   private String errorMessage = null;
 
   private Connection connection = null;
-  private ActionContext context = null;
+  private Object context = null;
 
   private FileItemList fileAttachments = null;
   
@@ -265,6 +266,10 @@ public class Notification extends Thread {
   }
 
   public void setFileAttachments(FileItemList tmp) { this.fileAttachments = tmp; }
+  
+  public void setContext(Object context) {
+    this.context = context;
+  }
 
   /**
    *  Gets the Id attribute of the Notification object
@@ -602,11 +607,13 @@ public class Notification extends Thread {
       thisMessage.setPort(port);
       thisMessage.setMessage(messageToSend);
       if (context != null) {
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("Notification-> Setting Keystore");
+        if (context instanceof ActionContext) {
+          thisMessage.setKeystoreLocation((String)((ActionContext)context).getServletContext().getAttribute("ClientSSLKeystore"));
+          thisMessage.setKeystorePassword((String)((ActionContext)context).getServletContext().getAttribute("ClientSSLKeystorePassword"));
+        } else if (context instanceof ComponentContext) {
+          thisMessage.setKeystoreLocation((String)((ComponentContext)context).getAttribute("ClientSSLKeystore"));
+          thisMessage.setKeystorePassword((String)((ComponentContext)context).getAttribute("ClientSSLKeystorePassword"));
         }
-        thisMessage.setKeystoreLocation((String)context.getServletContext().getAttribute("ClientSSLKeystore"));
-        thisMessage.setKeystorePassword((String)context.getServletContext().getAttribute("ClientSSLKeystorePassword"));
       }
       result = thisMessage.send();
       if (System.getProperty("DEBUG") != null) {
