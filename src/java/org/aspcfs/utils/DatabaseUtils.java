@@ -107,6 +107,22 @@ public class DatabaseUtils {
   }
 
 
+  public static String castDateTimeToDate(Connection db, String date) {
+    String tmpDate = "";
+    switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          tmpDate = date + "::date";
+          break;
+        case DatabaseUtils.MSSQL:
+          tmpDate += "CONVERT(char(10), " + date + ", 101)";
+          break;
+        default:
+          break;
+    }
+    return tmpDate;
+  }
+  
+  
   /**
    *  Gets the currVal attribute of the DatabaseUtils class
    *
@@ -229,7 +245,8 @@ public class DatabaseUtils {
   public static boolean parseBoolean(String tmp) {
     return ("ON".equalsIgnoreCase(tmp) ||
         "TRUE".equalsIgnoreCase(tmp) ||
-        "1".equals(tmp));
+        "1".equals(tmp) ||
+        "Y".equals(tmp));
   }
 
 

@@ -71,7 +71,7 @@
           &nbsp;
         </td>
         <td width="100%">
-          Add Call
+          Add Activity
         </td>
       </tr>
       </dhv:permission>

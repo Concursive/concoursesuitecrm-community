@@ -1522,6 +1522,29 @@ public class Contact extends GenericBean {
 
 
   /**
+   *  Gets the nameFirstInitialLast attribute of the Contact object
+   *
+   *@return    The nameFirstInitialLast value
+   */
+  public String getNameFirstInitialLast() {
+    StringBuffer out = new StringBuffer();
+    if (nameFirst != null && nameFirst.trim().length() > 0) {
+      out.append(String.valueOf(nameFirst.charAt(0)) + ".");
+    }
+    if (nameLast != null && nameLast.trim().length() > 0) {
+      if (out.length() > 0) {
+        out.append(" ");
+      }
+      out.append(nameLast);
+    }
+    if (out.toString().length() == 0) {
+      return null;
+    }
+    return out.toString().trim();
+  }
+  
+  
+  /**
    *  Gets the NameLastFirst attribute of the Contact object
    *
    *@return    The NameLastFirst value
@@ -1954,6 +1977,18 @@ public class Contact extends GenericBean {
   }
 
 
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildPhoneNumberList(Connection db) throws SQLException {
+    phoneNumberList.setContactId(this.getId());
+    phoneNumberList.buildList(db);
+  }
+  
+  
   /**
    *  Inserts this object into the database, and populates this Id. For
    *  maintenance, only the required fields are inserted, then an update is

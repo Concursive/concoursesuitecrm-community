@@ -2,6 +2,9 @@
 <%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<%
+  String trailSource = request.getParameter("trailSource");
+%>
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -14,13 +17,17 @@
 <a href="Accounts.do?command=Dashboard">Dashboard</a> >
 <%}%>
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<% if("accounts".equals(trailSource)){ %>
+<a href="AccountsCalls.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Activities</a> >
+<% }else{ %>
 <a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
 <a href="Contacts.do?command=Details&id=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Contact Details</a> >
-<a href="AccountContactsCalls.do?command=View&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Calls</a> >
+<a href="AccountContactsCalls.do?command=View&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Activities</a> >
+<% } %>
 <dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
-<a href="AccountContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Call Details</a> >
+<a href="AccountContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%><%= addLinkParams(request, "view") %>">Activity Details</a> >
 </dhv:evaluate>
-Forward Call
+Forward Activity
 </td>
 </tr>
 </table>
@@ -28,23 +35,27 @@ Forward Call
 </dhv:evaluate>
 <%-- include the accounts menu --%>
 <%@ include file="accounts_details_header_include.jsp" %>
+<% if("accounts".equals(trailSource)){ %>
+<dhv:container name="accounts" selected="activities" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs" appendToUrl="&trailSource=accounts"/>
+<% }else{ %>
 <dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
+<% } %>
 <form name="newMessageForm" action="AccountContactsCalls.do?command=SendCall&contactId=<%= ContactDetails.getId() %>&id=<%= request.getParameter("id") %>" method="post" onSubmit="return sendMessage();">
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
       <%-- include contact menu --%>
       <% String param1 = "id=" + ContactDetails.getId(); 
-      %>
+    %>
         <strong><%= ContactDetails.getNameLastFirst() %>:</strong>
         [ <dhv:container name="accountscontacts" selected="calls" param="<%= param1 %>"/> ]
         <br>
         <br>
         <input type="submit" value="Send">
         <% if("list".equals(request.getParameter("return"))){ %>
-        <input type="button" value="Cancel" onClick="javascript:window.location.href='AccountContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>'">
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='AccountContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "view|trailSource") %>'">
         <% }else{ %>
-        <input type="button" value="Cancel" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>'">
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "view|trailSource") %>'">
       <% } %>
         <br><br>
         <%-- include the message form --%>
@@ -52,9 +63,9 @@ Forward Call
         <br>
         <input type="submit" value="Send">
         <% if("list".equals(request.getParameter("return"))){ %>
-        <input type="button" value="Cancel" onClick="javascript:window.location.href='AccountContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>'">
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='AccountContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "view|trailSource") %>'">
         <% }else{ %>
-        <input type="button" value="Cancel" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>'">
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "view|trailSource") %>'">
       <% } %>
     </td>
   </tr>

@@ -39,7 +39,7 @@
 </script>
 <body onLoad="javascript:document.forms[0].name.focus();">
 <%-- Trails --%>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
   <td>
     <a href="ExternalContacts.do">Contacts</a> >

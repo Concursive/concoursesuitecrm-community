@@ -27,8 +27,7 @@
   }
 
   function reloadFrames(){
-    window.frames['calendar'].location.href='MyCFS.do?command=MonthView&source=Calendar&inline=true';
-    window.frames['calendardetails'].location.href='MyCFS.do?command=Alerts&source=calendarDetails&inline=true';
+    window.frames['calendar'].location.href='MyCFS.do?command=MonthView&source=Calendar&inline=true&reloadCalendarDetails=true';
   }
 </script>
 

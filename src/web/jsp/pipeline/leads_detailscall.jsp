@@ -1,10 +1,12 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.Call,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
 <%@ page import="org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
+<jsp:useBean id="ReminderTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="CallResult" class="org.aspcfs.modules.contacts.base.CallResult" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
@@ -20,8 +22,8 @@
 	<a href="Leads.do?command=Search">Search Results</a> >
 <% } %>
 <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> >
-<a href="LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Calls</a> >
-Call Details
+<a href="LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Activities</a> >
+Activity Details
 </td>
 </tr>
 </table>
@@ -38,74 +40,46 @@ Call Details
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
-      <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" value="Modify" onClick="javascript:window.location.href='LeadsCalls.do?command=Modify&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>';"></dhv:permission>
-      <dhv:permission name="pipeline-opportunities-calls-delete"><input type="button" value="Delete" onClick="javascript:return confirmDelete('LeadsCalls.do?command=Delete&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>')"></dhv:permission>
-      <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='LeadsCallsForward.do?command=ForwardCall&forwardType=<%= Constants.PIPELINE_CALLS %>&headerId=<%= opportunityHeader.getId() %>&id=<%=CallDetails.getId()%><%= addLinkParams(request, "viewSource") %>';"></dhv:permission>
+      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" value="Complete" onClick="javascript:window.location.href='LeadsCalls.do?command=Complete&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>'"></dhv:permission>
+     </dhv:evaluate>
+     <% if("pending".equals(request.getParameter("view")) || CallDetails.getStatusId() != Call.CANCELED){ %>
+      <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" onclick="javascript:window.location.href='LeadsCalls.do?command=Modify&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>';" value="Modify"></dhv:permission>
+      <%}%>
+      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" value="Cancel Pending Activity" onClick="javascript:window.location.href='LeadsCalls.do?command=Cancel&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= addLinkParams(request, "viewSource") %>';"></dhv:permission></dhv:evaluate>
+      <dhv:evaluate exp="<%= !isPopup(request) %>">
+      <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='LeadsCallsForward.do?command=ForwardCall&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>'"></dhv:permission>
+      </dhv:evaluate>
       <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br>&nbsp;</dhv:permission>
-      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+      
+      <% if("pending".equals(request.getParameter("view"))){ %>
+        <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
+        <%-- include follow up activity details --%>
+        <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
+        </dhv:evaluate>
+        &nbsp;
+        <%-- include completed activity details --%>
+        <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
+      <% }else{ %>
+        <%-- include completed activity details --%>
+        <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
+        &nbsp;
+        <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
+        <%-- include follow up activity details --%>
+        <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
+        </dhv:evaluate>
+      <% } %>
+      
+      &nbsp;
+      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
         <tr>
           <th colspan="2">
-            <strong>Call Details</strong>
-          </th>     
+            <strong>Record Information</strong>  
+          </th>
         </tr>
         <tr class="containerBody">
-          <td class="formLabel">
-            Type
-          </td>
-          <td>
-            <%= toHtml(CallDetails.getCallType()) %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Contact Name
-          </td>
-          <td>
-            <%= toHtml(CallDetails.getContactName()) %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Length
-          </td>
-          <td>
-            <%= toHtml(CallDetails.getLengthText()) %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Subject
-          </td>
-          <td>
-            <%= toHtml(CallDetails.getSubject()) %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
-            Notes
-          </td>
-          <td>
-            <%= toHtml(CallDetails.getNotes()) %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td nowrap class="formLabel">
-            Alert Description
-          </td>
-          <td>
-            <%= toHtml(CallDetails.getAlertText()) %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td nowrap class="formLabel">
-            Alert Date
-          </td>
-          <td>
-          <zeroio:tz timestamp="<%= CallDetails.getAlertDate() %>" dateOnly="true" default="&nbsp;"/>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel">
+          <td class="formLabel" nowrap>
             Entered
           </td>
           <td>
@@ -114,7 +88,7 @@ Call Details
           </td>
         </tr>
         <tr class="containerBody">
-          <td nowrap class="formLabel">
+          <td class="formLabel" nowrap>
             Modified
           </td>
           <td>
@@ -122,10 +96,20 @@ Call Details
             <zeroio:tz timestamp="<%= CallDetails.getModified() %>" />
           </td>
         </tr>
-      </table><br>
-      <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" value="Modify" onClick="javascript:window.location.href='LeadsCalls.do?command=Modify&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>';"></dhv:permission>
-      <dhv:permission name="pipeline-opportunities-calls-delete"><input type="button" value="Delete" onClick="javascript:return confirmDelete('LeadsCalls.do?command=Delete&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>')"></dhv:permission>
-      <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='LeadsCallsForward.do?command=ForwardCall&forwardType=<%= Constants.PIPELINE_CALLS %>&headerId=<%= opportunityHeader.getId() %>&id=<%=CallDetails.getId()%><%= addLinkParams(request, "viewSource") %>';"></dhv:permission>
+      </table>
+      <br>
+      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" value="Complete" onClick="javascript:window.location.href='LeadsCalls.do?command=Complete&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>'"></dhv:permission>
+     </dhv:evaluate>
+     <% if("pending".equals(request.getParameter("view")) || CallDetails.getStatusId() != Call.CANCELED){ %>
+      <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" onclick="javascript:window.location.href='LeadsCalls.do?command=Modify&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>';" value="Modify"></dhv:permission>
+      <%}%>
+      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" value="Cancel Pending Activity" onClick="javascript:window.location.href='LeadsCalls.do?command=Cancel&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= addLinkParams(request, "viewSource") %>';"></dhv:permission></dhv:evaluate>
+      <dhv:evaluate exp="<%= !isPopup(request) %>">
+      <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='LeadsCallsForward.do?command=ForwardCall&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>'"></dhv:permission>
+      </dhv:evaluate>
+      <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br>&nbsp;</dhv:permission>
     </td>
   </tr>
 </table>

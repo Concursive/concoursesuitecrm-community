@@ -3,7 +3,7 @@
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="ImportDetails" class="org.aspcfs.modules.contacts.base.ContactImport" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<table class="trails">
+<table class="trails" cellspacing="0">
 <tr>
   <td>
     <a href="Accounts.do">Accounts</a> >

@@ -113,6 +113,32 @@ public class ObjectUtils {
 
 
   /**
+   *  Invokes the specified method
+   *
+   *@param  target  The new param value
+   *@param  param   The new param value
+   *@param  value   The new param value
+   *@return         Description of the Returned Value
+   */
+  public static boolean invokeMethod(Object target, String thisMethod, Object value) {
+    try {
+      if (value != null) {
+        Class[] argTypes = new Class[]{value.getClass()};
+        Method method = target.getClass().getMethod(thisMethod, argTypes);
+        method.invoke(target, new Object[]{value});
+      }
+    } catch (Exception e) {
+      //e.printStackTrace(System.out);
+      if (System.getProperty("DEBUG") != null) {
+            System.out.println("ObjectUtils-> invokeMethod Exception");
+      }
+      return false;
+    }
+    return true;
+  }
+  
+  
+  /**
    *  Gets the object attribute of the ObjectUtils class
    *
    *@param  target  Description of Parameter

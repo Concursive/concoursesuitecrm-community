@@ -32,6 +32,7 @@ public class HtmlSelectTime extends TagSupport {
   private String baseName = null;
   private Timestamp value = null;
   private String timeZone = null;
+  private boolean hidden = false;
 
 
   /**
@@ -72,8 +73,28 @@ public class HtmlSelectTime extends TagSupport {
   public void setTimeZone(String tmp) {
     timeZone = tmp;
   }
-  
-  
+
+
+  /**
+   *  Sets the hidden attribute of the HtmlSelectTime object
+   *
+   *@param  tmp  The new hidden value
+   */
+  public void setHidden(boolean tmp) {
+    this.hidden = tmp;
+  }
+
+
+  /**
+   *  Sets the hidden attribute of the HtmlSelectTime object
+   *
+   *@param  tmp  The new hidden value
+   */
+  public void setHidden(String tmp) {
+    this.hidden = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
   /**
    *  Description of the Method
    *
@@ -119,29 +140,38 @@ public class HtmlSelectTime extends TagSupport {
       }
       //System.out.println(formatter.format(cal.getTime()));
       // output the results
-      if (is24Hour) {
-        // Show 24 hour selector
-        this.pageContext.getOut().write(
-            HtmlSelectHours24.getSelect(baseName + "Hour", String.valueOf(hour)).toString());
-      } else {
-        // Show 12 hour selector
-        this.pageContext.getOut().write(
-            HtmlSelectHours.getSelect(baseName + "Hour", String.valueOf(hour)).toString());
-      }
-      this.pageContext.getOut().write(":");
-      this.pageContext.getOut().write(
-          HtmlSelectMinutesFives.getSelect(baseName + "Minute",
-          (minute < 10 ? String.valueOf("0" + minute) : String.valueOf(minute))).toString());
-      if (is24Hour) {
-        // Do not show AM/PM
-      } else {
-        if (AMPM == Calendar.AM) {
+      if (!hidden) {
+        if (is24Hour) {
+          // Show 24 hour selector
           this.pageContext.getOut().write(
-              HtmlSelectAMPM.getSelect(baseName + "AMPM", "AM").toString());
+              HtmlSelectHours24.getSelect(baseName + "Hour", String.valueOf(hour)).toString());
         } else {
+          // Show 12 hour selector
           this.pageContext.getOut().write(
-              HtmlSelectAMPM.getSelect(baseName + "AMPM", "PM").toString());
+              HtmlSelectHours.getSelect(baseName + "Hour", String.valueOf(hour)).toString());
         }
+        this.pageContext.getOut().write(":");
+        this.pageContext.getOut().write(
+            HtmlSelectMinutesFives.getSelect(baseName + "Minute",
+            (minute < 10 ? String.valueOf("0" + minute) : String.valueOf(minute))).toString());
+        if (is24Hour) {
+          // Do not show AM/PM
+        } else {
+          if (AMPM == Calendar.AM) {
+            this.pageContext.getOut().write(
+                HtmlSelectAMPM.getSelect(baseName + "AMPM", "AM").toString());
+          } else {
+            this.pageContext.getOut().write(
+                HtmlSelectAMPM.getSelect(baseName + "AMPM", "PM").toString());
+          }
+        }
+      } else {
+        this.pageContext.getOut().write(
+            "<input type=\"hidden\" name=\"" + baseName + "Hour" + "\" value=\"" + String.valueOf(hour) + "\" />");
+        this.pageContext.getOut().write(
+            "<input type=\"hidden\" name=\"" + baseName + "Minute" + "\" value=\"" + String.valueOf(minute) + "\" />");
+        this.pageContext.getOut().write(
+            "<input type=\"hidden\" name=\"" + baseName + "AMPM" + "\" value=\"" + String.valueOf(AMPM) + "\" />");
       }
     } catch (Exception e) {
       throw new JspException("HtmlSelectTime Error: " + e.getMessage());

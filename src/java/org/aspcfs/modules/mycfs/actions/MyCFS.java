@@ -82,18 +82,22 @@ public final class MyCFS extends CFSModule {
       if ("old".equals(inboxInfo.getListView())) {
         noteList.setOldMessagesOnly(true);
       }
-      
+
       // TODO: Modify CFSNoteList so that only 1 query is always generated so
       // this doesn't have to happen...
       if ("sent".equals(inboxInfo.getListView())) {
-        /*Changing sort column as  "sent_namelast" is not a column in the query*/
-        if ("sent_namelast".equals(inboxInfo.getColumnToSortBy())){
+        /*
+         *  Changing sort column as  "sent_namelast" is not a column in the query
+         */
+        if ("sent_namelast".equals(inboxInfo.getColumnToSortBy())) {
           inboxInfo.setColumnToSortBy("m.sent");
         }
         noteList.setSentMessagesOnly(true);
       } else {
-        /*Changing sort column back to requested column*/
-        if ("m.sent".equals(inboxInfo.getColumnToSortBy())){
+        /*
+         *  Changing sort column back to requested column
+         */
+        if ("m.sent".equals(inboxInfo.getColumnToSortBy())) {
           inboxInfo.setColumnToSortBy("sent_namelast");
         }
       }
@@ -521,7 +525,7 @@ public final class MyCFS extends CFSModule {
               errors = new HashMap();
             }
             errors.put("contact" + thisContact.getId(), "Message could not be sent since contact does not have an email address");
-          } else if(email.startsWith("P:") && (thisContact.hasAccount() && (thisContact.getOrgId() != 0))){
+          } else if (email.startsWith("P:") && (thisContact.hasAccount() && (thisContact.getOrgId() != 0))) {
             if (errors == null) {
               errors = new HashMap();
             }
@@ -623,7 +627,7 @@ public final class MyCFS extends CFSModule {
     if (context.getAction().getActionName().equals("MyCFSInbox")) {
       addModuleBean(context, "My Inbox", "");
     } else if (context.getAction().getActionName().equals("LeadsCallsForward")) {
-      addModuleBean(context, "View Opportunities", "Opportunity Calls");
+      addModuleBean(context, "View Opportunities", "Opportunity Activities");
     } else {
       addModuleBean(context, "My Tasks", "Forward Message");
     }
@@ -720,7 +724,7 @@ public final class MyCFS extends CFSModule {
     }
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     User thisRec = thisUser.getUserRecord();
-    
+
     //this is how we get the multiple-level heirarchy...recursive function.
     UserList shortChildList = thisRec.getShortChildList();
     UserList newUserList = thisRec.getFullChildList(shortChildList, new UserList());
@@ -738,8 +742,9 @@ public final class MyCFS extends CFSModule {
       if (hasPermission(context, "myhomepage-tasks-view")) {
         calendarInfo.addAlertType("Task", "org.aspcfs.modules.tasks.base.TaskListScheduledActions", "Tasks");
       }
-      if (hasPermission(context, "contacts-external_contacts-calls-view")) {
-        calendarInfo.addAlertType("Call", "org.aspcfs.modules.contacts.base.CallListScheduledActions", "Calls");
+
+      if (hasPermission(context, "contacts-external_contacts-calls-view") || hasPermission(context, "accounts-accounts-contacts-calls-view")) {
+        calendarInfo.addAlertType("Call", "org.aspcfs.modules.contacts.base.CallListScheduledActions", "Activities");
       }
       if (hasPermission(context, "projects-projects-view")) {
         calendarInfo.addAlertType("Project", "com.zeroio.iteam.base.ProjectListScheduledActions", "Projects");
@@ -750,10 +755,12 @@ public final class MyCFS extends CFSModule {
       if (hasPermission(context, "contacts-external_contacts-opportunities-view") || hasPermission(context, "pipeline-opportunities-view")) {
         calendarInfo.addAlertType("Opportunity", "org.aspcfs.modules.pipeline.base.OpportunityListScheduledActions", "Opportunities");
       }
-      if (hasPermission(context, "tickets-tickets-view")) {
-        calendarInfo.addAlertType("Tickets", "org.aspcfs.modules.troubletickets.base.TicketListScheduledActions", "Tickets");
+      if (hasPermission(context, "products-view")) {
+        calendarInfo.addAlertType("Quote", "org.aspcfs.modules.quotes.base.QuotesListScheduledActions", "Quotes");
       }
-      
+      if (hasPermission(context, "products-view") || hasPermission(context, "tickets-tickets-view")) {
+        calendarInfo.addAlertType("Ticket", "org.aspcfs.modules.troubletickets.base.TicketListScheduledActions", "Tickets");
+      }
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
     }
     return "HomeOK";
@@ -782,44 +789,15 @@ public final class MyCFS extends CFSModule {
       db = this.getConnection(context);
       calendarInfo.update(db, context);
       companyCalendar = new CalendarView(calendarInfo);
-      companyCalendar.addHolidaysByRange();
+      companyCalendar.addHolidays();
+
       //check if the user's account is expiring
       User thisUser = this.getUser(context, this.getUserId(context));
       if (thisUser.getExpires() != null) {
         String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
         companyCalendar.addEvent(expiryDate, "Your user login expires", CalendarEventList.EVENT_TYPES[9]);
       }
-      
-      // Additional Today Items
-      if (hasPermission(context, "products-view")) {
-        Timestamp todayTimestamp = new Timestamp(System.currentTimeMillis());
-        // Retrieve the quote status lookup list
-        SystemStatus systemStatus = this.getSystemStatus(context);
-        LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
-        // Build quotes for this user that are in their account
-        // and pending their approval
-        QuoteList quoteList = new QuoteList();
-        quoteList.setOrgId(thisUser.getContact().getOrgId());
-        quoteList.setStatusId(list.getIdFromValue("Pending customer acceptance"));
-        quoteList.buildList(db);
-        Iterator quotes = quoteList.iterator();
-        while (quotes.hasNext()) {
-          Quote thisQuote = (Quote) quotes.next();
-          companyCalendar.addEvent(todayTimestamp, "Quote #" + thisQuote.getId() + " needs your approval", CalendarEventList.EVENT_TYPES[10], thisQuote.getId());
-        }
-        // Build a list of tickets they have submitted to show status
-        TicketList ticketList = new TicketList();
-        ticketList.setOrgId(thisUser.getContact().getOrgId());
-        ticketList.setOnlyOpen(true);
-        ticketList.setOnlyWithProducts(true);
-        ticketList.buildList(db);
-        Iterator tickets = ticketList.iterator();
-        while (tickets.hasNext()) {
-          Ticket thisTicket = (Ticket) tickets.next();
-          companyCalendar.addEvent(todayTimestamp, "Request #" + thisTicket.getId() + " is in progress", CalendarEventList.EVENT_TYPES[11], -1);
-        }
-      }
-      
+
       //create events depending on alert type
       String selectedAlertType = calendarInfo.getCalendarDetailsView();
       String param1 = "org.aspcfs.utils.web.CalendarView";
@@ -829,9 +807,14 @@ public final class MyCFS extends CFSModule {
         AlertType thisAlert = (AlertType) alertTypes.get(i);
         Object thisInstance = Class.forName(thisAlert.getClassName()).newInstance();
         if (selectedAlertType.equalsIgnoreCase("all") || selectedAlertType.toLowerCase().startsWith(((thisAlert.getName()).toLowerCase()))) {
-          //set UserId
-          Method method = Class.forName(thisAlert.getClassName()).getMethod("setUserId", new Class[]{int.class});
-          method.invoke(thisInstance, new Object[]{new Integer(calendarInfo.getSelectedUserId())});
+
+          //set module
+          Method method = Class.forName(thisAlert.getClassName()).getMethod("setModule", new Class[]{Class.forName("org.aspcfs.modules.actions.CFSModule")});
+          method.invoke(thisInstance, new Object[]{(CFSModule) this});
+
+          //set action context
+          method = Class.forName(thisAlert.getClassName()).getMethod("setContext", new Class[]{Class.forName("com.darkhorseventures.framework.actions.ActionContext")});
+          method.invoke(thisInstance, new Object[]{context});
 
           //set Start and End Dates
           method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Timestamp")});
@@ -884,11 +867,9 @@ public final class MyCFS extends CFSModule {
 
     try {
       db = this.getConnection(context);
-
       calendarInfo.update(db, context);
       companyCalendar = new CalendarView(calendarInfo);
       //companyCalendar.updateParams();
-      companyCalendar.addHolidaysByRange();
       //check if the user's account is expiring
       User thisUser = this.getUser(context, this.getUserId(context));
       if (thisUser.getExpires() != null) {
@@ -903,9 +884,13 @@ public final class MyCFS extends CFSModule {
         AlertType thisAlert = (AlertType) alertTypes.get(i);
         Object thisInstance = Class.forName(thisAlert.getClassName()).newInstance();
 
-        //set UserId
-        Method method = Class.forName(thisAlert.getClassName()).getMethod("setUserId", new Class[]{int.class});
-        method.invoke(thisInstance, new Object[]{new Integer(calendarInfo.getSelectedUserId())});
+        //set module
+        Method method = Class.forName(thisAlert.getClassName()).getMethod("setModule", new Class[]{Class.forName("org.aspcfs.modules.actions.CFSModule")});
+        method.invoke(thisInstance, new Object[]{(CFSModule) this});
+
+        //set action context
+        method = Class.forName(thisAlert.getClassName()).getMethod("setContext", new Class[]{Class.forName("com.darkhorseventures.framework.actions.ActionContext")});
+        method.invoke(thisInstance, new Object[]{context});
 
         //set Start and End Dates
         java.sql.Timestamp startDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarStartDate(context)));
@@ -929,7 +914,6 @@ public final class MyCFS extends CFSModule {
     context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
     return "CalendarOK";
   }
-
 
 
   /**

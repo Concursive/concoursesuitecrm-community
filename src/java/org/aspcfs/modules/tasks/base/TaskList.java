@@ -180,11 +180,11 @@ public class TaskList extends ArrayList {
     StringBuffer sqlTail = new StringBuffer();
     createFilter(sqlFilter);
     sqlSelect.append(
-        "SELECT duedate, count(*) AS nocols " +
+        "SELECT " + DatabaseUtils.castDateTimeToDate(db, "duedate") + ", count(*) AS nocols " +
         "FROM task t " +
         "WHERE t.task_id > -1 ");
     sqlFilter.append("AND duedate IS NOT NULL ");
-    sqlTail.append("GROUP BY duedate ");
+    sqlTail.append("GROUP BY " + DatabaseUtils.castDateTimeToDate(db, "duedate"));
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
     prepareFilter(pst);
     rs = pst.executeQuery();
@@ -193,8 +193,7 @@ public class TaskList extends ArrayList {
     }
     while (rs.next()) {
       String dueDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("duedate"));
-      int temp = rs.getInt("nocols");
-      events.put(dueDate, new Integer(temp));
+      events.put(dueDate, new Integer(rs.getInt("nocols")));
     }
     rs.close();
     pst.close();
@@ -215,8 +214,9 @@ public class TaskList extends ArrayList {
     StringBuffer sqlFilter = new StringBuffer();
     createFilter(sqlFilter);
     sqlSelect.append(
-        "SELECT t.task_id, t.description, t.duedate, t.complete " +
+        "SELECT t.task_id, t.description, t.duedate, t.complete, t.priority, t.entered, tc.contact_id " +
         "FROM task t " +
+        "LEFT JOIN tasklink_contact tc ON (t.task_id = tc.task_id) " +
         "WHERE t.task_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
     prepareFilter(pst);
@@ -227,6 +227,11 @@ public class TaskList extends ArrayList {
       thisTask.setDescription(rs.getString("description"));
       thisTask.setDueDate(rs.getTimestamp("duedate"));
       thisTask.setComplete(rs.getBoolean("complete"));
+      thisTask.setPriority(rs.getInt("priority"));
+      thisTask.setEntered(rs.getTimestamp("entered"));
+      float ageCheck = ((System.currentTimeMillis() - thisTask.getEntered().getTime()) / 86400000);
+      thisTask.setAge(java.lang.Math.round(ageCheck));
+      thisTask.setContactId(DatabaseUtils.getInt(rs, "contact_id"));
       this.add(thisTask);
     }
     rs.close();

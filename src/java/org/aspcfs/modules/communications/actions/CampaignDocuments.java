@@ -421,7 +421,7 @@ public final class CampaignDocuments extends CFSModule {
         }
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
+      //User either canceled the download or lost connection
       if (System.getProperty("DEBUG") != null) {
         System.out.println(se.toString());
       }

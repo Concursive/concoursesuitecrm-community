@@ -25,7 +25,7 @@
     <td>
       <%= ContactEmailTypeList.getHtmlSelect("email"+ecount+"type", thisEmailAddress.getType()) %>
       <input type="text" size="40" name="email<%= ecount %>address" maxlength="255" value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
-      <input type="radio" name="forPrimary" value="<%= ecount %>" <%= (thisEmailAddress.getPrimaryEmail()) ? " checked" : "" %>>Primary
+      <input type="radio" name="primaryEmail" value="<%= ecount %>" <%= (thisEmailAddress.getPrimaryEmail()) ? " checked" : "" %>>Primary
       <dhv:evaluate if="<%= thisEmailAddress.getId() > 0 %>">
         <input type="hidden" name="email<%= ecount %>id" value="<%= thisEmailAddress.getId() %>">
         <input type="checkbox" name="email<%= ecount %>delete" value="on">mark to remove
@@ -44,7 +44,7 @@
     <td>
       <%= ContactEmailTypeList.getHtmlSelect("email" + ecount + "type", ((ContactDetails.getEmailAddressTypeId(1)==-1)?1:ContactDetails.getEmailAddressTypeId(1))) %>
       <input type="text" size="40" name="email<%=ecount%>address" maxlength="255">
-      <input type="radio" name="forPrimary" value="<%= ecount %>">Primary
+      <input type="radio" name="primaryEmail" value="<%= ecount %>">Primary
     </td>
   </tr>
 <%
@@ -74,6 +74,7 @@
       <%= ContactPhoneTypeList.getHtmlSelect("phone" + icount + "type", thisPhoneNumber.getType()) %>
       <input type="text" size="20" name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
       <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10" value="<%= toHtmlValue(thisPhoneNumber.getExtension()) %>">
+      <input type="radio" name="primaryNumber" value="<%= icount %>" <%= (thisPhoneNumber.getPrimaryNumber()) ? " checked" : "" %>>Primary
       <dhv:evaluate if="<%= thisPhoneNumber.getId() > 0 %>">
         <input type="hidden" name="phone<%= icount %>id" value="<%= thisPhoneNumber.getId() %>">
         <input type="checkbox" name="phone<%= icount %>delete" value="on">mark to remove
@@ -94,6 +95,7 @@
       <%= ContactPhoneTypeList.getHtmlSelect("phone"+icount+"type", "Business") %>
       <input type="text" size="20" name="phone<%=icount%>number">&nbsp;ext.
       <input type="text" size="5" name="phone<%=icount%>ext" maxlength="10">
+      <input type="radio" name="primaryNumber" value="<%= icount %>">Primary
     </td>
   </tr>
 <%}%>  
@@ -120,6 +122,7 @@
     </td>
     <td>
       <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", thisAddress.getType()) %>
+      <input type="radio" name="primaryAddress" value="<%=acount%>" <%= thisAddress.getPrimaryAddress() ? " checked" : ""%>>Primary
     </td>
   </tr>
   <tr class="containerBody">
@@ -204,6 +207,7 @@
     </td>
     <td>
       <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", "Business") %>
+      <input type="radio" name="primaryAddress" value="<%=acount%>">Primary
     </td>
   </tr>
   <tr class="containerBody">

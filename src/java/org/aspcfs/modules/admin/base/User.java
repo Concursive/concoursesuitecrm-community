@@ -771,7 +771,7 @@ public class User extends GenericBean {
 
 
   /**
-   *  Sets the managerId attribute of the User object
+   *  Sets the managerId attribute of the User object DPM 8.14.03
    *
    *@param  tmp  The new managerId value
    *@since       1.1
@@ -1335,6 +1335,15 @@ public class User extends GenericBean {
    */
   public String getTimeZone() {
     return timeZone;
+  }
+  
+  
+  public TimeZone getTimeZoneActual() {
+    TimeZone tZone = Calendar.getInstance().getTimeZone();
+    if (timeZone != null && !"".equals(timeZone)) {
+      tZone = TimeZone.getTimeZone(timeZone);
+    }
+    return tZone;
   }
 
 

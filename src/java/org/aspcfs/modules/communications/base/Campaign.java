@@ -30,14 +30,14 @@ public class Campaign extends GenericBean {
   public final static int STARTED = 3;
   public final static int FINISHED = 4;
   public final static int ERROR = 5;
-  public final static int CANCELLED = 6;
+  public final static int CANCELED = 6;
 
   public final static String IDLE_TEXT = "Idle";
   public final static String QUEUE_TEXT = "In Queue";
   public final static String STARTED_TEXT = "Sending Messages";
   public final static String FINISHED_TEXT = "Messages Sent";
   public final static String ERROR_TEXT = "Error in Campaign";
-  public final static String CANCELLED_TEXT = "Cancelled";
+  public final static String CANCELED_TEXT = "Canceled";
 
   //campaign types
   public final static int GENERAL = 1;
@@ -1961,8 +1961,8 @@ public class Campaign extends GenericBean {
           "WHERE campaign_id = ? " +
           "AND status_id IN (" + QUEUE + ", " + ERROR + ") ");
       int i = 0;
-      pst.setInt(++i, CANCELLED);
-      pst.setString(++i, CANCELLED_TEXT);
+      pst.setInt(++i, CANCELED);
+      pst.setString(++i, CANCELED_TEXT);
       pst.setBoolean(++i, false);
       pst.setInt(++i, modifiedBy);
       pst.setInt(++i, id);

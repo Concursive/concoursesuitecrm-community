@@ -391,8 +391,8 @@ public final class MyTasks extends CFSModule {
         processErrors(context, thisTask.getErrors());
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
-      System.out.println("MyTasks -> ProcessImage : Download cancelled or connection lost");
+      //User either canceled the download or lost connection
+      System.out.println("MyTasks-> ProcessImage : Download canceled or connection lost");
     } catch (Exception e) {
       errorMessage = e;
       this.freeConnection(context, db);

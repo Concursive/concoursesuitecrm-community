@@ -39,10 +39,6 @@ public class CalendarEvent implements Comparable {
 
   //Time
   protected String time = "00:00";
-  protected String hour = "";
-  protected String minutes = "";
-  protected String ampm = "";
-  protected String duration = "";
 
   //Repeat
   protected int repeatType = 0;
@@ -300,34 +296,6 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Gets the link attribute of the CalendarEvent object
-   *
-   *@return    The link value
-   */
-  public String getLink() {
-
-    if (category.equalsIgnoreCase("Opportunity")) {
-      return "<a href=\"javascript:popURL('LeadsComponents.do?command=ModifyComponent&id=" + id + "&popup=true&return=Calendar','CRM_Opportunity','500','475','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Opportunity';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
-    } else if (category.equalsIgnoreCase("Account Alerts") || category.equalsIgnoreCase("Account Contract Alerts")) {
-      return "<a href=\"javascript:popURL('Accounts.do?command=Modify&orgId=" + id + "&popup=true&return=Calendar','CRM_Account','500','475','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Account';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
-    } else if (category.equalsIgnoreCase("Assignments")) {
-      return "<a href=\"javascript:popURL('ProjectManagementAssignments.do?command=Modify&aid=" + idsub + "&pid=" + id + "&popup=true&return=Calendar','CRM_Assignment','600','325','yes','no');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Assignment';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
-    } else if (category.equalsIgnoreCase("Contact Calls")) {
-      return "<a href=\"javascript:popURL('ExternalContactsCalls.do?command=Modify&id=" + idsub + "&contactId=" + id + "&popup=true&return=Calendar','CRM_Opportunity','550','375','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Call';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
-    } else if (category.equalsIgnoreCase("Opportunity Calls")) {
-      return "<a href=\"javascript:popURL('LeadsCalls.do?command=Modify&id=" + idsub + "&headerId=" + id + "&popup=true&return=Calendar','CRM_Opportunity','550','375','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Call';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
-    } else if (category.equalsIgnoreCase("Tasks")) {
-      return "<a href=\"javascript:popURL('MyTasks.do?command=Modify&id=" + id + "&popup=true&return=Calendar','CRM_Task','600','420','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Update this Task';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
-    } else if (category.equalsIgnoreCase("Quotes pending your approval")) {
-      return "<a href=\"javascript:popURL('Quotes.do?command=CustomerDisplay&quoteId=" + id + "&popup=true&return=Calendar','CRM_Quote','600','400','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Review this Quote';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
-    } else if(category.equalsIgnoreCase("Open Tickets")){
-      return "<a href=\"javascript:popURL('TroubleTickets.do?command=Modify&id=" + id + "&popup=true&return=Calendar','CRM_Ticket','600','450','yes','yes');\" style=\"text-decoration:none;color:black;\" onMouseOver=\"this.style.color='blue';window.status='Review this Quote';return true;\" onMouseOut=\"this.style.color='black';window.status='';return true;\">";
-    }
-    return link;
-  }
-
-
-  /**
    *  Gets the Subject attribute of the CalendarEvent object
    *
    *@return    The Subject value
@@ -350,44 +318,6 @@ public class CalendarEvent implements Comparable {
 
 
   /**
-   *  Gets the Icon attribute of the CalendarEvent object
-   *
-   *@return    The Icon value
-   *@since
-   */
-  public String getIcon() {
-    if (!icon.equals("")) {
-      return icon;
-    } else if (category.equals("event")) {
-      return "<img border=0 src=\"images/event-timed.gif\" alt=\"Event:" + this.getSubject() + "\" align=texttop width=12 height=12>";
-    } else if (category.equalsIgnoreCase("holiday")) {
-      return "<img border=0 src=\"images/event-holiday.gif\" alt=\"US Bank Holiday:" + this.getSubject() + "\" align=texttop width=12 height=12>";
-    } else if (category.equalsIgnoreCase("Opportunity")) {
-      return "<img border=0 src=\"images/alertopp.gif\" alt=\"Opp:" + this.getSubject() + "\" align=texttop>";
-    } else if (category.equalsIgnoreCase("Contact Calls") || category.equalsIgnoreCase("Opportunity Calls")) {
-      return "<img border=0 src=\"images/alertcall.gif\" alt=\"Call:" + this.getSubject() + "\" align=texttop>";
-    } else if (category.equalsIgnoreCase("Assignments")) {
-      return "<img border=0 src=\"images/alertassignment.gif\" alt=\"Assignment:" + this.getSubject() + "\" align=texttop>";
-    } else if (category.equalsIgnoreCase("Account Alerts") || category.equalsIgnoreCase("Account Contract Alerts")) {
-      return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" alt=\"Account:" + this.getSubject() + "\" align=texttop>";
-    } else if (category.equalsIgnoreCase("Tasks")) {
-      if (this.getStatus() == Task.DONE) {
-        return "<a href=\"javascript:changeImages('image" + this.getId() + "','MyTasks.do?command=ProcessImage&id=box.gif|gif|'+" + this.getId() + "+'|0','/MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+" + this.getId() + "+'|1');\"><img src=\"images/box-checked.gif\" name=\"image" + this.getId() + "\" id=\"1\" border=0 title=\"Click to change\"></a>";
-      } else {
-        return "<a href=\"javascript:changeImages('image" + this.getId() + "','MyTasks.do?command=ProcessImage&id=box.gif|gif|'+" + this.getId() + "+'|1','/MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+" + this.getId() + "+'|1');\"><img src=\"images/box.gif\" name=\"image" + this.getId() + "\" id=\"0\" border=0 title=\"Click to change\"></a>";
-      }
-    } else if (category.equalsIgnoreCase("Ad quotes pending your approval")) {
-      return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" alt=\"Ad Quote:" + this.getSubject() + "\" align=texttop>";
-    } else if (category.equalsIgnoreCase("Ad requests you have made that are in progress")) {
-      return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" alt=\"Ad Request:" + this.getSubject() + "\" align=texttop>";
-    } else if(category.equalsIgnoreCase("Open Tickets")){
-      return "<img border=0 src=\"images/tree0.gif\" alt=\"Ticket:" + this.getSubject() + "\" align=texttop>";
-    }
-    return icon;
-  }
-
-
-  /**
    *  Gets the icon attribute of the CalendarEvent class
    *
    *@param  thisCategory  Description of the Parameter
@@ -400,9 +330,9 @@ public class CalendarEvent implements Comparable {
       return "<img border=0 src=\"images/event-holiday.gif\" align=texttop width=12 height=12 title=\"US Bank Holiday\">";
     } else if (thisCategory.equalsIgnoreCase("System Alerts")) {
       return "<img border=0 src=\"images/box-hold.gif\" align=texttop width=16 height=15 title=\"User Account Expires\">";
-    } else if (thisCategory.equalsIgnoreCase("Opportunity")) {
+    } else if (thisCategory.equalsIgnoreCase("Opportunity") || thisCategory.equalsIgnoreCase("Opportunities")) {
       return "<img border=0 src=\"images/alertopp.gif\" align=texttop title=\"Opportunities\">";
-    } else if (thisCategory.equalsIgnoreCase("Contact Calls") || thisCategory.equalsIgnoreCase("Opportunity Calls")) {
+    } else if (thisCategory.equalsIgnoreCase("Calls") || thisCategory.equalsIgnoreCase("Contact Calls") || thisCategory.equalsIgnoreCase("Opportunity Calls")) {
       return "<img border=0 src=\"images/alertcall.gif\" align=texttop title=\"Calls\">";
     } else if (thisCategory.equalsIgnoreCase("Assignments")) {
       return "<img border=0 src=\"images/alertassignment.gif\" align=texttop title=\"Assignments\">";
@@ -414,34 +344,6 @@ public class CalendarEvent implements Comparable {
       return "<img src=\"images/tree0.gif\" border=0 align=texttop title=\"Tickets\">";
     }
     return "";
-  }
-
-
-  /**
-   *  Gets the namePlural attribute of the CalendarEvent class
-   *
-   *@param  thisCategory  Description of the Parameter
-   *@return               The namePlural value
-   */
-  public static String getNamePlural(String thisCategory) {
-    if (thisCategory.equals("event")) {
-      return "Events";
-    } else if (thisCategory.equalsIgnoreCase("holiday")) {
-      return "US Bank Holiday";
-    } else if (thisCategory.equalsIgnoreCase("System Alerts")) {
-      return "System Alert";
-    } else if (thisCategory.equalsIgnoreCase("Opportunity")) {
-      return "Opportunities";
-    } else if (thisCategory.equalsIgnoreCase("Contact Calls") || thisCategory.equalsIgnoreCase("Opportunity Calls")) {
-      return "Calls";
-    } else if (thisCategory.equalsIgnoreCase("Assignments")) {
-      return "Assignments";
-    } else if (thisCategory.equalsIgnoreCase("Account Alerts") || thisCategory.equalsIgnoreCase("Account Contract Alerts")){
-      return "Accounts";
-    } else if (thisCategory.equalsIgnoreCase("Tasks")) {
-      return "Tasks";
-    }
-    return thisCategory;
   }
 
 

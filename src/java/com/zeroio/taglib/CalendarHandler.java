@@ -22,7 +22,8 @@ import org.aspcfs.modules.login.beans.UserBean;
  *
  *@author     matt rajkowski
  *@created    July 21, 2004
- *@version    $Id$
+ *@version    $Id: CalendarHandler.java,v 1.1 2004/07/21 19:00:43 mrajkowski Exp
+ *      $
  */
 public class CalendarHandler extends TagSupport {
 
@@ -30,6 +31,7 @@ public class CalendarHandler extends TagSupport {
   private String form = null;
   private String field = null;
   private Timestamp timestamp = null;
+  private boolean hidden = false;
 
 
   /**
@@ -93,6 +95,26 @@ public class CalendarHandler extends TagSupport {
 
 
   /**
+   *  Sets the hidden attribute of the CalendarHandler object
+   *
+   *@param  tmp  The new hidden value
+   */
+  public void setHidden(boolean tmp) {
+    this.hidden = tmp;
+  }
+
+
+  /**
+   *  Sets the hidden attribute of the CalendarHandler object
+   *
+   *@param  tmp  The new hidden value
+   */
+  public void setHidden(String tmp) {
+    this.hidden = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@return                   Description of the Return Value
@@ -136,11 +158,16 @@ public class CalendarHandler extends TagSupport {
     }
     // Output the result based on the retrieved info (if any)
     try {
-      // TODO: Add onChange="checkDate(this.value)"
-      this.pageContext.getOut().write(
-          "<input type=\"text\" name=\"" + field + "\" size=\"10\" value=\"" + dateString + "\">" +
-          "&nbsp;<a href=\"javascript:popCalendar('" + form + "','" + field + "','" + language + "','" + country + "');\">" +
-          "<img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\"></a>");
+      if (!hidden) {
+        // TODO: Add onChange="checkDate(this.value)"
+        this.pageContext.getOut().write(
+            "<input type=\"text\" name=\"" + field + "\" size=\"10\" value=\"" + dateString + "\" />" +
+            "&nbsp;<a href=\"javascript:popCalendar('" + form + "','" + field + "','" + language + "','" + country + "');\">" +
+            "<img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\"></a>");
+      } else {
+        this.pageContext.getOut().write(
+            "<input type=\"hidden\" name=\"" + field + "\" value=\"" + dateString + "\" />");
+      }
     } catch (Exception e) {
     }
     return SKIP_BODY;

@@ -3,14 +3,14 @@
   var thisImportId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, importId, hasCancelOption, process, canDelete) {
+  function displayMenu(loc, id, importId, hasCancelOption, process, canDelete) {
     thisImportId = importId;
     updateMenu(hasCancelOption, process, canDelete);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuImport", "down", 0, 0, 170, getHeight("menuImportTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   
   function updateMenu(hasCancelOption, process, canDelete){
@@ -58,44 +58,48 @@
 </script>
 <div id="menuImportContainer" class="menu">
   <div id="menuImportContent">
-    <table id="menuImportTable" class="pulldown" width="170">
+    <table id="menuImportTable" class="pulldown" width="170" cellspacing="0">
       <dhv:permission name="accounts-accounts-contacts-imports-view">
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+          onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-imports-add">
-      <tr id="menuProcess">
-        <td>
+      <tr id="menuProcess" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+          onclick="process()">
+        <th>
           <img src="images/icons/stock_compile-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:process()">Process</a>
+          Process
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-imports-add">
-      <tr id="menuCancel">
-        <td>
+      <tr id="menuCancel" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+          onclick="cancel()">
+        <th>
           <img src="images/icons/stock_calc-cancel-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:cancel()">Cancel</a>
+          Cancel
         </td>
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-imports-delete">
-      <tr id="menuDelete">
-        <td>
+      <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+          onclick="deleteAction()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteAction()">Delete</a>
+          Delete
         </td>
       </tr>
       </dhv:permission>

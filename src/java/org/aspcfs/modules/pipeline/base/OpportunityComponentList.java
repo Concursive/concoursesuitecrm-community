@@ -378,7 +378,7 @@ public class OpportunityComponentList extends ArrayList {
     StringBuffer sqlFilter = new StringBuffer();
     createFilter(sqlFilter);
     sqlSelect.append(
-        "SELECT oc.opp_id, oc.id, oc.description, org.name as acct_name, oc.alertdate, oc.alert " +
+        "SELECT oc.opp_id, oc.id, oc.description, oc.alertdate, oc.alert, oc.closedate, oc.guessvalue " +
         "FROM opportunity_component oc  " +
         "LEFT JOIN opportunity_header oh ON (oc.opp_id = oh.opp_id) " +
         "LEFT JOIN organization org ON (oh.acctlink = org.org_id) " +
@@ -391,9 +391,10 @@ public class OpportunityComponentList extends ArrayList {
       thisOpp.setHeaderId(rs.getInt("opp_id"));
       thisOpp.setId(rs.getInt("id"));
       thisOpp.setDescription(rs.getString("description"));
-      thisOpp.setAccountName(rs.getString("acct_name"));
       thisOpp.setAlertDate(rs.getTimestamp("alertdate"));
       thisOpp.setAlertText(rs.getString("alert"));
+      thisOpp.setCloseDate(rs.getString("closedate"));
+      thisOpp.setGuess(rs.getDouble("guessvalue"));
       this.add(thisOpp);
     }
     rs.close();

@@ -4,14 +4,14 @@
   var thisQuoteId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(id, orgId, contactId) {
+  function displayMenu(loc, id, orgId, contactId) {
     thisOrgId = orgId;
     thisQuoteId = contactId;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuQuote", "down", 0, 0, 170, getHeight("menuQuoteTable"));
     }
-    return ypSlideOutMenu.displayMenu(id);
+    return ypSlideOutMenu.displayDropMenu(id, loc);
   }
   //Menu link functions
   function details() {
@@ -24,21 +24,23 @@
 </script>
 <div id="menuQuoteContainer" class="menu">
   <div id="menuQuoteContent">
-    <table id="menuQuoteTable" class="pulldown" width="170">
-      <tr>
-        <td>
+    <table id="menuQuoteTable" class="pulldown" width="170" cellspacing="0">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+          onclick="details()">
+        <th>
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:details()">View Details</a>
+          View Details
         </td>
       </tr>
-      <tr>
-        <td>
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+          onclick="deleteQuote()">
+        <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        </td>
+        </th>
         <td width="100%">
-          <a href="javascript:deleteQuote()">Delete</a>
+          Delete
         </td>
       </tr>
     </table>

@@ -1,5 +1,7 @@
 package org.aspcfs.modules.contacts.base;
 
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.ScheduledActions;
 import org.aspcfs.modules.mycfs.base.*;
 import org.aspcfs.modules.base.Constants;
@@ -20,9 +22,9 @@ import java.sql.*;
  */
 public class CallListScheduledActions extends CallList implements ScheduledActions {
 
-  private int userId = -1;
-
-
+  private ActionContext context = null;
+  private CFSModule module = null;
+  
   /**
    *  Constructor for the CallListScheduledActions object
    */
@@ -30,24 +32,43 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
 
 
   /**
-   *  Sets the userId attribute of the CallListScheduledActions object
+   *  Sets the module attribute of the QuoteListScheduledActions object
    *
-   *@param  userId  The new userId value
+   *@param  tmp  The new module value
    */
-  public void setUserId(int userId) {
-    this.userId = userId;
+  public void setModule(CFSModule tmp) {
+    this.module = tmp;
   }
 
 
   /**
-   *  Gets the userId attribute of the CallListScheduledActions object
+   *  Sets the context attribute of the QuoteListScheduledActions object
    *
-   *@return    The userId value
+   *@param  tmp  The new context value
    */
-  public int getUserId() {
-    return userId;
+  public void setContext(ActionContext tmp) {
+    this.context = tmp;
   }
 
+
+  /**
+   *  Gets the context attribute of the QuoteListScheduledActions object
+   *
+   *@return    The context value
+   */
+  public ActionContext getContext() {
+    return context;
+  }
+
+
+  /**
+   *  Gets the module attribute of the QuoteListScheduledActions object
+   *
+   *@return    The module value
+   */
+  public CFSModule getModule() {
+    return module;
+  }
 
   /**
    *  Description of the Method
@@ -61,28 +82,42 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       System.out.println("CallListScheduledActions --> Building Call Alerts ");
     }
     try {
+      //get the userId
+      int userId = module.getUserId(context);
+      
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
-      
-      this.setEnteredBy(this.getUserId());
-      this.setHasAlertDate(true);
-      this.buildList(db);
+
+      //add all pending activities
+      this.setOnlyPending(true);
+      this.setOwner(userId);
+      this.buildShortList(db);
       Iterator m = this.iterator();
       while (m.hasNext()) {
         Call thisCall = (Call) m.next();
-        CalendarEvent thisEvent = null;
         String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisCall.getAlertDate());
-        if (thisCall.getOppHeaderId() == -1 && thisCall.getContactId() > -1) {
-          thisEvent = companyCalendar.addEvent(alertDate, "", 
-              (thisCall.getContactName() != null && !"".equals(thisCall.getContactName()) ? thisCall.getContactName() + ": " : "") + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[5], thisCall.getContactId(), thisCall.getId());
-        } else {
-          thisEvent = companyCalendar.addEvent(alertDate, "", 
-              (thisCall.getContactName() != null && !"".equals(thisCall.getContactName()) ? thisCall.getContactName() + ": " : "") + thisCall.getAlertText(), CalendarEventList.EVENT_TYPES[6], thisCall.getOppHeaderId(), thisCall.getId());
+        CallEventList thisList = (CallEventList) companyCalendar.getEventList(alertDate, CalendarEventList.EVENT_TYPES[1]);
+        thisList.getPendingCalls().add(thisCall);
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("CallListScheduledActions-> Pending Call: " + thisCall.getAlertText() + " added on " + alertDate);
         }
-        if (thisCall.getContactId() > 0) {
-          String contactLink = "[<a href=\"javascript:popURL('ExternalContacts.do?command=ContactDetails&id=" + 
-              thisCall.getContactId() + "&popup=true&popupType=inline','Details','650','500','yes','yes');\">Contact Link</a>]";
-          thisEvent.addRelatedLink(contactLink);
+      }
+
+      //add all completed activities
+      this.clear();
+      this.setOnlyPending(false);
+      this.setOnlyCompleted(true);
+      this.setOwner(-1);
+      this.setEnteredBy(userId);
+      this.buildShortList(db);
+      m = this.iterator();
+      while (m.hasNext()) {
+        Call thisCall = (Call) m.next();
+        String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisCall.getEntered());
+        CallEventList thisList = (CallEventList) companyCalendar.getEventList(alertDate, CalendarEventList.EVENT_TYPES[1]);
+        thisList.getCompletedCalls().add(thisCall);
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("CallListScheduledActions-> Complete Call: " + thisCall.getSubject() + " added on " + alertDate);
         }
       }
     } catch (SQLException e) {
@@ -104,17 +139,22 @@ public class CallListScheduledActions extends CallList implements ScheduledActio
       System.out.println("CallListScheduledActions --> Building Alert Counts ");
     }
     try {
+      //get the userId
+      int userId = module.getUserId(context);
+      
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
-      
-      this.setEnteredBy(this.getUserId());
-      this.setHasAlertDate(true);
-      HashMap dayEvents = this.queryRecordCount(db, timeZone);
-      Set s = dayEvents.keySet();
-      Iterator i = s.iterator();
-      while (i.hasNext()) {
-        String thisDay = (String) i.next();
-        companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[5], thisDay, dayEvents.get(thisDay));
+
+      //add pending activities count
+      this.setOwner(userId);
+      this.setOnlyPending(true);
+      HashMap pendingEvents = this.queryRecordCount(db, timeZone);
+
+      //add completed activities count
+      Iterator j = pendingEvents.keySet().iterator();
+      while (j.hasNext()) {
+        String thisDay = (String) j.next();
+        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[1], pendingEvents.get(thisDay));
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Call Calendar Alert Counts");

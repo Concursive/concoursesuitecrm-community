@@ -1,10 +1,18 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.text.DateFormat,java.lang.reflect.*, org.aspcfs.modules.mycfs.beans.CalendarBean, org.aspcfs.modules.mycfs.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,java.lang.reflect.*, org.aspcfs.modules.mycfs.beans.CalendarBean, org.aspcfs.modules.mycfs.base.*,org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="CompanyCalendar" class="org.aspcfs.utils.web.CalendarView" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/images.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript" src="javascript/trackMouse.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<%@ include file="../initPopupMenu.jsp" %>
 <%@ include file="../initPage.jsp" %>
+<%-- include the select menu jsp's for all events --%>
+<%@ include file="mycfs/calendar_task_events_menu.jsp" %>
+<%@ include file="mycfs/calendar_calls_events_menu.jsp" %>
+<%@ include file="mycfs/calendar_account_events_menu.jsp" %>
+<%@ include file="mycfs/calendar_opportunity_events_menu.jsp" %>
 <% 
    String returnPage = request.getParameter("return");
    CalendarBean CalendarInfo = (CalendarBean) session.getAttribute(returnPage!=null?returnPage + "CalendarInfo" :"CalendarInfo");
@@ -14,6 +22,8 @@
    }
 %>
 <script type="text/javascript">
+<%-- Preload image rollovers for drop-down menu --%>
+loadImages('select');
 function changeUserName(id){
   alert(window.parent.getElementById(id).innerHtml);
   userName = window.parent.getElementById(id).innerHtml;
@@ -74,7 +84,9 @@ function reloadCalendar(){
    Iterator days = (CompanyCalendar.getEvents(100)).iterator();
    if (days.hasNext()) {
      boolean showToday = false;
+     boolean firstEvent = true;
      int count = 0;
+     int menuCount = 0;
      Calendar today = Calendar.getInstance();
      today.setTimeZone(timeZone);
      while (days.hasNext()) {
@@ -107,66 +119,21 @@ function reloadCalendar(){
           </td>
         </tr>
     </dhv:evaluate>
-<%
-       boolean firstTime = true;
-       for (int i = 0; i< Array.getLength(CalendarEventList.EVENT_TYPES); i++) {
-       firstTime = true;
-       
-       Iterator eventList = thisDay.iterator();
-       while (eventList.hasNext()) {
-         CalendarEvent thisEvent = (CalendarEvent)eventList.next();
-         if (thisEvent.getCategory().toUpperCase().equals(CalendarEventList.EVENT_TYPES[i].toUpperCase())){
-           if (firstTime) {
-             firstTime = false;
-%>
-      <tr>
+    <tr>
         <td colspan="2" width="100%">
-          <table cellspacing="0" cellpadding="0" border="0" marginheight="0" marginwidth="0">
-            <tr>
-              <td><%= thisEvent.getIcon(CalendarEventList.EVENT_TYPES[i])%><a href="javascript:changeImages('detailsimage<%=toFullDateString(thisDay.getDate()) + i%>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertdetails<%=toFullDateString(thisDay.getDate()) + i%>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%=count==0?"images/arrowdown.gif":"images/arrowright.gif"%>" name="detailsimage<%=toFullDateString(thisDay.getDate()) + i%>" id="<%=count==0?"0":"1"%>" border=0 title="Click To View Details"><%=CalendarEvent.getNamePlural(CalendarEventList.EVENT_TYPES[i]) %></a></td>
-            </tr>
-          </table>
-          <table cellspacing="0" cellpadding="0" marginheight="0" marginwidth="0" border="0" id="alertdetails<%= toFullDateString(thisDay.getDate()) + i %>" style="<%=count==0?"display:":"display:none"%>">
-<%
-           }
-%>
-            <tr>
-              <td style="visibility:hidden" width="18">&nbsp;</td>
-              <td>
-                <li>
-                  <%=thisEvent.getCategory().equalsIgnoreCase("task")?thisEvent.getIcon():""%>&nbsp;<%= thisEvent.getLink() %><%= thisEvent.getSubject() %></a><%= thisEvent.getRelatedLinks() != null && thisEvent.getRelatedLinks().size() > 0 ? "&nbsp;" : "" %>
-                  <%-- Display all related links --%>
-                   <dhv:evaluate exp="<%= thisEvent.getRelatedLinks() != null %>">
-                   <%
-                    Iterator linkList = thisEvent.getRelatedLinks().iterator();
-                    while (linkList.hasNext()) {
-                   %>
-                      <%= linkList.next().toString() %>
-                   <%}%>
-                   </dhv:evaluate>
-                </li>
-              </td>
-            </tr>
-<%
-          }
-        }
-       if(!firstTime) {
-%>
-          </table>
+          <%-- draw the events for the day --%>
+          <%@ include file="mycfs/calendar_days_events_include.jsp" %>
         </td>
-      </tr>
-<%
-         }
-       }
-%>
-        </tr>
-        <tr style="visibility:none">
-          <td style="visibility:none">
-            <br>
-          </td>
-        </tr>
-<%
-      ++count;
+    </tr>
+    <dhv:evaluate if="<%= days.hasNext() %>">
+    <tr style="visibility:none">
+      <td style="visibility:none">
+        <br>
+      </td>
+    </tr>
+    </dhv:evaluate>
+<%    
+      count++;
      }
    } else {
 %>

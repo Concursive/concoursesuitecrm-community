@@ -1,5 +1,7 @@
 package org.aspcfs.modules.pipeline.base;
 
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.ScheduledActions;
 import org.aspcfs.modules.mycfs.base.*;
 import org.aspcfs.modules.base.Constants;
@@ -19,7 +21,8 @@ import java.sql.*;
  */
 public class OpportunityListScheduledActions extends OpportunityComponentList implements ScheduledActions {
 
-  private int userId = -1;
+  private ActionContext context = null;
+  private CFSModule module = null;
 
 
   /**
@@ -29,22 +32,42 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
 
 
   /**
-   *  Sets the userId attribute of the OpportunityListScheduledActions object
+   *  Sets the module attribute of the QuoteListScheduledActions object
    *
-   *@param  userId  The new userId value
+   *@param  tmp  The new module value
    */
-  public void setUserId(int userId) {
-    this.userId = userId;
+  public void setModule(CFSModule tmp) {
+    this.module = tmp;
   }
 
 
   /**
-   *  Gets the userId attribute of the OpportunityListScheduledActions object
+   *  Sets the context attribute of the QuoteListScheduledActions object
    *
-   *@return    The userId value
+   *@param  tmp  The new context value
    */
-  public int getUserId() {
-    return userId;
+  public void setContext(ActionContext tmp) {
+    this.context = tmp;
+  }
+
+
+  /**
+   *  Gets the context attribute of the QuoteListScheduledActions object
+   *
+   *@return    The context value
+   */
+  public ActionContext getContext() {
+    return context;
+  }
+
+
+  /**
+   *  Gets the module attribute of the QuoteListScheduledActions object
+   *
+   *@return    The module value
+   */
+  public CFSModule getModule() {
+    return module;
   }
 
 
@@ -60,10 +83,13 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
       if (System.getProperty("DEBUG") != null) {
         System.out.println("OppListScheduledActions -> Building opportunity alerts");
       }
+      //get the userId
+      int userId = module.getUserId(context);
+
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
-      
-      this.setOwner(this.getUserId());
+
+      this.setOwner(userId);
       this.setHasAlertDate(true);
       this.buildShortList(db);
       if (System.getProperty("DEBUG") != null) {
@@ -73,11 +99,7 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
       while (n.hasNext()) {
         OpportunityComponent thisOpp = (OpportunityComponent) n.next();
         String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisOpp.getAlertDate());
-        companyCalendar.addEvent(alertDate, "",
-            ((thisOpp.getAccountName() != null && !thisOpp.getAccountName().equals("")) ? thisOpp.getAccountName() + ": " : "") +
-            thisOpp.getDescription() +
-            " (" + thisOpp.getAlertText() + ")",
-            "Opportunity", thisOpp.getId());
+        companyCalendar.addEvent(alertDate, CalendarEventList.EVENT_TYPES[2], thisOpp);
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Opportunity Calendar Alerts");
@@ -97,20 +119,23 @@ public class OpportunityListScheduledActions extends OpportunityComponentList im
     if (System.getProperty("DEBUG") != null) {
       System.out.println("OppListScheduledActions -> Building Alert Counts ");
     }
-    
+
     try {
+      //get the userId
+      int userId = module.getUserId(context);
+
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
-      
-      this.setOwner(this.getUserId());
+
+      this.setOwner(userId);
       this.setHasAlertDate(true);
-      
+
       HashMap dayEvents = this.queryRecordCount(db, timeZone);
       Set s = dayEvents.keySet();
       Iterator i = s.iterator();
       while (i.hasNext()) {
         String thisDay = (String) i.next();
-        companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[2], thisDay, dayEvents.get(thisDay));
+        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[2], dayEvents.get(thisDay));
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Opportunity Calendar Alert Counts");

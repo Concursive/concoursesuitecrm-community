@@ -124,9 +124,16 @@ public class ContactAddressList extends AddressList {
    */
   public ContactAddressList(HttpServletRequest request) {
     int i = 0;
+    int primaryAddress = -1;
+    if (request.getParameter("primaryAddress") != null) {
+      primaryAddress = Integer.parseInt((String) request.getParameter("primaryAddress"));
+    }
     while (request.getParameter("address" + (++i) + "type") != null) {
       ContactAddress thisAddress = new ContactAddress();
       thisAddress.buildRecord(request, i);
+      if (primaryAddress == i) {
+        thisAddress.setPrimaryAddress(true);
+      }
       if (thisAddress.isValid()) {
         this.addElement(thisAddress);
       }

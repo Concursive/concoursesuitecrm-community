@@ -23,6 +23,8 @@ public class QuoteList extends ArrayList {
   private int enteredBy = -1;
   private int modifiedBy = -1;
   private boolean buildResources = false;
+  protected java.sql.Timestamp alertRangeStart = null;
+  protected java.sql.Timestamp alertRangeEnd = null;
 
 
   /**
@@ -222,6 +224,66 @@ public class QuoteList extends ArrayList {
    */
   public void setBuildResources(String tmp) {
     this.buildResources = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the QuoteList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(java.sql.Timestamp tmp) {
+    this.alertRangeStart = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the QuoteList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(String tmp) {
+    this.alertRangeStart = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the QuoteList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(java.sql.Timestamp tmp) {
+    this.alertRangeEnd = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the QuoteList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(String tmp) {
+    this.alertRangeEnd = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Gets the alertRangeStart attribute of the QuoteList object
+   *
+   *@return    The alertRangeStart value
+   */
+  public java.sql.Timestamp getAlertRangeStart() {
+    return alertRangeStart;
+  }
+
+
+  /**
+   *  Gets the alertRangeEnd attribute of the QuoteList object
+   *
+   *@return    The alertRangeEnd value
+   */
+  public java.sql.Timestamp getAlertRangeEnd() {
+    return alertRangeEnd;
   }
 
 

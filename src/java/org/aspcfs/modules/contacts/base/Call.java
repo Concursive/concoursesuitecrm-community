@@ -7,10 +7,11 @@ import com.darkhorseventures.framework.actions.*;
 import java.sql.*;
 import java.text.*;
 import java.util.ArrayList;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.actionlist.base.*;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  *  Description of the Class
@@ -21,29 +22,57 @@ import org.aspcfs.modules.actionlist.base.*;
  */
 public class Call extends GenericBean {
 
+  //static variables
+  //PENDING :followup due of a completed activity
+  public final static int CANCELED = 1;
+  public final static int COMPLETE = 2;
+  public final static int COMPLETE_FOLLOWUP_PENDING = 3;
+
   private int id = -1;
   private int orgId = -1;
   private int contactId = -1;
   private int callTypeId = -1;
   private int oppHeaderId = -1;
-  private String callType = "";
   private int length = 0;
-  private String subject = "";
-  private String notes = "";
   private int enteredBy = -1;
   private String enteredName = "";
   private int modifiedBy = -1;
   private String modifiedName = "";
+  private int alertCallTypeId = -1;
+  private int owner = -1;
+  private int assignedBy = -1;
+  private int completedBy = -1;
+  private int resultId = -1;
+  private int priorityId = -1;
+  private int statusId = -1;
+  private int reminderTypeId = -1;
+  private int reminderId = -1;
+  private int parentId = -1;
+  private int contactOrgId = -1;
+
+  private String callType = "";
+  private String subject = null;
+  private String notes = null;
+  private String followupNotes = null;
   private String contactName = "";
-  private String alertText = "";
+  private String alertText = null;
+  private String alertCallType = "";
+  private String priorityString = "";
+  private String orgName = null;
 
   private java.sql.Timestamp alertDate = null;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
+  private java.sql.Timestamp followupDate = null;
+  private java.sql.Timestamp assignDate = null;
+  private java.sql.Timestamp completeDate = null;
+
+  private boolean hasFollowup = false;
 
   //action list properties
   private int actionId = -1;
 
+  Contact contact = new Contact();
 
   /**
    *  Constructor for the Call object
@@ -98,34 +127,32 @@ public class Call extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int callId) throws SQLException {
-    Statement st = null;
-    ResultSet rs = null;
-
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT c.*, t.*, " +
-        "e.namelast as elast, e.namefirst as efirst, " +
-        "m.namelast as mlast, m.namefirst as mfirst, " +
-        "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.company as ctcompany " +
+        "SELECT c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c.length, " +
+        "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
+        "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
+        "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
+        "c.alert_call_type_id, c.alert, c.followup_notes, t.*, talert.description as alertType, " +
+        "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.company as ctcompany, p.description as priority " +
         "FROM call_log c " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
         "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
-        "LEFT JOIN contact e ON (c.enteredby = e.user_id) " +
-        "LEFT JOIN contact m ON (c.modifiedby = m.user_id) " +
+        "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
+        "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
         "WHERE call_id > -1 ");
     if (callId > -1) {
       sql.append("AND call_id = " + callId + " ");
     } else {
       throw new SQLException("Valid call ID not specified.");
     }
-
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     }
     rs.close();
-    st.close();
+    pst.close();
     if (id == -1) {
       throw new SQLException("Call record not found.");
     }
@@ -189,8 +216,7 @@ public class Call extends GenericBean {
    *@param  tmp  The new alertDate value
    */
   public void setAlertDate(String tmp) {
-    this.alertDate = DatabaseUtils.parseDateToTimestamp(tmp);
-
+    this.alertDate = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
@@ -276,6 +302,497 @@ public class Call extends GenericBean {
    */
   public void setActionId(String actionId) {
     this.actionId = Integer.parseInt(actionId);
+  }
+
+
+  /**
+   *  Sets the parentId attribute of the Call object
+   *
+   *@param  parentId  The new parentId value
+   */
+  public void setParentId(int parentId) {
+    this.parentId = parentId;
+  }
+
+
+  /**
+   *  Sets the parentId attribute of the Call object
+   *
+   *@param  parentId  The new parentId value
+   */
+  public void setParentId(String parentId) {
+    this.parentId = Integer.parseInt(parentId);
+  }
+
+
+  /**
+   *  Sets the owner attribute of the Call object
+   *
+   *@param  owner  The new owner value
+   */
+  public void setOwner(int owner) {
+    this.owner = owner;
+  }
+
+
+  /**
+   *  Sets the hasFollowup attribute of the Call object
+   *
+   *@param  hasFollowup  The new hasFollowup value
+   */
+  public void setHasFollowup(boolean hasFollowup) {
+    this.hasFollowup = hasFollowup;
+  }
+
+
+  /**
+   *  Sets the hasFollowup attribute of the Call object
+   *
+   *@param  hasFollowup  The new hasFollowup value
+   */
+  public void setHasFollowup(String hasFollowup) {
+    this.hasFollowup = DatabaseUtils.parseBoolean(hasFollowup);
+  }
+
+
+  /**
+   *  Gets the hasFollowup attribute of the Call object
+   *
+   *@return    The hasFollowup value
+   */
+  public boolean getHasFollowup() {
+    return hasFollowup;
+  }
+
+
+  /**
+   *  Sets the owner attribute of the Call object
+   *
+   *@param  owner  The new owner value
+   */
+  public void setOwner(String owner) {
+    this.owner = Integer.parseInt(owner);
+  }
+
+
+  /**
+   *  Sets the assignedBy attribute of the Call object
+   *
+   *@param  assignedBy  The new assignedBy value
+   */
+  public void setAssignedBy(int assignedBy) {
+    this.assignedBy = assignedBy;
+  }
+
+
+  /**
+   *  Sets the completedBy attribute of the Call object
+   *
+   *@param  completedBy  The new completedBy value
+   */
+  public void setCompletedBy(int completedBy) {
+    this.completedBy = completedBy;
+  }
+
+
+  /**
+   *  Sets the priorityId attribute of the Call object
+   *
+   *@param  priorityId  The new priorityId value
+   */
+  public void setPriorityId(int priorityId) {
+    this.priorityId = priorityId;
+  }
+
+
+  /**
+   *  Sets the priorityId attribute of the Call object
+   *
+   *@param  priorityId  The new priorityId value
+   */
+  public void setPriorityId(String priorityId) {
+    if (Integer.parseInt(priorityId) > 0) {
+      this.priorityId = Integer.parseInt(priorityId);
+    }
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the Call object
+   *
+   *@param  statusId  The new statusId value
+   */
+  public void setStatusId(int statusId) {
+    this.statusId = statusId;
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the Call object
+   *
+   *@param  statusId  The new statusId value
+   */
+  public void setStatusId(String statusId) {
+    this.statusId = Integer.parseInt(statusId);
+  }
+
+
+  /**
+   *  Sets the reminderTypeId attribute of the Call object
+   *
+   *@param  reminderTypeId  The new reminderTypeId value
+   */
+  public void setReminderTypeId(int reminderTypeId) {
+    this.reminderTypeId = reminderTypeId;
+  }
+
+
+  /**
+   *  Sets the reminderTypeId attribute of the Call object
+   *
+   *@param  reminderTypeId  The new reminderTypeId value
+   */
+  public void setReminderTypeId(String reminderTypeId) {
+    if (Integer.parseInt(reminderTypeId) > 0) {
+      this.reminderTypeId = Integer.parseInt(reminderTypeId);
+    }
+  }
+
+
+  /**
+   *  Sets the reminderId attribute of the Call object
+   *
+   *@param  reminderId  The new reminderId value
+   */
+  public void setReminderId(int reminderId) {
+    this.reminderId = reminderId;
+  }
+
+
+  /**
+   *  Sets the reminderId attribute of the Call object
+   *
+   *@param  reminderId  The new reminderId value
+   */
+  public void setReminderId(String reminderId) {
+    this.reminderId = Integer.parseInt(reminderId);
+  }
+
+
+  /**
+   *  Sets the followupDate attribute of the Call object
+   *
+   *@param  followupDate  The new followupDate value
+   */
+  public void setFollowupDate(java.sql.Timestamp followupDate) {
+    this.followupDate = followupDate;
+  }
+
+
+  /**
+   *  Sets the followupDate attribute of the Call object
+   *
+   *@param  tmp  The new followupDate value
+   */
+  public void setFollowupDate(String tmp) {
+    this.followupDate = DateUtils.parseTimestampString(tmp);
+  }
+
+
+  /**
+   *  Sets the assignDate attribute of the Call object
+   *
+   *@param  assignDate  The new assignDate value
+   */
+  public void setAssignDate(java.sql.Timestamp assignDate) {
+    this.assignDate = assignDate;
+  }
+
+
+  /**
+   *  Sets the completeDate attribute of the Call object
+   *
+   *@param  completeDate  The new completeDate value
+   */
+  public void setCompleteDate(java.sql.Timestamp completeDate) {
+    this.completeDate = completeDate;
+  }
+
+
+  /**
+   *  Sets the alertCallType attribute of the Call object
+   *
+   *@param  alertCallType  The new alertCallType value
+   */
+  public void setAlertCallType(String alertCallType) {
+    this.alertCallType = alertCallType;
+  }
+
+
+  /**
+   *  Sets the followupNotes attribute of the Call object
+   *
+   *@param  followupNotes  The new followupNotes value
+   */
+  public void setFollowupNotes(String followupNotes) {
+    this.followupNotes = followupNotes;
+  }
+
+
+  /**
+   *  Sets the priorityString attribute of the Call object
+   *
+   *@param  priorityString  The new priorityString value
+   */
+  public void setPriorityString(String priorityString) {
+    this.priorityString = priorityString;
+  }
+
+
+  /**
+   *  Sets the contactOrgId attribute of the Call object
+   *
+   *@param  contactOrgId  The new contactOrgId value
+   */
+  public void setContactOrgId(int contactOrgId) {
+    this.contactOrgId = contactOrgId;
+  }
+
+
+  /**
+   *  Sets the orgName attribute of the Call object
+   *
+   *@param  orgName  The new orgName value
+   */
+  public void setOrgName(String orgName) {
+    this.orgName = orgName;
+  }
+
+
+  /**
+   *  Sets the contact attribute of the Call object
+   *
+   *@param  contact  The new contact value
+   */
+  public void setContact(Contact contact) {
+    this.contact = contact;
+  }
+
+
+  /**
+   *  Gets the contact attribute of the Call object
+   *
+   *@return    The contact value
+   */
+  public Contact getContact() {
+    return contact;
+  }
+
+
+  /**
+   *  Gets the EnteredName attribute of the Call object
+   *
+   *@return    The EnteredName value
+   *@since
+   */
+  public String getEnteredName() {
+    return enteredName;
+  }
+
+
+  /**
+   *  Gets the ModifiedName attribute of the Call object
+   *
+   *@return    The ModifiedName value
+   *@since
+   */
+  public String getModifiedName() {
+    return modifiedName;
+  }
+  
+  /**
+   *  Gets the orgName attribute of the Call object
+   *
+   *@return    The orgName value
+   */
+  public String getOrgName() {
+    return orgName;
+  }
+
+
+  /**
+   *  Gets the contactOrgId attribute of the Call object
+   *
+   *@return    The contactOrgId value
+   */
+  public int getContactOrgId() {
+    return contactOrgId;
+  }
+
+
+  /**
+   *  Gets the priorityString attribute of the Call object
+   *
+   *@return    The priorityString value
+   */
+  public String getPriorityString() {
+    return priorityString;
+  }
+
+
+  /**
+   *  Gets the followupNotes attribute of the Call object
+   *
+   *@return    The followupNotes value
+   */
+  public String getFollowupNotes() {
+    return followupNotes;
+  }
+
+
+  /**
+   *  Gets the alertCallType attribute of the Call object
+   *
+   *@return    The alertCallType value
+   */
+  public String getAlertCallType() {
+    return alertCallType;
+  }
+
+
+  /**
+   *  Gets the parentId attribute of the Call object
+   *
+   *@return    The parentId value
+   */
+  public int getParentId() {
+    return parentId;
+  }
+
+
+  /**
+   *  Gets the parentId attribute of the Call object
+   *
+   *@return    The priority value
+   */
+  public int getPriorityId() {
+    return priorityId;
+  }
+
+
+  /**
+   *  Gets the owner attribute of the Call object
+   *
+   *@return    The owner value
+   */
+  public int getOwner() {
+    return owner;
+  }
+
+
+  /**
+   *  Gets the assignedBy attribute of the Call object
+   *
+   *@return    The assignedBy value
+   */
+  public int getAssignedBy() {
+    return assignedBy;
+  }
+
+
+  /**
+   *  Gets the completedBy attribute of the Call object
+   *
+   *@return    The completedBy value
+   */
+  public int getCompletedBy() {
+    return completedBy;
+  }
+
+
+  /**
+   *  Gets the statusId attribute of the Call object
+   *
+   *@return    The statusId value
+   */
+  public int getStatusId() {
+    return statusId;
+  }
+
+
+  /**
+   *  Gets the statusString attribute of the Call object
+   *
+   *@return    The statusString value
+   */
+  public String getStatusString() {
+    String tmp = "";
+    if (statusId == Call.COMPLETE || statusId == Call.COMPLETE_FOLLOWUP_PENDING) {
+      tmp = "Complete";
+    } else if (statusId == Call.CANCELED) {
+      tmp = "Canceled";
+    }
+    return tmp;
+  }
+
+
+  /**
+   *  Gets the reminderTypeId attribute of the Call object
+   *
+   *@return    The reminderTypeId value
+   */
+  public int getReminderTypeId() {
+    return reminderTypeId;
+  }
+
+
+  /**
+   *  Gets the reminderId attribute of the Call object
+   *
+   *@return    The reminderId value
+   */
+  public int getReminderId() {
+    return reminderId;
+  }
+
+
+  /**
+   *  Gets the alertCallTypeId attribute of the Call object
+   *
+   *@return    The alertCallTypeId value
+   */
+  public int getAlertCallTypeId() {
+    return alertCallTypeId;
+  }
+
+
+  /**
+   *  Gets the followupDate attribute of the Call object
+   *
+   *@return    The followupDate value
+   */
+  public java.sql.Timestamp getFollowupDate() {
+    return followupDate;
+  }
+
+
+  /**
+   *  Gets the assignDate attribute of the Call object
+   *
+   *@return    The assignDate value
+   */
+  public java.sql.Timestamp getAssignDate() {
+    return assignDate;
+  }
+
+
+  /**
+   *  Gets the completeDate attribute of the Call object
+   *
+   *@return    The completeDate value
+   */
+  public java.sql.Timestamp getCompleteDate() {
+    return completeDate;
   }
 
 
@@ -493,56 +1010,6 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the alertDateString attribute of the Call object
-   *
-   *@return    The alertDateString value
-   */
-  public String getAlertDateString() {
-    String tmp = "";
-    try {
-      return DateFormat.getDateInstance(3).format((java.util.Date) alertDate);
-    } catch (NullPointerException e) {
-    }
-    return tmp;
-  }
-
-
-  /**
-   *  Gets the alertDateStringLongYear attribute of the Call object
-   *
-   *@return    The alertDateStringLongYear value
-   */
-  public String getAlertDateStringLongYear() {
-    String tmp = "";
-    try {
-      SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
-      formatter.applyPattern("M/d/yyyy");
-      return formatter.format((java.util.Date) alertDate);
-    } catch (NullPointerException e) {
-    }
-    return tmp;
-  }
-
-
-  /**
-   *  Gets the alertDateStringLongYear attribute of the Call class
-   *
-   *@param  alertDate  Description of the Parameter
-   *@return            The alertDateStringLongYear value
-   */
-  public static String getAlertDateStringLongYear(java.sql.Timestamp alertDate) {
-    String tmp = "";
-    try {
-      SimpleDateFormat formatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.LONG);
-      formatter.applyPattern("M/d/yyyy");
-      return formatter.format((java.util.Date) alertDate);
-    } catch (NullPointerException e) {
-    }
-    return tmp;
-  }
-
-
-  /**
    *  Gets the entered attribute of the Call object
    *
    *@return    The entered value
@@ -675,7 +1142,7 @@ public class Call extends GenericBean {
    *@since
    */
   public String getLengthString() {
-    return ("" + length);
+    return (String.valueOf(length));
   }
 
 
@@ -691,6 +1158,16 @@ public class Call extends GenericBean {
     } else {
       return "";
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean hasLength() {
+    return (length > 0);
   }
 
 
@@ -739,24 +1216,80 @@ public class Call extends GenericBean {
 
 
   /**
-   *  Gets the EnteredName attribute of the Call object
+   *  Sets the resultId attribute of the Call object
    *
-   *@return    The EnteredName value
-   *@since
+   *@param  tmp  The new resultId value
    */
-  public String getEnteredName() {
-    return enteredName;
+  public void setResultId(int tmp) {
+    this.resultId = tmp;
   }
 
 
   /**
-   *  Gets the ModifiedName attribute of the Call object
+   *  Sets the resultId attribute of the Call object
    *
-   *@return    The ModifiedName value
-   *@since
+   *@param  tmp  The new resultId value
    */
-  public String getModifiedName() {
-    return modifiedName;
+  public void setResultId(String tmp) {
+    this.resultId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the resultId attribute of the Call object
+   *
+   *@return    The resultId value
+   */
+  public int getResultId() {
+    return resultId;
+  }
+
+
+  /**
+   *  Sets the alertCallTypeId attribute of the Call object
+   *
+   *@param  tmp  The new alertCallTypeId value
+   */
+  public void setAlertCallTypeId(int tmp) {
+    this.alertCallTypeId = tmp;
+  }
+
+
+  /**
+   *  Sets the alertCallTypeId attribute of the Call object
+   *
+   *@param  tmp  The new alertCallTypeId value
+   */
+  public void setAlertCallTypeId(String tmp) {
+    if (Integer.parseInt(tmp) > 0) {
+      this.alertCallTypeId = Integer.parseInt(tmp);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int lookupReminderSeconds(Connection db) throws SQLException {
+    if (this.getReminderTypeId() == -1) {
+      throw new SQLException("ID was not specified");
+    }
+
+    int scds = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT base_value FROM lookup_call_reminder " +
+        "WHERE code = ? ");
+    pst.setInt(1, reminderTypeId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      scds = rs.getInt("base_value");
+    }
+    pst.close();
+    return scds;
   }
 
 
@@ -787,10 +1320,14 @@ public class Call extends GenericBean {
     }
     try {
       db.setAutoCommit(false);
+      Contact thisContact = new Contact(db, this.getContactId());
       StringBuffer sql = new StringBuffer();
       sql.append(
           "INSERT INTO call_log " +
-          "(org_id, contact_id, opp_id, call_type_id, length, subject, notes, alertdate, alert, ");
+          "(org_id, contact_id, opp_id, call_type_id, length, subject, notes, " +
+          "alertdate, alert, alert_call_type_id, result_id, parent_id, owner, followup_notes, status_id, " +
+          "reminder_value, reminder_type_id, priority_id, followup_date, ");
+
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -798,7 +1335,8 @@ public class Call extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+
       if (entered != null) {
         sql.append("?, ");
       }
@@ -807,13 +1345,13 @@ public class Call extends GenericBean {
       }
       sql.append("?, ?) ");
       int i = 0;
-
       PreparedStatement pst = db.prepareStatement(sql.toString());
-      if (this.getOrgId() > 0) {
-        pst.setInt(++i, this.getOrgId());
+      if (thisContact.getOrgId() > 0) {
+        pst.setInt(++i, thisContact.getOrgId());
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
+      
       if (this.getContactId() > 0) {
         pst.setInt(++i, this.getContactId());
       } else {
@@ -832,12 +1370,18 @@ public class Call extends GenericBean {
       pst.setInt(++i, this.getLength());
       pst.setString(++i, this.getSubject());
       pst.setString(++i, this.getNotes());
-      if (alertDate == null) {
-        pst.setNull(++i, java.sql.Types.TIMESTAMP);
-      } else {
-        pst.setTimestamp(++i, this.getAlertDate());
-      }
+      DatabaseUtils.setTimestamp(pst, ++i, alertDate);
       pst.setString(++i, this.getAlertText());
+      DatabaseUtils.setInt(pst, ++i, alertCallTypeId);
+      DatabaseUtils.setInt(pst, ++i, resultId);
+      DatabaseUtils.setInt(pst, ++i, parentId);
+      DatabaseUtils.setInt(pst, ++i, owner);
+      pst.setString(++i, this.getFollowupNotes());
+      pst.setInt(++i, statusId);
+      DatabaseUtils.setInt(pst, ++i, reminderId);
+      DatabaseUtils.setInt(pst, ++i, reminderTypeId);
+      DatabaseUtils.setInt(pst, ++i, priorityId);
+      DatabaseUtils.setTimestamp(pst, ++i, followupDate);
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -848,9 +1392,14 @@ public class Call extends GenericBean {
       pst.setInt(++i, this.getModifiedBy());
       pst.execute();
       pst.close();
-
       id = DatabaseUtils.getCurrVal(db, "call_log_call_id_seq");
 
+      //mark complete/canceled based on statusId
+      if (this.getStatusId() == COMPLETE || this.getStatusId() == COMPLETE_FOLLOWUP_PENDING) {
+        markComplete(db, this.getEnteredBy());
+      } else if (this.getStatusId() == CANCELED) {
+        markCanceled(db, this.getEnteredBy());
+      }
       if (actionId > 0) {
         updateLog(db);
       }
@@ -893,7 +1442,7 @@ public class Call extends GenericBean {
         db.rollback();
       }
       throw new SQLException(e.getMessage());
-    }finally {
+    } finally {
       if (commit) {
         db.setAutoCommit(true);
       }
@@ -964,49 +1513,114 @@ public class Call extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Call ID was not specified");
     }
-
     if (!isValid(db)) {
       return -1;
     }
-
     int resultCount = 0;
-
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-
     sql.append(
         "UPDATE call_log " +
         "SET call_type_id = ?, length = ?, subject = ?, notes = ?, " +
-        "modifiedby = ?, alertdate = ?, alert = ?, " +
+        "modifiedby = ?, alertdate = ?, alert = ?, alert_call_type_id = ?, followup_notes = ?, status_id = ?, " +
+        "result_id = ?, owner = ?, reminder_value = ?, reminder_type_id = ?, priority_id = ?, followup_date = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE call_id = ? " +
         "AND modified = ? ");
-
     int i = 0;
     pst = db.prepareStatement(sql.toString());
-
     if (this.getCallTypeId() > 0) {
       pst.setInt(++i, this.getCallTypeId());
     } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
-
     pst.setInt(++i, length);
     pst.setString(++i, subject);
     pst.setString(++i, notes);
     pst.setInt(++i, this.getModifiedBy());
-    if (alertDate == null) {
-      pst.setNull(++i, java.sql.Types.TIMESTAMP);
-    } else {
-      pst.setTimestamp(++i, this.getAlertDate());
-    }
+    DatabaseUtils.setTimestamp(pst, ++i, alertDate);
     pst.setString(++i, this.getAlertText());
+    DatabaseUtils.setInt(pst, ++i, alertCallTypeId);
+    pst.setString(++i, this.getFollowupNotes());
+    pst.setInt(++i, statusId);
+    DatabaseUtils.setInt(pst, ++i, resultId);
+    if (this.getOwner() > 0) {
+      pst.setInt(++i, this.getOwner());
+    } else {
+      pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    DatabaseUtils.setInt(pst, ++i, reminderId);
+    DatabaseUtils.setInt(pst, ++i, reminderTypeId);
+    DatabaseUtils.setInt(pst, ++i, priorityId);
+    DatabaseUtils.setTimestamp(pst, ++i, followupDate);
     pst.setInt(++i, this.getId());
     pst.setTimestamp(++i, this.getModified());
-
     resultCount = pst.executeUpdate();
     pst.close();
+    return resultCount;
+  }
 
+
+  /**
+   *  Updates the current record and marks it complete in the database
+   *
+   *@param  db                Description of the Parameter
+   *@param  userId            Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int markComplete(Connection db, int userId) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Call ID was not specified");
+    }
+    int resultCount = 0;
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "UPDATE call_log " +
+        "SET completedby = ?, complete_date = CURRENT_TIMESTAMP, status_id = ? " +
+        "WHERE call_id = ? ");
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, userId);
+    if (this.getStatusId() == COMPLETE_FOLLOWUP_PENDING) {
+      pst.setInt(++i, COMPLETE_FOLLOWUP_PENDING);
+    } else {
+      pst.setInt(++i, COMPLETE);
+    }
+    pst.setInt(++i, this.getId());
+    resultCount = pst.executeUpdate();
+    pst.close();
+    return resultCount;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  userId            Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int markCanceled(Connection db, int userId) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Call ID was not specified");
+    }
+    int resultCount = 0;
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "UPDATE call_log " +
+        "SET completedby = ?, complete_date = CURRENT_TIMESTAMP, status_id = ? " +
+        "WHERE call_id = ? ");
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, userId);
+    pst.setInt(++i, CANCELED);
+    pst.setInt(++i, this.getId());
+    resultCount = pst.executeUpdate();
+    pst.close();
     return resultCount;
   }
 
@@ -1022,17 +1636,46 @@ public class Call extends GenericBean {
   protected boolean isValid(Connection db) throws SQLException {
     errors.clear();
 
-    if ((subject == null || subject.trim().equals("")) &&
-        (notes == null || notes.trim().equals(""))) {
-      errors.put("actionError", "Cannot insert a blank record");
+    if (subject == null || subject.trim().equals("")) {
+      errors.put("subjectError", "Cannot insert a blank record");
     }
 
     if (contactId == -1 && orgId == -1 && oppHeaderId == -1) {
-      errors.put("actionError", "Call is not associated with a valid record");
+      errors.put("linkError", "Activity is not associated with a valid record");
     }
 
     if (length < 0) {
       errors.put("lengthError", "Length cannot be less than 0");
+    }
+
+    if (resultId == -1) {
+      errors.put("resultError", "Result of the activity is required");
+    }
+
+    if (callTypeId < 1) {
+      errors.put("typeError", "Type of the activity is required");
+    }
+
+    if (length < 0) {
+      errors.put("lengthError", "Length cannot be less than 0");
+    }
+
+    if (alertDate != null || hasFollowup) {
+      if ("".equals(StringUtils.toString(alertText.trim()))) {
+        errors.put("descriptionError", "Description is required");
+      }
+      if (alertCallTypeId < 1) {
+        errors.put("followupTypeError", "Type is required");
+      }
+      if (priorityId == -1) {
+        errors.put("priorityError", "Priority is required");
+      }
+      if (alertDate == null) {
+        errors.put("alertDateError", "Date is required");
+      }
+    } else {
+      //reset priority Id as it does not have a "none" option
+      priorityId = -1;
     }
 
     if (hasErrors()) {
@@ -1056,25 +1699,41 @@ public class Call extends GenericBean {
     orgId = DatabaseUtils.getInt(rs, "org_id");
     contactId = DatabaseUtils.getInt(rs, "contact_id");
     oppHeaderId = DatabaseUtils.getInt(rs, "opp_id");
+    callTypeId = DatabaseUtils.getInt(rs, "call_type_id");
     length = rs.getInt("length");
     subject = rs.getString("subject");
     notes = rs.getString("notes");
-    alertDate = rs.getTimestamp("alertdate");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+    alertDate = rs.getTimestamp("alertdate");
+    followupDate = rs.getTimestamp("followup_date");
+    parentId = DatabaseUtils.getInt(rs, "parent_id");
+    owner = DatabaseUtils.getInt(rs, "owner");
+    assignedBy = DatabaseUtils.getInt(rs, "assignedBy");
+    assignDate = rs.getTimestamp("assign_date");
+    completedBy = DatabaseUtils.getInt(rs, "completedBy");
+    completeDate = rs.getTimestamp("complete_date");
+    resultId = DatabaseUtils.getInt(rs, "result_id");
+    priorityId = DatabaseUtils.getInt(rs, "priority_id");
+    statusId = rs.getInt("status_id");
+    reminderId = DatabaseUtils.getInt(rs, "reminder_value");
+    reminderTypeId = DatabaseUtils.getInt(rs, "reminder_type_id");
+    alertCallTypeId = DatabaseUtils.getInt(rs, "alert_call_type_id");
     alertText = rs.getString("alert");
+    followupNotes = rs.getString("followup_notes");
+    resultId = DatabaseUtils.getInt(rs, "result_id");
     //lookup_call_types table
     callTypeId = DatabaseUtils.getInt(rs, "code");
     callType = rs.getString("description");
+    alertCallType = rs.getString("alertType");
     //contact table
-    enteredName = Contact.getNameLastFirst(rs.getString("elast"), rs.getString("efirst"));
-    modifiedName = Contact.getNameLastFirst(rs.getString("mlast"), rs.getString("mfirst"));
     contactName = Contact.getNameLastFirst(rs.getString("ctlast"), rs.getString("ctfirst"));
     if (contactName == null || "".equals(contactName)) {
       contactName = rs.getString("ctcompany");
     }
+    priorityString = rs.getString("priority");
   }
 
 
@@ -1088,5 +1747,6 @@ public class Call extends GenericBean {
     thisList.add("alertDate");
     return thisList;
   }
+
 }
 

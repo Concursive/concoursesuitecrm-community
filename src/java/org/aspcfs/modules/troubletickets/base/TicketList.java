@@ -322,6 +322,66 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
+   *  Sets the alertRangeStart attribute of the TicketList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(java.sql.Timestamp tmp) {
+    this.alertRangeStart = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the TicketList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
+  public void setAlertRangeStart(String tmp) {
+    this.alertRangeStart = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the TicketList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(java.sql.Timestamp tmp) {
+    this.alertRangeEnd = tmp;
+  }
+
+
+  /**
+   *  Sets the alertRangeEnd attribute of the TicketList object
+   *
+   *@param  tmp  The new alertRangeEnd value
+   */
+  public void setAlertRangeEnd(String tmp) {
+    this.alertRangeEnd = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Gets the alertRangeStart attribute of the TicketList object
+   *
+   *@return    The alertRangeStart value
+   */
+  public java.sql.Timestamp getAlertRangeStart() {
+    return alertRangeStart;
+  }
+
+
+  /**
+   *  Gets the alertRangeEnd attribute of the TicketList object
+   *
+   *@return    The alertRangeEnd value
+   */
+  public java.sql.Timestamp getAlertRangeEnd() {
+    return alertRangeEnd;
+  }
+
+
+  /**
    *  Gets the customerProductId attribute of the TicketList object
    *
    *@return    The customerProductId value
@@ -568,46 +628,6 @@ public class TicketList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the TicketList object
-   *
-   *@param  tmp  The new alertRangeStart value
-   */
-  public void setAlertRangeStart(java.sql.Timestamp tmp) {
-    this.alertRangeStart = tmp;
-  }
-
-
-  /**
-   *  Sets the alertRangeStart attribute of the TicketList object
-   *
-   *@param  tmp  The new alertRangeStart value
-   */
-  public void setAlertRangeStart(String tmp) {
-    this.alertRangeStart = DatabaseUtils.parseTimestamp(tmp);
-  }
-
-
-  /**
-   *  Sets the alertRangeEnd attribute of the TicketList object
-   *
-   *@param  tmp  The new alertRangeEnd value
-   */
-  public void setAlertRangeEnd(java.sql.Timestamp tmp) {
-    this.alertRangeEnd = tmp;
-  }
-
-
-  /**
-   *  Sets the alertRangeEnd attribute of the TicketList object
-   *
-   *@param  tmp  The new alertRangeEnd value
-   */
-  public void setAlertRangeEnd(String tmp) {
-    this.alertRangeEnd = DatabaseUtils.parseTimestamp(tmp);
-  }
-
-
-  /**
    *  Gets the assignedTo attribute of the TicketList object
    *
    *@return    The assignedTo value
@@ -788,26 +808,6 @@ public class TicketList extends ArrayList implements SyncableList {
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
-  }
-
-
-  /**
-   *  Gets the alertRangeStart attribute of the TicketList object
-   *
-   *@return    The alertRangeStart value
-   */
-  public java.sql.Timestamp getAlertRangeStart() {
-    return alertRangeStart;
-  }
-
-
-  /**
-   *  Gets the alertRangeEnd attribute of the TicketList object
-   *
-   *@return    The alertRangeEnd value
-   */
-  public java.sql.Timestamp getAlertRangeEnd() {
-    return alertRangeEnd;
   }
 
 

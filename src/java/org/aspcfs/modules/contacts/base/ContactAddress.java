@@ -78,7 +78,7 @@ public class ContactAddress extends Address {
     StringBuffer sql = new StringBuffer();
     sql.append("SELECT c.address_id, c.contact_id, c.address_type, c.addrline1, c.addrline1,  " +
         "c.addrline2, c.addrline3, c.city, c.state, c.country, c.postalcode, c.entered, c.enteredby, " +
-        "c.modified, c.modifiedby, l.description " +
+        "c.modified, c.modifiedby, c.primary_address, l.description " +
         "FROM contact_address c, lookup_contactaddress_types l " +
         "WHERE c.address_type = l.code " +
         "AND address_id = " + addressId + " ");
@@ -149,7 +149,7 @@ public class ContactAddress extends Address {
   public void insert(Connection db, int contactId, int enteredBy) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO contact_address " +
-        "(contact_id, address_type, addrline1, addrline2, addrline3, city, state, postalcode, country, ");
+        "(contact_id, address_type, addrline1, addrline2, addrline3, city, state, postalcode, country, primary_address, ");
     if (this.getEntered() != null) {
       sql.append("entered, ");
     }
@@ -157,7 +157,7 @@ public class ContactAddress extends Address {
       sql.append("modified, ");
     }
     sql.append("enteredBy, modifiedBy ) ");
-    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
     if (this.getEntered() != null) {
       sql.append("?, ");
     }
@@ -190,6 +190,7 @@ public class ContactAddress extends Address {
     }
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
+    pst.setBoolean(++i, this.getPrimaryAddress());
 
     if (this.getEntered() != null) {
       pst.setTimestamp(++i, this.getEntered());
@@ -218,7 +219,7 @@ public class ContactAddress extends Address {
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE contact_address " +
-        "SET address_type = ?, addrline1 = ?, addrline2 = ?, addrline3 = ?, city = ?, state = ?, postalcode = ?, country = ?, " +
+        "SET address_type = ?, addrline1 = ?, addrline2 = ?, addrline3 = ?, city = ?, state = ?, postalcode = ?, country = ?, primary_address = ?, " +
         "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE address_id = ? ");
     int i = 0;
@@ -238,6 +239,7 @@ public class ContactAddress extends Address {
     }
     pst.setString(++i, this.getZip());
     pst.setString(++i, this.getCountry());
+    pst.setBoolean(++i, this.getPrimaryAddress());
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, this.getId());
     pst.execute();

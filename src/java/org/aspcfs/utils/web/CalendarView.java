@@ -6,6 +6,7 @@ import org.aspcfs.modules.mycfs.base.CalendarEvent;
 import org.aspcfs.modules.mycfs.base.CalendarEventList;
 import org.aspcfs.modules.mycfs.beans.CalendarBean;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.ObjectUtils;
 import com.darkhorseventures.framework.actions.ActionContext;
 import java.text.*;
 import java.util.*;
@@ -523,10 +524,30 @@ public class CalendarView {
    *@return       The Events value
    *@since
    */
-  public ArrayList getEvents(String tmp1, String tmp2, String tmp3) {
+  public CalendarEventList getEvents(String tmp1, String tmp2, String tmp3) {
     String key = tmp1 + "/" + tmp2 + "/" + tmp3;
     if (eventList.containsKey(key)) {
-      return (ArrayList) eventList.get(key);
+      return (CalendarEventList) eventList.get(key);
+    } else {
+      return new CalendarEventList();
+    }
+  }
+
+
+  /**
+   *  Gets the events attribute of the CalendarView object
+   *
+   *@param  tmp1       Description of the Parameter
+   *@param  tmp2       Description of the Parameter
+   *@param  tmp3       Description of the Parameter
+   *@param  eventType  Description of the Parameter
+   *@return            The events value
+   */
+  public ArrayList getEvents(String tmp1, String tmp2, String tmp3, String eventType) {
+    String key = tmp1 + "/" + tmp2 + "/" + tmp3;
+    if (eventList.containsKey(key)) {
+      CalendarEventList daysEvents = (CalendarEventList) eventList.get(key);
+      return (ArrayList) daysEvents.getEvents(eventType);
     } else {
       return new ArrayList();
     }
@@ -552,31 +573,53 @@ public class CalendarView {
 
 
   /**
+   *  Sets the eventList attribute of the CalendarView object
+   *
+   *@param  key            The new eventList value
+   *@param  thisEventList  The new eventList value
+   */
+  public void setEventList(String key, Object thisEventList) {
+    eventList.put(key, thisEventList);
+  }
+
+
+  /**
+   *  Gets the eventList attribute of the CalendarView object
+   *
+   *@return    The eventList value
+   */
+  public HashMap getEventList() {
+    return eventList;
+  }
+
+
+  /**
+   *  Gets the eventList attribute of the CalendarView object
+   *
+   *@param  key  Description of the Parameter
+   *@return      The eventList value
+   */
+  public CalendarEventList getEventList(String key) {
+    if (eventList.containsKey(key)) {
+      return (CalendarEventList) eventList.get(key);
+    } else {
+      return new CalendarEventList();
+    }
+  }
+
+
+  /**
    *  Gets the eventCount attribute of the CalendarView object
    *
-   *@param  tmp1           Description of the Parameter
-   *@param  tmp2           Description of the Parameter
-   *@param  tmp3           Description of the Parameter
-   *@param  eventCategory  Description of the Parameter
-   *@return                The eventCount value
+   *@param  tmp1       Description of the Parameter
+   *@param  tmp2       Description of the Parameter
+   *@param  tmp3       Description of the Parameter
+   *@param  eventType  Description of the Parameter
+   *@return            The eventCount value
    */
-  public int getEventCount(int tmp1, int tmp2, int tmp3, String eventCategory) {
+  public int getEventCount(int tmp1, int tmp2, int tmp3, String eventType) {
     String key = tmp1 + "/" + tmp2 + "/" + tmp3;
-    ArrayList tmpList = null;
-    int eventCount = 0;
-    if (eventList.containsKey(key)) {
-      tmpList = (ArrayList) eventList.get(key);
-    }
-    Iterator events = tmpList.iterator();
-    if (events.hasNext()) {
-      while (events.hasNext()) {
-        CalendarEvent thisEvent = (CalendarEvent) events.next();
-        if (thisEvent.getCategory().toUpperCase().startsWith(eventCategory.toUpperCase())) {
-          eventCount++;
-        }
-      }
-    }
-    return eventCount;
+    return ((ArrayList) this.getEventList(key).getEvents(eventType)).size();
   }
 
 
@@ -804,25 +847,6 @@ public class CalendarView {
 
 
   /**
-   *  Gets the Event attribute of the CalendarView object
-   *
-   *@param  tmp1  Description of Parameter
-   *@param  tmp2  Description of Parameter
-   *@param  tmp3  Description of Parameter
-   *@return       The Event value
-   *@since
-   */
-  public CalendarEvent getEvent(String tmp1, String tmp2, String tmp3) {
-    String key = tmp1 + "/" + tmp2 + "/" + tmp3;
-    if (eventList.containsKey(key)) {
-      return (CalendarEvent) ((ArrayList) eventList.get(key)).get(0);
-    } else {
-      return null;
-    }
-  }
-
-
-  /**
    *  Returns the week day name Creation date: (5/2/2000 2:50:10 AM)
    *
    *@param  day         int
@@ -880,26 +904,13 @@ public class CalendarView {
    *@return    The DaysEvents value
    *@since
    */
-  public ArrayList getDaysEvents(int m, int d, int y) {
+  public CalendarEventList getDaysEvents(int m, int d, int y) {
     int displayMonth = m + 1;
     int displayYear = y;
     int displayDay = d;
 
     //Get this day's events
-    ArrayList tmpEvents = getEvents("" + displayMonth, "" + displayDay, "" + displayYear);
-
-    //Sort the events
-    if (sortEvents && tmpEvents.size() > 1) {
-      Object sortArray[] = tmpEvents.toArray();
-      Comparator comparator = null;
-      comparator = new ComparatorEvent();
-      Arrays.sort(sortArray, comparator);
-      tmpEvents.clear();
-      for (int i = 0; i < sortArray.length; i++) {
-        tmpEvents.add((CalendarEvent) sortArray[i]);
-      }
-    }
-    return tmpEvents;
+    return getEvents("" + displayMonth, "" + displayDay, "" + displayYear);
   }
 
 
@@ -1104,9 +1115,9 @@ public class CalendarView {
       //Display the day in the appropriate link color
       if (popup) {
         //Popup calendar
-        CalendarEvent tmpEvent = getEvent("" + displayMonth, "" + displayDay, "" + displayYear);
+        String tmpEvent = (String) eventList.get(displayMonth + "/" + displayDay + "/" + displayYear);
         String dateColor = "" + displayDay;
-        if ((tmpEvent != null) && (!tmpEvent.getCategory().equals("blank"))) {
+        if ("highlight".equals(tmpEvent)) {
           dateColor = "<font color=#FF0000>" + displayDay + "</font>";
         } else if (!mainMonth) {
           dateColor = "<font color=#888888>" + displayDay + "</font>";
@@ -1126,19 +1137,17 @@ public class CalendarView {
         }
 
         //get all events categories and respective counts.
-        HashMap events = this.getEventList(displayMonth + "", displayDay + "", displayYear + "").getEventTypes();
-        if (events != null) {
-          Set s = events.keySet();
-          Iterator i = s.iterator();
-          int count = 0;
+        HashMap events = this.getEventList(displayMonth + "", displayDay + "", displayYear + "");
+        if (events.size() > 0) {
           html.append("<table width=\"12%\" align=\"center\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" class=\"dayIcon\">");
-          while (i.hasNext()) {
-            Object eventCategory = i.next();
-            if (((Integer) events.get(eventCategory)).intValue() > 0) {
-              ++count;
-              html.append("<tr><td>" + CalendarEvent.getIcon(String.valueOf(eventCategory)) + "</td>");
-              if(!((String) eventCategory).equals(CalendarEventList.EVENT_TYPES[9])){ 
-                html.append("<td> " + events.get(eventCategory) + "</td></tr>");
+          for (int i = 0; i < Array.getLength(CalendarEventList.EVENT_TYPES); i++) {
+            String eventType = CalendarEventList.EVENT_TYPES[i];
+            if (events.containsKey(eventType)) {
+              if (!eventType.equals(CalendarEventList.EVENT_TYPES[7])) {
+                Object eventObj = events.get(eventType);
+                //use reflection to call the size method on the event list object
+                String eventSize = (String) ObjectUtils.getObject(eventObj, "sizeString");
+                html.append("<tr><td>" + CalendarEvent.getIcon(eventType) + "</td><td> " + eventSize + "</td></tr>");
               }
             }
           }
@@ -1223,14 +1232,12 @@ public class CalendarView {
    */
   public ArrayList getEvents(int max) {
     ArrayList allDays = new ArrayList();
-    ArrayList thisDay = null;
     String val = "";
     int count = 0;
     int loopCount = 0;
     int dayCount = 0;
     StringBuffer html = new StringBuffer();
 
-    //Calendar tmpCal = new GregorianCalendar();
     Calendar tmpCal = Calendar.getInstance(timeZone);
     Date now = new Date();
     if (calendarInfo != null) {
@@ -1245,46 +1252,19 @@ public class CalendarView {
       }
     }
     while (count < max && loopCount < dayCount) {
-      thisDay = getDaysEvents(tmpCal.get(Calendar.MONTH), tmpCal.get(Calendar.DAY_OF_MONTH), tmpCal.get(Calendar.YEAR));
-      Iterator i = thisDay.iterator();
-      if (i.hasNext()) {
-        CalendarEventList thisEventList = new CalendarEventList();
+      CalendarEventList thisEventList = getDaysEvents(tmpCal.get(Calendar.MONTH), tmpCal.get(Calendar.DAY_OF_MONTH), tmpCal.get(Calendar.YEAR));
+      if (thisEventList.size() > 0) {
         thisEventList.setDate(DateUtils.getDate(tmpCal));
         allDays.add(thisEventList);
         if (System.getProperty("DEBUG") != null) {
           System.out.println("CalendarView-> Day added ");
         }
-        while (i.hasNext() && count < max) {
-          CalendarEvent thisEvent = (CalendarEvent) i.next();
-          thisEventList.add(thisEvent);
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("CalendarView-> Event added: " + thisEvent.getCategory() + " on " + thisEvent.getDateString());
-          }
-          count++;
-        }
       }
       tmpCal.add(java.util.Calendar.DATE, +1);
       loopCount++;
+      count++;
     }
     return allDays;
-  }
-
-
-
-  /**
-   *  Adds a feature to the EventCount attribute of the CalendarView object
-   *
-   *@param  type   The feature to be added to the EventCount attribute
-   *@param  date   The feature to be added to the EventCount attribute
-   *@param  count  The feature to be added to the EventCount attribute
-   */
-  public void addEventCount(String type, String date, Object count) {
-    CalendarEventList thisDay = null;
-    if (eventList.get(date) == null) {
-      eventList.put(date, new CalendarEventList());
-    }
-    thisDay = (CalendarEventList) eventList.get(date);
-    thisDay.addEventType(type, count);
   }
 
 
@@ -1305,37 +1285,24 @@ public class CalendarView {
 
 
   /**
-   *  The calendar should have used date objects...
+   *  Adds a feature to the Events attribute of the CalendarView object
    *
-   *@param  eventDate  The feature to be added to the Event attribute
-   *@param  subject    The feature to be added to the Event attribute
-   *@param  category   The feature to be added to the Event attribute
-   *@param  id         The feature to be added to the Event attribute
-   *@return            Description of the Return Value
+   *@param  eventDate  The feature to be added to the Events attribute
+   *@param  eventType  The feature to be added to the Events attribute
+   *@param  events     The feature to be added to the Events attribute
    */
-  public CalendarEvent addEvent(java.sql.Timestamp eventDate, String subject, String category, int id) {
-    return addEvent(eventDate, subject, category, id, -1);
-  }
-
-
-  /**
-   *  Adds a feature to the Event attribute of the CalendarView object
-   *
-   *@param  eventDate  The feature to be added to the Event attribute
-   *@param  subject    The feature to be added to the Event attribute
-   *@param  category   The feature to be added to the Event attribute
-   *@param  idmain     The feature to be added to the Event attribute
-   *@param  idsub      The feature to be added to the Event attribute
-   *@return            Description of the Return Value
-   */
-  public CalendarEvent addEvent(java.sql.Timestamp eventDate, String subject, String category, int idmain, int idsub) {
-    CalendarEvent thisEvent = new CalendarEvent();
-    if (eventDate != null) {
-      SimpleDateFormat shortDateFormat = new SimpleDateFormat("M/d/yyyy");
-      String eventDateString = shortDateFormat.format(eventDate);
-      return addEvent(eventDateString, "", subject, category, idmain, idsub, -1);
+  public void addEvents(String eventDate, String eventType, Object events) {
+    CalendarEventList dailyEvents = null;
+    if (eventList.containsKey(eventDate)) {
+      dailyEvents = (CalendarEventList) eventList.get(eventDate);
+    } else {
+      dailyEvents = new CalendarEventList();
     }
-    return null;
+    //Add the event to the list
+    dailyEvents.put(eventType, events);
+
+    //Add the events to the eventList
+    this.eventList.put(eventDate, dailyEvents);
   }
 
 
@@ -1344,150 +1311,60 @@ public class CalendarView {
    *  Adds a feature to the Event attribute of the CalendarView object
    *
    *@param  eventDate  The feature to be added to the Event attribute
-   *@param  subject    The feature to be added to the Event attribute
-   *@param  category   The feature to be added to the Event attribute
-   *@return            Description of the Return Value
+   *@param  eventType  The feature to be added to the Event attribute
+   *@param  event      The feature to be added to the Event attribute
    */
-  public CalendarEvent addEvent(String eventDate, String subject, String category) {
-    return addEvent(eventDate, "", subject, category);
-  }
-
-
-  /**
-   *  Adds a feature to the Event attribute of the CalendarView object
-   *
-   *@param  eventDate  The feature to be added to the Event attribute
-   *@param  eventTime  The feature to be added to the Event attribute
-   *@param  subject    The feature to be added to the Event attribute
-   *@param  category   The feature to be added to the Event attribute
-   *@return            Description of the Return Value
-   */
-  public CalendarEvent addEvent(String eventDate, String eventTime, String subject, String category) {
-    return addEvent(eventDate, eventTime, subject, category, -1, -1, -1);
-  }
-
-
-  /**
-   *  Adds a feature to the Event attribute of the CalendarView object
-   *
-   *@param  eventDate  The feature to be added to the Event attribute
-   *@param  eventTime  The feature to be added to the Event attribute
-   *@param  subject    The feature to be added to the Event attribute
-   *@param  category   The feature to be added to the Event attribute
-   *@param  id         The feature to be added to the Event attribute
-   *@return            Description of the Return Value
-   */
-  public CalendarEvent addEvent(String eventDate, String eventTime, String subject, String category, int id) {
-    return addEvent(eventDate, eventTime, subject, category, id, -1, -1);
-  }
-
-
-  /**
-   *  Adds a feature to the Event attribute of the CalendarView object
-   *
-   *@param  eventDate  The feature to be added to the Event attribute
-   *@param  eventTime  The feature to be added to the Event attribute
-   *@param  subject    The feature to be added to the Event attribute
-   *@param  category   The feature to be added to the Event attribute
-   *@param  idmain     The feature to be added to the Event attribute
-   *@param  idsub      The feature to be added to the Event attribute
-   *@return            Description of the Return Value
-   */
-  public CalendarEvent addEvent(String eventDate, String eventTime, String subject, String category, int idmain, int idsub) {
-    return addEvent(eventDate, eventTime, subject, category, idmain, idsub, -1);
-  }
-
-
-  /**
-   *  Adds a feature to the Event attribute of the CalendarView object
-   *
-   *@param  eventDate  The feature to be added to the Event attribute
-   *@param  eventTime  The feature to be added to the Event attribute
-   *@param  subject    The feature to be added to the Event attribute
-   *@param  category   The feature to be added to the Event attribute
-   *@param  idmain     The feature to be added to the Event attribute
-   *@param  idsub      The feature to be added to the Event attribute
-   *@param  status     The feature to be added to the Event attribute
-   *@return            Description of the Return Value
-   */
-  public CalendarEvent addEvent(String eventDate, String eventTime, String subject, String category, int idmain, int idsub, int status) {
-    CalendarEvent thisEvent = new CalendarEvent();
-    StringTokenizer st = new StringTokenizer(eventDate, "/");
-    if (st.hasMoreTokens()) {
-      thisEvent.setMonth(st.nextToken());
-      thisEvent.setDay(st.nextToken());
-      thisEvent.setYear(st.nextToken());
-    }
-    thisEvent.setTime(eventTime);
-    thisEvent.setSubject(subject);
-    thisEvent.setCategory(category);
-    thisEvent.setId(idmain);
-    thisEvent.setIdsub(idsub);
-    thisEvent.setStatus(status);
-    this.addEvent(thisEvent);
-    return thisEvent;
-  }
-
-
-  /**
-   *  Adds a feature to the Event attribute of the CalendarView object
-   *
-   *@param  thisEvent  The feature to be added to the Event attribute
-   */
-  public void addEvent(CalendarEvent thisEvent) {
-    //Check to see if the eventList already has dailyEvents for the eventDate
+  public void addEvent(String eventDate, String eventType, Object event) {
     CalendarEventList dailyEvents = null;
-    if (eventList.containsKey(thisEvent.getDateString())) {
-      dailyEvents = (CalendarEventList) eventList.get(thisEvent.getDateString());
+    if (eventList.containsKey(eventDate)) {
+      dailyEvents = (CalendarEventList) eventList.get(eventDate);
     } else {
       dailyEvents = new CalendarEventList();
     }
     //Add the event to the list
-    dailyEvents.add(thisEvent);
-
+    dailyEvents.addEvent(eventType, event);
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("CalendarEventList-> Event Type: " + eventType + " added on " + eventDate);
+    }
     //Add the events to the eventList
-    this.eventList.put(thisEvent.getDateString(), dailyEvents);
+    this.eventList.put(eventDate, dailyEvents);
   }
 
 
   /**
-   *  Adds a feature to the HolidaysByRange attribute of the CalendarView object
+   *  Adds a feature to the EventCount attribute of the CalendarView object
+   *
+   *@param  eventType   The feature to be added to the EventCount attribute
+   *@param  eventCount  The feature to be added to the EventCount attribute
+   *@param  eventDate   The feature to be added to the EventCount attribute
    */
-  public void addHolidaysByRange() {
-    ArrayList thisDay = null;
-    CalendarView tempView = new CalendarView();
-
-    if (calendarInfo != null) {
-      tempView.setYear(calendarInfo.getYearSelected());
-      tempView.addHolidays();
-      Calendar tmpCal = Calendar.getInstance();
-      int dayCount = 0;
-      if (calendarInfo.isAgendaView()) {
-        dayCount = 7;
-      } else if (calendarInfo.getCalendarView().equalsIgnoreCase("day")) {
-        dayCount = 1;
-        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getMonthSelected() - 1, calendarInfo.getDaySelected());
-      } else if (calendarInfo.getCalendarView().equalsIgnoreCase("week")) {
-        dayCount = 7;
-        tmpCal.set(calendarInfo.getYearSelected(), calendarInfo.getStartMonthOfWeek() - 1, calendarInfo.getStartDayOfWeek());
-      }
-      for (int j = 0; j < dayCount; j++) {
-        thisDay = tempView.getDaysEvents(tmpCal.get(Calendar.MONTH), tmpCal.get(Calendar.DAY_OF_MONTH), tmpCal.get(Calendar.YEAR));
-        Iterator i = thisDay.iterator();
-        if (i.hasNext()) {
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("CalendarView-> Day added: " + tmpCal.get(Calendar.MONTH) + "/" + tmpCal.get(Calendar.DAY_OF_MONTH) + "/" + tmpCal.get(Calendar.YEAR));
-          }
-          while (i.hasNext()) {
-            CalendarEvent thisEvent = (CalendarEvent) i.next();
-            if (thisEvent.getCategory().equalsIgnoreCase("holiday")) {
-              this.addEvent(thisEvent);
-            }
-          }
-        }
-        tmpCal.add(java.util.Calendar.DATE, +1);
-      }
+  public void addEventCount(String eventDate, String eventType, Object eventCount) {
+    CalendarEventList dailyEvents = null;
+    if (eventList.containsKey(eventDate)) {
+      dailyEvents = (CalendarEventList) eventList.get(eventDate);
+    } else {
+      dailyEvents = new CalendarEventList();
     }
+    //Add the event to the list
+    dailyEvents.addEventCount(eventType, eventCount);
+
+    //Add the events to the eventList
+    this.eventList.put(eventDate, dailyEvents);
+  }
+
+
+  /**
+   *  Gets the eventList attribute of the CalendarView object
+   *
+   *@param  eventDate  Description of the Parameter
+   *@param  eventType  Description of the Parameter
+   *@return            The eventList value
+   */
+  public Object getEventList(String eventDate, String eventType) {
+    CalendarEventList dailyEvents = getEventList(eventDate);
+    Object thisEventList = dailyEvents.getEvents(eventType);
+    this.eventList.put(eventDate, dailyEvents);
+    return thisEventList;
   }
 
 
@@ -1512,19 +1389,24 @@ public class CalendarView {
    */
   public void addHolidays(int theYear) {
     Calendar tmpCal = new GregorianCalendar();
+    CalendarEvent thisEvent = null;
     int dayOfWeek = -1;
 
     //New Year's Day
-    this.addEvent("1/1/" + theYear, "", "New Year's Day", "holiday");
+    thisEvent = new CalendarEvent();
+    thisEvent.setSubject("New Year's Day");
+    this.addEvent("1/1/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
 
     //Martin Luther Kings birthday : third Monday in January;
+    thisEvent = new CalendarEvent();
     tmpCal.set(theYear, Calendar.JANUARY, 1);
     dayOfWeek = tmpCal.get(Calendar.DAY_OF_WEEK);
     while (dayOfWeek != Calendar.MONDAY) {
       tmpCal.add(Calendar.DATE, 1);
       dayOfWeek = tmpCal.get(Calendar.DAY_OF_WEEK);
     }
-    this.addEvent("1/" + (tmpCal.get(Calendar.DATE) + 14) + "/" + theYear, "", "Martin Luther King's Birthday", "holiday");
+    thisEvent.setSubject("Martin Luther King's Birthday");
+    this.addEvent("1/" + (tmpCal.get(Calendar.DATE) + 14) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
 
     //Washington's birthday : third Monday in February; (President's Day)
     tmpCal.set(theYear, Calendar.FEBRUARY, 1);
@@ -1533,7 +1415,9 @@ public class CalendarView {
       tmpCal.add(Calendar.DATE, 1);
       dayOfWeek = tmpCal.get(Calendar.DAY_OF_WEEK);
     }
-    this.addEvent("2/" + (tmpCal.get(Calendar.DATE) + 14) + "/" + theYear, "", "President's Day", "holiday");
+    thisEvent = new CalendarEvent();
+    thisEvent.setSubject("President's Day");
+    this.addEvent("2/" + (tmpCal.get(Calendar.DATE) + 14) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
 
     //Memorial Day : last Monday in May;
     tmpCal.set(theYear, Calendar.MAY, 1);
@@ -1547,16 +1431,22 @@ public class CalendarView {
     if (tmpCal.get(Calendar.MONTH) != Calendar.MAY) {
       tmpCal.add(Calendar.DATE, -7);
     }
-    this.addEvent("5/" + (tmpCal.get(Calendar.DATE)) + "/" + theYear, "", "Memorial Day", "holiday");
+    thisEvent = new CalendarEvent();
+    thisEvent.setSubject("Memorial Day");
+    this.addEvent("5/" + (tmpCal.get(Calendar.DATE)) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
 
     //Independence Day : July 4 (moved to Monday if Sunday, Friday if Saturday);
-    this.addEvent("7/4/" + theYear, "", "Independence Day", "holiday");
+    thisEvent = new CalendarEvent();
+    thisEvent.setSubject("Independence Day");
+    this.addEvent("7/4/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
     tmpCal.set(theYear, Calendar.JULY, 4);
     dayOfWeek = tmpCal.get(Calendar.DAY_OF_WEEK);
     if (dayOfWeek == Calendar.SUNDAY) {
-      this.addEvent("7/5/" + theYear, "", "Independence Day (Bank Holiday)", "holiday");
+      thisEvent.setSubject("Independence Day (Bank Holiday)");
+      this.addEvent("7/5/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
     } else if (dayOfWeek == Calendar.SATURDAY) {
-      this.addEvent("7/3/" + theYear, "", "Independence Day (Bank Holiday)", "holiday");
+      thisEvent.setSubject("Independence Day (Bank Holiday)");
+      this.addEvent("7/3/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
     }
 
     //Labor Day : first Monday in September;
@@ -1566,7 +1456,9 @@ public class CalendarView {
       tmpCal.add(Calendar.DATE, 1);
       dayOfWeek = tmpCal.get(Calendar.DAY_OF_WEEK);
     }
-    this.addEvent("9/" + (tmpCal.get(Calendar.DATE)) + "/" + theYear, "", "Labor Day", "holiday");
+    thisEvent = new CalendarEvent();
+    thisEvent.setSubject("Labor Day");
+    this.addEvent("9/" + (tmpCal.get(Calendar.DATE)) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
 
     //Columbus Day : second Monday in October;
     tmpCal.set(theYear, Calendar.OCTOBER, 1);
@@ -1575,16 +1467,22 @@ public class CalendarView {
       tmpCal.add(Calendar.DATE, 1);
       dayOfWeek = tmpCal.get(Calendar.DAY_OF_WEEK);
     }
-    this.addEvent("10/" + (tmpCal.get(Calendar.DATE) + 7) + "/" + theYear, "", "Columbus Day", "holiday");
+    thisEvent = new CalendarEvent();
+    thisEvent.setSubject("Columbus Day");
+    this.addEvent("10/" + (tmpCal.get(Calendar.DATE) + 7) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
 
     //Veteran's Day : November 11 (moved to Monday if Sunday, Friday if Saturday);
-    this.addEvent("11/11/" + theYear, "", "Veteran's Day", "holiday");
+    thisEvent = new CalendarEvent();
+    thisEvent.setSubject("Veteran's Day");
+    this.addEvent("11/11/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
     tmpCal.set(theYear, Calendar.NOVEMBER, 11);
     dayOfWeek = tmpCal.get(Calendar.DAY_OF_WEEK);
     if (dayOfWeek == Calendar.SUNDAY) {
-      this.addEvent("11/12/" + theYear, "", "Veteran's Day (Bank Holiday)", "holiday");
+      thisEvent.setSubject("Veteran's Day (Bank Holiday)");
+      this.addEvent("11/12/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
     } else if (dayOfWeek == Calendar.SATURDAY) {
-      this.addEvent("11/10/" + theYear, "", "Veteran's Day (Bank Holiday)", "holiday");
+      thisEvent.setSubject("Veteran's Day (Bank Holiday)");
+      this.addEvent("11/10/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
     }
 
     //Thanksgiving Day : fourth Thursday in November;
@@ -1594,17 +1492,24 @@ public class CalendarView {
       tmpCal.add(Calendar.DATE, 1);
       dayOfWeek = tmpCal.get(Calendar.DAY_OF_WEEK);
     }
-    this.addEvent("11/" + (tmpCal.get(Calendar.DATE) + 21) + "/" + theYear, "", "Thanksgiving Day", "holiday");
+    thisEvent = new CalendarEvent();
+    thisEvent.setSubject("Thanksgiving Day");
+    this.addEvent("11/" + (tmpCal.get(Calendar.DATE) + 21) + "/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
 
     //Christmas : December 25 (moved to Monday if Sunday or Friday if Saturday);
-    this.addEvent("12/25/" + theYear, "", "Christmas Day", "holiday");
+    thisEvent = new CalendarEvent();
+    thisEvent.setSubject("Christmas Day");
+    this.addEvent("12/25/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
     //*
+    thisEvent = new CalendarEvent();
     tmpCal.set(theYear, Calendar.DECEMBER, 25);
     dayOfWeek = tmpCal.get(Calendar.DAY_OF_WEEK);
     if (dayOfWeek == Calendar.SUNDAY) {
-      this.addEvent("12/26/" + theYear, "", "Christmas Day (Bank Holiday)", "holiday");
+      thisEvent.setSubject("Christmas Day (Bank Holiday)");
+      this.addEvent("12/26/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
     } else if (dayOfWeek == Calendar.SATURDAY) {
-      this.addEvent("12/24/" + theYear, "", "Christmas Day (Bank Holiday)", "holiday");
+      thisEvent.setSubject("Christmas Day (Bank Holiday)");
+      this.addEvent("12/24/" + theYear, CalendarEventList.EVENT_TYPES[7], thisEvent);
     }
   }
 
@@ -1637,12 +1542,9 @@ public class CalendarView {
    */
   public boolean isHoliday(String tmp1, String tmp2, String tmp3) {
     if (eventList.containsKey(tmp1 + "/" + tmp2 + "/" + tmp3)) {
-      ArrayList tmpEvents = getEvents(tmp1, tmp2, tmp3);
-      for (int i = 0; i < tmpEvents.size(); i++) {
-        CalendarEvent tmpEvent = (CalendarEvent) tmpEvents.get(i);
-        if ("holiday".equals(tmpEvent.getCategory())) {
-          return true;
-        }
+      ArrayList tmpEvents = getEvents(tmp1, tmp2, tmp3, CalendarEventList.EVENT_TYPES[7]);
+      if (tmpEvents.size() > 0) {
+        return true;
       }
     }
     return false;

@@ -85,7 +85,7 @@ Campaign List
       </td>
     <td valign="center" width="100%" class="row<%= rowid %>">
       <a href="CampaignManager.do?command=ViewDetails&id=<%= campaign.getId() %>&reset=true"><%= toHtml(campaign.getName()) %></a>
-      <%= (("true".equals(request.getParameter("notify")) && (String.valueOf(campaign.getId())).equals(request.getParameter("id")))?" <font color=\"red\">(Cancelled)</font>":"") %>
+      <%= (("true".equals(request.getParameter("notify")) && (String.valueOf(campaign.getId())).equals(request.getParameter("id")))?" <font color=\"red\">(Canceled)</font>":"") %>
     </td>
     <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <dhv:permission name="campaign-campaigns-groups-edit"><a href="CampaignManager.do?command=AddGroups&id=<%= campaign.getId() %>"></dhv:permission><%= (campaign.hasGroups()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %><dhv:permission name="campaign-campaigns-groups-view"></a></dhv:permission>

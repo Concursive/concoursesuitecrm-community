@@ -2,32 +2,79 @@
 <script language="javascript">
   var thisContactId = -1;
   var thisCallId = -1;
+  var thisView = "";
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, contactId, callId) {
+  function displayMenu(loc, id, contactId, callId, view) {
     thisContactId = contactId;
     thisCallId = callId;
+    thisView = view;
+    updateMenu();
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuCall", "down", 0, 0, 170, getHeight("menuCallTable"));
     }
     return ypSlideOutMenu.displayDropMenu(id, loc);
   }
+  
+  //Update menu for this Contact based on permissions
+  function updateMenu(){
+    if(thisView == 'pending'){
+      showSpan('menuComplete');
+      showSpan('menuCancel');
+      showSpan('menuReschedule');
+      hideSpan('menuModify');
+    }else{
+      hideSpan('menuComplete');
+      hideSpan('menuCancel');
+      hideSpan('menuReschedule');
+      if(thisView != 'cancel'){
+        showSpan('menuModify');
+      }else{
+        hideSpan('menuModify');
+       }
+      }
+    }
+  
   //Menu link functions
   function details() {
-    window.location.href='AccountContactsCalls.do?command=Details&contactId=' + thisContactId + '&id=' + thisCallId;
+    var url = 'AccountContactsCalls.do?command=Details&contactId=' + thisContactId + '&id=' + thisCallId;
+    if(thisView == 'pending'){
+      url += '&view=pending';
+    }
+    window.location.href=url;
+  }
+  
+  function complete() {
+    var url = 'AccountContactsCalls.do?command=Complete&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list';
+    if(thisView == 'pending'){
+      url += '&view=pending';
+    }
+    window.location.href=url;
   }
   
   function modify() {
-    window.location.href='AccountContactsCalls.do?command=Modify&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list';
+    var url = 'AccountContactsCalls.do?command=Modify&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list';
+    if(thisView == 'pending'){
+      url += '&view=pending';
+    }
+    window.location.href=url;
   }
   
   function forward() {
-    window.location.href='AccountContactsCalls.do?command=ForwardCall&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list';
+    var url ='AccountContactsCalls.do?command=ForwardCall&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list';
+    if(thisView == 'pending'){
+      url += '&view=pending';
+    }
+    window.location.href=url;
   }
   
   function deleteCall() {
-    popURL('AccountContactsCalls.do?command=ConfirmDelete&id=' + thisCallId + '&contactId=' + thisContactId + '&popup=true' + '<%= addLinkParams(request, "popupType|actionId") %>', 'CONFIRM_DELETE','320','200','yes','no');
+  var url = 'AccountContactsCalls.do?command=Cancel&contactId=' + thisContactId + '&id=' + thisCallId + '&return=list&action=cancel';
+    if(thisView == 'pending'){
+      url += '&view=pending';
+    }
+    window.location.href=url;
   }
 </script>
 <div id="menuCallContainer" class="menu">
@@ -44,12 +91,32 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-calls-edit">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+      <tr id="menuComplete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="complete()">
         <th>
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Modify
+          Complete Activity
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-calls-edit">
+      <tr id="menuReschedule" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
+          <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          Modify Activity
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-calls-edit">
+      <tr id="menuModify" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="modify()">
+        <th>
+          <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          Modify Activity
         </td>
       </tr>
       </dhv:permission>
@@ -64,12 +131,12 @@
       </tr>
       </dhv:permission>
       <dhv:permission name="accounts-accounts-contacts-calls-delete">
-      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteCall()">
+      <tr id="menuCancel" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteCall()">
         <th>
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete
+          Cancel Activity
         </td>
       </tr>
       </dhv:permission>

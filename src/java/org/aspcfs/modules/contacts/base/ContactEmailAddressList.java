@@ -47,14 +47,14 @@ public class ContactEmailAddressList extends EmailAddressList {
    */
   public ContactEmailAddressList(HttpServletRequest request) {
     int i = 0;
-    int forPrimary = -1;
-    if (request.getParameter("forPrimary") != null) {
-      forPrimary = Integer.parseInt((String) request.getParameter("forPrimary"));
+    int primaryEmail = -1;
+    if (request.getParameter("primaryEmail") != null) {
+      primaryEmail = Integer.parseInt((String) request.getParameter("primaryEmail"));
     }
     while (request.getParameter("email" + (++i) + "type") != null) {
       ContactEmailAddress thisEmailAddress = new ContactEmailAddress();
       thisEmailAddress.buildRecord(request, i);
-      if (forPrimary == i) {
+      if (primaryEmail == i) {
         thisEmailAddress.setPrimaryEmail(true);
       }
       if (thisEmailAddress.isValid()) {
@@ -317,8 +317,8 @@ public class ContactEmailAddressList extends EmailAddressList {
     while (i.hasNext()) {
       ContactEmailAddress thisEmailAddress = (ContactEmailAddress) i.next();
       //emailListSelect.addItem(thisEmailAddress.getId(), thisEmailAddress.getEmail());
-      emailListSelect.addItem(thisEmailAddress.getId(), 
-            thisEmailAddress.getEmail() + (thisEmailAddress.getPrimaryEmail()? "*":""));
+      emailListSelect.addItem(thisEmailAddress.getId(),
+          thisEmailAddress.getEmail() + (thisEmailAddress.getPrimaryEmail() ? "*" : ""));
     }
     return emailListSelect.getHtml(selectName, defaultKey);
   }

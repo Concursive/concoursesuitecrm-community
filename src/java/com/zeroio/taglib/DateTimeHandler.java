@@ -29,6 +29,7 @@ public class DateTimeHandler extends TagSupport {
 
   private Timestamp timestamp = null;
   private boolean dateOnly = false;
+  private boolean timeOnly = false;
   private int timeFormat = DateFormat.SHORT;
   private int dateFormat = DateFormat.SHORT;
   private String pattern = null;
@@ -116,6 +117,26 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
+   *  Sets the timeOnly attribute of the DateTimeHandler object
+   *
+   *@param  timeOnly  The new timeOnly value
+   */
+  public void setTimeOnly(boolean timeOnly) {
+    this.timeOnly = timeOnly;
+  }
+
+
+  /**
+   *  Sets the timeOnly attribute of the DateTimeHandler object
+   *
+   *@param  timeOnly  The new timeOnly value
+   */
+  public void setTimeOnly(String timeOnly) {
+    this.timeOnly = "true".equals(timeOnly);
+  }
+
+
+  /**
    *  Sets a pattern
    *
    *@param  pattern  The new pattern value
@@ -191,6 +212,9 @@ public class DateTimeHandler extends TagSupport {
         if (dateOnly) {
           formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
               dateFormat, locale);
+        } else if (timeOnly) {
+          formatter = (SimpleDateFormat) SimpleDateFormat.getTimeInstance(
+              timeFormat, locale);
         } else {
           formatter = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance(
               dateFormat, timeFormat, locale);

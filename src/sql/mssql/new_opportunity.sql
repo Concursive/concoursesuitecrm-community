@@ -5,7 +5,39 @@
  *@created    March 27, 2002
  *@version    $Id$
  */
- 
+
+ CREATE TABLE lookup_call_priority (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INT DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  weight INT NOT NULL
+)
+;
+
+CREATE TABLE lookup_call_reminder (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(50) NOT NULL,
+  base_value INTEGER DEFAULT 0 NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INT DEFAULT 0,
+  enabled BIT DEFAULT 1
+)
+;
+
+CREATE TABLE lookup_call_result (
+  result_id INT IDENTITY PRIMARY KEY,
+  description VARCHAR(100) NOT NULL,
+  level INT DEFAULT 0,
+  enabled BIT DEFAULT 1,
+  next_required BIT NOT NULL DEFAULT 0,
+  next_days INT NOT NULL DEFAULT 0,
+  next_call_type_id INT NULL,
+  canceled_type BIT NOT NULL DEFAULT 0
+)
+;
+
 CREATE TABLE lookup_call_types (
   code INT IDENTITY PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
@@ -90,7 +122,25 @@ CREATE TABLE call_log (
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
-  alert VARCHAR(100) DEFAULT NULL
+  alert VARCHAR(255) DEFAULT NULL,
+  alert_call_type_id INT REFERENCES lookup_call_types(code),
+  parent_id INT NULL REFERENCES call_log(call_id),
+  owner INT NULL REFERENCES access(user_id),
+  assignedby INT REFERENCES access(user_id),
+  assign_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  completedby INT REFERENCES access(user_id),
+  complete_date DATETIME NULL,
+  result_id INT REFERENCES lookup_call_result(result_id),
+  priority_id INT REFERENCES lookup_call_priority(code),
+  status_id INT NOT NULL DEFAULT 1,
+  reminder_value INT NULL,
+  reminder_type_id INT NULL REFERENCES lookup_call_reminder(code)
 );
 
 CREATE INDEX "call_log_cidx" ON "call_log" ("alertdate", "enteredby");
+CREATE INDEX "call_log_entered_idx" ON "call_log" (entered);
+CREATE INDEX "call_org_id_idx" ON "call_log" (org_id);
+CREATE INDEX "call_contact_id_idx" ON "call_log" (contact_id);
+CREATE INDEX "call_opp_id_idx" ON "call_log" (opp_id);
+
+ALTER TABLE lookup_call_result ADD FOREIGN KEY(next_call_type_id) REFERENCES call_log(call_id); 

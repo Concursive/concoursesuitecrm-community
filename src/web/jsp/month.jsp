@@ -132,7 +132,7 @@
     origMonth = calendarView.getMonth();
     origDay = calendarView.getDay();
   }
-  calendarView.addEvent(origMonth + "/" + origDay + "/" + origYear, "", origStatus);
+  calendarView.getEventList().put(origMonth + "/" + origDay + "/" + origYear, origStatus);
 %>
 <input type="hidden" name="origYear" value="<%= origYear %>">
 <input type="hidden" name="origMonth" value="<%= origMonth %>">

@@ -14,7 +14,7 @@
 	<a href="Leads.do?command=Search">Search Results</a> >
 <% } %>
 <a href="Leads.do?command=DetailsOpp&headerId=<%= request.getParameter("headerId") %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> >
-<a href="LeadsCalls.do?command=View&headerId=<%= request.getParameter("headerId") %><%= addLinkParams(request, "viewSource") %>">Calls</a> >
+<a href="LeadsCalls.do?command=View&headerId=<%= request.getParameter("headerId") %><%= addLinkParams(request, "viewSource") %>">Activities</a> >
 <a href="LeadsCalls.do?command=Details&headerId=<%= request.getParameter("headerId") %>&id=<%= request.getParameter("id") %><%= addLinkParams(request, "viewSource") %>">Call Details</a> >
 Call Forward
 </td>

@@ -113,6 +113,10 @@
       <required>no</required>
     </attribute>
     <attribute>
+      <name>firstInitialLast</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
       <name>default</name>
       <required>no</required>
       <rtexprvalue>true</rtexprvalue>
@@ -435,6 +439,10 @@
     </attribute>
     <attribute>
       <name>dateOnly</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>timeOnly</name>
       <required>no</required>
     </attribute>
     <attribute>

@@ -325,8 +325,8 @@ public final class QA extends CFSModule {
         processErrors(context, thisFeature.getErrors());
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
-      System.out.println("HelpFeature -> ProcessImage : Download cancelled or connection lost");
+      //User either canceled the download or lost connection
+      System.out.println("HelpFeature -> ProcessImage : Download canceled or connection lost");
     } catch (Exception e) {
       this.freeConnection(context, db);
       System.out.println(e.toString());
@@ -516,8 +516,8 @@ public final class QA extends CFSModule {
         processErrors(context, thisRule.getErrors());
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
-      System.out.println("HelpBusinessRule -> ProcessImage : Download cancelled or connection lost");
+      //User either canceled the download or lost connection
+      System.out.println("HelpBusinessRule -> ProcessImage : Download canceled or connection lost");
     } catch (Exception e) {
       this.freeConnection(context, db);
       System.out.println(e.toString());
@@ -845,8 +845,8 @@ public final class QA extends CFSModule {
         processErrors(context, thisNote.getErrors());
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
-      System.out.println("HelpNote -> ProcessImage : Download cancelled or connection lost");
+      //User either canceled the download or lost connection
+      System.out.println("HelpNote -> ProcessImage : Download canceled or connection lost");
     } catch (Exception e) {
       this.freeConnection(context, db);
       System.out.println(e.toString());

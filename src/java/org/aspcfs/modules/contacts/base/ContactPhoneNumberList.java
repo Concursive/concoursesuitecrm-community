@@ -46,9 +46,16 @@ public class ContactPhoneNumberList extends PhoneNumberList {
    */
   public ContactPhoneNumberList(HttpServletRequest request) {
     int i = 0;
+    int primaryNumber = -1;
+    if (request.getParameter("primaryNumber") != null) {
+      primaryNumber = Integer.parseInt((String) request.getParameter("primaryNumber"));
+    }
     while (request.getParameter("phone" + (++i) + "type") != null) {
       ContactPhoneNumber thisPhoneNumber = new ContactPhoneNumber();
       thisPhoneNumber.buildRecord(request, i);
+      if (primaryNumber == i) {
+        thisPhoneNumber.setPrimaryNumber(true);
+      }
       if (thisPhoneNumber.isValid()) {
         this.addElement(thisPhoneNumber);
       }
@@ -136,6 +143,13 @@ public class ContactPhoneNumberList extends PhoneNumberList {
   }
 
 
+  /**
+   *  Gets the htmlSelect attribute of the ContactPhoneNumberList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelect value
+   */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect emailListSelect = new HtmlSelect();
 
@@ -148,12 +162,12 @@ public class ContactPhoneNumberList extends PhoneNumberList {
       elementText += thisNumber.getNumber();
       emailListSelect.addItem(
           thisNumber.getId(),
-          elementText);
+          elementText + (thisNumber.getPrimaryNumber() ? "*" : ""));
     }
     return emailListSelect.getHtml(selectName, defaultKey);
   }
-  
-  
+
+
   /**
    *  Builds a list of addresses based on several parameters. The parameters are
    *  set after this object is constructed, then the buildList method is called
@@ -230,7 +244,7 @@ public class ContactPhoneNumberList extends PhoneNumberList {
         sqlOrder.append("LIMIT " + pagedListInfo.getItemsPerPage() + " ");
       }
       sqlOrder.append("OFFSET " + pagedListInfo.getCurrentOffset() + " ");
-    }else{
+    } else {
       sqlOrder.append("ORDER BY phone_type ");
     }
 

@@ -698,7 +698,7 @@ public final class AutoGuide extends CFSModule {
         }
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
+      //User either canceled the download or lost connection
       if (System.getProperty("DEBUG") != null) {
         System.out.println(se.toString());
       }
@@ -766,7 +766,7 @@ public final class AutoGuide extends CFSModule {
         System.err.println("AutoGuide-> Trying to send a file that does not exist");
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
+      //User either canceled the download or lost connection
       if (System.getProperty("DEBUG") != null) {
         se.printStackTrace(System.out);
       }
@@ -817,7 +817,7 @@ public final class AutoGuide extends CFSModule {
           StringUtils.toString(inventoryItem.getVehicle().getMake().getName()) + ".txt");
       fileDownload.sendTextAsFile(context, inventoryItem.toString());
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
+      //User either canceled the download or lost connection
       if (System.getProperty("DEBUG") != null) {
         se.printStackTrace(System.out);
       }

@@ -468,7 +468,7 @@ public final class Reports extends CFSModule {
 
   /**
    *  Action to cancel a queued report. If the report is already processing then
-   *  it cannot be cancelled.
+   *  it cannot be canceled.
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -487,7 +487,7 @@ public final class Reports extends CFSModule {
       if (queue.getProcessed() == null) {
         queue.delete(db, this.getPath(context, "reports-queue") + this.getDatePath(queue.getEntered()) + queue.getFilename());
       } else {
-        context.getRequest().setAttribute("actionError", "Report could not be cancelled because processing has already started");
+        context.getRequest().setAttribute("actionError", "Report could not be canceled because processing has already started");
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

@@ -7,6 +7,8 @@
  */
 package com.zeroio.iteam.base;
 
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.base.ScheduledActions;
@@ -27,7 +29,8 @@ import java.sql.*;
 
 public class ProjectListScheduledActions extends ProjectList implements ScheduledActions {
 
-  private int userId = -1;
+  private ActionContext context = null;
+  private CFSModule module = null;
 
 
   /**
@@ -37,22 +40,42 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
 
 
   /**
-   *  Sets the userId attribute of the CallListScheduledActions object
+   *  Sets the module attribute of the QuoteListScheduledActions object
    *
-   *@param  userId  The new userId value
+   *@param  tmp  The new module value
    */
-  public void setUserId(int userId) {
-    this.userId = userId;
+  public void setModule(CFSModule tmp) {
+    this.module = tmp;
   }
 
 
   /**
-   *  Gets the userId attribute of the CallListScheduledActions object
+   *  Sets the context attribute of the QuoteListScheduledActions object
    *
-   *@return    The userId value
+   *@param  tmp  The new context value
    */
-  public int getUserId() {
-    return userId;
+  public void setContext(ActionContext tmp) {
+    this.context = tmp;
+  }
+
+
+  /**
+   *  Gets the context attribute of the QuoteListScheduledActions object
+   *
+   *@return    The context value
+   */
+  public ActionContext getContext() {
+    return context;
+  }
+
+
+  /**
+   *  Gets the module attribute of the QuoteListScheduledActions object
+   *
+   *@return    The module value
+   */
+  public CFSModule getModule() {
+    return module;
   }
 
 
@@ -68,7 +91,10 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ProjectListScheduledActions-> Building Project Alerts ");
       }
-
+      
+      //get the userId
+      int userId = module.getUserId(context);
+      
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
 
@@ -97,7 +123,7 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
           thisEvent.setId(thisAssignment.getProjectId());
           thisEvent.setIdsub(thisAssignment.getId());
           thisEvent.setIcon(thisAssignment.getStatusGraphicTag());
-          companyCalendar.addEvent(thisEvent);
+          //companyCalendar.addEvent(thisEvent);
         }
       }
     } catch (SQLException e) {
@@ -119,6 +145,10 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
       System.out.println("ProjectListScheduledActions-> Building Alert Counts ");
     }
     try {
+      
+      //get the userId
+      int userId = module.getUserId(context);
+      
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
 

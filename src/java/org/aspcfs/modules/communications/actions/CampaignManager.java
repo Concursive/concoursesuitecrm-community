@@ -562,7 +562,7 @@ public final class CampaignManager extends CFSModule {
         }
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
+      //User either canceled the download or lost connection
       if (System.getProperty("DEBUG") != null) {
         System.out.println(se.toString());
       }
@@ -1233,7 +1233,7 @@ public final class CampaignManager extends CFSModule {
         return ("CancelOK");
       } else {
         context.getRequest().setAttribute("Error",
-            "<p><b>This campaign could not be cancelled because it has already started processing or has completed.</b></p>" +
+            "<p><b>This campaign could not be canceled because it has already started processing or has completed.</b></p>" +
             "<p>Once the server starts sending the messages, the campaign cannot be stopped.</p>" +
             "<p><a href=\"CampaignManager.do?command=Dashboard\">Back to Dashboard</a></p>");
         return ("UserError");
@@ -1716,7 +1716,7 @@ public final class CampaignManager extends CFSModule {
         System.err.println("PMF-> Trying to send a file that does not exist");
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
+      //User either canceled the download or lost connection
     } catch (Exception e) {
       errorMessage = e;
       System.out.println(e.toString());
@@ -2081,7 +2081,7 @@ public final class CampaignManager extends CFSModule {
         return (executeCommandView(context));
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
+      //User either canceled the download or lost connection
       if (System.getProperty("DEBUG") != null) {
         System.out.println(se.toString());
       }

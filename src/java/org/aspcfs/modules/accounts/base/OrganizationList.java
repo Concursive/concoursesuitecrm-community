@@ -706,24 +706,25 @@ public class OrganizationList extends Vector implements SyncableList {
    *
    *@param  db                Description of the Parameter
    *@param  timeZone          Description of the Parameter
+   *@param  events            Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public HashMap queryRecordCount(Connection db, TimeZone timeZone) throws SQLException {
+  public HashMap queryRecordCount(Connection db, TimeZone timeZone, HashMap events) throws SQLException {
 
     PreparedStatement pst = null;
     ResultSet rs = null;
 
-    HashMap events = new HashMap();
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlTail = new StringBuffer();
 
-    String sqlDate = ((hasAlertDate ? "alertdate " : "") + (hasExpireDate ? "contract_end " : ""));
+    String sqlDate = ((hasAlertDate ? DatabaseUtils.castDateTimeToDate(db, "alertdate") : "") + (hasExpireDate ? DatabaseUtils.castDateTimeToDate(db, "contract_end") : ""));
+
     createFilter(sqlFilter);
 
     sqlSelect.append(
-        "SELECT " + sqlDate + ", count(*) as nocols " +
+        "SELECT " + sqlDate + " as date, count(*) as nocols " +
         "FROM organization o " +
         "WHERE o.org_id >= 0 ");
 
@@ -732,9 +733,13 @@ public class OrganizationList extends Vector implements SyncableList {
     prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
-      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp(sqlDate.trim()));
-      int temp = rs.getInt("nocols");
-      events.put(alertDate, new Integer(temp));
+      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("date"));
+      int thisCount = rs.getInt("nocols");
+      if (events.containsKey(alertDate)) {
+        int tmpCount = ((Integer) events.get(alertDate)).intValue();
+        thisCount += tmpCount;
+      }
+      events.put(alertDate, new Integer(thisCount));
     }
     rs.close();
     pst.close();
@@ -759,7 +764,10 @@ public class OrganizationList extends Vector implements SyncableList {
     createFilter(sqlFilter);
 
     sqlSelect.append(
-        "SELECT o.org_id, o.name, o.alertdate, o.alert, o.contract_end " +
+        "SELECT o.org_id, o.name, " +
+        (hasAlertDate ? "o.alertdate, " : "") +
+        (hasExpireDate ? "o.contract_end, " : "") +
+        "o.alert, o.enteredby " +
         "FROM organization o " +
         "WHERE o.org_id >= 0 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
@@ -769,9 +777,14 @@ public class OrganizationList extends Vector implements SyncableList {
       Organization thisOrg = new Organization();
       thisOrg.setOrgId(rs.getInt("org_id"));
       thisOrg.setName(rs.getString("name"));
-      thisOrg.setAlertDate(rs.getTimestamp("alertdate"));
+      if (hasAlertDate) {
+        thisOrg.setAlertDate(rs.getTimestamp("alertdate"));
+      }
+      if (hasExpireDate) {
+        thisOrg.setContractEndDate(rs.getTimestamp("contract_end"));
+      }
       thisOrg.setAlertText(rs.getString("alert"));
-      thisOrg.setContractEndDate(rs.getTimestamp("contract_end"));
+      thisOrg.setEnteredBy(rs.getInt("enteredby"));
       this.add(thisOrg);
     }
     rs.close();
@@ -1019,7 +1032,7 @@ public class OrganizationList extends Vector implements SyncableList {
     if (excludeUnapprovedAccounts) {
       sqlFilter.append("AND (o.status_id IS NULL OR o.status_id = ?) ");
     }
-    
+
     if (typeId > 0) {
       sqlFilter.append("AND o.org_id IN (select atl.org_id from account_type_levels atl where atl.type_id = ?) ");
     }

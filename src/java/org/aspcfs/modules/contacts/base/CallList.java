@@ -32,11 +32,18 @@ public class CallList extends ArrayList {
   protected int orgId = -1;
   protected int oppHeaderId = -1;
   protected int enteredBy = -1;
+  protected int owner = -1;
   protected boolean hasAlertDate = false;
   protected java.sql.Timestamp alertDate = null;
   protected java.sql.Timestamp alertRangeStart = null;
   protected java.sql.Timestamp alertRangeEnd = null;
-
+  protected java.sql.Timestamp notificationRangeStart = null;
+  protected java.sql.Timestamp notificationRangeEnd = null;
+  protected boolean onlyPending = false;
+  protected boolean excludeCanceled = false;
+  protected boolean onlyCompleted = false;
+  protected boolean allContactsInAccount = false;
+  protected int contactOrgId = -1;
 
 
   /**
@@ -91,6 +98,11 @@ public class CallList extends ArrayList {
   }
 
 
+  /**
+   *  Sets the oppHeaderId attribute of the CallList object
+   *
+   *@param  oppHeaderId  The new oppHeaderId value
+   */
   public void setOppHeaderId(int oppHeaderId) {
     this.oppHeaderId = oppHeaderId;
   }
@@ -129,18 +141,23 @@ public class CallList extends ArrayList {
   }
 
 
+  /**
+   *  Sets the oppHeaderId attribute of the CallList object
+   *
+   *@param  oppHeaderId  The new oppHeaderId value
+   */
   public void setOppHeaderId(String oppHeaderId) {
     this.oppHeaderId = Integer.parseInt(oppHeaderId);
   }
 
 
   /**
-   *  Sets the alertRangeStart attribute of the CallList object
+   *  Sets the alertRangeStart attribute of the Task object
    *
-   *@param  tmp  The new alertRangeStart value
+   *@param  alertRangeStart  The new alertRangeStart value
    */
-  public void setAlertRangeStart(java.sql.Timestamp tmp) {
-    this.alertRangeStart = tmp;
+  public void setAlertRangeStart(java.sql.Timestamp alertRangeStart) {
+    this.alertRangeStart = alertRangeStart;
   }
 
 
@@ -153,6 +170,32 @@ public class CallList extends ArrayList {
     this.alertRangeStart = java.sql.Timestamp.valueOf(tmp);
   }
 
+
+  /**
+   *  Sets the owner attribute of the CallList object
+   *
+   *@param  owner  The new owner value
+   */
+  public void setOwner(int owner) {
+    this.owner = owner;
+  }
+
+
+  /**
+   *  Gets the owner attribute of the CallList object
+   *
+   *@return    The owner value
+   */
+  public int getOwner() {
+    return owner;
+  }
+
+
+  /**
+   *  Sets the alertRangeStart attribute of the CallList object
+   *
+   *@param  tmp  The new alertRangeStart value
+   */
 
   /**
    *  Sets the alertRangeEnd attribute of the CallList object
@@ -171,6 +214,138 @@ public class CallList extends ArrayList {
    */
   public void setAlertRangeEnd(String tmp) {
     this.alertRangeEnd = java.sql.Timestamp.valueOf(tmp);
+  }
+
+
+  /**
+   *  Sets the onlyPending attribute of the CallList object
+   *
+   *@param  tmp  The new onlyPending value
+   */
+  public void setOnlyPending(boolean tmp) {
+    this.onlyPending = tmp;
+  }
+
+
+  /**
+   *  Sets the onlyPending attribute of the CallList object
+   *
+   *@param  tmp  The new onlyPending value
+   */
+  public void setOnlyPending(String tmp) {
+    this.onlyPending = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the excludeCanceled attribute of the CallList object
+   *
+   *@param  excludeCanceled  The new excludeCanceled value
+   */
+  public void setExcludeCanceled(boolean excludeCanceled) {
+    this.excludeCanceled = excludeCanceled;
+  }
+
+
+  /**
+   *  Sets the onlyCompleted attribute of the CallList object
+   *
+   *@param  onlyCompleted  The new onlyCompleted value
+   */
+  public void setOnlyCompleted(boolean onlyCompleted) {
+    this.onlyCompleted = onlyCompleted;
+  }
+
+
+  /**
+   *  Sets the notificationRangeStart attribute of the CallList object
+   *
+   *@param  notificationRangeStart  The new notificationRangeStart value
+   */
+  public void setNotificationRangeStart(java.sql.Timestamp notificationRangeStart) {
+    this.notificationRangeStart = notificationRangeStart;
+  }
+
+
+  /**
+   *  Sets the notificationRangeEnd attribute of the CallList object
+   *
+   *@param  notificationRangeEnd  The new notificationRangeEnd value
+   */
+  public void setNotificationRangeEnd(java.sql.Timestamp notificationRangeEnd) {
+    this.notificationRangeEnd = notificationRangeEnd;
+  }
+
+
+  /**
+   *  Sets the allContactsInAccount attribute of the CallList object
+   *
+   *@param  allContactsInAccount  The new allContactsInAccount value
+   *@param  contactOrgId          The new allContactsInAccount value
+   */
+  public void setAllContactsInAccount(boolean allContactsInAccount, int contactOrgId) {
+    this.allContactsInAccount = allContactsInAccount;
+    this.contactOrgId = contactOrgId;
+  }
+
+
+  /**
+   *  Gets the allContactsInAccount attribute of the CallList object
+   *
+   *@return    The allContactsInAccount value
+   */
+  public boolean getAllContactsInAccount() {
+    return allContactsInAccount;
+  }
+
+
+  /**
+   *  Gets the contactOrgId attribute of the CallList object
+   *
+   *@return    The contactOrgId value
+   */
+  public int getContactOrgId() {
+    return contactOrgId;
+  }
+
+
+  /**
+   *  Gets the notificationRangeStart attribute of the CallList object
+   *
+   *@return    The notificationRangeStart value
+   */
+  public java.sql.Timestamp getNotificationRangeStart() {
+    return notificationRangeStart;
+  }
+
+
+  /**
+   *  Gets the notificationRangeEnd attribute of the CallList object
+   *
+   *@return    The notificationRangeEnd value
+   */
+  public java.sql.Timestamp getNotificationRangeEnd() {
+    return notificationRangeEnd;
+  }
+
+
+  /**
+   *  Gets the onlyCompleted attribute of the CallList object
+   *
+   *@return    The onlyCompleted value
+   */
+  public boolean getOnlyCompleted() {
+    return onlyCompleted;
+  }
+
+
+  /**
+   *  Gets the excludeCanceled attribute of the CallList object
+   *
+   *@return    The excludeCanceled value
+   */
+  public boolean getExcludeCanceled() {
+    return excludeCanceled;
   }
 
 
@@ -340,8 +515,23 @@ public class CallList extends ArrayList {
   }
 
 
+  /**
+   *  Gets the oppHeaderId attribute of the CallList object
+   *
+   *@return    The oppHeaderId value
+   */
   public int getOppHeaderId() {
     return oppHeaderId;
+  }
+
+
+  /**
+   *  Gets the onlyPending attribute of the CallList object
+   *
+   *@return    The onlyPending value
+   */
+  public boolean getOnlyPending() {
+    return onlyPending;
   }
 
 
@@ -349,6 +539,7 @@ public class CallList extends ArrayList {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  timeZone          Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
@@ -362,21 +553,26 @@ public class CallList extends ArrayList {
     StringBuffer sqlFilter = new StringBuffer();
     StringBuffer sqlTail = new StringBuffer();
 
+    String sqlDate = (onlyPending ? "alertdate" : "entered");
+
     createFilter(sqlFilter);
 
     sqlSelect.append(
-        "SELECT alertdate, count(*) as nocols " +
+        "SELECT " + sqlDate + " as date " +
         "FROM call_log c " +
         "WHERE call_id > -1 ");
-
-    sqlTail.append("GROUP BY alertdate ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlTail.toString());
     prepareFilter(pst);    
     rs = pst.executeQuery();
     while (rs.next()) {
-      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("alertdate"));
-      int tempcount=rs.getInt("nocols"); 
-      events.put(alertDate, new Integer(tempcount));
+      String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, rs.getTimestamp("date"));
+      if (events.containsKey(alertDate)) {
+        Integer count = (Integer) events.get(alertDate);
+        int tmpCount = count.intValue();
+        events.put(alertDate, new Integer(++tmpCount));
+      } else {
+        events.put(alertDate, new Integer(1));
+      }
     }
     rs.close();
     pst.close();
@@ -395,12 +591,21 @@ public class CallList extends ArrayList {
     ResultSet rs = null;
     StringBuffer sqlSelect = new StringBuffer();
     StringBuffer sqlFilter = new StringBuffer();
+    StringBuffer sqlOrder = new StringBuffer();
     createFilter(sqlFilter);
     sqlSelect.append(
-        "c.call_id, c.subject, c.contact_id, c.opp_id, c.opp_id, c.alertdate " +
+        "SELECT c.call_id, c.subject, c.contact_id, c.opp_id, c.opp_id, c.alertdate, c.alert, " +
+        "c.owner, c.complete_date, ct.org_id as contact_org_id, ct.namelast as ctlast, ct.namefirst as ctfirst, " + "ct.company as ctcompany, ct.org_name as orgname, c.status_id, c.entered, p.description as priority " +
         "FROM call_log c " +
+        "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
+        "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
         "WHERE c.call_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
+    if (onlyCompleted) {
+      sqlOrder.append("ORDER BY c.entered ");
+    } else {
+      sqlOrder.append("ORDER BY c.alertdate, p.weight DESC ");
+    }
+    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     prepareFilter(pst);
     rs = pst.executeQuery();
     while (rs.next()) {
@@ -409,7 +614,30 @@ public class CallList extends ArrayList {
       thisCall.setSubject(rs.getString("subject"));
       thisCall.setContactId(DatabaseUtils.getInt(rs, "contact_id"));
       thisCall.setOppHeaderId(DatabaseUtils.getInt(rs, "opp_id"));
+
       thisCall.setAlertDate(rs.getTimestamp("alertdate"));
+      thisCall.setAlertText(rs.getString("alert"));
+      thisCall.setOwner(rs.getInt("owner"));
+      thisCall.setCompleteDate(rs.getTimestamp("complete_date"));
+      //contact details
+      thisCall.setContactOrgId(DatabaseUtils.getInt(rs, "contact_org_id"));
+      String contactName = Contact.getNameLastFirst(rs.getString("ctlast"), rs.getString("ctfirst"));
+      if (contactName == null || "".equals(contactName)) {
+        contactName = rs.getString("ctcompany");
+      }
+      thisCall.setOrgName(rs.getString("orgname"));
+      thisCall.setContactName(contactName);
+      thisCall.setStatusId(rs.getInt("status_id"));
+      thisCall.setEntered(rs.getTimestamp("entered"));
+      thisCall.setPriorityString(rs.getString("priority"));
+
+      //build Contact Details
+      Contact thisContact = new Contact();
+      thisContact.setId(thisCall.getContactId());
+      thisContact.buildPhoneNumberList(db);
+      thisCall.setContact(thisContact);
+
+      //add call to list
       this.add(thisCall);
     }
     rs.close();
@@ -436,10 +664,6 @@ public class CallList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) as recordcount " +
         "FROM call_log c " +
-        "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
-        "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
-        "LEFT JOIN contact e ON (c.enteredby = e.user_id) " +
-        "LEFT JOIN contact m ON (c.modifiedby = m.user_id) " +
         "WHERE call_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
@@ -467,21 +691,20 @@ public class CallList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "c.*, t.*, " +
-        "e.namelast as elast, e.namefirst as efirst, " +
-        "m.namelast as mlast, m.namefirst as mfirst, " +
-        "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.company as ctcompany " +
+        "c.call_id, c.org_id, c.contact_id, c.opp_id, c.call_type_id, c.length, " +
+        "c.subject, c.notes, c.entered, c.enteredby, c.modified, c.modifiedby, c.alertdate, " +
+        "c.followup_date, c.parent_id, c.owner, c.assignedby, c.assign_date, c.completedby, " +
+        "c.complete_date, c.result_id, c.priority_id, c.status_id, c.reminder_value, c.reminder_type_id, " +
+        "c.alert_call_type_id, c.alert, c.followup_notes, t.*, talert.description as alertType, " +
+        "ct.namelast as ctlast, ct.namefirst as ctfirst, ct.company as ctcompany, p.description as priority " +
         "FROM call_log c " +
         "LEFT JOIN contact ct ON (c.contact_id = ct.contact_id) " +
         "LEFT JOIN lookup_call_types t ON (c.call_type_id = t.code) " +
-        "LEFT JOIN contact e ON (c.enteredby = e.user_id) " +
-        "LEFT JOIN contact m ON (c.modifiedby = m.user_id) " +
+        "LEFT JOIN lookup_call_types talert ON (c.alert_call_type_id = talert.code) " +
+        "LEFT JOIN lookup_call_priority p ON (c.priority_id = p.code) " +
         "WHERE call_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
-    if (System.getProperty("DEBUG") != null) {
-      System.out.println("CallList --> Building List ");
-    }
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
       pagedListInfo.doManualOffset(db, rs);
@@ -527,36 +750,68 @@ public class CallList extends ArrayList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
     if (contactId != -1) {
       sqlFilter.append("AND c.contact_id = ? ");
+    }
+
+    if (allContactsInAccount) {
+      sqlFilter.append("AND c.org_id = ? ");
     }
 
     if (hasAlertDate == true) {
       sqlFilter.append("AND c.alertdate IS NOT NULL ");
     }
-
     if (oppHeaderId != -1) {
       sqlFilter.append("AND c.opp_id = ? ");
     }
-
     if (enteredBy != -1) {
       sqlFilter.append("AND c.enteredby = ? ");
     }
-
     if (alertDate != null) {
       sqlFilter.append("AND c.alertdate = ? ");
     }
-
     if (orgId != -1) {
       sqlFilter.append("AND c.org_id = ? ");
     }
 
-    if (alertRangeStart != null) {
-      sqlFilter.append("AND c.alertdate >= ? ");
+    if (owner != -1) {
+      sqlFilter.append("AND c.owner = ? ");
     }
+
+    if (alertRangeStart != null) {
+      if (onlyCompleted) {
+        sqlFilter.append("AND c.entered >= ? ");
+      } else {
+        sqlFilter.append("AND c.alertdate >= ? ");
+      }
+    }
+
     if (alertRangeEnd != null) {
-      sqlFilter.append("AND c.alertdate < ? ");
+      if (onlyCompleted) {
+        sqlFilter.append("AND c.entered < ? ");
+      } else {
+        sqlFilter.append("AND c.alertdate < ? ");
+      }
+    }
+
+    if (notificationRangeStart != null) {
+      sqlFilter.append("AND c.followup_date >= ? ");
+    }
+
+    if (notificationRangeEnd != null) {
+      sqlFilter.append("AND c.followup_date < ? ");
+    }
+
+    if (onlyPending) {
+      sqlFilter.append("AND c.status_id = ? AND alertdate is NOT NULL ");
+    }
+
+    if (onlyCompleted) {
+      sqlFilter.append("AND (c.status_id = ? OR c.status_id = ?) ");
+    }
+
+    if (excludeCanceled) {
+      sqlFilter.append("AND c.status_id != ? ");
     }
   }
 
@@ -575,28 +830,46 @@ public class CallList extends ArrayList {
       pst.setInt(++i, contactId);
     }
 
+    if (allContactsInAccount) {
+      pst.setInt(++i, contactOrgId);
+    }
+
     if (oppHeaderId != -1) {
       pst.setInt(++i, oppHeaderId);
     }
-
     if (enteredBy != -1) {
       pst.setInt(++i, enteredBy);
     }
-
     if (alertDate != null) {
       pst.setTimestamp(++i, alertDate);
     }
-
     if (orgId != -1) {
       pst.setInt(++i, orgId);
     }
-
+    if (owner != -1) {
+      pst.setInt(++i, owner);
+    }
     if (alertRangeStart != null) {
       pst.setTimestamp(++i, alertRangeStart);
     }
-
     if (alertRangeEnd != null) {
       pst.setTimestamp(++i, alertRangeEnd);
+    }
+    if (notificationRangeStart != null) {
+      pst.setTimestamp(++i, notificationRangeStart);
+    }
+    if (notificationRangeEnd != null) {
+      pst.setTimestamp(++i, notificationRangeEnd);
+    }
+    if (onlyPending) {
+      pst.setInt(++i, Call.COMPLETE_FOLLOWUP_PENDING);
+    }
+    if (onlyCompleted) {
+      pst.setInt(++i, Call.COMPLETE_FOLLOWUP_PENDING);
+      pst.setInt(++i, Call.COMPLETE);
+    }
+    if (excludeCanceled) {
+      pst.setInt(++i, Call.CANCELED);
     }
     return i;
   }

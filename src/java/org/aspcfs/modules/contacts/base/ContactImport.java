@@ -657,8 +657,8 @@ public class ContactImport extends Import implements Runnable {
       //do not use stop to stop the thread, nullify it
       importThread = null;
 
-      //set the status to cancelled
-      this.setStatusId(Import.CANCELLED);
+      //set the status to canceled
+      this.setStatusId(Import.CANCELED);
 
       //perform clean up
       destroy();

@@ -109,6 +109,9 @@ CREATE TABLE ticket (
 
 CREATE INDEX "ticket_cidx" ON "ticket" USING btree ("assigned_to", "closed");
 CREATE INDEX "ticketlist_entered" ON "ticket" (entered);
+CREATE INDEX "ticket_problem_idx" ON "ticket" (problem);
+CREATE INDEX "ticket_comment_idx" ON "ticket" (comment);
+CREATE INDEX "ticket_solution_idx" ON "ticket" (solution);
 
 CREATE TABLE project_ticket_count (
   project_id INT UNIQUE NOT NULL REFERENCES projects(project_id),

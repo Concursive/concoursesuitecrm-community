@@ -25,7 +25,7 @@ public class Import extends GenericBean {
   public final static int QUEUED = 2;
   public final static int RUNNING = 3;
   public final static int FAILED = 4;
-  public final static int CANCELLED = 5;
+  public final static int CANCELED = 5;
   public final static int PROCESSED_UNAPPROVED = 6;
   public final static int PROCESSED_APPROVED = 7;
   public final static int DELETED = 8;
@@ -526,8 +526,8 @@ public class Import extends GenericBean {
         case FAILED:
           tmp = "Failed";
           break;
-        case CANCELLED:
-          tmp = "Cancelled";
+        case CANCELED:
+          tmp = "Canceled";
           break;
         case PROCESSED_UNAPPROVED:
           tmp = "Pending Approval";

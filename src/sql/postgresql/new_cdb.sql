@@ -3,7 +3,7 @@
  *
  *@version    $Id$
  */
- 
+
 CREATE SEQUENCE access_user_id_seq MINVALUE 0 START 0;
 CREATE TABLE access (
   user_id INTEGER DEFAULT nextval('access_user_id_seq') NOT NULL PRIMARY KEY,
@@ -419,9 +419,12 @@ CREATE TABLE contact_address (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL references access(user_id)
+  modifiedby INT NOT NULL references access(user_id),
+  primary_address BOOLEAN NOT NULL DEFAULT false
 )
 ;
+
+CREATE INDEX "contact_address_contact_id_idx" ON "contact_address" (contact_id);
 
 CREATE SEQUENCE contact_email_emailaddress__seq;
 CREATE TABLE contact_emailaddress (
@@ -437,6 +440,8 @@ CREATE TABLE contact_emailaddress (
 )
 ;
 
+CREATE INDEX "contact_email_contact_id_idx" ON "contact_emailaddress" (contact_id);
+
 CREATE TABLE contact_phone (
   phone_id SERIAL PRIMARY KEY,
   contact_id INT REFERENCES contact(contact_id),
@@ -446,9 +451,12 @@ CREATE TABLE contact_phone (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL references access(user_id)
+  modifiedby INT NOT NULL references access(user_id),
+  primary_number BOOLEAN NOT NULL DEFAULT false
 )
 ;
+
+CREATE INDEX "contact_phone_contact_id_idx" ON "contact_phone" (contact_id);
 
 CREATE SEQUENCE notification_notification_i_seq;
 CREATE TABLE notification (

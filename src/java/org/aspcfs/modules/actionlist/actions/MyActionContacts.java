@@ -399,8 +399,8 @@ public final class MyActionContacts extends CFSModule {
         processErrors(context, thisContact.getErrors());
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
-      System.out.println("MyActionContacts -> ProcessImage : Download cancelled or connection lost");
+      //User either canceled the download or lost connection
+      System.out.println("MyActionContacts -> ProcessImage : Download canceled or connection lost");
     } catch (Exception e) {
       errorMessage = e;
       this.freeConnection(context, db);

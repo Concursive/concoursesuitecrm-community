@@ -22,6 +22,7 @@ public class UsernameHandler extends TagSupport {
 
   private int userId = -1;
   private boolean lastFirst = false;
+  private boolean firstInitialLast = false;
   private String defaultText = null;
 
 
@@ -57,6 +58,26 @@ public class UsernameHandler extends TagSupport {
 
 
   /**
+   *  Sets the firstInitialLast attribute of the UsernameHandler object
+   *
+   *@param  firstInitialLast  The new firstInitialLast value
+   */
+  public void setFirstInitialLast(boolean firstInitialLast) {
+    this.firstInitialLast = firstInitialLast;
+  }
+
+
+  /**
+   *  Sets the firstInitialLast attribute of the UsernameHandler object
+   *
+   *@param  tmp  The new firstInitialLast value
+   */
+  public void setFirstInitialLast(String tmp) {
+    this.firstInitialLast = "true".equals(tmp);
+  }
+
+
+  /**
    *  Sets the default attribute of the UsernameHandler object
    *
    *@param  tmp  The new default value
@@ -79,27 +100,26 @@ public class UsernameHandler extends TagSupport {
       ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
       if (ce == null) {
         System.out.println("UsernameHandler-> ConnectionElement is null");
+      }
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      if (systemStatus == null) {
+        System.out.println("UsernameHandler-> SystemStatus is null");
       } else {
-        SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-        if (systemStatus == null) {
-          System.out.println("UsernameHandler-> SystemStatus is null");
-        } else {
-          User thisUser = systemStatus.getUser(userId);
-          if (thisUser != null) {
-            Contact thisContact = thisUser.getContact();
-            if (thisContact != null) {
-              if (lastFirst) {
-                this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameLastFirst()));
-              } else {
-                this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameFirstLast()));
-              }
+        User thisUser = systemStatus.getUser(userId);
+        if (thisUser != null) {
+          Contact thisContact = thisUser.getContact();
+          if (thisContact != null) {
+            if (lastFirst) {
+              this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameLastFirst()));
+            } else if (firstInitialLast) {
+              this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameFirstInitialLast()));
             } else {
-              System.out.println("UsernameHandler-> Contact is null");
+              this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameFirstLast()));
             }
-          } else {
-            //NOTE: the default text will already be in the output format
-            this.pageContext.getOut().write(StringUtils.toHtml(defaultText));
           }
+        } else {
+          //NOTE: the default text will already be in the output format
+          this.pageContext.getOut().write(StringUtils.toHtml(defaultText));
         }
       }
     } catch (Exception e) {

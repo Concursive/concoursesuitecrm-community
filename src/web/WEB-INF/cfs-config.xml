@@ -201,6 +201,35 @@
     <forward name="MyProfileOK" resource="/mycfs/mycfs_profile.jsp" layout="nav"/>
     <forward name="MaintenanceModeOK" resource="/mycfs/maintenance.jsp" layout="nav"/>
   </action>
+  <action name="CalendarCalls" class="org.aspcfs.modules.accounts.actions.AccountContactsCalls">
+    <bean name="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
+    <forward name="AddPopupOK" resource="/mycfs/calendar_calls_add.jsp" layout="style"/>
+    <forward name="ViewPopupOK" resource="/mycfs/calendar_calls_list.jsp" layout="style"/>
+    <forward name="ModifyPopupOK" resource="/mycfs/calendar_calls_modify.jsp" layout="style"/>
+    <forward name="SuggestCallPopupOK" resource="/contacts/companydirectory_calls_suggest.jsp" layout="style"/>
+    <forward name="InsertPopupOK" resource="/closepopupandreload.jsp" layout="style"/>
+    <forward name="UpdatePopupOK" resource="/closepopupandreload.jsp" layout="style"/>
+  </action>
+  <action name="CalendarTasks" class="org.aspcfs.modules.tasks.actions.MyTasks">
+    <bean name="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request" />
+    <forward name="NewTaskPopupOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=CalendarTasks"/>
+    <forward name="PrepareTaskPopupOK" resource="/tasks/mytasks_new.jsp" layout="style"/>
+    <forward name="TaskDetailsPopupOK" resource="/tasks/mytasks_details.jsp" layout="style"/>
+    <forward name="InsertTaskPopupOK" resource="/closepopupandreload.jsp"/>
+  </action>
+  <action name="CalendarOpportunities" class="org.aspcfs.modules.pipeline.actions.Leads">
+    <bean name="ComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
+    <forward name="PrepareOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=LeadsComponents"/>
+    <forward name="PopupModifyOK"  resource="/OpportunityForm.do?command=Prepare&amp;actionSource=CalendarOpportunities"/>
+    <forward name="PrepareModifyOppPopupOK" resource="/pipeline/leads_modifycomponent.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
+  </action>
+  <action name="CalendarAccounts" class="org.aspcfs.modules.accounts.actions.Accounts">
+    <bean name="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+    <forward name="ModifyOK" resource="/accounts/accounts_modify.jsp" layout="nav"/>
+    <forward name="ModifyPopupOK" resource="/accounts/accounts_modify.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
+  </action>
   <action name="MyCFSProfile" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <bean name="EmployeeBean" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
     <forward name="ProfileOK" resource="/mycfs/mycfs_personal.jsp" layout="nav"/>
@@ -548,12 +577,16 @@
     <bean name="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
     <forward name="ViewOK" resource="/pipeline/leads_listcalls.jsp" layout="nav"/>
     <forward name="AddOK" resource="/pipeline/leads_addcall.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/LeadsCalls.do?command=View"/>
     <forward name="DetailsOK" resource="/pipeline/leads_detailscall.jsp" layout="nav"/>
     <forward name="ModifyPopupOK" resource="/pipeline/leads_modifycall.jsp" layout="style"/>
     <forward name="ModifyOK" resource="/pipeline/leads_modifycall.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/LeadsCalls.do?command=Details"/>
+    <forward name="UpdateListOK" resource="/LeadsCalls.do?command=View"/>
     <forward name="DeleteOK" resource="/LeadsCalls.do?command=View"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
+    <!-- <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeletePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/> -->
   </action>
   
   <action name="LeadsCallsForward" class="org.aspcfs.modules.pipeline.actions.LeadsCalls">
@@ -622,6 +655,10 @@
     <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
     <forward name="RebuildElementsOK" resource="/accounts/accounts_js_buildelements.jsp"/>
   </action>
+  <action name="AccountsCalls" class="org.aspcfs.modules.accounts.actions.AccountsCalls">
+    <bean name="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
+    <forward name="ViewOK" resource="/accounts/accounts_calls_list.jsp" layout="nav"/>
+  </action>
   <action name="Contacts" class="org.aspcfs.modules.accounts.actions.Contacts">
     <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
     <forward name="ListOK" resource="/accounts/accounts_contacts_list.jsp" layout="nav"/>
@@ -657,14 +694,19 @@
   <action name="AccountContactsCalls" class="org.aspcfs.modules.accounts.actions.AccountContactsCalls">
     <bean name="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
     <forward name="ViewOK" resource="/accounts/accounts_contacts_calls_list.jsp" layout="nav"/>
+    <forward name="ViewPopupOK" resource="/accounts/accounts_contacts_calls_list.jsp" layout="style"/>
     <forward name="DetailsOK" resource="/accounts/accounts_contacts_calls_details.jsp" layout="nav"/>
     <forward name="AddOK" resource="/accounts/accounts_contacts_calls_add.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/AccountContactsCalls.do?command=View"/>
+    <forward name="UpdateOK" resource="/AccountContactsCalls.do?command=Details"/>
+    <forward name="UpdateListOK" resource="/AccountContactsCalls.do?command=View"/>
     <forward name="ModifyOK" resource="/accounts/accounts_contacts_calls_modify.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeletePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="SendCallOK" resource="/MyCFS.do?command=SendMessage&amp;actionSource=AccountContactsCalls"/>
     <forward name="SendMessageOK" resource="/accounts/accounts_contacts_calls_confirmsend.jsp" layout="nav"/>
     <forward name="ForwardMessageOK" resource="/accounts/accounts_contacts_calls_forward.jsp" layout="nav"/>
+    <forward name="SuggestCallOK" resource="/contacts/companydirectory_calls_suggest.jsp" layout="nav"/>
   </action>
   <action name="AccountContactsOpps" class="org.aspcfs.modules.accounts.actions.AccountContactsOpps">
     <bean name="OppDetails" class="org.aspcfs.modules.pipeline.beans.OpportunityBean" scope="request"/>

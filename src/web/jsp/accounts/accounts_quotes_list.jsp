@@ -82,17 +82,7 @@ Quotes
         <a href="AccountQuotes.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&quoteId=<%= thisQuote.getId() %>">Quote #<%= thisQuote.getId() %></a>
       </td>
       <td valign="center" width="20%" class="row<%= rowid %>">
-<%
-      if(thisQuote.getIssuedDate() != null){
-%>
-        <dhv:tz timestamp="<%= thisQuote.getIssuedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
-<%    
-      }else{
-%>
-        not issued
-<%    
-      }
-%>
+        <zeroio:tz timestamp="<%= thisQuote.getIssuedDate() %>" default="not issued"/>
       </td>
       <td valign="center" width="50%" class="row<%= rowid %>">
         <%= toHtml(thisQuote.getShortDescription()) %>

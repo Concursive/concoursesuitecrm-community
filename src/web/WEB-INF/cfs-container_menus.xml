@@ -24,6 +24,11 @@
       <permission value="accounts-accounts-contacts-view"/>
       <link value="Contacts.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
+    <submenu name="activities">
+      <long_html value="Activities"/>
+      <permission value="accounts-accounts-contacts-calls-view"/>
+      <link value="AccountsCalls.do?command=View&amp;orgId=${orgId}"/>
+    </submenu>
     <submenu name="opportunities">
       <long_html value="Opportunities"/>
       <permission value="accounts-accounts-opportunities-view"/>
@@ -94,7 +99,7 @@
       <link value="ExternalContacts.do?command=Fields&amp;contactId=${id}"/>
     </submenu>
     <submenu name="calls">
-      <long_html value="Calls"/>
+      <long_html value="Activities"/>
       <permission value="contacts-external_contacts-calls-view"/>
       <link value="ExternalContactsCalls.do?command=View&amp;contactId=${id}"/>
     </submenu>
@@ -138,7 +143,7 @@
       <link value="Contacts.do?command=Details&amp;id=${id}"/>
     </submenu>
     <submenu name="calls">
-      <long_html value="Calls"/>
+      <long_html value="Activities"/>
       <permission value="accounts-accounts-contacts-calls-view"/>
       <link value="AccountContactsCalls.do?command=View&amp;contactId=${id}"/>
     </submenu>
@@ -186,7 +191,7 @@
       <link value="Leads.do?command=DetailsOpp&amp;headerId=${id}"/>
     </submenu>
     <submenu name="calls">
-      <long_html value="Calls"/>
+      <long_html value="Activities"/>
       <permission value="pipeline-opportunities-calls-view"/>
       <link value="LeadsCalls.do?command=View&amp;headerId=${id}"/>
     </submenu>

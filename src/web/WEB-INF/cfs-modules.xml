@@ -141,7 +141,6 @@
       <short_html value="Export"/>
       <link value="ExternalContacts.do?command=Reports"/>
     </submenu>
-    
   </menu>
   
   <menu>
@@ -193,6 +192,7 @@
     <action name="Accounts"/>
     <action name="Contacts"/>
     <action name="ContactsPortal"/>
+    <action name="AccountsCalls"/>
     <action name="AccountContactsImports"/>
     <action name="Opportunities"/>
     <action name="OpportunitiesComponents"/>
@@ -216,6 +216,7 @@
     <action name="AccountQuotes"/>
     <action name="AccountOrdersProducts"/>
     <action name="AccountOrdersPayments"/>
+    <action name="AccountContactsCalls"/>
     <page title="Accounts"/>
     <permission value="accounts-view"/>
     <long_html value="Accounts"/>
@@ -264,7 +265,6 @@
       <short_html value="Export"/>
       <link value="Accounts.do?command=Reports"/>
     </submenu>
-    
   </menu>
   
 <!--

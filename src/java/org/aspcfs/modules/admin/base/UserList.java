@@ -656,7 +656,6 @@ public class UserList extends Vector implements SyncableList {
       String elementText = null;
 
       elementText = thisUser.getContact().getValidName();
-
       if (!(thisUser.getEnabled())) {
         elementText += " *";
       }

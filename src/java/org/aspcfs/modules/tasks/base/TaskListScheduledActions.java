@@ -1,5 +1,7 @@
 package org.aspcfs.modules.tasks.base;
 
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.ScheduledActions;
 import org.aspcfs.modules.mycfs.base.*;
 import org.aspcfs.modules.base.Constants;
@@ -20,7 +22,9 @@ import java.sql.*;
  */
 public class TaskListScheduledActions extends TaskList implements ScheduledActions {
 
-  private int userId = -1;
+  private ActionContext context = null;
+  private CFSModule module = null;
+
 
 
   /**
@@ -30,22 +34,42 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
 
   /**
-   *  Sets the userId attribute of the TaskListScheduledActions object
+   *  Sets the module attribute of the QuoteListScheduledActions object
    *
-   *@param  userId  The new userId value
+   *@param  tmp  The new module value
    */
-  public void setUserId(int userId) {
-    this.userId = userId;
+  public void setModule(CFSModule tmp) {
+    this.module = tmp;
   }
 
 
   /**
-   *  Gets the userId attribute of the TaskListScheduledActions object
+   *  Sets the context attribute of the QuoteListScheduledActions object
    *
-   *@return    The userId value
+   *@param  tmp  The new context value
    */
-  public int getUserId() {
-    return userId;
+  public void setContext(ActionContext tmp) {
+    this.context = tmp;
+  }
+
+
+  /**
+   *  Gets the context attribute of the QuoteListScheduledActions object
+   *
+   *@return    The context value
+   */
+  public ActionContext getContext() {
+    return context;
+  }
+
+
+  /**
+   *  Gets the module attribute of the QuoteListScheduledActions object
+   *
+   *@return    The module value
+   */
+  public CFSModule getModule() {
+    return module;
   }
 
 
@@ -59,23 +83,25 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
   public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
 
     try {
+      //get the userId
+      int userId = module.getUserId(context);
+
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("TaskListScheduledActions-> Building Task Alerts for user " + this.getUserId());
+        System.out.println("TaskListScheduledActions-> Building Task Alerts for user " + userId);
       }
 
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
-      
+
       // Add Tasks to calendar details
-      this.setOwner(this.getUserId());
+      this.setOwner(userId);
       this.buildShortList(db);
       Iterator taskList = this.iterator();
       int taskCount = 0;
       while (taskList.hasNext()) {
         Task thisTask = (Task) taskList.next();
-        int status = thisTask.getComplete() ? 1 : 0;
         String alertDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisTask.getDueDate());
-        companyCalendar.addEvent(alertDate, "", thisTask.getDescription(), CalendarEventList.EVENT_TYPES[0], thisTask.getId(), -1, status);
+        companyCalendar.addEvent(alertDate, CalendarEventList.EVENT_TYPES[0], thisTask);
       }
     } catch (SQLException e) {
       throw new SQLException("Error Building Task Calendar Alerts");
@@ -96,18 +122,21 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TaskListScheduledActions-> Building Alert Count ");
       }
-      
+
+      //get the user
+      int userId = module.getUserId(context);
+
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
-      
+
       // Add Task count to calendar
-      this.setOwner(this.getUserId());
+      this.setOwner(userId);
       HashMap dayEvents = this.queryRecordCount(db, timeZone);
       Set s = dayEvents.keySet();
       Iterator i = s.iterator();
       while (i.hasNext()) {
         String thisDay = (String) i.next();
-        companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[0], thisDay, dayEvents.get(thisDay));
+        companyCalendar.addEventCount(thisDay, CalendarEventList.EVENT_TYPES[0], dayEvents.get(thisDay));
         if (System.getProperty("DEBUG") != null) {
           System.out.println("TaskListScheduledActions-> Added Tasks for " + thisDay + "- " + String.valueOf(dayEvents.get(thisDay)));
         }

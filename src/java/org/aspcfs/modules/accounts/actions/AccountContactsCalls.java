@@ -7,12 +7,15 @@ import java.sql.*;
 import java.util.Vector;
 import java.text.DateFormat;
 import java.io.*;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.mycfs.base.CFSNote;
 import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.actions.CFSModule;
 
 /**
@@ -31,25 +34,120 @@ public final class AccountContactsCalls extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
+    int MINIMIZED_ITEMS_PER_PAGE = 5;
     if (!hasPermission(context, "accounts-accounts-contacts-calls-view")) {
       return ("PermissionError");
     }
 
+    //Parameters
     String contactId = context.getRequest().getParameter("contactId");
-    PagedListInfo callListInfo = this.getPagedListInfo(context, "AccountContactCallsListInfo");
-    callListInfo.setLink("AccountContactsCalls.do?command=View&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
-    addModuleBean(context, "View Accounts", "View Calls");
+    String source = context.getRequest().getParameter("source");
 
+    //reset the paged lists
+    if ("true".equals(context.getRequest().getParameter("resetList"))) {
+      if ("calendar".equals(source)) {
+        context.getSession().removeAttribute("CalAccountContactCallsListInfo");
+        context.getSession().removeAttribute("CalAccountContactCompletedCallsListInfo");
+      } else {
+        context.getSession().removeAttribute("AccountContactCallsListInfo");
+        context.getSession().removeAttribute("AccountContactCompletedCallsListInfo");
+      }
+    }
+    //Determine the sections to view
+    String sectionId = null;
+    if (context.getRequest().getParameter("pagedListSectionId") != null) {
+      sectionId = context.getRequest().getParameter("pagedListSectionId");
+    }
+    addModuleBean(context, "View Accounts", "View Activities");
     Connection db = null;
+    //Pending Call List
     CallList callList = new CallList();
+
+    //if request from calendar use different pagedlistinfo
+    String pendingPagedListId = "AccountContactCallsListInfo";
+    if ("calendar".equals(source)) {
+      pendingPagedListId = "Cal" + pendingPagedListId;
+    }
+
+    if (sectionId == null || pendingPagedListId.equals(sectionId)) {
+      PagedListInfo callListInfo = this.getPagedListInfo(context, pendingPagedListId, "c.alertdate", null);
+      callListInfo.setLink("AccountContactsCalls.do?command=View&contactId=" + contactId +
+          HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+      if (sectionId == null) {
+        if (!callListInfo.getExpandedSelection()) {
+          if (callListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
+            callListInfo.setItemsPerPage(MINIMIZED_ITEMS_PER_PAGE);
+          }
+        } else {
+          if (callListInfo.getItemsPerPage() == MINIMIZED_ITEMS_PER_PAGE) {
+            callListInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
+          }
+        }
+      } else if (sectionId.equals(callListInfo.getId())) {
+        callListInfo.setExpandedSelection(true);
+      }
+      callList.setPagedListInfo(callListInfo);
+      //set the account
+      callList.setOnlyPending(true);
+      callList.setContactId(contactId);
+    }
+
+    //Completed Call List
+    CallList completedCallList = new CallList();
+
+    //if request from calendar use different pagedlistinfo
+    String completedPagedListId = "AccountContactCompletedCallsListInfo";
+    if ("calendar".equals(source)) {
+      completedPagedListId = "Cal" + completedPagedListId;
+    }
+
+    if (sectionId == null || completedPagedListId.equals(sectionId)) {
+      PagedListInfo completedCallListInfo = this.getPagedListInfo(context, completedPagedListId, "c.entered", "desc");
+      if ("calendar".equals(source)) {
+        completedCallListInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
+        completedCallListInfo.setLink("CalendarCalls.do?command=View&contactId=" + contactId +
+            HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId|source"));
+        completedCallListInfo.setExpandedSelection(true);
+      } else {
+        completedCallListInfo.setLink("AccountContactsCalls.do?command=View&contactId=" + contactId +
+            HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+        if (sectionId == null) {
+          if (!completedCallListInfo.getExpandedSelection()) {
+            if (completedCallListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
+              completedCallListInfo.setItemsPerPage(MINIMIZED_ITEMS_PER_PAGE);
+            }
+          } else {
+            if (completedCallListInfo.getItemsPerPage() == MINIMIZED_ITEMS_PER_PAGE) {
+              completedCallListInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
+            }
+          }
+        } else if (sectionId.equals(completedCallListInfo.getId())) {
+          completedCallListInfo.setExpandedSelection(true);
+        }
+      }
+      completedCallList.setPagedListInfo(completedCallListInfo);
+      completedCallList.setContactId(contactId);
+    }
     try {
       db = this.getConnection(context);
-      callList.setContactId(contactId);
-      callList.setPagedListInfo(callListInfo);
-      callList.buildList(db);
-
+      if (sectionId == null || pendingPagedListId.equals(sectionId)) {
+        callList.buildList(db);
+      }
+      if (sectionId == null || completedPagedListId.equals(sectionId)) {
+        completedCallList.buildList(db);
+      }
       //add account and contact to the request
       addFormElements(context, db);
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      //Need the call types for display purposes
+      LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
+      context.getRequest().setAttribute("CallTypeList", callTypeList);
+
+      //Need the result types for display purposes
+      CallResultList resultList = new CallResultList();
+      resultList.buildList(db);
+      context.getRequest().setAttribute("callResultList", resultList);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -57,6 +155,7 @@ public final class AccountContactsCalls extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("CallList", callList);
+    context.getRequest().setAttribute("CompletedCallList", completedCallList);
     return this.getReturn(context, "View");
   }
 
@@ -68,32 +167,35 @@ public final class AccountContactsCalls extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-contacts-calls-view"))) {
       return ("PermissionError");
     }
-
-    addModuleBean(context, "View Accounts", "Calls");
-
+    addModuleBean(context, "View Accounts", "Activities");
+    //Process parameters
     String callId = context.getRequest().getParameter("id");
     String contactId = context.getRequest().getParameter("contactId");
-
+    //Prepare the view
     Connection db = null;
     Call thisCall = null;
-
     try {
       db = this.getConnection(context);
-
       //add account and contact to the request
       Contact thisContact = addFormElements(context, db);
-
-      if (!hasAuthority(db, context, thisContact)) {
-        return ("PermissionError");
-      }
 
       //build the call
       thisCall = new Call(db, callId);
 
+      if (thisCall.getAlertDate() != null) {
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        //Need the call types for display purposes
+        LookupList reminderList = systemStatus.getLookupList(db, "lookup_call_reminder");
+        context.getRequest().setAttribute("ReminderTypeList", reminderList);
+      }
+
+      //Result Lookup
+      //Need the result types for display purposes
+      CallResult thisResult = new CallResult(db, thisCall.getResultId());
+      context.getRequest().setAttribute("CallResult", thisResult);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -117,15 +219,32 @@ public final class AccountContactsCalls extends CFSModule {
       return ("PermissionError");
     }
     String contactId = context.getRequest().getParameter("contactId");
-    addModuleBean(context, "View Accounts", "Add a Call");
+    addModuleBean(context, "View Accounts", "Add an Activity");
     Connection db = null;
     try {
       db = this.getConnection(context);
       //add account and contact to the request
       addFormElements(context, db);
-      LookupList callTypeList = new LookupList(db, "lookup_call_types");
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      //Type Lookup
+      LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
       callTypeList.addItem(0, "--None--");
       context.getRequest().setAttribute("CallTypeList", callTypeList);
+
+      //Result Lookup
+      CallResultList resultList = new CallResultList();
+      resultList.buildList(db);
+      context.getRequest().setAttribute("callResultList", resultList);
+
+      //Priority Lookup
+      LookupList priorityList = systemStatus.getLookupList(db, "lookup_call_priority");
+      context.getRequest().setAttribute("PriorityList", priorityList);
+
+      //Reminder Type Lookup
+      LookupList reminderList = systemStatus.getLookupList(db, "lookup_call_reminder");
+      reminderList.addItem(0, "--None--");
+      context.getRequest().setAttribute("ReminderTypeList", reminderList);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -141,40 +260,77 @@ public final class AccountContactsCalls extends CFSModule {
 
 
   /**
-   *  Save a Call
+   *  Save an Activity
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
+    String permission = "accounts-accounts-contacts-calls-add";
     boolean recordInserted = false;
-    int resultCount = 0;
+    int resultCount = -1;
+    Call parentCall = null;
+    Call previousCall = null;
+    addModuleBean(context, "View Accounts", "Save an Activity");
+    //Process the parameters
     String contactId = context.getRequest().getParameter("contactId");
+    String parentId = context.getRequest().getParameter("parentId");
+    String action = context.getRequest().getParameter("action");
+    //Save the current call
     Call thisCall = (Call) context.getFormBean();
     thisCall.setModifiedBy(getUserId(context));
-    addModuleBean(context, "View Accounts", "Save a Call");
-    if (!hasPermission(context, "accounts-accounts-contacts-calls-add") &&
-        !hasPermission(context, "contacts-external_contacts-add")) {
+    if (thisCall.getId() > 0) {
+      permission = "accounts-accounts-contacts-calls-edit";
+    }
+    if (!(hasPermission(context, permission))) {
       return ("PermissionError");
     }
     Connection db = null;
     try {
       db = this.getConnection(context);
+      if (parentId != null && Integer.parseInt(parentId) > -1) {
+        parentCall = new Call(db, Integer.parseInt(parentId));
+      }
+
       //update or insert the call
       if (thisCall.getId() > 0) {
+        if (thisCall.getStatusId() == Call.COMPLETE) {
+          previousCall = new Call(db, thisCall.getId());
+          if (previousCall.getAlertDate() == null && thisCall.getAlertDate() != null) {
+            thisCall.setStatusId(Call.COMPLETE_FOLLOWUP_PENDING);
+          }
+        }
         resultCount = thisCall.update(db, context);
       } else {
+        //set the status
+        if (thisCall.getId() == -1) {
+          if ("cancel".equals(action)) {
+            thisCall.setStatusId(Call.CANCELED);
+          } else {
+            if (thisCall.getAlertDate() != null) {
+              thisCall.setStatusId(Call.COMPLETE_FOLLOWUP_PENDING);
+            } else {
+              thisCall.setStatusId(Call.COMPLETE);
+            }
+          }
+        }
         thisCall.setEnteredBy(getUserId(context));
         recordInserted = thisCall.insert(db, context);
       }
       //add account and contact to the request
       addFormElements(context, db);
 
-      if (!recordInserted && resultCount == 0) {
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      if (!recordInserted && resultCount == -1) {
         processErrors(context, thisCall.getErrors());
-        LookupList callTypeList = new LookupList(db, "lookup_call_types");
-        callTypeList.addItem(0, "--None--");
-        context.getRequest().setAttribute("CallTypeList", callTypeList);
+        if (thisCall.getId() > 0) {
+          addModifyFormElements(db, context, thisCall);
+        }
+      } else {
+        if (parentCall != null) {
+          parentCall.setStatusId(Call.COMPLETE);
+          parentCall.update(db, context);
+        }
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -187,15 +343,15 @@ public final class AccountContactsCalls extends CFSModule {
       if (context.getRequest().getParameter("actionSource") != null) {
         return this.getReturn(context, "InsertCall");
       }
-      return (executeCommandView(context));
+      return this.getReturn(context, "Insert");
     } else if (resultCount == 1) {
       if ("list".equals(context.getRequest().getParameter("return"))) {
-        return (executeCommandView(context));
+        return this.getReturn(context, "UpdateList");
       }
-      return (executeCommandDetails(context));
+      return this.getReturn(context, "Update");
     }
     if (thisCall.getId() > 0) {
-      return (executeCommandModify(context));
+      return this.getReturn(context, "Modify");
     }
     return (executeCommandAdd(context));
   }
@@ -211,7 +367,7 @@ public final class AccountContactsCalls extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-contacts-calls-edit")) {
       return ("PermissionError");
     }
-    addModuleBean(context, "View Accounts", "Modify a Call");
+    addModuleBean(context, "View Accounts", "Modify an Activity");
 
     String contactId = context.getRequest().getParameter("contactId");
 
@@ -227,13 +383,7 @@ public final class AccountContactsCalls extends CFSModule {
       //add account and contact to the request
       Contact thisContact = addFormElements(context, db);
 
-      if (!hasAuthority(db, context, thisContact)) {
-        return ("PermissionError");
-      }
-
-      LookupList callTypeList = new LookupList(db, "lookup_call_types");
-      callTypeList.addItem(0, "--None--");
-      context.getRequest().setAttribute("CallTypeList", callTypeList);
+      addModifyFormElements(db, context, thisCall);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -242,6 +392,110 @@ public final class AccountContactsCalls extends CFSModule {
     }
     context.getRequest().setAttribute("CallDetails", thisCall);
     return this.getReturn(context, "Modify");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandComplete(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-contacts-calls-edit")) {
+      return ("PermissionError");
+    }
+    addModuleBean(context, "View Accounts", "Complete Activity");
+    //Process parameters
+    String contactId = context.getRequest().getParameter("contactId");
+    int callId = Integer.parseInt(context.getRequest().getParameter("id"));
+    Connection db = null;
+    Call thisCall = null;
+    try {
+      db = this.getConnection(context);
+      //Load the previous Call to get details for completed activity
+      thisCall = new Call(db, callId);
+      context.getRequest().setAttribute("PreviousCallDetails", thisCall);
+
+      //add account and contact to the request
+      Contact thisContact = addFormElements(context, db);
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      //Type Lookup
+      LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
+      callTypeList.addItem(0, "--None--");
+      context.getRequest().setAttribute("CallTypeList", callTypeList);
+
+      //Result Lookup
+      CallResultList resultList = new CallResultList();
+      resultList.buildList(db);
+      context.getRequest().setAttribute("callResultList", resultList);
+
+      //Priority Lookup
+      LookupList priorityList = systemStatus.getLookupList(db, "lookup_call_priority");
+      context.getRequest().setAttribute("PriorityList", priorityList);
+
+      //Reminder Type Lookup
+      LookupList reminderList = systemStatus.getLookupList(db, "lookup_call_reminder");
+      context.getRequest().setAttribute("ReminderTypeList", reminderList);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return this.getReturn(context, "Add");
+  }
+
+
+  /**
+   *  Modify a Call
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandCancel(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-contacts-calls-delete")) {
+      return ("PermissionError");
+    }
+    addModuleBean(context, "View Accounts", "Cancel Activity");
+    //Process parameters
+    String contactId = context.getRequest().getParameter("contactId");
+    int callId = Integer.parseInt(context.getRequest().getParameter("id"));
+    Connection db = null;
+    Call thisCall = null;
+    try {
+      db = this.getConnection(context);
+      //Load the previous Call to get details for completed activity
+      thisCall = new Call(db, callId);
+      context.getRequest().setAttribute("PreviousCallDetails", thisCall);
+      //Create an empty next call based on the previous call
+      Call nextCall = new Call();
+      nextCall.setCallTypeId(thisCall.getAlertCallTypeId());
+      nextCall.setSubject(thisCall.getAlertText());
+      nextCall.setNotes(thisCall.getFollowupNotes());
+      context.getRequest().setAttribute("CallDetails", nextCall);
+      //add account and contact to the request
+      Contact thisContact = addFormElements(context, db);
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      //Type Lookup
+      LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
+      callTypeList.addItem(0, "--None--");
+      context.getRequest().setAttribute("CallTypeList", callTypeList);
+      //Result Lookup
+      CallResultList resultList = new CallResultList();
+      resultList.buildList(db);
+      context.getRequest().setAttribute("callResultList", resultList);
+      //Priority Lookup
+      LookupList priorityList = systemStatus.getLookupList(db, "lookup_call_priority");
+      context.getRequest().setAttribute("PriorityList", priorityList);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return this.getReturn(context, "Add");
   }
 
 
@@ -263,9 +517,6 @@ public final class AccountContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, contactId);
-      if (!hasAuthority(db, context, thisContact)) {
-        return ("PermissionError");
-      }
       thisCall = new Call(db, Integer.parseInt(id));
       DependencyList dependencies = thisCall.processDependencies(db);
       htmlDialog.setTitle("CFS: Confirm Delete");
@@ -301,7 +552,6 @@ public final class AccountContactsCalls extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-contacts-calls-delete"))) {
       return ("PermissionError");
     }
-
     boolean recordDeleted = false;
     String contactId = context.getRequest().getParameter("contactId");
     Call thisCall = null;
@@ -310,9 +560,6 @@ public final class AccountContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, contactId);
-      if (!hasAuthority(db, context, thisContact)) {
-        return ("PermissionError");
-      }
       thisCall = new Call(db, context.getRequest().getParameter("id"));
 
       recordDeleted = thisCall.delete(db);
@@ -351,14 +598,14 @@ public final class AccountContactsCalls extends CFSModule {
 
     String msgId = context.getRequest().getParameter("id");
     CFSNote newNote = null;
-    addModuleBean(context, "View Accounts", "Forward Message");
-
+    addModuleBean(context, "View Accounts", "Forward Activity");
     Connection db = null;
+    Call thisCall = null;
+
     try {
       db = this.getConnection(context);
-
       newNote = new CFSNote();
-      Call thisCall = new Call(db, msgId);
+      thisCall = new Call(db, msgId);
       newNote.setBody(
           "Contact Name: " + StringUtils.toString(thisCall.getContactName()) + "\n" +
           "Type: " + StringUtils.toString(thisCall.getCallType()) + "\n" +
@@ -367,7 +614,6 @@ public final class AccountContactsCalls extends CFSModule {
           "Notes: " + StringUtils.toString(thisCall.getNotes()) + "\n" +
           "Entered: " + StringUtils.toString(thisCall.getEnteredName()) + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getEntered())  + "\n" +
           "Modified: " + StringUtils.toString(thisCall.getModifiedName()) + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getModified()));
-
       //load contact and account
       addFormElements(context, db);
     } catch (Exception e) {
@@ -393,7 +639,7 @@ public final class AccountContactsCalls extends CFSModule {
     }
 
     String callId = context.getRequest().getParameter("id");
-    addModuleBean(context, "View Accounts", "Send Message");
+    addModuleBean(context, "View Accounts", "Send Activity");
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -401,7 +647,7 @@ public final class AccountContactsCalls extends CFSModule {
       //load the call
       Call thisCall = new Call(db, callId);
       context.getRequest().setAttribute("CallDetails", thisCall);
-      
+
       //load contact and account
       addFormElements(context, db);
     } catch (Exception e) {
@@ -437,6 +683,71 @@ public final class AccountContactsCalls extends CFSModule {
     }
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
     return thisContact;
+  }
+
+
+  /**
+   *  Adds a feature to the ModifyFormElements attribute of the AccountContactsCalls object
+   *
+   *@param  db                The feature to be added to the ModifyFormElements attribute
+   *@param  context           The feature to be added to the ModifyFormElements attribute
+   *@param  thisCall          The feature to be added to the ModifyFormElements attribute
+   *@exception  SQLException  Description of the Exception
+   */
+  private void addModifyFormElements(Connection db, ActionContext context, Call thisCall) throws SQLException {
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    //Type Lookup
+    LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
+    callTypeList.addItem(0, "--None--");
+    context.getRequest().setAttribute("CallTypeList", callTypeList);
+    if ("pending".equals(context.getRequest().getParameter("view")) || (thisCall.getStatusId() == Call.COMPLETE && thisCall.getAlertDate() == null)) {
+      //Reminder Type Lookup
+      LookupList reminderList = systemStatus.getLookupList(db, "lookup_call_reminder");
+      context.getRequest().setAttribute("ReminderTypeList", reminderList);
+
+      //Priority Lookup
+      LookupList priorityList = systemStatus.getLookupList(db, "lookup_call_priority");
+      context.getRequest().setAttribute("PriorityList", priorityList);
+
+      //Result
+      CallResult thisResult = new CallResult(db, thisCall.getResultId());
+      context.getRequest().setAttribute("CallResult", thisResult);
+
+      //include the callResultList if it is a completed activity with no followup
+      if (!"pending".equals(context.getRequest().getParameter("view"))) {
+        CallResultList resultList = new CallResultList();
+        resultList.buildList(db);
+        context.getRequest().setAttribute("callResultList", resultList);
+      }
+    } else {
+      //Result Lookup
+      CallResultList resultList = new CallResultList();
+      resultList.buildList(db);
+      context.getRequest().setAttribute("callResultList", resultList);
+    }
+  }
+
+
+  /**
+   *  Suggest activity based on result of a previous activity
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandSuggestCall(ActionContext context) {
+    String resultId = context.getRequest().getParameter("resultId");
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      CallResult thisResult = new CallResult(db, Integer.parseInt(resultId));
+      context.getRequest().setAttribute("CallResult", thisResult);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return this.getReturn(context, "SuggestCall");
   }
 }
 

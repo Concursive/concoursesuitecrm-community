@@ -328,7 +328,7 @@ public final class TroubleTickets extends CFSModule {
         System.err.println("Accounts-> Trying to send a file that does not exist");
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
+      //User either canceled the download or lost connection
     } catch (Exception e) {
       errorMessage = e;
       System.out.println(e.toString());

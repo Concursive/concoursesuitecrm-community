@@ -11,14 +11,15 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.controller.*;
 import org.aspcfs.modules.pipeline.base.*;
-import org.aspcfs.modules.base.Constants;;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Description of the Class
  *
- * @author     chris
- * @created    January 15, 2003
- * @version    $Id$
+ *@author     chris
+ *@created    January 15, 2003
+ *@version    $Id: OpportunityBean.java,v 1.7 2003/09/26 18:49:27 mrajkowski Exp
+ *      $
  */
 public class OpportunityBean extends GenericBean {
   private OpportunityHeader header = null;
@@ -37,10 +38,10 @@ public class OpportunityBean extends GenericBean {
 
 
   /**
-   *Constructor for the OpportunityBean object
+   *  Constructor for the OpportunityBean object
    *
-   * @param  tmp1  Description of the Parameter
-   * @param  tmp2  Description of the Parameter
+   *@param  tmp1  Description of the Parameter
+   *@param  tmp2  Description of the Parameter
    */
   public OpportunityBean(OpportunityHeader tmp1, OpportunityComponent tmp2) {
     header = tmp1;
@@ -51,7 +52,7 @@ public class OpportunityBean extends GenericBean {
   /**
    *  Sets the actionId attribute of the OpportunityBean object
    *
-   * @param  actionId  The new actionId value
+   *@param  actionId  The new actionId value
    */
   public void setActionId(int actionId) {
     this.actionId = actionId;
@@ -61,7 +62,7 @@ public class OpportunityBean extends GenericBean {
   /**
    *  Sets the actionId attribute of the OpportunityBean object
    *
-   * @param  actionId  The new actionId value
+   *@param  actionId  The new actionId value
    */
   public void setActionId(String actionId) {
     this.actionId = Integer.parseInt(actionId);
@@ -71,7 +72,7 @@ public class OpportunityBean extends GenericBean {
   /**
    *  Gets the actionId attribute of the OpportunityBean object
    *
-   * @return    The actionId value
+   *@return    The actionId value
    */
   public int getActionId() {
     return actionId;
@@ -81,7 +82,7 @@ public class OpportunityBean extends GenericBean {
   /**
    *  Gets the component attribute of the OpportunityBean object
    *
-   * @return    The component value
+   *@return    The component value
    */
   public OpportunityComponent getComponent() {
     return component;
@@ -91,7 +92,7 @@ public class OpportunityBean extends GenericBean {
   /**
    *  Gets the header attribute of the OpportunityBean object
    *
-   * @return    The header value
+   *@return    The header value
    */
   public OpportunityHeader getHeader() {
     return header;
@@ -101,7 +102,7 @@ public class OpportunityBean extends GenericBean {
   /**
    *  Sets the component attribute of the OpportunityBean object
    *
-   * @param  tmp  The new component value
+   *@param  tmp  The new component value
    */
   public void setComponent(OpportunityComponent tmp) {
     this.component = tmp;
@@ -111,7 +112,7 @@ public class OpportunityBean extends GenericBean {
   /**
    *  Sets the header attribute of the OpportunityBean object
    *
-   * @param  tmp  The new header value
+   *@param  tmp  The new header value
    */
   public void setHeader(OpportunityHeader tmp) {
     this.header = tmp;
@@ -121,9 +122,9 @@ public class OpportunityBean extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     header.insert(db);
@@ -135,10 +136,10 @@ public class OpportunityBean extends GenericBean {
   /**
    *  Description of the Method
    *
-   * @param  db                Description of the Parameter
-   * @param  context           Description of the Parameter
-   * @return                   Description of the Return Value
-   * @exception  SQLException  Description of the Exception
+   *@param  db                Description of the Parameter
+   *@param  context           Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db, ActionContext context) throws SQLException {
     boolean headerInserted = false;
@@ -166,7 +167,8 @@ public class OpportunityBean extends GenericBean {
 
     return true;
   }
-  
+
+
   /**
    *  Gets the properties that are TimeZone sensitive for a Call
    *
@@ -174,6 +176,16 @@ public class OpportunityBean extends GenericBean {
    */
   public static ArrayList getTimeZoneParams() {
     return OpportunityComponent.getTimeZoneParams();
+  }
+
+
+  /**
+   *  Gets the numberParams attribute of the OpportunityBean class
+   *
+   *@return    The numberParams value
+   */
+  public static ArrayList getNumberParams() {
+    return OpportunityComponent.getNumberParams();
   }
 }
 

@@ -26,6 +26,7 @@ public class DateTimeHandler extends TagSupport {
 
   private Timestamp timestamp = null;
   private boolean dateOnly = false;
+  private boolean timeOnly = false;
   private int timeFormat = DateFormat.LONG;
   private int dateFormat = DateFormat.SHORT;
   private String pattern = null;
@@ -89,6 +90,36 @@ public class DateTimeHandler extends TagSupport {
    */
   public void setDateOnly(boolean dateOnly) {
     this.dateOnly = dateOnly;
+  }
+
+
+  /**
+   *  Sets the timeOnly attribute of the DateTimeHandler object
+   *
+   *@param  timeOnly  The new timeOnly value
+   */
+  public void setTimeOnly(String timeOnly) {
+    this.timeOnly = "true".equals(timeOnly);
+  }
+
+
+  /**
+   *  Sets the timeOnly attribute of the DateTimeHandler object
+   *
+   *@param  timeOnly  The new timeOnly value
+   */
+  public void setTimeOnly(boolean timeOnly) {
+    this.timeOnly = timeOnly;
+  }
+
+
+  /**
+   *  Gets the timeOnly attribute of the DateTimeHandler object
+   *
+   *@return    The timeOnly value
+   */
+  public boolean getTimeOnly() {
+    return timeOnly;
   }
 
 
@@ -189,6 +220,8 @@ public class DateTimeHandler extends TagSupport {
           //default pattern for a date :9/21/2003
           if (dateOnly) {
             formatter.applyPattern("M/d/yyyy");
+          }else if(timeOnly){
+            formatter.applyPattern("h:mm a");
           }
         }
 

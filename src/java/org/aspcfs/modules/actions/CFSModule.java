@@ -187,7 +187,7 @@ public class CFSModule {
    *@return          The UserId value
    *@since           1.7
    */
-  protected int getUserId(ActionContext context) {
+  public int getUserId(ActionContext context) {
     return UserUtils.getUserId(context.getRequest());
   }
 
@@ -286,7 +286,7 @@ public class CFSModule {
    *@return          The User value
    *@since
    */
-  protected User getUser(ActionContext context, int userId) {
+  public User getUser(ActionContext context, int userId) {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     return systemStatus.getUser(userId);

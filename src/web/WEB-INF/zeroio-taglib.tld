@@ -41,6 +41,16 @@
         <required>no</required>
         <rtexprvalue>yes</rtexprvalue>
       </attribute>
+      <attribute>
+      <name>value</name>
+      <required>no</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>AMPM</name>
+      <required>no</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
   </tag>
   
   <tag>
@@ -191,6 +201,11 @@
       <required>no</required>
       <rtexprvalue>yes</rtexprvalue>
     </attribute>
+    <attribute>
+      <name>hidden</name>
+      <required>no</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
   </tag>
   
   <tag>
@@ -252,6 +267,10 @@
     </attribute>
     <attribute>
       <name>dateOnly</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>timeOnly</name>
       <required>no</required>
     </attribute>
     <attribute>
@@ -355,7 +374,7 @@
     </attribute>
     <attribute>
       <name>form</name>
-      <required>yes</required>
+      <required>no</required>
       <rtexprvalue>yes</rtexprvalue>
     </attribute>
     <attribute>
@@ -366,6 +385,11 @@
     <attribute>
       <name>timestamp</name>
       <required>yes</required>
+      <rtexprvalue>yes</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>hidden</name>
+      <required>no</required>
       <rtexprvalue>yes</rtexprvalue>
     </attribute>
   </tag>

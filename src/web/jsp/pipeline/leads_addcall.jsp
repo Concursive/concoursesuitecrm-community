@@ -2,66 +2,13 @@
 <%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,org.aspcfs.modules.contacts.base.Call,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
-<jsp:useBean id="CallTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="PreviousCallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].subject.focus();">
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkInt.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
-<script language="JavaScript">
-  function doCheck(form) {
-    if (form.dosubmit.value == "false") {
-      return true;
-    } else {
-      return(checkForm(form));
-    }
-  }
-  function checkForm(form) {
-    formTest = true;
-    message = "";
-    alertMessage = "";
-    
-    var tmpList = document.forms['addCall'].elements['contactId'];
-    if (tmpList.options[tmpList.selectedIndex].value == "-1") { 
-      message += "- Check that a Contact is selected\r\n";
-      formTest = false;
-    }
-    if (!checkInt(form.length.value)){
-      message += "- Check that Length is a whole number\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkDate(form.alertDate.value))) { 
-      message += "- Check that Alert Date is entered correctly\r\n";
-      formTest = false;
-    }
-    if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
-      message += "- Please specify an alert date\r\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
-      message += "- Please specify an alert description\r\n";
-      formTest = false;
-    }
-    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      alertMessage += "Alert Date is before today's date\r\n";
-    }
-    if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
-      return false;
-    } else {
-      if(alertMessage != ""){
-         return confirmAction(alertMessage);
-      }else{
-        return true;
-      }
-    }
-  }
-</script>
-<form name="addCall" action="LeadsCalls.do?command=Insert&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<body onLoad="javascript:document.forms[0].callTypeId.focus();">
+<form name="addCall" action="LeadsCalls.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -73,8 +20,20 @@
 	<a href="Leads.do?command=Search">Search Results</a> >
 <% } %>
 <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> >
-<a href="LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Calls</a> >
-Add a Call
+<a href="LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Activities</a> >
+<% if(PreviousCallDetails.getId() > 0 && !"cancel".equals(request.getParameter("action"))){ %>
+  <% if (!"list".equals(request.getParameter("return"))){ %>
+    <a href="LeadsCalls.do?command=Details&headerId=<%= opportunityHeader.getId() %>&id=<%= (PreviousCallDetails.getId() > -1 ? PreviousCallDetails.getId() : CallDetails.getId()) %><%= addLinkParams(request, "viewSource") %>">Activity Details</a> >
+  <% } %>
+  Complete Activity
+<% }else if(PreviousCallDetails.getId() > 0 && "cancel".equals(request.getParameter("action"))){ %>
+  <% if (!"list".equals(request.getParameter("return"))){ %>
+    <a href="LeadsCalls.do?command=Details&headerId=<%= opportunityHeader.getId() %>&id=<%= (PreviousCallDetails.getId() > -1 ? PreviousCallDetails.getId() : CallDetails.getId()) %><%= addLinkParams(request, "viewSource") %>">Activity Details</a> >
+  <% } %>
+  Cancel Activity
+<% }else{ %>
+Add Activity
+<% } %>
 </td>
 </tr>
 </table>
@@ -97,86 +56,18 @@ Add a Call
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
       <br>
       <%= showError(request, "actionError") %>
-      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-        <tr>
-          <th colspan="2">
-            <strong>Log a Call</strong>
-          </th>
-        </tr>
-        <tr class="containerBody">
-          <td nowrap class="formLabel">
-            Type
-          </td>
-          <td>
-            <%= CallTypeList.getHtmlSelect("callTypeId", CallDetails.getCallTypeId()) %>
-          </td>
-        </tr>
-<% if (opportunityHeader.getContactLink() == -1) { %>
-        <tr class="containerBody">
-          <td nowrap class="formLabel">
-            Contact
-          </td>
-          <td valign="center">
-	<% if (opportunityHeader.getAccountLink() == -1 || ContactList.size() == 0) { %>
-            <%= ContactList.getEmptyHtmlSelect("contactId") %>
-	<%} else {%>
-            <%= ContactList.getHtmlSelect("contactId", CallDetails.getContactId() ) %>
-	<%}%>
-            <font color="red">*</font>
-          </td>
-        </tr>
-  <%} else {%>
-          <input type="hidden" name="contactId" value="<%= opportunityHeader.getContactLink() %>">
-  <%}%>
-        <tr class="containerBody">
-          <td nowrap class="formLabel">
-            Subject
-          </td>
-          <td>
-            <input type="text" size="50" name="subject" value="<%= toHtmlValue(CallDetails.getSubject()) %>">
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td nowrap class="formLabel" valign="top">
-            Notes
-          </td>
-          <td>
-            <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(CallDetails.getNotes()) %></TEXTAREA>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td nowrap class="formLabel">
-            Length
-          </td>
-          <td>
-            <input type="text" size="5" name="length" value="<%= toHtmlValue(CallDetails.getLengthString()) %>"> minutes  <%= showAttribute(request, "lengthError") %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td nowrap class="formLabel">
-            Alert Description
-          </td>
-          <td valign="center">
-            <input type="text" size="50" name="alertText" value="<%= toHtmlValue(CallDetails.getAlertText()) %>"><br>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td nowrap class="formLabel">
-            Alert Date
-          </td>
-          <td>
-            <input type="text" size="10" name="alertDate" value="<%= toHtmlValue(CallDetails.getAlertDateString()) %>"> 
-            <a href="javascript:popCalendar('addCall', 'alertDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
-          </td>
-        </tr>
-      </table>
+      <%@ include file="leads_call_include.jsp" %>
+      &nbsp;
       <br>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="oppHeaderId" value=<%= opportunityHeader.getId() %>>
       <input type="hidden" name="headerId" value=<%= opportunityHeader.getId() %>>
-      <%= addHiddenParams(request, "viewSource") %>
+      <dhv:evaluate if="<%= PreviousCallDetails.getId() > -1 %>">
+      <input type="hidden" name="parentId" value="<%= PreviousCallDetails.getId() %>">
+      </dhv:evaluate>
+      <%= addHiddenParams(request, "action|viewSource") %>
 <%-- End container contents --%>
     </td>
   </tr>

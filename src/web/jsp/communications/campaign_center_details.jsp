@@ -130,7 +130,7 @@ Campaign Details
       <td>
         <center>
           This campaign has been configured and can now be activated.<br>
-          Once active, today's campaigns will begin processing in under 5 minutes and cannot be cancelled.<br>
+          Once active, today's campaigns will begin processing in under 5 minutes and cannot be canceled.<br>
           Verify the campaign then
           <a href="javascript:confirmForward('CampaignManager.do?command=Activate&id=<%= Campaign.getId() %>&notify=true&modified=<%= Campaign.getModified() %>');"><font color="red">click to Activate</font></a>.
         </center>

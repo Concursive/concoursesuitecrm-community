@@ -4,9 +4,15 @@
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
+<jsp:useBean id="ReminderTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="CallResult" class="org.aspcfs.modules.contacts.base.CallResult" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<form name="addCall" action="AccountContactsCalls.do?command=Modify&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>" method="post">
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<%
+  String trailSource = request.getParameter("trailSource");
+%>
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -19,86 +25,74 @@
 <a href="Accounts.do?command=Dashboard">Dashboard</a> >
 <%}%>
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<% if("accounts".equals(trailSource)){ %>
+<a href="AccountsCalls.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Activities</a> >
+<% }else{ %>
 <a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
 <a href="Contacts.do?command=Details&id=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Contact Details</a> >
-<a href="AccountContactsCalls.do?command=View&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Calls</a> >
-Call Details
+<a href="AccountContactsCalls.do?command=View&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Activities</a> >
+<% } %>
+Activity Details
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
 <%@ include file="accounts_details_header_include.jsp" %>
+<% if("accounts".equals(trailSource)){ %>
+<dhv:container name="accounts" selected="activities" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"  appendToUrl="&trailSource=accounts"/>
+<% }else{ %>
 <dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-<form name="addCall" action="AccountContactsCalls.do?command=Modify&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>" method="post">
+<% } %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
-    <% String param1 = "id=" + ContactDetails.getId(); 
+      <%-- include contact menu --%>
+      <% String param1 = "id=" + ContactDetails.getId(); 
     %>
         <strong><%= ContactDetails.getNameLastFirst() %>:</strong>
         [ <dhv:container name="accountscontacts" selected="calls" param="<%= param1 %>"/> ]
-      <br>
-      <br>
-      <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="submit"  value="Modify"></dhv:permission>
-      <dhv:permission name="accounts-accounts-contacts-calls-delete"><input type="button" value="Delete" onClick="javascript:popURL('AccountContactsCalls.do?command=ConfirmDelete&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId()%><%= isPopup(request) ? "" : "&popup=true" %><%= addLinkParams(request, "popup|popupType|actionId") %>', 'CONFIRM_DELETE','320','200','yes','no');"></dhv:permission>
+        <br>
+        <br>
+      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="button" value="Complete" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Complete&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "view|trailSource") %>'"></dhv:permission>
+      </dhv:evaluate>
+      <% if("pending".equals(request.getParameter("view"))){ %>
+        <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="submit" value="Modify"></dhv:permission>
+      <%}else if(CallDetails.getStatusId() != Call.CANCELED){%>
+        <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="submit" value="Modify"></dhv:permission>
+      <%}%>
+      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:permission name="accounts-accounts-contacts-calls-delete"><input type="button" value="Cancel Pending Activity" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Cancel&contactId=<%= CallDetails.getContactId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= addLinkParams(request, "popup|popupType|actionId|view|trailSource") %>';"></dhv:permission></dhv:evaluate>
       <dhv:evaluate exp="<%= !isPopup(request) %>">
-      <dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='AccountContactsCalls.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'"></dhv:permission>
+      <dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='AccountContactsCalls.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId|view|trailSource") %>'"></dhv:permission>
       </dhv:evaluate>
       <dhv:permission name="accounts-accounts-contacts-calls-edit,accounts-accounts-contacts-calls-delete"><br>&nbsp;</dhv:permission>
+      
+      <% if("pending".equals(request.getParameter("view"))){ %>
+        <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
+        <%-- include follow up activity details --%>
+        <%@ include file="accounts_contacts_calls_details_followup_include.jsp" %>
+        </dhv:evaluate>
+        &nbsp;
+        <%-- include completed activity details --%>
+        <%@ include file="accounts_contacts_calls_details_include.jsp" %>
+      <% }else{ %>
+        <%-- include completed activity details --%>
+        <%@ include file="accounts_contacts_calls_details_include.jsp" %>
+        &nbsp;
+        <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
+        <%-- include follow up activity details --%>
+        <%@ include file="accounts_contacts_calls_details_followup_include.jsp" %>
+        </dhv:evaluate>
+      <% } %>
+      
+      &nbsp;
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
         <tr>
           <th colspan="2">
-            <strong>Call Details</strong>  
+            <strong>Record Information</strong>  
           </th>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel" nowrap>
-            Type
-          </td>
-          <td>
-            <%= toHtml(CallDetails.getCallType()) %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel" nowrap>
-            Length
-          </td>
-          <td>
-            <%= toHtml(CallDetails.getLengthText()) %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel" nowrap>
-            Subject
-          </td>
-          <td>
-            <%= toHtml(CallDetails.getSubject()) %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td nowrap class="formLabel" valign="top">
-            Notes
-          </td>
-          <td>
-            <%= toHtml(CallDetails.getNotes()) %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel" nowrap>
-            Alert Description
-          </td>
-          <td>
-            <%= toHtml(CallDetails.getAlertText()) %>
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel" nowrap>
-            Alert Date
-          </td>
-          <td>
-            <zeroio:tz timestamp="<%= CallDetails.getAlertDate() %>" dateOnly="true" default="&nbsp;"/>
-          </td>
         </tr>
         <tr class="containerBody">
           <td class="formLabel" nowrap>
@@ -118,15 +112,24 @@ Call Details
             <zeroio:tz timestamp="<%= CallDetails.getModified() %>" />
           </td>
         </tr>
-      </table><br>
-      <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="submit"  value="Modify"></dhv:permission>
-      <dhv:permission name="accounts-accounts-contacts-calls-delete"><input type="button" value="Delete" onClick="javascript:popURL('AccountContactsCalls.do?command=ConfirmDelete&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId()%><%= isPopup(request) ? "" : "&popup=true" %><%= addLinkParams(request, "popup|popupType|actionId") %>', 'CONFIRM_DELETE','320','200','yes','no');"></dhv:permission>
+      </table>
+      <br>
+      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="button" value="Complete" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Complete&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "view|trailSource") %>'"></dhv:permission>
+      </dhv:evaluate>
+      <% if("pending".equals(request.getParameter("view"))){ %>
+        <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="submit" value="Modify"></dhv:permission>
+      <%}else if(CallDetails.getStatusId() != Call.CANCELED){%>
+        <dhv:permission name="accounts-accounts-contacts-calls-edit"><input type="submit" value="Modify"></dhv:permission>
+      <%}%>
+      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+      <dhv:permission name="accounts-accounts-contacts-calls-delete"><input type="button" value="Cancel Pending Activity" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Cancel&contactId=<%= CallDetails.getContactId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= isPopup(request) ? "&popup=true" : "" %><%= addLinkParams(request, "popupType|actionId|view|") %>';"></dhv:permission></dhv:evaluate>
       <dhv:evaluate exp="<%= !isPopup(request) %>">
-      <dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='AccountContactsCalls.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>'"></dhv:permission>
+      <dhv:permission name="myhomepage-inbox-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='AccountContactsCalls.do?command=ForwardCall&contactId=<%= ContactDetails.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId|view|trailSource") %>'"></dhv:permission>
       </dhv:evaluate>
       <dhv:permission name="accounts-accounts-contacts-calls-edit,accounts-accounts-contacts-calls-delete"><br>&nbsp;</dhv:permission>
     </td>
   </tr>
 </table>
-<%= addHiddenParams(request, "popup|popupType|actionId") %>
+<%= addHiddenParams(request, "popup|popupType|actionId|view|trailSource") %>
 </form>

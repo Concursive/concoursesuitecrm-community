@@ -423,7 +423,7 @@ public final class ProjectManagementFiles extends CFSModule {
         }
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
+      //User either canceled the download or lost connection
     } catch (Exception e) {
       errorMessage = e;
       System.out.println(e.toString());
@@ -724,7 +724,7 @@ public final class ProjectManagementFiles extends CFSModule {
         return "SystemERROR";
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
+      //User either canceled the download or lost connection
     } catch (Exception e) {
     }
     return ("-none-");

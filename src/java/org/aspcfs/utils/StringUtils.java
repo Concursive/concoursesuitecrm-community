@@ -361,7 +361,7 @@ public class StringUtils {
 
 
   /**
-   *  Description of the Method
+   *  Loads text into a string from a file
    *
    *@param  file                     Description of the Parameter
    *@return                          Description of the Return Value
@@ -678,6 +678,38 @@ public class StringUtils {
       return (encoder.encode(inString.getBytes("UTF8")));
     } catch (Exception e) {
       return "";
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  text  Description of the Parameter
+   *@param  size  Description of the Parameter
+   *@return       Description of the Return Value
+   */
+  public static String trimToSize(String text, int size) {
+    if (text != null && text.length() > size) {
+      return (text.substring(0, (size -1)) + "...");
+    } else {
+      return text;
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  text  Description of the Parameter
+   *@param  size  Description of the Parameter
+   *@return       Description of the Return Value
+   */
+  public static String trimToSizeNoDots(String text, int size) {
+    if (text != null && text.length() > size) {
+      return (text.substring(0, (size)));
+    } else {
+      return text;
     }
   }
 }

@@ -6,6 +6,7 @@ import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.DatabaseUtils;
 import java.util.Locale;
 
 /**
@@ -38,6 +39,7 @@ public class Address {
   private boolean enabled = true;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
+  private boolean primaryAddress = false;
 
 
   /**
@@ -137,6 +139,36 @@ public class Address {
         this.otherState = tmp;
       }
     }
+  }
+
+
+  /**
+   *  Sets the primaryAddress attribute of the Address object
+   *
+   *@param  tmp  The new primaryAddress value
+   */
+  public void setPrimaryAddress(boolean tmp) {
+    this.primaryAddress = tmp;
+  }
+
+
+  /**
+   *  Sets the primaryAddress attribute of the Address object
+   *
+   *@param  tmp  The new primaryAddress value
+   */
+  public void setPrimaryAddress(String tmp) {
+    this.primaryAddress = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the primaryAddress attribute of the Address object
+   *
+   *@return    The primaryAddress value
+   */
+  public boolean getPrimaryAddress() {
+    return primaryAddress;
   }
 
 
@@ -722,6 +754,9 @@ public class Address {
     this.setModifiedBy(rs.getInt("modifiedby"));
     if (this.getModifiedBy() == -1) {
       this.setModifiedBy(0);
+    }
+    if (isContact) {
+      this.setPrimaryAddress(rs.getBoolean("primary_address"));
     }
     this.setTypeName(rs.getString("description"));
   }

@@ -86,7 +86,7 @@ public final class ProcessFileItemImage extends CFSModule {
         System.err.println("Image-> Trying to send a file that does not exist: " + filePath + fileItem.getClientFilename());
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
+      //User either canceled the download or lost connection
     } catch (Exception e) {
       //System.out.println(e.toString());
       e.printStackTrace(System.out);

@@ -408,7 +408,8 @@ CREATE TABLE contact_address (
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL references access(user_id)
+  modifiedby INT NOT NULL references access(user_id),
+  primary_address BIT NOT NULL DEFAULT 0
 )
 ;
 
@@ -434,7 +435,8 @@ CREATE TABLE contact_phone (
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL references access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL references access(user_id)
+  modifiedby INT NOT NULL references access(user_id),
+  primary_number BIT NOT NULL DEFAULT 0
 )
 ;
 

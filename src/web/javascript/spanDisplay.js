@@ -1,9 +1,13 @@
 function showSpan(thisID) {
-  document.getElementById(thisID).style.display = '';
+  if(document.getElementById(thisID) != null){
+    document.getElementById(thisID).style.display = '';
+  }
   return true;
 }
 function hideSpan(thisID) {
-  document.getElementById(thisID).style.display = 'none';
+  if(document.getElementById(thisID) != null){
+    document.getElementById(thisID).style.display = 'none';
+  }
   return true;
 }
 function isSpanVisible(thisID) {

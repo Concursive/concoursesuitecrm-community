@@ -4,6 +4,7 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
+<%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
@@ -16,9 +17,9 @@
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
 <a href="Contacts.do?command=Details&id=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Contact Details</a> >
-<a href="AccountContactsCalls.do?command=View&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Calls</a> >
-<a href="AccountContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Call Details</a> >
-Call Sent
+<a href="AccountContactsCalls.do?command=View&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Activities</a> >
+<a href="AccountContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Activity Details</a> >
+Activity Sent
 </td>
 </tr>
 </table>
@@ -32,13 +33,12 @@ Call Sent
     <td class="containerBack">
       <%-- include contact menu --%>
       <% String param1 = "id=" + ContactDetails.getId(); 
-      %>
+    %>
         <strong><%= ContactDetails.getNameLastFirst() %>:</strong>
         [ <dhv:container name="accountscontacts" selected="calls" param="<%= param1 %>"/> ]
         <br>
-        <br>
-        <%-- include the confirmation message --%>
-        <%@ include file="../confirmsend.jsp" %>
+      <%-- include the confirmation message --%>
+      <%@ include file="../confirmsend.jsp" %>
     </td>
   </tr>
 </table>

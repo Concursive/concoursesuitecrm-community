@@ -4,11 +4,11 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do">Contacts</a> > 
+<a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
 <a href="ExternalContacts.do?command=ContactDetails&contactId=<%= request.getParameter("contactId") %>">Contact Details</a> >
-<a href="ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>&id=<%= request.getParameter("id") %>">Calls</a> >
-Forward Call
+<a href="ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>&id=<%= request.getParameter("id") %>">Activities</a> >
+Forward Activity
 </td>
 </tr>
 </table>

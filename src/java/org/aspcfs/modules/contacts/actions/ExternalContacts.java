@@ -131,7 +131,7 @@ public final class ExternalContacts extends CFSModule {
         System.err.println("PMF-> Trying to send a file that does not exist");
       }
     } catch (java.net.SocketException se) {
-      //User either cancelled the download or lost connection
+      //User either canceled the download or lost connection
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");

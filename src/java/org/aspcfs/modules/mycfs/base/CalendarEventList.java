@@ -1,6 +1,7 @@
 package org.aspcfs.modules.mycfs.base;
 
 import java.util.*;
+import org.aspcfs.utils.ObjectUtils;
 
 /**
  *  Description of the Class
@@ -9,12 +10,25 @@ import java.util.*;
  *@created    December 18, 2002
  *@version    $Id$
  */
-public class CalendarEventList extends ArrayList {
+public class CalendarEventList extends HashMap {
 
   private java.util.Date date = null;
   private HashMap eventTypes = null;
-  //anything added to this array should be added at the end 
-  public final static String[] EVENT_TYPES = {"Tasks", "Calls", "Opportunity", "Account Alerts", "Account Contract Alerts", "Contact Calls", "Opportunity Calls", "Holiday", "Assignments", "System Alerts", "Quotes pending your approval", "Requests you have made that are in progress","Open Tickets"};
+  //anything added to this array should be added at the end
+  public final static String[] EVENT_TYPES = {
+      "Tasks", 
+      "Calls", 
+      "Opportunities", 
+      "Account Alerts", 
+      "Account Contract Alerts", 
+      "Contact Calls", 
+      "Opportunity Calls", 
+      "Holiday", 
+      "Assignments", 
+      "System Alerts", 
+      "Quotes", 
+      "Tickets",
+      "Ticket Requests"};
 
 
   /**
@@ -64,19 +78,83 @@ public class CalendarEventList extends ArrayList {
 
 
   /**
+   *  Adds a feature to the Event attribute of the CallEventList object
+   *
+   *@param  eventType  The feature to be added to the Event attribute
+   *@param  event      The feature to be added to the Event attribute
+   */
+  public void addEvent(String eventType, Object event) {
+    Object categoryEvents = null;
+    if (this.containsKey(eventType)) {
+      categoryEvents = this.get(eventType);
+    } else {
+      categoryEvents = addCategoryEventList(eventType);
+    }
+    if (eventType.equalsIgnoreCase(EVENT_TYPES[7])) {
+      ((ArrayList) categoryEvents).add(event);
+    } else {
+      ObjectUtils.invokeMethod(categoryEvents, "addEvent", event);
+    }
+  }
+
+
+  /**
+   *  Gets the events attribute of the CalendarEventList object
+   *
+   *@param  eventType  Description of the Parameter
+   *@return            The events value
+   */
+  public Object getEvents(String eventType) {
+    Object categoryEvents = null;
+    if (this.containsKey(eventType)) {
+      categoryEvents = this.get(eventType);
+    } else {
+      categoryEvents = addCategoryEventList(eventType);
+    }
+    return categoryEvents;
+  }
+
+
+  /**
    *  Associates a count with a event Type specifying the number of events of that type for that day.
    *
-   *@param  type   The feature to be added to the EventType attribute
-   *@param  count  The feature to be added to the EventType attribute
+   *@param  eventType   The feature to be added to the EventCount attribute
+   *@param  eventCount  The feature to be added to the EventCount attribute
    */
-  public void addEventType(String type, Object count) {
-    if (eventTypes == null) {
-      eventTypes = new HashMap();
+  public void addEventCount(String eventType, Object eventCount) {
+    Object categoryEvents = null;
+    if (this.containsKey(eventType)) {
+      categoryEvents = this.get(eventType);
+    } else {
+      categoryEvents = addCategoryEventList(eventType);
     }
-    if (eventTypes.get(type) != null) {
-      eventTypes.remove(type);
+    ObjectUtils.invokeMethod(categoryEvents, "setSize", eventCount);
+  }
+
+
+  /**
+   *  Adds a feature to the CategoryEventList attribute of the CallEventList object
+   *
+   *@param  eventType  The feature to be added to the CategoryEventList attribute
+   *@return            Description of the Return Value
+   */
+  public Object addCategoryEventList(String eventType) {
+    Object thisList = null;
+    if (eventType.equalsIgnoreCase(EVENT_TYPES[0])) {
+      thisList = new TaskEventList();
+    } else if (eventType.equals(EVENT_TYPES[1])) {
+      thisList = new CallEventList();
+    } else if (eventType.equals(EVENT_TYPES[2])) {
+      thisList = new OpportunityEventList();
+    } else if (eventType.equals(EVENT_TYPES[3])) {
+      thisList = new OrganizationEventList();
+    } else if (eventType.equals(EVENT_TYPES[10])) {
+      thisList = new QuoteEventList();
+    } else if (eventType.equals(EVENT_TYPES[7])) {
+      thisList = new ArrayList();
     }
-    eventTypes.put(type, count);
+    this.put(eventType, thisList);
+    return thisList;
   }
 }
 

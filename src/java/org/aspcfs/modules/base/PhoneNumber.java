@@ -6,6 +6,7 @@ import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Represents a phone number.
@@ -30,6 +31,7 @@ public class PhoneNumber {
   private boolean enabled = true;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
+  private boolean primaryNumber = false;
 
 
   /**
@@ -190,6 +192,36 @@ public class PhoneNumber {
    */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the primaryNumber attribute of the PhoneNumber object
+   *
+   *@param  tmp  The new primaryNumber value
+   */
+  public void setPrimaryNumber(boolean tmp) {
+    this.primaryNumber = tmp;
+  }
+
+
+  /**
+   *  Sets the primaryNumber attribute of the PhoneNumber object
+   *
+   *@param  tmp  The new primaryNumber value
+   */
+  public void setPrimaryNumber(String tmp) {
+    this.primaryNumber = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the primaryNumber attribute of the PhoneNumber object
+   *
+   *@return    The primaryNumber value
+   */
+  public boolean getPrimaryNumber() {
+    return primaryNumber;
   }
 
 
@@ -497,6 +529,9 @@ public class PhoneNumber {
     }
     this.setModified(rs.getTimestamp("modified"));
     this.setModifiedBy(rs.getInt("modifiedby"));
+    if (isContact) {
+      this.setPrimaryNumber(rs.getBoolean("primary_number"));
+    }
     if (modifiedBy == -1) {
       this.setModifiedBy(0);
     }
@@ -529,7 +564,6 @@ public class PhoneNumber {
     this.setType(request.getParameter("phone" + parseItem + "type"));
 
     StringBuffer thisString = new StringBuffer();
-
 
     if (request.getParameter("phone" + parseItem + "number") != null &&
         !request.getParameter("phone" + parseItem + "number").trim().equals("")) {
