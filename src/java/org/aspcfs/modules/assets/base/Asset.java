@@ -403,10 +403,12 @@ public class Asset extends GenericBean {
     tmp = StringUtils.replace(tmp, ",", "");
     tmp = StringUtils.replace(tmp, "$", "");
 
-    try {
-      this.purchaseCost = Double.parseDouble(tmp);
-    } catch (NumberFormatException ne) {
-      errors.put("purchaseCostError", tmp + " is invalid input for this field");
+    if (!"".equals(tmp)){
+      try {
+        this.purchaseCost = Double.parseDouble(tmp);
+      } catch (NumberFormatException ne) {
+        errors.put("purchaseCostError", tmp + " is invalid input for this field");
+      }
     }
   }
 

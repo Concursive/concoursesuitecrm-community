@@ -147,15 +147,18 @@ public class AccountsServiceContracts extends CFSModule {
       if (inserted) {
         // inserting into hours history if service_contract update is successful
         String tmpHours = (String) context.getRequest().getParameter("totalHoursRemaining");
-        if (!"".equals(tmpHours)) {
-          ServiceContractHours scHours = new ServiceContractHours();
-          scHours.setServiceContractId(thisContract.getId());
-          scHours.setAdjustmentHours(tmpHours);
-          scHours.setAdjustmentReason((String) context.getRequest().getParameter("adjustmentReason"));
-          scHours.setAdjustmentNotes((String) context.getRequest().getParameter("adjustmentNotes"));
-          scHours.setEnteredBy(getUserId(context));
-          scHours.setModifiedBy(getUserId(context));
-          scHours.insert(db);
+        if (tmpHours != null){
+          tmpHours = tmpHours.trim();
+          if (!"".equals(tmpHours)) {
+            ServiceContractHours scHours = new ServiceContractHours();
+            scHours.setServiceContractId(thisContract.getId());
+            scHours.setAdjustmentHours(tmpHours);
+            scHours.setAdjustmentReason((String) context.getRequest().getParameter("adjustmentReason"));
+            scHours.setAdjustmentNotes((String) context.getRequest().getParameter("adjustmentNotes"));
+            scHours.setEnteredBy(getUserId(context));
+            scHours.setModifiedBy(getUserId(context));
+            scHours.insert(db);
+          }
         }
       } else {
         processErrors(context, thisContract.getErrors());
@@ -198,8 +201,11 @@ public class AccountsServiceContracts extends CFSModule {
       //Calculate hours remaining if it has been adjusted
       double newHoursRemaining = thisContract.getTotalHoursRemaining();
       String tmpHours = (String) context.getRequest().getParameter("adjustmentHours");
-      if (!"".equals(tmpHours)) {
-        newHoursRemaining = newHoursRemaining + Double.parseDouble(tmpHours);
+      if (tmpHours != null){
+        tmpHours = tmpHours.trim();
+        if (!"".equals(tmpHours)) {
+          newHoursRemaining = newHoursRemaining + Double.parseDouble(tmpHours);
+        }
       }
 
       thisContract.setTotalHoursRemaining(newHoursRemaining);
