@@ -46,7 +46,7 @@ public final class ExternalContactsOpps extends CFSModule {
     addModuleBean(context, "External Contacts", "Opportunities");
 
     PagedListInfo oppPagedListInfo = this.getPagedListInfo(context, "ExternalOppsPagedListInfo");
-    oppPagedListInfo.setLink("ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId);
+    oppPagedListInfo.setLink("ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
 
     Connection db = null;
     OpportunityHeaderList oppList = new OpportunityHeaderList();
@@ -80,6 +80,10 @@ public final class ExternalContactsOpps extends CFSModule {
         return ("PermissionError");
       }
       context.getRequest().setAttribute("opportunityHeaderList", oppList);
+      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
+      if (popup) {
+        return "ListOppsPopupOK";
+      }
       return ("ListOppsOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -138,7 +142,7 @@ public final class ExternalContactsOpps extends CFSModule {
         return ("PermissionError");
       }
       addModuleBean(context, "External Contacts", "Opportunities");
-      return "PrepareOK";
+      return "PrepareOppOK";
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -402,10 +406,14 @@ public final class ExternalContactsOpps extends CFSModule {
     }
 
     if (errorMessage == null) {
+      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
       if (!hasAuthority(context, thisContact.getOwner())) {
         return ("PermissionError");
       }
       addRecentItem(context, thisHeader);
+      if(popup){
+        return ("DetailsOppPopupOK");
+      }
       return ("DetailsOppOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -447,8 +455,12 @@ public final class ExternalContactsOpps extends CFSModule {
       this.freeConnection(context, db);
     }
     if (errorMessage == null) {
+      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
       context.getRequest().setAttribute("headerDetails", thisHeader);
       addRecentItem(context, thisHeader);
+      if(popup){
+        return ("ModifyOppPopupOK");
+      }
       return ("ModifyOppOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -492,8 +504,12 @@ public final class ExternalContactsOpps extends CFSModule {
       if (!hasAuthority(context, thisComponent.getOwner())) {
         return ("PermissionError");
       }
+      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
       context.getRequest().setAttribute("oppComponentDetails", thisComponent);
       addRecentItem(context, thisComponent);
+      if(popup){
+      return ("DetailsComponentPopupOK");
+      }
       return ("DetailsComponentOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -528,7 +544,7 @@ public final class ExternalContactsOpps extends CFSModule {
       htmlDialog.addMessage(dependencies.getHtmlString());
       htmlDialog.setTitle("CFS: Confirm Delete");
       htmlDialog.setHeader("This object has the following dependencies within CFS:");
-      htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContactsOpps.do?command=DeleteOpp&contactId=" + contactId + "&id=" + headerId + "'");
+      htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContactsOpps.do?command=DeleteOpp&contactId=" + contactId + "&id=" + headerId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {
       errorMessage = e;
@@ -571,7 +587,7 @@ public final class ExternalContactsOpps extends CFSModule {
       }
       htmlDialog.setTitle("CFS: General Contacts Opportunities");
       htmlDialog.setShowAndConfirm(false);
-      htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContactsOppComponents.do?command=DeleteComponent&contactId=" + contactId + "&id=" + id + "'");
+      htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContactsOppComponents.do?command=DeleteComponent&contactId=" + contactId + "&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'" );
       htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
     } catch (Exception e) {
       errorMessage = e;
@@ -620,9 +636,9 @@ public final class ExternalContactsOpps extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
         context.getRequest().setAttribute("contactId", contactId);
-        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId);
+        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=ViewOpps&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
         deleteRecentItem(context, newOpp);
-        return ("OppDeleteOK");
+        return "OppDeleteOK";
       } else {
         processErrors(context, newOpp.getErrors());
         return (executeCommandViewOpps(context));
@@ -664,7 +680,7 @@ public final class ExternalContactsOpps extends CFSModule {
     }
     if (errorMessage == null) {
       if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=DetailsOpp&headerId=" + component.getHeaderId() + "&contactId=" + contactId);
+        context.getRequest().setAttribute("refreshUrl", "ExternalContactsOpps.do?command=DetailsOpp&headerId=" + component.getHeaderId() + "&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
         deleteRecentItem(context, component);
         return ("ComponentDeleteOK");
       } else {

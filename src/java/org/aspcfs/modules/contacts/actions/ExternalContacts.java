@@ -473,8 +473,12 @@ public final class ExternalContacts extends CFSModule {
       if (!hasAuthority(context, campaign.getEnteredBy())) {
         return ("PermissionError");
       }
-
+      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
+      addModuleBean(context, "External Contacts", "Messages");
       context.getRequest().setAttribute("ContactDetails", thisContact);
+      if (popup) {
+        return ("MessageDetailsPopupOK");
+      }
       return ("MessageDetailsOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -506,7 +510,7 @@ public final class ExternalContacts extends CFSModule {
 
       context.getSession().removeAttribute("ContactMessageListInfo");
       PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ContactMessageListInfo");
-      pagedListInfo.setLink("ExternalContacts.do?command=ViewMessages&contactId=" + contactId);
+      pagedListInfo.setLink("ExternalContacts.do?command=ViewMessages&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
 
       thisContact = new Contact(db, contactId);
       if (!hasAuthority(context, thisContact.getOwner())) {
@@ -534,7 +538,11 @@ public final class ExternalContacts extends CFSModule {
     }
 
     if (errorMessage == null) {
+      boolean popup = "true".equals(context.getRequest().getParameter("popup"));
       addModuleBean(context, "External Contacts", "Messages");
+      if (popup) {
+        return ("ViewMessagesPopupOK");
+      }
       return ("ViewMessagesOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -587,7 +595,7 @@ public final class ExternalContacts extends CFSModule {
 
     if (errorMessage == null) {
       addModuleBean(context, "External Contacts", "Add Folder Record");
-      return ("AddFolderRecordOK");
+      return this.getReturn(context, "AddFolderRecord");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -698,11 +706,11 @@ public final class ExternalContacts extends CFSModule {
     if (errorMessage == null) {
       addModuleBean(context, "External Contacts", "Custom Fields Details");
       if (Integer.parseInt(selectedCatId) <= 0) {
-        return ("FieldsEmptyOK");
+        return this.getReturn(context, "FieldsEmpty");
       } else if (recordId == null && showRecords) {
-        return ("FieldRecordListOK");
+        return this.getReturn(context, "FieldRecordList");
       } else {
-        return ("FieldsOK");
+        return this.getReturn(context, "Fields");
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -776,6 +784,9 @@ public final class ExternalContacts extends CFSModule {
     if (errorMessage == null) {
       addModuleBean(context, "External Contacts", "View Contact Details");
       context.getSession().removeAttribute("ContactMessageListInfo");
+      if ("true".equals(context.getRequest().getParameter("popup"))) {
+        return ("ContactDetailsPopupOK");
+      }
       return ("ContactDetailsOK");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -946,13 +957,13 @@ public final class ExternalContacts extends CFSModule {
     int resultCount = 0;
     String id = context.getRequest().getParameter("id");
     String permission = "contacts-external_contacts-add";
-    
+
     Contact thisContact = (Contact) context.getFormBean();
     thisContact.setRequestItems(context.getRequest());
     thisContact.setTypeList(context.getRequest().getParameterValues("selectedList"));
     thisContact.setEnteredBy(getUserId(context));
     thisContact.setModifiedBy(getUserId(context));
-    if (thisContact.getId() >  0) {
+    if (thisContact.getId() > 0) {
       permission = "contacts-external_contacts-edit";
     }
     if (!hasPermission(context, permission)) {
@@ -1132,9 +1143,9 @@ public final class ExternalContacts extends CFSModule {
       }
       addModuleBean(context, "External Contacts", "Modify Custom Fields");
       if (recordId.equals("-1")) {
-        return ("AddFolderRecordOK");
+        return this.getReturn(context, "AddFolderRecord");
       } else {
-        return ("ModifyFieldsOK");
+        return this.getReturn(context, "ModifyFields");
       }
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -1213,9 +1224,9 @@ public final class ExternalContacts extends CFSModule {
 
     if (errorMessage == null) {
       if (resultCount == -1) {
-        return ("ModifyFieldsOK");
+        return this.getReturn(context, "ModifyFields");
       } else if (resultCount == 1) {
-        return ("UpdateFieldsOK");
+        return this.getReturn(context, "UpdateFields");
       } else {
         context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
         return ("UserError");
@@ -1287,7 +1298,7 @@ public final class ExternalContacts extends CFSModule {
 
     if (errorMessage == null) {
       if (resultCode == -1) {
-        return ("AddFolderRecordOK");
+        return this.getReturn(context, "AddFolderRecord");
       } else {
         return (this.executeCommandFields(context));
       }
