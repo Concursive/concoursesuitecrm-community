@@ -41,7 +41,7 @@
       <permission name="contacts-external_contacts-messages" attributes="v---" description="Messages"/>
       <permission name="contacts-external_contacts-opportunities" attributes="vaed" description="Opportunities"/>
     </category>
-    <category id="4" name="Pipeline Management" folders="false" lookups="true" viewpoints="true">
+    <category id="4" name="Pipeline Management" folders="false" lookups="true" viewpoints="true" reports="true">
       <lookup constantId="1" class="lookupList" table="lookup_stage" description="Stage"/>
       <lookup constantId="2" class="lookupList" table="lookup_opportunity_types" description="Opportunity Types"/>
       <permission name="pipeline" attributes="v---" description="Access to Pipeline Management module" viewpoints="true"/>
@@ -50,6 +50,11 @@
       <permission name="pipeline-reports" attributes="va-d" description="Reports"/>
       <permission name="pipeline-opportunities-calls" attributes="vaed" description="Calls"/>
       <permission name="pipeline-opportunities-documents" attributes="vaed" description="Documents"/>
+      <report file="opportunity_pipeline.xml" type="user" permission="pipeline-opportunities" title="Opportunity Pipeline" description="What are my upcoming opportunities by stage?"/>
+      <!--
+      <report file="opportunity_types.xml" type="user" permission="pipeline-opportunities" title="Opportunities by Type" description="What types of opportunities are available?"/>
+      <report file="opportunity_types.xml" type="admin" permission="pipeline-opportunities" title="Opportunities by Type" description="What types of opportunities are available?"/>
+      -->
     </category>
     <category id="1" name="Account Management" folders="true" lookups="true">
       <folder constantId="1" description="Accounts"/>

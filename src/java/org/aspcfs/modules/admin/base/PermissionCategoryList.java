@@ -12,11 +12,13 @@ import org.aspcfs.modules.admin.base.PermissionCategory;
 import org.aspcfs.modules.base.Constants;
 
 /**
- *  Description of the Class
+ *  Contains a list of PermissionCategory objects, the list can be generated
+ *  based on specified filters
  *
  *@author     Mathur
  *@created    January 13, 2003
- *@version    $Id$
+ *@version    $Id: PermissionCategoryList.java,v 1.7.24.1 2003/09/15 20:58:21
+ *      mrajkowski Exp $
  */
 public class PermissionCategoryList extends Vector {
 
@@ -28,7 +30,7 @@ public class PermissionCategoryList extends Vector {
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
   private boolean customizableModulesOnly = false;
-
+  private boolean modulesWithReportsOnly = false;
   private int enabledState = -1;
   private int activeState = -1;
 
@@ -202,6 +204,39 @@ public class PermissionCategoryList extends Vector {
 
 
   /**
+   *  Gets the modulesWithReportsOnly attribute of the PermissionCategoryList
+   *  object
+   *
+   *@return    The modulesWithReportsOnly value
+   */
+  public boolean getModulesWithReportsOnly() {
+    return modulesWithReportsOnly;
+  }
+
+
+  /**
+   *  Sets the modulesWithReportsOnly attribute of the PermissionCategoryList
+   *  object
+   *
+   *@param  tmp  The new modulesWithReportsOnly value
+   */
+  public void setModulesWithReportsOnly(boolean tmp) {
+    this.modulesWithReportsOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the modulesWithReportsOnly attribute of the PermissionCategoryList
+   *  object
+   *
+   *@param  tmp  The new modulesWithReportsOnly value
+   */
+  public void setModulesWithReportsOnly(String tmp) {
+    this.modulesWithReportsOnly = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -310,6 +345,9 @@ public class PermissionCategoryList extends Vector {
           "AND (lookups = ? OR folders = ? " +
           "OR scheduled_events = ? OR object_events = ?) ");
     }
+    if (modulesWithReportsOnly) {
+      sqlFilter.append("AND reports = ? ");
+    }
   }
 
 
@@ -332,6 +370,9 @@ public class PermissionCategoryList extends Vector {
       pst.setBoolean(++i, true);
       pst.setBoolean(++i, true);
       pst.setBoolean(++i, true);
+      pst.setBoolean(++i, true);
+    }
+    if (modulesWithReportsOnly) {
       pst.setBoolean(++i, true);
     }
     return i;

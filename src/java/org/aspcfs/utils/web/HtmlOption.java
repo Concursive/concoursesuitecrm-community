@@ -7,7 +7,7 @@ import java.util.*;
  *
  *@author     akhi_m
  *@created    June 9, 2003
- *@version    $id: exp$
+ *@version    $Id$
  */
 public class HtmlOption {
 
@@ -18,7 +18,7 @@ public class HtmlOption {
 
 
   /**
-   *Constructor for the Option object
+   *  Constructor for the Option object
    *
    *@param  value  Description of the Parameter
    *@param  text   Description of the Parameter
@@ -30,7 +30,7 @@ public class HtmlOption {
 
 
   /**
-   *Constructor for the HtmlOption object
+   *  Constructor for the HtmlOption object
    *
    *@param  value    Description of the Parameter
    *@param  text     Description of the Parameter
@@ -44,11 +44,11 @@ public class HtmlOption {
 
 
   /**
-   *Constructor for the HtmlOption object
+   *  Constructor for the HtmlOption object
    *
-   *@param  value    Description of the Parameter
-   *@param  text     Description of the Parameter
-   *@param  jsEvent  Description of the Parameter
+   *@param  value          Description of the Parameter
+   *@param  text           Description of the Parameter
+   *@param  attributeList  Description of the Parameter
    */
   public HtmlOption(String value, String text, HashMap attributeList) {
     this.value = value;

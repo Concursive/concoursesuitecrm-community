@@ -416,7 +416,7 @@ public class CFSModule {
    *@return           The datePath value
    */
   public static String getDatePath(java.util.Date fileDate) {
-    return getDatePath(new java.sql.Timestamp(fileDate.getTime()));
+    return DateUtils.getDatePath(fileDate);
   }
 
 
@@ -428,11 +428,7 @@ public class CFSModule {
    *@since
    */
   public static String getDatePath(java.sql.Timestamp fileDate) {
-    SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
-    String datePathToUse1 = formatter1.format(fileDate);
-    SimpleDateFormat formatter2 = new SimpleDateFormat("MMdd");
-    String datePathToUse2 = formatter2.format(fileDate);
-    return datePathToUse1 + fs + datePathToUse2 + fs;
+    return DateUtils.getDatePath(fileDate);
   }
 
 
@@ -466,6 +462,18 @@ public class CFSModule {
       timeZone = TimeZone.getTimeZone(tZone);
     }
     return timeZone;
+  }
+
+
+  /**
+   *  Gets the WEB-INF path and appends the specified directory name
+   *
+   *@param  context           Description of the Parameter
+   *@param  moduleFolderName  Description of the Parameter
+   *@return                   The webInfPath value
+   */
+  protected String getWebInfPath(ActionContext context, String moduleFolderName) {
+    return (context.getServletContext().getRealPath("/") + "WEB-INF" + fs + moduleFolderName + fs);
   }
 
 

@@ -11,7 +11,8 @@ import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 
 /**
- *  Description of the Class
+ *  Represents a module category that has capabilities (lists, reports, etc.)
+ *  and contains permissions for various actions
  *
  *@author     Mathur
  *@created    January 13, 2003
@@ -33,7 +34,8 @@ public class PermissionCategory extends GenericBean {
   private boolean categories = false;
   private boolean scheduledEvents = false;
   private boolean objectEvents = false;
-  
+  private boolean reports = false;
+
   //Constants for working with lookup lists
   //NOTE: currently all editable lookup lists need to be defined here
   public final static int PERMISSION_CAT_LEADS = 4;
@@ -116,8 +118,8 @@ public class PermissionCategory extends GenericBean {
 
 
   /**
-   *  Returns a permission category id for the specified category name by
-   *  lookup up the value in the database and returning the first id found.
+   *  Returns a permission category id for the specified category name by lookup
+   *  up the value in the database and returning the first id found.
    *
    *@param  db                Description of the Parameter
    *@param  name              Description of the Parameter
@@ -368,6 +370,16 @@ public class PermissionCategory extends GenericBean {
 
 
   /**
+   *  Gets the reports attribute of the PermissionCategory object
+   *
+   *@return    The reports value
+   */
+  public boolean getReports() {
+    return reports;
+  }
+
+
+  /**
    *  Gets the scheduledEvents attribute of the PermissionCategory object
    *
    *@return    The scheduledEvents value
@@ -448,6 +460,26 @@ public class PermissionCategory extends GenericBean {
 
 
   /**
+   *  Sets the reports attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new reports value
+   */
+  public void setReports(boolean tmp) {
+    this.reports = tmp;
+  }
+
+
+  /**
+   *  Sets the reports attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new reports value
+   */
+  public void setReports(String tmp) {
+    this.reports = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Sets the scheduledEvents attribute of the PermissionCategory object
    *
    *@param  tmp  The new scheduledEvents value
@@ -498,8 +530,8 @@ public class PermissionCategory extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO permission_category (category, description, " +
         "level, enabled, active, lookups, folders, viewpoints, categories, scheduled_events, " +
-        "object_events) " +
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "object_events, reports) " +
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     pst.setString(++i, category);
     pst.setString(++i, description);
@@ -512,6 +544,7 @@ public class PermissionCategory extends GenericBean {
     pst.setBoolean(++i, categories);
     pst.setBoolean(++i, scheduledEvents);
     pst.setBoolean(++i, objectEvents);
+    pst.setBoolean(++i, reports);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "permission_cate_category_id_seq");
@@ -538,6 +571,7 @@ public class PermissionCategory extends GenericBean {
     categories = rs.getBoolean("categories");
     scheduledEvents = rs.getBoolean("scheduled_events");
     objectEvents = rs.getBoolean("object_events");
+    reports = rs.getBoolean("reports");
   }
 
 }

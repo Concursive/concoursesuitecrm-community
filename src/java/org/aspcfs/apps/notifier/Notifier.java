@@ -1,5 +1,6 @@
 package org.aspcfs.apps.notifier;
 
+import org.aspcfs.apps.common.*;
 import java.sql.*;
 import java.util.*;
 import java.io.*;
@@ -45,9 +46,6 @@ public class Notifier extends ReportBuilder {
    */
   public final static String fs = System.getProperty("file.separator");
   public final static String lf = System.getProperty("line.separator");
-  public final static String NOREPLY_DISCLAIMER =
-      "* THIS IS AN AUTOMATED MESSAGE, PLEASE DO NOT REPLY";
-
 
   /**
    *  Constructor for the Notifier object public Notifier() { } ** Starts the
@@ -103,44 +101,13 @@ public class Notifier extends ReportBuilder {
       this.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCommunicationsRecipients");
       //this.getTaskList().add("org.aspcfs.apps.notifier.task.NotifyCallOwners");
     }
-    if (filename.endsWith(".xml")) {
-      AppUtils.loadConfig(filename, this.config);
-    } else {
-      ApplicationPrefs prefs = new ApplicationPrefs();
-      prefs.load(filename + "build.properties");
-      config = prefs.getPrefs();
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Notifier-> WEBSERVER.ASPMODE: " + (String) config.get("WEBSERVER.ASPMODE"));
-      }
-    }
+    AppUtils.loadConfig(filename, this.config);
     if (config.containsKey("FILELIBRARY")) {
       this.baseName = (String) this.config.get("GATEKEEPER.URL");
       this.dbUser = (String) this.config.get("GATEKEEPER.USER");
       this.dbPass = (String) this.config.get("GATEKEEPER.PASSWORD");
       try {
-        SiteList siteList = new SiteList();
-        if ("true".equals((String) this.config.get("WEBSERVER.ASPMODE"))) {
-          if (System.getProperty("DEBUG") != null) {
-            System.out.println("Notifier-> Processing site list: " + (String) this.config.get("GATEKEEPER.DRIVER"));
-          }
-          //Build list of sites to process
-          Class.forName((String) this.config.get("GATEKEEPER.DRIVER"));
-          Connection dbSites = DriverManager.getConnection(
-              this.baseName, this.dbUser, this.dbPass);
-          siteList.setEnabled(Constants.TRUE);
-          siteList.buildList(dbSites);
-          dbSites.close();
-        } else {
-          //This setup only allows one site so process it
-          Site thisSite = new Site();
-          thisSite.setDatabaseDriver((String) this.config.get("GATEKEEPER.DRIVER"));
-          thisSite.setDatabaseUrl((String) this.config.get("GATEKEEPER.URL"));
-          thisSite.setDatabaseUsername((String) this.config.get("GATEKEEPER.USER"));
-          thisSite.setDatabasePassword((String) this.config.get("GATEKEEPER.PASSWORD"));
-          thisSite.setSiteCode((String) this.config.get("GATEKEEPER.APPCODE"));
-          thisSite.setVirtualHost((String) this.config.get("WEBSERVER.URL"));
-          siteList.add(thisSite);
-        }
+        SiteList siteList = SiteUtils.getSiteList(config);
         //Get the time range for the reports
         Calendar calToday = Calendar.getInstance();
         today = new java.sql.Timestamp(calToday.getTimeInMillis());
@@ -255,7 +222,7 @@ public class Notifier extends ReportBuilder {
         thisNotification.setSiteCode(baseName);
         thisNotification.setSubject("CRM Opportunity" + (relationshipName != null ? ": " + StringUtils.toHtml(relationshipName) : ""));
         thisNotification.setMessageToSend(
-            NOREPLY_DISCLAIMER + "<br>" +
+            ReportConstants.NOREPLY_DISCLAIMER + "<br>" +
             "<br>" +
             "The following opportunity component in Dark Horse CRM has an alert set:<br>" +
             "<br>" +
@@ -318,7 +285,7 @@ public class Notifier extends ReportBuilder {
         thisNotification.setSubject(
             "Call Alert: " + thisCall.getSubject());
         thisNotification.setMessageToSend(
-            NOREPLY_DISCLAIMER + "<br>" +
+            ReportConstants.NOREPLY_DISCLAIMER + "<br>" +
             "<br>" +
             "The following activity in Dark Horse CRM has an alert set: <br>" +
             "<br>" +

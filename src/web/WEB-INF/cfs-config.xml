@@ -351,11 +351,6 @@
     <forward name="OppListOK" resource="/pipeline/LeadsViewOpp.jsp" layout="nav"/>
     <forward name="OppDetailsOK" resource="/pipeline/LeadsDetailsOpp.jsp" layout="nav"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
-    <forward name="ReportsOK" resource="/pipeline/leads_reports.jsp" layout="nav"/>
-    <forward name="GenerateFormOK" resource="/pipeline/leads_reports_generate.jsp" layout="nav"/>
-    <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
-    <forward name="DeleteReportOK" resource="/Leads.do?command=Reports"/>
-    <forward name="DeleteReportERROR" resource="/Leads.do?command=Reports"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="ModifyOppPopupOK" resource="/pipeline/LeadsModify.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
@@ -392,13 +387,11 @@
     <forward name="DeleteOK" resource="/LeadsCalls.do?command=View"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
-  
   <action name="LeadsCallsForward" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
     <forward name="SendMessageOK" resource="/pipeline/leads_confirmsend.jsp" layout="nav"/>
     <forward name="ForwardMessageOK" resource="/pipeline/leads_forwardcall.jsp" layout="nav"/>
    </action>
-    
   <action name="LeadsDocuments" class="org.aspcfs.modules.pipeline.actions.LeadsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="ViewOK" resource="/pipeline/leads_documents_list.jsp" layout="nav"/>
@@ -410,6 +403,14 @@
     <forward name="UpdateOK" resource="/LeadsDocuments.do?command=View"/>
     <forward name="DeleteOK" resource="/LeadsDocuments.do?command=View"/>
     <forward name="DeleteERROR" resource="/LeadsDocuments.do?command=View"/>
+  </action>
+  <action name="LeadsReports" class="org.aspcfs.modules.pipeline.actions.LeadsReports">
+    <forward name="ExportListOK" resource="/pipeline/leads_reports.jsp" layout="nav"/>
+    <forward name="ExportFormOK" resource="/pipeline/leads_reports_generate.jsp" layout="nav"/>
+    <forward name="ExportOK" resource="/LeadsReports.do?command=ExportList"/>
+    <forward name="ExportHtmlOK" resource="/reports_show.jsp" layout="style"/>
+    <forward name="DeleteExportOK" resource="/LeadsReports.do?command=ExportList"/>
+    <forward name="DeleteExportERROR" resource="/LeadsReports.do?command=ExportList"/>
   </action>
   <action name="LeadsPrototype" class="com.darkhorseventures.cfs.prototype.module.Prototype">
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
@@ -821,9 +822,20 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
-  <!-- End Ticket Module -->
-  
-  <!-- Setup Module -->
+  <!-- Reports Module -->
+  <action name="Reports" class="org.aspcfs.modules.reports.actions.Reports">
+    <forward name="ReportQueueOK" resource="/reports/reports_queue.jsp" layout="nav"/>
+    <forward name="RunReportOK" resource="/reports/reports_run.jsp" layout="nav"/>
+    <forward name="ListReportsOK" resource="/reports/reports_list.jsp" layout="nav"/>
+    <forward name="CriteriaListOK" resource="/reports/reports_criteria_list.jsp" layout="nav"/>
+    <forward name="ParameterListOK" resource="/reports/reports_parameter_list.jsp" layout="nav"/>
+    <forward name="GenerateReportOK" resource="/reports/reports_queue_added.jsp" layout="nav"/>
+    <forward name="ProcessReportOK" resource="/Reports.do?command=StreamReport"/>
+    <forward name="DeleteReportOK" resource="/Reports.do?command=ViewQueue"/>
+    <forward name="CancelReportOK" resource="/Reports.do?command=ViewQueue"/>
+    <forward name="DeleteCriteriaOK" resource="/Reports.do?command=CriteriaList"/>
+  </action>
+  <!-- Admin Module -->
   <action name="Admin" class="org.aspcfs.modules.admin.actions.Admin">
     <forward name="HomeOK" resource="/admin/admin.jsp" layout="nav"/>
     <forward name="ConfigurationOK" resource="/admin/admin_configuration.jsp" layout="nav"/>
@@ -848,7 +860,6 @@
   <action name="AdminQA" class="org.aspcfs.modules.admin.actions.AdminQA">
     <forward name="QAReportOK" resource="/admin/admin_qa_report.jsp" layout="nav"/>
   </action>
-  
   <action name="AdminFieldsFolder" class="org.aspcfs.modules.admin.actions.AdminFields">
     <bean name="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
     <forward name="ListFoldersOK" resource="/admin/admin_fields_folder_list.jsp" layout="nav"/>
@@ -898,7 +909,6 @@
     <forward name="ResetOK" resource="/AdminCategories.do?command=View"/>
     <forward name="ActivateOK" resource="/AdminCategories.do?command=ViewActive"/>
   </action>
-  
   <action name="Users" class="org.aspcfs.modules.admin.actions.Users">
     <bean name="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request" />
     <forward name="ListUsersOK" resource="/admin/admin_listusers.jsp" layout="nav"/>
@@ -926,7 +936,6 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
-  
   <action name="Viewpoints" class="org.aspcfs.modules.admin.actions.Viewpoints">
     <bean name="viewpoint" class="org.aspcfs.modules.admin.base.Viewpoint" scope="request" />
     <forward name="ListViewpointsOK" resource="/admin/admin_listviewpoints.jsp" layout="nav"/>
@@ -1027,7 +1036,7 @@
     <forward name="DefaultOK" resource="/admin/system_process_ok.jsp" layout="nav"/>
   </action>
   <!-- Initial Setup actions -->
-  <action name="SetupServer" class="org.aspcfs.modules.setup.actions.SetupServer">
+  <action name="LicenseServer" class="org.aspcfs.modules.setup.actions.SetupServer">
     <forward name="SubmitProcessOK" resource="/service/system_process_packet.jsp"/>
   </action>
   <action name="Setup" class="org.aspcfs.modules.setup.actions.Setup">

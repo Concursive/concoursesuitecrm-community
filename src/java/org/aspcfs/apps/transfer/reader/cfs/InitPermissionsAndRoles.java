@@ -97,6 +97,7 @@ public class InitPermissionsAndRoles implements DataReader {
         thisRecord.addField("folders", (String) category.getAttribute("folders"));
         thisRecord.addField("lookups", (String) category.getAttribute("lookups"));
         thisRecord.addField("viewpoints", (String) category.getAttribute("viewpoints"));
+        thisRecord.addField("reports", (String) category.getAttribute("reports"));
         processOK = writer.save(thisRecord);
         int categoryId = Integer.parseInt(writer.getLastResponse());
         
@@ -175,6 +176,26 @@ public class InitPermissionsAndRoles implements DataReader {
           lookupRecord.addField("description", (String) lookup.getAttribute("description"));
           lookupRecord.addField("categoryId", String.valueOf(categoryId));
           writer.save(lookupRecord);
+        }
+        
+        //Insert any reports under this category
+        ArrayList reportList = new ArrayList();
+        XMLUtils.getAllChildren(category, "report", reportList);
+        Iterator reportItems = reportList.iterator();
+        while (reportItems.hasNext()) {
+          Element report = (Element) reportItems.next();
+          DataRecord reportRecord = new DataRecord();
+          reportRecord.setName("report");
+          reportRecord.setAction("insert");
+          reportRecord.addField("categoryId", String.valueOf(categoryId));
+          //TODO: Lookup the id if there is one
+          //reportRecord.addField("permissionId", String.valueOf(permissionId));
+          reportRecord.addField("permissionId", -1);
+          reportRecord.addField("file", (String) report.getAttribute("file"));
+          reportRecord.addField("type", (String) report.getAttribute("type"));
+          reportRecord.addField("title", (String) report.getAttribute("title"));
+          reportRecord.addField("description", (String) report.getAttribute("description"));
+          writer.save(reportRecord);
         }
       }
       

@@ -189,7 +189,6 @@ public final class ProcessSystem extends CFSModule {
     for (int i = 0; i < listing.length; i++) {
       File thisFile = listing[i];
       if (thisFile.isDirectory()) {
-        //System.out.println(thisFile.getName());
         precompileDirectory(context, thisFile, dir + thisFile.getName() + "/");
       } else {
         precompileJSP(context, thisFile, dir);
@@ -206,7 +205,9 @@ public final class ProcessSystem extends CFSModule {
    *@param  dir       Description of the Parameter
    */
   private void precompileJSP(ActionContext context, File thisFile, String dir) {
-    if (thisFile.getName().endsWith(".jsp") && !thisFile.getName().endsWith("_include.jsp")) {
+    if (thisFile.getName().endsWith(".jsp") && 
+        !thisFile.getName().endsWith("_include.jsp") && 
+        !thisFile.getName().endsWith("_menu.jsp")) {
       String serverName = "http://" + HTTPUtils.getServerUrl(context.getRequest());
       String jsp = serverName + dir + thisFile.getName();
       try {

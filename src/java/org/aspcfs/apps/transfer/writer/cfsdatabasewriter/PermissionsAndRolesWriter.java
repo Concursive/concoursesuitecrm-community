@@ -219,6 +219,7 @@ public class PermissionsAndRolesWriter implements DataWriter {
         thisCategory.setFolders(record.getValue("folders"));
         thisCategory.setLookups(record.getValue("lookups"));
         thisCategory.setViewpoints(record.getValue("viewpoints"));
+        thisCategory.setReports(record.getValue("reports"));
         thisCategory.insert(db);
         id = thisCategory.getId();
         return true;
@@ -274,6 +275,27 @@ public class PermissionsAndRolesWriter implements DataWriter {
           pst.setInt(5, record.getIntValue("level"));
           pst.setString(6, record.getValue("description"));
           pst.setInt(7, record.getIntValue("categoryId"));
+          pst.executeUpdate();
+          pst.close();
+        } catch (SQLException e) {
+          e.printStackTrace(System.out);
+          return false;
+        }
+        return true;
+      }
+      
+      if (record.getName().equals("report")) {
+        try {
+          PreparedStatement pst = db.prepareStatement(
+            "INSERT INTO report " +
+            "(category_id, permission_id, filename, type, title, description) " +
+            "VALUES (?, ?, ?, ?, ?, ?) ");
+          pst.setInt(1, record.getIntValue("categoryId"));
+          DatabaseUtils.setInt(pst, 2, record.getIntValue("permissionId"));
+          pst.setString(3, record.getValue("file"));
+          pst.setString(4, record.getValue("type"));
+          pst.setString(5, record.getValue("title"));
+          pst.setString(6, record.getValue("description"));
           pst.executeUpdate();
           pst.close();
         } catch (SQLException e) {

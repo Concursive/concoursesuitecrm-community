@@ -46,6 +46,7 @@ public class SecurityHook implements ControllerHook {
     //Login and Process modules bypass security and must implement their own
     if (action.toUpperCase().startsWith("LOGIN") ||
         action.toUpperCase().startsWith("SETUP") ||
+        action.toUpperCase().startsWith("LICENSESERVER") ||
         action.toUpperCase().startsWith("PROCESS")) {
       return null;
     }

@@ -159,9 +159,9 @@ public class Setup extends CFSModule {
       bean.setText(PrivateString.encrypt(key, "5USERBINARY-1.0"));
       //Make sure the server received the key ok
       if (bean.getSsl()) {
-        response = HTTPUtils.sendPacket("https://ds21.darkhorseventures.com/setup/SetupServer.do?command=SubmitRegistration", bean.toXmlString());
+        response = HTTPUtils.sendPacket("https://ds21.darkhorseventures.com/setup/LicenseServer.do?command=SubmitRegistration", bean.toXmlString());
       } else {
-        response = HTTPUtils.sendPacket("http://ds21.darkhorseventures.com/setup/SetupServer.do?command=SubmitRegistration", bean.toXmlString());
+        response = HTTPUtils.sendPacket("http://ds21.darkhorseventures.com/setup/LicenseServer.do?command=SubmitRegistration", bean.toXmlString());
       }
       if (response == null) {
         context.getRequest().setAttribute("actionError",

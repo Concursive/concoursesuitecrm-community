@@ -21,6 +21,26 @@ import java.security.*;
 public class HTTPUtils {
 
   /**
+   *  Generates acceptable html text when displaying in HTML, especially useful
+   *  within a table cell because a cell should not be left empty
+   *
+   *@param  s  Description of the Parameter
+   *@return    Description of the Return Value
+   */
+  public static String toHtml(String s) {
+    if (s != null) {
+      if (s.trim().equals("")) {
+        return ("&nbsp;");
+      } else {
+        return toHtmlValue(s);
+      }
+    } else {
+      return ("&nbsp;");
+    }
+  }
+
+
+  /**
    *  Generates acceptable default html text when using an input field on an
    *  html form
    *

@@ -5,9 +5,10 @@ import java.util.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 import javax.xml.parsers.*;
+import org.aspcfs.controller.ApplicationPrefs;
 
 /**
- *  Description of the Class
+ *  Useful methods that applications can use
  *
  *@author     matt rajkowski
  *@created    January 15, 2003
@@ -16,50 +17,60 @@ import javax.xml.parsers.*;
 public class AppUtils {
 
   /**
-   *  Description of the Method
+   *  Parses either an XML preferences file or a key-value preferences file
    *
    *@param  filename  Description of the Parameter
    *@param  config    Description of the Parameter
    *@return           Description of the Return Value
    */
   public static boolean loadConfig(String filename, HashMap config) {
-    File file = new File(filename);
-    if (file == null) {
-      System.err.println("AppUtils-> Configuration file not found: " + filename);
-      return false;
-    }
-    try {
-      Document document = parseDocument(file);
-      config.clear();
-      NodeList tags = document.getElementsByTagName("init-param");
-      for (int i = 0; i < tags.getLength(); i++) {
-        Element tag = (Element) tags.item(i);
-        NodeList params = tag.getChildNodes();
-        String name = null;
-        String value = null;
-        for (int j = 0; j < params.getLength(); j++) {
-          Node param = (Node) params.item(j);
-          if (param.hasChildNodes()) {
-            NodeList children = param.getChildNodes();
-            Node thisNode = (Node) children.item(0);
-            if (param.getNodeName().equals("param-name")) {
-              name = thisNode.getNodeValue();
-            }
-            if (param.getNodeName().equals("param-value")) {
-              value = thisNode.getNodeValue();
+    if (filename.endsWith(".xml")) {
+      File file = new File(filename);
+      if (file == null) {
+        System.err.println("AppUtils-> Configuration file not found: " + filename);
+        return false;
+      }
+      try {
+        Document document = parseDocument(file);
+        config.clear();
+        NodeList tags = document.getElementsByTagName("init-param");
+        for (int i = 0; i < tags.getLength(); i++) {
+          Element tag = (Element) tags.item(i);
+          NodeList params = tag.getChildNodes();
+          String name = null;
+          String value = null;
+          for (int j = 0; j < params.getLength(); j++) {
+            Node param = (Node) params.item(j);
+            if (param.hasChildNodes()) {
+              NodeList children = param.getChildNodes();
+              Node thisNode = (Node) children.item(0);
+              if (param.getNodeName().equals("param-name")) {
+                name = thisNode.getNodeValue();
+              }
+              if (param.getNodeName().equals("param-value")) {
+                value = thisNode.getNodeValue();
+              }
             }
           }
+          if (value == null) {
+            value = "";
+          }
+          config.put(name, value);
         }
-        if (value == null) {
-          value = "";
-        }
-        config.put(name, value);
+      } catch (Exception e) {
+        e.printStackTrace();
+        return false;
       }
-    } catch (Exception e) {
-      e.printStackTrace();
-      return false;
+      return true;
+    } else {
+      ApplicationPrefs prefs = new ApplicationPrefs();
+      prefs.load(filename + "build.properties");
+      if (!prefs.has("FILELIBRARY")) {
+        prefs.add("FILELIBRARY", filename);
+      }
+      config.putAll(prefs.getPrefs());
+      return true;
     }
-    return true;
   }
 
 

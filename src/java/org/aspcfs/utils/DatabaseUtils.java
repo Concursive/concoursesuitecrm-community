@@ -8,7 +8,7 @@ import java.text.*;
 import java.util.*;
 
 /**
- *  Database server specific sql
+ *  Useful methods for working with multiple databases and database fields
  *
  *@author     matt rajkowski
  *@created    March 18, 2002
@@ -266,6 +266,37 @@ public class DatabaseUtils {
 
 
   /**
+   *  Gets the long attribute of the DatabaseUtils class
+   *
+   *@param  rs                Description of the Parameter
+   *@param  column            Description of the Parameter
+   *@return                   The long value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static long getLong(ResultSet rs, String column) throws SQLException {
+    return DatabaseUtils.getLong(rs, column, -1);
+  }
+
+
+  /**
+   *  Gets the long attribute of the DatabaseUtils class
+   *
+   *@param  rs                Description of the Parameter
+   *@param  column            Description of the Parameter
+   *@param  defaultValue      Description of the Parameter
+   *@return                   The long value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static long getLong(ResultSet rs, String column, long defaultValue) throws SQLException {
+    long fieldValue = rs.getLong(column);
+    if (rs.wasNull()) {
+      fieldValue = defaultValue;
+    }
+    return fieldValue;
+  }
+
+
+  /**
    *  Sets the int attribute of the DatabaseUtils class
    *
    *@param  pst               The new int value
@@ -278,6 +309,23 @@ public class DatabaseUtils {
       pst.setNull(paramCount, java.sql.Types.INTEGER);
     } else {
       pst.setInt(paramCount, value);
+    }
+  }
+
+
+  /**
+   *  Sets the long attribute of the DatabaseUtils class
+   *
+   *@param  pst               The new long value
+   *@param  paramCount        The new long value
+   *@param  value             The new long value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void setLong(PreparedStatement pst, int paramCount, long value) throws SQLException {
+    if (value == -1) {
+      pst.setNull(paramCount, java.sql.Types.INTEGER);
+    } else {
+      pst.setLong(paramCount, value);
     }
   }
 

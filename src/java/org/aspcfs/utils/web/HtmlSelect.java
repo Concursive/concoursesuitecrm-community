@@ -348,24 +348,6 @@ public class HtmlSelect extends ArrayList {
       String timeZone = gmtString + tz.getDisplayName();
       if (!tz.getDisplayName().startsWith("GMT")) {
         this.addItem(gmtId, timeZone + " (" + gmtId + ")");
-
-        /*
-         *  Iterator select = this.iterator();
-         *  boolean matched = false;
-         *  while (select.hasNext()) {
-         *  String tmp = (String)select.next();
-         *  if (tmp.indexOf(timeZone) > -1) {
-         *  matched = true;
-         *  break;
-         *  }
-         *  }
-         *  if (!matched) {
-         *  /&& !this.contains(gmtId + "|" + timeZone))
-         *  this.addItem(gmtId, timeZone);
-         *  } else {
-         *  if (System.getProperty("DEBUG") != null) System.out.println("HtmlSelect-> TimeZone: " + gmtId + " | " + timeZone);
-         *  }
-         */
       }
     }
   }
@@ -550,12 +532,12 @@ public class HtmlSelect extends ArrayList {
     StringBuffer outputHtml = new StringBuffer();
     if (!checkboxOutput) {
       outputHtml.append(
-          "<select size='" + this.selectSize + "' " + 
+          "<select size='" + this.selectSize + "' " +
           (selectStyle == null ? "" : "style='" + selectStyle + "' ") +
-          "name='" + this.selectName + "'" + 
-          (jsEvent != null ? " " + this.jsEvent : "") + 
-          (idName != null ? " " + "id='" + this.idName + "' " : "") + 
-          (multiple != false ? " multiple " : "") + 
+          "name='" + this.selectName + "'" +
+          (jsEvent != null ? " " + this.jsEvent : "") +
+          (idName != null ? " " + "id='" + this.idName + "' " : "") +
+          (multiple != false ? " multiple " : "") +
           this.getAttributeList() + ">");
     }
 
@@ -917,6 +899,24 @@ public class HtmlSelect extends ArrayList {
     htmlReady = replace(htmlReady, "/&lt;", "<");
     htmlReady = replace(htmlReady, "/&gt;", ">");
     return (htmlReady);
+  }
+
+
+  /**
+   *  Returns the text of the specified key
+   *
+   *@param  key  Description of the Parameter
+   *@return      The valueFromId value
+   */
+  public String getValueFromId(String key) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      HtmlOption thisOption = (HtmlOption) i.next();
+      if (key.equals(thisOption.getValue())) {
+        return thisOption.getText();
+      }
+    }
+    return key;
   }
 }
 

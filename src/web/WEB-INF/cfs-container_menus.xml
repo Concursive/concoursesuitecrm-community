@@ -313,5 +313,26 @@
       <link value="AdminCategories.do?command=View&amp;moduleId=${moduleId}"/>
     </submenu>
   </container>
+  <!-- Submenu in Pipeline Management Reports -->
+  <container name="pipelineReports">
+    <separator value=" | "/>
+    <long_css on="containerOn" off="containerOff"/>
+    <short_css on="containerOn" off="containerOff"/>
+    <submenu name="queue">
+      <long_html value="Report Queue"/>
+      <permission value="pipeline-reports-view"/>
+      <link value="LeadsReports.do?command=Default"/>
+    </submenu>
+    <submenu name="run">
+      <long_html value="Run Report"/>
+      <permission value="pipeline-reports-view"/>
+      <link value="LeadsReports.do?command=RunReport"/>
+    </submenu>
+    <submenu name="export">
+      <long_html value="Export Data"/>
+      <permission value="pipeline-reports-view"/>
+      <link value="LeadsReports.do?command=ExportList"/>
+    </submenu>
+  </container>
   
 </application>

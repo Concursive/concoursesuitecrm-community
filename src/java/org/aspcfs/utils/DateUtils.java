@@ -5,7 +5,7 @@ import java.text.*;
 import java.util.*;
 
 /**
- *  Description of the Class
+ *  Useful methods for working with dates and date fields
  *
  *@author     matt rajkowski
  *@created    January 13, 2003
@@ -14,7 +14,7 @@ import java.util.*;
 public class DateUtils {
 
   /**
-   *  Description of the Method
+   *  Takes a string and tries to convert it to a Date
    *
    *@param  tmp  Description of the Parameter
    *@return      Description of the Return Value
@@ -37,7 +37,7 @@ public class DateUtils {
 
 
   /**
-   *  Description of the Method
+   *  Takes a string and tries to convert it to a Timestamp
    *
    *@param  tmp  Description of the Parameter
    *@return      Description of the Return Value
@@ -60,7 +60,8 @@ public class DateUtils {
 
 
   /**
-   *  parses special String formats into Timestamps
+   *  Takes a string and tries to convert it to a Timestamp based on the
+   *  specified formatting
    *
    *@param  tmp     Description of the Parameter
    *@param  format  Description of the Parameter
@@ -87,7 +88,8 @@ public class DateUtils {
 
 
   /**
-   *  parses special String formats into Dates
+   *  Takes a string and tries to convert it to a Date based on the specified
+   *  formatting
    *
    *@param  tmp     Description of the Parameter
    *@param  format  Description of the Parameter
@@ -138,7 +140,8 @@ public class DateUtils {
 
 
   /**
-   *  Returns the converted server time based on the current calendar time and timezone of the user
+   *  Returns the converted server time based on the current calendar time and
+   *  timezone of the user
    *
    *@param  cal       Description of the Parameter
    *@param  timeZone  Description of the Parameter
@@ -207,8 +210,8 @@ public class DateUtils {
   /**
    *  Returns the current time from a calendar object
    *
-   *@param  cal         Description of the Parameter
-   *@return             The date value
+   *@param  cal  Description of the Parameter
+   *@return      The date value
    */
   public static java.util.Date getDate(Calendar cal) {
     java.util.Date convertedDate = null;
@@ -225,13 +228,54 @@ public class DateUtils {
 
 
   /**
-   *  Returns the current date of the calendar in the m/d/yyyy format as a string
+   *  Returns the current date of the calendar in the m/d/yyyy format as a
+   *  string
    *
-   *@param  cal         Description of the Parameter
-   *@return             The dateString value
+   *@param  cal  Description of the Parameter
+   *@return      The dateString value
    */
   public static String getDateString(Calendar cal) {
     return (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR);
+  }
+
+
+  /**
+   *  Returns a directory structure based on the date supplied
+   *
+   *@param  fileDate  Description of the Parameter
+   *@return           The datePath value
+   */
+  public static String getDatePath(java.util.Date fileDate) {
+    return getDatePath(new java.sql.Timestamp(fileDate.getTime()));
+  }
+
+
+  /**
+   *  Returns a directory structure based on the timestamp supplied, used for
+   *  the fileLibrary: yyyy/MMdd/
+   *
+   *@param  fileDate  Description of Parameter
+   *@return           The DatePath value
+   *@since
+   */
+  public static String getDatePath(java.sql.Timestamp fileDate) {
+    SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
+    String datePathToUse1 = formatter1.format(fileDate);
+    SimpleDateFormat formatter2 = new SimpleDateFormat("MMdd");
+    String datePathToUse2 = formatter2.format(fileDate);
+    return datePathToUse1 + System.getProperty("file.separator") + datePathToUse2 + System.getProperty("file.separator");
+  }
+
+
+  /**
+   *  Returns a string that is suitable for a filename based on a timestamp
+   *
+   *@param  fileDate  Description of the Parameter
+   *@return           The filename value
+   */
+  public static String getFilename(java.sql.Timestamp fileDate) {
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+    return formatter.format(new java.util.Date());
   }
 }
 
