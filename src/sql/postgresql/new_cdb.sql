@@ -17,6 +17,7 @@ CREATE TABLE system_modules (
 );
 
 INSERT INTO system_modules (description) VALUES ('Account Management');
+INSERT INTO system_modules (description) VALUES ('Contacts & Resources');
 
 
 CREATE TABLE mod_log (

@@ -499,6 +499,7 @@ public final class AdminFields extends CFSModule {
   
   private void addModuleList(ActionContext context, Connection db) throws SQLException {
     String moduleId = context.getRequest().getParameter("modId");
+    System.out.println("ModID is: " + moduleId);
     LookupList moduleList = new LookupList(db, "system_modules");
     moduleList.setDefaultKey(moduleId);
     context.getRequest().setAttribute("ModuleList", moduleList);

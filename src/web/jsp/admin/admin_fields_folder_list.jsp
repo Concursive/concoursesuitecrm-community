@@ -4,7 +4,7 @@
 <jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form name="details" action="/AdminFields.do?command=ListFolders" method="post">
+<form name="details" action="/AdminFieldsFolder.do?command=ListFolders" method="post">
 <a href="/Admin.do">Setup</a> >
 <a href="/Admin.do?command=Config">System Configuration</a> >
 Custom Folders<br>

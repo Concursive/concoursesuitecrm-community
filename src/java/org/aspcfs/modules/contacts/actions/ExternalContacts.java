@@ -98,6 +98,80 @@ public final class ExternalContacts extends CFSModule {
       return ("SystemError");
     }
   }
+  
+   public String executeCommandFields(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    Contact thisContact = null;
+
+    String recordId = null;
+    
+    try {
+      String contactId = context.getRequest().getParameter("contactId");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+      
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.CONTACTS);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(false);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+      
+      String selectedCatId = (String)context.getRequest().getParameter("catId");
+      if (selectedCatId == null) {
+        selectedCatId = (String)context.getRequest().getAttribute("catId");
+      }
+      if (selectedCatId == null) {
+        selectedCatId = "" + thisList.getDefaultCategoryId();
+      }
+      context.getRequest().setAttribute("catId", selectedCatId);
+      
+      recordId = context.getRequest().getParameter("recId");
+      
+      if (recordId == null) {
+        CustomFieldCategory thisCategory = thisList.getCategory(Integer.parseInt(selectedCatId));
+        context.getRequest().setAttribute("Category", thisCategory);
+        
+        CustomFieldRecordList recordList = new CustomFieldRecordList();
+        recordList.setLinkModuleId(Constants.CONTACTS);
+        recordList.setLinkItemId(thisContact.getId());
+        recordList.setCategoryId(thisCategory.getId());
+        recordList.buildList(db);
+        context.getRequest().setAttribute("Records", recordList);
+      } else {
+        CustomFieldCategory thisCategory = thisList.getCategory(Integer.parseInt(selectedCatId));
+        thisCategory.setLinkModuleId(Constants.CONTACTS);
+        thisCategory.setLinkItemId(thisContact.getId());
+        thisCategory.setRecordId(Integer.parseInt(recordId));
+        thisCategory.setIncludeEnabled(Constants.TRUE);
+        thisCategory.setIncludeScheduled(Constants.TRUE);
+        thisCategory.setBuildResources(true);
+        thisCategory.buildResources(db);
+        context.getRequest().setAttribute("Category", thisCategory);
+      }
+      
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    if (errorMessage == null) {
+      addModuleBean(context, "External Contacts", "Custom Fields Details");
+      if (recordId == null) {
+        return ("FieldRecordListOK");
+      } else {
+        return ("FieldsOK");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
 
 
   /**
