@@ -333,31 +333,56 @@ public class PilotOnlineReader implements DataReader {
       organizationList.buildList(db);
       Calendar runDateStart = Calendar.getInstance();
       Calendar runDateEnd = Calendar.getInstance();
-      if (runDateStart.get(Calendar.DAY_OF_WEEK) != Calendar.WEDNESDAY) {
-	      while (runDateStart.get(Calendar.DAY_OF_WEEK) != Calendar.WEDNESDAY) {
-		runDateStart.add(Calendar.DATE, 1);
-		runDateEnd.add(Calendar.DATE, 1);
-	      }
-      } else {
-	      runDateStart.add(Calendar.DATE, 1);
-	      runDateStart.add(Calendar.DATE, -1);
-	      runDateEnd.add(Calendar.DATE, 1);
-	      runDateEnd.add(Calendar.DATE, -1);
+      
+      switch (runDateStart.get(Calendar.DAY_OF_WEEK)) {
+        case Calendar.SATURDAY:
+          runDateStart.add(Calendar.DATE, -3);
+          runDateEnd.add(Calendar.DATE, -3);
+          break;
+        case Calendar.SUNDAY:
+          runDateStart.add(Calendar.DATE, -4);
+          runDateEnd.add(Calendar.DATE, -4);
+          break;
+        case Calendar.MONDAY:
+          runDateStart.add(Calendar.DATE, -5);
+          runDateEnd.add(Calendar.DATE, -5);
+          break;
+        case Calendar.TUESDAY: 
+          runDateStart.add(Calendar.DATE, 1);
+          runDateEnd.add(Calendar.DATE, 1);
+          break;
+        case Calendar.WEDNESDAY:
+          break;
+        case Calendar.THURSDAY:
+          runDateStart.add(Calendar.DATE, -1);
+          runDateEnd.add(Calendar.DATE, -1);
+          break;
+        case Calendar.FRIDAY:
+          runDateStart.add(Calendar.DATE, -2);
+          runDateEnd.add(Calendar.DATE, -2);
+          break;
+        default:
+          while (runDateStart.get(Calendar.DAY_OF_WEEK) != Calendar.WEDNESDAY) {
+            runDateStart.add(Calendar.DATE, 1);
+            runDateEnd.add(Calendar.DATE, 1);
+          }
+          break;
       }
+      //Define the final date range
+      runDateStart.add(Calendar.DATE, -2);
+      runDateEnd.add(Calendar.DATE, 2);
+      //Zero out the time
       runDateStart.set(Calendar.HOUR, 0);
       runDateStart.set(Calendar.MINUTE, 0);
       runDateStart.set(Calendar.SECOND, 0);
       runDateStart.set(Calendar.MILLISECOND, 0);
-      
-      runDateStart.add(Calendar.DATE, -2);
-      runDateEnd.add(Calendar.DATE, 2);
-      
+      //Zero out the time
       runDateEnd.set(Calendar.HOUR, 0);
       runDateEnd.set(Calendar.MINUTE, 0);
       runDateEnd.set(Calendar.SECOND, 0);
       runDateEnd.set(Calendar.MILLISECOND, 0);
       
-      processLog.add("INFO: Processing organizations/vehicles: " + organizationList.size());
+      processLog.add("INFO: Processing organizations/vehicles: " + organizationList.size() + " for " + runDateStart.getTime() + " through " + runDateEnd.getTime());
       int vehicleCount = 0;
       Iterator organizations = organizationList.iterator();
       while (organizations.hasNext()) {
@@ -463,7 +488,7 @@ public class PilotOnlineReader implements DataReader {
       ftp.setDeleteSourceFilesAfterSend(true);
       ftp.setMakeRemoteDir(true);
       ftp.addFile(pictureDestinationPath + "*.jpg");
-      while (!sendComplete && retryCount < 6) {
+      while (!sendComplete && retryCount < 10) {
         ++retryCount;
         processOK = (ftp.put(ftpPictures) == 0);
         if (!processOK) {
