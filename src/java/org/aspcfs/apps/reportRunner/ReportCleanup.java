@@ -74,6 +74,7 @@ public class ReportCleanup {
       String baseName = (String) config.get("GATEKEEPER.URL");
       String dbUser = (String) config.get("GATEKEEPER.USER");
       String dbPass = (String) config.get("GATEKEEPER.PASSWORD");
+      Connection db = null;
       try {
         SiteList siteList = SiteUtils.getSiteList(config);
         //Process each site
@@ -84,7 +85,7 @@ public class ReportCleanup {
         while (i.hasNext()) {
           Site thisSite = (Site) i.next();
           Class.forName(thisSite.getDatabaseDriver());
-          Connection db = DriverManager.getConnection(
+          db = DriverManager.getConnection(
               thisSite.getDatabaseUrl(),
               thisSite.getDatabaseUsername(),
               thisSite.getDatabasePassword());
@@ -108,9 +109,16 @@ public class ReportCleanup {
       } catch (Exception exc) {
         exc.printStackTrace(System.out);
         System.err.println("ReportCleanup-> Error: " + exc.toString());
+      } finally {
+        if (db != null) {
+          try {
+            db.close();
+            db = null;
+          } catch (Exception e) {
+          }
+        }
       }
     }
   }
 }
-
 

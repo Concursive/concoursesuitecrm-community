@@ -106,6 +106,7 @@ public class Notifier extends ReportBuilder {
       this.baseName = (String) this.config.get("GATEKEEPER.URL");
       this.dbUser = (String) this.config.get("GATEKEEPER.USER");
       this.dbPass = (String) this.config.get("GATEKEEPER.PASSWORD");
+      Connection db = null;
       try {
         SiteList siteList = SiteUtils.getSiteList(config);
         //Get the time range for the reports
@@ -127,7 +128,7 @@ public class Notifier extends ReportBuilder {
         while (i.hasNext()) {
           Site thisSite = (Site) i.next();
           Class.forName(thisSite.getDatabaseDriver());
-          Connection db = DriverManager.getConnection(
+          db = DriverManager.getConnection(
               thisSite.getDatabaseUrl(),
               thisSite.getDatabaseUsername(),
               thisSite.getDatabasePassword());
@@ -169,6 +170,14 @@ public class Notifier extends ReportBuilder {
       } catch (Exception exc) {
         exc.printStackTrace(System.out);
         System.err.println("Notifier-> BuildReport Error: " + exc.toString());
+      } finally {
+        if (db != null) {
+          try {
+            db.close();
+            db = null;
+          } catch (Exception e) {
+          }
+        }
       }
     }
   }
@@ -693,5 +702,4 @@ public class Notifier extends ReportBuilder {
     return config;
   }
 }
-
 
