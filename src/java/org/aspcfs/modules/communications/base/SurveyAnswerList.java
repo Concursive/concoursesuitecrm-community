@@ -351,9 +351,9 @@ public class SurveyAnswerList extends Vector {
 
     if (hasComments > -1) {
       if (hasComments == Constants.TRUE) {
-        sqlFilter.append("AND sa.comments <> '' ");
+        sqlFilter.append("AND sa.comments NOT LIKE '' ");
       } else {
-        sqlFilter.append("AND sa.comments = '' ");
+        sqlFilter.append("AND sa.comments LIKE '' ");
       }
     }
   }
