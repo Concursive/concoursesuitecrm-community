@@ -479,6 +479,69 @@ public class LookupElement {
   /**
    *  Description of the Method
    *
+   *@param  db                Description of the Parameter
+   *@param  tableName         Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int enableElement(Connection db, String tableName) throws SQLException {
+    int resultCount = 0;
+    if (this.getCode() == 0) {
+      throw new SQLException("Element Code not specified.");
+    }
+    PreparedStatement pst = null;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "UPDATE " + tableName + " " +
+        "SET enabled = ? " +
+        "WHERE code = ? ");
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    pst.setBoolean(++i, true);
+    pst.setInt(++i, this.getCode());
+    resultCount = pst.executeUpdate();
+    pst.close();
+    return resultCount;
+  }
+
+
+  /**
+   *  Gets the disabled attribute of the LookupElement object
+   *
+   *@param  db                Description of the Parameter
+   *@param  tableName         Description of the Parameter
+   *@return                   The disabled value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int isDisabled(Connection db, String tableName) throws SQLException {
+    if (this.getDescription() == null) {
+      throw new SQLException("Element description not specified");
+    }
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    int tmpCode = -1;
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT * " +
+        "FROM " + tableName + " " +
+        "WHERE description = ? " +
+        "AND enabled = false ");
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    pst.setString(++i, this.description);
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      tmpCode = rs.getInt("code");
+    }
+    rs.close();
+    pst.close();
+    return tmpCode;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
    *@param  db                Description of Parameter
    *@param  tableName         Description of Parameter
    *@return                   Description of the Returned Value
