@@ -663,7 +663,7 @@
     <forward name="ViewOK" resource="/communications/campaign_documents_list.jsp" layout="nav"/>
     <forward name="AddOK" resource="/communications/campaign_documents_upload.jsp" layout="nav"/>
     <forward name="UploadOK" resource="/CampaignDocuments.do?command=View"/>
-    <forward name="AddVersionOK" resource="/communications/communications/campaign_documents_upload_version.jsp" layout="nav"/>
+    <forward name="AddVersionOK" resource="/communications/campaign_documents_upload_version.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/communications/campaign_documents_details.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/communications/campaign_documents_modify.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/CampaignDocuments.do?command=View"/>
