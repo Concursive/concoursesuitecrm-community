@@ -82,11 +82,11 @@ public class HtmlSelectTimeZone {
     select.addItem("Asia/Baku", "GMT+4 Baku, Tbilisi");
     select.addItem("Asia/Kabul", "GMT+4:30 Kabul");
     select.addItem("Asia/Yekaterinburg", "GMT+5 Yekaterinburg");
-    //select.addItem("", "GMT+5 Islamabad");
-    //select.addItem("", "GMT+5:30 New Delhi");
+    select.addItem("Asia/Karachi", "GMT+5 Karachi");
+    select.addItem("Asia/Calcutta", "GMT+5:30 Calcutta");
     select.addItem("Asia/Katmandu", "GMT+5:45 Katmandu");
     select.addItem("Asia/Dhaka", "GMT+6 Astana, Dhaka");
-    //select.addItem("", "GMT+6 Sri Lanka");
+    select.addItem("Asia/Colombo", "GMT+6 Colombo");
     select.addItem("Asia/Almaty", "GMT+6 Almaty");
     select.addItem("Asia/Rangoon", "GMT+6:30 Rangoon");
     //select.addItem("", "GMT+6:30 Yangoon");
