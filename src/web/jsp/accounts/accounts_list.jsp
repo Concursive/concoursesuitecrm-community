@@ -34,22 +34,22 @@ Search Results
     <th width="8" <% ++columnCount; %>>
       <strong>Action</strong>
     </th>
-    <th width="30%" nowrap <% ++columnCount; %>>
+    <th nowrap <% ++columnCount; %>>
       <strong><a href="Accounts.do?command=Search&column=o.name">Account Name</a></strong>
       <%= SearchOrgListInfo.getSortIcon("o.name") %>
     </th>
     <dhv:include name="organization.phoneNumbers" none="true">
-      <th width="20%" nowrap <% ++columnCount; %>>
+      <th nowrap <% ++columnCount; %>>
         <strong>Phone</strong>
       </th>
     </dhv:include>
     <dhv:include name="organization.phoneNumbers" none="true">
-      <th width="20%" nowrap <% ++columnCount; %>>
+      <th nowrap <% ++columnCount; %>>
         <strong>Fax</strong>
       </th>
     </dhv:include>
     <dhv:include name="organization.emailAddresses" none="true">
-      <th width="30%" nowrap <% ++columnCount; %>>
+      <th nowrap <% ++columnCount; %>>
         <strong>Email</strong>
       </th>
     </dhv:include>
@@ -72,11 +72,11 @@ Search Results
        <a href="javascript:displayMenu('menuAccount', '<%= thisOrg.getOrgId() %>', '<%= status %>');"
        onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-		<td width="30%" class="row<%= rowid %>">
+		<td class="row<%= rowid %>">
       <a href="Accounts.do?command=Details&orgId=<%=thisOrg.getOrgId()%>"><%= toHtml(thisOrg.getName()) %></a>
 		</td>
     <dhv:include name="organization.phoneNumbers" none="true">
-      <td width="20%" valign="center" class="row<%= rowid %>" nowrap>
+      <td valign="center" class="row<%= rowid %>" nowrap>
       <dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() == null)%>">
         <%= toHtml(thisOrg.getPhoneNumber("Main")) %>
       </dhv:evaluate>    
@@ -86,12 +86,12 @@ Search Results
       </td>
     </dhv:include>
     <dhv:include name="organization.phoneNumbers" none="true">
-      <td width="20%" valign="center" class="row<%= rowid %>" nowrap>
+      <td valign="center" class="row<%= rowid %>" nowrap>
         <%= toHtml(thisOrg.getPhoneNumber("Fax")) %>
       </td>
     </dhv:include>
     <dhv:include name="organization.emailAddresses" none="true">
-      <td width="30%" valign="center" class="row<%= rowid %>" nowrap>
+      <td valign="center" class="row<%= rowid %>" nowrap>
       <dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() == null)%>">
       <% if ( (thisOrg.getEmailAddress("Primary")).length() > 0 ) { %>
         <a href="mailto:<%= toHtml(thisOrg.getEmailAddress("Primary")) %>"><%= toHtml(thisOrg.getEmailAddress("Primary")) %></a>
