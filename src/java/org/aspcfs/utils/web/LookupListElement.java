@@ -21,6 +21,7 @@ import org.aspcfs.modules.contacts.base.ContactType;
 public class LookupListElement {
 
   protected int moduleId = -1;
+  protected int categoryId = -1;
   protected int lookupId = -1;
   protected String tableName = null;
   protected String className = null;
@@ -29,6 +30,21 @@ public class LookupListElement {
   protected java.sql.Timestamp entered = null;
   protected LookupList lookupList = null;
 
+  public LookupListElement(Connection db, int moduleId, int lookupId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT * " +
+      "FROM lookup_lists_lookup " +
+      "WHERE module_id = ? " +
+      "AND lookup_id = ? ");
+    pst.setInt(1, moduleId);
+    pst.setInt(2, lookupId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      buildRecord(rs);
+    }
+    rs.close();
+    pst.close();
+  }
 
   /**
    *  Constructor for the LookupListElement object
@@ -39,8 +55,7 @@ public class LookupListElement {
   public LookupListElement(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-
-
+  
   /**
    *  Sets the moduleId attribute of the LookupListElement object
    *
@@ -50,6 +65,9 @@ public class LookupListElement {
     this.moduleId = moduleId;
   }
 
+  public void setCategoryId(int categoryId) {
+    this.categoryId = categoryId;
+  }
 
   /**
    *  Sets the lookupId attribute of the LookupListElement object
@@ -149,6 +167,10 @@ public class LookupListElement {
   public int getModuleId() {
     return moduleId;
   }
+  
+  public int getCategoryId() {
+    return categoryId;
+  }
 
 
   /**
@@ -212,12 +234,12 @@ public class LookupListElement {
     } else if (className.equals("contactType")) {
       ContactTypeList contactTypeList = new ContactTypeList();
       contactTypeList.setIncludeDefinedByUser(userId);
-      contactTypeList.setCategory(moduleId == Constants.ACCOUNTS ? ContactType.ACCOUNT : ContactType.GENERAL);
+      contactTypeList.setCategory(categoryId == Constants.ACCOUNTS ? ContactType.ACCOUNT : ContactType.GENERAL);
       contactTypeList.setShowPersonal(true);
       contactTypeList.buildList(db);
       setLookupList(contactTypeList.getLookupList("list", 0));
     } else {
-      throw new SQLException("LookupListElement class name not found");
+      throw new SQLException("LookupListElement class name not found: " + className);
     }
   }
 
@@ -236,6 +258,7 @@ public class LookupListElement {
     level = rs.getInt("level");
     description = rs.getString("description");
     entered = rs.getTimestamp("entered");
+    categoryId = rs.getInt("category_id");
   }
 
 }
