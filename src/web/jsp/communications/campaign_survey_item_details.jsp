@@ -41,7 +41,7 @@
         } else {
           rowid = 2;
         }
-        ActiveSurveyAnswerItem thisItem = (ActiveSurveyAnswerItem)i.next();
+        SurveyAnswerItem thisItem = (SurveyAnswerItem)i.next();
   %>      
      <tr class="row<%= rowid %>" nowrap>
         <td align="left" valign="center" class="row<%= rowid %>" nowrap>

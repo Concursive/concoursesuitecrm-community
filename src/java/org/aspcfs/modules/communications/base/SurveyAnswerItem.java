@@ -4,6 +4,7 @@ package org.aspcfs.modules.communications.base;
 import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 import javax.servlet.http.*;
+import org.aspcfs.modules.contacts.base.Contact;
 
 /**
  *  Description of the Class
@@ -16,6 +17,8 @@ public class SurveyAnswerItem {
   private int id = -1;
   private int answerId = -1;
   private String comments = null;
+  private Contact recipient = null;
+  private java.sql.Timestamp entered = null;
   private ActiveSurveyQuestionItem item = null;
 
 
@@ -90,6 +93,46 @@ public class SurveyAnswerItem {
 
 
   /**
+   *  Sets the entered attribute of the ActiveSurveyAnswerItem object
+   *
+   *@param  entered  The new entered value
+   */
+  public void setEntered(java.sql.Timestamp entered) {
+    this.entered = entered;
+  }
+
+
+  /**
+   *  Sets the recipient attribute of the ActiveSurveyAnswerItem object
+   *
+   *@param  recipient  The new recipient value
+   */
+  public void setRecipient(Contact recipient) {
+    this.recipient = recipient;
+  }
+
+
+  /**
+   *  Gets the recipient attribute of the ActiveSurveyAnswerItem object
+   *
+   *@return    The recipient value
+   */
+  public Contact getRecipient() {
+    return recipient;
+  }
+
+
+  /**
+   *  Gets the entered attribute of the ActiveSurveyAnswerItem object
+   *
+   *@return    The entered value
+   */
+  public java.sql.Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
    *  Gets the item attribute of the SurveyAnswerItem object
    *
    *@return    The item value
@@ -151,6 +194,43 @@ public class SurveyAnswerItem {
       throw new SQLException("Answer ID not specified.");
     }
     item = new ActiveSurveyQuestionItem(db, id);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildResources(Connection db) throws SQLException {
+    if (answerId == -1) {
+      throw new SQLException("Answer ID not specified");
+    }
+
+    int contactId = -1;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    pst = db.prepareStatement("SELECT sr.contact_id, sr.entered " +
+        "FROM active_survey_answers s, active_survey_responses sr " +
+        "WHERE answer_id = ? WHERE s.answer_id = sr.answer_id ");
+    pst.setInt(1, answerId);
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      entered = rs.getTimestamp("entered");
+      contactId = rs.getInt("contact_id");
+    } else {
+      rs.close();
+      pst.close();
+      throw new SQLException("Question AnswerItem record not found.");
+    }
+    rs.close();
+    pst.close();
+
+    if (contactId == -1) {
+      throw new SQLException("Contact Id not found");
+    }
+    recipient = new Contact(db, contactId);
   }
 
 
