@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.darkhorseventures.webutils.PagedListInfo;
 import com.darkhorseventures.webutils.HtmlSelect;
 import com.darkhorseventures.utils.DatabaseUtils;
-import com.darkhorseventures.webutils.LookupElement;
 
 /**
  *  Queries the task category list depending on the supplied parameters
@@ -142,11 +141,17 @@ public class TaskCategoryList extends ArrayList {
         break;
       }
       ++count;
-      LookupElement thisCategory = new LookupElement(rs);
+      TaskCategory thisCategory = new TaskCategory(rs);
       this.add(thisCategory);
     }
     rs.close();
     pst.close();
+    
+    Iterator categories = this.iterator();
+    while (categories.hasNext()) {
+      TaskCategory thisCategory = (TaskCategory)categories.next();
+      thisCategory.buildResources(db);
+    }
   }
 
 
