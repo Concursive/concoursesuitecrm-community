@@ -64,11 +64,12 @@ CREATE TABLE system_prefs (
 );
 
 CREATE TABLE mod_log (
-datetime			DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-,username			varchar(80) NOT NULL
-,tablename			varchar(80) NOT NULL
-,action				text
-,record_id			text
+  mod_id INT IDENTITY PRIMARY KEY,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NULL,
+  action INT NOT NULL,
+  record_id INT NULL,
+  record_size INT NULL
 );
 
 CREATE TABLE lookup_contact_types (

@@ -1041,3 +1041,21 @@ CREATE TABLE process_log (
   status INT,
   message TEXT
 )
+
+GO
+
+DROP TABLE mod_log
+
+GO
+
+CREATE TABLE mod_log (
+  mod_id INT IDENTITY PRIMARY KEY,
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NULL,
+  action INT NOT NULL,
+  record_id INT NULL,
+  record_size INT NULL
+)
+
+GO
+
