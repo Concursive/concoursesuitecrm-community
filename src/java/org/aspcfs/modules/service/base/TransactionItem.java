@@ -11,7 +11,6 @@ import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.controller.objectHookManager.ObjectHookAction;
 
-
 /**
  *  Every Transaction can be made of many TransactionItems. TransactionItems
  *  represent objects in which a method will be called upon.<p>
@@ -39,6 +38,7 @@ public class TransactionItem {
   private final static byte SYNC_END = 7;
   private final static byte SYNC_DELETE = 8;
   private final static byte GET_DATETIME = 9;
+  private final static byte SYNC_DELETE_CACHE = 10;
 
   private String name = null;
   private Object object = null;
@@ -151,6 +151,8 @@ public class TransactionItem {
       setAction(this.GET_DATETIME);
     } else if ("syncDelete".equals(tmp)) {
       setAction(this.SYNC_DELETE);
+    } else if ("syncDeleteCache".equals(tmp)) {
+      setAction(this.SYNC_DELETE_CACHE);
     }
   }
 
@@ -392,10 +394,26 @@ public class TransactionItem {
           thisRecord.put("guid", String.valueOf(cuid));
           thisRecord.setRecordId(recordId);
           recordList.add(thisRecord);
-          //This can be done when the client sends a sync_end...
-          //if (syncClientMap.lookupClientId(clientManager, syncClientMap.getTableId(), String.valueOf(recordId)) == -1) {
-          //  this.deleteClientMapping(dbLookup, thisRecord);
-          //}
+        }
+        rs.close();
+        if (pst != null) {
+          pst.close();
+        }
+      }
+    } else if (action == SYNC_DELETE_CACHE) {
+      //Remove deleted items from the cache, now that the client has successfully deleted them
+      String uniqueField = ObjectUtils.getParam(object, "uniqueField");
+      String tableName = ObjectUtils.getParam(object, "tableName");
+      if (uniqueField != null && tableName != null) {
+        PreparedStatement pst = null;
+        ResultSet rs = syncClientMap.buildSyncDeletes(db, pst, uniqueField, tableName, recordList);
+        while (rs.next()) {
+          Record thisRecord = new Record("delete");
+          int cuid = rs.getInt("cuid");
+          int recordId = rs.getInt("record_id");
+          thisRecord.put("guid", String.valueOf(cuid));
+          thisRecord.setRecordId(recordId);
+          this.deleteClientMapping(dbLookup, thisRecord);
         }
         rs.close();
         if (pst != null) {
@@ -613,16 +631,16 @@ public class TransactionItem {
               }
             }
           } else {
-              SyncTable referencedTable = (SyncTable) packetContext.getObjectMap().get(param + "List");
-              if (referencedTable != null) {
-                int recordId = syncClientMap.lookupServerId(packetContext.getClientManager(), referencedTable.getId(), value);
-                ObjectUtils.setParam(object, param + "Id", String.valueOf(recordId));
-                if (System.getProperty("DEBUG") != null) {
-                  System.out.println("TransactionItem-> Setting new parameter: " + param + "Id" + " data: " + recordId);
-                }
-              } else {
-                throw new SQLException("Sync reference does not exist, you must sync referenced tables first");
+            SyncTable referencedTable = (SyncTable) packetContext.getObjectMap().get(param + "List");
+            if (referencedTable != null) {
+              int recordId = syncClientMap.lookupServerId(packetContext.getClientManager(), referencedTable.getId(), value);
+              ObjectUtils.setParam(object, param + "Id", String.valueOf(recordId));
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("TransactionItem-> Setting new parameter: " + param + "Id" + " data: " + recordId);
               }
+            } else {
+              throw new SQLException("Sync reference does not exist, you must sync referenced tables first");
+            }
           }
         }
       }
