@@ -260,7 +260,6 @@ public class PilotOnlineReader implements DataReader {
             ImageUtils.saveThumbnail(sourcePicture, destinationPicture, 285.0, -1.0);
           }
         }
-        picturesToProcess.clear();
       } catch (Exception e) {
         e.printStackTrace(System.out);
         processOK = false;
@@ -273,34 +272,12 @@ public class PilotOnlineReader implements DataReader {
     byte buffer[];
     int bytes;
     StringBuffer error = new StringBuffer();
-    try {
-      if (processOK) {
-        //FTP the data
-        String command[] = {
-          "ncftpput", "-u", this.getFtpUser(ftpData), "-p", this.getFtpPassword(ftpData), "-Z", "-S", "tmp", "-DD", this.getFtpHost(ftpData), this.getFtpRemoteDir(ftpData), ((TextWriter)writer).getFilename()
-        };
-        process = runtime.exec(command);
-        BufferedReader br
-            = new BufferedReader(
-                  new InputStreamReader(process.getErrorStream()));
-        String tmp = null;
-        while ((tmp = br.readLine()) != null) {
-          error.append(tmp);
-        }
-        process.waitFor();
-        processOK = (process.exitValue() == 0);
-        logger.info("FTP Process Result: " + String.valueOf(processOK) + " " + error.toString());
-      }
-    } catch (Exception e) {
-      e.printStackTrace(System.out);
-      processOK = false;
-    }
-     
+    
     try {
       if (processOK) {
         //FTP the pictures
         String command[] = {
-          "ncftpput", "-u", this.getFtpUser(ftpPictures), "-p", this.getFtpPassword(ftpPictures), "-Z", "-S", "tmp", "-DD", this.getFtpHost(ftpPictures), this.getFtpRemoteDir(ftpPictures), pictureDestinationPath + "*.jpg"
+          "ncftpput", "-u", this.getFtpUser(ftpPictures), "-p", this.getFtpPassword(ftpPictures), "-Z", "-S", ".tmp", "-DD", this.getFtpHost(ftpPictures), this.getFtpRemoteDir(ftpPictures), pictureDestinationPath + "*.jpg"
         };
         
         process = runtime.exec(command);
@@ -316,6 +293,29 @@ public class PilotOnlineReader implements DataReader {
         logger.info("FTP Process Result: " + String.valueOf(processOK) + " " + error.toString());
       }
     } catch (Exception e) {
+      processOK = false;
+    }
+    
+    try {
+      if (processOK) {
+        //FTP the data
+        String command[] = {
+          "ncftpput", "-u", this.getFtpUser(ftpData), "-p", this.getFtpPassword(ftpData), "-Z", "-S", ".tmp", "-DD", this.getFtpHost(ftpData), this.getFtpRemoteDir(ftpData), ((TextWriter)writer).getFilename()
+        };
+        process = runtime.exec(command);
+        BufferedReader br
+            = new BufferedReader(
+                  new InputStreamReader(process.getErrorStream()));
+        String tmp = null;
+        while ((tmp = br.readLine()) != null) {
+          error.append(tmp);
+        }
+        process.waitFor();
+        processOK = (process.exitValue() == 0);
+        logger.info("FTP Process Result: " + String.valueOf(processOK) + " " + error.toString());
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
       processOK = false;
     }
     
