@@ -51,6 +51,7 @@ public class UserList extends Vector {
   private int myId = -1;
   private String username = null;
   
+  private boolean excludeDisabledIfUnselected = false;
   
   /**
    *  Constructor for the UserList object
@@ -130,6 +131,13 @@ public class UserList extends Vector {
   
   public void setBuildRevenueYTD(boolean buildRevenueYTD) {
     this.buildRevenueYTD = buildRevenueYTD;
+  }
+  
+  public boolean getExcludeDisabledIfUnselected() {
+    return excludeDisabledIfUnselected;
+  }
+  public void setExcludeDisabledIfUnselected(boolean excludeDisabledIfUnselected) {
+    this.excludeDisabledIfUnselected = excludeDisabledIfUnselected;
   }
   
   /**
@@ -370,7 +378,6 @@ public class UserList extends Vector {
     return includeAliases;
   }
   
-  
   /**
    *  Gets the JsEvent attribute of the UserList object
    *
@@ -470,10 +477,25 @@ public class UserList extends Vector {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       User thisUser = (User) i.next();
-      userListSelect.addItem(
-      thisUser.getId(),
-      Contact.getNameLastFirst(thisUser.getContact().getNameLast(),
-      thisUser.getContact().getNameFirst()));
+      String elementText = null;
+      
+      //userListSelect.addItem(
+      //thisUser.getId(),
+      //Contact.getNameLastFirst(thisUser.getContact().getNameLast(),
+      //thisUser.getContact().getNameFirst()));
+      
+      elementText = Contact.getNameLastFirst(thisUser.getContact().getNameLast(), thisUser.getContact().getNameFirst());
+      
+      if (!(thisUser.getEnabled())) {
+        elementText += " *";
+      }
+      
+      if ( thisUser.getEnabled() || (!thisUser.getEnabled() && !excludeDisabledIfUnselected) || (excludeDisabledIfUnselected && thisUser.getId() == defaultKey) )  {
+        userListSelect.addItem(
+          thisUser.getId(),
+          elementText);
+      }
+      
     }
     return userListSelect.getHtml(selectName, defaultKey);
   }
@@ -493,10 +515,24 @@ public class UserList extends Vector {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       User thisUser = (User) i.next();
-      userListSelect.addItem(
+      String elementText = null;
+      
+      //userListSelect.addItem(
+      //   thisUser.getId(),
+      //    Contact.getNameLastFirst(thisUser.getContact().getNameLast(),
+      //    thisUser.getContact().getNameFirst()));
+      
+      elementText = Contact.getNameLastFirst(thisUser.getContact().getNameLast(), thisUser.getContact().getNameFirst());
+      
+      if (!(thisUser.getEnabled())) {
+        elementText += " *";
+      }
+      
+      if ( thisUser.getEnabled() || (!thisUser.getEnabled() && !excludeDisabledIfUnselected) || (excludeDisabledIfUnselected && thisUser.getId() == defaultKey) )  {
+        userListSelect.addItem(
           thisUser.getId(),
-          Contact.getNameLastFirst(thisUser.getContact().getNameLast(),
-          thisUser.getContact().getNameFirst()));
+          elementText);
+      }
     }
     return userListSelect;
   }
@@ -765,7 +801,7 @@ public class UserList extends Vector {
       "a.entered as access_entered, a.enteredby as access_enteredby, " +
       "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
       "r.role, " +
-      "m.namefirst as mgr_namefirst, m.namelast as mgr_namelast, " +
+      "m.namefirst as mgr_namefirst, m.namelast as mgr_namelast, m_usr.enabled as mgr_enabled, " +
       "als.namefirst as als_namefirst, als.namelast as als_namelast, " +
       "c.*, d.description as departmentname, t.description as type_name, " +
       "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
@@ -781,7 +817,8 @@ public class UserList extends Vector {
       "LEFT JOIN contact ct_eb ON (c.enteredby = ct_eb.user_id) " +
       "LEFT JOIN contact ct_mb ON (c.modifiedby = ct_mb.user_id) " +
       "LEFT JOIN contact als ON (a.alias = als.user_id) " +
-      "LEFT JOIN contact m ON (a.manager_id = m.user_id), " +
+      "LEFT JOIN contact m ON (a.manager_id = m.user_id) " +
+      "LEFT JOIN access m_usr ON (a.manager_id = m_usr.user_id), " +
       "role r " +
       "WHERE a.role_id = r.role_id ");
     

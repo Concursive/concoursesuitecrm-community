@@ -81,6 +81,9 @@ public class User extends GenericBean {
   protected GraphSummaryList revenue = new GraphSummaryList();
   private int assistant = -1;
   private int alias = -1;
+  
+  //check to see if manager user is enabled
+  private boolean managerUserEnabled = true;
 
 
   /**
@@ -326,6 +329,12 @@ public class User extends GenericBean {
     this.gmr = tmp;
   }
 
+  public void setManagerUserEnabled(boolean managerUserEnabled) {
+    this.managerUserEnabled = managerUserEnabled;
+  }
+  public boolean getManagerUserEnabled() {
+    return managerUserEnabled;
+  }
 
   /**
    *  Gets the revenueLock attribute of the User object
@@ -1287,7 +1296,6 @@ public class User extends GenericBean {
 
         UserList countList = thisRec.getShortChildList();
 
-        //System.out.println("size of: " + countList.getListSize() + " ");
         if (countList != null && countList.getListSize() > 0) {
           currentList = thisRec.getFullChildList(countList, currentList);
         }
@@ -1784,13 +1792,14 @@ public class User extends GenericBean {
         "a.entered as access_entered, a.enteredby as access_enteredby, " +
         "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
         "r.role, " +
-        "m.namefirst as mgr_namefirst, m.namelast as mgr_namelast, " +
+        "m.namefirst as mgr_namefirst, m.namelast as mgr_namelast, m_usr.enabled as mgr_enabled, " +
         "als.namefirst as als_namefirst, als.namelast as als_namelast, " +
         "c.* " +
         "FROM access a " +
         "LEFT JOIN contact c ON (a.contact_id = c.contact_id) " +
         "LEFT JOIN contact als ON (a.alias = als.user_id) " +
         "LEFT JOIN contact m ON (a.manager_id = m.user_id) " +
+        "LEFT JOIN access m_usr ON (a.manager_id = m_usr.user_id) " +
         "LEFT JOIN role r ON (a.role_id = r.role_id) " +
         "WHERE a.user_id > -1 ");
     if (userId > -1) {
@@ -2046,10 +2055,16 @@ public class User extends GenericBean {
 
     String managerNameFirst = rs.getString("mgr_namefirst");
     String managerNameLast = rs.getString("mgr_namelast");
+    
+    //check to see if manager user is enabled
+    if (managerId > -1) {
+      managerUserEnabled = rs.getBoolean("mgr_enabled");
+    }
+    
     if (managerNameFirst != null || managerNameLast != null) {
       this.manager = Contact.getNameLastFirst(managerNameLast, managerNameFirst);
     }
-
+    
     String aliasNameFirst = rs.getString("als_namefirst");
     String aliasNameLast = rs.getString("als_namelast");
     if (aliasNameFirst != null) {
