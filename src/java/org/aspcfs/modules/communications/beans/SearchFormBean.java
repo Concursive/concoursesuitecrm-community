@@ -16,10 +16,10 @@ import java.sql.*;
  */
 public class SearchFormBean extends GenericBean {
 
-  private String groupName = null;
+  	private String groupName = null;
 	private String searchCriteriaText = "";
 	private int id = -1;
-  private int owner = -1;
+  	private int owner = -1;
 	private SearchCriteriaList searchCriteriaList = null;
 
 

@@ -194,7 +194,7 @@ public final class CampaignManagerGroup extends CFSModule {
       thisSCL.setOwner(getUserId(context));
       thisSCL.insert(db);
       context.getRequest().setAttribute("id", "" + thisSCL.getId());
-
+      
       context.getSession().removeAttribute("CampaignGroupsPreviewInfo");
       PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsPreviewInfo");
       pagedListInfo.setLink("/CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
@@ -296,7 +296,7 @@ public final class CampaignManagerGroup extends CFSModule {
 
     SearchFormBean thisSearchForm = (SearchFormBean)context.getRequest().getAttribute("SearchForm");
     SearchCriteriaList thisSCL = thisSearchForm.getSearchCriteriaList();
-
+    
     try {
       db = this.getConnection(context);
       thisSCL.setId(Integer.parseInt(context.getRequest().getParameter("id")));

@@ -17,7 +17,8 @@ import com.darkhorseventures.webutils.HtmlSelect;
  *
  *@author     mrajkowski
  *@created    August 29, 2001
- *@version    $Id$
+ *@version    $Id: ContactList.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski Exp
+ *      $
  */
 public class ContactList extends Vector {
 
@@ -461,7 +462,15 @@ public class ContactList extends Vector {
 	public String getHtmlSelect(String selectName) {
 		return getHtmlSelect(selectName, -1);
 	}
-	
+
+
+	/**
+	 *  Gets the EmptyHtmlSelect attribute of the ContactList object
+	 *
+	 *@param  selectName  Description of Parameter
+	 *@return             The EmptyHtmlSelect value
+	 *@since
+	 */
 	public String getEmptyHtmlSelect(String selectName) {
 		HtmlSelect contactListSelect = new HtmlSelect();
 		contactListSelect.addItem(-1, "-- None --");
@@ -490,6 +499,7 @@ public class ContactList extends Vector {
 		}
 		return contactListSelect.getHtml(selectName, defaultKey);
 	}
+
 
 	/**
 	 *  Description of the Method
@@ -534,25 +544,27 @@ public class ContactList extends Vector {
 				city
 				};
 
-    System.out.println("ContactList-> SCL Size: " + this.getScl().size());
-    Iterator i = this.getScl().keySet().iterator();
+		System.out.println("ContactList-> SCL Size: " + this.getScl().size() + " name: " + this.getScl().getGroupName());
+		Iterator i = this.getScl().keySet().iterator();
 		while (i.hasNext()) {
 			++count;
 			Integer group = (Integer) i.next();
 			SearchCriteriaGroup thisGroup = (SearchCriteriaGroup) this.getScl().get(group);
-
 			fieldName = thisGroup.getGroupField().getFieldName();
-      System.out.println("Field: " + fieldName);
+			
+			//System.out.println("Field: " + fieldName);
 
 			Iterator j = thisGroup.iterator();
 
 			while (j.hasNext()) {
 
 				SearchCriteriaElement thisElement = (SearchCriteriaElement) j.next();
-				System.out.println("which one: " + (thisElement.getOperator()));
+				//System.out.println("which one: " + (thisElement.getFieldId() + " " + thisElement.getOperator()) + " " + thisElement.getText());
 
 				readyToGo = replace(thisElement.getText().toLowerCase(), '\'', "\\'");
 				String check = (String) outerHash[(thisElement.getFieldId() - 1)].get(thisElement.getOperator());
+				
+				//System.out.println("what is check : " + check);
 
 				//only if we have string data to deal with
 				if (check == null || thisElement.getDataType().equals("date")) {
@@ -670,7 +682,7 @@ public class ContactList extends Vector {
 		}
 
 		pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
-		
+
 		items = prepareFilter(pst);
 		rs = pst.executeQuery();
 		while (rs.next()) {

@@ -258,6 +258,10 @@ public String executeCommandDetails(ActionContext context) {
 			db = this.getConnection(context);  
 			
 			if (searchString == null || searchString.equals("")) {
+				if (ticListInfo.getListView() == null) {
+					ticListInfo.setListView("A");
+				}
+				
 				ticList.setOnlyOpen(true);
 				
 				if ("A".equals(ticListInfo.getListView())) {
