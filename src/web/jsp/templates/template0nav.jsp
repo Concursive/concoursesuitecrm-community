@@ -22,8 +22,11 @@
       &nbsp;
     </th>
     <th align="right">
-      <a href="Login.do?command=Logout" class="s"> Logout</a> |
-      <a href="javascript:popURL('Help.do?module=<%= request.getAttribute("moduleAction") %>&section=<%= request.getParameter("command") %>&sub=<%= request.getParameter("section") %>','CFS_Help','790','500','yes','yes');" class="s" onMouseOver="window.status='Pop-up Help';return true;" onMouseOut="window.status='';return true;">Help</a><br>
+      <a href="javascript:window.print()" class="s">Print</a>
+      |
+      <a href="javascript:popURL('Help.do?module=<%= request.getAttribute("moduleAction") %>&section=<%= request.getParameter("command") %>&sub=<%= request.getParameter("section") %>','CFS_Help','790','500','yes','yes');" class="s" onMouseOver="window.status='Pop-up Help';return true;" onMouseOut="window.status='';return true;">Help</a>
+      |
+      <a href="Login.do?command=Logout" class="s">Logout</a><br>
 <%
   if (!User.getUserRecord().getContact().getNameFirstLast().equals("")) {
 %>  
