@@ -167,6 +167,27 @@ public class ContactType {
 
 
   /**
+   *  Returns the id of the Contact Type object<br>
+   *  Required for LookupHtmlHandler when a validation fails
+   *
+   *@return    The code value
+   */
+  public int getCode() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the codeString attribute of the ContactType object
+   *
+   *@return    The codeString value
+   */
+  public String getCodeString() {
+    return String.valueOf(id);
+  }
+
+
+  /**
    *  Gets the Description attribute of the ContactType object
    *
    *@return    The Description value

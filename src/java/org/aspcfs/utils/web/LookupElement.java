@@ -302,6 +302,16 @@ public class LookupElement {
 
 
   /**
+   *  Returns the code in String form for use in reflection.
+   *
+   *@return    The codeString value
+   */
+  public String getCodeString() {
+    return String.valueOf(code);
+  }
+
+
+  /**
    *  Gets the id attribute of the LookupElement object, id is a required name
    *  for some CFS reflection parsing
    *
