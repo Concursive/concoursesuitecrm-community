@@ -201,7 +201,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           rs.close();
           pst.close();
           if (activityCount > 0) {
-            items.append("<a href='ProjectManagement.do?command=PersonalView' class='s'>Assigned Activities</a> (" + paint(activityCount) + ")<br>");
+            items.append("<a href='ProjectManagement.do?command=Overview' class='s'>Assigned Activities</a> (" + paint(activityCount) + ")<br>");
             ++myItems;
           }
         }
