@@ -48,10 +48,10 @@
           <%= thisItem.getRecipient().getNameLastFirst() %>
         </td>
         <td width="15%" align="left" valign="center" nowrap>
-          <%= toHtml(thisItem.getRecipient().getPhoneNumber(PhoneNumber.BUSSINESS)) %>
+          <%= toHtml(thisItem.getRecipient().getPhoneNumber(PhoneNumber.BUSINESS)) %>
         </td>
         <td width="15%" align="left" valign="center" nowrap>
-          <%= toHtml(thisItem.getRecipient().getEmailAddress(EmailAddress.BUSSINESS)) %>
+          <%= toHtml(thisItem.getRecipient().getEmailAddress(EmailAddress.BUSINESS)) %>
         </td>
         <td align="left" valign="center" nowrap>
           <%= toDateTimeString(thisItem.getEntered()) %>
@@ -66,7 +66,7 @@
       <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="ItemDetailsListInfo"/>
     <%} else {%>  
     <tr>
-      <td class="row2" valign="center">
+      <td class="row2" valign="center" colspan="4">
         No responses found for this item.
       </td>
     </tr>
