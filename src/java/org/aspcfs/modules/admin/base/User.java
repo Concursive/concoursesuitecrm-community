@@ -115,7 +115,7 @@ public class User extends GenericBean {
     buildRecord(db, Integer.parseInt(userId));
     buildResources(db);
   }
-  
+
 
   /**
    *  Constructor for the User object
@@ -145,38 +145,79 @@ public class User extends GenericBean {
     buildRecord(db, userId);
     buildResources(db);
   }
-  
-public GraphSummaryList getRevenue() {
-	return revenue;
-}
-public void setRevenue(GraphSummaryList revenue) {
-	this.revenue = revenue;
-}
-public double getYTD() {
-	return YTD;
-}
-public void setYTD(double YTD) {
-	this.YTD = YTD;
-}
 
+
+  /**
+   *  Gets the revenue attribute of the User object
+   *
+   *@return    The revenue value
+   */
+  public GraphSummaryList getRevenue() {
+    return revenue;
+  }
+
+
+  /**
+   *  Sets the revenue attribute of the User object
+   *
+   *@param  revenue  The new revenue value
+   */
+  public void setRevenue(GraphSummaryList revenue) {
+    this.revenue = revenue;
+  }
+
+
+  /**
+   *  Gets the yTD attribute of the User object
+   *
+   *@return    The yTD value
+   */
+  public double getYTD() {
+    return YTD;
+  }
+
+
+  /**
+   *  Sets the yTD attribute of the User object
+   *
+   *@param  YTD  The new yTD value
+   */
+  public void setYTD(double YTD) {
+    this.YTD = YTD;
+  }
+
+
+  /**
+   *  Gets the yTDValue attribute of the User object
+   *
+   *@return    The yTDValue value
+   */
   public String getYTDValue() {
     double value_2dp = (double) Math.round(YTD * 100.0) / 100.0;
     String toReturn = "" + value_2dp;
     if (toReturn.endsWith(".0")) {
       toReturn = toReturn.substring(0, toReturn.length() - 2);
-    } 
-    
-    if (Integer.parseInt(toReturn) == 0) 
-        toReturn = "";
-	
+    }
+
+    if (Integer.parseInt(toReturn) == 0) {
+      toReturn = "";
+    }
+
     return toReturn;
   }
-  
+
+
+  /**
+   *  Gets the yTDCurrency attribute of the User object
+   *
+   *@return    The yTDCurrency value
+   */
   public String getYTDCurrency() {
     NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
     String amountOut = numberFormatter.format(YTD);
     return amountOut;
   }
+
 
   /**
    *  Constructor for the User object
@@ -222,9 +263,16 @@ public void setYTD(double YTD) {
   public void setAssistant(int tmp) {
     this.assistant = tmp;
   }
-public UserList getChildUsers() {
-	return childUsers;
-}
+
+
+  /**
+   *  Gets the childUsers attribute of the User object
+   *
+   *@return    The childUsers value
+   */
+  public UserList getChildUsers() {
+    return childUsers;
+  }
 
 
   /**
@@ -277,12 +325,26 @@ public UserList getChildUsers() {
   public void setGmr(GraphSummaryList tmp) {
     this.gmr = tmp;
   }
-public boolean getRevenueLock() {
-	return revenueLock;
-}
-public void setRevenueLock(boolean revenueLock) {
-	this.revenueLock = revenueLock;
-}
+
+
+  /**
+   *  Gets the revenueLock attribute of the User object
+   *
+   *@return    The revenueLock value
+   */
+  public boolean getRevenueLock() {
+    return revenueLock;
+  }
+
+
+  /**
+   *  Sets the revenueLock attribute of the User object
+   *
+   *@param  revenueLock  The new revenueLock value
+   */
+  public void setRevenueLock(boolean revenueLock) {
+    this.revenueLock = revenueLock;
+  }
 
 
   /**
@@ -322,7 +384,14 @@ public void setRevenueLock(boolean revenueLock) {
       managerUser.setIsValid(false, false);
     }
   }
-  
+
+
+  /**
+   *  Sets the revenueIsValid attribute of the User object
+   *
+   *@param  isValid   The new revenueIsValid value
+   *@param  dataAlso  The new revenueIsValid value
+   */
   public void setRevenueIsValid(boolean isValid, boolean dataAlso) {
     if (dataAlso == true) {
       this.revenue.setIsValid(isValid);
@@ -364,10 +433,18 @@ public void setRevenueLock(boolean revenueLock) {
     this.getCgmr().setValue(key, v3);
     this.getCramr().setValue(key, v4);
   }
-  
+
+
+  /**
+   *  Sets the revenueGraphValues attribute of the User object
+   *
+   *@param  key  The new revenueGraphValues value
+   *@param  v1   The new revenueGraphValues value
+   */
   public void setRevenueGraphValues(String key, Double v1) {
     this.getRevenue().setValue(key, v1);
   }
+
 
   /**
    *  Sets the Cgmr attribute of the User object
@@ -434,9 +511,16 @@ public void setRevenueLock(boolean revenueLock) {
     this.previousUsername = tmp;
   }
 
+
+  /**
+   *  Sets the encryptedPassword attribute of the User object
+   *
+   *@param  tmp  The new encryptedPassword value
+   */
   public void setEncryptedPassword(String tmp) {
     this.encryptedPassword = tmp;
   }
+
 
   /**
    *  Sets the Password attribute of the User object
@@ -943,6 +1027,12 @@ public void setRevenueLock(boolean revenueLock) {
     }
   }
 
+
+  /**
+   *  Gets the revenueIsValid attribute of the User object
+   *
+   *@return    The revenueIsValid value
+   */
   public boolean getRevenueIsValid() {
     if (this.revenue.getIsValid() == true) {
       return true;
@@ -950,6 +1040,8 @@ public void setRevenueLock(boolean revenueLock) {
       return false;
     }
   }
+
+
   /**
    *  Gets the Gmr attribute of the User object
    *
@@ -1047,7 +1139,7 @@ public void setRevenueLock(boolean revenueLock) {
    */
   public String getEncryptedPassword() {
     if (encryptedPassword != null) {
-      return encryptedPassword; 
+      return encryptedPassword;
     } else {
       return this.encryptPassword(password);
     }
@@ -1276,8 +1368,8 @@ public void setRevenueLock(boolean revenueLock) {
 
 
   /**
-   *  Returns whether this user is above the specified userId.  If the
-   *  specified userId is a child of this user, returns true.
+   *  Returns whether this user is above the specified userId. If the specified
+   *  userId is a child of this user, returns true.
    *
    *@param  userId  Description of Parameter
    *@return         The managerOf value
@@ -1303,6 +1395,10 @@ public void setRevenueLock(boolean revenueLock) {
     }
   }
 
+
+  /**
+   *  Description of the Method
+   */
   public void doRevenueLock() {
     while (revenueLock == true) {
     }
@@ -1313,6 +1409,7 @@ public void setRevenueLock(boolean revenueLock) {
     }
   }
 
+
   /**
    *  Sets the opportunityLock to false, allowing any waiting requests to try
    *  and lock it.
@@ -1322,8 +1419,11 @@ public void setRevenueLock(boolean revenueLock) {
   public void doOpportunityUnlock() {
     this.opportunityLock = false;
   }
-  
-  
+
+
+  /**
+   *  Description of the Method
+   */
   public void doRevenueUnlock() {
     this.revenueLock = false;
   }
@@ -1387,7 +1487,15 @@ public void setRevenueLock(boolean revenueLock) {
       }
     }
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public boolean insert(Connection db) throws SQLException {
     try {
       db.setAutoCommit(false);
@@ -1401,26 +1509,26 @@ public void setRevenueLock(boolean revenueLock) {
           "INSERT INTO access " +
           "(username, password, contact_id, alias, " +
           "manager_id, role_id, expires, ");
-                if (entered != null) {
-                        sql.append("entered, ");
-                }
-                if (modified != null) {
-                        sql.append("modified, ");
-                }
-          sql.append("enteredBy, modifiedBy ) ");
-          sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
-                if (entered != null) {
-                        sql.append("?, ");
-                }
-                if (modified != null) {
-                        sql.append("?, ");
-                }          
-          sql.append("?, ?) ");
+      if (entered != null) {
+        sql.append("entered, ");
+      }
+      if (modified != null) {
+        sql.append("modified, ");
+      }
+      sql.append("enteredBy, modifiedBy ) ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
+      if (entered != null) {
+        sql.append("?, ");
+      }
+      if (modified != null) {
+        sql.append("?, ");
+      }
+      sql.append("?, ?) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, getUsername());
-      
+
       if (encryptedPassword != null) {
         pst.setString(++i, encryptedPassword);
       } else {
@@ -1435,19 +1543,18 @@ public void setRevenueLock(boolean revenueLock) {
       }
       pst.setInt(++i, getRoleId());
 
-
       if (expires == null) {
         pst.setNull(++i, java.sql.Types.DATE);
       } else {
         pst.setDate(++i, this.getExpires());
       }
-        if (entered != null) {
-                pst.setTimestamp(++i, entered);
-        }
-        if (modified != null) {
-                pst.setTimestamp(++i, modified);
-        }
-      
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
+      }
+      if (modified != null) {
+        pst.setTimestamp(++i, modified);
+      }
+
       pst.setInt(++i, getEnteredBy());
       pst.setInt(++i, getModifiedBy());
       pst.execute();
@@ -1671,36 +1778,46 @@ public void setRevenueLock(boolean revenueLock) {
     pst.close();
     buildResources(db);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  year              Description of the Parameter
+   *@param  type              Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildRevenueYTD(Connection db, int year, int type) throws SQLException {
     PreparedStatement pst = null;
     ResultSet rs = null;
-    
-    String range = ((UserList)this.getFullChildList(this.getShortChildList(), new UserList())).getUserListIds(this.getId());
+
+    String range = ((UserList) this.getFullChildList(this.getShortChildList(), new UserList())).getUserListIds(this.getId());
     System.out.println("Using: " + range);
-    
+
     StringBuffer sql = new StringBuffer();
     sql.append(
         "SELECT sum(rv.amount) as s " +
         "FROM revenue rv " +
         "WHERE rv.owner IN (" + range + ") AND rv.year = ? ");
-	
+
     if (type > 0) {
-	sql.append("AND rv.type = ? ");
+      sql.append("AND rv.type = ? ");
     }
     pst = db.prepareStatement(sql.toString());
     int i = 0;
     pst.setInt(++i, year);
     if (type > 0) {
-	    pst.setInt(++i, type);
+      pst.setInt(++i, type);
     }
     rs = pst.executeQuery();
     if (rs.next()) {
-	    this.setYTD(rs.getDouble("s"));
-    } 
+      this.setYTD(rs.getDouble("s"));
+    }
     rs.close();
     pst.close();
   }
+
 
   /**
    *  Method added in for SSS and other ASP customers newPassword: Updates the
@@ -1966,6 +2083,7 @@ public void setRevenueLock(boolean revenueLock) {
     childUsers = new UserList(db, this, true);
   }
 
+
   /**
    *  Updates the current user record
    *
@@ -1980,10 +2098,19 @@ public void setRevenueLock(boolean revenueLock) {
     i = this.update(db, context, false);
     return i;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public int update(Connection db) throws SQLException {
     return update(db, null, true);
   }
+
 
   /**
    *  Updates the current user record, this method is used internally

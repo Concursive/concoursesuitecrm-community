@@ -227,6 +227,11 @@ public class CFSDatabaseReader implements DataReader {
             if (field != null && !"".equals(field)) {
               thisProperty.setField(field);
             }
+            
+            String value = ((Element) n).getAttribute("value");
+            if (value != null) {
+              thisProperty.setValue(value);
+            }
 
             mapProperties.add(thisProperty);
           }
