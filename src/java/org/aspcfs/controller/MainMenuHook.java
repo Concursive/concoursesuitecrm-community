@@ -106,7 +106,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
     Iterator menuItemsList = menuItems.iterator();
     while (menuItemsList.hasNext()) {
       MainMenuItem thisMenu = (MainMenuItem)menuItemsList.next();
-      if (thisUser.hasPermission(thisMenu.getPermission())) {
+      if ("".equals(thisMenu.getPermission()) || thisUser.hasPermission(thisMenu.getPermission())) {
         if (thisMenu.hasActionName(actionPath)) {
           //The user is on this link/module
           thisModule.setName(thisMenu.getPageTitle());
@@ -122,6 +122,7 @@ public class MainMenuHook implements ControllerMainMenuHook {
             //If user has permission then...
             SubmenuItem newItem = new SubmenuItem(thisItem);
             if (newItem.getName().equals(thisModule.getSubmenuKey())) {
+              newItem.setIsActive(true);
               newItem.setHtmlClass("rs");
             }
             thisModule.addMenuItem(newItem);
@@ -161,9 +162,12 @@ public class MainMenuHook implements ControllerMainMenuHook {
 
     //Output the menus
     String[] theMenus = new String[2];
+    //TODO: Update the CFS templates to work with the following commented out line instead
+    //theMenus[0] = menu.toString();
     theMenus[0] = "<td width=" + menuWidth + ">" + menu.toString() + "</td>";
     theMenus[1] = smallMenu.toString();
     request.setAttribute("MainMenu", theMenus[0]);
+    request.setAttribute("MainMenuWidth", String.valueOf(menuWidth));
     request.setAttribute("MainMenuSmall", theMenus[1]);
   }
 
