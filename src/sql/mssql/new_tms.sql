@@ -67,7 +67,6 @@ CREATE TABLE ticket_category_draft (
   enabled BIT DEFAULT 1
 );
 
-
 CREATE TABLE ticket (
   ticketid INT IDENTITY PRIMARY KEY,
   org_id INT REFERENCES organization, 

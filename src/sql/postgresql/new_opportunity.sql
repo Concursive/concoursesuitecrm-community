@@ -42,23 +42,23 @@ CREATE TABLE opportunity_component (
   owner INT NOT NULL REFERENCES access(user_id),
   description VARCHAR(80),
   closedate TIMESTAMP(3) NOT NULL,
-  closeprob float,
-  terms float,
-  units char(1),
-  lowvalue float,
-  guessvalue float,
-  highvalue float,
-  stage INT references lookup_stage(code),
+  closeprob FLOAT,
+  terms FLOAT,
+  units CHAR(1),
+  lowvalue FLOAT,
+  guessvalue FLOAT,
+  highvalue FLOAT,
+  stage INT REFERENCES lookup_stage(code),
   stagedate TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  commission float,
-  type char(1),
+  commission FLOAT,
+  type CHAR(1),
   alertdate TIMESTAMP(3),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),  
   closed TIMESTAMP,
-  alert varchar(100) default null,
+  alert VARCHAR(100) DEFAULT NULL,
   enabled BOOLEAN NOT NULL DEFAULT true,
   notes TEXT
 );
@@ -70,7 +70,7 @@ CREATE INDEX "oppcomplist_description" ON "opportunity_component" (description);
 CREATE TABLE opportunity_component_levels (
   opp_id INT NOT NULL REFERENCES opportunity_component(id),
   type_id INT NOT NULL REFERENCES lookup_opportunity_types(code),
-  level INTEGER not null,
+  level INTEGER NOT NULL,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -91,7 +91,7 @@ CREATE TABLE call_log (
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),
-  alert varchar(100) default null
+  alert varchar(100) DEFAULT NULL
 );
 
 CREATE INDEX "call_log_cidx" ON "call_log" USING btree ("alertdate", "enteredby");
