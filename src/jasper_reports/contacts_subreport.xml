@@ -24,13 +24,18 @@
 		<defaultValueExpression><![CDATA["/home/matt/source/dhv/cfs2/src/jasper_reports/new/"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="WhereClause" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="approved" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer(org.aspcfs.modules.base.Import.PROCESSED_APPROVED)]]></defaultValueExpression>
+	</parameter>
 	<queryString><![CDATA[SELECT 
 con.namefirst,con.namelast,con.contact_id,con.title,
-lct.description as contact_type
+lct.description as contact_type,
+con.status_id
 FROM contact con
 LEFT JOIN contact_type_levels ctl ON (con.contact_id = ctl.contact_id)
 LEFT JOIN lookup_contact_types lct ON (ctl.type_id = lct.code)
-WHERE con.org_id = $P{org_id}]]></queryString>
+WHERE con.org_id = $P{org_id}
+AND con.status_id IS NULL OR con.status_id = $P{approved}]]></queryString>
 	<field name="contact_type" class="java.lang.String"/>
 	<field name="namelast" class="java.lang.String"/>
 	<field name="namefirst" class="java.lang.String"/>

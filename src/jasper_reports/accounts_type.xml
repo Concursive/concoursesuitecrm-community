@@ -26,7 +26,10 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="userid" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new Integer(2)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="approved" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer(org.aspcfs.modules.base.Import.PROCESSED_APPROVED)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT
 o.name AS name,
@@ -34,13 +37,15 @@ o.account_number AS account_number,
 o.contract_end AS contract_end,
 o.entered as org_entered,
 ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst,
-i.description as industry_name, lat.description as type_desc  
+i.description as industry_name, lat.description as type_desc,  
+o.status_id
 FROM organization o
 LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id)
 LEFT JOIN lookup_industry i ON (o.industry_temp_code = i.code)
 LEFT JOIN account_type_levels atl ON (o.org_id = atl.org_id) 
 LEFT JOIN lookup_account_types lat ON (atl.type_id = lat.code)
 WHERE o.org_id > 0 
+AND o.status_id IS NULL OR o.status_id = $P{approved}
 AND o.owner = $P{userid}
 $P!{lookup_account_types_where}
 ORDER BY type_desc, o.name]]></queryString>

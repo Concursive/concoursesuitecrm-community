@@ -23,7 +23,10 @@
 	</parameter>
 	<parameter name="date_end" isForPrompting="true" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[End Date To]]></parameterDescription>
-		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2003-10-01 00:00:00")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2004-12-01 00:00:00")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="approved" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer(org.aspcfs.modules.base.Import.PROCESSED_APPROVED)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT
 o.account_number as account_number,
@@ -35,13 +38,15 @@ ct_owner.namefirst as o_namefirst,
 o.entered as entered,
 o.name as name,
 lat.description as type_desc,
-o.org_id as org_id
+o.org_id as org_id,
+o.status_id
 FROM organization o
 LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id)
 LEFT JOIN lookup_industry i ON (o.industry_temp_code = i.code)
 LEFT JOIN account_type_levels atl ON (o.org_id = atl.org_id) 
 LEFT JOIN lookup_account_types lat ON (atl.type_id = lat.code)
 WHERE o.org_id > 0
+AND o.status_id IS NULL OR o.status_id = $P{approved}
 AND o.contract_end >= $P{date_start}
 AND o.contract_end < $P{date_end}
 ORDER BY o.contract_end, lat.level]]></queryString>

@@ -18,25 +18,30 @@
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<parameter name="userid" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(31)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new Integer(2)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="path" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression><![CDATA["/home/matt/source/dhv/cfs2/src/jasper_reports/new/"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["/home/ananth/source/crm/src/jasper_reports/"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="TRUE" isForPrompting="false" class="java.lang.Boolean">
 		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="approved" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer(org.aspcfs.modules.base.Import.PROCESSED_APPROVED)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT
 o.name as name,
 o.org_id as org_id,
 o.contract_end as contract_end,
 ct_owner.namelast as o_namelast,
-ct_owner.namefirst as o_namefirst
+ct_owner.namefirst as o_namefirst,
+o.status_id
 FROM organization o
 LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id)
 WHERE o.org_id > 0
 AND o.owner = $P{userid}
 AND o.enabled = $P{TRUE}
+AND o.status_id IS NULL OR o.status_id = $P{approved}
 ORDER BY o.name]]></queryString>
 	<field name="name" class="java.lang.String"/>
 	<field name="org_id" class="java.lang.Integer"/>

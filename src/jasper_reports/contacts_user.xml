@@ -18,22 +18,27 @@
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<parameter name="userid" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(31)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new Integer(2)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="path" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression><![CDATA["/home/matt/source/dhv/cfs2/src/jasper_reports/new/"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["/home/ananth/source/crm/src/jasper_reports/"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="user_name" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression><![CDATA["Ananth"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["drichards"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="approved" isForPrompting="false" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[new Integer(org.aspcfs.modules.base.Import.PROCESSED_APPROVED)]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT 
 con.namefirst,con.namelast,con.contact_id,con.title,
-lct.description as contact_type,o.name
+lct.description as contact_type,o.name, 
+con.status_id
 FROM contact con
 LEFT JOIN contact_type_levels ctl ON (con.contact_id = ctl.contact_id)
 LEFT JOIN lookup_contact_types lct ON (ctl.type_id = lct.code)
 LEFT JOIN organization o ON (con.org_id = o.org_id)
 WHERE con.owner = $P{userid}
+AND con.status_id IS NULL OR con.status_id = $P{approved}
 ORDER BY con.namelast, con.namefirst]]></queryString>
 	<field name="namelast" class="java.lang.String"/>
 	<field name="namefirst" class="java.lang.String"/>
