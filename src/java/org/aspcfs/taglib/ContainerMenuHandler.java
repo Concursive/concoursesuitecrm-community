@@ -64,7 +64,7 @@ public class ContainerMenuHandler extends TagSupport {
       System.out.println("ContainerMenuHandler: Param-> " + param);
       System.out.println("ContainerMenuHandler: Value-> " + value);
     }
-    params.put("$" + param, value);
+    params.put("${" + param + "}", value);
   }
 
 

@@ -7,37 +7,37 @@
     <submenu name="details">
       <long_html value="Details"/>
       <permission value=""/>
-      <link value="Accounts.do?command=Details&amp;orgId=$orgId"/>
+      <link value="Accounts.do?command=Details&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="vehicles">
       <long_html value="Vehicle Inventory"/>
       <permission value="accounts-autoguide-inventory-view"/>
-      <link value="AccountsAutoGuide.do?command=AccountList&amp;orgId=$orgId"/>
+      <link value="AccountsAutoGuide.do?command=AccountList&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="folders">
       <long_html value="Folders"/>
       <permission value="accounts-accounts-folders-view"/>
-      <link value="Accounts.do?command=Fields&amp;orgId=$orgId"/>
+      <link value="Accounts.do?command=Fields&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="contacts">
       <long_html value="Contacts"/>
       <permission value="accounts-accounts-contacts-view"/>
-      <link value="Contacts.do?command=View&amp;orgId=$orgId"/>
+      <link value="Contacts.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="opportunities">
       <long_html value="Opportunities"/>
       <permission value="accounts-accounts-opportunities-view"/>
-      <link value="Opportunities.do?command=View&amp;orgId=$orgId"/>
+      <link value="Opportunities.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="tickets">
       <long_html value="Tickets"/>
       <permission value="accounts-accounts-tickets-view"/>
-      <link value="Accounts.do?command=ViewTickets&amp;orgId=$orgId"/>
+      <link value="Accounts.do?command=ViewTickets&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="documents">
       <long_html value="Documents"/>
       <permission value="accounts-accounts-documents-view"/>
-      <link value="AccountsDocuments.do?command=View&amp;orgId=$orgId"/>
+      <link value="AccountsDocuments.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
   </container>
   
@@ -49,27 +49,27 @@
     <submenu name="details">
       <long_html value="Details"/>
       <permission value=""/>
-      <link value="ExternalContacts.do?command=ContactDetails&amp;id=$id"/>
+      <link value="ExternalContacts.do?command=ContactDetails&amp;id=${id}"/>
     </submenu>
     <submenu name="folders">
       <long_html value="Folders"/>
       <permission value="contacts-external_contacts-folders-view"/>
-      <link value="ExternalContacts.do?command=Fields&amp;contactId=$id"/>
+      <link value="ExternalContacts.do?command=Fields&amp;contactId=${id}"/>
     </submenu>
     <submenu name="calls">
       <long_html value="Calls"/>
       <permission value="contacts-external_contacts-calls-view"/>
-      <link value="ExternalContactsCalls.do?command=View&amp;contactId=$id"/>
+      <link value="ExternalContactsCalls.do?command=View&amp;contactId=${id}"/>
     </submenu>
     <submenu name="messages">
       <long_html value="Messages"/>
       <permission value="contacts-external_contacts-messages-view"/>
-      <link value="ExternalContacts.do?command=ViewMessages&amp;contactId=$id"/>
+      <link value="ExternalContacts.do?command=ViewMessages&amp;contactId=${id}"/>
     </submenu>
     <submenu name="opportunities">
       <long_html value="Opportunities"/>
       <permission value="contacts-external_contacts-opportunities-view"/>
-      <link value="ExternalContactsOpps.do?command=ViewOpps&amp;contactId=$id"/>
+      <link value="ExternalContactsOpps.do?command=ViewOpps&amp;contactId=${id}"/>
     </submenu>
   </container>
   
@@ -81,17 +81,17 @@
     <submenu name="details">
       <long_html value="Details"/>
       <permission value=""/>
-      <link value="Leads.do?command=DetailsOpp&amp;id=$id"/>
+      <link value="Leads.do?command=DetailsOpp&amp;id=${id}"/>
     </submenu>
     <submenu name="calls">
       <long_html value="Calls"/>
       <permission value="pipeline-opportunities-calls-view"/>
-      <link value="LeadsCalls.do?command=View&amp;oppId=$id"/>
+      <link value="LeadsCalls.do?command=View&amp;oppId=${id}"/>
     </submenu>
     <submenu name="documents">
       <long_html value="Documents"/>
       <permission value="pipeline-opportunities-documents-view"/>
-      <link value="LeadsDocuments.do?command=View&amp;oppId=$id"/>
+      <link value="LeadsDocuments.do?command=View&amp;oppId=${id}"/>
     </submenu>
   </container>
   
@@ -103,22 +103,22 @@
     <submenu name="details">
       <long_html value="Details"/>
       <permission value=""/>
-      <link value="CampaignManager.do?command=ViewDetails&amp;id=$id"/>
+      <link value="CampaignManager.do?command=ViewDetails&amp;id=${id}"/>
     </submenu>
     <submenu name="groups">
       <long_html value="Groups"/>
       <permission value="campaign-campaigns-groups-view"/>
-      <link value="CampaignManager.do?command=ViewGroups&amp;id=$id"/>
+      <link value="CampaignManager.do?command=ViewGroups&amp;id=${id}"/>
     </submenu>
     <submenu name="message">
       <long_html value="Message"/>
       <permission value="campaign-campaigns-messages-view"/>
-      <link value="CampaignManager.do?command=ViewMessage&amp;id=$id"/>
+      <link value="CampaignManager.do?command=ViewMessage&amp;id=${id}"/>
     </submenu>
     <submenu name="schedule">
       <long_html value="Schedule"/>
       <permission value="campaign-campaigns-view"/>
-      <link value="CampaignManager.do?command=ViewSchedule&amp;id=$id"/>
+      <link value="CampaignManager.do?command=ViewSchedule&amp;id=${id}"/>
     </submenu>
   </container>
   
@@ -130,22 +130,22 @@
     <submenu name="details">
       <long_html value="Vehicle Details"/>
       <permission value=""/>
-      <link value="AccountsAutoGuide.do?command=View&amp;section=Details&amp;orgId=$orgId"/>
+      <link value="AccountsAutoGuide.do?command=View&amp;section=Details&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="options">
       <long_html value="Options"/>
       <permission value=""/>
-      <link value="AccountsAutoGuide.do?command=View&amp;section=Options&amp;orgId=$orgId"/>
+      <link value="AccountsAutoGuide.do?command=View&amp;section=Options&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="pictures">
       <long_html value="Pictures"/>
       <permission value=""/>
-      <link value="AccountsAutoGuide.do?command=View&amp;section=Pictures&amp;orgId=$orgId"/>
+      <link value="AccountsAutoGuide.do?command=View&amp;section=Pictures&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="schedule">
       <long_html value="Ad Schedule"/>
       <permission value=""/>
-      <link value="AccountsAutoGuide.do?command=View&amp;section=Schedule&amp;orgId=$orgId"/>
+      <link value="AccountsAutoGuide.do?command=View&amp;section=Schedule&amp;orgId=${orgId}"/>
     </submenu>
   </container>
 </application>
