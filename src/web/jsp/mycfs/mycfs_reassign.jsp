@@ -23,10 +23,9 @@ Re-assignments<br>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="Reassignments.do?command=Reassign">
-    <td align="left" valign="bottom">
+    <td align="left" valign="center">
     <% UserSelectList.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\""); %>
-    User to re-assign data from:<br>
-    <%= UserSelectList.getHtmlSelect("userId", SourceUser.getId()) %>
+    User to re-assign data from:&nbsp;<%= UserSelectList.getHtmlSelect("userId", SourceUser.getId()) %>
     </td>
     </form>
   </tr>
