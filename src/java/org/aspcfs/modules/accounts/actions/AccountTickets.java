@@ -234,11 +234,9 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   public String executeCommandTicketDetails(ActionContext context) {
-
-    if (!(hasPermission(context, "accounts-accounts-tickets-view"))) {
+    if (!hasPermission(context, "accounts-accounts-tickets-view")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     Ticket newTic = null;
@@ -251,12 +249,10 @@ public final class AccountTickets extends CFSModule {
       ticketId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
       newTic = new Ticket(db, Integer.parseInt(ticketId));
-
-      //check whether or not the owner is an active User
-      newTic.checkEnabledOwnerAccount(db);
-
+      if (newTic.getAssignedTo() > 0) {
+        newTic.checkEnabledOwnerAccount(db);
+      }
       newTic.getHistory().setPagedListInfo(ticListInfo);
-
       Organization thisOrganization = new Organization(db, newTic.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
     } catch (Exception e) {
