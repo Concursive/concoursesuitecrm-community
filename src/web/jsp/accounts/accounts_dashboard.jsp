@@ -38,20 +38,17 @@
       <table height="100%" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr class="title">
           <td width="100%">
-          
           <table width="100%" cellspacing="0" cellpadding="0" border="1" bordercolorlight="#000000" bordercolor="#FFFFFF">
             <tr>
               <td>
             <table width="100%" cellspacing="4" cellpadding="0" border="0" class="title">
               <tr class="title">
-                <td width="60%" valign="center">
+                <td valign="center" align="center" nowrap>
                   <select id="alerts" size="1" name="alertsView" onChange="javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=calendardetails&inline=true&return=Accounts&alertsView='+document.getElementById('alerts').value);">
-                    <option  value="AccountsAll" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAll")?" selected":"" %>>All Scheduled Actions</option>
+                    <option  value="AccountsAll" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAll")?" selected":"" %>>All Sched. Actions</option>
                     <option  value="AccountsContractEndDates" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsEndDates")?" selected":"" %>>Contract End Dates</option>
                     <option  value="AccountsAlertDates" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAlertDates")?" selected":"" %>>Alert Dates</option>
                   </select>
-                </td>
-                <td valign="center" align="right">
                 <% if(NewUserList.size()!=0){%>
                   <%= NewUserList.getHtml("userId",CalendarInfo.getSelectedUserId()) %>
                 <%}%>
@@ -61,7 +58,6 @@
               </td>
             </tr>
           </table>
-            
           </td>
         </tr>
         <tr>

@@ -51,12 +51,11 @@
               <td>
             <table width="100%" cellspacing="4" cellpadding="0" border="0" class="title">
               <tr class="title">
-                <td width="60%" valign="center">
+                <td valign="center" align="center" nowrap>
                  <select id="alerts" size="1" name="alertsView" onChange="javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=calendardetails&inline=true&alertsView='+document.getElementById('alerts').value);">
-                  <option value="all" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("all") ? " selected":"" %>>All Scheduled Actions</option>
+                  <option value="all" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("all") ? " selected":"" %>>All Sched. Actions</option>
                    <% 
                     Iterator alertTypes = CalendarInfo.getAlertTypes().iterator();
-                    
                     while(alertTypes.hasNext()){
                     AlertType thisAlert = (AlertType)alertTypes.next();
                     boolean isSelected = CalendarInfo.getCalendarDetailsView().equalsIgnoreCase(thisAlert.getName());
@@ -66,8 +65,6 @@
                     }
                    %>
                  </select>
-                </td>
-                <td valign="center" align="right">
                 <% if(NewUserList.size()!=0){%>
                   <%= NewUserList.getHtml("userId",CalendarInfo.getSelectedUserId()) %>
                 <%}%>
