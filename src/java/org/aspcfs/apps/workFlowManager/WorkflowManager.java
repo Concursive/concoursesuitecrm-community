@@ -2,13 +2,16 @@ package org.aspcfs.apps.workFlowManager;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.sql.*;
+import org.aspcfs.controller.objectHookManager.ObjectHookComponent;
 
 /**
  *  Description of the Class
  *
  *@author     matt rajkowski
  *@created    January 13, 2003
- *@version    $Id$
+ *@version    $Id: WorkflowManager.java,v 1.4 2003/01/13 21:41:16 mrajkowski Exp
+ *      $
  */
 public class WorkflowManager {
   Map classes = new HashMap();
@@ -36,9 +39,16 @@ public class WorkflowManager {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("WorkflowManager-> Business Process Start: " + startId);
     }
+    //Retrieve the lastAnchor, and set nextAnchor to current timestamp
+    //based on process name
+    //store in componentContext as process.lastAnchor, process.nextAnchor
+    loadAnchors(context);
+    //Execute the process, starting with 1st component
     BusinessProcessComponent startComponent = context.getProcess().getComponent(startId);
     boolean startResult = this.executeComponent(context, startComponent);
     processChildren(context, startComponent, startResult);
+    //Store the nextAnchor as the lastAnchor
+    saveAnchors(context);
     if (System.getProperty("DEBUG") != null) {
       System.out.println("WorkflowManager-> Business Process End");
     }
@@ -121,6 +131,7 @@ public class WorkflowManager {
       Method method = classRef.getClass().getMethod("execute", new Class[]{context.getClass()});
       result = method.invoke(classRef, new Object[]{context});
     } catch (Exception e) {
+      e.printStackTrace(System.out);
       System.out.println("WorkflowManager-> Exception while trying to execute component " + component.getClassName() + " error: " + e.getMessage());
     }
     if (result instanceof Boolean) {
@@ -175,6 +186,84 @@ public class WorkflowManager {
           context.setParameter(thisParameter.getName(), thisParameter.getValue());
         }
       }
+    }
+  }
+
+
+  /**
+   *  Loads, from the database, the last time the process executed successfully
+   *
+   *@param  context  Description of the Parameter
+   */
+  private void loadAnchors(ComponentContext context) {
+    System.out.println("WorkflowManager-> loadAnchors");
+    Connection db = null;
+    try {
+      context.setParameter("process.nextAnchor", (new java.sql.Timestamp(new java.util.Date().getTime())).toString());
+      db = ObjectHookComponent.getConnection(context);
+      PreparedStatement pst = db.prepareStatement(
+          "SELECT anchor " +
+          "FROM business_process_log " +
+          "WHERE process_name = ? ");
+      pst.setString(1, context.getProcess().getName());
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        context.setParameter("process.lastAnchor", rs.getTimestamp("anchor").toString());
+      }
+      rs.close();
+      pst.close();
+    } catch (Exception e) {
+    } finally {
+      ObjectHookComponent.freeConnection(context, db);
+    }
+  }
+
+
+  /**
+   *  Saves, to the database, the start time when the last process executed successfully
+   *
+   *@param  context  Description of the Parameter
+   */
+  private void saveAnchors(ComponentContext context) {
+    System.out.println("WorkflowManager-> saveAnchors");
+    Connection db = null;
+    try {
+      db = ObjectHookComponent.getConnection(context);
+      PreparedStatement pst = db.prepareStatement(
+          "UPDATE business_process_log " +
+          "SET anchor = ? " +
+          "WHERE process_name = ? " +
+          "AND anchor = ? ");
+      if (context.hasParameter("process.nextAnchor")) {
+        pst.setTimestamp(1, java.sql.Timestamp.valueOf(context.getParameter("process.nextAnchor")));
+      } else {
+        pst.setNull(1, java.sql.Types.DATE);
+      }
+      pst.setString(2, context.getProcess().getName());
+      if (context.hasParameter("process.lastAnchor")) {
+        pst.setTimestamp(3, java.sql.Timestamp.valueOf(context.getParameter("process.lastAnchor")));
+      } else {
+        pst.setNull(3, java.sql.Types.DATE);
+      }
+      int count = pst.executeUpdate();
+      pst.close();
+      if (count == 0) {
+        pst = db.prepareStatement(
+            "INSERT INTO business_process_log " +
+            "(process_name, anchor) VALUES (?, ?) ");
+        pst.setString(1, context.getProcess().getName());
+        if (context.hasParameter("process.nextAnchor")) {
+          pst.setTimestamp(2, java.sql.Timestamp.valueOf(context.getParameter("process.nextAnchor")));
+        } else {
+          pst.setNull(2, java.sql.Types.DATE);
+        }
+        pst.execute();
+        pst.close();
+      }
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+    } finally {
+      ObjectHookComponent.freeConnection(context, db);
     }
   }
 }
