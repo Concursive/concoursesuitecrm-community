@@ -269,7 +269,7 @@
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.OrganizationEmailAddress" id="organizationEmailAddressList">
+    <map class="com.darkhorseventures.cfsbase.OrganizationEmailAddress" id="organizationEmailAddress">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
       <property lookup="lookupOrgEmailTypes">type</property>
