@@ -81,6 +81,11 @@
       <name>lastFirst</name>
       <required>no</required>
     </attribute>
+    <attribute>
+      <name>default</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
   </tag>
   
   <tag>

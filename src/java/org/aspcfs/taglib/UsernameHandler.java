@@ -7,6 +7,7 @@ import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.controller.SystemStatus;
 import com.darkhorseventures.database.ConnectionElement;
 import java.util.*;
+import org.aspcfs.utils.StringUtils;
 
 /**
  *  This Class evaluates a User ID and returns a Contact record from application
@@ -21,6 +22,7 @@ public class UsernameHandler extends TagSupport {
 
   private int userId = -1;
   private boolean lastFirst = false;
+  private String defaultText = null;
 
 
   /**
@@ -55,7 +57,18 @@ public class UsernameHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   *  Sets the default attribute of the UsernameHandler object
+   *
+   *@param  tmp  The new default value
+   */
+  public void setDefault(String tmp) {
+    this.defaultText = tmp;
+  }
+
+
+  /**
+   *  Prints the user's name from the user cache, if not found displays
+   *  the default text value.
    *
    *@return                   Description of the Returned Value
    *@exception  JspException  Description of Exception
@@ -75,13 +88,13 @@ public class UsernameHandler extends TagSupport {
       if (thisUser != null) {
         Contact thisContact = thisUser.getContact();
         if (lastFirst) {
-          this.pageContext.getOut().write(thisContact.getNameLastFirst());
+          this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameLastFirst()));
         } else {
-          this.pageContext.getOut().write(thisContact.getNameFirstLast());
+          this.pageContext.getOut().write(StringUtils.toHtml(thisContact.getNameFirstLast()));
         }
       } else {
-        System.out.println("UsernameHandler-> User is null");
-        this.pageContext.getOut().write("");
+        //NOTE: the default text will already be in the output format
+        this.pageContext.getOut().write(defaultText);
       }
     } catch (Exception e) {
       throw new JspException("UsernameHandler-> Error: " + e.getMessage());
