@@ -66,8 +66,12 @@ public class OrganizationEmailAddress extends EmailAddress {
   public void process(Connection db, int orgId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
       if (this.getId() == -1) {
-      this.insert(db, orgId, enteredBy);
+	this.setOrgId(orgId);
+	this.setEnteredBy(enteredBy);
+	this.setModifiedBy(modifiedBy);
+      	this.insert(db);
       } else {
+	this.setModifiedBy(modifiedBy);
         this.update(db, modifiedBy);
       }
     } else {

@@ -79,8 +79,9 @@ public class ContactAddress extends Address {
   public void process(Connection db, int contactId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
       if (this.getId() == -1) {
+	this.setContactId(contactId);
 	this.setEnteredBy(enteredBy);
-	this.setModifiedBy(enteredBy);
+	this.setModifiedBy(modifiedBy);
         this.insert(db, contactId, enteredBy);
       } else {
 	this.setModifiedBy(modifiedBy);

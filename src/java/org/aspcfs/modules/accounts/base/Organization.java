@@ -1485,21 +1485,24 @@ public boolean getEnabled() {
       Iterator iphone = phoneNumberList.iterator();
       while (iphone.hasNext()) {
         OrganizationPhoneNumber thisPhoneNumber = (OrganizationPhoneNumber) iphone.next();
-        thisPhoneNumber.insert(db, this.getOrgId(), this.getEnteredBy());
+        //thisPhoneNumber.insert(db, this.getOrgId(), this.getEnteredBy());
+        thisPhoneNumber.process(db, orgId, this.getEnteredBy(), this.getModifiedBy());
       }
 
       //Insert the addresses if there are any
       Iterator iaddress = addressList.iterator();
       while (iaddress.hasNext()) {
         OrganizationAddress thisAddress = (OrganizationAddress) iaddress.next();
-        thisAddress.insert(db, this.getOrgId(), this.getEnteredBy());
+        //thisAddress.insert(db, this.getOrgId(), this.getEnteredBy());
+        thisAddress.process(db, orgId, this.getEnteredBy(), this.getModifiedBy());
       }
 
       //Insert the email addresses if there are any
       Iterator iemail = emailAddressList.iterator();
       while (iemail.hasNext()) {
         OrganizationEmailAddress thisEmailAddress = (OrganizationEmailAddress) iemail.next();
-        thisEmailAddress.insert(db, this.getOrgId(), this.getEnteredBy());
+        //thisEmailAddress.insert(db, this.getOrgId(), this.getEnteredBy());
+        thisEmailAddress.process(db, orgId, this.getEnteredBy(), this.getModifiedBy());
       }
 
       this.update(db, true);

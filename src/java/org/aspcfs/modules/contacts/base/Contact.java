@@ -1546,21 +1546,21 @@ public class Contact extends GenericBean {
       Iterator iphone = phoneNumberList.iterator();
       while (iphone.hasNext()) {
         ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber) iphone.next();
-        thisPhoneNumber.insert(db, this.getId(), this.getEnteredBy());
+        thisPhoneNumber.process(db, id, this.getEnteredBy(), this.getModifiedBy());
       }
 
       //Insert the addresses if there are any
       Iterator iaddress = addressList.iterator();
       while (iaddress.hasNext()) {
         ContactAddress thisAddress = (ContactAddress) iaddress.next();
-        thisAddress.insert(db, this.getId(), this.getEnteredBy());
+        thisAddress.process(db, id, this.getEnteredBy(), this.getModifiedBy());
       }
 
       //Insert the email addresses if there are any
       Iterator iemail = emailAddressList.iterator();
       while (iemail.hasNext()) {
         ContactEmailAddress thisEmailAddress = (ContactEmailAddress) iemail.next();
-        thisEmailAddress.insert(db, this.getId(), this.getEnteredBy());
+        thisEmailAddress.process(db, id, this.getEnteredBy(), this.getModifiedBy());
       }
 
       this.update(db, true);

@@ -77,11 +77,15 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     st.close();
   }
   
-  public void process(Connection db, int contactId, int enteredBy, int modifiedBy) throws SQLException {
+  public void process(Connection db, int orgId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
       if (this.getId() == -1) {
-      this.insert(db, contactId, enteredBy);
+	this.setOrgId(orgId);
+	this.setEnteredBy(enteredBy);
+	this.setModifiedBy(modifiedBy);
+        this.insert(db);
       } else {
+	this.setModifiedBy(modifiedBy);
         this.update(db, modifiedBy);
       }
     } else {

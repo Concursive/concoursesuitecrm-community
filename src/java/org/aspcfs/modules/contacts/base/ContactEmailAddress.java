@@ -69,9 +69,10 @@ public class ContactEmailAddress extends EmailAddress {
   public void process(Connection db, int contactId, int enteredBy, int modifiedBy) throws SQLException {
     if (this.getEnabled() == true) {
       if (this.getId() == -1) {
+	this.setContactId(contactId);
 	this.setEnteredBy(enteredBy);
-	this.setModifiedBy(enteredBy);
-        this.insert(db, contactId, enteredBy);
+	this.setModifiedBy(modifiedBy);
+        this.insert(db);
       } else {
 	this.setModifiedBy(modifiedBy);
         this.update(db, modifiedBy);
