@@ -242,10 +242,9 @@ public final class Contacts extends CFSModule {
    *@since
    */
   public String executeCommandDetails(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-contacts-view"))) {
+    if (!hasPermission(context, "accounts-accounts-contacts-view")) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "View Accounts", "View Contact Details");
     Exception errorMessage = null;
 
@@ -274,13 +273,7 @@ public final class Contacts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
-
-      if (!hasAuthority(context, newContact.getOwner())) {
-        return ("PermissionError");
-      }
-
       context.getRequest().setAttribute("ContactDetails", newContact);
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       return ("DetailsOK");
@@ -299,21 +292,18 @@ public final class Contacts extends CFSModule {
    *@since
    */
   public String executeCommandDelete(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-contacts-delete"))) {
+    if (!hasPermission(context, "accounts-accounts-contacts-delete")) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     boolean recordDeleted = false;
 
     Contact thisContact = null;
     Organization thisOrganization = null;
     String orgId = null;
-
     if (context.getRequest().getParameter("orgId") != null) {
       orgId = context.getRequest().getParameter("orgId");
     }
-
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -326,7 +316,6 @@ public final class Contacts extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "View Accounts", "Delete Contact");
     if (errorMessage == null) {
       context.getRequest().setAttribute("orgId", orgId);
@@ -353,37 +342,27 @@ public final class Contacts extends CFSModule {
    *@since
    */
   public String executeCommandModify(ActionContext context) {
-    if (!(hasPermission(context, "accounts-accounts-contacts-edit"))) {
+    if (!hasPermission(context, "accounts-accounts-contacts-edit")) {
       return ("PermissionError");
     }
-
     addModuleBean(context, "View Accounts", "Modify Contact");
     Exception errorMessage = null;
-
     String orgid = context.getRequest().getParameter("orgId");
     String passedId = context.getRequest().getParameter("id");
-
     Connection db = null;
     Contact newContact = null;
     Organization thisOrganization = null;
     try {
       db = this.getConnection(context);
-      newContact = new Contact(db, "" + passedId);
+      newContact = new Contact(db, passedId);
       thisOrganization = new Organization(db, Integer.parseInt(orgid));
       buildFormElements(context, db);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
       this.freeConnection(context, db);
     }
-
     if (errorMessage == null) {
-
-      if (!hasAuthority(context, newContact.getOwner())) {
-        return ("PermissionError");
-      }
-
       context.getRequest().setAttribute("ContactDetails", newContact);
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       return ("ModifyOK");
