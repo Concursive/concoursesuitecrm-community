@@ -214,6 +214,10 @@ public class Organization extends GenericBean {
   public void setOwner(int owner) {
     this.owner = owner;
   }
+  
+  public void setOwnerId(int owner) {
+    this.owner = owner;
+  }
 
 
   /**
@@ -283,6 +287,10 @@ public class Organization extends GenericBean {
    *@param  owner  The new Owner value
    */
   public void setOwner(String owner) {
+    this.owner = Integer.parseInt(owner);
+  }
+  
+  public void setOwnerId(String owner) {
     this.owner = Integer.parseInt(owner);
   }
 
@@ -813,6 +821,10 @@ public class Organization extends GenericBean {
    *@return    The Owner value
    */
   public int getOwner() {
+    return owner;
+  }
+  
+  public int getOwnerId() {
     return owner;
   }
 

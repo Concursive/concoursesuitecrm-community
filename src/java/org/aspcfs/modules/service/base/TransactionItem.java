@@ -90,11 +90,21 @@ public class TransactionItem {
         String thisField = (String) fields.next();
         String thisValue = null;
         if (thisField.endsWith("Guid")) {
-          String param = thisField.substring(0, thisField.indexOf("Guid"));
+          String lookupField = thisField.substring(0, thisField.lastIndexOf("Guid"));
+          String param = thisField.substring(0, thisField.lastIndexOf("Guid"));
+          if (param.indexOf("/") > -1) {
+            param = param.substring(param.indexOf("/") + 1);
+            lookupField = thisField.substring(0, thisField.indexOf("/"));
+            thisField = thisField.substring(0, thisField.indexOf("/"));
+          }
+          
           SyncTable referencedTable = (SyncTable)mapping.get(param + "List");
           if (referencedTable != null) {
+            System.out.println("Referenced Table: " + referencedTable.getId());
+            System.out.println("Lookup Field: " + lookupField + "Id");
             int recordId = syncClientMap.lookupId(db, referencedTable.getId(), 
-              ObjectUtils.getParam(thisObject, param + "Id"));
+              ObjectUtils.getParam(thisObject, lookupField + "Id"));
+            System.out.println("RecordID: " + recordId);
             thisValue = String.valueOf(recordId);
           }
         } else {
