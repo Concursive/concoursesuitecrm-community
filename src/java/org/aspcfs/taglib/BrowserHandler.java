@@ -18,7 +18,6 @@ public class BrowserHandler extends TagSupport {
   private String os = null;
   private boolean include = true;
 
-
   /**
    *  Sets the id attribute of the BrowserHandler object
    *
@@ -77,8 +76,7 @@ public class BrowserHandler extends TagSupport {
    */
   public final int doStartTag() throws JspException {
     UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
-
-    if (thisUser.getBrowserId().equalsIgnoreCase(browserId)) {
+    if (thisUser.getBrowserId().indexOf(browserId) > -1) {
       if (include) {
         if (versionPasses(thisUser.getBrowserVersion()) && osPasses(thisUser.getClientType().getOsString())) {
           return EVAL_BODY_INCLUDE;
@@ -101,7 +99,7 @@ public class BrowserHandler extends TagSupport {
     }
   }
 
-
+  
   /**
    *  Description of the Method
    *
