@@ -15,13 +15,13 @@
     <forward name="SystemError" resource="/error_system.jsp"/>
   </action>
 	
-	<action name="ProcessMessage" class="com.darkhorseventures.cfsmodule.ProcessMessage">
+  <action name="ProcessMessage" class="com.darkhorseventures.cfsmodule.ProcessMessage">
     <forward name="PreviewOK" resource="/campaign_messages_preview.jsp"/>
   </action>
 	
-	<action name="ProcessPacket" class="com.darkhorseventures.cfsmodule.ProcessPacket">
+  <action name="ProcessPacket" class="com.darkhorseventures.cfsmodule.ProcessPacket">
     <forward name="PacketOK" resource="/error_system.jsp"/>
-		<forward name="PacketError" resource="/error_system.jsp"/>
+    <forward name="PacketError" resource="/error_system.jsp"/>
   </action>
   
   <action name="Login" class="com.darkhorseventures.cfsmodule.Login">
@@ -244,7 +244,7 @@
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
   </action>
-	<action name="AccountsDocuments" class="com.darkhorseventures.cfsmodule.AccountsDocuments">
+  <action name="AccountsDocuments" class="com.darkhorseventures.cfsmodule.AccountsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
@@ -293,7 +293,7 @@
   </action>
   <action name="CampaignManagerGroup" class="com.darkhorseventures.cfsmodule.CampaignManagerGroup">
     <bean name="SearchForm" class="com.darkhorseventures.cfsbase.SearchFormBean" scope="request"/>
-		<forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="ViewOK" resource="/campaign_groups_view.jsp" layout="nav"/>
@@ -306,7 +306,7 @@
   </action>
   <action name="CampaignManagerMessage" class="com.darkhorseventures.cfsmodule.CampaignManagerMessage">
     <bean name="Message" class="com.darkhorseventures.cfsbase.Message" scope="request"/>
-		<forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/error_user.jsp" layout="nav"/>
     <forward name="ViewOK" resource="/campaign_messages_view.jsp" layout="nav"/>
