@@ -484,7 +484,9 @@ public class ConnectionPool implements Runnable {
         }
       }
     }
-    System.out.println("Connection Pool: Stopped");
+    if (debug) {
+      System.out.println("Connection Pool: Stopped");
+    }
   }
 
 
