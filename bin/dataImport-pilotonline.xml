@@ -1,0 +1,25 @@
+<data-import-config>
+  <description>
+    Export vehicle data for customers
+  </description>
+  <reader class="com.darkhorseventures.apps.dataimport.reader.autoguide.PilotOnlineReader">
+    <driver>com.microsoft.jdbc.sqlserver.SQLServerDriver</driver>
+    <url>jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs;SelectMethod=cursor</url>
+    <user>dhv_appuser</user>
+    <password>@pus3r</password>
+    <pictureSourcePath>c:\tomcat\webapps\cfs\WEB-INF\fileLibrary\cdb_cfs\autoguide</pictureSourcePath>
+    <pictureDestinationPath>c:\tomcat\webapps\cfs\WEB-INF\fileLibrary\cdb_cfs\autoguide\outgoing\pilotonline</pictureDestinationPath>
+<!--
+    <ftpData>ftp://auto_guide:autoguide@ftp2.hamptonroads.com:./</ftpData>
+    <ftpPictures>ftp://auto_guide:autoguide@ftp1.hamptonroads.com:./auto_guide</ftpPictures>
+-->
+    <ftpData>ftp://anonymous:guest@127.0.0.1:./</ftpData>
+    <ftpPictures>ftp://anonymous:guest@127.0.0.1:./pix</ftpPictures>
+    <processConfigFile/>
+  </reader>
+  <writer class="com.darkhorseventures.apps.dataimport.writer.TextWriter">
+    <filename>autoguide-vehicles.txt</filename>
+    <fieldSeparator>|</fieldSeparator>
+    <showColumnNames>true</showColumnNames>
+  </writer>
+</data-import-config>
