@@ -84,7 +84,7 @@
           </td>
           <td>
             <input type="hidden" name="owner" id="ownerid" value="<%= Task.getOwner() == -1 ? User.getUserRecord().getId() : Task.getOwner() %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&reset=true');">Change Owner</a>]
+            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&reset=true');">Change Owner</a>]
           </td>
         </tr>
       </table>
