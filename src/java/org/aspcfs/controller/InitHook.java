@@ -8,22 +8,24 @@ import org.aspcfs.utils.web.CustomFormList;
 import java.sql.*;
 import java.util.Hashtable;
 import java.util.Properties;
-import org.jcrontab.*;
 import org.aspcfs.utils.StringUtils;
+import java.io.File;
 
 /**
  *  Code that is initialized when the ServletController starts.
  *
  *@author     mrajkowski
  *@created    July 10, 2001
- *@version    $Id$
+ *@version    $Id: InitHook.java,v 1.24.18.1 2003/08/12 21:12:56 mrajkowski Exp
+ *      $
  */
 public class InitHook implements ControllerInitHook {
-  public static final String fs = System.getProperty("file.separator");
-  
+  public final static String fs = System.getProperty("file.separator");
+
+
   /**
-   *  When the ServletController is initialized, this code maps init-params
-   *  to the Context or Application scope.
+   *  When the ServletController is initialized, this code maps init-params to
+   *  the Context or Application scope.
    *
    *@param  config  Description of Parameter
    *@return         Description of the Returned Value
@@ -32,95 +34,43 @@ public class InitHook implements ControllerInitHook {
   public String executeControllerInit(ServletConfig config) {
     System.out.println("InitHook-> Executing");
     ServletContext context = config.getServletContext();
-    //Add the gatekeeper info to the context
-    InitHook.addAttribute(config, context, "SiteCode", "GATEKEEPER.APPCODE");
-    InitHook.addAttribute(config, context, "GKDRIVER", "GATEKEEPER.DRIVER");
-    InitHook.addAttribute(config, context, "GKHOST", "GATEKEEPER.URL");
-    InitHook.addAttribute(config, context, "GKUSER", "GATEKEEPER.USER");
-    InitHook.addAttribute(config, context, "GKUSERPW", "GATEKEEPER.PASSWORD");
-    //Define the ConnectionPool, else defaults from the ContextListener will be used
-    ConnectionPool cp = (ConnectionPool) context.getAttribute("ConnectionPool");
-    if (cp != null) {
-      if (config.getInitParameter("CONNECTION_POOL.DEBUG") != null) {
-        cp.setDebug(config.getInitParameter("CONNECTION_POOL.DEBUG"));
-      }
-      if (config.getInitParameter("CONNECTION_POOL.TEST_CONNECTIONS") != null) {
-        cp.setTestConnections(config.getInitParameter("CONNECTION_POOL.TEST_CONNECTIONS"));
-      }
-      if (config.getInitParameter("CONNECTION_POOL.ALLOW_SHRINKING") != null) {
-        cp.setAllowShrinking(config.getInitParameter("CONNECTION_POOL.ALLOW_SHRINKING"));
-      }
-      if (config.getInitParameter("CONNECTION_POOL.MAX_CONNECTIONS") != null) {
-        cp.setMaxConnections(config.getInitParameter("CONNECTION_POOL.MAX_CONNECTIONS"));
-      }
-      if (config.getInitParameter("CONNECTION_POOL.MAX_IDLE_TIME.SECONDS") != null) {
-        cp.setMaxIdleTimeSeconds(config.getInitParameter("CONNECTION_POOL.MAX_IDLE_TIME.SECONDS"));
-      }
-      if (config.getInitParameter("CONNECTION_POOL.MAX_DEAD_TIME.SECONDS") != null) {
-        cp.setMaxDeadTimeSeconds(config.getInitParameter("CONNECTION_POOL.MAX_DEAD_TIME.SECONDS"));
-      }
-    }
-    //Define whether the app requires SSL for browser clients
-    if (config.getInitParameter("ForceSSL") != null) {
-      if ("true".equals(config.getInitParameter("ForceSSL"))) {
-        context.setAttribute("ForceSSL", "true");
-      } else {
-        context.setAttribute("ForceSSL", "false");
-      }
-    }
-    //Define the developer's debug code
-    if (config.getInitParameter("GlobalPWInfo") != null) {
-      context.setAttribute("GlobalPWInfo",
-          config.getInitParameter("GlobalPWInfo"));
+    //Load the system prefs to determine the file library path
+    org.aspcfs.modules.setup.utils.Prefs.loadPrefs(context);
+    //Load the build.properties file to set the rest of the prefs
+    File propertyFile = null;
+    if (context.getAttribute("FileLibrary") != null) {
+      propertyFile = new File((String) context.getAttribute("FileLibrary") + "build.properties");
     } else {
-      context.setAttribute("GlobalPWInfo", "#notspecified");
+      propertyFile = new File(context.getRealPath("/") + "WEB-INF" + fs + "fileLibrary" + fs + "build.properties");
+      if (propertyFile.exists()) {
+        context.setAttribute("FileLibrary", context.getRealPath("/") + "WEB-INF" + fs + "fileLibrary" + fs);
+      }
     }
+    //Load prefs from file
+    ApplicationPrefs prefs = new ApplicationPrefs();
+    if (propertyFile != null && propertyFile.exists()) {
+      prefs.load(propertyFile.getPath());
+      if (prefs.has("CONTROL")) {
+        context.setAttribute("cfs.setup", "true");
+      } else {
+        prefs.clear();
+      }
+    }
+    context.setAttribute("APPLICATION.PREFS", prefs);
+    prefs.populateContext(context);
     //Define the keystore, to be used by tasks that require SSL certificates
-    InitHook.addAttribute(config, context, "ClientSSLKeystore", "ClientSSLKeystore");
-    InitHook.addAttribute(config, context, "ClientSSLKeystorePassword", "ClientSSLKeystorePassword");
+    this.addAttribute(config, context, "ClientSSLKeystore", "ClientSSLKeystore");
+    this.addAttribute(config, context, "ClientSSLKeystorePassword", "ClientSSLKeystorePassword");
     //Read in the default module settings for CFS
-    InitHook.addAttribute(config, context, "ContainerMenuConfig", "ContainerMenuConfig");
+    this.addAttribute(config, context, "ContainerMenuConfig", "ContainerMenuConfig");
     if (config.getInitParameter("DynamicFormConfig") != null) {
       context.setAttribute("DynamicFormConfig", config.getInitParameter("DynamicFormConfig"));
       CustomFormList forms = new CustomFormList(context, config.getInitParameter("DynamicFormConfig"));
       context.setAttribute("DynamicFormList", forms);
     }
-    //Define the mail server to be used within CFS
-    if (config.getInitParameter("MailServer") != null) {
-      context.setAttribute("MailServer",
-          config.getInitParameter("MailServer"));
-      System.setProperty("MailServer", String.valueOf(config.getInitParameter("MailServer")));
-    } else {
-      context.setAttribute("MailServer", "127.0.0.1");
-      System.setProperty("MailServer", "127.0.0.1");
-    }
-    //Start the cron last
-    if ("true".equals(config.getInitParameter("CRON.ENABLED"))) {
-      try {
-        System.out.println("InitHook-> Starting CRON");
-        Crontab crontab = Crontab.getInstance();
-        Properties jcronProperties = new Properties();
-        jcronProperties.setProperty("org.jcrontab.Crontab.refreshFrequency", "3");
-        //Specify the cron items are in the gatekeeper database
-        jcronProperties.setProperty("org.jcrontab.data.datasource", "org.aspcfs.jcrontab.datasource.CFSDatasource");
-        jcronProperties.setProperty("org.jcrontab.data.GenericSQLSource.driver", StringUtils.toString((String)context.getAttribute("GKDRIVER")));
-        jcronProperties.setProperty("org.jcrontab.data.GenericSQLSource.url", StringUtils.toString((String)context.getAttribute("GKHOST")));
-        jcronProperties.setProperty("org.jcrontab.data.GenericSQLSource.username", StringUtils.toString((String)context.getAttribute("GKUSER")));
-        jcronProperties.setProperty("org.jcrontab.data.GenericSQLSource.password", StringUtils.toString((String)context.getAttribute("GKUSERPW")));
-        //jcron logger -- TODO: implement a database logger
-        jcronProperties.setProperty("org.jcrontab.log.Logger", "org.jcrontab.log.DebugLogger");
-        crontab.setConnectionPool(cp);
-        crontab.setServletContext(context);
-        crontab.init(jcronProperties);
-        context.setAttribute("Crontab", crontab);
-      } catch (Exception e) {
-        System.err.println(e.toString());
-      }
-    }
     return null;
   }
-
-
+  
   /**
    *  Adds a feature to the Attribute attribute of the InitHook class
    *
@@ -134,6 +84,5 @@ public class InitHook implements ControllerInitHook {
       context.setAttribute(attributeName, config.getInitParameter(paramName));
     }
   }
-
 }
 
