@@ -247,7 +247,7 @@
     <echo message="Installing web.xml configuration file"/>
     <copy file="${src.web.dir}/WEB-INF/web.xml" todir="${CFS_HOME}/WEB-INF" overwrite="true"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
-             token="@SiteCode@" value="${GKAPPCODE}"/>
+             token="@GKAPPCODE@" value="${GKAPPCODE}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
              token="@GKDRIVER@" value="${GKDRIVER}"/>
     <replace file="${CFS_HOME}/WEB-INF/web.xml"
