@@ -296,12 +296,12 @@ Modify Ticket<br>
   </table>
   <br>
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
+    <tr class="title">
       <td colspan="2">
         <strong>Resolution</strong>
       </td>
 		</tr>
-		<tr>
+		<tr class="containerBody">
       <td valign="top" class="formLabel">
         Solution
       </td>
