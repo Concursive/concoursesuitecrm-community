@@ -2,6 +2,7 @@ package com.darkhorseventures.autoguide.base;
 
 import java.sql.*;
 import java.text.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Represents a scheduled date when an ad is going to run, along with details
@@ -510,6 +511,8 @@ public class AdRun {
     pst.setInt(++i, enteredBy);
     pst.execute();
     pst.close();
+    
+    id = DatabaseUtils.getCurrVal(db, "autoguide_ad_run_ad_run_id_seq");
   }
 
 
