@@ -4,8 +4,12 @@ import java.sql.*;
 import java.util.*;
 import java.io.*;
 import java.net.*;
+import java.text.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
+import javax.xml.parsers.*;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
 /**
  *  Application that processes various kinds of Alerts in CFS, generating
@@ -17,6 +21,8 @@ import com.darkhorseventures.cfsbase.*;
  */
 public class Notifier extends ReportBuilder {	
 
+	Hashtable config = new Hashtable();
+	
   /**
    *  Constructor for the Notifier object
    *
@@ -238,9 +244,7 @@ public class Notifier extends ReportBuilder {
         }
       }
       if (campaignCount > 0) {
-        if (faxLog.size() > 0) {
-          outputFaxLog(faxLog);
-        }
+        outputFaxLog(faxLog);
         thisCampaign.setStatusId(Campaign.FINISHED);
         thisCampaign.setStatus(Campaign.FINISHED_TEXT);
         thisCampaign.update(db);
@@ -273,90 +277,150 @@ public class Notifier extends ReportBuilder {
     thisNotifier.baseName = args[0];
     thisNotifier.dbUser = args[1];
     thisNotifier.dbPass = args[2];
+		thisNotifier.loadConfig();
     
     if (thisNotifier.baseName.equals("debug")) {
       thisNotifier.sendAdminReport("Notifier manual sendmail test");
     } else {
       try {
-	Class.forName("org.postgresql.Driver");
-  
-	Vector siteList = new Vector();
-  
-	Connection dbSites = DriverManager.getConnection(
-	    thisNotifier.baseName, thisNotifier.dbUser, thisNotifier.dbPass);
-	Statement stSites = dbSites.createStatement();
-	ResultSet rsSites = stSites.executeQuery(
-	    "SELECT * " +
-	    "FROM sites " +
-	    "WHERE enabled = true ");
-	while (rsSites.next()) {
-	  Hashtable siteInfo = new Hashtable();
-	  siteInfo.put("driver", rsSites.getString("driver"));
-	  siteInfo.put("host", rsSites.getString("dbhost"));
-	  siteInfo.put("name", rsSites.getString("dbname"));
-	  siteInfo.put("port", rsSites.getString("dbport"));
-	  siteInfo.put("user", rsSites.getString("dbuser"));
-	  siteInfo.put("password", rsSites.getString("dbpw"));
-	  siteInfo.put("sitecode", rsSites.getString("sitecode"));
-	  siteList.add(siteInfo);
-	}
-	rsSites.close();
-	stSites.close();
-	dbSites.close();
-  
-	Iterator i = siteList.iterator();
-	while (i.hasNext()) {
-  
-	  Hashtable siteInfo = (Hashtable)i.next();
-	  Class.forName((String)siteInfo.get("driver"));
-	  Connection db = DriverManager.getConnection(
-	      (String)siteInfo.get("host") + ":" +
-	      (String)siteInfo.get("port") + "/" +
-	      (String)siteInfo.get("name"),
-	      (String)siteInfo.get("user"),
-	      (String)siteInfo.get("password"));
-	  thisNotifier.baseName = (String)siteInfo.get("sitecode");
-  
-	  System.out.println("Running Alerts...");
-	  thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db));
-	  //thisNotifier.output.append(thisNotifier.buildCallAlerts(db));
-	  thisNotifier.output.append("<br><hr><br>");
-	  
-	  System.out.println("Running Communications...");
-	  thisNotifier.output.append(thisNotifier.buildCommunications(db, (String)siteInfo.get("name")));
-	  thisNotifier.output.append("<br><hr><br>");
-	  
-	  db.close();
-	}
-	
-	System.out.println(thisNotifier.output.toString());
-	//thisNotifier.sendAdminReport(thisNotifier.output.toString());
-	java.util.Date end = new java.util.Date();
+				Class.forName((String)thisNotifier.config.get("DatabaseDriver"));
+				
+				Vector siteList = new Vector();
+				
+				Connection dbSites = DriverManager.getConnection(
+						thisNotifier.baseName, thisNotifier.dbUser, thisNotifier.dbPass);
+				Statement stSites = dbSites.createStatement();
+				ResultSet rsSites = stSites.executeQuery(
+						"SELECT * " +
+						"FROM sites " +
+						"WHERE enabled = true ");
+				while (rsSites.next()) {
+					Hashtable siteInfo = new Hashtable();
+					siteInfo.put("driver", rsSites.getString("driver"));
+					siteInfo.put("host", rsSites.getString("dbhost"));
+					siteInfo.put("name", rsSites.getString("dbname"));
+					siteInfo.put("port", rsSites.getString("dbport"));
+					siteInfo.put("user", rsSites.getString("dbuser"));
+					siteInfo.put("password", rsSites.getString("dbpw"));
+					siteInfo.put("sitecode", rsSites.getString("sitecode"));
+					siteList.add(siteInfo);
+				}
+				rsSites.close();
+				stSites.close();
+				dbSites.close();
+				
+				Iterator i = siteList.iterator();
+				while (i.hasNext()) {
+				
+					Hashtable siteInfo = (Hashtable)i.next();
+					Class.forName((String)siteInfo.get("driver"));
+					Connection db = DriverManager.getConnection(
+							(String)siteInfo.get("host") + ":" +
+							(String)siteInfo.get("port") + "/" +
+							(String)siteInfo.get("name"),
+							(String)siteInfo.get("user"),
+							(String)siteInfo.get("password"));
+					thisNotifier.baseName = (String)siteInfo.get("sitecode");
+				
+					System.out.println("Running Alerts...");
+					thisNotifier.output.append(thisNotifier.buildOpportunityAlerts(db));
+					//thisNotifier.output.append(thisNotifier.buildCallAlerts(db));
+					thisNotifier.output.append("<br><hr><br>");
+					
+					System.out.println("Running Communications...");
+					thisNotifier.output.append(thisNotifier.buildCommunications(db, (String)siteInfo.get("name")));
+					thisNotifier.output.append("<br><hr><br>");
+					
+					db.close();
+				}
+				
+				System.out.println(thisNotifier.output.toString());
+				//thisNotifier.sendAdminReport(thisNotifier.output.toString());
+				java.util.Date end = new java.util.Date();
       } catch (Exception exc) {
-	System.out.println("Sending error email...");
-	//thisNotifier.sendAdminReport(exc.toString());
-	System.err.println("BuildReport Error: " + exc.toString());
-      }
+				System.out.println("Sending error email...");
+				//thisNotifier.sendAdminReport(exc.toString());
+				System.err.println("BuildReport Error: " + exc.toString());
+			}
       System.exit(0);
     }
   }
-  
+	
+	private void loadConfig() {
+    File file = new File("notifier.xml");
+		if (file == null) {
+			System.err.println("Notifier configuration file not found-> notifier.xml");
+      return;
+    } try {
+      Document document = parseDocument(file);
+      config.clear();
+			NodeList tags = document.getElementsByTagName("init-param");
+			for (int i = 0; i < tags.getLength(); i++) {
+				Element tag = (Element)tags.item(i);
+				NodeList params = tag.getChildNodes();
+				String name = null;
+				String value = null;
+				for (int j = 0; j < params.getLength(); j++) {
+					Node param = (Node)params.item(j);
+					if (param.hasChildNodes()) {
+						NodeList children = param.getChildNodes();
+						Node thisNode = (Node)children.item(0);
+						if (param.getNodeName().equals("param-name")) {
+							name = thisNode.getNodeValue();
+						}
+						if (param.getNodeName().equals("param-value")) {
+							value = thisNode.getNodeValue();
+						}
+					}
+				}
+				config.put(name, value);
+			}
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+	
+	private Document parseDocument(File file)
+       throws FactoryConfigurationError, ParserConfigurationException, SAXException, IOException {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder builder = factory.newDocumentBuilder();
+    Document document = builder.parse(file);
+    return document;
+  }
+
   private boolean outputFaxLog(Vector faxLog) {
 		System.out.println("Notifier-> Outputting fax log");
+		String fs = System.getProperty("file.separator");
     if (faxLog == null || faxLog.size() == 0) return false;
     PrintWriter out = null;
+		String baseDirectory = (String)config.get("BaseDirectory");
+		if (baseDirectory != null && !baseDirectory.equals("")) {
+			if (!baseDirectory.endsWith(fs)) baseDirectory += fs;
+			File dir = new File(baseDirectory);
+			dir.mkdirs();
+		}
+		SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMMddhhmmss");
+		String uniqueScript = formatter1.format(new java.util.Date());
     try {
-      Iterator faxEntries = faxLog.iterator();
-      out = new PrintWriter(new BufferedWriter(new FileWriter("foo.sh")));
+      out = new PrintWriter(new BufferedWriter(new FileWriter(baseDirectory + (String)config.get("BaseFilename") + uniqueScript + ".sh")));
+			Iterator faxEntries = faxLog.iterator();
       while (faxEntries.hasNext()) {
         String thisEntry = (String)faxEntries.next();
 				StringTokenizer st = new StringTokenizer(thisEntry, "|");
 				String databaseName = st.nextToken();
 				String messageId = st.nextToken();
 				String faxNumber = st.nextToken();
-				String baseFilename = "fax" + faxNumber + messageId;
-        out.println("./html2ps -o " + baseFilename + ".ps http://127.0.0.1:8080/ProcessMessage.do?id=" + databaseName + "\\|" + messageId);
-        out.println("gs -q -sDEVICE=tiffg3 -dNOPAUSE -dBATCH -sOutputFile=" + baseFilename + ".tiff " + baseFilename + ".ps");
+				String uniqueId = formatter1.format(new java.util.Date());
+				
+				String baseFilename = baseDirectory + (String)config.get("BaseFilename") + uniqueId + messageId + "-" + faxNumber;
+        out.println("perl html2ps -o " + baseFilename + ".ps http://" + (String)config.get("CFSWebServer") + "/ProcessMessage.do?id=" + databaseName + "\\|" + messageId + " >/dev/null 2>&1");
+        out.println("gs -q -sDEVICE=tiffg4 -dNOPAUSE -dBATCH -sOutputFile=" + baseFilename + ".tiff " + baseFilename + ".ps");
+				out.println("rm " + baseFilename + ".ps");
+				
+				if (!"false".equals((String)config.get("FaxEnabled"))) {
+					out.println("sendfax -n -h " + (String)config.get("FaxServer") + " -d " + faxNumber + " " + baseFilename + ".tiff");
+				}
+				out.println("rm " + baseFilename + ".tiff");
       }
     } catch (IOException e) {
       e.printStackTrace(System.err);
@@ -364,6 +428,13 @@ public class Notifier extends ReportBuilder {
     } finally {
       if (out != null) out.close();
     }
+		
+		try {
+			java.lang.Process process = java.lang.Runtime.getRuntime().exec("/bin/sh " + baseDirectory + "cfsfax" + uniqueScript + ".sh");
+		} catch (Exception e) {
+			e.printStackTrace(System.out);
+		}
+		
     return true;
   }
 

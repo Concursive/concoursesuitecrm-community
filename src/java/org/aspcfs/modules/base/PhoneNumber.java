@@ -423,6 +423,18 @@ public class PhoneNumber {
       this.setId(request.getParameter("phone" + parseItem + "id"));
     }
   }
-
+	
+	public static final String convertToNumber(String tmp) {
+		tmp = tmp.trim();
+		StringBuffer sb = new StringBuffer();
+		String allowed = "0123456789";
+		for (int i=0; i<tmp.length(); i++) {
+			String theChar = tmp.substring(i, i+1);
+			if (allowed.indexOf(theChar) > -1) {
+				sb.append(theChar);
+			}
+		}
+		return sb.toString();
+	}
 }
 

@@ -1,0 +1,31 @@
+<!-- Configuration for Notifier -->
+<application>
+  <!-- Driver for connecting to sites database -->
+  <init-param>
+    <param-name>DatabaseDriver</param-name>
+    <param-value>org.postgresql.Driver</param-value>
+  </init-param>
+  <!-- Web address for CFS Web Server to retrieve data from -->
+  <init-param>
+    <param-name>CFSWebServer</param-name>
+    <param-value>127.0.0.1:8080</param-value>
+  </init-param>
+  <!-- Remote Hylafax fax server -->
+  <init-param>
+    <param-name>FaxServer</param-name>
+    <param-value>216.54.81.125</param-value>
+  </init-param>
+	<init-param>
+    <param-name>FaxEnabled</param-name>
+    <param-value>false</param-value>
+  </init-param>
+  <!-- Temporary folder for fax images -->
+  <init-param>
+    <param-name>BaseDirectory</param-name>
+    <param-value>faxFiles</param-value>
+  </init-param>
+  <init-param>
+    <param-name>BaseFilename</param-name>
+    <param-value>cfsfax</param-value>
+  </init-param>
+</application>

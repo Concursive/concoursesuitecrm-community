@@ -392,7 +392,11 @@ public class Notification {
 					System.out.println("Notification-> To: " + thisContact.getPhoneNumber("Demo Fax"));
           String phoneNumber = thisContact.getPhoneNumber("Demo Fax");
           if (!phoneNumber.equals("") && phoneNumber.length() > 0) {
-            if (phoneNumber.startsWith("757")) {
+						phoneNumber = PhoneNumber.convertToNumber(phoneNumber);
+            if (phoneNumber.startsWith("1")) {
+							phoneNumber = phoneNumber.substring(1);
+						}
+						if (phoneNumber.startsWith("757")) {
               phoneNumber = phoneNumber.substring(3);
             } else {
               phoneNumber = "1" + phoneNumber;
