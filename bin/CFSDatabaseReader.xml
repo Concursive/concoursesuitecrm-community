@@ -450,7 +450,7 @@
       <property field="operatorid"/>
       <property field="value"/>
     </map>
-    <!--map class="com.darkhorseventures.webutils.CustomLookupList" id="searchFieldElement" table="search_fields" uniqueField="id">
+    <map class="com.darkhorseventures.webutils.CustomLookupList" id="searchFieldElement" table="search_fields" uniqueField="id">
       <property alias="guid" field="id"/>
       <property field="field"/>
       <property field="description"/>
@@ -460,7 +460,7 @@
       <property field="object_class"/>
       <property field="enabled"/>
     </map>
-    <map class="com.darkhorseventures.cfsbase.Revenue" id="revenue">
+    <!--map class="com.darkhorseventures.cfsbase.Revenue" id="revenue">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
       <property>transactionId</property>
