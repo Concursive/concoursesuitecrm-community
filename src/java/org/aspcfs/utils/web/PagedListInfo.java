@@ -26,6 +26,7 @@ public class PagedListInfo {
   public final String[] lettersArray = {"0", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
   String link = "";
+  String id = null;
   String columnToSortBy = null;
   String sortOrder = null;
   int itemsPerPage = 10;
@@ -138,7 +139,13 @@ public void setSavedCriteria(HashMap savedCriteria) {
   public void setParentFieldType(String parentFieldType) {
     this.parentFieldType = parentFieldType;
   }
-
+  
+public String getId() {
+	return id;
+}
+public void setId(String id) {
+	this.id = id;
+}
 
   /**
    *  Sets the parentFormName attribute of the PagedListInfo object
@@ -307,11 +314,14 @@ public void setSavedCriteria(HashMap savedCriteria) {
    *@param  context  The new Parameters value
    *@since           1.1
    */
-  public void setParameters(ActionContext context) {
-	   
+  public boolean setParameters(ActionContext context) {
+	  
+    if (context.getRequest().getParameter("pagedListInfoId") != null && !(context.getRequest().getParameter("pagedListInfoId").equals("")) && !(context.getRequest().getParameter("pagedListInfoId").equals(this.getId()))) {
+            return false;
+    } 
+    
     Enumeration parameters = context.getRequest().getParameterNames();
     boolean reset = false;
-
 
     String tmpSortOrder = context.getRequest().getParameter("order");
     if (tmpSortOrder != null) {
@@ -411,6 +421,7 @@ public void setSavedCriteria(HashMap savedCriteria) {
 		}
 		
 	}
+      return true;
   }
   
     

@@ -118,6 +118,7 @@ public class PagedListControlHandler extends TagSupport {
             ((tdClass != null) ? " class=\"" + tdClass + "\"" : "") +
             ">");
         out.write("<input type=\"hidden\" name=\"offset\" value=\"\">");
+        out.write("<input type=\"hidden\" name=\"pagedListInfoId\" value=\"" + object + "\">");
 
         out.write("[" +
             pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") +

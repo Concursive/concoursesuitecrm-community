@@ -41,6 +41,7 @@ public class CFSModule {
     PagedListInfo tmpInfo = (PagedListInfo) context.getSession().getAttribute(viewName);
     if (tmpInfo == null) {
       tmpInfo = new PagedListInfo();
+      tmpInfo.setId(viewName);
       context.getSession().setAttribute(viewName, tmpInfo);
     }
     tmpInfo.setParameters(context);

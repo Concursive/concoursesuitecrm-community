@@ -3,8 +3,8 @@
 <jsp:useBean id="SeverityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="TicketTypeSelect" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].searchId.focus();">
-<form name="searchTicket" action="/TroubleTickets.do?command=Home&auto-populate=true" method="post">
+<body onLoad="javascript:document.forms[0].searchcodeId.focus();">
+<form name="searchTicket" action="/TroubleTickets.do?command=ViewResults&auto-populate=true" method="post">
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr bgcolor="#DEE0FA">
     <td colspan=2 valign=center align=left>
@@ -14,10 +14,19 @@
   
   <tr>
     <td nowrap class="formLabel">
-      Ticket Number
+      Number
     </td>
     <td>
-      <input type=text size=10 name="searchId" value="">
+      <input type=text size=10 name="searchcodeId" value="">
+    </td>
+  </tr>
+  
+  <tr>
+    <td nowrap class="formLabel">
+      Description
+    </td>
+    <td>
+      <input type=text size=40 name="searchDescription" value="">
     </td>
   </tr>
   
@@ -26,7 +35,7 @@
       Organization
     </td>
 	<td bgColor="white">
-	<%= OrgList.getHtmlSelectDefaultNone("searchOrgId") %>
+	<%= OrgList.getHtmlSelectDefaultNone("searchcodeOrgId") %>
 	</td>
   </tr>
   
@@ -36,7 +45,7 @@
 	Severity
 	</td>
 	<td bgColor="white">
-	<%= SeverityList.getHtmlSelect("searchSeverity",0) %>
+	<%= SeverityList.getHtmlSelect("searchcodeSeverity",0) %>
 	</td>
 	</tr>
 	</dhv:include>
@@ -47,7 +56,7 @@
 	Priority
 	</td>
 	<td bgColor="white">
-	<%= PriorityList.getHtmlSelect("searchPriority",0) %>
+	<%= PriorityList.getHtmlSelect("searchcodePriority",0) %>
 	</td>
 	</tr>
   </dhv:include>
@@ -59,7 +68,7 @@
 	<td bgColor="white">
 	<%= TicketTypeSelect.getHtml() %>
 	<input type=hidden name="search" value="1">
-   	</td>
+  </td>
 	</tr>
 	
 </table>

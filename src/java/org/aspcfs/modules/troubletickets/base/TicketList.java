@@ -29,6 +29,7 @@ public class TicketList extends Vector {
   private int severity = 0;
   private int priority = 0;
   private String accountOwnerIdRange = null;
+  private String description = null;
 
   private String searchText = "";
 
@@ -174,8 +175,7 @@ public class TicketList extends Vector {
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
   }
-
-
+  
   /**
    *  Sets the EnteredBy attribute of the TicketList object
    *
@@ -184,6 +184,14 @@ public class TicketList extends Vector {
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
+  }
+
+  public String getDescription() {
+          return description;
+  }
+
+  public void setDescription(String description) {
+          this.description = description;
   }
 
 
@@ -474,6 +482,14 @@ public class TicketList extends Vector {
       if (enteredBy > -1) {
         sqlFilter.append("AND t.enteredby = ? ");
       }
+      
+      if (description != null) {
+              if (description.indexOf("%") >= 0) {
+                      sqlFilter.append("AND lower(t.problem) like lower(?) ");
+              } else {
+                      sqlFilter.append("AND lower(t.problem) = lower(?) ");
+              }
+      }
 
       if (onlyOpen == true) {
         sqlFilter.append("AND t.closed IS null ");
@@ -546,6 +562,9 @@ public class TicketList extends Vector {
 
       if (enteredBy > -1) {
         pst.setInt(++i, enteredBy);
+      }
+      if (description != null) {
+        pst.setString(++i, description);
       }
       if (id > -1) {
         pst.setInt(++i, id);

@@ -18,6 +18,13 @@ import com.darkhorseventures.webutils.*;
  *@version
  */
 public final class TroubleTickets extends CFSModule {
+        
+  public String executeCommandDefault(ActionContext context) {
+    if (!(hasPermission(context, "tickets-tickets-view"))) {
+      return ("DefaultError");
+    }
+    return (this.executeCommandHome(context));
+  }
 
   /**
    *  Description of the Method
@@ -275,73 +282,75 @@ public final class TroubleTickets extends CFSModule {
     Statement st = null;
     ResultSet rs = null;
 
-    TicketList ticList = new TicketList();
-
-    String passedId = context.getRequest().getParameter("searchId");
-    String passedOrgId = context.getRequest().getParameter("searchOrgId");
-    String passedPriority = context.getRequest().getParameter("searchPriority");
-    String passedSeverity = context.getRequest().getParameter("searchSeverity");
-    String passedType = context.getRequest().getParameter("type");
+    TicketList createdByMeList = new TicketList();
+    TicketList assignedToMeList = new TicketList();
+    TicketList openList = new TicketList();
 
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+    
+    //new
+    
+    PagedListInfo assignedToMeInfo = this.getPagedListInfo(context, "AssignedToMeInfo");
+    PagedListInfo openInfo = this.getPagedListInfo(context, "OpenInfo");
+    
+    assignedToMeInfo.setLink("/TroubleTickets.do?command=Home");
+    openInfo.setLink("/TroubleTickets.do?command=Home");
+    
+    assignedToMeList.setPagedListInfo(assignedToMeInfo);
+    //assignedToMeInfo.setSearchCriteria(assignedToMeList);
 
-    PagedListInfo ticListInfo = this.getPagedListInfo(context, "TicListInfo");
-    ticListInfo.setLink("/TroubleTickets.do?command=Home");
-
-    String searchString = context.getRequest().getParameter("search");
-
-    //search stuff
-
-    if (passedId != null && !(passedId.equals(""))) {
-      ticList.setId(passedId);
-    }
-    if (passedOrgId != null && !(passedOrgId.equals(""))) {
-      ticList.setOrgId(passedOrgId);
-    }
-
-    if (passedSeverity != null && !(passedSeverity.equals(""))) {
-      ticList.setSeverity(passedSeverity);
-    }
-    if (passedPriority != null && !(passedPriority.equals(""))) {
-      ticList.setPriority(passedPriority);
-    }
-
-    if (passedType != null && passedType.equals("1")) {
-      ticList.setOnlyOpen(true);
-    } else if (passedType != null && passedType.equals("2")) {
-      ticList.setOnlyClosed(true);
-    }
-
+    openList.setPagedListInfo(openInfo);
+    //openInfo.setSearchCriteria(openList);
+    
+    assignedToMeList.setAssignedTo(getUserId(context));
+    assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+    
+    openList.setUnassignedToo(true);
+    openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+    
     //end
+
+    PagedListInfo createdByMeInfo = this.getPagedListInfo(context, "CreatedByMeInfo");
+    createdByMeInfo.setLink("/TroubleTickets.do?command=Home");
+    
+    createdByMeList.setPagedListInfo(createdByMeInfo);
+    //createdByMeInfo.setSearchCriteria(createdByMeList);
+    
+    createdByMeList.setUnassignedToo(true);
+    createdByMeList.setEnteredBy(getUserId(context));
 
     try {
       db = this.getConnection(context);
+      
+      if ("assignedToMe".equals(assignedToMeInfo.getListView())) {
+          assignedToMeList.setAssignedTo(getUserId(context));
+          assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+      }
+      
+      if ("unassigned".equals(openInfo.getListView())) {
+          openList.setUnassignedToo(true);
+          openList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
+      }
 
-      if (searchString == null || searchString.equals("")) {
-        if (ticListInfo.getListView() == null) {
-          ticListInfo.setListView("A");
-        }
-
-        ticList.setOnlyOpen(true);
-
-        if ("A".equals(ticListInfo.getListView())) {
+/**
+        if ("unassigned".equals(ticListInfo.getListView())) {
           ticList.setUnassignedToo(true);
-          //ticList.setOwnerIdRange(this.getUserRange(context));
           ticList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
-        } else if ("B".equals(ticListInfo.getListView())) {
+        } else if ("assignedToMe".equals(ticListInfo.getListView())) {
           ticList.setAssignedTo(getUserId(context));
-          //ticList.setOwner(this.getUserId(context));
           ticList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
         } else {
           ticList.setUnassignedToo(true);
-          //ticList.setOwner(this.getUserId(context));
-          ticList.setEnteredBy(getUserId(context));
+          
+          if ("createdByMe".equals(ticListInfo.getListView())) {
+                  ticList.setEnteredBy(getUserId(context));
+          }
+          
         }
-
-      }
-
-      ticList.setPagedListInfo(ticListInfo);
-      ticList.buildList(db);
+*/
+      createdByMeList.buildList(db);
+      assignedToMeList.buildList(db);
+      openList.buildList(db);
 
     } catch (Exception e) {
       errorCode = 1;
@@ -350,7 +359,9 @@ public final class TroubleTickets extends CFSModule {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "ViewTickets", "View Tickets");
-    context.getRequest().setAttribute("TicList", ticList);
+    context.getRequest().setAttribute("CreatedByMeList", createdByMeList);
+    context.getRequest().setAttribute("AssignedToMeList", assignedToMeList);
+    context.getRequest().setAttribute("OpenList", openList);
 
     if (errorCode == 0) {
       addModuleBean(context, "ViewTickets", "View Tickets");
@@ -473,8 +484,8 @@ public final class TroubleTickets extends CFSModule {
     HtmlSelect ticketTypeSelect = new HtmlSelect();
     ticketTypeSelect.setSelectName("type");
     ticketTypeSelect.addItem("0", "-- Any --");
-    ticketTypeSelect.addItem("1", "Open");
-    ticketTypeSelect.addItem("2", "Closed");
+    ticketTypeSelect.addItem("1", "Open Only");
+    ticketTypeSelect.addItem("2", "Closed Only");
     ticketTypeSelect.build();
     context.getRequest().setAttribute("TicketTypeSelect", ticketTypeSelect);
 
