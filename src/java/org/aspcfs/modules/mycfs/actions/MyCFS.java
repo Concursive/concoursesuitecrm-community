@@ -9,6 +9,7 @@ import java.sql.*;
 import java.util.Vector;
 import com.darkhorseventures.webutils.*;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 /**
  *  The MyCFS module.
@@ -136,6 +137,7 @@ public final class MyCFS extends CFSModule {
 		addModuleBean(context, "Customize Headlines", "");
 		int headlines = 0;
 		Exception errorMessage = null;
+		boolean existsAlready = false;
 
 		Connection db = null;
 
@@ -149,8 +151,10 @@ public final class MyCFS extends CFSModule {
 			newOrg.setIndustry("1");
 			newOrg.setEnteredBy(getUserId(context));
 			newOrg.setMiner_only(true);
-
+			
 			db = this.getConnection(context);
+			
+			//existsAlready = newOrg.checkIfExists(db,name);
 			newOrg.insert(db);
 		}
 		catch (SQLException e) {
@@ -215,6 +219,12 @@ public final class MyCFS extends CFSModule {
 		Statement st = null;
 		ResultSet rs = null;
 		ResultSet headline_rs = null;
+		
+		CalendarView companyCalendar = new CalendarView(context.getRequest());
+		//companyCalendar.addHolidays();
+		companyCalendar.setMonthArrows(true);
+		companyCalendar.setFrontPageView(true);
+		
 
 		try {
 			StringBuffer sql = new StringBuffer();
@@ -291,6 +301,14 @@ public final class MyCFS extends CFSModule {
 			alertOpps.setEnteredBy(getUserId(context));
 			alertOpps.setHasAlertDate(true);
 			alertOpps.buildList(db);
+			
+			Iterator n = alertOpps.iterator();
+			if ( n.hasNext() ) {
+				while (n.hasNext()) {
+					Opportunity thisOpp = (Opportunity)n.next();
+					companyCalendar.addEvent(thisOpp.getAlertDate(),"","<font color=red>A</font>","");
+				}
+			}
 
 		}
 		catch (SQLException e) {
@@ -301,6 +319,7 @@ public final class MyCFS extends CFSModule {
 		}
 
 		if (errorMessage == null) {
+			context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
 			context.getRequest().setAttribute("NewsList", newsList);
 			context.getRequest().setAttribute("AlertsListSelection", alertsListSelect);
 			context.getRequest().setAttribute("AlertOppsList", alertOpps);

@@ -41,6 +41,7 @@ public class CalendarView {
   protected boolean headerSpace = false;
   protected boolean monthArrows = false;
   protected boolean smallView = false;
+  protected boolean frontPageView = false;
   protected boolean popup = false;
   protected String borderSize = "";
 
@@ -146,6 +147,12 @@ public class CalendarView {
     this.update();
   }
 
+public boolean getFrontPageView() {
+	return frontPageView;
+}
+public void setFrontPageView(boolean frontPageView) {
+	this.frontPageView = frontPageView;
+}
 
   /**
    *  Sets the day property (java.lang.String) value.
@@ -529,6 +536,8 @@ public class CalendarView {
     if (popup) {
       pre = "small";
       tableWidth = "155";
+    } else if (frontPageView) {
+	    tableWidth = "300";
     }
 
     //Display Calendar
@@ -560,7 +569,7 @@ public class CalendarView {
     for (int i = 1; i < 8; i++) {
       html.append("<td width='14%' class='" + pre + "weekName'>");
       //width='70'
-      if (popup) {
+      if (popup || frontPageView) {
         html.append(this.getDayName(i, true));
       } else {
         html.append(this.getDayName(i, false));
@@ -586,7 +595,11 @@ public class CalendarView {
 
       html.append("<td valign='top'");
       if (!smallView) {
-        html.append("height='70'");
+	if (!frontPageView) {      
+        	html.append("height='70'");
+	} else {
+		html.append("height='25'");
+	}
       }
 
       boolean mainMonth = false;
