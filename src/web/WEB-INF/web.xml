@@ -92,7 +92,7 @@ Replaceable parameter  typical value / description
     </init-param>
     <init-param>
         <param-name>SiteCode</param-name>
-        <param-value>ds21</param-value>
+        <param-value>@SiteCode@</param-value>
     </init-param>
     <init-param>
         <param-name>ClientSSLKeystore</param-name>
