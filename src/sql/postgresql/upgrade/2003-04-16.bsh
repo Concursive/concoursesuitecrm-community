@@ -1,0 +1,32 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  April 16, 2003
+  - Moves the "contacts-internal_contacts" permission to the "My Home Page" category
+  - Renames the "contacts-internal_contacts" description to "Employees"
+*/
+import java.sql.*;
+
+//Get the "My Home Page" category id for which this permission will be moved to
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT category_id " +
+  "FROM permission_category " +
+  "WHERE category = 'My Home Page'");
+if (rs.next()) {
+  categoryId = rs.getInt("category_id");
+}
+rs.close();
+st.close();
+print("My Home Page Category Id: " + categoryId);
+
+//Move and rename the permission
+if (categoryId > -1) {
+  st.execute(
+    "UPDATE permission " +
+    "SET description = 'Employees', category_id = " + categoryId + " " +
+    "WHERE permission = 'contacts-internal_contacts'");
+  print("Permission updated: contacts-internal_contacts");
+}
+
