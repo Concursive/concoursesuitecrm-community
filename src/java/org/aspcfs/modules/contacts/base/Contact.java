@@ -833,7 +833,7 @@ public class Contact extends GenericBean {
     StringBuffer out = new StringBuffer();
 
     if (nameLast != null && nameLast.length() > 0) {
-      out.append(nameLast + " ");
+      out.append(nameLast);
     }
 
     if (nameFirst != null && nameFirst.length() > 0) {
