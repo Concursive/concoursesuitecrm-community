@@ -47,14 +47,12 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.assigned_
 	<field name="assigned_to" class="java.lang.Integer"/>
 	<field name="namelast" class="java.lang.String"/>
 	<field name="namefirst" class="java.lang.String"/>
-	<variable name="month_yr" class="java.lang.String" resetType="Group" resetGroup="month_yr" calculation="Nothing">
-		<variableExpression><![CDATA[(new SimpleDateFormat("MMMM yyyy")).format($F{entered})]]></variableExpression>	</variable>
 	<variable name="total_vol" class="java.lang.Integer" resetType="Group" resetGroup="month_yr" calculation="Count">
 		<variableExpression><![CDATA[$F{assigned_to} == null ? new Integer(1) :$F{assigned_to}]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
 	<variable name="volume" class="java.lang.Integer" resetType="Group" resetGroup="assignee" calculation="Count">
 		<variableExpression><![CDATA[$F{assigned_to} == null ? new Integer(1) :$F{assigned_to}]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
 		<group  name="month_yr" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
-			<groupExpression><![CDATA[$V{month_yr}]]></groupExpression>
+			<groupExpression><![CDATA[$F{entered}]]></groupExpression>
 			<groupHeader>
 			<band height="30"  isSplitAllowed="true" >
 				<rectangle radius="0" >
@@ -89,7 +87,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.assigned_
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$V{month_yr} == null ? "":$V{month_yr}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[(new SimpleDateFormat("MMMM yyyy")).format($F{entered})]]></textFieldExpression>
 				</textField>
 				<rectangle radius="0" >
 					<reportElement

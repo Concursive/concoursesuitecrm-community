@@ -47,14 +47,12 @@ AND t.entered <= $P{date_end}
 ORDER BY $P!{year_part}, $P!{month_part}, $P!{day_part}, tc.description]]></queryString>
 	<field name="entered" class="java.sql.Timestamp"/>
 	<field name="description" class="java.lang.String"/>
-	<variable name="date_wise" class="java.lang.String" resetType="Group" resetGroup="date_wise" calculation="Nothing">
-		<variableExpression><![CDATA[(new SimpleDateFormat("MMMM dd, yyyy")).format($F{entered})]]></variableExpression>		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
 	<variable name="total_vol" class="java.lang.Long" resetType="Group" resetGroup="date_wise" calculation="Count">
 		<variableExpression><![CDATA[($F{description} != null ? $F{description} : "")  ]]></variableExpression>	</variable>
 	<variable name="volume" class="java.lang.Long" resetType="Group" resetGroup="category" calculation="Count">
 		<variableExpression><![CDATA[($F{description} != null ? $F{description} : "")  ]]></variableExpression>		<initialValueExpression><![CDATA[new Long(0)]]></initialValueExpression>	</variable>
 		<group  name="date_wise" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
-			<groupExpression><![CDATA[$V{date_wise}]]></groupExpression>
+			<groupExpression><![CDATA[$F{entered}]]></groupExpression>
 			<groupHeader>
 			<band height="30"  isSplitAllowed="true" >
 				<rectangle radius="0" >
@@ -89,7 +87,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, $P!{day_part}, tc.description]]></quer
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$V{date_wise} == null ? "":$V{date_wise}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[(new SimpleDateFormat("MMMM dd, yyyy")).format($F{entered})]]></textFieldExpression>
 				</textField>
 				<rectangle radius="0" >
 					<reportElement
