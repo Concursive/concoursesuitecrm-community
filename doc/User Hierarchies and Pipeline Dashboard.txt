@@ -1,7 +1,10 @@
-Some thoughts on the subject...
-
-Minimize the database hits by getting a single list of opportunities to process.
-Supporting objects may be too much.
+/**
+ *  User Hierarchies and Pipeline Dashboard
+ *
+ *@author     mrajkowski
+ *@created    January 14, 2002
+ *@version    $Id$
+ */
 
 When the user logs in, their hierarchy is in memory.
 - getFullChildList() gets a vector of all users in hierarchy
