@@ -59,8 +59,8 @@ View Users
       <%= UserListInfo.getSortIcon("c.namelast") %>
     </th>
     <th nowrap>
-      <b><a href="Users.do?command=ListUsers&column=username">Username</a></b>
-      <%= UserListInfo.getSortIcon("username") %>
+      <b><a href="Users.do?command=ListUsers&column=a.username">Username</a></b>
+      <%= UserListInfo.getSortIcon("a.username") %>
     </th>
     <th nowrap>
       <b><a href="Users.do?command=ListUsers&column=role">Role</a></b>
