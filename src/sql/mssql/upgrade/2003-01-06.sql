@@ -1,4 +1,19 @@
-/* 2003-01-06: Need to perform this manually, updates CFS to 2.5 database */
+/* 2003-01-06: Need to perform this manually, updates CFS to 2.5 database 
+
+  Manual entries:
+  
+  ALTER TABLE contact DROP CONSTRAINT DF_contact_type_id
+  ALTER TABLE contact ADD CONSTRAINT primary_contact
+  
+  REMOVE default from folder_id
+  
+  Update the permissions tables with module code
+  
+  ALTER TABLE account_type_levels RENAME COLUMN id TO org_id
+
+*/
+
+
 
 UPDATE access_log
 SET user_id = a.user_id 
@@ -79,10 +94,7 @@ ALTER TABLE organization DROP COLUMN duplicate
 
 ALTER TABLE contact ALTER COLUMN owner INT NULL
 ALTER TABLE contact ADD primary_contact BIT NULL
-//ALTER TABLE contact DROP CONSTRAINT DF_contact_type_id
-//ALTER TABLE contact ADD CONSTRAINT primary_contact
 
-//Defaults may not work here...
 ALTER TABLE permission_category ADD [folders] [bit] NULL DEFAULT 0
 ALTER TABLE permission_category ADD [lookups] [bit] NULL DEFAULT 0
 
@@ -638,7 +650,6 @@ CREATE TABLE project_folders (
 )
 GO
 ALTER TABLE project_files ALTER COLUMN project_id INT NULL
-//REMOVE default from folder_id
 ALTER TABLE project_files_download ALTER COLUMN user_download_id INT NULL
 GO
 CREATE TABLE project_team (
@@ -1568,7 +1579,59 @@ ALTER TABLE [dbo].[organization_phone] ADD
 	)
 GO
 
+/* Fix contact types */
+INSERT INTO contact_type_levels
+SELECT contact_id, type_id, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+FROM contact
+WHERE type_id IS NOT NULL
+GO
 
+/* Permissions Tables */
+UPDATE permission_category SET folders = 1, lookups = 1 WHERE category = 'Account Management'
+UPDATE permission_category SET folders = 1, lookups = 1 WHERE category = 'Contacts & Resources'
+UPDATE permission_category SET folders = 0, lookups = 0 WHERE category = 'Auto Guide'
+UPDATE permission_category SET folders = 0, lookups = 1 WHERE category = 'Pipeline Management'
+UPDATE permission_category SET folders = 0, lookups = 0 WHERE category = 'Demo'
+UPDATE permission_category SET folders = 0, lookups = 0 WHERE category = 'Campaign Manager'
+UPDATE permission_category SET folders = 0, lookups = 0 WHERE category = 'Project Management'
+UPDATE permission_category SET folders = 0, lookups = 1 WHERE category = 'Tickets'
+UPDATE permission_category SET folders = 0, lookups = 0 WHERE category = 'Admin'
+UPDATE permission_category SET folders = 0, lookups = 0 WHERE category = 'Help'
+UPDATE permission_category SET folders = 0, lookups = 0 WHERE category = 'System'
+UPDATE permission_category SET folders = 0, lookups = 0 WHERE category = 'My Home Page'
+GO
 
+/* Verify these values in existing data before inserting */
+INSERT INTO module_field_categorylink (module_id, category_id) VALUES (5, 1);
+INSERT INTO module_field_categorylink (module_id, category_id) VALUES (3, 2);
+GO
 
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (5, 1, 'lookuplist', 'lookup_account_types', 1, 'Account Types');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (5, 2, 'lookuplist', 'lookup_revenue_types', 2, 'Revenue Types');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (5, 3, 'contacttype', '', 3, 'Contact Types');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 1, 'contacttype', '', 1, 'Contact Types');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 2, 'lookuplist', 'lookup_contactemail_types', 2, 'Contact Email Type');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 3, 'lookuplist', 'lookup_contactaddress_types', 3, 'Contact Address Type');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 4, 'lookuplist', 'lookup_contactphone_types', 4, 'Contact Phone Type');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (3, 5, 'lookuplist', 'lookup_department', 5, 'Department');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (4, 1, 'lookuplist', 'lookup_stage', 1, 'Stage');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (4, 2, 'lookuplist', 'lookup_opportunity_types', 2, 'Opportunity Type');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (8, 1, 'lookuplist', 'lookup_ticketsource', 1, 'Ticket Source');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (8, 2, 'lookuplist', 'ticket_severity', 2, 'Ticket Severity');
+INSERT INTO lookup_lists_lookup (module_id, lookup_id, class_name, table_name, level, description) VALUES (8, 3, 'lookuplist', 'ticket_priority', 3, 'Ticket Priority');
+GO
 
+UPDATE permission 
+SET permission = 'myhomepage-reassign'
+WHERE permission = 'admin-reassign';
+
+UPDATE permission
+SET category_id = permission_category.category_id
+FROM permission_category
+WHERE permission = 'myhomepage-reassign'
+AND permission_category.category = 'My Home Page';
+
+UPDATE permission_category
+SET category = 'General Contacts'
+WHERE category = 'Contacts & Resources';
+GO
