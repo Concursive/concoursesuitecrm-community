@@ -94,7 +94,7 @@
     <td nowrap valign=top class="formLabel">
       Select fields to include
     </td>
-    <td width=200>
+    <td width=40%>
       <select size=5 multiple name="fields">
       <option value="contact" >Contact/Organization</option>
       <option value="owner" >Owner</option>
@@ -130,7 +130,7 @@
       </table>
       </td>
       
-      <td width=100%>
+      <td width=60%>
       <select size=5 name="selectedList" multiple>
       <option value="id" >Opportunity ID</option>
       <option value="description" >Description</option>
