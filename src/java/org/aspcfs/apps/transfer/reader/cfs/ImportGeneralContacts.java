@@ -123,6 +123,7 @@ public class ImportGeneralContacts extends CSVReader {
       newContactRecord.setName("contact");
       newContactRecord.setAction("insert");
       newContactRecord.addField("guid", contactId);
+      newContactRecord.addField("accessType", "2");
       newContactRecord.addField("userId", userId, "user", null);
       newContactRecord.addField("nameFirst", "");
       newContactRecord.addField("nameLast", "Electronic Import");
@@ -131,21 +132,6 @@ public class ImportGeneralContacts extends CSVReader {
       newContactRecord.addField("modifiedBy", userId);
       newContactRecord.addField("enabled", "false");
       writer.save(newContactRecord);
-      /*
-       *  XMLUtils responseXML = new XMLUtils(writer.getLastResponse(), true);
-       *  System.out.println(XMLUtils.getNodeText(responseXML.getFirstElement("id")));
-       *  /Update the user with the contact info
-       *  DataRecord newUserRecord = new DataRecord();
-       *  newUserRecord.setName("user");
-       *  newUserRecord.setAction("insert");
-       *  newUserRecord.addField("guid", userId);
-       *  newUserRecord.addField("username", "Electronic Import");
-       *  newUserRecord.addField("contactId", contactId, "contact", null);
-       *  newUserRecord.addField("encryptedPassword", "none");
-       *  newUserRecord.addField("enteredBy", userId);
-       *  newUserRecord.addField("modifiedBy", userId);
-       *  writer.save(newUserRecord);
-       */
       //Prepare the formatters
       AddressFormatter addressFormatter = new AddressFormatter();
       EmailAddressFormatter emailFormatter = new EmailAddressFormatter();
@@ -206,6 +192,7 @@ public class ImportGeneralContacts extends CSVReader {
         ContactPhoneNumberList phoneNumberList = thisContact.getPhoneNumberList();
         ContactAddressList addressList = thisContact.getAddressList();
 
+        thisContact.setAccessType(1);
         thisContact.setId(contactId);
         thisContact.setEnteredBy(userId);
         if (OWNER > 0) {
