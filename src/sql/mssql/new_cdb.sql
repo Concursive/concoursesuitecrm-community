@@ -324,7 +324,7 @@ CREATE TABLE lookup_delivery_options (
 
 CREATE TABLE news (
   rec_id INT IDENTITY PRIMARY KEY,
-  org_id INT references organization(org_id),
+  org_id INT REFERENCES organization(org_id),
   url TEXT,
   base TEXT,
   headline TEXT,
