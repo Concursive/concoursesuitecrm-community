@@ -905,7 +905,7 @@ public class Call extends GenericBean {
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
-    ActionList actionList = ActionItemLogList.isItemLinked(db, this.getId());
+    ActionList actionList = ActionItemLogList.isItemLinked(db, this.getId(), Constants.CALL_OBJECT);
     if (actionList != null) {
       Dependency thisDependency = new Dependency();
       thisDependency.setName(actionList.getDescription());

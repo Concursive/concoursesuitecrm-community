@@ -985,7 +985,7 @@ public class OpportunityHeader extends GenericBean {
     rs.close();
     pst.close();
     
-    ActionList actionList = ActionItemLogList.isItemLinked(db, this.getId());
+    ActionList actionList = ActionItemLogList.isItemLinked(db, this.getId(), Constants.OPPORTUNITY_OBJECT);
       if (actionList != null) {
         Dependency thisDependency = new Dependency();
         thisDependency.setName(actionList.getDescription());
