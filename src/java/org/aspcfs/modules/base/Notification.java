@@ -442,11 +442,13 @@ public class Notification extends Thread {
           System.out.println("Notification-> To: " + thisUser.getContact().getEmailAddress("Business"));
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
+          mail.setFrom(from + " <cfs-messenger@darkhorseventures.com>");
           if (from != null) {
-            mail.setFrom(from);
+            mail.addReplyTo(from);
           } else {
-            mail.setFrom(siteCode + "@" + this.getHostName());
+            mail.addReplyTo(siteCode + "@" + this.getHostName());
           }
+          
           mail.setType("text/html");
           mail.addTo(thisUser.getContact().getEmailAddress("Business"));
           mail.setSubject(subject);
