@@ -51,11 +51,18 @@
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
   <form name="addEmployee" action="CompanyDirectory.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-  <dhv:evaluate exp="<%= !isPopup(request) %>">
+<dhv:evaluate exp="<%= !isPopup(request) %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
   <a href="MyCFS.do?command=Home">My Home Page</a> > 
-  Add Employee<br>
-  <hr color="#BFBFBB" noshade>
-  </dhv:evaluate>
+  Add Employee
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
+</dhv:evaluate>
   <input type="hidden" name="empid" value="<%= ContactDetails.getId() %>">
   <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
   <dhv:evaluate exp="<%= !isPopup(request) %>">

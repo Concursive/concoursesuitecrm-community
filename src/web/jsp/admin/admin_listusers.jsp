@@ -11,9 +11,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
-View Users<br>
-<hr color="#BFBFBB" noshade>
+View Users
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="admin-users-add"><a href="Users.do?command=InsertUserForm">Add New User</a></dhv:permission>
 <center><%= UserListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">

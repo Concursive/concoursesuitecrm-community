@@ -7,14 +7,20 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <form name="componentDetails" action="ExternalContactsOpps.do?command=ModifyComponent&id=<%= oppComponentDetails.getId() %>" method="post">
 <dhv:evaluate exp="<%= !isPopup(request) %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>">Contact Details</a> >
 <a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>">Opportunities</a> >
 <a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= oppComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>">Opportunity Details</a> >
 Component Details
-<br>
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 </dhv:evaluate>
 <%@ include file="contact_details_header_include.jsp" %>
 <% String param1 = "id=" + ContactDetails.getId(); 

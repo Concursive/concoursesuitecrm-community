@@ -66,12 +66,19 @@
 %> 
   <form name="addContact" action="Contacts.do?command=Save&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" method="post">
   <dhv:evaluate exp="<%= !popUp %>">
+<%-- Trails --%>
+<table cellpadding="4" cellspacing="0" width="100%" class="trails">
+<tr>
+<td width="100%">
   <a href="Accounts.do">Account Management</a> > 
   <a href="Accounts.do?command=Search">Search Results</a> >
   <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
   <a href="Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Contacts</a> >
-  Add Contact<br>
-  <hr color="#BFBFBB" noshade>
+  Add Contact
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
   </dhv:evaluate>
   <%@ include file="accounts_details_header_include.jsp" %>
   <dhv:evaluate exp="<%= !popUp %>">

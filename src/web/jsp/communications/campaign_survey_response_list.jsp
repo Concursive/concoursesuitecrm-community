@@ -4,11 +4,18 @@
 <jsp:useBean id="SurveyResponseListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="SurveyResponseList" class="org.aspcfs.modules.communications.base.SurveyResponseList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
 <a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
 Response
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
 <% String param1 = "id=" + Campaign.getId(); %>
 <dhv:container name="communications" selected="response" param="<%= param1 %>" style="tabs"/>

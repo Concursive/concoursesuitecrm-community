@@ -13,9 +13,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> >
-Export Data<br>
-<hr color="#BFBFBB" noshade>
+Export Data
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="accounts-accounts-reports-add"><a href="Accounts.do?command=GenerateForm">Generate new export</a></dhv:permission>
 <dhv:permission name="accounts-accounts-reports-add" none="true"><br></dhv:permission>
 <center><%= RptListInfo.getAlphabeticalPageLinks() %></center>

@@ -57,6 +57,10 @@
   }
 %>
 <dhv:evaluate exp="<%= !popUp %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Leads.do">Pipeline Management</a> > 
 <a href="Leads.do?command=ViewOpp">View Components</a> >
 <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
@@ -64,8 +68,11 @@
 <% if (request.getParameter("return") == null) { %>
 	<a href="LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>">Call Details</a> >
 <%}%>
-Modify Call<br>
-<hr color="#BFBFBB" noshade>
+Modify Call
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 </dhv:evaluate>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>

@@ -74,12 +74,19 @@
    obj.selectedIndex = insertIndex;
   }
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="Accounts.do?command=ViewTickets&orgId=<%=OrgDetails.getOrgId()%>">Tickets</a> >
-Add Ticket<br>
-<hr color="#BFBFBB" noshade>
+Add Ticket
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
 <dhv:container name="accounts" selected="tickets" param="<%= param1 %>" style="tabs"/>

@@ -3,12 +3,19 @@
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="TroubleTickets.do">Tickets</a> > 
 <a href="TroubleTickets.do?command=Home">View Tickets</a> >
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>">Ticket Details</a> >
 <a href="TroubleTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>">Documents</a> >
-Details<br>
-<hr color="#BFBFBB" noshade>
+Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
 <%= toHtml(TicketDetails.getCompanyName()) %></strong>
 <dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>

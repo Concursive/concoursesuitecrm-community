@@ -6,9 +6,16 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <body onLoad="javascript:document.forms[0].searchDescription.focus();">
 <form name="searchLeads" action="Leads.do?command=Search" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Leads.do">Pipeline Management</a> > 
-Search Opportunities<br>
-<hr color="#BFBFBB" noshade>
+Search Opportunities
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

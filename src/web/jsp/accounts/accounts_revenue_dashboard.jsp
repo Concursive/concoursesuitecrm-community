@@ -9,9 +9,16 @@
 <% String includePage = "../graphs/" + (String) request.getAttribute("GraphFileName") + ".map"; %>          
 <jsp:include page="<%= includePage %>" flush="true"/>
 <form name="Dashboard" action="RevenueManager.do?command=Dashboard" method="POST">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
-Revenue Dashboard<br>
-<hr color="#BFBFBB" noshade>
+Revenue Dashboard
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table width="100%" border="0" cellspacing="0" cellpadding="3">
   <tr>
     <%-- Left Column --%>

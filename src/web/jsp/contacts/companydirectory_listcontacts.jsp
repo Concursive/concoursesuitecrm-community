@@ -13,9 +13,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="ExternalContacts.do">General Contacts</a> > 
-Search Results<br>
-<hr color="#BFBFBB" noshade>
+Search Results
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="contacts-external_contacts-add">
   <a href="ExternalContacts.do?command=Prepare">Add a Contact</a>
 </dhv:permission>

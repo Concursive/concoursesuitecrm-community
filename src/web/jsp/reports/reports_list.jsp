@@ -6,23 +6,16 @@
 <jsp:useBean id="category" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <jsp:useBean id="reports" class="org.aspcfs.modules.reports.base.ReportList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<a href="Reports.do">Reports</a> >
-<a href="Reports.do?command=RunReport">Run Report</a> >
-Reports<br>
-<hr color="#BFBFBB" noshade>
 <%-- Trails --%>
-<%--
-<table cellpadding="4" cellspacing="0" width="100%" class="trails">
+<table class="trails">
 <tr>
-<td width="100%">
+<td>
 <a href="Reports.do">Reports</a> >
 <a href="Reports.do?command=RunReport">Run Report</a> >
 Reports
 </td>
 </tr>
 </table>
-<br>
---%>
 <%-- End Trails --%>
 <strong><%= toHtml(category.getCategory()) %></strong><br>
 Choose a report to run:<br>

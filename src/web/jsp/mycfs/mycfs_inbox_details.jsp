@@ -4,10 +4,17 @@
 <jsp:useBean id="InboxInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
 <a href="MyCFSInbox.do?command=Inbox">My Mailbox</a> >
-Message Details<br>
-<hr color="#BFBFBB" noshade>
+Message Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:evaluate if="<%= !InboxInfo.getListView().equalsIgnoreCase("sent") %>">
 <input type="button" name="btn" value="Reply" onClick="javascript:window.location.href='MyCFSInbox.do?command=ReplyToMessage&id=<%=NoteDetails.getId()%>'">
 <input type="button" value="<%= (NoteDetails.getStatus() != 2?"Archive":"Send to Inbox") %>" onClick="javascript:window.location.href='MyCFSInbox.do?command=CFSNoteTrash&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>';">

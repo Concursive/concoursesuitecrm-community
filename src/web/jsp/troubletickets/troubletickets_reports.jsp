@@ -14,9 +14,16 @@
   loadImages('select');
 </script>
 <form name="listView" method="post" action="TroubleTickets.do?command=Reports">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="TroubleTickets.do">Tickets</a> > 
-Export Data<br>
-<hr color="#BFBFBB" noshade>
+Export Data
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="tickets-reports-add"><a href="TroubleTickets.do?command=GenerateForm">Generate new export</a></dhv:permission>
 <dhv:permission name="tickets-reports-add" none="true"><br></dhv:permission>
 <center><%= TicketRptListInfo.getAlphabeticalPageLinks() %></center>

@@ -5,11 +5,18 @@
 <jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <form name="details" action="AdminFieldsFolder.do?command=ListFolders" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=PermissionCategory.getId()%>"><%= PermissionCategory.getCategory() %></a> >
-Custom Folders<br>
-<hr color="#BFBFBB" noshade>
+Custom Folders
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
   <dhv:permission name="admin-sysconfig-folders-add">
     <a href="AdminFieldsFolder.do?command=AddFolder&modId=<%= PermissionCategory.getId() %>">Add a Folder to this Module</a><br>
     <% if (request.getAttribute("actionError") == null) { %>

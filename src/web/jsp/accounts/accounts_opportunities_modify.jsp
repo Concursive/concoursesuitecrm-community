@@ -4,6 +4,10 @@
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <form name="modifyOpp" action="Opportunities.do?command=Update&orgId=<%= OrgDetails.getId() %>&auto-populate=true" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -11,8 +15,11 @@
 <% if (request.getParameter("return") == null) {%>
 	<a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getOrgId() %>">Opportunity Details</a> >
 <%}%>
-Modify Opportunity<br>
-<hr color="#BFBFBB" noshade>
+Modify Opportunity
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
 <dhv:container name="accounts" selected="opportunities" param="<%= param1 %>" style="tabs"/>

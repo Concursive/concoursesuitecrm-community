@@ -235,9 +235,16 @@
 </script>
 <body onLoad="javascript:document.forms[0].name.focus();updateFormElements(0);">
 <form name="addAccount" action="Accounts.do?command=Insert&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<%-- Trails --%>
+<table cellpadding="4" cellspacing="0" width="100%" class="trails">
+<tr>
+<td width="100%">
 <a href="Accounts.do">Account Management</a> > 
-Add Account<br>
-<hr color="#BFBFBB" noshade>
+Add Account
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">

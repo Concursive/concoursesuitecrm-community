@@ -3,11 +3,18 @@
 <jsp:useBean id="Survey" class="org.aspcfs.modules.communications.base.Survey" scope="request"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <%@ include file="../initPage.jsp" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManagerAttachment.do">Create Attachments</a> >
 <a href="CampaignManagerSurvey.do?command=View">Surveys</a> >
-Survey Details<br>
-<hr color="#BFBFBB" noshade>
+Survey Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="campaign-campaigns-surveys-edit">
 <input type="button" name="action" value="Modify" onClick="javascript:window.location.href='CampaignManagerSurvey.do?command=Modify&id=<%=Survey.getId()%>'">
 </dhv:permission>

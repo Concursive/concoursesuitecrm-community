@@ -12,9 +12,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
-View Roles<br>
-<hr color="#BFBFBB" noshade>
+View Roles
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="admin-roles-add"><a href="Roles.do?command=InsertRoleForm">Add New Role</a></dhv:permission>
 <center><%= RoleListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="RoleListInfo"/>

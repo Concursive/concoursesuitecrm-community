@@ -30,12 +30,19 @@
   }
 </script>
 <form name="details" action="AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>" method="post" onSubmit="return checkForm(this);">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="Admin.do?command=Config&modId=<%= ModId %>">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>"><%= PermissionCategory.getCategory() %></a> >
 <a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
-Folder<br>
-<hr color="#BFBFBB" noshade>
+Folder
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <% if (request.getAttribute("actionError") != null) { %>
 <%= showError(request, "actionError") %>
 <%}%>

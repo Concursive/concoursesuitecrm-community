@@ -14,11 +14,18 @@ function finalize(selectedContacts, actionId){
 <%
   if (!"true".equalsIgnoreCase(request.getParameter("finalsubmit"))) {
 %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
 <a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>">My Action Lists</a> >
 <a href="MyActionContacts.do?command=List&actionId=<%= request.getParameter("actionId") %>">List Details</a> >
-Modify Action List<br>
-<hr color="#BFBFBB" noshade>
+Modify Action List
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%-- Navigating the contact list, not the final submit --%>
 <form name="contactListView" method="post" action="MyActionContacts.do?command=Modify&doBuild=false">
   <center><%= ContactListInfo.getAlphabeticalPageLinks("setFieldSubmit","contactListView") %></center>

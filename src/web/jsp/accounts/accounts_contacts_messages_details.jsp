@@ -6,14 +6,21 @@
 <jsp:useBean id="AccountContactMessageListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
 <a href="Contacts.do?command=Details&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 <a href="Contacts.do?command=ViewMessages&contactId=<%= ContactDetails.getId() %>">Messages</a> >
-Message Details<br>
-<hr color="#BFBFBB" noshade>
+Message Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="accounts_details_header_include.jsp" %>
 <dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">

@@ -3,11 +3,18 @@
 <%@ include file="../initPage.jsp" %>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="AccessLog" class="org.aspcfs.modules.admin.base.AccessLogList" scope="request"/>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="Users.do?command=ListUsers">View Users</a> >
 <a href="Users.do?command=UserDetails&id=<%=UserRecord.getId()%>">User Details</a> >
-Login History<br>
-<hr color="#BFBFBB" noshade>
+Login History
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
 <% String param1 = "id=" + UserRecord.getId(); %>      
 <dhv:container name="users" selected="history" param="<%= param1 %>" style="tabs"/>

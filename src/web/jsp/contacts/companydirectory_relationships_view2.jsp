@@ -3,11 +3,18 @@
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="howDirectSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 Relationships
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="contact_details_header_include.jsp" %>
 <% String param1 = "id=" + ContactDetails.getId(); %>      
 <dhv:container name="contacts" selected="relationships" param="<%= param1 %>" style="tabs"/>

@@ -33,10 +33,17 @@
     }
   }
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
 <a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>">My Action Lists</a> >
-Action Contacts<br>
-<hr color="#BFBFBB" noshade>
+Action Contacts
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="myhomepage-action-lists-edit">
 <a href="javascript:window.location.href='MyActionContacts.do?command=Prepare&actionId=<%= request.getParameter("actionId") %>&return=details&params=' + escape('filters=all|mycontacts|accountcontacts');"  onMouseOver="window.status='Add Contacts To List';return true;"  onMouseOut="window.status='';return true;">Add Contacts to List</a>&nbsp;
 <a href="MyActionContacts.do?command=Modify&actionId=<%= request.getParameter("actionId") %>">Modify List</a>

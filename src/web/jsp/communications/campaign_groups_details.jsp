@@ -2,10 +2,17 @@
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.web.LookupElement" %>
 <jsp:useBean id="scl" class="org.aspcfs.modules.communications.base.SearchCriteriaList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManagerGroup.do?command=View">View Groups</a> >
 Group Details
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="campaign-campaigns-groups-edit"><input type="button" name="cmd" value="Modify" onClick="window.location.href='CampaignManagerGroup.do?command=Modify&id=<%= request.getAttribute("id") %>'"></dhv:permission>
 <dhv:permission name="campaign-campaigns-groups-delete"><input type="button" name="cmd" value="Delete Group" onClick="popURLReturn('CampaignManagerGroup.do?command=ConfirmDelete&id=<%= request.getAttribute("id") %>&popup=true','CampaignManagerGroup.do?command=View', 'Delete_group','330','200','yes','no');"></dhv:permission>
 <input type="button" name="cmd" value="Preview" onClick="window.location.href='CampaignManagerGroup.do?command=Preview&id=<%= request.getAttribute("id") %>&reset=true'">

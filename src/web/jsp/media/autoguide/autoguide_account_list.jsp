@@ -6,11 +6,18 @@
 <jsp:useBean id="listFilterSelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <%@ include file="../../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-Vehicle Inventory List<br>
-<hr color="#BFBFBB" noshade>
+Vehicle Inventory List
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="../../accounts/accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
 <dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" style="tabs"/>

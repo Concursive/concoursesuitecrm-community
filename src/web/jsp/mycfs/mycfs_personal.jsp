@@ -40,10 +40,17 @@
   }
 </script>
 <form action="MyCFSProfile.do?command=UpdateProfile&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
 <a href="MyCFS.do?command=MyProfile">My Settings</a> >
-Personal Information<br>
-<hr color="#BFBFBB" noshade>
+Personal Information
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="myhomepage-profile-personal-edit">
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile';this.form.dosubmit.value='false';">

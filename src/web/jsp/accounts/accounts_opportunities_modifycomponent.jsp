@@ -74,6 +74,10 @@ function checkForm(form) {
    }
 %>
 <form name="opportunityForm" action="OpportunitiesComponents.do?command=SaveComponent&orgId=<%= OrgDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -86,8 +90,11 @@ function checkForm(form) {
 <a href="Opportunities.do?command=Details&headerId=<%= ComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>">Opportunity Details</a> >
 <a href="OpportunitiesComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>">Component Details</a> >
 <%}%>
-Modify Component<br>
-<hr color="#BFBFBB" noshade>
+Modify Component
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
 <dhv:container name="accounts" selected="opportunities" param="<%= param1 %>" style="tabs"/>

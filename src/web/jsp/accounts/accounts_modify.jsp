@@ -258,6 +258,10 @@
     popUp = true;
   }%>
 <dhv:evaluate exp="<%= !popUp %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
@@ -269,8 +273,11 @@
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <%}%>
-Modify Account<br>
-<hr color="#BFBFBB" noshade>
+Modify Account
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 </dhv:evaluate>
 <%@ include file="accounts_details_header_include.jsp" %>
   <dhv:evaluate exp="<%= !popUp %>">

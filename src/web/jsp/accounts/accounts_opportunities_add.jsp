@@ -76,12 +76,19 @@ function checkForm(form) {
 }
 </script>
 <form name="opportunityForm" action="Opportunities.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
-Add Opportunity<br>
-<hr color="#BFBFBB" noshade>
+Add Opportunity
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
 <dhv:container name="accounts" selected="opportunities" param="<%= param1 %>" style="tabs"/>

@@ -3,10 +3,17 @@
 <%@ include file="../initPage.jsp" %>
 <form name="details" action="ExternalContacts.do?command=ModifyContact&id=<%= ContactDetails.getId() %>" method="post">
 <dhv:evaluate exp="<%= !isPopup(request) %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
-Contact Details<br>
-<hr color="#BFBFBB" noshade>
+Contact Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 </dhv:evaluate>
 <%@ include file="contact_details_include.jsp" %>
 <input type="hidden" name="command" value="">

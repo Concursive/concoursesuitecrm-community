@@ -1,9 +1,16 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <form name="modifyTimeout" action="AdminConfig.do?command=UpdateTimeout" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="AdminConfig.do?command=ListGlobalParams">Configure System</a> >
-Modify Timeout<br>
-<hr color="#BFBFBB" noshade>
+Modify Timeout
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 The session timeout is the time in which a user will automatically be logged out if the specified period of inactivity is reached.<br>
 &nbsp;<br>
 <dhv:permission name="admin-sysconfig-view">

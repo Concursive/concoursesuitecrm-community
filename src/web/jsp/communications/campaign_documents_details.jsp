@@ -3,12 +3,19 @@
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
 <a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
 <a href="CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>">Documents</a> >
-Document Details<br>
-<hr color="#BFBFBB" noshade>
+Document Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
 <% String param1 = "id=" + Campaign.getId(); %>
 <dhv:container name="communications" selected="documents" param="<%= param1 %>" style="tabs"/>

@@ -71,6 +71,10 @@ function checkForm(form) {
 %>
 <form name="opportunityForm" action="LeadsComponents.do?command=SaveComponent&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate if="<%= !popUp %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Leads.do">Pipeline Management</a> > 
 <a href="Leads.do?command=ViewOpp">View Components</a> >
 <% if ("list".equals(request.getParameter("return"))) {%>
@@ -79,8 +83,11 @@ function checkForm(form) {
   <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>">Opportunity Details</a> > 
   <a href="LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>">Component Details</a> >
 <%}%>
-Modify Component<br>
-<hr color="#BFBFBB" noshade>
+Modify Component
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 </dhv:evaluate>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>

@@ -91,11 +91,18 @@
 </script>
 <body onLoad="javascript:document.forms[0].nameFirst.focus();">
   <form name="addContact" action="ExternalContacts.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-  <dhv:evaluate exp="<%= !isPopup(request)  || isInLinePopup(request) %>">
+<dhv:evaluate exp="<%= !isPopup(request)  || isInLinePopup(request) %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
   <a href="ExternalContacts.do">General Contacts</a> > 
-    Add Contact<br>
-    <hr color="#BFBFBB" noshade>
-  </dhv:evaluate>
+    Add Contact
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
+</dhv:evaluate>
   <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
   <dhv:evaluate exp="<%= !isPopup(request) %>">
   <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">

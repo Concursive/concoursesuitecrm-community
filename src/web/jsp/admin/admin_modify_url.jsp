@@ -2,10 +2,17 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <form name="modifyTimeout" action="AdminConfig.do?command=Update" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="AdminConfig.do?command=ListGlobalParams">Configure System</a> >
-Modify Setting<br>
-<hr color="#BFBFBB" noshade>
+Modify Setting
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 For system emails, what URL should be included to allow the user to return back to the site?<br>
 The URL must be specific and must exist in your DNS.<br>
 If a domain name is not configured, you can specify the IP address, include the full URL to

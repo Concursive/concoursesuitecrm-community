@@ -11,9 +11,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 Dashboard
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <center><%= CampaignDashboardListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>

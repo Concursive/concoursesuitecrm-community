@@ -8,9 +8,16 @@
 <body onLoad="javascript:document.forms[0].name.focus();">
 <form name="addAccount" action="MyCFS.do?command=InsertHeadline" method="post">
 </dhv:permission>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
-Headlines<br>
-<hr color="#BFBFBB" noshade>
+Headlines
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="myhomepage-miner-add">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>

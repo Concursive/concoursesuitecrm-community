@@ -4,10 +4,17 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <%@ include file="../initPage.jsp" %>
 <form name="details" action="TroubleTickets.do?command=Modify&auto-populate=true" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="TroubleTickets.do">Tickets</a> > 
 <a href="TroubleTickets.do?command=Home">View Tickets</a> >
-Ticket Details<br>
-<hr color="#BFBFBB" noshade>
+Ticket Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
 <%= toHtml(TicketDetails.getCompanyName()) %></strong>
 <dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>

@@ -2,11 +2,18 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
 <a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Schedule
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
 <% String param1 = "id=" + Campaign.getId(); %>
 <dhv:container name="communications" selected="schedule" param="<%= param1 %>" style="tabs"/>

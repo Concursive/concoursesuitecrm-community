@@ -23,11 +23,18 @@
   }
 </script>
 <form name="inputForm" action="CampaignManager.do?command=InsertSchedule&id=<%= Campaign.getId() %>" method="post" onSubmit="return checkForm(this);">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> > 
 <a href="CampaignManager.do?command=View">Campaign List</a> >
 <a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Delivery
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr class="containerHeader">
     <td>

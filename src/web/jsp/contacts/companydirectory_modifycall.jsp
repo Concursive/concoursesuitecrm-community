@@ -5,6 +5,10 @@
 <%@ include file="../initPage.jsp" %>
 <form name="addCall" action="ExternalContactsCalls.do?command=Update&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate exp="<%= !isPopup(request) %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
@@ -12,8 +16,11 @@
  <%if (request.getParameter("return") == null) { %>
 	<a href="ExternalContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>">Call Details</a> >
 <%}%>
-Modify Call<br>
-<hr color="#BFBFBB" noshade>
+Modify Call
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 </dhv:evaluate>
 <%@ include file="contact_details_header_include.jsp" %>
 <dhv:evaluate if="<%= (!isPopup(request) || isInLinePopup(request)) %>"> 

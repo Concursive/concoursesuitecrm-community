@@ -4,6 +4,10 @@
 <jsp:useBean id="ManagerUser" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <form name="disableUser" action="Users.do?command=DisableUser" method="POST">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
@@ -14,7 +18,10 @@
   <a href="Users.do?command=UserDetails&id=<%= User.getId() %>">User Details</a> >
 <%}%>
 Disable User Account
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>

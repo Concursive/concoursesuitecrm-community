@@ -20,9 +20,16 @@
 </script>
 <body onLoad="javascript:document.forms[0].searchFirstName.focus();">
 <form name="searchContact" action="ExternalContacts.do?command=SearchContacts&auto-populate=true" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="ExternalContacts.do">General Contacts</a> > 
-Search Contacts<br>
-<hr color="#BFBFBB" noshade>
+Search Contacts
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

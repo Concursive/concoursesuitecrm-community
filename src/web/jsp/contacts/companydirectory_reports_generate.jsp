@@ -32,10 +32,17 @@
 </script>
 <body onLoad="javascript:document.forms[0].subject.focus()">
 <form name="generate" action="ExternalContacts.do?command=ExportReport" method="post" onSubmit="return checkForm(this);">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=Reports">Export Data</a> >
-New Export<br>
-<hr color="#BFBFBB" noshade>
+New Export
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <input type="submit" value="Generate">
 <input type="button" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=Reports';javascript:this.form.submit();">
 <br>

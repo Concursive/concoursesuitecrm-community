@@ -26,10 +26,17 @@
 </script>
 <body onLoad="javascript:document.forms[0].subject.focus();">
 <form name="generate" action="LeadsReports.do?command=Export" method="post" onSubmit="return checkForm(this);">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Leads.do">Pipeline Management</a> > 
 <a href="LeadsReports.do?command=ExportList">Export Data</a> > 
-New Export<br>
-<hr color="#BFBFBB" noshade>
+New Export
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%-- Display viewpoint info --%>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>

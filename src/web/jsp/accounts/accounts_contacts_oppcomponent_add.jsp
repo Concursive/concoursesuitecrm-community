@@ -67,8 +67,11 @@
     }
   }
 </script>
-
 <dhv:evaluate if="<%= !isPopup(request) %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -76,8 +79,11 @@
 <a href="Contacts.do?command=Details&id=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Contact Details</a> >
 <a href="AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>">Opportunities</a> >
 <a href="AccountContactsOpps.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>">Opportunity Details</a> >
-Add Opportunity<br>
-<hr color="#BFBFBB" noshade>
+Add Opportunity
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 </dhv:evaluate>
 <form name="opportunityForm" action="AccountContactsOppComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 

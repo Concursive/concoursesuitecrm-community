@@ -16,11 +16,18 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="TroubleTickets.do">Tickets</a> > 
 <a href="TroubleTickets.do?command=Home">View Tickets</a> >
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>">Ticket Details</a> >
-Tasks<br>
-<hr color="#BFBFBB" noshade>
+Tasks
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
 <%= toHtml(TicketDetails.getCompanyName()) %></strong>
 <dhv:evaluate exp="<%= !(TicketDetails.getCompanyEnabled()) %>"><font color="red">(account disabled)</font></dhv:evaluate>

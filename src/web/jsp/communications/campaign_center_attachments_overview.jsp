@@ -5,11 +5,18 @@
 <jsp:useBean id="fileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <form name="modForm" action="CampaignManager.do?command=InsertAttachment&id=<%= Campaign.getId() %>" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=View">Campaign List</a> >
 <a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Attachments
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table cellpadding="4" cellspacing="0" width="100%" style="border: 1px solid #000;">
   <tr class="containerHeader">
     <td style="border-bottom: 1px solid #000;">

@@ -77,12 +77,19 @@
 </script>
 <form name="addVehicle" action="AccountsAutoGuide.do?command=AccountInsert&orgId=<%= OrgDetails.getOrgId() %>&auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <input type="hidden" name="accountId" value="<%= OrgDetails.getOrgId() %>"/>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="AccountsAutoGuide.do?command=AccountList&orgId=<%=OrgDetails.getOrgId()%>">Vehicle Inventory List</a> >
-Add Vehicle<br>
-<hr color="#BFBFBB" noshade>
+Add Vehicle
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="../../accounts/accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>
 <dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" style="tabs"/>

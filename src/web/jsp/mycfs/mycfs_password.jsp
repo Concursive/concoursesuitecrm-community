@@ -5,10 +5,17 @@
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].password.focus();">
 <form action="MyCFSPassword.do?command=UpdatePassword&auto-populate=true" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
 <a href="MyCFS.do?command=MyProfile">My Settings</a> >
-Password<br>
-<hr color="#BFBFBB" noshade>
+Password
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="myhomepage-profile-password-edit">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">

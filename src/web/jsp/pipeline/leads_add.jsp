@@ -81,9 +81,16 @@ function checkForm(form) {
 }
 </script>
 <form name="opportunityForm" action="Leads.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Leads.do">Pipeline Management</a> > 
-Add Opportunity<br>
-<hr color="#BFBFBB" noshade>
+Add Opportunity
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>

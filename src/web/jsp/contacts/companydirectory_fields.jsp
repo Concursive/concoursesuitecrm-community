@@ -8,24 +8,27 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <form name="details" action="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>" method="post">
 <dhv:evaluate exp="<%= !isPopup(request) %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 <dhv:evaluate if="<%= (Category.getAllowMultipleRecords() && Record == null) %>">
-List of Folder Records
+  List of Folder Records
 </dhv:evaluate>
-
 <dhv:evaluate if="<%= (Category.getAllowMultipleRecords() && Record != null) %>">
 <a href="ExternalContacts.do?command=Fields&contactId=<%=ContactDetails.getId()%>&catId=<%= Category.getId() %>">List of Folder Records</a> >
-Folder Record Details
+  Folder Record Details
 </dhv:evaluate>
-
 <dhv:evaluate if="<%= (!Category.getAllowMultipleRecords()) %>">
-Folder Record Details
+  Folder Record Details
 </dhv:evaluate>
-
-<br>
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 </dhv:evaluate>
 <%@ include file="contact_details_header_include.jsp" %>
 <% String param1 = "id=" + ContactDetails.getId(); 

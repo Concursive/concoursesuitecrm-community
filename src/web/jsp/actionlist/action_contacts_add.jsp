@@ -16,11 +16,18 @@ function saveCriteria() {
   }
 %>
 <form name="searchForm" method="post" action="MyActionContacts.do?command=Save&actionId=<%= ActionList.getId() %>" onSubmit="return saveCriteria();">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
 <a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>">My Action Lists</a> >
 <a href="MyActionContacts.do?command=List&actionId=<%= request.getParameter("actionId") %>">List Details</a> >
-Add Contacts<br>
-<hr color="#BFBFBB" noshade>
+Add Contacts
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <input type="submit" value="Save">
 <input type="button" value="Cancel" onClick="javascript:window.location.href='<%= returnURL %>'">
 <input type="button" value="Preview" onClick="javascript:popPreview()">

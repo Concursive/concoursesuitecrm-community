@@ -86,6 +86,10 @@
   }
 %>
   <form name="addContact" action="Contacts.do?command=Save&action=Modify&auto-populate=true&orgId=<%=ContactDetails.getOrgId()%>" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -93,8 +97,11 @@
 <% if (request.getParameter("return") == null) {%>
 	<a href="Contacts.do?command=Details&id=<%=ContactDetails.getId()%>">Contact Details</a> >
 <%}%>
-Modify Contact<br>
-<hr color="#BFBFBB" noshade>
+Modify Contact
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
 <dhv:container name="accounts" selected="contacts" param="<%= param1 %>" style="tabs"/>

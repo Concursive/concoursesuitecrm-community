@@ -1,10 +1,17 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ include file="../initPage.jsp" %>
 <form name="modify" action="AdminConfig.do?command=Update" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="AdminConfig.do?command=ListGlobalParams">Configure System</a> >
-Modify Setting<br>
-<hr color="#BFBFBB" noshade>
+Modify Setting
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 Dark Horse CRM sends various notifications to users by email.  Dark Horse CRM can also be used
 to send email to contacts that have been entered into the Contacts and Accounts modules.<br>
 Which email server should Dark Horse CRM use?<br>

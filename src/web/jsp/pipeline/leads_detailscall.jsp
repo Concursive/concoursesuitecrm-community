@@ -8,12 +8,19 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Leads.do">Pipeline Management</a> > 
 <a href="Leads.do?command=ViewOpp">View Components</a> >
 <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
 <a href="LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>">Calls</a> >
-Call Details<br>
-<hr color="#BFBFBB" noshade>
+Call Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>

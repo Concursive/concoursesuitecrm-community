@@ -12,9 +12,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 View Groups
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="campaign-campaigns-groups-add"><a href="CampaignManagerGroup.do?command=Add">Add a Contact Group</a></dhv:permission>
 <dhv:permission name="campaign-campaigns-messages-add" none="true"><br></dhv:permission>
 <center><%= CampaignGroupListInfo.getAlphabeticalPageLinks() %></center>

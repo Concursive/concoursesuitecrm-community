@@ -16,9 +16,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="TroubleTickets.do">Tickets</a> > 
-View Tickets<br>
-<hr color="#BFBFBB" noshade>
+View Tickets
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <% if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpandedSelection()) && !(CreatedByMeInfo.getExpandedSelection())) || AssignedToMeInfo.getExpandedSelection()) { %>
 <dhv:pagedListStatus showExpandLink="true" title="Tickets Assigned to Me" object="AssignedToMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">

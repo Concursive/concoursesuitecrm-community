@@ -7,12 +7,19 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
 <form name="modInventory" action="AccountsAutoGuide.do?command=AccountModify&id=<%= InventoryItem.getId() %>&orgId=<%= OrgDetails.getOrgId() %>" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="AccountsAutoGuide.do?command=AccountList&orgId=<%=OrgDetails.getOrgId()%>">Vehicle Inventory List</a> >
-Vehicle Details<br>
-<hr color="#BFBFBB" noshade>
+Vehicle Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="../../accounts/accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
 <dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" style="tabs"/>

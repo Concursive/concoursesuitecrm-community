@@ -112,7 +112,11 @@
   }
 %> 
   <form name="addContact" action="ExternalContacts.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-  <dhv:evaluate exp="<%= !popUp %>">
+<dhv:evaluate exp="<%= !popUp %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
   <a href="ExternalContacts.do">General Contacts</a> > 
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>
@@ -122,9 +126,12 @@
   <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
   <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
   <%}%>
-  Modify Contact<br>
-  <hr color="#BFBFBB" noshade>
-  </dhv:evaluate>
+  Modify Contact
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
+</dhv:evaluate>
 <%@ include file="contact_details_header_include.jsp" %>
 <% String param1 = "id=" + ContactDetails.getId(); 
    String param2 = addLinkParams(request, "popup|popupType|actionId"); %>

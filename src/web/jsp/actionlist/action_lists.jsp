@@ -11,9 +11,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
-My Action Lists<br>
-<hr color="#BFBFBB" noshade>
+My Action Lists
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="myhomepage-action-lists-add">
 <a href="javascript:window.location.href='MyActionLists.do?command=Add&return=list&params=' + escape('filters=all|mycontacts|accountcontacts');">Add an Action List</a><br>
 </dhv:permission>

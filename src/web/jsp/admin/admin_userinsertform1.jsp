@@ -38,11 +38,17 @@ function checkForm(form) {
     }
   }
 </script>
-
 <form name="addUser" action="Users.do?command=AddUser&auto-populate=true" onSubmit="return checkForm(this);" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
-Add User<br>
-<hr color="#BFBFBB" noshade>
+Add User
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
 <% if (request.getAttribute("actionError") != null) { %>
   <%= showError(request, "actionError") %>

@@ -8,6 +8,10 @@
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <form name="modify" action="RevenueManager.do?command=Update&auto-populate=true&orgId=<%=Revenue.getOrgId()%>" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -15,8 +19,11 @@
 <% if (request.getParameter("return") == null) {%>
 	<a href="RevenueManager.do?command=Details&id=<%=Revenue.getId()%>">Revenue Details</a> >
 <%}%>
-Modify Revenue<br>
-<hr color="#BFBFBB" noshade>
+Modify Revenue
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
 <dhv:container name="accounts" selected="revenue" param="<%= param1 %>" style="tabs"/>

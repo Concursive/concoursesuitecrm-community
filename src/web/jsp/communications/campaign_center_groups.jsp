@@ -4,11 +4,18 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <form name="modForm" action="CampaignManager.do?command=RemoveGroups&id=<%= Campaign.getId() %>" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
 <a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Groups
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
 <% String param1 = "id=" + Campaign.getId(); %>
 <dhv:container name="communications" selected="groups" param="<%= param1 %>" style="tabs"/>

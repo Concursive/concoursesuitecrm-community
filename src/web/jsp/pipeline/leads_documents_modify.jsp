@@ -31,12 +31,19 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Leads.do">Pipeline Management</a> > 
 <a href="Leads.do?command=ViewOpp">View Components</a> >
 <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
 <a href="LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %>">Documents</a> > 
-Modify Document<br>
-<hr color="#BFBFBB" noshade>
+Modify Document
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
       <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>

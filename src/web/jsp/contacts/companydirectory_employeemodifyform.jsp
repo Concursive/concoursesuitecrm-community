@@ -77,6 +77,10 @@
   }
 %>
   <form name="addContact" action="CompanyDirectory.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
   <a href="MyCFS.do?command=Home">My Home Page</a> > 
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>
@@ -86,8 +90,11 @@
   <a href="CompanyDirectory.do?command=ListEmployees">View Employees</a> >
   <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%=ContactDetails.getId()%>">Employee Details</a> >
   <% } %>
-  Modify Employee<br>
-  <hr color="#BFBFBB" noshade>
+  Modify Employee
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
   <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>

@@ -9,9 +9,16 @@
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <body onLoad="javascript:document.forms[0].searchcodeId.focus();">
 <form name="searchTicket" action="TroubleTickets.do?command=SearchTickets" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="TroubleTickets.do">Tickets</a> > 
-Search Form<br>
-<hr color="#BFBFBB" noshade>
+Search Form
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">

@@ -3,14 +3,21 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <% if (request.getParameter("return") == null) { %>
 <a href="Accounts.do?command=Search">Search Results</a> >
 <%} else if (request.getParameter("return").equals("dashboard")) {%>
 <a href="Accounts.do?command=Dashboard">Dashboard</a> >
 <%}%>
-Account Details<br>
-<hr color="#BFBFBB" noshade>
+Account Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
 <dhv:container name="accounts" selected="details" param="<%= param1 %>" style="tabs"/>

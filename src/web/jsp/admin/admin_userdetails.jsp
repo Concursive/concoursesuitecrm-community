@@ -4,10 +4,17 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="Users.do?command=ListUsers">View Users</a> >
-User Details<br>
-<hr color="#BFBFBB" noshade>
+User Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
 <% String param1 = "id=" + UserRecord.getId(); %>
 <dhv:container name="users" selected="details" param="<%= param1 %>" style="tabs"/>

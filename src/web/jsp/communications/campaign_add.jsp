@@ -24,10 +24,17 @@
 </script>
 <body onLoad="javascript:document.forms[0].name.focus();">
 <form name="addForm" action="CampaignManager.do?command=Insert&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=View">Campaign List</a> >
 Add a Campaign
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
   <input type="submit" value="Insert" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignManager.do?command=View';">
   <input type="reset" value="Reset">

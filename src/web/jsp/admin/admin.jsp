@@ -1,7 +1,14 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ include file="../initPage.jsp" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 Setup
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 Manage Dark Horse CRM by reviewing system usage, configuring specific modules, and configuring system parameters.<br>
 &nbsp;<br>
 <dhv:permission name="admin-sysconfig-view,admin-users-view,admin-roles-view">

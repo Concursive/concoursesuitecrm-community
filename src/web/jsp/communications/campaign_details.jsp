@@ -4,10 +4,17 @@
 <jsp:useBean id="ActiveSurvey" class="org.aspcfs.modules.communications.base.ActiveSurvey" scope="request"/>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <%@ include file="../initPage.jsp" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
 Campaign Details
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
 <% String param1="id=" + Campaign.getId(); %>
 <dhv:container name="communications" selected="details" param="<%= param1 %>" style="tabs"/>

@@ -161,13 +161,20 @@ listOfOperators[1] = dateOperators
 listOfOperators[2] = numberOperators
 </script>
 <form name="searchForm" method="post" action="CampaignManagerGroup.do?command=Update&auto-populate=true&id=<%= SCL.getId() %>" onSubmit="return checkForm(this);" >
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManagerGroup.do?command=View">View Groups</a> >
 <dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
 <a href="CampaignManagerGroup.do?command=Details&id=<%= SCL.getId() %>">Group Details</a> >
 </dhv:evaluate>
-Group Details<br>
-<hr color="#BFBFBB" noshade>
+Group Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <input type="submit" value="Save" name="Save">
 <dhv:evaluate if="<%= "list".equals(request.getParameter("return")) %>">
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerGroup.do?command=View'">

@@ -3,6 +3,10 @@
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <dhv:evaluate if="<%= !isPopup(request) %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -12,8 +16,11 @@
 <dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
 <a href="AccountContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Call Details</a> >
 </dhv:evaluate>
-Forward Call<br>
-<hr color="#BFBFBB" noshade>
+Forward Call
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 </dhv:evaluate>
 <%-- include the accounts menu --%>
 <%@ include file="accounts_details_header_include.jsp" %>

@@ -18,12 +18,19 @@
 </script>
 <body onLoad="javascript:document.forms['modifyList'].newValue.focus();">
 <form name="modifyList" method="post" action="Admin.do?command=UpdateList" onSubmit="return doCheck();">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=moduleId%>"><%=PermissionCategory.getCategory()%></a> >
 <a href="Admin.do?command=EditLists&moduleId=<%=moduleId%>">Lookup Lists</a> > 
-Edit List<br>
-<hr color="#BFBFBB" noshade>
+Edit List
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="3">

@@ -5,12 +5,19 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <%@ include file="../initPage.jsp" %>
 <form name="details" action="AccountTickets.do?command=ModifyTicket&auto-populate=true" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>">Account Details</a> >
 <a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>">Tickets</a> >
-Ticket Details<br>
-<hr color="#BFBFBB" noshade>
+Ticket Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%-- Begin container --%>
 <%@ include file="accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      

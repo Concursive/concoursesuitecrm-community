@@ -8,6 +8,10 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <body onLoad="javascript:document.forms[0].username.focus();">
 <form name="details" action="Users.do?command=UpdateUser&auto-populate=true" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> > 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
@@ -17,8 +21,11 @@
 <a href="Users.do?command=ListUsers">View Users</a> >
 <a href="Users.do?command=UserDetails&id=<%= UserRecord.getId() %>">User Details</a> >
 <%}%>
-Modify User<br>
-<hr color="#BFBFBB" noshade>
+Modify User
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
 <% String param1 = "id=" + UserRecord.getId(); %>      
 <dhv:container name="users" selected="details" param="<%= param1 %>" style="tabs"/>

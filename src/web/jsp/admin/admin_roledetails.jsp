@@ -4,10 +4,17 @@
 <jsp:useBean id="Role" class="org.aspcfs.modules.admin.base.Role" scope="request"/>
 <jsp:useBean id="PermissionList" class="org.aspcfs.modules.admin.base.PermissionList" scope="request"/>
 <form action='Roles.do?command=UpdateRole&auto-populate=true' method='post'>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="Roles.do">View Roles</a> >
 Update Role
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <input type="hidden" name="id" value="<%= Role.getId() %>">
 <input type="hidden" name="modified" value="<%= Role.getModified() %>">
 <dhv:permission name="admin-roles-edit">

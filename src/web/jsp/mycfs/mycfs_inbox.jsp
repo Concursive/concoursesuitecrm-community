@@ -13,9 +13,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
-My Mailbox<br>
-<hr color="#BFBFBB" noshade>
+My Mailbox
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <a href="javascript:window.location.href='MyCFSInbox.do?command=NewMessage';">New Message</a>
 <br>
 <center><%= InboxInfo.getAlphabeticalPageLinks() %></center>

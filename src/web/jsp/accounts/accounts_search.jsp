@@ -11,9 +11,16 @@
 </script>
 <body onLoad="javascript:document.forms[0].searchName.focus();">
 <form name="searchAccount" action="Accounts.do?command=Search" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
-Search Accounts<br>
-<hr color="#BFBFBB" noshade>
+Search Accounts
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">

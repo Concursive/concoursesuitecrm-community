@@ -7,12 +7,19 @@
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/submit.js"></script>
 <form action='Viewpoints.do?command=InsertViewpoint&auto-populate=true' method='post'>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="Users.do?command=ListUsers">View Users</a> >
 <a href="Users.do?command=UserDetails&id=<%= request.getParameter("userId") %>">User Details</a> >
 <a href="Viewpoints.do?command=ListViewpoints&userId=<%= request.getParameter("userId") %>">Viewpoints</a> >
-Add Viewpoint <br>
-<hr color="#BFBFBB" noshade>
+Add Viewpoint
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
 <% String param1 = "id=" + UserRecord.getId(); %>
 <dhv:container name="users" selected="viewpoints" param="<%= param1 %>" style="tabs"/>

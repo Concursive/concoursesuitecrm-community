@@ -5,10 +5,17 @@
 <jsp:useBean id="TimeZone" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <form action="MyCFSSettings.do?command=UpdateSettings" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
 <a href="MyCFS.do?command=MyProfile">My Settings</a> >
-Location<br>
-<hr color="#BFBFBB" noshade>
+Location
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="myhomepage-profile-settings-edit,myhomepage-profile-view">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">

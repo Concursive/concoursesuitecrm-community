@@ -5,14 +5,21 @@
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="document.inputForm.subject.focus();">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>">Account Details</a> >
 <a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>">Tickets</a> >
 <a href="AccountTickets.do?command=TicketDetails&id=<%=TicketDetails.getId()%>">Ticket Details</a> >
 <a href="AccountTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>">Documents</a> >
-Add Version<br>
-<hr color="#BFBFBB" noshade>
+Add Version
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <form method="post" name="inputForm" action="AccountTicketsDocuments.do?command=UploadVersion" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
 <%@ include file="accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      

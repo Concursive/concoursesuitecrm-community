@@ -41,6 +41,10 @@ function updateUserList() {
 </SCRIPT>
 <body>
 <form name="details" action="TroubleTickets.do?command=Update&auto-populate=true" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="TroubleTickets.do">Tickets</a> > 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
@@ -50,8 +54,11 @@ function updateUserList() {
 <a href="TroubleTickets.do?command=Home">View Tickets</a> >
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>">Ticket Details</a> >
 <%}%>
-Modify Ticket<br>
-<hr color="#BFBFBB" noshade>
+Modify Ticket
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
 <%= toHtml(TicketDetails.getCompanyName()) %></strong>
 <dhv:evaluate if="<%= !(TicketDetails.getCompanyEnabled()) %>">

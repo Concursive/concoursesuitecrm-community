@@ -1,7 +1,14 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 Create Attachments
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 Customize and configure your Campaigns with the following attachments:<br>
 &nbsp;<br>
 <dhv:permission name="campaign-campaigns-surveys-view">

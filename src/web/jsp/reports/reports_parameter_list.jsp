@@ -11,14 +11,19 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <form name="paramForm" method="post" action="Reports.do?command=GenerateReport&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=<%= request.getParameter("criteriaId") %>">
-<%-- trails --%>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Reports.do">Reports</a> >
 <a href="Reports.do?command=RunReport">Run Report</a> >
 <a href="Reports.do?command=ListReports&categoryId=<%= category.getId() %>">Reports</a> >
 <a href="Reports.do?command=CriteriaList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>">Criteria List</a> >
-Parameters<br>
-<hr color="#BFBFBB" noshade>
-<%-- end trails --%>
+Parameters
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong><%= toHtml(category.getCategory()) %></strong><br>
 <strong><%= toHtml(report.getTitle()) %>:</strong>
 <%= toHtml(report.getDescription()) %>

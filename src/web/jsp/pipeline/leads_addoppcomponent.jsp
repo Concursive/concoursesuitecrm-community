@@ -65,6 +65,10 @@
 }
 </script>
 <form name="opportunityForm" action="LeadsComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Leads.do">Pipeline Management</a> > 
 <% if (request.getParameter("return") == null) { %>
 	<a href="Leads.do?command=ViewOpp">View Components</a> >
@@ -74,8 +78,11 @@
 	<%}%>
 <%}%>
 <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
-Add Component<br>
-<hr color="#BFBFBB" noshade>
+Add Component
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
   &nbsp;<br>

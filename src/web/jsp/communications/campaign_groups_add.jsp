@@ -19,10 +19,17 @@ function checkForm(form) {
 </SCRIPT>
 <body onLoad="javascript:document.forms[0].groupName.focus()">
 <form name="searchForm" method="post" action="CampaignManagerGroup.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManagerGroup.do?command=View">View Groups</a> >
 Add a Group
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <input type="submit" value="Save">
 <input type="button" value="Cancel" onClick="javascript:window.location.href='CampaignManagerGroup.do?command=View'">
 <input type="button" value="Preview" onClick="javascript:popPreview()">

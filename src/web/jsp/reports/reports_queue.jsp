@@ -15,21 +15,15 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
-<a href="Reports.do">Reports</a> >
-Report Queue<br>
-<hr color="#BFBFBB" noshade>
 <%-- Trails --%>
-<%--
-<table cellpadding="4" cellspacing="0" width="100%" class="trails">
+<table class="trails">
 <tr>
-<td width="100%">
+<td>
 <a href="Reports.do">Reports</a> >
 Report Queue
 </td>
 </tr>
 </table>
-<br>
---%>
 <%-- End Trails --%>
 <%-- Completed Reports --%>
 <%= showError(request, "actionError", false) %>

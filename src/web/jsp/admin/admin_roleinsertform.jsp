@@ -5,9 +5,16 @@
 <jsp:useBean id="PermissionList" class="org.aspcfs.modules.admin.base.PermissionList" scope="request"/>
 <body onLoad="javascript:document.forms[0].role.focus();">
 <form action='Roles.do?command=InsertRole&auto-populate=true' method='post'>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
-Add Role<br>
-<hr color="#BFBFBB" noshade>
+Add Role
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <input type="submit" value="Add" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
 <br>

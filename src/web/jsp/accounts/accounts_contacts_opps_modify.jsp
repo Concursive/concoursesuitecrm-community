@@ -6,6 +6,10 @@
 <%@ include file="../initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].description.focus();">
 <dhv:evaluate if="<%= !isPopup(request) %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -15,8 +19,11 @@
 <% if ("list".equals(request.getParameter("return"))){ %>
 <a href="AccountContactsOpps.do?command=DetailsOpp&headerId=<%= OpportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>">Opportunity Details</a> >
 <% } %>
-Modify Opportunity<br>
-<hr color="#BFBFBB" noshade>
+Modify Opportunity
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 </dhv:evaluate>
 <%@ include file="accounts_details_header_include.jsp" %>
 <dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>

@@ -5,12 +5,19 @@
 <jsp:useBean id="PermissionList" class="org.aspcfs.modules.admin.base.PermissionList" scope="request"/>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <form action="Viewpoints.do?command=UpdateViewpoint&auto-populate=true" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="Users.do?command=ListUsers">View Users</a> >
 <a href="Users.do?command=UserDetails&id=<%= request.getParameter("userId") %>">User Details</a> >
 <a href="Viewpoints.do?command=ListViewpoints&userId=<%= request.getParameter("userId") %>">Viewpoints</a> >
-Update Viewpoint <br>
-<hr color="#BFBFBB" noshade>
+Update Viewpoint
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
 <% String param1 = "id=" + UserRecord.getId(); %>      
 <dhv:container name="users" selected="viewpoints" param="<%= param1 %>" style="tabs"/>

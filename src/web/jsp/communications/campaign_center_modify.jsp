@@ -24,13 +24,20 @@
 </script>
 <body onLoad="javascript:document.forms[0].name.focus();">
 <form name="addForm" action="CampaignManager.do?command=Update&auto-populate=true" method="post" onSubmit="return checkForm(this);">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> > 
 <a href="CampaignManager.do?command=View">Campaign List</a> >
 <dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
   <a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 </dhv:evaluate>
 Modify
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= Campaign.getId() %>">
   <input type="hidden" name="modified" value="<%= Campaign.getModified() %>">

@@ -15,9 +15,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Leads.do">Pipeline Management</a> >
-Export Data<br>
-<hr color="#BFBFBB" noshade>
+Export Data
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%-- Display viewpoint info --%>
 <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>

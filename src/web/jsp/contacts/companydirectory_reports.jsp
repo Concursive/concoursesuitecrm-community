@@ -13,9 +13,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="ExternalContacts.do">General Contacts</a> > 
-Export Data<br>
-<hr color="#BFBFBB" noshade>
+Export Data
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="contacts-external_contacts-reports-add"><a href="ExternalContacts.do?command=GenerateForm">Generate new export</a></dhv:permission>
 <dhv:permission name="contacts-external_contacts-reports-add" none="true"><br></dhv:permission>
 <center><%= ContactRptListInfo.getAlphabeticalPageLinks() %></center>

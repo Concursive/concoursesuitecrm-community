@@ -2,9 +2,16 @@
 <%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*" %>
 <%@ include file="../initPage.jsp" %>
 <form name="addticket" action="TroubleTickets.do?command=Insert&auto-populate=true" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="TroubleTickets.do">Tickets</a> > 
-Add Ticket<br>
-<hr color="#BFBFBB" noshade>
+Add Ticket
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
 <input type="reset" value="Reset">	

@@ -41,11 +41,18 @@ function highlight() {
 <body onLoad="document.forms[0].name.focus();">
 <%}%>
 <form name="modMessage" action="CampaignManagerMessage.do?command=Update&auto-populate=true" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManagerMessage.do?command=View">Message List</a> >
 <a href="CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>">Message Details</a> >
 Modify Message
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <input type="hidden" name="modified" value="<%= Message.getModified() %>">
 <dhv:evaluate if="<%= request.getParameter("return") != null %>">
   <input type="hidden" name="return" value="<%= request.getParameter("return") %>">

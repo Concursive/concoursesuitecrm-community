@@ -5,11 +5,18 @@
 <jsp:useBean id="scl" class="org.aspcfs.modules.communications.base.SearchCriteriaList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <dhv:evaluate if="<%= !"true".equals(request.getParameter("popup")) %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManagerGroup.do?command=View">View Groups</a> >
 <a href="CampaignManagerGroup.do?command=Details&id=<%= request.getAttribute("id") %>">Group Details</a> >
-Contact List<br>
-<hr color="#BFBFBB" noshade>
+Contact List
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <input type="button" name="cmd" value="Back to Criteria" onClick="window.location.href='CampaignManagerGroup.do?command=Details&id=<%= request.getAttribute("id") %>&return=<%= request.getParameter("return") %>'">
 </dhv:evaluate>
 <dhv:pagedListStatus object="CampaignGroupsPreviewInfo"/>

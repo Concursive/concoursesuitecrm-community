@@ -14,9 +14,16 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
-Re-assignments<br>
-<hr color="#BFBFBB" noshade>
+Re-assignments
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <% if (request.getAttribute("actionError") != null) { %>
 <%= showError(request, "actionError") %>
 <%}%>

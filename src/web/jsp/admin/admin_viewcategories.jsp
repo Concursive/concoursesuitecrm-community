@@ -9,13 +9,18 @@
 <jsp:useBean id="selectedCategories" class="java.util.HashMap" scope="session"/>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> > 
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
 Categories
-<br>
-<hr color="#BFBFBB" noshade>
-
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <script type="text/javascript">
 function loadCategories(level) {
   var url = "";

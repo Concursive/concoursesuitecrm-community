@@ -13,9 +13,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
-View Employees<br>
-<hr color="#BFBFBB" noshade>
+View Employees
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="contacts-internal_contacts-add"><a href="CompanyDirectory.do?command=Prepare">Add an Employee</a></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-add" none="true"><br></dhv:permission>
 <center><%= CompanyDirectoryInfo.getAlphabeticalPageLinks() %></center>

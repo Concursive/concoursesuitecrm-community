@@ -7,14 +7,21 @@
 <jsp:useBean id="report" class="org.aspcfs.modules.reports.base.Report" scope="request"/>
 <jsp:useBean id="queuePosition" class="java.lang.String" scope="request" />
 <%@ include file="../initPage.jsp" %>
-<%-- trails --%>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
+
 <a href="Reports.do">Reports</a> >
 <a href="Reports.do?command=RunReport">Run Report</a> >
 <a href="Reports.do?command=ListReports&categoryId=<%= category.getId() %>">Reports</a> >
 <a href="Reports.do?command=CriteriaList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>">Criteria List</a> >
 <a href="Reports.do?command=ParameterList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=<%= request.getParameter("criteriaId") %>">Parameters</a> >
-Report Added<br>
-<hr color="#BFBFBB" noshade>
+Report Added
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%-- end trails --%>
 <p>The following report has been added to the report queue.  The report can be
 retrieved from the <a href="Reports.do?command=ViewQueue">queue</a> once the server 

@@ -28,6 +28,10 @@
     }
   }
 </SCRIPT>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
@@ -37,8 +41,11 @@
 <dhv:evaluate if="<%= "AdminScheduledEvents".equals(request.getParameter("return")) %>">
 <a href="<%= request.getParameter("return") %>.do?moduleId=<%= PermissionCategory.getId() %>">Scheduled Events</a> >
 </dhv:evaluate>
-Process Details<br>
-<hr color="#BFBFBB" noshade>
+Process Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>

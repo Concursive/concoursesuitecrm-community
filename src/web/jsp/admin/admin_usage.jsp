@@ -57,9 +57,16 @@
   }
 </SCRIPT>
 <body onLoad="page_init();">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> > 
-Usage<br>
-<hr color="#BFBFBB" noshade>
+Usage
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 Current Usage and Billing Usage Information<br>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">

@@ -1,10 +1,17 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ include file="../initPage.jsp" %>
 <form name="modifyTimeout" action="AdminConfig.do?command=Update" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="AdminConfig.do?command=ListGlobalParams">Configure System</a> >
-Modify Setting<br>
-<hr color="#BFBFBB" noshade>
+Modify Setting
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 For system emails, what email address should be in the FROM field of the email?<br>
 &nbsp;<br>
 <dhv:permission name="admin-sysconfig-view">

@@ -13,11 +13,18 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="Users.do?command=ListUsers">View Users</a> >
 <a href="Users.do?command=UserDetails&id=<%= request.getParameter("userId") %>">User Details</a> >
-Viewpoints<br>
-<hr color="#BFBFBB" noshade>
+Viewpoints
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
 <% String param1 = "id=" + UserRecord.getId(); %>
 <dhv:container name="users" selected="viewpoints" param="<%= param1 %>" style="tabs"/>

@@ -19,8 +19,16 @@
  <body onLoad="javascript:document.forms['addTask'].description.focus();">
 </dhv:permission>
 <form name="addTask" action="MyTasks.do?command=Insert&auto-populate=true" method="post" onSubmit="return validateTask();">
-<a href="MyCFS.do?command=Home">My Home Page</a> > My Tasks<br>
-<hr color="#BFBFBB" noshade>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
+<a href="MyCFS.do?command=Home">My Home Page</a> >
+My Tasks
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
  <dhv:permission name="myhomepage-tasks-add">
  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>

@@ -14,9 +14,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
-Search Results<br>
-<hr color="#BFBFBB" noshade>
+Search Results
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="accounts-accounts-add"><a href="Accounts.do?command=Add">Add an Account</a></dhv:permission>
 <dhv:permission name="accounts-accounts-add" none="true"><br></dhv:permission>
 <center><%= SearchOrgListInfo.getAlphabeticalPageLinks() %></center>

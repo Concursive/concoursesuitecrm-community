@@ -5,6 +5,10 @@
 <jsp:useBean id="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <dhv:evaluate if="<%= !isPopup(request) %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -14,8 +18,11 @@
 <% if (!"list".equals(request.getParameter("return"))){ %>
 <a href="AccountContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Call  Details</a> >
 <% } %>
-Update Call<br>
-<hr color="#BFBFBB" noshade>
+Update Call
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <body onLoad="javascript:document.forms[0].subject.focus();">
 </dhv:evaluate>
 <%@ include file="accounts_details_header_include.jsp" %>

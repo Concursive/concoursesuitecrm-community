@@ -15,13 +15,18 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
-<%-- trails --%>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Reports.do">Reports</a> >
 <a href="Reports.do?command=RunReport">Run Report</a> >
 <a href="Reports.do?command=ListReports&categoryId=<%= category.getId() %>">Reports</a> >
-Criteria List<br>
-<hr color="#BFBFBB" noshade>
-<%-- end trails --%>
+Criteria List
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong><%= toHtml(category.getCategory()) %></strong><br>
 <strong><%= toHtml(report.getTitle()) %>:</strong>
 <%= toHtml(report.getDescription()) %>

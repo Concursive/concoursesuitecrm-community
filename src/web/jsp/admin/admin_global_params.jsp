@@ -1,9 +1,16 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Timeout" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
-Configure System<br>
-<hr color="#BFBFBB" noshade>
+Configure System
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <% int count = 1; %>
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">

@@ -13,11 +13,18 @@ function downloadMessage(campaignId){
   }
 }
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
 <a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Message
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
 <% String param1 = "id=" + Campaign.getId(); %>
 <dhv:container name="communications" selected="message" param="<%= param1 %>" style="tabs"/>

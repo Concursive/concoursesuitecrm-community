@@ -2,8 +2,15 @@
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="ItemList" class="org.aspcfs.modules.communications.base.ActiveSurveyQuestionItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-Item List<br>
-<hr color="#BFBFBB" noshade>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
+Item List
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="3">

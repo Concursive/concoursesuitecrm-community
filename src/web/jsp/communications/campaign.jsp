@@ -1,6 +1,13 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 Communications Manager
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 Review and manage campaigns with the following options:<br>
 <dhv:permission name="campaign-campaigns-add">
 &nbsp;<br>

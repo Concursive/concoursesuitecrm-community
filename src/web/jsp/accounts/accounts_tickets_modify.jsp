@@ -56,6 +56,10 @@
 //  End -->
 </script>
 <body>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -63,8 +67,11 @@
 <% if (request.getParameter("return") == null) {%>
 <a href="AccountTickets.do?command=TicketDetails&id=<%=TicketDetails.getPaddedId()%>">Ticket Details</a> >
 <%}%>
-Modify Ticket<br>
-<hr color="#BFBFBB" noshade>
+Modify Ticket
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="accounts_details_header_include.jsp" %>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <% if (TicketDetails.getClosed() != null) { %>  

@@ -3,9 +3,16 @@
 <jsp:useBean id="ItemDetailsListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="ItemDetails" class="org.aspcfs.modules.communications.base.ActiveSurveyAnswerItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do?command=ShowItems&questionId=<%= request.getParameter("questionId") %>">Item List</a> >
-Item Details<br>
-<hr color="#BFBFBB" noshade>
+Item Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
 <tr class="containerHeader">
   <th colspan="2" valign="center">

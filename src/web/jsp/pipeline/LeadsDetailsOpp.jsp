@@ -15,6 +15,10 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Leads.do">Pipeline Management</a> > 
 <% if (request.getParameter("return") == null) { %>
 	<a href="Leads.do?command=ViewOpp">View Components</a> >
@@ -23,8 +27,11 @@
 		<a href="Leads.do?command=Dashboard">Dashboard</a> >
 	<%}%>
 <%}%>
-Opportunity Details<br>
-<hr color="#BFBFBB" noshade>
+Opportunity Details
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <% if (request.getAttribute("actionError") != null) { %>
 <%= showError(request, "actionError") %>
 <%}%>

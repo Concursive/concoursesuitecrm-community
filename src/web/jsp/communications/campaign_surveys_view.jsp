@@ -12,10 +12,17 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManagerAttachment.do">Create Attachments</a> >
 Surveys
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="campaign-campaigns-surveys-add"><a href="CampaignManagerSurvey.do?command=Add">Add a Survey</a></dhv:permission>
 <dhv:permission name="campaign-campaigns-surveys-add" none="true"><br></dhv:permission>
 <center><%= CampaignSurveyListInfo.getAlphabeticalPageLinks() %></center>

@@ -9,10 +9,17 @@
     popUp = true;
   }%>
 <dhv:evaluate exp="<%= !popUp %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> > 
 <a href="MyTasks.do?command=ListTasks">My Tasks</a> >
-<%= Task.getId()==-1?"Add":"Update" %> a Task <br>
-<hr color="#BFBFBB" noshade>
+<%= Task.getId()==-1?"Add":"Update" %> a Task
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 </dhv:evaluate>
 <input type="submit" value="<%= Task.getId()==-1?"Save":"Update" %>">
 <input type="button" value="Cancel" onClick="<%=popUp?"javascript:window.close();":"javascript:window.location.href='MyTasks.do?command=ListTasks';"%>"><br>

@@ -69,6 +69,10 @@ function checkForm(form) {
 </SCRIPT>
 
 <dhv:evaluate if="<%= !isPopup(request) %>">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -78,8 +82,11 @@ function checkForm(form) {
 <% if (!"list".equals(request.getParameter("return"))){ %>
 <a href="AccountContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>">Opportunity Details</a> >
 <% } %>
-Modify Component<br>
-<hr color="#BFBFBB" noshade>
+Modify Component
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 </dhv:evaluate>
 <form name="opportunityForm" action="AccountContactsOppComponents.do?command=SaveComponent&contactId=<%= ContactDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%@ include file="accounts_details_header_include.jsp" %>

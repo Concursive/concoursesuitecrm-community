@@ -8,11 +8,18 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <form name="modForm" action="CampaignManager.do?command=AddGroups&id=<%= Campaign.getId() %>" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> > 
 <a href="CampaignManager.do?command=View">Campaign List</a> >
 <a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
 Choose Groups
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <input type="submit" value="Update Campaign Groups" onClick="this.form.action='CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>'">
 <input type="submit" value="Cancel" onClick="this.form.action='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'">
 <br>

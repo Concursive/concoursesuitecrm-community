@@ -12,9 +12,16 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 Campaign List
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:permission name="campaign-campaigns-add"><a href="CampaignManager.do?command=Add&source=list">Add a Campaign</a></dhv:permission>
 <center><%= CampaignListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">

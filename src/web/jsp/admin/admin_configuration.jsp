@@ -2,9 +2,16 @@
 <%@ page import="org.aspcfs.modules.admin.base.PermissionCategory, java.util.*" %>
 <%@ include file="../initPage.jsp" %>
 <jsp:useBean id="PermissionCategoryList" class="org.aspcfs.modules.admin.base.PermissionCategoryList" scope="request"/>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> > 
-Configure Modules<br>
-<hr color="#BFBFBB" noshade>
+Configure Modules
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 Setup Dark Horse CRM to meet the specific needs of your organization, including configuration of lookup lists and custom fields.  Choose a Dark Horse CRM module to proceed.<br>
 &nbsp;<br>
 <table cellpadding="0" cellspacing="0" border="0" width="100%">

@@ -6,12 +6,19 @@
 <jsp:useBean id="ResponseListDetailsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <%@ include file="../initPage.jsp" %>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
 <a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
 <a href="CampaignManager.do?command=ViewResponse&id=<%= Campaign.getId() %>">Response</a> >
 Response Details
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
 <% String param1 = "id=" + Campaign.getId(); %>
 <dhv:container name="communications" selected="response" param="<%= param1 %>" style="tabs"/>

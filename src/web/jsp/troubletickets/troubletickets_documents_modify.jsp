@@ -4,12 +4,19 @@
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="document.inputForm.subject.focus();">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="TroubleTickets.do">Tickets</a> > 
 <a href="TroubleTickets.do?command=Home">View Tickets</a> >
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>">Ticket Details</a> >
 <a href="TroubleTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>">Documents</a> >
-Modify Document<br>
-<hr color="#BFBFBB" noshade>
+Modify Document
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <form method="post" name="inputForm" action="TroubleTicketsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
 <strong>Ticket # <%= TicketDetails.getPaddedId() %><br>
 <%= toHtml(TicketDetails.getCompanyName()) %></strong>

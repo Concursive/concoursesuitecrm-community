@@ -12,10 +12,17 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="TroubleTickets.do">Tickets</a> > 
 <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
 Search Results
-<hr color="#BFBFBB" noshade>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:pagedListStatus title="Current Search Results" object="TicListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>

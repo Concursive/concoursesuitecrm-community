@@ -33,12 +33,19 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
 <a href="AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Documents</a> >
-Upload Document<br>
-<hr color="#BFBFBB" noshade>
+Upload Document
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%@ include file="accounts_details_header_include.jsp" %>
 <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
 <dhv:container name="accounts" selected="documents" param="<%= param1 %>" style="tabs"/>

@@ -38,10 +38,17 @@ function checkForm(form) {
 %>
 <body onLoad="javascript:document.forms[0].description.focus()">
 <form name="searchForm" method="post" action="MyActionLists.do?command=Save&auto-populate=true" onSubmit="return checkForm(this);">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
 <a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>">My Action Lists</a> >
-New Action List<br>
-<hr color="#BFBFBB" noshade>
+New Action List
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:evaluate if="<%= request.getAttribute("actionError") != null %>">
 <%= showError(request, "actionError") %>
 </dhv:evaluate>

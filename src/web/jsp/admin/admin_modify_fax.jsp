@@ -1,10 +1,17 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ include file="../initPage.jsp" %>
 <form name="modifyTimeout" action="AdminConfig.do?command=Update" method="post">
+<%-- Trails --%>
+<table class="trails">
+<tr>
+<td>
 <a href="Admin.do">Setup</a> >
 <a href="AdminConfig.do?command=ListGlobalParams">Configure System</a> >
-Modify Setting<br>
-<hr color="#BFBFBB" noshade>
+Modify Setting
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <font color="red">* </font><b>The HylaFax server application requires Linux or Unix.</b><br>
 Users will have the capability to send faxes using Dark Horse CRM.<br>
 The faxing component requires a properly configured
