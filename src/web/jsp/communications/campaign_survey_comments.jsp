@@ -44,7 +44,7 @@
    <tr class="row<%= rowid %>">
     <%if(!openEnded){%>
       <td valign="top" align="center" class="row<%= rowid %>" nowrap>
-        <%=thisAnswer.getQuantAns()%>
+        <%=thisAnswer.getQuantAns()!=-1?thisAnswer.getQuantAns()+"":"&nbsp;"%>
       </td>
     <%}%>
     
