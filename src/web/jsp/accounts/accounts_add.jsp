@@ -78,15 +78,14 @@ Add Account<br>
       Account Type(s)
     </td>
     <td>
-    <table width=100% cellpadding=0 cellspacing=0 border=0>
+    <table width=100% cellpadding=0 cellspacing=5 border=0>
 	<tr>
-	<td width=90 valign=center>
+	<td valign=center>
       <%= AccountTypeList.getHtmlSelect("selectedList", 0) %>
       	</td>
-	
+  
 	<td valign=top>
 	Press "Shift" and drag for multiple consecutive selections. For non-consecutive selections, hold down "Ctrl" and click on each item you want to select. 
-	To de-select, press "Ctrl" and click on the item. 
 	</td>
 	
 	</tr>
