@@ -6,13 +6,18 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <%@ include file="../initPage.jsp" %>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
+  <%-- Title --%>
+  <tr>
+    <td><strong>Page Title:</strong> <%= toHtml(Help.getTitle()) %><br>
+    &nbsp;</td>
+  </tr>
   <%-- Introduction --%>
   <tr>
     <td>
       <table cellpadding="4" cellspacing="0" width="100%" class="details">
       <tr>
        <th>
-          <strong>Introduction</strong> [<a href="javascript:popURL('QA.do?command=ModifyIntro&id=<%= Help.getId() %>&popup=true', 'QA_Intro','500','200','yes','yes');">Edit</a>]
+          <strong>Introduction</strong> [<a href="javascript:popURL('QA.do?command=ModifyIntro&id=<%= Help.getId() %>&popup=true', 'QA_Intro','500','260','yes','yes');">Edit</a>]
        </th>
       </tr>
        <tr>

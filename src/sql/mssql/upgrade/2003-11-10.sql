@@ -1,11 +1,5 @@
-/**
- *  MSSQL Table Creation
- *
- *@author     mrajkowski
- *@created    March 19, 2002
- *@version    $Id$
- */
- 
+DROP TABLE help_contents;
+
 CREATE TABLE help_module (
   module_id INT IDENTITY PRIMARY KEY,
   category_id INT REFERENCES permission_category(category_id), 

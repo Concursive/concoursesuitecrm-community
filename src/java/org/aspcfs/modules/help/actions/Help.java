@@ -5,7 +5,12 @@ import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.help.base.*;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.LookupElement;
+import com.isavvix.tools.*;
 import java.sql.*;
+import java.util.StringTokenizer;
+import org.aspcfs.utils.HTTPUtils;
 
 /**
  *  Help Module
@@ -14,6 +19,8 @@ import java.sql.*;
  *@created    January 21, 2002
  *@version    $Id$
  */
+ 
+
 public final class Help extends CFSModule {
 
   /**
@@ -35,8 +42,10 @@ public final class Help extends CFSModule {
       thisItem.setModule(module);
       thisItem.setSection(section);
       thisItem.setSubsection(subsection);
-      thisItem.processRecord(db, this.getUserId(context));
+      
+      thisItem.fetchRecord(db);
       context.getRequest().setAttribute("Help", thisItem);
+
     } catch (Exception e) {
       errorMessage = e;
       e.printStackTrace(System.out);
@@ -102,5 +111,56 @@ public final class Help extends CFSModule {
     }
     return ("ViewAllOK");
   }
-}
 
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandViewContext(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+
+      String helpId = context.getRequest().getParameter("helpId");
+      db = this.getConnection(context);
+      HelpItem thisItem = new HelpItem();
+
+      thisItem.setId(helpId);
+      thisItem.queryRecord(db);
+      context.getRequest().setAttribute("Help", thisItem);
+
+    } catch (Exception e) {
+      errorMessage = e;
+      e.printStackTrace(System.out);
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    return ("ContextOK");
+
+  }
+  
+
+  public String executeCommandViewModule(ActionContext context) {
+    Exception errorMessage = null;
+    Connection db = null;
+    try {
+
+      String moduleId = context.getRequest().getParameter("moduleId");
+      db = this.getConnection(context);
+
+      HelpModule thisModule = new HelpModule(db, Integer.parseInt(moduleId));
+      context.getRequest().setAttribute("helpModule", thisModule);
+
+    } catch (Exception e) {
+      errorMessage = e;
+      e.printStackTrace(System.out);
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    return ("ModuleOK");
+  }
+}

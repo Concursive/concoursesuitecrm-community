@@ -6,13 +6,11 @@
 <script language="JavaScript">
   function checkForm(form) {
     var formTest = true;
-  
     //Check required fields
     if (form.description.value == "") {    
       alert("Description is required.");
       formTest = false;
     }
-  
     if (formTest == false) {
       return false;
     } else {
@@ -29,17 +27,25 @@
 </tr>
 <tr class="containerBody">
   <td class="formLabel" valign="top">
+    Title
+  </td>
+  <td>
+    <input type="text" name="title" value="<%= toHtmlValue(Help.getTitle()) %>" />
+  </td>
+</tr>
+<tr class="containerBody">
+  <td class="formLabel" valign="top">
     Introduction
   </td>
   <td>
-      <textarea rows='6' name='description' cols='50'><%= toString(Help.getDescription()) %></textarea>
+    <textarea rows="6" name="description" cols="50"><%= toString(Help.getDescription()) %></textarea>
   </td>
 </tr>
 </table><br>
-<input type="submit" value="Update">
-<input type="submit" value="Cancel" onClick="javascript:window.close();">
+<input type="submit" value="Update" />
+<input type="submit" value="Cancel" onClick="javascript:window.close();" />
 <dhv:evaluate if="<%= Help.getId() > 0 %>">
-  <input type="hidden" name="modified" value="<%= Help.getModified() %>">
+  <input type="hidden" name="modified" value="<%= Help.getModified() %>" />
 </dhv:evaluate>
   <input type="hidden" name="id" value="<%= Help.getId() %>">
   <input type="hidden" name="module" value="<%= toString(Help.getModule()) %>">

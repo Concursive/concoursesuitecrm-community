@@ -968,13 +968,15 @@
   <!-- End Setup Module -->
   
   <action name="Help" class="org.aspcfs.modules.help.actions.Help">
-    <bean name="Help" class="org.aspcfs.modules.help.base.HelpItem" scope="request" />
-    <forward name="HelpOK" resource="/help/help.jsp" layout="style"/>
+    <forward name="HelpOK" resource="/help/help.jsp"/>
     <forward name="ModifyOK" resource="/help/help_form.jsp" layout="style"/>
     <forward name="ProcessOK" resource="/closepopup.jsp"/>
     <forward name="ViewAllOK" resource="/help/help_viewall.jsp" layout="style"/>
+    <forward name="ContextOK" resource="/help/help_context.jsp"/>
+    <forward name="ModuleOK" resource="/help/help_module_content.jsp"/>
   </action>
-  
+
+
   <action name="QA" class="org.aspcfs.modules.help.actions.QA">
     <bean name="Help" class="org.aspcfs.modules.help.base.HelpItem" scope="request" />
     <forward name="QAPopupOK" resource="/qa/qa.jsp" layout="style"/>
