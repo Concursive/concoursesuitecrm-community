@@ -144,6 +144,7 @@ function ShowSpan(thisID)
       </td>
 		</tr>
 		
+    <dhv:include name="tickets-code" none="true">
 		<tr>
       <td width=100 class="formLabel">
         Category
@@ -156,6 +157,7 @@ function ShowSpan(thisID)
       
       </td>
 		</tr>
+    </dhv:include>
 				
     <dhv:include name="tickets-subcat1" none="true">
 		<tr>
@@ -210,6 +212,7 @@ function ShowSpan(thisID)
 		</td>     
 		</tr>
 		
+    <dhv:include name="tickets-severity" none="true">
 		<tr>
 		<td width=100 class="formLabel">
 		Severity
@@ -218,16 +221,18 @@ function ShowSpan(thisID)
 		<%= SeverityList.getHtmlSelect("severityCode", TicketDetails.getSeverityCode()) %>
 		</td>
 		</tr>
+    </dhv:include>
 		
+    <dhv:include name="tickets-priority" none="true">
 		<tr>
-		<td width=100 class="formLabel">
-		Priority
-		</td>
-		<td bgColor="white">
-		<%= PriorityList.getHtmlSelect("priorityCode", TicketDetails.getPriorityCode()) %>
-		
-		</td>
+      <td width=100 class="formLabel">
+        Priority
+      </td>
+      <td bgColor="white">
+        <%= PriorityList.getHtmlSelect("priorityCode", TicketDetails.getPriorityCode()) %>
+      </td>
 		</tr>
+    </dhv:include>
 		
 		<tr>
 		<td width=100 class="formLabel">
@@ -248,12 +253,12 @@ function ShowSpan(thisID)
 		</tr>
 		
 		<tr>
-		<td width=100 class="formLabel">
-      		User Comments
-    		</td>
+    <td width=100 class="formLabel">
+      User Comments
+    </td>
 		
 		<td bgColor="white">
-		<textarea name=newticketlogentry cols=55 rows=3><%=TicketDetails.getNewticketlogentry()%></textarea>
+      <textarea name="comment" cols="55" rows="3"><%=TicketDetails.getComment()%></textarea>
 		</td>
 		</tr>
 		

@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
@@ -47,7 +48,7 @@
   </tr>
 	<tr class="containerBody">
 		<td class="formLabel">
-      Problem
+      <dhv:label name="tickets-problem">Problem</dhv:label>
     </td>
 		<td valign=top>
       <%=toHtml(TicketDetails.getProblem())%>
@@ -64,6 +65,8 @@
       <%=toHtml(TicketDetails.getCategoryName())%>
 		</td>
   </tr>
+  
+  <dhv:include name="tickets-severity" none="true">
 	<tr class="containerBody">
 		<td class="formLabel">
       Severity
@@ -72,6 +75,9 @@
       <%=toHtml(TicketDetails.getSeverityName())%>
 		</td>
   </tr>
+  </dhv:include>
+	
+  <dhv:include name="tickets-priority" none="true">
   <tr class="containerBody">
 		<td class="formLabel">
       Priority
@@ -80,6 +86,8 @@
       <%=toHtml(TicketDetails.getPriorityName())%>
 		</td>
   </tr>
+  </dhv:include>
+  
 	<tr class="containerBody">
 		<td class="formLabel">
       Department
@@ -122,6 +130,9 @@
   </tr>
 </table>
 &nbsp;
+<%
+  if (TicketDetails.getThisContact().getId() != -1) {
+%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=4 valign=center align=left>
@@ -162,6 +173,7 @@
   </tr>
 </table>
 &nbsp;
+<%}%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
 		<td colspan=4 valign=center align=left>

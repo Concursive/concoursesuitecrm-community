@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="TicketDetails" class="com.darkhorseventures.cfsbase.Ticket" scope="request"/>
@@ -127,7 +128,7 @@ function ShowSpan(thisID)
   </tr>
   <tr class="containerBody">
 		<td class="formLabel">
-      Problem
+      <dhv:label name="tickets-problem">Problem</dhv:label>
     </td>
 		<td valign=top>
       <textarea name="problem" cols=55 rows=3><%=TicketDetails.getProblem()%></textarea>
@@ -139,6 +140,8 @@ function ShowSpan(thisID)
       <input type=hidden name=refresh value="-1">
 		</td>
   </tr>
+  
+  <dhv:include name="tickets-code" none="true">
 	<tr class="containerBody">
 		<td class="formLabel">
       Category
@@ -150,6 +153,9 @@ function ShowSpan(thisID)
 <%}%>
 		</td>
   </tr>
+  </dhv:include>
+				
+  <dhv:include name="tickets-subcat1" none="true">
 	<tr class="containerBody">
 		<td class="formLabel">
       Sub-level 1
@@ -161,6 +167,9 @@ function ShowSpan(thisID)
 <%}%>
 		</td>
   </tr>
+  </dhv:include>
+				
+  <dhv:include name="tickets-subcat2" none="true">
 	<tr class="containerBody">
 		<td class="formLabel">
       Sub-level 2
@@ -172,6 +181,9 @@ function ShowSpan(thisID)
 <%}%>
 		</td>
   </tr>
+  </dhv:include>
+				
+  <dhv:include name="tickets-subcat3" none="true">
 	<tr class="containerBody">
 		<td class="formLabel">
       Sub-level 3
@@ -183,6 +195,7 @@ function ShowSpan(thisID)
 <%}%>
 		</td>
   </tr>
+  </dhv:include>
 </table>
 <br>
 <a name="department"></a> 
@@ -192,6 +205,8 @@ function ShowSpan(thisID)
       <strong>Assignment</strong>
 		</td>     
   </tr>
+  
+  <dhv:include name="tickets-severity" none="true">
 	<tr class="containerBody">
 		<td class="formLabel">
       Severity
@@ -200,6 +215,9 @@ function ShowSpan(thisID)
       <%= SeverityList.getHtmlSelect("severityCode", TicketDetails.getSeverityCode()) %>
 		</td>
   </tr>
+  </dhv:include>
+  
+  <dhv:include name="tickets-priority" none="true">
 	<tr class="containerBody">
 		<td class="formLabel">
       Priority
@@ -208,6 +226,8 @@ function ShowSpan(thisID)
       <%= PriorityList.getHtmlSelect("priorityCode", TicketDetails.getPriorityCode()) %>
 		</td>
   </tr>
+  </dhv:include>
+  
 	<tr class="containerBody">
 		<td class="formLabel">
       Department
@@ -229,7 +249,7 @@ function ShowSpan(thisID)
       User Comments
     </td>
 		<td>
-      <textarea name=newticketlogentry cols=55 rows=3><%=TicketDetails.getNewticketlogentry()%></textarea>
+      <textarea name="comment" cols="55" rows="3"><%=TicketDetails.getComment()%></textarea>
 		</td>
   </tr>
 </table>

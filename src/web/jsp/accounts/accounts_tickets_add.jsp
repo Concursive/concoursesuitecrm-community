@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="CategoryList" class="com.darkhorseventures.cfsbase.TicketCategoryList" scope="request"/>
@@ -150,7 +151,7 @@
 	</tr>
 	<tr class="containerBody">
     <td class="formLabel">
-      Problem
+      <dhv:label name="tickets-problem">Problem</dhv:label>
     </td>
     <td>
       <textarea name="problem" cols=55 rows=3><%=TicketDetails.getProblem()%></textarea>
@@ -158,6 +159,8 @@
       <input type=hidden name=refresh value="-1">
     </td>
 	</tr>
+  
+  <dhv:include name="tickets-code" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
       Category
@@ -166,6 +169,9 @@
       <%= CategoryList.getHtmlSelect("catCode", TicketDetails.getCatCode()) %>
     </td>
 	</tr>
+  </dhv:include>
+  
+  <dhv:include name="tickets-subcat1" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
       Sub-level 1
@@ -175,6 +181,9 @@
       <input type=hidden name="close" value="">
     </td>
 	</tr>
+  </dhv:include>
+  
+  <dhv:include name="tickets-subcat2" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
       Sub-level 2
@@ -183,6 +192,9 @@
       <%= SubList2.getHtmlSelect("subCat2", TicketDetails.getSubCat2()) %>
     </td>
 	</tr>
+  </dhv:include>
+	
+  <dhv:include name="tickets-subcat3" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
       Sub-level 3
@@ -191,6 +203,7 @@
       <%= SubList3.getHtmlSelect("subCat3", TicketDetails.getSubCat3()) %>
     </td>
 	</tr>
+  </dhv:include>
 </table>
 <br>
 <a name="department"></a> 
@@ -200,6 +213,8 @@
       <strong>Assignment</strong>
     </td>     
 	</tr>
+  
+  <dhv:include name="tickets-severity" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
       Severity
@@ -208,6 +223,9 @@
       <%= SeverityList.getHtmlSelect("severityCode",  TicketDetails.getSeverityCode()) %>
     </td>
 	</tr>
+  </dhv:include>
+	
+  <dhv:include name="tickets-priority" none="true">
 	<tr class="containerBody">
     <td class="formLabel">
       Priority
@@ -216,6 +234,8 @@
       <%= PriorityList.getHtmlSelect("priorityCode", TicketDetails.getPriorityCode()) %>
     </td>
 	</tr>
+  </dhv:include>
+  
   <tr class="containerBody">
     <td class="formLabel">
       Department
@@ -237,7 +257,7 @@
       Entry Comments
     </td>
     <td>
-      <textarea name=newticketlogentry cols=55 rows=3><%=TicketDetails.getNewticketlogentry()%></textarea>
+      <textarea name="comment" cols="55" rows="3"><%=TicketDetails.getComment()%></textarea>
     </td>
 	</tr>
 </table>

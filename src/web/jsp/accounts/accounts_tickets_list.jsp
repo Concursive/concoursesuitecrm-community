@@ -1,3 +1,4 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="TicList" class="com.darkhorseventures.cfsbase.TicketList" scope="request"/>
@@ -46,7 +47,7 @@
       <b>Age</b>
     </td>
     <td>
-      <b>Problem</b>
+      <b><dhv:label name="tickets-problem">Problem</dhv:label></b>
     </td>
   </tr>
 <%

@@ -30,6 +30,7 @@
 	</td>
   </tr>
   
+  <dhv:include name="tickets-severity" none="true">
   <tr>
 	<td width=100 class="formLabel">
 	Severity
@@ -38,7 +39,9 @@
 	<%= SeverityList.getHtmlSelect("searchSeverity",0) %>
 	</td>
 	</tr>
-	
+	</dhv:include>
+  
+  <dhv:include name="tickets-priority" none="true">
 	<tr>
 	<td width=100 class="formLabel">
 	Priority
@@ -47,6 +50,7 @@
 	<%= PriorityList.getHtmlSelect("searchPriority",0) %>
 	</td>
 	</tr>
+  </dhv:include>
 	
 	<tr>
 	<td width=100 class="formLabel">

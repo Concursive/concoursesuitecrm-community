@@ -70,26 +70,28 @@
 		</td>
 		</tr>
 		
+    <dhv:include name="tickets-severity" none="true">
 		<tr>
 		<td width=100 class="formLabel">
-      		Severity
-    		</td>
-		
+      Severity
+    </td>
 		<td valign=top bgColor="white">
-		<%=toHtml(TicketDetails.getSeverityName())%>
+      <%=toHtml(TicketDetails.getSeverityName())%>
 		</td>
 		</tr>
-		
+		</dhv:include>
+	
+    <dhv:include name="tickets-priority" none="true">
 		<tr>
 		<td width=100 class="formLabel">
-      		Priority
-    		</td>
-		
+      Priority
+    </td>
 		<td valign=top bgColor="white">
-		<%=toHtml(TicketDetails.getPriorityName())%>
+      <%=toHtml(TicketDetails.getPriorityName())%>
 		</td>
 		</tr>
-		
+		</dhv:include>
+    
 		<tr>
 		<td width=100 class="formLabel">
 		Department
@@ -140,59 +142,54 @@
 		</table>
 	</td>
   </tr>
-      	<tr>
+<%
+  if (TicketDetails.getThisContact().getId() != -1) {
+%>
+  <tr>
   	<td>
   	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-	
-			<tr bgcolor="#DEE0FA">
-		<td colspan=4 valign=center align=left>
-		<strong>Primary Contact</strong>
-		</td>     
+    <tr bgcolor="#DEE0FA">
+      <td colspan=4 valign=center align=left>
+      <strong>Primary Contact</strong>
+      </td>     
 		</tr>
-
-				
 		<tr>
-		<td width=100 class="formLabel">
-    		Name
-		</td>
-		<td bgColor="white">
-		<%=toHtml(TicketDetails.getThisContact().getNameLast())%>, <%=toHtml(TicketDetails.getThisContact().getNameFirst())%>
-		</td>
+      <td width=100 class="formLabel">
+          Name
+      </td>
+      <td bgColor="white">
+      <%=toHtml(TicketDetails.getThisContact().getNameLast())%>, <%=toHtml(TicketDetails.getThisContact().getNameFirst())%>
+      </td>
 		</tr>
-		
 		<tr>
-		<td width=100 class="formLabel">
-    		Title
-		</td>
-		<td bgColor="white">
-		<%=toHtml(TicketDetails.getThisContact().getTitle())%>
-		</td>
+      <td width=100 class="formLabel">
+          Title
+      </td>
+      <td bgColor="white">
+      <%=toHtml(TicketDetails.getThisContact().getTitle())%>
+      </td>
 		</tr>
-		
 		<tr>
-		<td width=100 class="formLabel">
-    		Email
-		</td>
-		<td bgColor="white">
-		<a href="mailto:<%=toHtml(TicketDetails.getThisContact().getEmailAddress("Business"))%>"><%=toHtml(TicketDetails.getThisContact().getEmailAddress("Business"))%></a>
-		</td>
+      <td width=100 class="formLabel">
+          Email
+      </td>
+      <td bgColor="white">
+      <a href="mailto:<%=toHtml(TicketDetails.getThisContact().getEmailAddress("Business"))%>"><%=toHtml(TicketDetails.getThisContact().getEmailAddress("Business"))%></a>
+      </td>
 		</tr>
-		
-				
 		<tr>
-		<td width=100 class="formLabel">
-    		Phone
-		</td>
-		<td bgColor="white">
-		<%=TicketDetails.getThisContact().getPhoneNumber("Business")%>
-		</td>
+      <td width=100 class="formLabel">
+          Phone
+      </td>
+      <td bgColor="white">
+      <%=TicketDetails.getThisContact().getPhoneNumber("Business")%>
+      </td>
 		</tr>
-
-		
 	</table>
 	</td>
   </tr>
-      	<tr>
+<%}%>
+  <tr>
   	<td>
   	<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
 	
