@@ -240,7 +240,7 @@ public final class CampaignManagerMessage extends CFSModule {
     }
     context.getRequest().setAttribute("submenu", submenu);
     addModuleBean(context, submenu, "Add Message");
-    return ("AddOK");
+    return this.getReturn(context, "Add");
   }
 
 
