@@ -98,10 +98,10 @@ Modify Component<br>
       <br>
       <br>
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-      <% if (request.getParameter("return") != null) {%>
-      <% if (request.getParameter("return").equals("list")) {%>
+      <% if ("list".equals(request.getParameter("return"))) {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
-      <%}%>
+      <% }if (request.getParameter("return").equals("listAll")) {%>
+            <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
       <% }else{ %>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
        <% } %>
@@ -120,11 +120,11 @@ Modify Component<br>
       <br>
       
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-      <% if (request.getParameter("return") != null) {%>
-        <% if (request.getParameter("return").equals("list")) {%>
+        <% if ("list".equals(request.getParameter("return"))){ %>
         <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
-        <%}%>
-      <%} else {%>
+      <%}if (request.getParameter("return").equals("listAll")) {%>
+            <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+      <% }else{ %>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
       <%}%>
       <input type="reset" value="Reset">
