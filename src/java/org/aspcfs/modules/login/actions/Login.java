@@ -276,6 +276,9 @@ public final class Login extends CFSModule {
         UserSession currentSession = sessionManager.replaceUserSession(context, thisUser.getActualUserId());
         context.getSession().setMaxInactiveInterval(systemStatus.getSessionTimeout());
       }
+      if (getPortalUserPermittedOrgId(context) != -1){
+        return "PortalLoginOK";
+      }
     } else {
       //logout user from current session
       return executeCommandLogout(context);
