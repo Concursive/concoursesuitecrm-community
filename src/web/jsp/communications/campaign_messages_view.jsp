@@ -40,8 +40,8 @@ Message List
       <%= CampaignMessageListInfo.getSortIcon("description") %>
     </td>
     <td align="center" nowrap>
-      <a href="CampaignManagerMessage.do?command=View&column=m.enteredby"><strong>Entered By</strong></a>
-      <%= CampaignMessageListInfo.getSortIcon("m.enteredby") %>
+      <a href="CampaignManagerMessage.do?command=View&column=ct_eb.namelast,ct_eb.namefirst"><strong>Entered By</strong></a>
+      <%= CampaignMessageListInfo.getSortIcon("ct_eb.namelast,ct_eb.namefirst") %>
     </td>
     <td align="center" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=m.modified"><strong>Last Modified</strong></a>
@@ -69,7 +69,7 @@ Message List
       <%= toHtml(thisMessage.getDescription()) %>
     </td>
     <td valign="center" align="center" class="row<%= rowid %>" nowrap>
-      <dhv:username id="<%= thisMessage.getEnteredBy() %>" />
+      <dhv:username id="<%= thisMessage.getEnteredBy() %>" lastFirst="true" />
     </td>
     <td valign="center" align="center" class="row<%= rowid %>" nowrap>
       <%= toHtml(thisMessage.getModifiedDateTimeString()) %>
