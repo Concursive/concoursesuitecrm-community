@@ -4,8 +4,16 @@
 <jsp:useBean id="SearchOrgListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Accounts.do">Account Management</a> > 
 Search Results<br>
 <hr color="#BFBFBB" noshade>
@@ -15,11 +23,9 @@ Search Results<br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchOrgListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete">
     <th>
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th width="30%" nowrap>
       <strong><a href="Accounts.do?command=Search&column=o.name">Account Name</a></strong>
       <%= SearchOrgListInfo.getSortIcon("o.name") %>
@@ -38,21 +44,20 @@ Search Results<br>
 	Iterator j = OrgList.iterator();
 	if ( j.hasNext() ) {
     int rowid = 0;
+    int i = 0;
     while (j.hasNext()) {
+    i++;
     rowid = (rowid != 1 ? 1 : 2);
     Organization thisOrg = (Organization)j.next();
 %>      
   <tr>
-    <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete">
     <td width=8 valign="center" nowrap class="row<%= rowid %>">
-      <dhv:evaluate exp="<%=(thisOrg.getEnabled())%>">
-      	<dhv:permission name="accounts-accounts-edit"><a href="Accounts.do?command=Modify&orgId=<%= thisOrg.getOrgId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-edit,accounts-accounts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-delete"><a href="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=thisOrg.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','330','200','yes','no');">Del</a></dhv:permission>
-      </dhv:evaluate>
-      <dhv:evaluate exp="<%=!(thisOrg.getEnabled())%>">
-        <dhv:permission name="accounts-accounts-edit"><a href="Accounts.do?command=Enable&orgId=<%= thisOrg.getOrgId() %>&return=list">Enable</a></dhv:permission>
-      </dhv:evaluate>
+        <% int status = -1;%>
+        <dhv:permission name="accounts-accounts-edit"><% status = thisOrg.getEnabled() ? 1 : 0; %></dhv:permission>
+      	<%-- Use the unique id for opening the menu, and toggling the graphics --%>
+         <a href="javascript:displayMenu('menuAccount', '<%= thisOrg.getOrgId() %>', '<%= status %>');"
+         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
-    </dhv:permission>
     
 		<td width="30%" class="row<%= rowid %>">
       <a href="Accounts.do?command=Details&orgId=<%=thisOrg.getOrgId()%>"><%= toHtml(thisOrg.getName()) %></a>
@@ -96,3 +101,4 @@ Search Results<br>
 </table>
 <br>
 <dhv:pagedListControl object="SearchOrgListInfo" tdClass="row1"/>
+

@@ -3,7 +3,15 @@
 <jsp:useBean id="CampaignSurveyListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="SurveyList" class="org.aspcfs.modules.communications.base.SurveyList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="campaign_surveys_view_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManagerAttachment.do">Create Attachments</a> >
 Surveys
@@ -28,11 +36,9 @@ Surveys
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-  <dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete">
    <th>
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th nowrap>
       <a href="CampaignManagerSurvey.do?command=View&column=name"><strong>Name</strong></a>
       <%= CampaignSurveyListInfo.getSortIcon("name") %>
@@ -49,16 +55,18 @@ Surveys
 	Iterator i = SurveyList.iterator();
 	if (i.hasNext()) {
     int rowid = 0;
+    int count = 0;
 		while (i.hasNext()) {
+      count++;
 			rowid = (rowid != 1?1:2);
       Survey thisSurvey = (Survey)i.next();
 %>      
       <tr>
-        <dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <dhv:permission name="campaign-campaigns-surveys-edit"><a href="CampaignManagerSurvey.do?command=Modify&id=<%=thisSurvey.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-surveys-edit,campaign-campaigns-surveys-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-surveys-delete"><a href="javascript:popURLReturn('CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=thisSurvey.getId()%>&popup=true','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">Del</a></dhv:permission>
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+          <a href="javascript:displayMenu('menuSurvey', '<%= thisSurvey.getId() %>');"
+          onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
-	</dhv:permission>
         <td class="row<%= rowid %>" width="100%" nowrap>
           <a href="CampaignManagerSurvey.do?command=Details&id=<%= thisSurvey.getId() %>"><%= toHtml(thisSurvey.getName()) %></a>
         </td>

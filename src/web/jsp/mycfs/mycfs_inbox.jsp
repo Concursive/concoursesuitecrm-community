@@ -3,8 +3,16 @@
 <jsp:useBean id="CFSNoteList" class="org.aspcfs.modules.mycfs.base.CFSNoteList" scope="request"/>
 <jsp:useBean id="InboxInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="mycfs_inbox_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
 My Mailbox<br>
 <hr color="#BFBFBB" noshade>
@@ -63,13 +71,17 @@ My Mailbox<br>
 	Iterator j = CFSNoteList.iterator();
 	if ( j.hasNext() ) {
     int rowid = 0;
+    int count =0;
     while (j.hasNext()) {
+      count++;
       rowid = (rowid != 1?1:2);
       CFSNote thisNote = (CFSNote) j.next();
 %>      
   <tr>
     <td valign="center" nowrap class="row<%= rowid %>">
-      <a href='javascript:window.location.href="MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%= thisNote.getId() %>&return=list"'>Fwd</a>|<a href="javascript:confirmDelete('MyCFSInbox.do?command=CFSNoteDelete&id=<%= thisNote.getId() %>');">Del</a>
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+        <a href="javascript:displayMenu('menuNote', '<%= Constants.CFSNOTE %>', '<%=  thisNote.getId() %>');"
+         onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
   <% if (InboxInfo.getListView().equalsIgnoreCase("new")){ %>
 		<td valign="center" nowrap class="row<%= rowid %>">

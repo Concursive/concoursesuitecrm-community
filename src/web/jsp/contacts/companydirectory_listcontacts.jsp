@@ -4,7 +4,15 @@
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
 <jsp:useBean id="SearchContactsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="companydirectory_listcontacts_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="ExternalContacts.do">General Contacts</a> > 
 Search Results<br>
 <hr color="#BFBFBB" noshade>
@@ -24,11 +32,9 @@ Search Results<br>
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete">
     <th valign="center">
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th nowrap>
       <strong><a href="ExternalContacts.do?command=SearchContacts&column=c.namelast">Name</a></strong>
       <%= SearchContactsInfo.getSortIcon("c.namelast") %>
@@ -53,24 +59,44 @@ Search Results<br>
 	Iterator i = ContactList.iterator();
 	if (i.hasNext()) {
 	int rowid = 0;
+  int count  =0;
 		while (i.hasNext()) {
+      count++;
       rowid = (rowid != 1 ? 1 : 2);
       Contact thisContact = (Contact)i.next();
 %>    
       <tr>
-        <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete">
-          <td width="8" class="row<%= rowid %>" nowrap>
-           <%if(thisContact.getEnabled()) {%>
-             <% if(thisContact.getOrgId() < 0){ %>
-             <dhv:permission name="contacts-external_contacts-edit"><a href="ExternalContacts.do?command=ModifyContact&id=<%= thisContact.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-delete"><a href="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%=thisContact.getId()%>&popup=true','ExternalContacts.do?command=SearchContacts', 'Delete_contact','330','200','yes','no');">Del</a></dhv:permission>
-             <% }else{ %>
-              <dhv:permission name="contacts-external_contacts-edit,accounts-accounts-contacts-edit" all="true"><a href="ExternalContacts.do?command=ModifyContact&id=<%= thisContact.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-contacts-delete,contacts-external_contacts-delete" all="true"><a href="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%=thisContact.getId()%>&popup=true','ExternalContacts.do?command=SearchContacts', 'Delete_contact','330','200','yes','no');">Del</a></dhv:permission>
-             <% } %>
-            <%}else{%>
-              &nbsp;
-            <%}%>
-          </td>
-        </dhv:permission>
+        <td width="8" class="row<%= rowid %>" nowrap>
+         <%-- check if user has edit or delete based on the type of contact --%>
+        <%
+          int hasEditPermission = 0;
+          int hasDeletePermission = 0;
+          int hasClonePermission = 0;
+          if(thisContact.getOrgId() < 0){ %>
+          <dhv:permission name="contacts-external_contacts-edit">
+            <% hasEditPermission = 1; %>
+          </dhv:permission>
+          <dhv:permission name="contacts-external_contacts-delete">
+            <% hasDeletePermission = 1; %>
+          </dhv:permission>
+          <dhv:permission name="contacts-external_contacts-add">
+            <% hasClonePermission = 1; %>
+          </dhv:permission>
+        <% }else{ %>
+          <dhv:permission name="contacts-external_contacts-edit,accounts-accounts-contacts-edit"  all="true">
+            <% hasEditPermission = 1; %>
+          </dhv:permission>
+          <dhv:permission name="contacts-external_contacts-delete,accounts-accounts-contacts-delete" all="true">
+            <% hasDeletePermission = 1; %>
+          </dhv:permission>
+          <dhv:permission name="contacts-external_contacts-add,accounts-accounts-contacts-add" all="true">
+            <% hasClonePermission = 1; %>
+          </dhv:permission>
+        <% } %>
+        
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+         <a href="javascript:displayMenu('menuContact','<%= thisContact.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>', '<%= hasClonePermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
+        </td>
         <td class="row<%= rowid %>" <%= "".equals(toString(thisContact.getNameLastFirst())) ? "width=\"10\"" : ""  %> nowrap>
           <% if(!"".equals(toString(thisContact.getNameLastFirst()))){ %>
           <a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>

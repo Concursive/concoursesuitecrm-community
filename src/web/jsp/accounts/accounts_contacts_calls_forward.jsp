@@ -9,7 +9,9 @@
 <a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
 <a href="Contacts.do?command=Details&id=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Contact Details</a> >
 <a href="AccountContactsCalls.do?command=View&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Calls</a> >
+<dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
 <a href="AccountContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Call Details</a> >
+</dhv:evaluate>
 Forward Call<br>
 <hr color="#BFBFBB" noshade>
 </dhv:evaluate>
@@ -28,13 +30,21 @@ Forward Call<br>
         <br>
         <br>
         <input type="submit" value="Send">
-        <input type="button" value="Cancel" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>'"><br><br>
-        <form name="newMessageForm" action="AccountContactsCalls.do?command=SendMessage&contactId=<%= request.getParameter("contactId") %>&id=<%= request.getParameter("id") %>" method="post" onSubmit="return sendMessage();">
+        <% if("list".equals(request.getParameter("return"))){ %>
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='AccountContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>'">
+        <% }else{ %>
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>'">
+      <% } %>
+        <br><br>
         <%-- include the message form --%>
         <%@ include file="../newmessage.jsp" %>
         <br>
         <input type="submit" value="Send">
+        <% if("list".equals(request.getParameter("return"))){ %>
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='AccountContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>'">
+        <% }else{ %>
         <input type="button" value="Cancel" onClick="javascript:window.location.href='AccountContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>'">
+      <% } %>
     </td>
   </tr>
 </table>

@@ -3,7 +3,14 @@
 <jsp:useBean id="campList" class="org.aspcfs.modules.communications.base.CampaignList" scope="request"/>
 <jsp:useBean id="CampaignDashboardListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="campaign_dashboard_menu.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="CampaignManager.do">Communications Manager</a> >
 Dashboard
 <hr color="#BFBFBB" noshade>
@@ -52,16 +59,25 @@ Dashboard
 	Iterator j = campList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
+    int count = 0;
     while (j.hasNext()) {
+      count++;
       rowid = (rowid != 1?1:2);
       Campaign campaign = (Campaign)j.next();
 	%>      
 	<tr class="containerBody">
     <td width="8" valign="center" align="center" nowrap class="row<%= rowid %>">
-      <%= (campaign.hasRun() && !campaign.hasFiles()?"&nbsp":"") %>
-      <dhv:permission name="campaign-campaigns-edit"><%= (campaign.hasRun()?"":"<a href=\"javascript:confirmForward('CampaignManager.do?command=Cancel&id=" + campaign.getId() +"&notify=true')\">Cancel</a>") %></dhv:permission>
-      <dhv:permission name="campaign-campaigns-edit" none="true">&nbsp;</dhv:permission>
-      <%= (campaign.hasFiles()?"<a href=\"CampaignManager.do?command=PrepareDownload&id=" + campaign.getId() + "\">Download<br>Available</a>":"") %>
+      <%  int cancelPermission = 0;
+          int downloadAvailable = 0;
+          if(!campaign.hasRun()){
+            cancelPermission = 1;
+          }
+          if(campaign.hasFiles()){
+            downloadAvailable  = 1;
+          }
+      %>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+      <a href="javascript:displayMenu('menuCampaign', '<%= campaign.getId() %>', '<%= cancelPermission %>', '<%= downloadAvailable %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td valign="center" width="100%" class="row<%= rowid %>">
       <a href="CampaignManager.do?command=Details&id=<%=campaign.getId()%>&reset=true"><%=toHtml(campaign.getName())%></a>

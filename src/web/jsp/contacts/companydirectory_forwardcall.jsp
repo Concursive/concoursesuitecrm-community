@@ -4,7 +4,10 @@
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>">Contact Details</a> >
 <a href="ExternalContactsCalls.do?command=View&contactId=<%=ContactDetails.getId() %>">Calls</a> >
-<a href="ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>&id=<%= request.getParameter("id") %>">Call Details</a> >
+<dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
+<a href="ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>&id=<%= request.getParameter("id")
+ %>">Call Details</a> >
+</dhv:evaluate>
 Forward Call<br>
 <hr color="#BFBFBB" noshade>
 <%@ include file="contact_details_header_include.jsp" %>
@@ -16,11 +19,20 @@ Forward Call<br>
     <td class="containerBack">
       <form name="newMessageForm" action="ExternalContactsCallsForward.do?command=SendCall&contactId=<%= request.getParameter("contactId") %>&id=<%= request.getParameter("id") %>" method="post" onSubmit="return sendMessage();">
       <input type="submit" value="Send">
-      <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>'"><br><br>
+      <% if("list".equals(request.getParameter("return"))){ %>
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>'">
+      <% }else{ %>
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>'">
+      <% } %>
+      <br><br>
       <%@ include file="../newmessage.jsp" %>
       <br>
       <input type="submit" value="Send">
-      <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>'">
+      <% if("list".equals(request.getParameter("return"))){ %>
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>'">
+      <% }else{ %>
+        <input type="button" value="Cancel" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=Details&id=<%= request.getParameter("id") %>&contactId=<%= request.getParameter("contactId") %>'">
+      <% } %>
       </form>
     </td>
   </tr>

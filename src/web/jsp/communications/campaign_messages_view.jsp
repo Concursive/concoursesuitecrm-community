@@ -3,7 +3,15 @@
 <jsp:useBean id="MessageList" class="org.aspcfs.modules.communications.base.MessageList" scope="request"/>
 <jsp:useBean id="CampaignMessageListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="campaign_messages_view_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="CampaignManager.do">Communications Manager</a> >
 Message List
 <hr color="#BFBFBB" noshade>
@@ -28,11 +36,9 @@ Message List
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-  <dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete">
     <th>
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th width="40%" nowrap>
       <a href="CampaignManagerMessage.do?command=View&column=name"><strong>Name</strong></a>
       <%= CampaignMessageListInfo.getSortIcon("name") %>
@@ -54,16 +60,18 @@ Message List
 	Iterator j = MessageList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
+    int count  =0;
     while (j.hasNext()) {
+      count++;
 		  rowid = (rowid != 1?1:2);
       Message thisMessage = (Message)j.next();
 %>      
   <tr class="containerBody">
-  <dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete">
     <td width="8" valign="center" nowrap align="center" class="row<%= rowid %>">
-      <dhv:permission name="campaign-campaigns-messages-edit"><a href="CampaignManagerMessage.do?command=Modify&id=<%=thisMessage.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-messages-delete"><a href="javascript:popURLReturn('CampaignManagerMessage.do?command=ConfirmDelete&id=<%=thisMessage.getId()%>&popup=true','CampaignManagerMessage.do?command=View', 'Delete_message','330','200','yes','no');">Del</a></dhv:permission>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+      <a href="javascript:displayMenu('menuMsg', '<%= thisMessage.getId() %>');"
+      onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
-    </dhv:permission>
 		<td width="40%" valign="center" class="row<%= rowid %>">
       <a href="CampaignManagerMessage.do?command=Details&id=<%=thisMessage.getId()%>"><%= toHtml(thisMessage.getName()) %></a>
 		</td>

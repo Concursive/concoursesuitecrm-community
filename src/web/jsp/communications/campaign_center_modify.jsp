@@ -26,14 +26,20 @@
 <form name="addForm" action="CampaignManager.do?command=Update&auto-populate=true" method="post" onSubmit="return checkForm(this);">
 <a href="CampaignManager.do">Communications Manager</a> > 
 <a href="CampaignManager.do?command=View">Campaign List</a> >
-<a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
+<dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
+  <a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
+</dhv:evaluate>
 Modify
 <hr color="#BFBFBB" noshade>
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= Campaign.getId() %>">
   <input type="hidden" name="modified" value="<%= Campaign.getModified() %>">
   <input type="submit" value="Update" name="Save">
+  <% if("list".equals(request.getParameter("return"))){ %>
+    <input type="button" value="Cancel" onClick="javascript:window.location.href='CampaignManager.do?command=View';">
+  <% }else{ %>
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignManager.do?command=ViewDetails';">
+  <% } %>
   <input type="reset" value="Reset">
   <br>
   <%= showError(request, "actionError") %>
@@ -62,7 +68,11 @@ Modify
   </table>
   <br>
   <input type="submit" value="Update" name="Save">
+  <% if("list".equals(request.getParameter("return"))){ %>
+    <input type="button" value="Cancel" onClick="javascript:window.location.href='CampaignManager.do?command=View';">
+  <% }else{ %>
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignManager.do?command=ViewDetails';">
+  <% } %>
   <input type="reset" value="Reset">
 </form>
 </body>

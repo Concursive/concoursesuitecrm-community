@@ -4,7 +4,15 @@
 <jsp:useBean id="OpportunityList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="OpportunityPagedInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_opportunities_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -36,11 +44,9 @@ Opportunities<br>
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
     <th width="8" nowrap>
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th width="100%" nowrap>
       <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.description">Opportunity Name</a></strong>
       <%= OpportunityPagedInfo.getSortIcon("x.description") %>
@@ -58,30 +64,32 @@ Opportunities<br>
   FileItem thisFile = new FileItem();
 	if ( j.hasNext() ) {
 		int rowid = 0;
+    int i = 0;
 	    while (j.hasNext()) {
+        i++;
 		    rowid = (rowid != 1?1:2);
         OpportunityHeader oppHeader = (OpportunityHeader)j.next();
 %>      
   <tr class="containerBody">
-    <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
     <td width="8" valign="center" nowrap class="row<%= rowid %>">
-      <dhv:permission name="accounts-accounts-opportunities-edit"><a href="Opportunities.do?command=Modify&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%= OrgDetails.getId() %>&headerId=<%= oppHeader.getId() %>','Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&popup=true', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+      <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+      <a href="javascript:displayMenu('menuOpp','<%= OrgDetails.getId() %>','<%= oppHeader.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-    </dhv:permission>
-      <td valign="center" class="row<%= rowid %>">
-        <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true">
-        <%= toHtml(oppHeader.getDescription()) %></a>
-        (<%= oppHeader.getComponentCount() %>)
-<dhv:evaluate if="<%= oppHeader.hasFiles() %>">
-        <%= thisFile.getImageTag() %>
-</dhv:evaluate>
-      </td>  
-      <td valign="center" align="right" class="row<%= rowid %>" nowrap>
-        $<%= toHtml(oppHeader.getTotalValueCurrency()) %>
-      </td>      
-      <td valign="center" class="row<%= rowid %>" nowrap>
-        <%= toHtml(oppHeader.getModifiedString()) %>
-      </td>   
+    <td valign="center" class="row<%= rowid %>">
+      <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true">
+      <%= toHtml(oppHeader.getDescription()) %></a>
+      (<%= oppHeader.getComponentCount() %>)
+      <dhv:evaluate if="<%= oppHeader.hasFiles() %>">
+      <%= thisFile.getImageTag() %>
+      </dhv:evaluate>
+    </td>  
+    <td valign="center" align="right" class="row<%= rowid %>" nowrap>
+      $<%= toHtml(oppHeader.getTotalValueCurrency()) %>
+    </td>      
+    <td valign="center" class="row<%= rowid %>" nowrap>
+      <%= toHtml(oppHeader.getModifiedString()) %>
+    </td>   
   </tr>
 <%}%>
 <%} else {%>

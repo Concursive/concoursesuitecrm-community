@@ -3,6 +3,14 @@
 <jsp:useBean id="ActionLists" class="org.aspcfs.modules.actionlist.base.ActionLists" scope="request"/>
 <jsp:useBean id="ActionListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="action_lists_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
 My Action Lists<br>
 <hr color="#BFBFBB" noshade>
@@ -28,11 +36,9 @@ My Action Lists<br>
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <dhv:permission name="myhomepage-action-lists-edit, myhomepage-action-lists-delete">
     <th rowspan="2" valign="middle">
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th rowspan="2" valign="middle" width="100%">
       <strong><a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>&column=al.description">Name</a></strong>
       <%= ActionListInfo.getSortIcon("al.description") %>
@@ -57,18 +63,17 @@ My Action Lists<br>
   Iterator j = ActionLists.iterator();
   if ( j.hasNext() ) {
   int rowid = 0;
+  int i =0;
   while (j.hasNext()) {
+      i++;
       rowid = (rowid != 1 ? 1 : 2);
       ActionList thisList = (ActionList) j.next();
 %>
   <tr class="row<%= rowid %>">
-  <dhv:permission name="myhomepage-action-lists-edit, myhomepage-action-lists-delete"> 
     <td nowrap>
-     <dhv:permission name="myhomepage-action-lists-edit">
-      <a href="javascript:window.location.href='MyActionLists.do?command=Modify&id=<%= thisList.getId() %>';">Edit</a></dhv:permission><dhv:permission name="myhomepage-action-lists-delete">|<a href="javascript:popURLReturn('MyActionLists.do?command=ConfirmDelete&id=<%= thisList.getId() %>&popup=true&linkModuleId=<%= toHtmlValue(request.getParameter("linkModuleId")) %>','MyActionLists.do?command=List', 'Delete_message','320','200','yes','no');">Del</a>
-      </dhv:permission>
+     <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+      <a href="javascript:displayMenu('menuAction','<%= thisList.getId() %>','<%=  toHtmlValue(request.getParameter("linkModuleId")) %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-    </dhv:permission>
     <td width="100%">
       <a href="MyActionContacts.do?command=List&actionId=<%= thisList.getId() %>&reset=true"><%= toHtmlValue(thisList.getDescription()) %></a>
     </td>

@@ -4,7 +4,15 @@
 <jsp:useBean id="DocListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_documents_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -38,14 +46,17 @@ Documents<br>
   Iterator j = FileItemList.iterator();
   if ( j.hasNext() ) {
     int rowid = 0;
+    int i = 0;
     while (j.hasNext()) {
+      i++;
       rowid = (rowid != 1?1:2);
       FileItem thisFile = (FileItem)j.next();
 %>      
     <tr class="row<%= rowid %>">
       <td width="10" valign="middle" align="center" nowrap>
-        <a href="AccountsDocuments.do?command=Download&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>">Download</a><br>
-        <dhv:permission name="accounts-accounts-documents-edit"><a href="AccountsDocuments.do?command=Modify&fid=<%= thisFile.getId() %>&orgId=<%= OrgDetails.getOrgId()%>">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-documents-edit,accounts-accounts-documents-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-documents-delete"><a href="javascript:confirmDelete('AccountsDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&orgId=<%= OrgDetails.getOrgId()%>');">Del</a></dhv:permission>
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+        <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+        <a href="javascript:displayMenu('menuFile','<%= OrgDetails.getId() %>','<%= thisFile.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td valign="middle" width="100%">
         <a href="AccountsDocuments.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getSubject()) %></a>

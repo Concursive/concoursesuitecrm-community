@@ -69,7 +69,7 @@ function checkForm(form) {
 <a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
 <a href="Contacts.do?command=Details&id=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Contact Details</a> >
 <a href="AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>">Opportunities</a> >
-<% if ("list".equals(request.getParameter("return"))){ %>
+<% if (!"list".equals(request.getParameter("return"))){ %>
 <a href="AccountContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>">Opportunity Details</a> >
 <% } %>
 Modify Component<br>
@@ -100,7 +100,7 @@ Modify Component<br>
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
       <% if ("list".equals(request.getParameter("return"))) {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
-      <% }if (request.getParameter("return").equals("listAll")) {%>
+      <% }else if ("listAll".equals(request.getParameter("return"))) {%>
             <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
       <% }else{ %>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
@@ -122,7 +122,7 @@ Modify Component<br>
       <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
         <% if ("list".equals(request.getParameter("return"))){ %>
         <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
-      <%}if (request.getParameter("return").equals("listAll")) {%>
+      <% }else if ("listAll".equals(request.getParameter("return"))) {%>
             <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
       <% }else{ %>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">

@@ -4,7 +4,15 @@
 <jsp:useBean id="opportunityHeaderList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="ExternalOppsPagedListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="companydirectory_listopps_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <dhv:evaluate exp="<%= !isPopup(request) %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
@@ -43,11 +51,9 @@ Opportunities<br>
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-  <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
     <th>
       <strong>Action</strong>
     </th>
-  </dhv:permission>
     <th nowrap>
       <strong><a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>&column=x.description<%= addLinkParams(request, "popup|popupType|actionId") %>">Opportunity Name</a></strong>
       <%= ExternalOppsPagedListInfo.getSortIcon("x.description") %>
@@ -65,20 +71,36 @@ Opportunities<br>
   FileItem thisFile = new FileItem();
 	if ( j.hasNext() ) {
 		int rowid = 0;
+    int count =0;
 	    while (j.hasNext()) {
+        count++;
         rowid = (rowid != 1?1:2);
         OpportunityHeader oppHeader = (OpportunityHeader)j.next();
 %>      
     <tr class="containerBody">
-      <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
       <td width="8" valign="top" align="center" class="row<%= rowid %>" nowrap>
-        <% if(ContactDetails.getOrgId() > 0){ %>
-        <dhv:permission name="contacts-external_contacts-opportunities-edit,accounts-accounts-contacts-opportunities-edit" all="true"><a href="ExternalContactsOpps.do?command=ModifyOpp&headerId=<%= oppHeader.getId() %>&contactId=<%= oppHeader.getContactLink() %>&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete,accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete,accounts-accounts-contacts-opportunities-delete" all="true"><a href="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%= ContactDetails.getId() %>&headerId=<%= oppHeader.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
-        <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete,accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete" all="true" none="true">&nbsp;</dhv:permission>
+      <%-- check if user has edit or delete based on the type of contact --%>
+        <%
+          int hasEditPermission = 0;
+          int hasDeletePermission = 0;
+          if(ContactDetails.getOrgId() < 0){ %>
+          <dhv:permission name="contacts-external_contacts-opportunities-edit">
+            <% hasEditPermission = 1; %>
+          </dhv:permission>
+          <dhv:permission name="contacts-external_contacts-opportunities-delete">
+            <% hasDeletePermission = 1; %>
+          </dhv:permission>
         <% }else{ %>
-        <dhv:permission name="contacts-external_contacts-opportunities-edit"><a href="ExternalContactsOpps.do?command=ModifyOpp&headerId=<%= oppHeader.getId() %>&contactId=<%= oppHeader.getContactLink() %>&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete"><a href="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%= ContactDetails.getId() %>&headerId=<%= oppHeader.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
-        <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true" none="true">&nbsp;</dhv:permission>
-        <%}%>
+          <dhv:permission name="contacts-external_contacts-opportunities-edit,accounts-accounts-contacts-opportunities-edit"  all="true">
+            <% hasEditPermission = 1; %>
+          </dhv:permission>
+          <dhv:permission name="contacts-external_contacts-opportunities-delete,accounts-accounts-contacts-opportunities-delete" all="true">
+            <% hasDeletePermission = 1; %>
+          </dhv:permission>
+        <% } %>
+        
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+         <a href="javascript:displayMenu('menuOpp','<%= ContactDetails.getId() %>','<%= oppHeader.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
       </td>
       </dhv:permission>
       <td width="100%" valign="top" class="row<%= rowid %>">

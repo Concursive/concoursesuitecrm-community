@@ -5,7 +5,15 @@
 <jsp:useBean id="OpportunityHeaderList" class="org.aspcfs.modules.pipeline.base.OpportunityHeaderList" scope="request"/>
 <jsp:useBean id="AccountContactOppsPagedListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_contacts_opps_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
@@ -47,11 +55,9 @@ Opportunities<br>
       </table>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
-        <dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete">
           <th>
             <strong>Action</strong>
           </th>
-        </dhv:permission>
           <th nowrap>
             <strong><a href="AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>&column=x.description<%= addLinkParams(request, "popup|popupType|actionId") %>">Opportunity Name</a></strong>
             <%= AccountContactOppsPagedListInfo.getSortIcon("x.description") %>
@@ -69,16 +75,18 @@ Opportunities<br>
         FileItem thisFile = new FileItem();
         if ( j.hasNext() ) {
           int rowid = 0;
+          int i = 0;
             while (j.hasNext()) {
+              i++;
               rowid = (rowid != 1?1:2);
               OpportunityHeader oppHeader = (OpportunityHeader)j.next();
       %>      
           <tr class="containerBody">
-            <dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete">
             <td width="8" valign="top" align="center" class="row<%= rowid %>" nowrap>
-              <dhv:permission name="accounts-accounts-contacts-opportunities-edit"><a href="AccountContactsOpps.do?command=ModifyOpp&headerId=<%= oppHeader.getId() %>&contactId=<%= oppHeader.getContactLink() %>&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-contacts-opportunities-delete"><a href="javascript:popURLReturn('AccountContactsOpps.do?command=ConfirmDelete&contactId=<%= ContactDetails.getId() %>&headerId=<%= oppHeader.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+              <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+              <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+              <a href="javascript:displayMenu('menuOpp','<%= oppHeader.getId() %>','<%= oppHeader.getContactLink() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
             </td>
-            </dhv:permission>
             <td width="100%" valign="top" class="row<%= rowid %>">
               <a href="AccountContactsOpps.do?command=DetailsOpp&headerId=<%= oppHeader.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
               <%= toHtml(oppHeader.getDescription()) %></a>

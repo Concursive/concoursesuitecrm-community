@@ -296,7 +296,63 @@ public final class TroubleTickets extends CFSModule {
     }
   }
 
-
+/**
+   *  DownloadCSVReport: Sends a copy of the CSV report to the user's local
+   *  machine
+   *
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   */
+  public String executeCommandDownloadCSVReport(ActionContext context) {
+    if (!(hasPermission(context, "tickets-tickets-reports-view"))) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    String itemId = (String) context.getRequest().getParameter("fid");
+    FileItem thisItem = null;
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), -1, Constants.DOCUMENTS_TICKETS_REPORTS);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    //Start the download
+    try {
+      FileItem itemToDownload = null;
+      itemToDownload = thisItem;
+      //itemToDownload.setEnteredBy(this.getUserId(context));
+      String filePath = this.getPath(context, "ticket-reports") + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename() + ".csv";
+      FileDownload fileDownload = new FileDownload();
+      fileDownload.setFullPath(filePath);
+      fileDownload.setDisplayName(itemToDownload.getClientFilename());
+      if (fileDownload.fileExists()) {
+        fileDownload.sendFile(context);
+        //Get a db connection now that the download is complete
+        db = getConnection(context);
+        itemToDownload.updateCounter(db);
+      } else {
+        System.err.println("Accounts-> Trying to send a file that does not exist");
+      }
+    } catch (java.net.SocketException se) {
+      //User either cancelled the download or lost connection
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errorMessage == null) {
+      return ("-none-");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  
   /**
    *  Description of the Method
    *

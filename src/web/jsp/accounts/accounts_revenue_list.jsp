@@ -4,7 +4,15 @@
 <jsp:useBean id="RevenueList" class="org.aspcfs.modules.accounts.base.RevenueList" scope="request"/>
 <jsp:useBean id="RevenueListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_revenue_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -35,11 +43,9 @@ Revenue<br>
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
 <tr>
-  <dhv:permission name="accounts-accounts-revenue-edit,accounts-accounts-revenue-delete">
   <th width="8">
     <strong>Action</strong>
   </th>
-  </dhv:permission>
   <th width="100%" nowrap>
     <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=description">Description</a></strong>
     <%= RevenueListInfo.getSortIcon("description") %>
@@ -67,16 +73,18 @@ Revenue<br>
 	Iterator j = RevenueList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
+    int i =0;
     while (j.hasNext()) {
+      i++;
 		  rowid = (rowid != 1?1:2);
       Revenue thisRevenue = (Revenue)j.next();
 %>      
 		<tr class="containerBody">
-		<dhv:permission name="accounts-accounts-revenue-edit,accounts-accounts-revenue-delete">
-      <td valign=center nowrap class="row<%= rowid %>">
-        <dhv:permission name="accounts-accounts-revenue-edit"><a href="RevenueManager.do?command=Modify&orgId=<%= OrgDetails.getOrgId()%>&id=<%=thisRevenue.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-revenue-edit,accounts-accounts-revenue-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-revenue-delete"><a href="javascript:confirmDelete('RevenueManager.do?command=Delete&orgId=<%= OrgDetails.getOrgId() %>&id=<%=thisRevenue.getId()%>');">Del</a></dhv:permission>
+      <td valign="center" nowrap class="row<%= rowid %>">
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+        <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+        <a href="javascript:displayMenu('menuRevenue','<%= OrgDetails.getId() %>','<%= thisRevenue.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
-    </dhv:permission>
       <td valign="center" class="row<%= rowid %>">
         <a href="RevenueManager.do?command=Details&id=<%=thisRevenue.getId()%>"><%= toHtml(thisRevenue.getDescription()) %></a>
       </td>

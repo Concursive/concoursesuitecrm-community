@@ -4,7 +4,15 @@
 <jsp:useBean id="CampaignDocListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="campaign_documents_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="CampaignManager.do">Communications Manager</a> >
 <a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
 <a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
@@ -38,14 +46,16 @@ Documents
   Iterator j = FileItemList.iterator();
   if ( j.hasNext() ) {
     int rowid = 0;
+    int i = 0;
     while (j.hasNext()) {
+      i++;
       rowid = (rowid != 1?1:2);
       FileItem thisFile = (FileItem)j.next();
 %>      
     <tr class="row<%= rowid %>">
       <td width="10" valign="middle" align="center" nowrap>
-        <a href="CampaignDocuments.do?command=Download&id=<%= Campaign.getId() %>&fid=<%= thisFile.getId() %>">Download</a><br>
-        <dhv:permission name="campaign-campaigns-edit"><a href="CampaignDocuments.do?command=Modify&fid=<%= thisFile.getId() %>&id=<%= Campaign.getId()%>">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-edit,campaign-campaigns-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-delete"><a href="javascript:confirmDelete('CampaignDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&id=<%= Campaign.getId()%>');">Del</a></dhv:permission>
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+        <a href="javascript:displayMenu('menuFile','<%= Campaign.getId() %>','<%= thisFile.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
       <td valign="middle" width="100%">
         <a href="CampaignDocuments.do?command=Details&id=<%= Campaign.getId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getSubject()) %></a>

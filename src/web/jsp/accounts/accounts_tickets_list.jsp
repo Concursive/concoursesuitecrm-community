@@ -4,7 +4,15 @@
 <jsp:useBean id="TicList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="AccountTicketInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_tickets_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -23,11 +31,9 @@ Tickets<br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountTicketInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete">
     <th>
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th valign="center" align="left">
       <strong>Number</strong>
     </th>
@@ -49,16 +55,18 @@ Tickets<br>
 	Iterator j = TicList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
+    int i =0;
     while (j.hasNext()) {
+      i++;
       rowid = (rowid != 1?1:2);
       Ticket thisTic = (Ticket)j.next();
 %>   
 	<tr class="containerBody">
-    <dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete">
     <td rowspan="2" width="8" valign="top" nowrap class="row<%= rowid %>">
-      <dhv:permission name="accounts-accounts-tickets-edit"><a href="AccountTickets.do?command=ModifyTicket&id=<%=thisTic.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-tickets-edit,accounts-accounts-tickets-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-tickets-delete"><a href="javascript:popURL('AccountTickets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=thisTic.getId()%>&popup=true', 'Delete_ticket','320','200','yes','no');">Del</a></dhv:permission>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+      <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+      <a href="javascript:displayMenu('menuTic','<%= OrgDetails.getId() %>','<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-    </dhv:permission>
     <td width="15" valign="top" nowrap>
 			<a href="AccountTickets.do?command=TicketDetails&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
 		</td>

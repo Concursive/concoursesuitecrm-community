@@ -83,7 +83,7 @@
       !-->
       <dhv:permission name="tickets-tickets-add">
       <tr>
-        <td
+        <td>
           &nbsp;
         </td>
         <td>
@@ -93,7 +93,7 @@
       </dhv:permission>
       <dhv:permission name="myhomepage-tasks-add">
       <tr>
-        <td
+        <td>
           &nbsp;
         </td>
         <td>
@@ -102,7 +102,7 @@
       </tr>
       </dhv:permission>
       <tr>
-        <td
+        <td>
           &nbsp;
         </td>
         <td>

@@ -650,6 +650,9 @@ public final class Accounts extends CFSModule {
       if ("disabled".equals(searchListInfo.getListView())) {
         organizationList.setIncludeEnabled(0);
       }
+      if ("all".equals(searchListInfo.getListView())) {
+        organizationList.setIncludeEnabled(-1);
+      }
       organizationList.buildList(db);
 
       context.getRequest().setAttribute("OrgList", organizationList);
@@ -876,8 +879,11 @@ public final class Accounts extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
         deleteRecentItem(context, thisOrganization);
-        context.getRequest().setAttribute("refreshUrl", "Accounts.do?command=View");
-        return ("DeleteOK");
+        context.getRequest().setAttribute("refreshUrl", "Accounts.do?command=Search");
+        if ("disable".equals(context.getRequest().getParameter("action")) && "list".equals(context.getRequest().getParameter("return"))) {
+          return executeCommandSearch(context);
+        }
+        return "DeleteOK";
       } else {
         processErrors(context, thisOrganization.getErrors());
         return (executeCommandSearch(context));

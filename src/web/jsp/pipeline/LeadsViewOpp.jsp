@@ -10,7 +10,15 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="LeadsViewOpp_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Leads.do">Pipeline Management</a> >
 View Components<br>
 <hr color="#BFBFBB" noshade>
@@ -50,11 +58,9 @@ View Components<br>
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete">
     <th valign="center">
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th valign="center" nowrap>
       <strong><a href="Leads.do?command=ViewOpp&column=x.description">Component</a></strong>
       <%= OpportunityListInfo.getSortIcon("x.description") %>
@@ -88,16 +94,18 @@ View Components<br>
   FileItem thisFile = new FileItem();
 	if ( j.hasNext() ) {
 		int rowid = 0;
+    int i =0;
     while (j.hasNext()) {
+      i++;
 		  rowid = (rowid != 1?1:2);
       OpportunityBean thisOpp = (OpportunityBean) j.next();
 %>      
 	<tr bgcolor="white">
-	<dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete">
     <td width="8" valign="top" nowrap class="row<%= rowid %>">
-      <dhv:permission name="pipeline-opportunities-edit"><a href="LeadsComponents.do?command=ModifyComponent&id=<%= thisOpp.getComponent().getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-delete"><a href="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&id=<%= thisOpp.getComponent().getId() %>&return=list&popup=true','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+       <a href="javascript:displayMenu('menuOpp', '<%= thisOpp.getHeader().getId() %>','<%= thisOpp.getComponent().getId() %>');"
+       onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-	</dhv:permission>
     <td width="33%" valign="top" class="row<%= rowid %>">
       <a href="Leads.do?command=DetailsOpp&headerId=<%= thisOpp.getHeader().getId() %>&reset=true">
       <%= toHtml(thisOpp.getComponent().getDescription()) %></a>

@@ -4,9 +4,17 @@
 <jsp:useBean id="TaskListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="mytasks_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/images.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <body onLoad="javascript:document.forms['addTask'].description.focus();">
 <form name="addTask" action="MyTasks.do?command=Insert&auto-populate=true" method="post" onSubmit="return validateTask();">
 <a href="MyCFS.do?command=Home">My Home Page</a> > My Tasks<br>
@@ -103,8 +111,9 @@
 %>
   <tr class="row<%= rowid %>">
     <td align="center" valign="top">
-      <a href="javascript:window.location.href='MyTasksForward.do?command=ForwardMessage&forwardType=<%= Constants.TASKS %>&id=<%=thisTask.getId()%>';">Fwd</a><dhv:permission name="myhomepage-tasks-delete">|<a href="javascript:popURLReturn('MyTasks.do?command=ConfirmDelete&id=<%= thisTask.getId() %>&popup=true','MyTasks.do?command=ListTasks', 'Delete_task','320','200','yes','no');">Del</a>
-      </dhv:permission>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+      <a href="javascript:displayMenu('menuTask', '<%= Constants.TASKS %>', '<%=  thisTask.getId() %>');"
+       onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td nowrap align="center" valign="top">
       <%= thisTask.getPriority()==-1?"-NA-":(new Integer(thisTask.getPriority())).toString() %>

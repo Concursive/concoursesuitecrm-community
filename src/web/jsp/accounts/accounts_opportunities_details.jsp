@@ -5,8 +5,16 @@
 <jsp:useBean id="ComponentList" class="org.aspcfs.modules.pipeline.base.OpportunityComponentList" scope="request"/>
 <jsp:useBean id="AccountsComponentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_opportunities_details_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>">Account Details</a> >
@@ -35,11 +43,9 @@ Opportunity Details<br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountsComponentListInfo"/>
  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
    <tr>
-    <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
     <th>
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th nowrap>
       <strong><a href="Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&column=oc.description">Component</a></strong>
       <%= AccountsComponentListInfo.getSortIcon("oc.description") %>
@@ -68,16 +74,18 @@ Opportunity Details<br>
 	Iterator j = ComponentList.iterator();
 	if (j.hasNext()) {
 		int rowid = 0;
+    int i = 0;
 	    while (j.hasNext()) {
+        i++;
         rowid = (rowid != 1?1:2);
         OpportunityComponent oppComponent = (OpportunityComponent)j.next();
 %>
   <tr class="row<%= rowid %>">
-    <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
     <td width="8" valign="top" align="center" nowrap>
-      <dhv:permission name="accounts-accounts-opportunities-edit"><a href="OpportunitiesComponents.do?command=ModifyComponent&id=<%= oppComponent.getId() %>&orgId=<%=OrgDetails.getId()%>&headerId=<%= oppComponent.getHeaderId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%= OrgDetails.getId() %>&id=<%= oppComponent.getId() %>&popup=true','Opportunities.do?command=ViewOpps&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+      <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+      <a href="javascript:displayMenu('menuOpp','<%= OrgDetails.getId() %>','<%= oppComponent.getId() %>', '<%= opportunityHeader.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-    </dhv:permission>
     <td width="100%" valign="top">
       <a href="OpportunitiesComponents.do?command=DetailsComponent&orgId=<%= OrgDetails.getId() %>&id=<%=oppComponent.getId()%>">
       <%= toHtml(oppComponent.getDescription()) %></a>

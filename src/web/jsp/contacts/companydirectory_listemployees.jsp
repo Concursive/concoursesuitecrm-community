@@ -3,8 +3,16 @@
 <jsp:useBean id="EmployeeList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="CompanyDirectoryInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="companydirectory_listemployees_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
 View Employees<br>
 <hr color="#BFBFBB" noshade>
@@ -14,11 +22,9 @@ View Employees<br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CompanyDirectoryInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-  <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete">
     <th>
       <strong>Action</strong>
     </th>
-  </dhv:permission>
     <th nowrap>
       <a href="CompanyDirectory.do?command=ListEmployees&column=c.namelast">
         <strong>Name</strong>
@@ -45,16 +51,17 @@ View Employees<br>
   Iterator i = EmployeeList.iterator();
   if (i.hasNext()) {
     int rowid = 0;
+    int count =0;
     while (i.hasNext()) {
+      count++;
       rowid = (rowid != 1?1:2);
       Contact thisEmployee = (Contact)i.next();
 %>      
   <tr>
-    <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete">
       <td width="8" valign="center" class="row<%= rowid %>" nowrap>
-        <dhv:permission name="contacts-internal_contacts-edit"><a href="CompanyDirectory.do?command=ModifyEmployee&empid=<%= thisEmployee.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-internal_contacts-delete"><a href="javascript:popURLReturn('CompanyDirectory.do?command=ConfirmDelete&id=<%=thisEmployee.getId()%>&popup=true','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');">Del</a></dhv:permission>
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+        <a href="javascript:displayMenu('menuEmployee','<%= thisEmployee.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
       </td>
-    </dhv:permission>
     <td class="row<%= rowid %>" nowrap>
       <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLastFirst()) %></a>
       <dhv:evaluate exp="<%=!(thisEmployee.hasEnabledAccount())%>"><font color="red">*</font></dhv:evaluate>          

@@ -3,7 +3,15 @@
 <jsp:useBean id="campList" class="org.aspcfs.modules.communications.base.CampaignList" scope="request"/>
 <jsp:useBean id="CampaignListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="campaign_view_menu.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="CampaignManager.do">Communications Manager</a> >
 Campaign List
 <hr color="#BFBFBB" noshade>
@@ -26,11 +34,9 @@ Campaign List
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 	<tr>
-	<dhv:permission name="campaign-campaigns-edit,campaign-campaigns-delete">
     <th width="8" valign="center" align="left">
       <strong>Action</strong>
     </th>
-    	</dhv:permission>
     <th valign="center" width="100%" align="left">
       <a href="CampaignManager.do?command=View&column=c.name"><strong>Name</strong></a>
       <%= CampaignListInfo.getSortIcon("c.name") %>
@@ -57,16 +63,18 @@ Campaign List
 	Iterator j = campList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
+    int count = 0;
     while (j.hasNext()) {
+      count++;
       rowid = (rowid != 1?1:2);
       Campaign campaign = (Campaign)j.next();
 %>
 	<tr class="containerBody">
-	<dhv:permission name="campaign-campaigns-edit,campaign-campaigns-delete">
     <td width="8" valign="center" nowrap class="row<%= rowid %>">
-      <dhv:permission name="campaign-campaigns-edit"><a href="CampaignManager.do?command=ViewDetails&id=<%= campaign.getId() %>&reset=true">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-edit,campaign-campaigns-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-delete"><a href="javascript:confirmDelete('CampaignManager.do?command=Delete&id=<%= campaign.getId() %>');">Del</a></dhv:permission>
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+        <a href="javascript:displayMenu('menuCampaign', '<%= campaign.getId() %>');"
+        onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
       </td>
-    	</dhv:permission>
     <td valign="center" width="100%" class="row<%= rowid %>">
       <a href="CampaignManager.do?command=ViewDetails&id=<%= campaign.getId() %>&reset=true"><%= toHtml(campaign.getName()) %></a>
       <%= (("true".equals(request.getParameter("notify")) && (String.valueOf(campaign.getId())).equals(request.getParameter("id")))?" <font color=\"red\">(Cancelled)</font>":"") %>

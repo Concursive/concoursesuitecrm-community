@@ -3,7 +3,15 @@
 <jsp:useBean id="RoleList" class="org.aspcfs.modules.admin.base.RoleList" scope="request"/>
 <jsp:useBean id="RoleListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="admin_listroles_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Admin.do">Setup</a> >
 View Roles<br>
 <hr color="#BFBFBB" noshade>
@@ -12,11 +20,9 @@ View Roles<br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="RoleListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <dhv:permission name="admin-roles-edit,admin-roles-delete">
     <th>
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th width="35%" nowrap>
       <b><a href="Roles.do?command=ListRoles&column=role">Role</a></b>
       <%= RoleListInfo.getSortIcon("role") %>
@@ -33,16 +39,17 @@ View Roles<br>
   Iterator i = RoleList.iterator();
   if (i.hasNext()) {
     int rowid = 0;
+    int count = 0;
     while (i.hasNext()) {
+      count++;
       rowid = (rowid != 1?1:2);
       Role thisRole = (Role)i.next();
 %>      
       <tr>
-        <dhv:permission name="admin-roles-edit,admin-roles-delete">
         <td nowrap class="row<%= rowid %>">
-          <dhv:permission name="admin-roles-edit"><a href="Roles.do?command=RoleDetails&id=<%= thisRole.getId() %>">Edit</a></dhv:permission><dhv:permission name="admin-roles-edit,admin-roles-delete" all="true">|</dhv:permission><dhv:permission name="admin-roles-delete"><a href="javascript:popURLReturn('Roles.do?command=ConfirmDelete&id=<%=thisRole.getId()%>&popup=true','Roles.do?command=ListRoles', 'Delete_role','320','200','yes','no');">Del</a></dhv:permission>
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+          <a href="javascript:displayMenu('menuRole', '<%= thisRole.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
-        </dhv:permission>
         <td class="row<%= rowid %>">
           <a href="Roles.do?command=RoleDetails&id=<%= thisRole.getId() %>"><%= toHtml(thisRole.getRole()) %></a>
         </td>

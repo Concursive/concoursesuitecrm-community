@@ -5,7 +5,15 @@
 <jsp:useBean id="AccountTicketDocumentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_tickets_documents_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>">Account Details</a> >
@@ -47,14 +55,16 @@ Documents<br>
           Iterator j = FileItemList.iterator();
           if ( j.hasNext() ) {
             int rowid = 0;
+            int i =0;
             while (j.hasNext()) {
+              i++;
               rowid = (rowid != 1?1:2);
               FileItem thisFile = (FileItem)j.next();
         %>      
             <tr class="row<%= rowid %>">
               <td width="10" valign="middle" align="center" nowrap>
-                <a href="AccountTicketsDocuments.do?command=Download&tId=<%= TicketDetails.getId() %>&fid=<%= thisFile.getId() %>">Download</a><br>
-                <dhv:permission name="accounts-accounts-tickets-documents-edit"><a href="AccountTicketsDocuments.do?command=Modify&fid=<%= thisFile.getId() %>&tId=<%= TicketDetails.getId()%>">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-tickets-documents-edit,accounts-accounts-tickets-documents-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-tickets-documents-delete"><a href="javascript:confirmDelete('AccountTicketsDocuments.do?command=Delete&fid=<%= thisFile.getId() %>&tId=<%= TicketDetails.getId()%>');">Del</a></dhv:permission>
+                <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+                <a href="javascript:displayMenu('menuFile','<%= TicketDetails.getId() %>','<%= thisFile.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
               </td>
               <td valign="middle" width="100%">
                 <a href="AccountTicketsDocuments.do?command=Details&tId=<%= TicketDetails.getId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getSubject()) %></a>

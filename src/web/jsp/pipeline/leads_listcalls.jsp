@@ -6,7 +6,15 @@
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="leads_listcalls_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Leads.do">Pipeline Management</a> > 
 <a href="Leads.do?command=ViewOpp">View Components</a> >
 <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
@@ -26,11 +34,9 @@ Calls<br>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsCallListInfo"/>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
-        <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete">
           <th>
             <strong>Action</strong>
           </th>
-        </dhv:permission>  
           <th>
             <strong>Subject</strong>
           </th>
@@ -48,16 +54,18 @@ Calls<br>
     Iterator j = LeadsCallList.iterator();
     if ( j.hasNext() ) {
       int rowid = 0;
+      int i =0;
         while (j.hasNext()) {
+          i++;
           rowid = (rowid != 1?1:2);
           Call thisCall = (Call)j.next();
 %>
         <tr class="containerBody">
-        <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete">
           <td width="8" nowrap class="row<%= rowid %>">
-            <dhv:permission name="pipeline-opportunities-calls-edit"><a href="LeadsCalls.do?command=Modify&id=<%= thisCall.getId() %>&headerId=<%= opportunityHeader.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-calls-delete"><a href="javascript:confirmDelete('LeadsCalls.do?command=Delete&id=<%= thisCall.getId() %>&headerId=<%= opportunityHeader.getId() %>');">Del</a></dhv:permission>
+            <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+             <a href="javascript:displayMenu('menuCall', '<%= opportunityHeader.getId() %>', '<%= thisCall.getId() %>');"
+             onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
           </td>
-        </dhv:permission>
         <td width="100%" class="row<%= rowid %>">
           <a href="LeadsCalls.do?command=Details&id=<%= thisCall.getId() %>&headerId=<%= opportunityHeader.getId() %>">
           <%= toHtml(thisCall.getSubject()) %>

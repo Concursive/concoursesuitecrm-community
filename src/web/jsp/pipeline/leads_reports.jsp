@@ -5,8 +5,16 @@
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="leads_reports_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Leads.do">Pipeline Management</a> >
 Reports<br>
 <hr color="#BFBFBB" noshade>
@@ -33,11 +41,9 @@ Reports<br>
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <dhv:permission name="pipeline-reports-view,pipeline-reports-delete">
     <th>
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th>
       <strong>Subject</strong>
     </th>
@@ -58,16 +64,18 @@ Reports<br>
 	Iterator j = FileList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
+    int i = 0;
     while (j.hasNext()) {
+      i++;
       rowid = (rowid != 1?1:2);
       FileItem thisItem = (FileItem)j.next();
 %>      
   <tr>
-    <dhv:permission name="pipeline-reports-view,pipeline-reports-delete">
     <td nowrap class="row<%= rowid %>">
-      <dhv:permission name="pipeline-reports-view"><a href="Leads.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="pipeline-reports-view,pipeline-reports-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-reports-delete"><a href="javascript:confirmDelete('Leads.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+       <a href="javascript:displayMenu('menuReport', '<%= thisItem.getId() %>');"
+       onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-    </dhv:permission>
     <td width="100%" class="row<%= rowid %>">
       <a href="javascript:popURL('Leads.do?command=ShowReportHtml&pid=-1&fid=<%= thisItem.getId() %>&popup=true','Report','600','400','yes','yes');"><%=toHtml(thisItem.getSubject())%></a>
     </td>

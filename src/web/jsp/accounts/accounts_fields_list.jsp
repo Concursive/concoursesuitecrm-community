@@ -5,7 +5,15 @@
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="Records" class="org.aspcfs.modules.base.CustomFieldRecordList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_fields_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <form name="details" action="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>" method="post">
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
@@ -30,11 +38,9 @@ List of Folder Records<br>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
       <tr>
         <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
-        <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
           <th valign="center">
             <strong>Action</strong>
           </th>
-        </dhv:permission>
         </dhv:evaluate>
         <th>
           <strong>Record</strong>
@@ -52,20 +58,22 @@ List of Folder Records<br>
 <%
     if (Records.size() > 0) {
       int rowid = 0;
+      int i = 0;
       Iterator records = Records.iterator();
       while (records.hasNext()) {
+        i++;
         rowid = (rowid != 1 ? 1 : 2);
         CustomFieldRecord thisRecord = (CustomFieldRecord)records.next();
 %>    
       <tr class="containerBody">
-        <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
-        <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <dhv:permission name="accounts-accounts-folders-edit"><a href="Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-folders-delete"><a href="javascript:confirmDelete('Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>');">Del</a></dhv:permission>
+          <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+          <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+           <a href="javascript:displayMenu('menuFolders', '<%= OrgDetails.getOrgId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');"
+           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+          </dhv:evaluate>
         </td>
-        </dhv:permission>
-        </dhv:evaluate>
-      
         <td align="left" width="100%" nowrap class="row<%= rowid %>">
           <a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
         </td>

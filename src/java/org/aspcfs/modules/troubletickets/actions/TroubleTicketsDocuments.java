@@ -85,7 +85,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
    */
   public String executeCommandAdd(ActionContext context) {
 
-    if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
+    if (!(hasPermission(context, "tickets-tickets-edit"))) {
       return ("PermissionError");
     }
 

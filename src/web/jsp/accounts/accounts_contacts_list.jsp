@@ -4,7 +4,15 @@
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="ContactListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_contacts_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
@@ -21,11 +29,9 @@ Contacts<br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 <tr>
-  <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete">
   <th width="8">
     <strong>Action</strong>
   </th>
-  </dhv:permission>
   <th>
     <strong><a href="Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=c.namelast">Name</a></strong>
     <%= ContactListInfo.getSortIcon("c.namelast") %>
@@ -44,16 +50,18 @@ Contacts<br>
 	Iterator j = ContactList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
+    int i = 0;
     while (j.hasNext()) {
+      i++;
 		  rowid = (rowid != 1?1:2);
       Contact thisContact = (Contact)j.next();
 %>      
 		<tr class="containerBody">
-      <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete">
       <td valign="center" nowrap class="row<%= rowid %>">
-        <dhv:permission name="accounts-accounts-contacts-edit"><a href="Contacts.do?command=Modify&orgId=<%= OrgDetails.getOrgId()%>&id=<%=thisContact.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-contacts-delete"><a href="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=thisContact.getId()%>&popup=true','Contacts.do?command=View', 'Delete_contact','330','200','yes','no');">Del</a></dhv:permission>
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+         <a href="javascript:displayMenu('menuContact', '<%= OrgDetails.getOrgId() %>', '<%= thisContact.getId() %>');"
+         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
-      </dhv:permission>
       <td valign="center" width="50%" class="row<%= rowid %>">
         <a href="Contacts.do?command=Details&id=<%=thisContact.getId()%>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
       </td>

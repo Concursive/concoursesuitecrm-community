@@ -5,7 +5,15 @@
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="Records" class="org.aspcfs.modules.base.CustomFieldRecordList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="companydirectory_fields_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <form name="details" action="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>" method="post">
 <dhv:evaluate exp="<%= !isPopup(request) %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
@@ -33,11 +41,9 @@ List of Folder Records<br>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
       <tr>
         <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
-        <dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete">
           <th valign="center">
             <strong>Action</strong>
           </th>
-        </dhv:permission>
         </dhv:evaluate>
         <th align="left">
           <strong>Record</strong>
@@ -55,18 +61,19 @@ List of Folder Records<br>
 <%
     if (Records.size() > 0) {
       int rowid = 0;
+      int count  =0 ;
       Iterator records = Records.iterator();
       while (records.hasNext()) {
+        count++;
         rowid = (rowid == 1 ? 2 : 1);
         CustomFieldRecord thisRecord = (CustomFieldRecord)records.next();
 %>    
       <tr class="containerBody">
         <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
-        <dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <dhv:permission name="contacts-external_contacts-folders-edit"><a href="ExternalContacts.do?command=ModifyFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-folders-edit,contacts-external_contacts-folders-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-folders-delete"><a href="javascript:confirmDelete('ExternalContacts.do?command=DeleteFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>');">Del</a></dhv:permission>
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+           <a href="javascript:displayMenu('menuField','<%= ContactDetails.getId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
           </td>
-        </dhv:permission>
         </dhv:evaluate>
         <td align="left" width="100%" nowrap class="row<%= rowid %>">
           <a href="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= thisRecord.getFieldData() != null ? thisRecord.getFieldData().getValueHtml(false) : "&nbsp;" %></a>

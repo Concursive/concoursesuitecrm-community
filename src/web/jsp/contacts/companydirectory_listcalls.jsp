@@ -4,8 +4,16 @@
 <jsp:useBean id="CallList" class="org.aspcfs.modules.contacts.base.CallList" scope="request"/>
 <jsp:useBean id="CallListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="companydirectory_listcalls_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
@@ -30,11 +38,9 @@ Calls<br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CallListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-  <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete">
     <th>
       <strong>Action</strong>
     </th>
-   </dhv:permission> 
     <th>
       <strong>Subject</strong>
     </th>
@@ -52,22 +58,37 @@ Calls<br>
 	Iterator j = CallList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
+    int count  =0;
 	    while (j.hasNext()) {
+        count++;
 		    rowid = (rowid != 1?1:2);
         Call thisCall = (Call)j.next();
 %>      
     <tr class="containerBody">
-      <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete">
       <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <% if(ContactDetails.getOrgId() < 0){ %>
-          <dhv:permission name="contacts-external_contacts-calls-edit"><a href="ExternalContactsCalls.do?command=Modify&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId()%>&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-calls-delete"><a href="javascript:popURL('ExternalContactsCalls.do?command=ConfirmDelete&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId()%>&popup=true<%= addLinkParams(request, "popupType|actionId") %>', 'CONFIRM_DELETE','320','200','yes','no');">Del</a></dhv:permission>
-          <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete"  all="true" none="true">&nbsp;</dhv:permission>
+        <%-- check if user has edit or delete based on the type of contact --%>
+          <%
+            int hasEditPermission = 0;
+            int hasDeletePermission = 0;
+            if(ContactDetails.getOrgId() < 0){ %>
+            <dhv:permission name="contacts-external_contacts-calls-edit">
+              <% hasEditPermission = 1; %>
+            </dhv:permission>
+            <dhv:permission name="contacts-external_contacts-calls-delete">
+             <%  hasDeletePermission = 1; %>
+            </dhv:permission>
           <% }else{ %>
-          <dhv:permission name="contacts-external_contacts-calls-edit,accounts-accounts-contacts-calls-edit"  all="true"><a href="ExternalContactsCalls.do?command=Modify&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId()%>&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete,accounts-accounts-contacts-calls-edit,accounts-accounts-contacts-calls-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-calls-delete,,accounts-accounts-contacts-calls-delete" all="true"><a href="javascript:popURL('ExternalContactsCalls.do?command=ConfirmDelete&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId()%>&popup=true<%= addLinkParams(request, "popupType|actionId") %>', 'CONFIRM_DELETE','320','200','yes','no');">Del</a></dhv:permission>
-          <dhv:permission name="contacts-external_contacts-calls-edit,contacts-external_contacts-calls-delete,accounts-accounts-contacts-calls-edit,accounts-accounts-contacts-calls-delete"  all="true" none="true">&nbsp;</dhv:permission>
+            <dhv:permission name="contacts-external_contacts-calls-edit,accounts-accounts-contacts-calls-edit"  all="true">
+             <% hasEditPermission = 1; %>
+            </dhv:permission>
+            <dhv:permission name="contacts-external_contacts-calls-delete,,accounts-accounts-contacts-calls-delete" all="true">
+             <% hasDeletePermission = 1; %>
+            </dhv:permission>
           <% } %>
+          
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+           <a href="javascript:displayMenu('menuCall','<%= ContactDetails.getId() %>', '<%= thisCall.getId() %>', '<%= hasEditPermission %>', '<%= hasDeletePermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
       </td>
-      </dhv:permission>
       <td width="100%" valign="center" class="row<%= rowid %>">
         <a href="ExternalContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
         <%= toHtml(thisCall.getSubject()) %>

@@ -7,8 +7,15 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="AccountContactComponentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_contacts_opps_details_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
-
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=View">View Accounts</a> >
@@ -51,11 +58,9 @@ Opportunity Details<br>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountContactComponentListInfo"/>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
         <tr>
-          <dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete">
           <th nowrap>
             <strong>Action</strong>
           </th>
-          </dhv:permission>
           <th nowrap>
             <strong><a href="AccountContactsOpps.do?command=DetailsOpp&headerId=<%= OpportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>&column=oc.description<%= addLinkParams(request, "popup|popupType|actionId") %>">Component</a></strong>
             <%= AccountContactComponentListInfo.getSortIcon("oc.description") %>
@@ -81,16 +86,18 @@ Opportunity Details<br>
         Iterator j = ComponentList.iterator();
         if ( j.hasNext() ) {
           int rowid = 0;
+          int i =0;
             while (j.hasNext()) {
+              i++;
               rowid = (rowid != 1?1:2);
               OpportunityComponent oppComponent = (OpportunityComponent)j.next();
       %>      
         <tr class="containerBody">
-          <dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete">
           <td width="8" valign="top" nowrap class="row<%= rowid %>">
-            <dhv:permission name="accounts-accounts-contacts-opportunities-edit"><a href="AccountContactsOppComponents.do?command=ModifyComponent&headerId=<%= oppComponent.getHeaderId() %>&id=<%= oppComponent.getId() %>&contactId=<%= ContactDetails.getId() %>&return=list&actionSource=AccountContactsOppComponents<%= addLinkParams(request, "popup|popupType|actionId") %>">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-contacts-opportunities-delete"><a href="javascript:popURLReturn('AccountContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= ContactDetails.getId() %>&id=<%= oppComponent.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+            <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+            <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+            <a href="javascript:displayMenu('menuOpp','<%= OpportunityHeader.getId() %>', '<%= oppComponent.getId() %>', '<%= OpportunityHeader.getContactLink() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
           </td>
-          </dhv:permission>
           <td width="100%" valign="top" class="row<%= rowid %>">
             <a href="AccountContactsOppComponents.do?command=DetailsComponent&contactId=<%= ContactDetails.getId() %>&id=<%= oppComponent.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
             <%= toHtml(oppComponent.getDescription()) %></a>

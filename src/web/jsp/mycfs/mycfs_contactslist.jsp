@@ -55,7 +55,7 @@
     }
 %>
   <script>
-    recipientEmails[<%= count %>] = "<%=email%>";
+    recipientEmails[<%= count %>] = "<%= toHtml(email) %>";
     recipientIds[<%= count %>] = "<%=id%>";
   </script>
 <%	

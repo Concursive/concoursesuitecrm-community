@@ -3,6 +3,14 @@
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="UserListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="admin_listusers_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Admin.do">Setup</a> >
 View Users<br>
 <hr color="#BFBFBB" noshade>
@@ -28,11 +36,9 @@ View Users<br>
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <dhv:permission name="admin-users-edit,admin-users-delete">
     <th align="center">
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th nowrap>
       <b><a href="Users.do?command=ListUsers&column=c.namelast">Name</a></b>
       <%= UserListInfo.getSortIcon("c.namelast") %>
@@ -53,22 +59,20 @@ View Users<br>
   Iterator i = UserList.iterator();
   if (i.hasNext()) {
     int rowid = 0;
+    int count = 0;
     while (i.hasNext()) {
+      count++;
       rowid = (rowid != 1?1:2);
       User thisUser = (User) i.next();
       Contact thisContact = (Contact) thisUser.getContact();
 %>      
       <tr class="row<%= rowid %>" width="8">
-        <dhv:permission name="admin-users-edit,admin-users-delete">
         <td valign="center" align="center" nowrap>
-          <dhv:evaluate exp="<%=(thisUser.getEnabled())%>">
-          <dhv:permission name="admin-users-edit"><a href="Users.do?command=ModifyUser&id=<%= thisUser.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="admin-users-edit,admin-users-delete" all="true">|</dhv:permission><dhv:permission name="admin-users-delete"><a href="Users.do?command=DisableUserConfirm&id=<%= thisUser.getId() %>&return=list">Disable</a></dhv:permission>
-          </dhv:evaluate>
-          <dhv:evaluate exp="<%=!(thisUser.getEnabled())%>">
-          <dhv:permission name="admin-users-edit"><a href="Users.do?command=EnableUser&id=<%= thisUser.getId() %>&return=list">Enable</a></dhv:permission>
-          </dhv:evaluate>
+          <% int status = thisUser.getEnabled() ? 1 : 0; %>
+          <dhv:permission name="admin-users-edit" none="true"><% status = -1; %></dhv:permission>
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+          <a href="javascript:displayMenu('menuUser', '<%= thisUser.getId() %>','<%= status %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
-        </dhv:permission>
         <td width="60%">
           <a href="Users.do?command=UserDetails&id=<%= thisUser.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
         </td>

@@ -7,7 +7,15 @@
 <jsp:useBean id="OpenList" class="org.aspcfs.modules.troubletickets.base.TicketList" scope="request"/>
 <jsp:useBean id="OpenInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="troubletickets_list_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="TroubleTickets.do">Tickets</a> > 
 View Tickets<br>
 <hr color="#BFBFBB" noshade>
@@ -15,11 +23,9 @@ View Tickets<br>
 <dhv:pagedListStatus showExpandLink="true" title="Tickets Assigned to Me" object="AssignedToMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-    <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<th valign="center" align="left">
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th valign="center" align="left">
       <strong>Number</strong>
     </th>
@@ -32,16 +38,17 @@ View Tickets<br>
 	Iterator k = AssignedToMeList.iterator();
 	if ( k.hasNext() ) {
 		int rowid = 0;
+    int i = 0;
 		while (k.hasNext()) {
+      i++;
 		  rowid = (rowid != 1?1:2);
       Ticket assignedTic = (Ticket)k.next();
 %>   
 	<tr class="row<%= rowid %>">
-  <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
     <td rowspan="2" width="8" valign="top" nowrap>
-      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= assignedTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= assignedTic.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');">Del</a></dhv:permission>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+       <a href="javascript:displayMenu('menuTicket', '<%= assignedTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-  </dhv:permission>
 		<td width="15" valign="top" nowrap>
 			<a href="TroubleTickets.do?command=Details&id=<%= assignedTic.getId() %>"><%= assignedTic.getPaddedId() %></a>
 		</td>
@@ -101,11 +108,9 @@ View Tickets<br>
 <dhv:pagedListStatus showExpandLink="true" title="Other Tickets in My Department" object="OpenInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-  <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<th valign="center" align="left">
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th valign="center" align="left">
       <strong>Number</strong>
     </th>
@@ -117,17 +122,18 @@ View Tickets<br>
 <%
 	Iterator n = OpenList.iterator();
 	if ( n.hasNext() ) {
+    int i = 0;
 		int rowid = 0;
 		while (n.hasNext()) {
+      i++;
       rowid = (rowid != 1?1:2);
       Ticket openTic = (Ticket)n.next();
 %>   
 	<tr>
-	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
     <td rowspan="2" width="8" valign="top" nowrap class="row<%= rowid %>">
-      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= openTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= openTic.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');">Del</a></dhv:permission>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+       <a href="javascript:displayMenu('menuTicket', '<%= openTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-    	</dhv:permission>
 		<td width="15" valign="top" nowrap class="row<%= rowid %>">
 			<a href="TroubleTickets.do?command=Details&id=<%= openTic.getId() %>"><%= openTic.getPaddedId() %></a>
 		</td>
@@ -193,11 +199,9 @@ View Tickets<br>
 <dhv:pagedListStatus showExpandLink="true" title="Tickets Created by Me" object="CreatedByMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-  <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<th valign="center" align="left">
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th valign="center" align="left">
       <strong>Number</strong>
     </th>
@@ -210,16 +214,17 @@ View Tickets<br>
 	Iterator j = CreatedByMeList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
+     int i = 0;
 		while (j.hasNext()) {
+      i++;
       rowid = (rowid != 1?1:2);
       Ticket thisTic = (Ticket)j.next();
 %>   
 	<tr class="row<%= rowid %>">
-	<dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
     <td rowspan="2" width="8" valign="top" nowrap>
-      <dhv:permission name="tickets-tickets-edit"><a href="TroubleTickets.do?command=Modify&id=<%= thisTic.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="tickets-tickets-edit,tickets-tickets-delete" all="true">|</dhv:permission><dhv:permission name="tickets-tickets-delete"><a href="javascript:popURL('TroubleTickets.do?command=ConfirmDelete&id=<%= thisTic.getId() %>&popup=true', 'Delete_ticket','320','200','yes','no');">Del</a></dhv:permission>
+      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+       <a href="javascript:displayMenu('menuTicket', '<%= thisTic.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
-    	</dhv:permission>
 		<td width="15" valign="top" nowrap>
 			<a href="TroubleTickets.do?command=Details&id=<%= thisTic.getId() %>"><%= thisTic.getPaddedId() %></a>
 		</td>

@@ -4,7 +4,15 @@
 <jsp:useBean id="ViewpointListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="admin_listviewpoints_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Admin.do">Setup</a> >
 <a href="Users.do?command=ListUsers">View Users</a> >
 <a href="Users.do?command=UserDetails&id=<%= request.getParameter("userId") %>">User Details</a> >
@@ -21,16 +29,14 @@ Viewpoints<br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ViewpointListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <dhv:permission name="admin-roles-edit,admin-roles-delete">
     <th valign="center" width="8" nowrap>
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th nowrap>
       <b><a href="Viewpoints.do?command=ListViewpoints&userId=<%= UserRecord.getId()%>&column=c.namelast">Viewpoint</a></b>
       <%= ViewpointListInfo.getSortIcon("c.namelast") %>
     </th>
-    <th width="120" nowrap>
+    <th width="120">
       <b><a href="Viewpoints.do?command=ListViewpoints&userId=<%= UserRecord.getId()%>&column=vp.entered">Entered</a></b>
       <%= ViewpointListInfo.getSortIcon("vp.entered") %>
     </th>
@@ -43,7 +49,9 @@ Viewpoints<br>
   Iterator i = ViewpointList.iterator();
   if (i.hasNext()) {
     int rowid = 0;
+    int count = 0;
     while (i.hasNext()) {
+      count++;
       if (rowid != 1) {
         rowid = 1;
       } else {
@@ -52,11 +60,10 @@ Viewpoints<br>
       Viewpoint thisViewpoint = (Viewpoint)i.next();
 %>      
       <tr>
-        <dhv:permission name="admin-roles-edit,admin-roles-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <dhv:permission name="admin-roles-edit"><a href="Viewpoints.do?command=ViewpointDetails&id=<%= thisViewpoint.getId() %>&userId=<%= UserRecord.getId() %>">Edit</a></dhv:permission><dhv:permission name="admin-roles-edit,admin-roles-delete" all="true">|</dhv:permission><dhv:permission name="admin-roles-delete"><a href="javascript:popURLReturn('Viewpoints.do?command=ConfirmDelete&id=<%=thisViewpoint.getId()%>&userId=<%= UserRecord.getId() %>&popup=true','Viewpoints.do?command=ListViewpoints&userId=<%= UserRecord.getId()%>', 'Delete_Viewpoint','320','200','yes','no');">Del</a></dhv:permission>
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+          <a href="javascript:displayMenu('menuViewpoint', '<%= UserRecord.getId() %>','<%= thisViewpoint.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
-        </dhv:permission>
         <td class="row<%= rowid %>" width="150">
           <a href="Viewpoints.do?command=ViewpointDetails&id=<%= thisViewpoint.getId() %>&userId=<%= UserRecord.getId()%>"><%= thisViewpoint.getVpUser().getContact().getNameLastFirst() %></a>
         </td>

@@ -3,8 +3,16 @@
 <jsp:useBean id="FileList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <jsp:useBean id="RptListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_reports_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Accounts.do">Account Management</a> >
 Reports<br>
 <hr color="#BFBFBB" noshade>
@@ -28,11 +36,9 @@ Reports<br>
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <dhv:permission name="accounts-accounts-reports-view,accounts-accounts-reports-delete">
     <th>
       <strong>Action</strong>
     </th>
-    </dhv:permission>
     <th nowrap>
       <strong><a href="Accounts.do?command=Reports&column=subject">Subject</a></strong>
       <%= RptListInfo.getSortIcon("subject") %>
@@ -55,16 +61,17 @@ Reports<br>
 	Iterator j = FileList.iterator();
 	if ( j.hasNext() ) {
 		int rowid = 0;
+    int count = 0;
     while (j.hasNext()) {
+      count++;
 		  rowid = (rowid != 1?1:2);
       FileItem thisItem = (FileItem)j.next();
 %>
   <tr>
-    <dhv:permission name="accounts-accounts-reports-view,accounts-accounts-reports-delete">
       <td nowrap class="row<%= rowid %>">
-        <dhv:permission name="accounts-accounts-reports-view"><a href="Accounts.do?command=DownloadCSVReport&fid=<%= thisItem.getId() %>">D/L</a></dhv:permission><dhv:permission name="accounts-accounts-reports-view,accounts-accounts-reports-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-reports-delete"><a href="javascript:confirmDelete('Accounts.do?command=DeleteReport&pid=-1&fid=<%= thisItem.getId() %>');">Del</a></dhv:permission>
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+         <a href="javascript:displayMenu('menuReport','<%= thisItem.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
       </td>
-    </dhv:permission>
     <td width="100%" class="row<%= rowid %>">
       <a href="javascript:popURL('Accounts.do?command=ShowReportHtml&pid=-1&fid=<%= thisItem.getId() %>&popup=true','Report','600','400','yes','yes');"><%=toHtml(thisItem.getSubject())%></a>
     </td>

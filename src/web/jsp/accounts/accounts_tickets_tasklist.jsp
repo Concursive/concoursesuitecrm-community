@@ -9,6 +9,14 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <%@ include file="../initPage.jsp" %>
+<%-- Initialize the drop-down menus --%>
+<%@ include file="../initPopupMenu.jsp" %>
+<%@ include file="accounts_tickets_tasklist_menu.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
+</script>
 <a href="Accounts.do">Account Management</a> > 
 <a href="Accounts.do?command=Search">Search Results</a> >
 <a href="Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>">Account Details</a> >
@@ -35,11 +43,9 @@ Tasks<br>
         &nbsp;<br>
         <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
           <tr>
-          <dhv:permission name="accounts-accounts-tickets-tasks-delete">
           <th align="center" nowrap>
             <strong>Action</strong>
           </th>
-          </dhv:permission>
           <th align="center" nowrap>
             <strong>Priority</strong>
           </th>
@@ -70,11 +76,11 @@ Tasks<br>
             Task thisTask = (Task) j.next();
       %>
         <tr class="row<%= rowid %>">
-          <dhv:permission name="accounts-accounts-tickets-tasks-delete">
           <td align="center" valign="top">
-            <a href="javascript:popURL('AccountTicketTasks.do?command=ConfirmDelete&id=<%= thisTask.getId() %>&popup=true', 'Delete_task','320','200','yes','no');">Del</a>
+            <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+            <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+            <a href="javascript:displayMenu('menuTask',<%= OrgDetails.getId() %>,<%= TicketDetails.getId() %>,'<%= thisTask.getId() %>')" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>)"><img src="images/select.gif" name="select<%= count %>" align="absmiddle" border="0"></a>
           </td>
-          </dhv:permission>
           <td nowrap align="center" valign="top">
             <%= thisTask.getPriority() == -1 ? "-NA-" : (new Integer(thisTask.getPriority())).toString() %>
           </td>
