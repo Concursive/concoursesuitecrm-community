@@ -97,7 +97,7 @@ public final class CampaignManagerMessage extends CFSModule {
     Message newMessage = null;
     try {
       db = this.getConnection(context);
-      newMessage = new Message(db, "" + passedId);
+      newMessage = new Message(db, passedId);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -147,14 +147,13 @@ public final class CampaignManagerMessage extends CFSModule {
     int resultCount = 0;
 
     try {
-      db = this.getConnection(context);
       newMessage.setModifiedBy(getUserId(context));
       //IE5.0+ uses an HTML Editor, all others use a Text Editor
       UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
       if (!("ie".equals(thisUser.getBrowserId()) && thisUser.getBrowserVersion() >= 5.0)) {
         newMessage.setMessageText(StringUtils.toHtmlText(newMessage.getMessageText()));
       }
-      
+      db = this.getConnection(context);
       resultCount = newMessage.update(db);
       if (resultCount == -1) {
         processErrors(context, newMessage.getErrors());
@@ -192,10 +191,8 @@ public final class CampaignManagerMessage extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandDetails(ActionContext context) {
-
     if (!(hasPermission(context, "campaign-campaigns-messages-view"))) {
       return ("PermissionError");
     }
@@ -262,25 +259,29 @@ public final class CampaignManagerMessage extends CFSModule {
    *@since
    */
   public String executeCommandInsert(ActionContext context) {
-
     if (!(hasPermission(context, "campaign-campaigns-messages-add"))) {
       return ("PermissionError");
     }
 
     addModuleBean(context, "BuildNew", "Add New Message");
     Exception errorMessage = null;
+    Connection db = null;
     boolean recordInserted = false;
 
     Message newMessage = (Message) context.getFormBean();
-    newMessage.setEnteredBy(getUserId(context));
-    newMessage.setModifiedBy(getUserId(context));
 
-    Connection db = null;
     try {
+      newMessage.setEnteredBy(getUserId(context));
+      newMessage.setModifiedBy(getUserId(context));
+      //IE5.0+ uses an HTML Editor, all others use a Text Editor
+      UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+      if (!("ie".equals(thisUser.getBrowserId()) && thisUser.getBrowserVersion() >= 5.0)) {
+        newMessage.setMessageText(StringUtils.toHtmlText(newMessage.getMessageText()));
+      }
       db = this.getConnection(context);
       recordInserted = newMessage.insert(db);
       if (recordInserted) {
-        newMessage = new Message(db, "" + newMessage.getId());
+        newMessage = new Message(db, newMessage.getId());
         context.getRequest().setAttribute("Message", newMessage);
       } else {
         processErrors(context, newMessage.getErrors());
@@ -333,7 +334,7 @@ public final class CampaignManagerMessage extends CFSModule {
 
     if (errorMessage == null) {
       if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl","CampaignManagerMessage.do?command=View");
+        context.getRequest().setAttribute("refreshUrl", "CampaignManagerMessage.do?command=View");
         return ("DeleteOK");
       } else {
         processErrors(context, thisMessage.getErrors());
@@ -383,11 +384,18 @@ public final class CampaignManagerMessage extends CFSModule {
     }
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
     Connection db = null;
     Message thisMessage = null;
-    
+
     HtmlDialog htmlDialog = new HtmlDialog();
     String id = null;
 
@@ -398,22 +406,22 @@ public final class CampaignManagerMessage extends CFSModule {
     if (context.getRequest().getParameter("id") != null) {
       id = context.getRequest().getParameter("id");
     }
-    
+
     try {
       db = this.getConnection(context);
       thisMessage = new Message(db, id);
       htmlDialog.setTitle("CFS: Campaign Manager");
-        
+
       htmlDialog.setRelationships(thisMessage.processDependencies(db));
-        
+
       if (htmlDialog.getRelationships().size() == 0) {
-              htmlDialog.setShowAndConfirm(false);
-              htmlDialog.setDeleteUrl("javascript:window.location.href='/CampaignManagerMessage.do?command=Delete&id=" + id + "'");
-       } else {
-              htmlDialog.setHeader("This Message cannot be deleted because at least one Campaign is using it.");
-              htmlDialog.addButton("OK", "javascript:parent.window.close()");
-       }
-        
+        htmlDialog.setShowAndConfirm(false);
+        htmlDialog.setDeleteUrl("javascript:window.location.href='/CampaignManagerMessage.do?command=Delete&id=" + id + "'");
+      } else {
+        htmlDialog.setHeader("This Message cannot be deleted because at least one Campaign is using it.");
+        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+      }
+
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -427,6 +435,7 @@ public final class CampaignManagerMessage extends CFSModule {
       return ("SystemError");
     }
   }
+
 
   /**
    *  Description of the Method
