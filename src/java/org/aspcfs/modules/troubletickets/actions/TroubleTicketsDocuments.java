@@ -36,7 +36,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
    */
   public String executeCommandView(ActionContext context) {
 
-    if (!(hasPermission(context, "accounts-accounts-documents-view"))) {
+    if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("PermissionError");
     }
 
@@ -123,7 +123,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
    */
   public String executeCommandUpload(ActionContext context) {
 
-    if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
+    if (!(hasPermission(context, "tickets-tickets-edit"))) {
       return ("PermissionError");
     }
 
@@ -207,7 +207,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
    */
   public String executeCommandAddVersion(ActionContext context) {
 
-    if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
+    if (!(hasPermission(context, "tickets-tickets-edit"))) {
       return ("PermissionError");
     }
 
@@ -254,7 +254,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
    */
   public String executeCommandUploadVersion(ActionContext context) {
 
-    if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
+    if (!(hasPermission(context, "tickets-tickets-edit"))) {
       return ("PermissionError");
     }
 
@@ -338,7 +338,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
    */
   public String executeCommandDetails(ActionContext context) {
 
-    if (!(hasPermission(context, "accounts-accounts-documents-view"))) {
+    if (!(hasPermission(context, "tickets-tickets-view"))) {
       return ("PermissionError");
     }
 
@@ -480,7 +480,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
    */
   public String executeCommandModify(ActionContext context) {
 
-    if (!(hasPermission(context, "accounts-accounts-documents-edit"))) {
+    if (!(hasPermission(context, "tickets-tickets-edit"))) {
       return ("PermissionError");
     }
 
@@ -521,7 +521,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
    */
   public String executeCommandUpdate(ActionContext context) {
 
-    if (!(hasPermission(context, "accounts-accounts-documents-edit"))) {
+    if (!(hasPermission(context, "tickets-tickets-edit"))) {
       return ("PermissionError");
     }
 
@@ -572,7 +572,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
    */
   public String executeCommandDelete(ActionContext context) {
 
-    if (!(hasPermission(context, "accounts-accounts-documents-delete"))) {
+    if (!(hasPermission(context, "tickets-tickets-edit"))) {
       return ("PermissionError");
     }
 
