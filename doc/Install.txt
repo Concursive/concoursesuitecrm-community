@@ -82,11 +82,12 @@
     $ visudo
 
   # Add the following to the bottom of /etc/profile:
-    export CATALINA_HOME=/usr/java/tomcat
-    export TOMCAT_HOME=${CATALINA_HOME}
     export JAVA_HOME=/usr/java/j2se
     export ANT_HOME=/usr/java/ant
     PATH=$PATH:${JAVA_HOME}/bin:${ANT_HOME}/bin
+    export CATALINA_HOME=/usr/java/tomcat
+    export CATALINA_OPTS=-Djava.awt.headless=true
+    export CFS_HOME=/home/webapps/ROOT
 
   # Remove the GNU Java if installed
     $ rm /usr/bin/java
@@ -94,9 +95,9 @@
     
   # Make the web folders
     $ mkdir /home/webapps
-    $ mkdir /home/webapps/cfs
+    $ mkdir /home/webapps/ROOT
     
-  # Log back in for changes to take affect, then test:
+  # Log back in for changes to take effect, then test:
   # Java version should say: 
   #   Java(TM) 2 Runtime Environment, Standard Edition (build 1.4.1-b21)
     $ java -version
@@ -104,32 +105,28 @@
     $ ant -version
 
 - Configure Apache Tomcat Web Server
-  # Setup tomcat as a service
-    $ ln -s /usr/java/tomcat/bin/catalina.sh /etc/init.d/tomcat
+  # Setup tomcat as a service, so that it auto-starts on boot
+    $ cp /usr/java/tomcat/bin/catalina.sh /etc/init.d/tomcat
     $ vi /etc/init.d/tomcat
   
-  # At top of file make sure the following is added:
+  # Edit the top of the file to look like the following, the additional
+    lines are the chkconfig, description, and processname:
   
 
-#!/bin/sh
-# -----------------------------------------------------------------------------
-# Start/Stop Script for the CATALINA Server
-#
-# chkconfig: - 85 15
-# description: Tomcat is a World Wide Web server.  It is used to serve \
-#              JSP files and CGI.
-# processname: tomcat
-#
+    #!/bin/sh
+    # -----------------------------------------------------------------------------
+    # Start/Stop Script for the CATALINA Server
+    #
+    # chkconfig: - 85 15
+    # description: Tomcat is a World Wide Web server.  It is used to serve \
+    #              JSP files and CGI.
+    # processname: tomcat
+    #
 
-    # Right before the line "# Get standard Java environment variables" add the lines:
-      export CATALINA_HOME=/usr/java/tomcat
-      export JAVA_HOME=/usr/java/j2se
-    # Search for:
-      "elif [ $1" = "start" ] ; then
-    # Scroll down past the "else" statement and insert the following 
-    #  on a new line after "-Djava.io.tmpdir="$CATALINA_TMPDIR" \
-      -Djava.awt.headless="true" \
-    # Save and exit
+  # Right before the line "# Get standard Java environment variables" add the line:
+    source /etc/profile
+  # Delete the line that reads "CATALINA_HOME=`cd "$PRGDIR/.." ; pwd`"
+  # Save and exit
     
   # Configure tomcat web application configuration
     $ vi ${CATALINA_HOME}/conf/web.xml
@@ -232,15 +229,11 @@
   # items will be integrated into the ASPCFS application
     $ crontab -e
   
-# System Maintenance
-0 0 * * * /usr/sbin/up2date -u --nox
-0 0/6 * * * /usr/bin/rdate -s clock.darkhorseventures.com && /sbin/clock -w
-
 # Clean up graphs and data every night
 1 3 * * * /usr/bin/lynx -dump http://127.0.0.1/ProcessSystem.do?command=ClearGraphData > /dev/null
 
 # Check for emails, faxes, reports, etc.
-0,5,10,15,20,25,30,35,40,45,50,55 * * * * /home/cfs/bin/notifier cfs > /dev/null
+*/5 * * * * /home/cfs/bin/notifier cfs > /dev/null
 
 
 *** Software Maintenace ***
