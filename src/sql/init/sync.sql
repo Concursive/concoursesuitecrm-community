@@ -5,11 +5,11 @@
   objects can be mapped to requests.
 */
 
-INSERT INTO sync_system (application_name) VALUES ('Vport Telemarketing');
-INSERT INTO sync_system (application_name) VALUES ('Land Mark: Auto Guide PocketPC');
-INSERT INTO sync_system (application_name) VALUES ('Street Smart Speakers: Web Portal');
+INSERT INTO sync_system (application_name) VALUES ('Deprecated');
+INSERT INTO sync_system (application_name) VALUES ('Auto Guide PocketPC');
+INSERT INTO sync_system (application_name) VALUES ('Unused');
 INSERT INTO sync_system (application_name) VALUES ('CFSHttpXMLWriter');
-INSERT INTO sync_system (application_name) VALUES ('Fluency');
+INSERT INTO sync_system (application_name) VALUES ('Test');
 
 /* VPORT */
 
