@@ -11,6 +11,8 @@ import com.darkhorseventures.cfsbase.Constants;
 
 public class VehicleList extends ArrayList {
 
+  public static String tableName = "autoguide_vehicle";
+  public static String uniqueField = "vehicle_id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
@@ -27,6 +29,9 @@ public class VehicleList extends ArrayList {
   }
   public void setSyncType(int tmp) { this.syncType = tmp; }
   public void setSyncType(String tmp) { this.syncType = Integer.parseInt(tmp); }
+  
+  public String getTableName() { return tableName; }
+  public String getUniqueField() { return uniqueField; }
   
   public void select(Connection db) throws SQLException {
     buildList(db);

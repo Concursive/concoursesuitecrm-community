@@ -11,6 +11,8 @@ import com.darkhorseventures.cfsbase.Constants;
 
 public class MakeList extends ArrayList {
 
+  public static String tableName = "autoguide_make";
+  public static String uniqueField = "make_id";
   private java.sql.Timestamp lastAnchor = null;
   private java.sql.Timestamp nextAnchor = null;
   private int syncType = Constants.NO_SYNC;
@@ -28,6 +30,8 @@ public class MakeList extends ArrayList {
   public void setSyncType(int tmp) { this.syncType = tmp; }
   public void setSyncType(String tmp) { this.syncType = Integer.parseInt(tmp); }
   
+  public String getTableName() { return tableName; }
+  public String getUniqueField() { return uniqueField; }
 
   public void select(Connection db) throws SQLException {
     buildList(db);

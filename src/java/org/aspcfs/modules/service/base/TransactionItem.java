@@ -24,13 +24,15 @@ import com.darkhorseventures.utils.ObjectUtils;
  */
 public class TransactionItem {
 
-  private final static int INSERT = 1;
-  private final static int SELECT = 2;
-  private final static int UPDATE = 3;
-  private final static int DELETE = 4;
-  private final static int SYNC = 5;
-  private final static int SYNC_START = 6;
-  private final static int SYNC_END = 7;
+  //Requested object actions
+  private final static byte INSERT = 1;
+  private final static byte SELECT = 2;
+  private final static byte UPDATE = 3;
+  private final static byte DELETE = 4;
+  private final static byte SYNC = 5;
+  private final static byte SYNC_START = 6;
+  private final static byte SYNC_END = 7;
+  private final static byte SYNC_DELETE = 8;
 
   private String name = null;
   private Object object = null;
@@ -107,11 +109,8 @@ public class TransactionItem {
    *@param  record            Description of Parameter
    *@exception  SQLException  Description of Exception
    */
-  public void insertClientMapping(Connection db, HashMap mapping,
-      AuthenticationItem auth, Record record) throws SQLException {
-    SyncClientMap syncClientMap = new SyncClientMap();
-    syncClientMap.setClientId(auth.getClientId());
-    syncClientMap.setTableId(((SyncTable) mapping.get(name)).getId());
+  public void insertClientMapping(Connection db, SyncClientMap syncClientMap, 
+      Record record) throws SQLException {
     syncClientMap.setRecordId(record.getRecordId());
     syncClientMap.setClientUniqueId((String) record.get("guid"));
     syncClientMap.insert(db);
@@ -299,6 +298,8 @@ public class TransactionItem {
           break;
         case SYNC_END:
           break;
+        case SYNC_DELETE:
+          break;
         default:
           appendErrorMessage("Unsupported action specified");
           break;
@@ -308,6 +309,10 @@ public class TransactionItem {
       appendErrorMessage("Unsupported object specified");
       return;
     }
+    
+    SyncClientMap syncClientMap = new SyncClientMap();
+    syncClientMap.setClientId(auth.getClientId());
+    syncClientMap.setTableId(((SyncTable) mapping.get(name)).getId());
 
     if ((action == INSERT && meta != null) || 
         action == SELECT || 
@@ -330,25 +335,32 @@ public class TransactionItem {
     } else if (action == SYNC) {
       ObjectUtils.setParam(object, "lastAnchor", auth.getLastAnchor());
       ObjectUtils.setParam(object, "nextAnchor", auth.getNextAnchor());
-
-      //Insert
+      //Build inserts for client
       if (auth.getNextAnchor() != null) {
         addRecords(object, db, Constants.SYNC_INSERTS);
+        Iterator syncRecords = recordList.iterator();
+        while (syncRecords.hasNext()) {
+          Record thisRecord = (Record) syncRecords.next();
+          this.insertClientMapping(db, syncClientMap, thisRecord);
+        }
       }
-
-      //Update
+      //Build updates for client
       if (auth.getLastAnchor() != null) {
         addRecords(object, db, Constants.SYNC_UPDATES);
       }
-
-      //Delete
-
-      Iterator syncRecords = recordList.iterator();
-      while (syncRecords.hasNext()) {
-        Record thisRecord = (Record) syncRecords.next();
-        this.insertClientMapping(db, mapping, auth, thisRecord);
+    } else if (action == SYNC_DELETE) {
+      //Build deletes for client
+      String uniqueField = ObjectUtils.getParam(object, "uniqueField");
+      String tableName = ObjectUtils.getParam(object, "tableName");
+      PreparedStatement pst = null;
+      ResultSet rs = syncClientMap.buildSyncDeletes(db, pst, uniqueField, tableName, recordList);
+      while (rs.next()) {
+        Record thisRecord = new Record("delete");
+        thisRecord.put("guid", rs.getString());
+        recordList.add(thisRecord);
       }
-
+      rs.close();
+      pst.close();
     } else if (executeMethod != null) {
       Class[] dbClass = new Class[]{Class.forName("java.sql.Connection")};
       Object[] dbObject = new Object[]{db};

@@ -107,7 +107,23 @@ public class SyncClientMap {
     pst.close();
     return resultCount;
   }
-
+  
+  public ResultSet buildSyncDeletes(Connection db, PreparedStatement pst, String uniqueField, String tableName, RecordList recordList) throws SQLException {
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        "SELECT cuid " +
+        "FROM sync_map " +
+        "WHERE client_id = ? " +
+        "AND table_id = ? " +
+        "AND record_id NOT IN (SELECT " + uniqueField + " FROM " + tableName + ") ");
+    int i = 0;
+    pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, clientId);
+    pst.setInt(++i, tableId);
+    ResultSet rs = pst.executeQuery();
+    return rs;
+  }
+  
 
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("map_id");
