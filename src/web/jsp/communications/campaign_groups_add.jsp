@@ -257,7 +257,7 @@ Add a Group
 		<%}%>
       <br>
       <!--a href="javascript:popURLCampaign('/CampaignManagerGroup.do?command=ShowContactsPopup&popup=true','Contacts','600','290','yes','yes');">Add Contacts</a><br-->
-      <a href="javascript:popContactsListMultipleCampaign('listViewId','1');">Add Contacts</a><br>
+      <a href="javascript:popContactsListMultipleCampaign('listViewId','1');">Add/Remove Contacts</a><br>
       &nbsp;<br>
       <input type="hidden" name="previousSelection" value="">
       <input type="button" value="Remove" onclick="removeValues()">
