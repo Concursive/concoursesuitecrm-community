@@ -415,6 +415,8 @@ CREATE TABLE contact_address (
 )
 ;
 
+CREATE INDEX "contact_address_contact_id_idx" ON "contact_address" (contact_id);
+
 CREATE TABLE contact_emailaddress (
   emailaddress_id INT IDENTITY PRIMARY KEY,
   contact_id INT REFERENCES contact(contact_id),
@@ -427,6 +429,8 @@ CREATE TABLE contact_emailaddress (
   primary_email BIT NOT NULL DEFAULT 0
 )
 ;
+
+CREATE INDEX "contact_email_contact_id_idx" ON "contact_emailaddress" (contact_id);
 
 CREATE TABLE contact_phone (
   phone_id INT IDENTITY PRIMARY KEY,
@@ -441,6 +445,8 @@ CREATE TABLE contact_phone (
   primary_number BIT NOT NULL DEFAULT 0
 )
 ;
+
+CREATE INDEX "contact_phone_contact_id_idx" ON "contact_phone" (contact_id);
 
 CREATE TABLE notification (
   notification_id INT IDENTITY PRIMARY KEY,
