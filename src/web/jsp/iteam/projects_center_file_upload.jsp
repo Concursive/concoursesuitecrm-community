@@ -36,11 +36,11 @@
   }
 </script>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
-<form method="POST" name="inputForm" action="/ProjectManagementFiles.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+<form method="POST" name="inputForm" action="ProjectManagementFiles.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
   <tr>
     <td width='2' bgcolor='#000000'>&nbsp;</td>
     <td width="100%" bgcolor="#000000" rowspan="2" valign="middle">
-      <font color='#FFFFFF'>&nbsp;<img border="0" src="/images/file.gif" align="absmiddle"><b>File Sharing</b></font>
+      <font color='#FFFFFF'>&nbsp;<img border="0" src="images/file.gif" align="absmiddle"><b>File Sharing</b></font>
     </td>
     <td width='2' bgcolor='#000000'>&nbsp;</td>
   </tr>
@@ -103,7 +103,7 @@
       <p align="center">
         <input type='submit' value=' Upload ' name="upload" onClick="javascript:this.form.dosubmit.value='true';">
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='/ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>';">
+        <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>';">
         <input type="hidden" name="dosubmit" value="false">
         <input type="hidden" name="pid" value="<%= Project.getId() %>">
       </p>

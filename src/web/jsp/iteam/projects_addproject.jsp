@@ -4,16 +4,16 @@
 <jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body bgcolor='#FFFFFF' onLoad="document.inputForm.title.focus()">
-<script language="JavaScript" type="text/javascript" src="/javascript/checkDate.js"></script>
-<script language="JavaScript" type="text/javascript" src="/javascript/popCalendar.js"></script>
-<form method="POST" name="inputForm" action="/ProjectManagement.do?command=InsertProject&auto-populate=true">
+<script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
+<form method="post" name="inputForm" action="ProjectManagement.do?command=InsertProject&auto-populate=true">
   <center>
   <table border="0" width="100%" cellspacing="0" cellpadding="0">
     <tr>
       <td width="2" bgcolor="#808080">&nbsp;</td>
       <td width="100%" colspan="2" bgcolor="#808080" rowspan="2">
         <font color="#FFFFFF">
-        &nbsp;<img border='0' src='/images/task.gif'>
+        &nbsp;<img border='0' src='images/task.gif'>
         <b>New Project Information</b>
         </font>
       </td>
@@ -23,7 +23,7 @@
       <td width="2" bgcolor="#808080">&nbsp;</td>
       <td width="2" bgcolor="#808080">&nbsp;</td>
     </tr>
-		<tr>
+    <tr>
       <td width="2" bgcolor="#808080">&nbsp;</td>
       <td width="100%" colspan="2">
         &nbsp;<br>
@@ -122,7 +122,7 @@
     </td>
       <td width="50%" bgcolor="#808080" height="30">
         <p align="left">
-          &nbsp;&nbsp;<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ProjectManagement.do'">
+          &nbsp;&nbsp;<input type="submit" value="Cancel" onClick="javascript:this.form.action='ProjectManagement.do'">
         </p>
     </td>
     <td width="2" bgcolor="#808080">&nbsp;</td>

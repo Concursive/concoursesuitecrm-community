@@ -24,7 +24,7 @@
     }
   }
 </script>
-<form method="POST" name="inputForm" action="/ProjectManagementIssues.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
+<form method="POST" name="inputForm" action="ProjectManagementIssues.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
   <table border="0" width="100%" cellspacing="0" cellpadding="0">
     <tr>
       <td width='2' bgcolor='#808080'>&nbsp;</td>
@@ -41,7 +41,10 @@
       <td width='2' bgcolor='#808080'>&nbsp;</td>
       <td width='100%' colspan='2' valign='center'>
         &nbsp;<br>
-        <%--= issueByLine --%>
+<%
+  String categoryId = request.getParameter("cid");
+  if (categoryId != null) Issue.setCategoryId(Integer.parseInt(categoryId));
+%>
         &nbsp;Issue Category: <%= CategoryList.getHtmlSelect("categoryId", Issue.getCategoryId()) %><br>
         &nbsp;
       </td>
@@ -79,7 +82,7 @@
       <td width='50%' bgcolor='#808080' height='30'>
         <p align='left'>
           &nbsp;&nbsp;
-          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='/ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>';">
+          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>&cid=<%= Issue.getCategoryId() %>';">
         </p>
       </td>
       <td width='2' bgcolor='#808080'>&nbsp;</td>

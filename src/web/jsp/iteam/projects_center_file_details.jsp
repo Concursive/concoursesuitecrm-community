@@ -46,10 +46,10 @@
 %>
   <tr class="row<%= rowid %>">
     <td rowspan="2">
-      <a href="/ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>">Download</a>
+      <a href="ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>">Download</a>
     </td>
     <td>
-      <a href="/ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>"><%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %></a>
+      <a href="ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>"><%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %></a>
     </td>
     <td align="right">
       <%= thisVersion.getRelativeSize() %> k&nbsp;

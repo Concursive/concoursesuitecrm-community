@@ -1,7 +1,7 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <table border='0' width='100%' cellspacing='0' cellpadding='0'>
   <tr>
     <td width='100%' bgcolor='#FF2200'>
@@ -29,13 +29,13 @@
 %>    
   <tr<%= bgColorVar %>>
     <td valign="middle" align="center" nowrap>
-      <a href="/ProjectManagementFiles.do?command=Modify&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>">Edit</a>|<a href="javascript:confirmDelete('/ProjectManagementFiles.do?command=Delete&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>');">Del</a>&nbsp;
+      <a href="ProjectManagementFiles.do?command=Modify&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>">Edit</a>|<a href="javascript:confirmDelete('ProjectManagementFiles.do?command=Delete&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>');">Del</a>&nbsp;
     </td>
     <td valign="top">
-      <a href="/ProjectManagementFiles.do?command=Details&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></a>
+      <a href="ProjectManagementFiles.do?command=Details&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></a>
     </td>
     <td align="center" valign="middle">
-      [<a href="/ProjectManagementFiles.do?command=AddVersion&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
+      [<a href="ProjectManagementFiles.do?command=AddVersion&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>">Add Version</a>]
     </td>
     <td align="right" valign="middle">
       <%= thisFile.getRelativeSize() %> k&nbsp;
@@ -71,6 +71,6 @@
 <hr color='#000000' width='100%' noshade size='1'>
 <br>
 <font color='#000000'>
-  [<a href="/ProjectManagementFiles.do?command=Add&pid=<%= Project.getId() %>&folderId=<%= Project.getFiles().getFolderId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">Submit File</a>]
+  [<a href="ProjectManagementFiles.do?command=Add&pid=<%= Project.getId() %>&folderId=<%= Project.getFiles().getFolderId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">Submit File</a>]
 </font>
   

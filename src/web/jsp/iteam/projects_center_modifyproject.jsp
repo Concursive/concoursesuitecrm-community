@@ -3,17 +3,17 @@
 <jsp:useBean id="DepartmentList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body bgcolor='#FFFFFF' onLoad="document.inputForm.title.focus()">
-<script language="JavaScript" type="text/javascript" src="/javascript/checkDate.js"></script>
-<script language="JavaScript" type="text/javascript" src="/javascript/popCalendar.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
-  <form method="POST" name="inputForm" action="/ProjectManagement.do?command=UpdateProject&auto-populate=true">
+  <form method="POST" name="inputForm" action="ProjectManagement.do?command=UpdateProject&auto-populate=true">
     <input type="hidden" name="id" value="<%= Project.getId() %>">
     <input type="hidden" name="modified" value="<%= Project.getModified() %>">
     <tr>
       <td width="2" bgcolor="#808080">&nbsp;</td>
       <td width="100%" colspan="2" bgcolor="#808080" rowspan="2">
         <font color="#FFFFFF">
-          &nbsp;<img border='0' src='/images/task.gif'>
+          &nbsp;<img border='0' src='images/task.gif'>
           <b>Update Existing Project Information</b>
         </font>
       </td>
@@ -120,7 +120,7 @@
       </td>
       <td width="50%" bgcolor="#808080" height="30">
         <p align="left">
-          &nbsp;&nbsp;<input type="submit" value="Cancel" onClick="javascript:this.form.action='/ProjectManagement.do?command=ProjectCenter&pid=<%= Project.getId() %>'">
+          &nbsp;&nbsp;<input type="submit" value="Cancel" onClick="javascript:this.form.action='ProjectManagement.do?command=ProjectCenter&pid=<%= Project.getId() %>'">
         </p>
       </td>
       <td width="2" bgcolor="#808080">&nbsp;</td>

@@ -53,7 +53,7 @@
     <tr<%= bgColorVar %>>
       <td width='19' valign='top'> <%= thisAssignment.getStatusGraphicTag() %></td>
       <td valign='top'>
-        <a href="/ProjectManagementAssignments.do?command=Modify&aid=<%= thisAssignment.getId() %>&pid=<%= Project.getId() %>"><%= toHtml(thisAssignment.getRole()) %></a><br>
+        <a href="ProjectManagementAssignments.do?command=Modify&aid=<%= thisAssignment.getId() %>&pid=<%= Project.getId() %>"><%= toHtml(thisAssignment.getRole()) %></a><br>
         <font color='#808080'><%= toHtml(thisAssignment.getTechnology()) %></font>
       </td>
       <td width='85' nowrap valign='top'><%= thisAssignment.getAssignDateString() %></td>
@@ -81,13 +81,13 @@
 <table border='0' width='100%' bgColor="#FFFFFF">
   <tr>
     <td width='100%'>
-      <img border='0' src='/images/box.gif' alt='Incomplete'>
+      <img border='0' src='images/box.gif' alt='Incomplete'>
       Assignment incomplete<br>
-      <img border='0' src='/images/box-checked.gif' alt='Completed'>
+      <img border='0' src='images/box-checked.gif' alt='Completed'>
       Assignment has been completed<br>
-      <img border='0' src='/images/box-closed.gif' alt='Closed'>
+      <img border='0' src='images/box-closed.gif' alt='Closed'>
       Assignment has been closed<br>
-      <img border='0' src='/images/box-hold.gif' alt='On Hold'>
+      <img border='0' src='images/box-hold.gif' alt='On Hold'>
       Assignment on hold
     </td>
   </tr>

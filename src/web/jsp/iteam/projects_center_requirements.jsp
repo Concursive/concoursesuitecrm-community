@@ -17,7 +17,6 @@
     <td width='118' bgcolor='#808080'><font color='#FFFFFF'>&lt;Effort&gt;</font></td>
   </tr>
 <%    
-  String statusGraphic = "&nbsp;";
   String bgColorVar = " bgColor='#E4E4E4'";
   RequirementList requirements = Project.getRequirements();
   Iterator i = requirements.iterator();
@@ -27,14 +26,16 @@
 %>    
   <tr<%= bgColorVar %>>
     <td width='19' valign='top'>
-      <%= statusGraphic %>
+      <%= thisRequirement.getStatusGraphicTag() %>
     </td>
     <td width='86' valign='top'>
       <%= thisRequirement.getEnteredString() %>
     </td>
     <td width='412' valign='top'>
-      <a href="/ProjectManagementRequirements.do?command=Modify&rid=<%= thisRequirement.getId() %>&pid=<%= Project.getId() %>"><%= toHtml(thisRequirement.getShortDescription()) %></a><br>
-      <i>Requested By <%= thisRequirement.getSubmittedBy() %></i>
+      <%= thisRequirement.getAssignmentTag("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=2&expand=" + thisRequirement.getId()) %>
+      <a href="ProjectManagementRequirements.do?command=Modify&rid=<%= thisRequirement.getId() %>&pid=<%= Project.getId() %>"><%= toHtml(thisRequirement.getShortDescription()) %></a>
+      (<%= thisRequirement.getAssignments().size() %> activit<%= (thisRequirement.getAssignments().size() == 1?"y":"ies") %>)<br>
+      <%= ("".equals(thisRequirement.getSubmittedBy())?"":"<i>Requested By " + thisRequirement.getSubmittedBy() + "</i>") %>
     </td>
     <td width='118' valign='top'>
       Due: <%= thisRequirement.getDeadlineString() %><br>
@@ -54,9 +55,9 @@
 <table border='0' width='100%'>
   <tr>
     <td width='100%'>
-      <img border='0' src='/images/box.gif' alt='Incomplete'> Requirement is incomplete<br>
-      <img border='0' src='/images/box-checked.gif' alt='Completed'> Requirement has been completed (or closed)<br>
-      <img border='0' src='/images/box-hold.gif' alt='On Hold'> Requirement has not been approved
+      <img border='0' src='images/box.gif' alt='Incomplete'> Requirement is incomplete<br>
+      <img border='0' src='images/box-checked.gif' alt='Completed'> Requirement has been completed (or closed)<br>
+      <img border='0' src='images/box-hold.gif' alt='On Hold'> Requirement has not been approved
     </td>
   </tr>
 </table>

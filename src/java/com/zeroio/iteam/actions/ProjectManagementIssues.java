@@ -123,6 +123,10 @@ public final class ProjectManagementIssues extends CFSModule {
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", ("issues_details").toLowerCase());
       
+      String categoryId = context.getRequest().getParameter("cid");
+      IssueCategory issueCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
+      context.getRequest().setAttribute("IssueCategory", issueCategory);
+      
       Issue thisIssue = new Issue(db, Integer.parseInt(issueId), thisProject.getId());
       Contact user = this.getUser(context, thisIssue.getEnteredBy()).getContact();
       thisIssue.setUser(user.getNameFirstLast()); 
@@ -166,6 +170,10 @@ public final class ProjectManagementIssues extends CFSModule {
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", ("issues_modify").toLowerCase());
       
+      String categoryId = context.getRequest().getParameter("cid");
+      IssueCategory issueCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
+      context.getRequest().setAttribute("IssueCategory", issueCategory);
+      
       Issue thisIssue = new Issue(db, Integer.parseInt(issueId), thisProject.getId());
       context.getRequest().setAttribute("Issue", thisIssue);
       
@@ -199,6 +207,10 @@ public final class ProjectManagementIssues extends CFSModule {
       Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", ("issues_reply").toLowerCase());
+      
+      String categoryId = context.getRequest().getParameter("cid");
+      IssueCategory issueCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
+      context.getRequest().setAttribute("IssueCategory", issueCategory);
       
       Issue thisIssue = new Issue(db, Integer.parseInt(issueId), thisProject.getId());
       context.getRequest().setAttribute("Issue", thisIssue);
@@ -234,6 +246,10 @@ public final class ProjectManagementIssues extends CFSModule {
       Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
       context.getRequest().setAttribute("Project", thisProject);
 
+      String categoryId = context.getRequest().getParameter("cid");
+      IssueCategory issueCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
+      context.getRequest().setAttribute("IssueCategory", issueCategory);
+      
       Issue thisIssue = new Issue(db, Integer.parseInt(issueId), thisProject.getId());
       context.getRequest().setAttribute("Issue", thisIssue);
       

@@ -4,8 +4,8 @@
 <jsp:useBean id="LoeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body bgcolor='#FFFFFF' onLoad="document.inputForm.shortDescription.focus();">
-<script language="JavaScript" type="text/javascript" src="/javascript/checkDate.js"></script>
-<script language="JavaScript" type="text/javascript" src="/javascript/popCalendar.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
     if (form.dosubmit.value == "false") {
@@ -50,7 +50,7 @@
     }
   }
 </script>
-<form method="POST" name="inputForm" action="/ProjectManagementRequirements.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
+<form method="POST" name="inputForm" action="ProjectManagementRequirements.do?command=Insert&auto-populate=true" onSubmit="return checkForm(this);">
   <table border="0" width="100%" cellspacing="0" cellpadding="0">
     <tr>
       <td width="2" bgcolor="#000000">&nbsp;</td>
@@ -141,7 +141,7 @@
       <td width="50%" bgcolor="#000000" height="30">
         <p align="left">
           &nbsp;&nbsp;
-          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='/ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>';">
+          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>';">
         </p>
       </td>
       <td width="2" bgcolor="#000000">&nbsp;</td>

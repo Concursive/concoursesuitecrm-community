@@ -238,7 +238,7 @@ public final class ProjectManagementFiles extends CFSModule {
     }
   }
 
-
+  
   /**
    *  Description of the Method
    *
@@ -267,7 +267,7 @@ public final class ProjectManagementFiles extends CFSModule {
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisProject.getId());
       thisItem.buildVersionList(db);
       context.getRequest().setAttribute("FileItem", thisItem);
-
+      
     } catch (Exception e) {
       errorMessage = e;
     } finally {

@@ -1,5 +1,6 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*,com.darkhorseventures.webutils.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
+<jsp:useBean id="IssueCategory" class="com.zeroio.iteam.base.IssueCategory" scope="request"/>
 <jsp:useBean id="Issue" class="com.zeroio.iteam.base.Issue" scope="request"/>
 <jsp:useBean id="CategoryList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
@@ -24,7 +25,7 @@
     }
   }
 </script>
-<form method="POST" name="inputForm" action="/ProjectManagementIssues.do?command=Update&auto-populate=true" onSubmit="return checkForm(this);">
+<form method="POST" name="inputForm" action="ProjectManagementIssues.do?command=Update&auto-populate=true" onSubmit="return checkForm(this);">
   <table border="0" width="100%" cellspacing="0" cellpadding="0">
     <tr>
       <td width='2' bgcolor='#808080'>&nbsp;</td>
@@ -79,7 +80,7 @@
       <td width='50%' bgcolor='#808080' height='30'>
         <p align='left'>
           &nbsp;&nbsp;
-          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='/ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>';">
+          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>';">
         </p>
       </td>
       <td width='2' bgcolor='#808080'>&nbsp;</td>

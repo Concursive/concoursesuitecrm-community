@@ -1,11 +1,12 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*,com.darkhorseventures.webutils.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
+<jsp:useBean id="IssueCategory" class="com.zeroio.iteam.base.IssueCategory" scope="request"/>
 <jsp:useBean id="Issue" class="com.zeroio.iteam.base.Issue" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <table border='0' width='100%' bgcolor='#000000' cellspacing='0' cellpadding='0'>
 <tr>
   <td width='100%' bgcolor='#003399'>
-    <font color='#FFFFFF'>&nbsp;<b>Issues</b></font>
+    <font color='#FFFFFF'>&nbsp;<b>Issues: <%= toHtml(IssueCategory.getDescription()) %></b></font>
   </td>
 </tr>
 </table>
@@ -73,7 +74,8 @@
 <%  
   } else {
 %>
-  [<a href="/ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>">Back to Topics</a>]  [<a href="/ProjectManagementIssues.do?command=Reply&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>">Add Reply</a>]
+  [<a href="ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>">Back to Issues</a>]
+  [<a href="ProjectManagementIssues.do?command=Reply&pid=<%= Project.getId() %>&iid=<%= Issue.getId() %>&cid=<%= IssueCategory.getId() %>">Add Reply</a>]
 <%  
   }
 %>

@@ -12,7 +12,7 @@
   <tr>
   <td bgcolor='#E4E4E4' valign='top' nowrap>
     <font color='#000000'>
-      <b><img border='0' src='/images/project.gif'>&nbsp;Project Center</b>
+      <b><img border='0' src='images/project.gif'>&nbsp;Project Center</b>
     </font>
   </td>
   <td bgcolor='#E4E4E4' valign='top'>
@@ -20,18 +20,18 @@
     <font color='#000000'>
 
 <!--  if ((accessAdmin.equals(trueChar)) || (projectManager == 1)) {-->
-    &nbsp; [<a href="/ProjectManagementRequirements.do?command=Add&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">New Requirement</a>]
+    &nbsp; [<a href="ProjectManagementRequirements.do?command=Add&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">New Requirement</a>]
 
 <!--  if ((accessAdmin.equals(trueChar)) || (projectManager == 1)) {-->
-    &nbsp; [<a href="/ProjectManagementTeam.do?command=Modify&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">Modify Team</a>]
+    &nbsp; [<a href="ProjectManagementTeam.do?command=Modify&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">Modify Team</a>]
 
 <!--  if ((accessAdmin.equals(trueChar)) || (projectManager == 1)) {-->
-    &nbsp; [<a href="/ProjectManagementAssignments.do?command=Add&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">New Activity</a>]
+    &nbsp; [<a href="ProjectManagementAssignments.do?command=Add&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">New Activity</a>]
 
-    &nbsp; [<a href="/ProjectManagementIssues.do?command=Add&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">New Issue</a>]
+    &nbsp; [<a href="ProjectManagementIssues.do?command=Add&pid=<%= Project.getId() %>" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">New Issue</a>]
 
   <!--  if ((accessAdmin.equals(trueChar)) || (projectManager == 1)) {-->
-    <br>[<a href="/ProjectManagement.do?command=ModifyProject&pid=<%= Project.getId() %>&return=ProjectCenter" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">Update Project</a>]
+    <br>[<a href="ProjectManagement.do?command=ModifyProject&pid=<%= Project.getId() %>&return=ProjectCenter" style="text-decoration:none;color:black;" onMouseOver="this.style.color = 'blue';" onMouseOut="this.style.color = 'black';">Update Project</a>]
 
   </font>
   </td>
@@ -41,7 +41,7 @@
 <table border='0' width='100%' cellspacing='0' cellpadding='0'>
   <tr>
   <td width='100%'>
-    <img border='0' src='/images/graybar_main.gif' width='100%' height='11'>
+    <img border='0' src='images/graybar_main.gif' width='100%' height='11'>
 <%
     String approvalResponse = "";
     if (Project.getApprovalDate() == null) {
@@ -86,11 +86,11 @@
     <tr>
       <td width='15' bgcolor='#E6E9CC' align='left' valign='top'>&nbsp;</td>
       <td bgcolor='#E6E9CC' align='right' valign='center'>
-        <a href="/ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>" onMouseOver="window.status='Requirements'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='/images/pc-requirements.gif' width='89' height='20'></a>
-        <a href="/ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>" onMouseOver="window.status='Team Members'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='/images/pc-team.gif'></a>
-        <a href="/ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=<%= Project.getId() %>" onMouseOver="window.status='Activities'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='/images/pc-activities.gif' width='63' height='20'></a>
-        <a href="/ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>" onMouseOver="window.status='Issues'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='/images/pc-issues.gif' width='48' height='20'></a>
-        <a href="/ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>&folderId=<%= Project.getFiles().getFolderId() %>" onMouseOver="window.status='File Sharing'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='/images/pc-filesharing.gif' width='76' height='20'></a>
+        <a href="ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>" onMouseOver="window.status='Requirements'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='images/pc-requirements.gif' width='89' height='20'></a>
+        <a href="ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>" onMouseOver="window.status='Team Members'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='images/pc-team.gif'></a>
+        <a href="ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=<%= Project.getId() %>" onMouseOver="window.status='Activities'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='images/pc-activities.gif' width='63' height='20'></a>
+        <a href="ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>" onMouseOver="window.status='Issues'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='images/pc-issues.gif' width='48' height='20'></a>
+        <a href="ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>&folderId=<%= Project.getFiles().getFolderId() %>" onMouseOver="window.status='File Sharing'; return true;" onMouseOut="window.status=''; return true;"><img border='0' src='images/pc-filesharing.gif' width='76' height='20'></a>
         <table border="0" width="100%" cellspacing="7" bgcolor="#FFFFFF">
           <tr>
             <td>

@@ -1,14 +1,15 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*,com.darkhorseventures.webutils.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="Assignment" class="com.zeroio.iteam.base.Assignment" scope="request"/>
+<jsp:useBean id="RequirementList" class="com.zeroio.iteam.base.RequirementList" scope="request"/>
 <jsp:useBean id="ActivityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="PriorityList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="StatusList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="LoeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body bgcolor='#FFFFFF' onLoad="document.inputForm.role.focus();">
-<script language="JavaScript" type="text/javascript" src="/javascript/checkDate.js"></script>
-<script language="JavaScript" type="text/javascript" src="/javascript/popCalendar.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
     if (form.dosubmit.value == "false") {
@@ -54,7 +55,7 @@
     }
   }
 </script>
-<form method="POST" name="inputForm" action="/ProjectManagementAssignments.do?command=Update&auto-populate=true" onSubmit="return checkForm(this);">
+<form method="POST" name="inputForm" action="ProjectManagementAssignments.do?command=Update&auto-populate=true" onSubmit="return checkForm(this);">
   <table border="0" width="100%" cellspacing="0" cellpadding="0">
     <tr>
       <td width="2" bgcolor="#000000">&nbsp;</td>
@@ -65,6 +66,16 @@
     </tr>
     <tr>
       <td width="2" bgcolor="#000000">&nbsp;</td>
+      <td width="2" bgcolor="#000000">&nbsp;</td>
+    </tr>
+    <tr>
+      <td width="2" bgcolor="#000000">&nbsp;</td>
+      <td width="100%" colspan="4">&nbsp;<br>
+        &nbsp;Link to Requirement:<br>
+        &nbsp;
+        <%= RequirementList.getHtmlSelect("requirementId", Assignment.getRequirementId()) %><font color=red>*</font> <%= showAttribute(request, "requirementIdError") %>
+        <br>
+      </td>
       <td width="2" bgcolor="#000000">&nbsp;</td>
     </tr>
     <tr>
@@ -153,7 +164,7 @@
           &nbsp;
           <input type='submit' value=' Update ' onClick="javascript:this.form.dosubmit.value='true';">&nbsp;&nbsp;
           &nbsp;&nbsp;
-          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='/ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=<%= Project.getId() %>';">
+          <input type='submit' value='Cancel' onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=<%= Project.getId() %>';">
           &nbsp;&nbsp;
         </p>
       </td>

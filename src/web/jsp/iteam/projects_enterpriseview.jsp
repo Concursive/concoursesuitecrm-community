@@ -24,11 +24,11 @@
     </tr>
     <tr>
       <td colspan="5">
-        <img border="0" src="/images/graybar_main.gif" width="100%" height="11"><br>
+        <img border="0" src="images/graybar_main.gif" width="100%" height="11"><br>
         &nbsp;
       </td>
     </tr>
-<%    
+<%
     while (i.hasNext()) {
       if (currentHighlight.equals(tableHighlight1)) {
         currentHighlight = tableHighlight2;
@@ -43,7 +43,7 @@
         &nbsp;
       </td>
       <td width="743" bgcolor="#E4EBFD" align="left" valign="top" colspan="4">
-        &nbsp;<a href="/ProjectManagement.do?command=ProjectCenter&pid=<%= thisProject.getId() %>"><b><%= toHtml(thisProject.getTitle()) %>:</b></a>
+        &nbsp;<a href="ProjectManagement.do?command=ProjectCenter&pid=<%= thisProject.getId() %>"><b><%= toHtml(thisProject.getTitle()) %>:</b></a>
         <%= toHtml(thisProject.getShortDescription()) %>
       </td>
     </tr>
@@ -76,7 +76,7 @@
       <td width="2" bgcolor="<%= currentHighlight %>">&nbsp;</td>
       <td width="430">
         &nbsp;&nbsp;&nbsp;<%= thisAssignment.getStatusGraphicTag() %>&nbsp;
-        <a href="javascript:popURL('/ProjectManagementAssignments.do?command=Modify&pid=<%= thisProject.getId() %>&aid=<%= thisAssignment.getId() %>&popup=true','CFS_Assignment','600','265','yes','no');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Update this assignment';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisAssignment.getRole()) %></a>
+        <a href="javascript:popURL('ProjectManagementAssignments.do?command=Modify&pid=<%= thisProject.getId() %>&aid=<%= thisAssignment.getId() %>&popup=true','CFS_Assignment','600','325','yes','no');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Update this assignment';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisAssignment.getRole()) %></a>
       </td>
       <td width="116" align="left">&nbsp;<%= toHtml(thisAssignment.getStatus()) %></td>
       <td width="88">&nbsp;<%= thisAssignment.getRelativeDueDateString() %></td>
@@ -111,7 +111,7 @@
       <td width="2" align="center" valign="top" bgcolor="<%= currentHighlight %>">&nbsp;</td>
       <td width="430" colspan="2">
         &nbsp;&nbsp;&nbsp;#&nbsp;
-        <a href="javascript:popURL('/ProjectManagementIssues.do?command=Details&pid=<%= thisProject.getId() %>&iid=<%= thisIssue.getId() %>&popup=true','CFS_Issue','600','300','yes','yes');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Review this issue';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisIssue.getSubject()) %></a>
+        <a href="javascript:popURL('ProjectManagementIssues.do?command=Details&pid=<%= thisProject.getId() %>&iid=<%= thisIssue.getId() %>&popup=true','CFS_Issue','600','300','yes','yes');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Review this issue';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisIssue.getSubject()) %></a>
       </td>
       <td width="88" align="left">&nbsp;<%= toHtml(thisIssue.getReplyDateString()) %></td>
       <td width="109">&nbsp;<dhv:username id="<%= thisIssue.getModifiedBy() %>" /></td>
@@ -139,7 +139,7 @@
 %>
   <tr>
     <td colspan="5">
-      <img border='0' src='/images/graybar_invert.gif' width='100%' height='11'>
+      <img border='0' src='images/graybar_invert.gif' width='100%' height='11'>
     </td>
   </tr>
   </table>

@@ -54,10 +54,10 @@ public final class ProjectManagement extends CFSModule {
       //Project Info
       projects.setGroupId(-1);
       projects.setOpenProjectsOnly(true);
-      projects.setProjectsForUser(getUserId(context));
+      projects.setProjectsForUser(this.getUserId(context));
       //Assignment Info
       projects.setBuildAssignments(true);
-      projects.setAssignmentsForUser(getUserId(context));
+      projects.setAssignmentsForUser(this.getUserId(context));
       projects.setOpenAssignmentsOnly(true);
       projects.setWithAssignmentDaysComplete(6);
       //Issue Info
@@ -100,7 +100,7 @@ public final class ProjectManagement extends CFSModule {
       projects.setGroupId(-1);
       //projects.setOpenProjectsOnly(true);
       //projects.setProjectsWithAssignmentsOnly(true);
-      projects.setUserRange(getUserRange(context));
+      projects.setUserRange(this.getUserRange(context));
       //Assignment Info
       projects.setBuildAssignments(true);
       //projects.setAssignmentsForUser(getUserId(context));
@@ -154,8 +154,8 @@ public final class ProjectManagement extends CFSModule {
       LookupList departmentList = new LookupList(db, "lookup_department");
       departmentList.addItem(0, "--None--");
       context.getRequest().setAttribute("DepartmentList", departmentList);
-			
-			ProjectList projectList = new ProjectList();
+
+      ProjectList projectList = new ProjectList();
 			projectList.setGroupId(-1);
 			projectList.setEmptyHtmlSelectRecord("--None--");
 			projectList.setEnteredByUserRange(getUserRange(context));
@@ -233,7 +233,7 @@ public final class ProjectManagement extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject = new Project(db, Integer.parseInt(projectId), this.getUserRange(context));
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", ("modifyproject").toLowerCase());
 
@@ -274,7 +274,7 @@ public final class ProjectManagement extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      thisProject.setModifiedBy(getUserId(context));
+      thisProject.setModifiedBy(this.getUserId(context));
       resultCount = thisProject.update(db, context);
       if (resultCount == -1) {
         processErrors(context, thisProject.getErrors());
@@ -336,10 +336,28 @@ public final class ProjectManagement extends CFSModule {
       db = getConnection(context);
       thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
       if ("Requirements".equals(section)) {
+        String toggle = (String)context.getRequest().getParameter("expand");
+        Vector reqsOpen = (Vector)context.getSession().getAttribute("Tree-OpenRequirements");
+        if (reqsOpen == null) {
+          reqsOpen = new Vector();
+          context.getSession().setAttribute("Tree-OpenRequirements", reqsOpen);
+        }
+        if (toggle != null) {
+          if (reqsOpen.contains(toggle)) {
+            if (System.getProperty("DEBUG") != null) System.out.println("ProjectManagement-> Removing: " + toggle);
+            reqsOpen.remove(toggle);
+          } else {
+            if (System.getProperty("DEBUG") != null) System.out.println("ProjectManagement-> Adding: " + toggle);
+            reqsOpen.add(toggle);
+          }
+        }
+        
+        thisProject.setBuildRequirementAssignments(true);
         thisProject.buildRequirementList(db);
         Iterator i = thisProject.getRequirements().iterator();
         while (i.hasNext()) {
           Requirement thisRequirement = (Requirement)i.next();
+          thisRequirement.setTreeOpen(reqsOpen.contains("" + thisRequirement.getId()));
           Contact enteredBy = this.getUser(context, thisRequirement.getEnteredBy()).getContact();
           Contact modifiedBy = this.getUser(context, thisRequirement.getModifiedBy()).getContact();
           thisRequirement.setEnteredByString(enteredBy.getNameFirstLast());
@@ -362,8 +380,20 @@ public final class ProjectManagement extends CFSModule {
           Contact userAssigned = this.getUser(context, thisAssignment.getUserAssignedId()).getContact();
           thisAssignment.setUserAssigned(userAssigned.getNameFirstLast());
         }
+      } else if ("Issues_Categories".equals(section)) {
+        thisProject.buildIssueCategoryList(db);
+        Iterator i = thisProject.getIssueCategories().iterator();
+        while (i.hasNext()) {
+          IssueCategory thisIssueCategory = (IssueCategory)i.next();
+          //User user = new User(db, this.getUser(context).getGroupId(), thisIssueCategory.getModifiedBy());
+          //thisIssueCategory.setUserModified(user.getNameFirstLast());
+        }
       } else if ("Issues".equals(section)) {
-        thisProject.buildIssueList(db);
+        String categoryId = context.getRequest().getParameter("cid");
+        if (categoryId == null) categoryId = context.getRequest().getParameter("categoryId");
+        thisProject.buildIssueList(db, Integer.parseInt(categoryId));
+        IssueCategory issueCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
+        context.getRequest().setAttribute("IssueCategory", issueCategory);
         Iterator i = thisProject.getIssues().iterator();
         while (i.hasNext()) {
           Issue thisIssue = (Issue)i.next();
@@ -383,6 +413,7 @@ public final class ProjectManagement extends CFSModule {
       context.getRequest().setAttribute("IncludeSection", section.toLowerCase());
     } catch (Exception e) {
       errorMessage = e;
+      e.printStackTrace(System.out);
     } finally {
       this.freeConnection(context, db);
     }

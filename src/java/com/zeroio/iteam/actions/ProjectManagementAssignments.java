@@ -41,6 +41,13 @@ public final class ProjectManagementAssignments extends CFSModule {
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", ("assignments_add").toLowerCase());
       
+      RequirementList requirements = new RequirementList();
+      requirements.setProject(thisProject);
+      requirements.setProjectId(thisProject.getId());
+      requirements.buildList(db);
+      requirements.setEmptyHtmlSelectRecord("-- Select Requirement --");
+      context.getRequest().setAttribute("RequirementList", requirements);
+      
       thisProject.buildTeamMemberList(db);
       java.util.Iterator i = thisProject.getTeam().iterator();
       while (i.hasNext()) {
@@ -146,6 +153,13 @@ public final class ProjectManagementAssignments extends CFSModule {
       Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
       context.getRequest().setAttribute("Assignment", thisAssignment);
       
+      RequirementList requirements = new RequirementList();
+      requirements.setProject(thisProject);
+      requirements.setProjectId(thisProject.getId());
+      requirements.buildList(db);
+      requirements.setEmptyHtmlSelectRecord("-- Select Requirement --");
+      context.getRequest().setAttribute("RequirementList", requirements);
+      
       thisProject.buildTeamMemberList(db);
       java.util.Iterator i = thisProject.getTeam().iterator();
       while (i.hasNext()) {
@@ -187,6 +201,13 @@ public final class ProjectManagementAssignments extends CFSModule {
 
       Assignment thisAssignment = new Assignment(db, Integer.parseInt(assignmentId), thisProject.getId());
       context.getRequest().setAttribute("Assignment", thisAssignment);
+      
+      RequirementList requirements = new RequirementList();
+      requirements.setProject(thisProject);
+      requirements.setProjectId(thisProject.getId());
+      requirements.buildList(db);
+      requirements.setEmptyHtmlSelectRecord("-- Select Requirement --");
+      context.getRequest().setAttribute("RequirementList", requirements);
       
       thisProject.buildTeamMemberList(db);
       java.util.Iterator i = thisProject.getTeam().iterator();

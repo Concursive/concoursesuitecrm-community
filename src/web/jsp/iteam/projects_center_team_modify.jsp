@@ -198,7 +198,7 @@
 </script>
 <body bgcolor='#FFFFFF' onLoad="changeDept(document.all.projectMemberForm, '- Select Department -')">
 <table border="0" width="100%" cellpadding="0" cellspacing="0">
-  <form name="projectMemberForm" method="post" action="/ProjectManagementTeam.do?command=Update&pid=<%= Project.getId() %>&auto-populate=true">
+  <form name="projectMemberForm" method="post" action="ProjectManagementTeam.do?command=Update&pid=<%= Project.getId() %>&auto-populate=true">
     <tr>
       <td width='2' bgcolor='#808080'>&nbsp;</td>
       <td width="100%" colspan="3" rowspan="2" bgcolor="#808080">
@@ -247,7 +247,7 @@
         <input type="hidden" name="deleteMembers">
         <input type="button" value="Restore Values" onClick="resetValues(this.form)"> &nbsp;
         <input type="submit" value="Update Team" onClick="checkSubmit(this.form)"> &nbsp;
-        <input type="submit" value="Cancel" onClick="javascript:this.form.action='/ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>'">
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>'">
       </td>
       <td width='2' bgcolor='#808080'>&nbsp;</td>
     </tr>

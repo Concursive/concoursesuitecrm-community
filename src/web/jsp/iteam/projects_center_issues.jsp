@@ -1,10 +1,11 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
+<jsp:useBean id="IssueCategory" class="com.zeroio.iteam.base.IssueCategory" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <table border='0' width='100%'  bgcolor='#000000' cellspacing='0' cellpadding='0'>
   <tr>
     <td width='100%' bgcolor='#003399'>
-      <font color='#FFFFFF'>&nbsp;<b>Issues</b></font>
+      <font color='#FFFFFF'>&nbsp;<b>Issues: <%= toHtml(IssueCategory.getDescription()) %></b></font>
     </td>
   </tr>
 </table>
@@ -27,7 +28,7 @@
 %>    
   <tr<%= bgColorVar %>>
     <td width='5' valign='top' nowrap>&nbsp;</td>
-    <td width="100%" valign='top' align='left'><a href="/ProjectManagementIssues.do?command=Details&pid=<%= thisIssue.getProjectId() %>&iid=<%= thisIssue.getId() %>"><%= toHtml(thisIssue.getSubject()) %></a> (<%= toHtml(thisIssue.getCategory()) %>)</td>
+    <td width="100%" valign='top' align='left'><a href="ProjectManagementIssues.do?command=Details&pid=<%= thisIssue.getProjectId() %>&iid=<%= thisIssue.getId() %>&cid=<%= IssueCategory.getId() %>"><%= toHtml(thisIssue.getSubject()) %></a></td>
     <td valign='top' align='center' nowrap><%= ((thisIssue.getReplyCount()==0)?"-":""+thisIssue.getReplyCount()) %></td>
     <td valign='top' align='left' nowrap>&nbsp; <%= thisIssue.getUser() %> &nbsp;</td>
     <td valign='top' align='left' nowrap><%= thisIssue.getReplyDateTimeString() %></td>
@@ -43,4 +44,6 @@
 </table>
 &nbsp;<br>
 <hr color='#000000' width='100%' noshade size='1'>
-  
+<br>
+[<a href="ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>">Back to Categories</a>]
+[<a href="ProjectManagementIssues.do?command=Add&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>">Add an Issue to this Category</a>]
