@@ -81,8 +81,8 @@ public class FileUtils {
   /**
    *  Gets the bytes free on the system for the specified directory
    *
-   *@param  dir              Description of the Parameter
-   *@return                  The freeBytes value
+   *@param  dir  Description of the Parameter
+   *@return      The freeBytes value
    */
   public static long getFreeBytes(String dir) {
     long free = -1;
@@ -138,6 +138,31 @@ public class FileUtils {
       System.out.println(e.getMessage());
     }
     return free;
+  }
+
+
+  /**
+   *  Deletes all files and subdirectories under dir. Returns true if all
+   *  deletions were successful. If a deletion fails, the method stops
+   *  attempting to delete and returns false.<p>
+   *
+   *  re: Java Developers Almanac 1.4
+   *
+   *@param  dir  Description of the Parameter
+   *@return      Description of the Return Value
+   */
+  public static boolean deleteDirectory(File dir) {
+    if (dir.isDirectory()) {
+      String[] children = dir.list();
+      for (int i = 0; i < children.length; i++) {
+        boolean success = deleteDirectory(new File(dir, children[i]));
+        if (!success) {
+          return false;
+        }
+      }
+    }
+    // The directory is now empty so delete it
+    return dir.delete();
   }
 }
 
