@@ -33,7 +33,7 @@ Component Details
 <input type=hidden name="contactId" value="<%= ContactDetails.getId() %>">
 
 <dhv:permission name="contacts-external_contacts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=ModifyComponent&id=<%=OppComponentDetails.getId()%>&contactId=<%=ContactDetails.getId()%>';submit();"></dhv:permission>
-<dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%=ContactDetails.getId()%>&oppId=<%=OppComponentDetails.getId()%>','ExternalContactsOpps.do?command=DetailsOpp&contactId=<%=ContactDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%=ContactDetails.getId()%>&oppId=<%=OppComponentDetails.getId()%>&popup=true','ExternalContactsOpps.do?command=DetailsOpp&contactId=<%=ContactDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"></dhv:permission>
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -189,7 +189,7 @@ Component Details
 </table>  
 <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"><br></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=ModifyComponent&oppId=<%=OppComponentDetails.getId()%>&contactId=<%=ContactDetails.getId()%>';submit();"></dhv:permission>
-<dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%=ContactDetails.getId()%>&id=<%=OppComponentDetails.getId()%>','ExternalContactsOpps.do?command=DetailsOpp&contactId=<%=ContactDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%=ContactDetails.getId()%>&id=<%=OppComponentDetails.getId()%>&popup=true','ExternalContactsOpps.do?command=DetailsOpp&contactId=<%=ContactDetails.getId()%>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"></dhv:permission></td>
 </td></tr>
 </table>

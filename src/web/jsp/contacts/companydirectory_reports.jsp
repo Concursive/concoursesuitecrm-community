@@ -71,7 +71,7 @@ Reports<br>
     </td>
     </dhv:permission>
     <td width="40%" class="row<%= rowid %>">
-    <a href="javascript:popURL('ExternalContacts.do?command=ShowReportHtml&pid=-1&fid=<%= thisItem.getId() %>&popup=true','Report','600','400','yes','yes');"><%=toHtml(thisItem.getSubject())%></a>
+    <a href="javascript:popURL('ExternalContacts.do?command=ShowReportHtml&pid=-1&fid=<%= thisItem.getId() %>&popup=true&popup=true','Report','600','400','yes','yes');"><%=toHtml(thisItem.getSubject())%></a>
     </td>
     <td width=20 class="row<%= rowid %>">
     <%= thisItem.getRelativeSize() %>k

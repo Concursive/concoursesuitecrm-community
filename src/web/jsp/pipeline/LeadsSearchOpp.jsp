@@ -35,7 +35,7 @@ Description
   
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      <a href="javascript:popURLReturn('MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=contactsingle&parentFormName=searchLeads', 'Leads.do?command=SearchOpp', 'Search_Opp','700','450','yes','no');">Contact</a>
+      <a href="javascript:popURLReturn('MyCFSInbox.do?command=ContactList&popup=true&flushtemplist=true&parentFieldType=contactsingle&parentFormName=searchLeads&popup=true', 'Leads.do?command=SearchOpp', 'Search_Opp','700','450','yes','no');">Contact</a>
     </td>
     <td width="100%">
       <table>

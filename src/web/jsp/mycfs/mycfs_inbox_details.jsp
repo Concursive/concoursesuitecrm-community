@@ -3,7 +3,6 @@
 <jsp:useBean id="InboxInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
-<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <form name="details" action="MyCFSInbox.do" method="post">
 <a href="MyCFS.do?command=Home">My Home Page</a> >
 <a href="MyCFSInbox.do?command=Inbox">My Mailbox</a> >

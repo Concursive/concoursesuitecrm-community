@@ -41,7 +41,7 @@ Account Details<br>
 
 </dhv:evaluate>
 
-<dhv:permission name="accounts-accounts-delete"><input type="button" name="action" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
+<dhv:permission name="accounts-accounts-delete"><input type="button" name="action" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br>&nbsp;</dhv:permission>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -402,7 +402,7 @@ Account Details<br>
 
 </dhv:permission>
 </dhv:evaluate>
-<dhv:permission name="accounts-accounts-delete"><input type="button" name="action" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
+<dhv:permission name="accounts-accounts-delete"><input type="button" name="action" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=View', 'Delete_account','320','200','yes','no');"></dhv:permission>
 </td></tr>
 </table>
 <input type=hidden name="command" value="">

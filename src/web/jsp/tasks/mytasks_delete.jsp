@@ -4,7 +4,6 @@
 <jsp:useBean id="DependencyList" class="java.util.HashMap" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
 
 <%
   Set s = DependencyList.keySet();

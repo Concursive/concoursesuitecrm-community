@@ -10,7 +10,7 @@
 Component Details<br>
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='LeadsComponents.do?command=ModifyComponent&id=<%=LeadsComponentDetails.getId()%>';submit();"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&oppId=<%=LeadsComponentDetails.getId()%>','Leads.do?command=DetailsOpp', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&oppId=<%=LeadsComponentDetails.getId()%>&popup=true','Leads.do?command=DetailsOpp', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   
@@ -164,5 +164,5 @@ Component Details<br>
 </table>
 <dhv:permission name="pipeline-opportunities-edit,pipeline-opportunities-delete"><br></dhv:permission>
 <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='LeadsComponents.do?command=ModifyComponent&id=<%=LeadsComponentDetails.getId()%>';submit();"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&oppId=<%=LeadsComponentDetails.getId()%>','Leads.do?command=DetailsOpp', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+<dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('LeadsComponents.do?command=ConfirmComponentDelete&oppId=<%=LeadsComponentDetails.getId()%>&popup=true','Leads.do?command=DetailsOpp', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 </form>

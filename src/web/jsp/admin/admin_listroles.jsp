@@ -49,7 +49,7 @@ View Roles<br>
       <tr>
         <dhv:permission name="admin-roles-edit,admin-roles-delete">
         <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="admin-roles-edit"><a href="Roles.do?command=RoleDetails&id=<%= thisRole.getId() %>">Edit</a></dhv:permission><dhv:permission name="admin-roles-edit,admin-roles-delete" all="true">|</dhv:permission><dhv:permission name="admin-roles-delete"><a href="javascript:popURLReturn('Roles.do?command=ConfirmDelete&id=<%=thisRole.getId()%>','Roles.do?command=ListRoles', 'Delete_role','320','200','yes','no');">Del</a></dhv:permission>
+          <dhv:permission name="admin-roles-edit"><a href="Roles.do?command=RoleDetails&id=<%= thisRole.getId() %>">Edit</a></dhv:permission><dhv:permission name="admin-roles-edit,admin-roles-delete" all="true">|</dhv:permission><dhv:permission name="admin-roles-delete"><a href="javascript:popURLReturn('Roles.do?command=ConfirmDelete&id=<%=thisRole.getId()%>&popup=true','Roles.do?command=ListRoles', 'Delete_role','320','200','yes','no');">Del</a></dhv:permission>
         </td>
         </dhv:permission>
         <td class="row<%= rowid %>"  width="150"><font class="columntext1">

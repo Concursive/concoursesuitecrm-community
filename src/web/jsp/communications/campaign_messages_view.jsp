@@ -66,7 +66,7 @@ Message List
   <tr class="containerBody">
   <dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete">
     <td width=8 valign=center nowrap align="center" class="row<%= rowid %>">
-      <dhv:permission name="campaign-campaigns-messages-edit"><a href="CampaignManagerMessage.do?command=Modify&id=<%=thisMessage.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-messages-delete"><a href="javascript:popURLReturn('/CampaignManagerMessage.do?command=ConfirmDelete&id=<%=thisMessage.getId()%>','CampaignManagerMessage.do?command=View', 'Delete_message','330','200','yes','no');">Del</a></dhv:permission>
+      <dhv:permission name="campaign-campaigns-messages-edit"><a href="CampaignManagerMessage.do?command=Modify&id=<%=thisMessage.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="campaign-campaigns-messages-edit,campaign-campaigns-messages-delete" all="true">|</dhv:permission><dhv:permission name="campaign-campaigns-messages-delete"><a href="javascript:popURLReturn('/CampaignManagerMessage.do?command=ConfirmDelete&id=<%=thisMessage.getId()%>&popup=true','CampaignManagerMessage.do?command=View', 'Delete_message','330','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
 		<td width=40% valign=center class="row<%= rowid %>">
