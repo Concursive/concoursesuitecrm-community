@@ -382,20 +382,14 @@ public class TransactionItem {
         }
         if (action == INSERT) {
           //Insert the guid / id into client mapping
-          if (ignoredProperties != null) {
-            Iterator ignoredList = ignoredProperties.keySet().iterator();
-            while (ignoredList.hasNext()) {
-              String param = (String) ignoredList.next();
-              if (param.equals("guid")) {
-                syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
-                syncClientMap.setClientUniqueId((String) ignoredProperties.get(param));
-                //Need to log the date/time of the new record for later approval of updates
-                //Reload the newly inserted object to get it's insert/modified date
-                Object insertedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
-                syncClientMap.insert(db, ObjectUtils.getParam(insertedObject, "modified"));
-                break;
-              }
-            }
+          if (ignoredProperties != null && ignoredProperties.containsKey("guid")) {
+            syncClientMap.setRecordId(Integer.parseInt(ObjectUtils.getParam(object, "id")));
+            syncClientMap.setClientUniqueId((String) ignoredProperties.get("guid"));
+            //Need to log the date/time of the new record for later approval of updates
+            //Reload the newly inserted object to get it's insert/modified date
+            Object insertedObject = ObjectUtils.constructObject(object.getClass(), db, Integer.parseInt(ObjectUtils.getParam(object, "id")));
+            syncClientMap.insert(db, ObjectUtils.getParam(insertedObject, "modified"));
+            
           }
         } else if (action == UPDATE) {
           //Update the modified date in client mapping
@@ -659,7 +653,11 @@ public class TransactionItem {
       }
       thisRecord.setRecordId(ObjectUtils.getParam(thisObject, "id"));
       if (thisRecord.containsKey("guid")) {
-        thisRecord.put("guid", String.valueOf(identity++));
+        if (thisRecord.getAction().equals("processed")) {
+          thisRecord.put("guid", ignoredProperties.get("guid"));
+        } else {
+          thisRecord.put("guid", String.valueOf(identity++));
+        }
       }
     }
   }

@@ -168,7 +168,9 @@ public class SyncClientMap {
     if (timestamp != null && !timestamp.trim().equals("")) {
       return insertMap(db, java.sql.Timestamp.valueOf(timestamp));
     } else {
-      System.out.println("NULL TIMESTAMP-> " + getTableId() + " " + getRecordId());
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("NULL TIMESTAMP-> " + getTableId() + " " + getRecordId());
+      }
       return insertMap(db, null);
     }
   }
