@@ -6,7 +6,6 @@
 <jsp:useBean id="ComponentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
-<form name="oppdet" action="ExternalContactsOpps.do?command=ModifyOpp&id=<%= headerDetails.getId() %>&orgId=<%= headerDetails.getAccountLink() %>&contactId=<%= headerDetails.getContactLink() %>" method="post">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%= contactDetails.getId() %>">Contact Details</a> >
@@ -27,10 +26,11 @@ Opportunity Details<br>
   </tr>
   <tr>
     <td class="containerBack">
+<form name="oppdet" action="ExternalContactsOpps.do?command=ModifyOpp&id=<%= headerDetails.getId() %>&orgId=<%= headerDetails.getAccountLink() %>&contactId=<%= headerDetails.getContactLink() %>" method="post">
 <dhv:permission name="contacts-external_contacts-opportunities-edit"><input type="button" value="Rename" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=ModifyOpp&headerId=<%= headerDetails.getId() %>&contactId=<%= headerDetails.getContactLink() %>';submit();"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=<%= contactDetails.getId() %>&headerId=<%= headerDetails.getId() %>&popup=true','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"></dhv:permission>
-<dhv:permission name="contacts-external_contacts-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=AddOppComponent&headerId=<%= headerDetails.getId() %>&contactId=<%= headerDetails.getContactLink() %>';submit();"></dhv:permission>
+<dhv:permission name="contacts-external_contacts-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=Prepare&headerId=<%= headerDetails.getId() %>&contactId=<%= headerDetails.getContactLink() %>';submit();"></dhv:permission>
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -57,6 +57,7 @@ Opportunity Details<br>
     </td>
   </tr>    
 </table>
+</form>
 <br>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ComponentListInfo"/>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -98,7 +99,7 @@ Opportunity Details<br>
   <tr class="containerBody">
     <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
     <td width="8" valign="top" nowrap class="row<%= rowid %>">
-      <dhv:permission name="contacts-external_contacts-opportunities-edit"><a href="ExternalContactsOppComponents.do?command=ModifyComponent&id=<%= oppComponent.getId() %>&contactId=<%= contactDetails.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete"><a href="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= contactDetails.getId() %>&id=<%= oppComponent.getId() %>&popup=true','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+      <dhv:permission name="contacts-external_contacts-opportunities-edit"><a href="ExternalContactsOppComponents.do?command=ModifyComponent&headerId=<%= oppComponent.getHeaderId() %>&id=<%= oppComponent.getId() %>&contactId=<%= contactDetails.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-opportunities-delete"><a href="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= contactDetails.getId() %>&id=<%= oppComponent.getId() %>&popup=true','ExternalContactsOpps.do?command=ViewOpps&contactId=<%= contactDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
     <td width="100%" valign="top" class="row<%= rowid %>">
@@ -132,4 +133,3 @@ Opportunity Details<br>
 </td>
 </tr>
 </table>
-</form>

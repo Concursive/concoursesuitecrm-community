@@ -73,6 +73,7 @@
     </td>
   </tr>
   <% if("pipeline".equals(entity)){ %>
+  <dhv:evaluate if="<%= OpportunityHeader.getId() == -1%>">
   <tr class="containerBody">
     <td nowrap valign="top" class="formLabel">
       Associate With
@@ -81,7 +82,7 @@
       <table cellspacing="0" cellpadding="0" border="0">
           <tr>
               <td>
-                <input type="radio" name="<%= OpportunityHeader.getId() > 0 ? "type" : "opp_type" %>" value="org" onclick=<%= "\"" + (OpportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink")  + ".value = '-1';\" " %><dhv:evaluate exp="<%=(OpportunityHeader.getAccountLink() > -1)%>">checked</dhv:evaluate>>
+                <input type="radio" name="<%= OpportunityHeader.getId() > 0 ? "type" : "opp_type" %>" value="org"  onclick=<%= "\"javascript:document.forms['opportunityForm']." + (OpportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink")  + ".value = '-1';\" " %><dhv:evaluate exp="<%=(OpportunityHeader.getAccountLink() > -1)%>">checked</dhv:evaluate>>
               </td>
               <td>
                 Account:&nbsp;
@@ -91,14 +92,14 @@
               </td>
               <td>
                 <input type="hidden" name="<%= OpportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink" %>" id="<%= OpportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink" %>" value="<%= OpportunityHeader.getAccountLink() %>">&nbsp;<font color="red">*</font> <%= showAttribute(request, "acctContactError") %>
-                &nbsp;[<a href="<%= "javascript:document.forms['addOpportunity']." + (OpportunityHeader.getId() > 0 ? "type[0]" : "opp_type[0]") + ".checked='t';popAccountsListSingle('" + (OpportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink" ) + "','changeaccount');" %>" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;">Select</a>]
+                &nbsp;[<a href="<%= "javascript:document.forms['opportunityForm']." + (OpportunityHeader.getId() > 0 ? "type[0]" : "opp_type[0]") + ".checked='t';popAccountsListSingle('" + (OpportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink" ) + "','changeaccount');" %>" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;">Select</a>]
               </td>
             </tr>
        </table>
       <table border="0" cellspacing="0" cellpadding="0">
         <tr>
           <td>
-            <input type="radio" name="<%= OpportunityHeader.getId() > 0 ? "type" : "opp_type"%>" value="contact" onclick=<%= "\"javascript:document.forms['addOpportunity']." + (OpportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink")  + ".value = '-1';\" " %> <dhv:evaluate exp="<%=(OpportunityHeader.getContactLink() > -1)%>">checked</dhv:evaluate>>
+            <input type="radio" name="<%= OpportunityHeader.getId() > 0 ? "type" : "opp_type"%>" value="contact" onclick=<%= "\"javascript:document.forms['opportunityForm']." + (OpportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink")  + ".value = '-1';\" " %> <dhv:evaluate exp="<%=(OpportunityHeader.getContactLink() > -1)%>">checked</dhv:evaluate>>
           </td>
           <td>
             Contact:&nbsp;
@@ -108,12 +109,13 @@
           </td>
           <td>
             <input type="hidden" name="<%= OpportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink" %>" id="<%= OpportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink" %>" value="<%= OpportunityHeader.getContactLink() == -1?-1:OpportunityHeader.getContactLink() %>">
-            &nbsp;[<a href=<%= "\"javascript:document.forms['addOpportunity']." + (OpportunityHeader.getId() > 0 ? "type[1]" : "opp_type[1]") + ".checked='t';popContactsListSingle('" + (OpportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink" ) + "','changecontact','reset=true&filters=mycontacts|accountcontacts');\" "%> onMouseOver="window.status='Select a Contact';return true;" onMouseOut="window.status='';return true;">Select</a>]
+            &nbsp;[<a href=<%= "\"javascript:document.forms['opportunityForm']." + (OpportunityHeader.getId() > 0 ? "type[1]" : "opp_type[1]") + ".checked='t';popContactsListSingle('" + (OpportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink" ) + "','changecontact','reset=true&filters=mycontacts|accountcontacts');\" "%> onMouseOver="window.status='Select a Contact';return true;" onMouseOut="window.status='';return true;">Select</a>]
           </td>
         </tr>
       </table>
     </td>
   </tr>
+  </dhv:evaluate>
   <% }else if("contact".equals(entity)){ %>
     <input type="hidden" name="<%= OpportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink" %>" value="<%= ContactDetails.getId() %>">
   <% }else if("account".equals(entity)){ %>
@@ -156,7 +158,7 @@
     </td>
     <td>
       <input type="text" size="10" name="<%= OpportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>" value="<%= toHtmlValue(ComponentDetails.getCloseDateString()) %>">
-      <a href="javascript:popCalendar('addOpportunity', '<%= OpportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>');">Date</a> (mm/dd/yyyy)
+      <a href="javascript:popCalendar('opportunityForm', '<%= OpportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>');">Date</a> (mm/dd/yyyy)
       <font color="red">*</font> <%= showAttribute(request, "closeDateError") %>
     </td>
   </tr>
@@ -227,7 +229,7 @@
     </td>
     <td>
       <input type="text" size="10" name="<%= OpportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>" value="<%= toHtmlValue(ComponentDetails.getAlertDateString()) %>">
-      <a href="javascript:popCalendar('addOpportunity', '<%= OpportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>');">Date</a> (mm/dd/yyyy)
+      <a href="javascript:popCalendar('opportunityForm', '<%= OpportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>');">Date</a> (mm/dd/yyyy)
     </td>
   </tr>
 </table>

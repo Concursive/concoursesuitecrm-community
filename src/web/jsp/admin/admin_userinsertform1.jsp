@@ -65,7 +65,7 @@ Add User<br>
             <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
             [<a href="javascript:popContactsListSingle('contactLink','changecontact','nonUsersOnly=true&reset=true&filters=accountcontacts|employees');">Select Contact</a>]
             <input type="hidden" name="contactId" id="contactLink" value="<%= UserRecord.getContactId() %>">
-            [<a href="javascript:popURL('ExternalContacts.do?command=InsertContactForm&popup=true&source=adduser', 'New_Contact','500','600','yes','yes');">Create new contact</a>]
+            [<a href="javascript:popURL('ExternalContacts.do?command=Prepare&popup=true&source=adduser', 'New_Contact','500','600','yes','yes');">Create new contact</a>]
           </td>
         </tr>
       </table>

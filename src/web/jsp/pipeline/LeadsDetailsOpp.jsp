@@ -53,7 +53,7 @@ Opportunity Details<br>
       <form name="oppdet" action="Leads.do?id=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>&contactId=<%= HeaderDetails.getContactLink() %>" method="post">
       <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Rename" onClick="javascript:this.form.action='Leads.do?command=ModifyOpp&headerId=<%= HeaderDetails.getId() %>';submit();"></dhv:permission>
       <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%= HeaderDetails.getId() %>&popup=true','Leads.do?command=ViewOpp', 'Delete_opp','320','200','yes','no')"></dhv:permission>
-      <dhv:permission name="pipeline-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='LeadsComponents.do?command=AddOppComponent&id=<%= HeaderDetails.getId() %>';submit();"></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='LeadsComponents.do?command=Prepare&headerId=<%= HeaderDetails.getId() %>';submit();"></dhv:permission>
       <dhv:permission name="pipeline-opportunities-delete,pipeline-opportunities-edit"><br>&nbsp;</dhv:permission>
       <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
         <tr class="title">

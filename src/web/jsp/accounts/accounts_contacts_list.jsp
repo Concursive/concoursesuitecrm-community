@@ -24,7 +24,7 @@ Contacts<br>
   </tr>
   <tr>
     <td class="containerBack">
-<dhv:permission name="accounts-accounts-contacts-add"><a href="Contacts.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add a Contact</a></dhv:permission>
+<dhv:permission name="accounts-accounts-contacts-add"><a href="Contacts.do?command=Prepare&orgId=<%=request.getParameter("orgId")%>">Add a Contact</a></dhv:permission>
 <center><%= ContactListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactListInfo"/>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">

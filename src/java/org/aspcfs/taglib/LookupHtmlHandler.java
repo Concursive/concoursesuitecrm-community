@@ -22,7 +22,6 @@ public class LookupHtmlHandler extends TagSupport {
   private String listType = null;
   private String listName = null;
   private String lookupName = null;
-  private String lookupElementClass = "org.aspcfs.utils.web.LookupElement";
 
 
   /**
@@ -52,26 +51,6 @@ public class LookupHtmlHandler extends TagSupport {
    */
   public void setListType(String listType) {
     this.listType = listType;
-  }
-
-
-  /**
-   *  Sets the lookupElementClass attribute of the LookupHtmlHandler object
-   *
-   *@param  lookupElementClass  The new lookupElementClass value
-   */
-  public void setLookupElementClass(String lookupElementClass) {
-    this.lookupElementClass = lookupElementClass;
-  }
-
-
-  /**
-   *  Gets the lookupElementClass attribute of the LookupHtmlHandler object
-   *
-   *@return    The lookupElementClass value
-   */
-  public String getLookupElementClass() {
-    return lookupElementClass;
   }
 
 
@@ -124,7 +103,7 @@ public class LookupHtmlHandler extends TagSupport {
             Iterator j = lookupList.iterator();
             while (j.hasNext()) {
               Object thisElt = (Object) j.next();
-              Class[] rsClass = new Class[]{Class.forName(lookupElementClass)};
+              //Class[] rsClass = new Class[]{Class.forName(lookupElementClass)};
               Method method = thisElt.getClass().getMethod("getCodeString", null);
               Object result = method.invoke(thisElt, null);
               int code = Integer.parseInt((String) result);

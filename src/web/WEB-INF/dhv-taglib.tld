@@ -318,10 +318,5 @@
       <name>listType</name>
       <required>no</required>
     </attribute>
-    <attribute>
-      <name>lookupElementClass</name>
-      <required>no</required>
-    </attribute>
   </tag>
-  
 </taglib>

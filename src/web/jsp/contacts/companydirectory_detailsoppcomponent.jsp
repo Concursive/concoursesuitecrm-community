@@ -27,10 +27,10 @@ Component Details
   </tr>
   <tr>
     <td class="containerBack">
-<input type="hidden" name="headerId" value="<%= oppComponentDetails.getId() %>">
+<input type="hidden" name="headerId" value="<%= oppComponentDetails.getHeaderId() %>">
 <input type="hidden" name="id" value="<%= oppComponentDetails.getId() %>">
 <input type="hidden" name="contactId" value="<%= contactDetails.getId() %>">
-<dhv:permission name="contacts-external_contacts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=ModifyComponent&id=<%= oppComponentDetails.getId() %>&contactId=<%= contactDetails.getId() %>';submit();"></dhv:permission>
+<dhv:permission name="contacts-external_contacts-opportunities-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=ModifyComponent&id=<%= oppComponentDetails.getId() %>&headerId=<%= oppComponentDetails.getHeaderId() %>&contactId=<%= contactDetails.getId() %>';submit();"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= contactDetails.getId() %>&id=<%= oppComponentDetails.getId() %>&popup=true','ExternalContactsOpps.do?command=DetailsOpp&contactId=<%= contactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"></dhv:permission>
 <br>&nbsp;

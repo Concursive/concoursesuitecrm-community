@@ -4,7 +4,7 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
-<form name="details" action="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>&cmd=modify" method="post">
+<form name="details" action="ExternalContacts.do?command=ModifyContact&id=<%= ContactDetails.getId() %>" method="post">
 <a href="ExternalContacts.do">General Contacts</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 Contact Details<br>
@@ -25,7 +25,7 @@ Contact Details<br>
     <td class="containerBack">
 <dhv:evaluate exp="<%= (ContactDetails.getEnabled()) %>">
 <dhv:permission name="contacts-external_contacts-edit"><input type="button" name="cmd" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:permission>
-<dhv:permission name="accounts-accounts-contacts-add"><input type="button" value="Clone"onClick="javascript:this.form.action='ExternalContacts.do?command=Clone&id=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-contacts-add"><input type="button" value="Clone" onClick="javascript:this.form.action='ExternalContacts.do?command=Clone&id=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-delete"><input type="button" name="cmd" value="Delete" onClick="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true','ExternalContacts.do?command=ListContacts', 'Delete_contact','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete"><br>&nbsp;</dhv:permission>
 </dhv:evaluate>

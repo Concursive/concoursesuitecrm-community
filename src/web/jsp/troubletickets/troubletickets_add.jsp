@@ -160,7 +160,7 @@ Add Ticket<br>
       <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
 	<%}%>
       <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-      [<a href="javascript:popURL('Contacts.do?command=Add&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','500','600','yes','yes');" onClick="return isAccountValid();">Create New Contact</a>] 
+      [<a href="javascript:popURL('Contacts.do?command=Prepare&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','500','600','yes','yes');" onClick="return isAccountValid();">Create New Contact</a>] 
     </td>
 	</tr>
 </table>

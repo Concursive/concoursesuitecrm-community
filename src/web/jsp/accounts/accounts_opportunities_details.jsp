@@ -30,7 +30,7 @@ Opportunity Details<br>
     <td class="containerBack">
 <dhv:permission name="accounts-accounts-opportunities-edit"><input type="button" value="Rename" onClick="javascript:this.form.action='Opportunities.do?command=Modify&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('Opportunities.do?command=ConfirmDelete&orgId=<%= OrgDetails.getId() %>&headerId=<%= HeaderDetails.getId() %>&popup=true','Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:permission>
-<dhv:permission name="accounts-accounts-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=AddOppComponent&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-add"><input type="button" value="Add Component" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=Prepare&headerId=<%= HeaderDetails.getId() %>&orgId=<%= HeaderDetails.getAccountLink() %>';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
@@ -101,7 +101,7 @@ Opportunity Details<br>
   <tr class="containerBody">
     <dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete">
     <td width="8" valign="top" align="center" nowrap class="row<%= rowid %>">
-      <dhv:permission name="accounts-accounts-opportunities-edit"><a href="OpportunitiesComponents.do?command=ModifyComponent&id=<%= oppComponent.getId() %>&orgId=<%=OrgDetails.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%= OrgDetails.getId() %>&id=<%= oppComponent.getId() %>&popup=true','Opportunities.do?command=ViewOpps&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
+      <dhv:permission name="accounts-accounts-opportunities-edit"><a href="OpportunitiesComponents.do?command=ModifyComponent&id=<%= oppComponent.getId() %>&orgId=<%=OrgDetails.getId()%>&headerId=<%= oppComponent.getHeaderId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-opportunities-edit,accounts-accounts-opportunities-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-opportunities-delete"><a href="javascript:popURLReturn('OpportunitiesComponents.do?command=ConfirmComponentDelete&orgId=<%= OrgDetails.getId() %>&id=<%= oppComponent.getId() %>&popup=true','Opportunities.do?command=ViewOpps&orgId=<%= OrgDetails.getId() %>', 'Delete_opp','320','200','yes','no');">Del</a></dhv:permission>
     </td>
     </dhv:permission>
     <td width="100%" valign="top" class="row<%= rowid %>">

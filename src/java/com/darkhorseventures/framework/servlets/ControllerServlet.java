@@ -559,11 +559,11 @@ public class ControllerServlet extends HttpServlet
     if (System.getProperty("DEBUG") != null) {
       System.out.println("> Looking up resource: " + lookup);
     }
-    /*if (request.getParameter("moduleAction") != null) {
-      String actualActionPath = (String) request.getParameter("moduleAction");
+    if (request.getParameter("actionSource") != null) {
+      String actualActionPath = (String) request.getParameter("actionSource");
       action = (Action) actions.get(actualActionPath);
-      System.out.println("MODULE ACTION FOUND -- > REDIRECTING .... TO " + actualActionPath);
-    }*/
+      System.out.println("ACTION SOURCE FOUND -- > REDIRECTING .... TO " + actualActionPath + " --> " + lookup);
+    }
     Resource resource = action.getResource(lookup);
     if (resource != null) {
       if ((resource.getXSL() != null) && (resource.getXSL().length() > 0)) {
@@ -655,7 +655,7 @@ public class ControllerServlet extends HttpServlet
             try {
               getServletContext().getRequestDispatcher(forwardPath).forward(request, response);
             } catch (Throwable t) {
-              System.out.println("Throwable exception trying to forward to JSP. MESSAGE: " + t.getMessage());
+              System.out.println("Throwable exception trying to forward to " + forwardPath + "MESSAGE: " + t.getMessage());
               t.printStackTrace(System.out);
               PrintWriter out = response.getWriter();
               out.println("<font color='red'>The included page caused a problem.</font>");

@@ -9,7 +9,7 @@
 View Contacts<br>
 <hr color="#BFBFBB" noshade>
 <dhv:permission name="contacts-external_contacts-add">
-  <a href="ExternalContacts.do?command=InsertContactForm">Add a Contact</a>
+  <a href="ExternalContacts.do?command=Prepare">Add a Contact</a>
 </dhv:permission>
 <dhv:permission name="contacts-external_contacts-add" none="true">
   <br>
@@ -75,7 +75,7 @@ View Contacts<br>
         <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete">
           <td width="8" class="row<%= rowid %>" nowrap>
             <%if(thisContact.getEnabled()) {%>
-             <dhv:permission name="contacts-external_contacts-edit"><a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId()%>&cmd=modify&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-delete"><a href="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%=thisContact.getId()%>&popup=true','ExternalContacts.do?command=ListContacts', 'Delete_contact','330','200','yes','no');">Del</a></dhv:permission>
+             <dhv:permission name="contacts-external_contacts-edit"><a href="ExternalContacts.do?command=ModifyContact&id=<%= thisContact.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-external_contacts-delete"><a href="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%=thisContact.getId()%>&popup=true','ExternalContacts.do?command=ListContacts', 'Delete_contact','330','200','yes','no');">Del</a></dhv:permission>
             <%}else{%>
               &nbsp;
             <%}%>

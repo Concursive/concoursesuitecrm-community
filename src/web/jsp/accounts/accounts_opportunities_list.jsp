@@ -24,7 +24,7 @@ Opportunities<br>
   </tr>
   <tr>
     <td class="containerBack">
-<dhv:permission name="accounts-accounts-opportunities-add"><a href="Opportunities.do?command=Add&orgId=<%= request.getParameter("orgId") %>">Add an Opportunity</a></dhv:permission>
+<dhv:permission name="accounts-accounts-opportunities-add"><a href="Opportunities.do?command=Prepare&orgId=<%= request.getParameter("orgId") %>">Add an Opportunity</a></dhv:permission>
 <center><%= OpportunityPagedInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>

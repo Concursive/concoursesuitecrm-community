@@ -1,13 +1,11 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,org.aspcfs.utils.web.*,com.zeroio.iteam.base.*" %>
-<jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
-<jsp:useBean id="LeadsComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
-<jsp:useBean id="BusTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
-<jsp:useBean id="StageList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
-<jsp:useBean id="UnitTypeList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
-<jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
+<jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
+<jsp:useBean id="ComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+<jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
@@ -47,37 +45,40 @@ function checkForm(form) {
     alert("Form could not be saved, please check the following:\r\n\r\n" + message);
     return false;
   } else {
-    var test = document.updateOpp.selectedList;
+    var test = document.opportunityForm.selectedList;
     if (test != null) {
-      return selectAllOptions(document.updateOpp.selectedList);
+      return selectAllOptions(document.opportunityForm.selectedList);
     }
   }
 }
 </SCRIPT>
-<form name="updateOpp" action="LeadsComponents.do?command=UpdateComponent&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
-<% 
-  boolean popUp = false;
-  if(request.getParameter("popup")!=null){
-    popUp = true;
-  }
+<%
+    boolean popUp = false;
+    String entity = "pipeline";
+    
+    if("contact".equals(request.getParameter("entity"))){
+        entity = "contact";
+    }else if("account".equals(request.getParameter("entity"))){
+        entity = "account";
+    }
+  
+   if(request.getParameter("popup")!=null){
+     popUp = true;
+   }
 %>
+<% if("pipeline".equals(entity)){ %>
+<form name="opportunityForm" action="LeadsComponents.do?command=SaveComponent&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate if="<%= !popUp %>">
 <a href="Leads.do">Pipeline Management</a> > 
 <a href="Leads.do?command=ViewOpp">View Opportunities</a> >
 <% if ("list".equals(request.getParameter("return"))) {%>
-  <a href="Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>">Opportunity Details</a> > 
+  <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>">Opportunity Details</a> > 
 <%} else if (request.getParameter("return") != null) {%>
-  <a href="Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>">Opportunity Details</a> > 
-  <a href="LeadsComponents.do?command=DetailsComponent&id=<%= LeadsComponentDetails.getId() %>">Component Details</a> >
+  <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>">Opportunity Details</a> > 
+  <a href="LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>">Component Details</a> >
 <%}%>
 Modify Component<br>
 <hr color="#BFBFBB" noshade>
-</dhv:evaluate>
-<input type="hidden" name="id" value="<%= LeadsComponentDetails.getId() %>">
-<input type="hidden" name="headerId" value="<%= LeadsComponentDetails.getHeaderId() %>">
-<input type="hidden" name="modified" value="<%= LeadsComponentDetails.getModified() %>">
-<dhv:evaluate if="<%= request.getParameter("return") != null %>">
-  <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 </dhv:evaluate>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
   <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
@@ -88,14 +89,14 @@ Modify Component<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
     <td>
-      <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>&nbsp;
-      <dhv:evaluate exp="<%= (opportunityHeader.getAccountEnabled() && opportunityHeader.getAccountLink() > -1) %>">
-        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%= opportunityHeader.getAccountLink() %>">Go to this Account</a> ]</dhv:permission>
+      <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>&nbsp;
+      <dhv:evaluate exp="<%= (OpportunityHeader.getAccountEnabled() && OpportunityHeader.getAccountLink() > -1) %>">
+        <dhv:permission name="accounts-view,accounts-accounts-view">[ <a href="Accounts.do?command=Details&orgId=<%= OpportunityHeader.getAccountLink() %>">Go to this Account</a> ]</dhv:permission>
       </dhv:evaluate>
-      <dhv:evaluate exp="<%= opportunityHeader.getContactLink() > -1 %>">
-        <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%= opportunityHeader.getContactLink() %>">Go to this Contact</a> ]</dhv:permission>
+      <dhv:evaluate exp="<%= OpportunityHeader.getContactLink() > -1 %>">
+        <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%= OpportunityHeader.getContactLink() %>">Go to this Contact</a> ]</dhv:permission>
       </dhv:evaluate>
-      <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
+      <dhv:evaluate if="<%= OpportunityHeader.hasFiles() %>">
         <% FileItem thisFile = new FileItem(); %>
         <%= thisFile.getImageTag()%>
       </dhv:evaluate>
@@ -103,7 +104,7 @@ Modify Component<br>
   </tr>
   <tr class="containerMenu">
     <td>
-      <% String param1 = "id=" + opportunityHeader.getId(); %>      
+      <% String param1 = "id=" + OpportunityHeader.getId(); %>      
       <dhv:container name="opportunities" selected="details" param="<%= param1 %>" />
     </td>
   </tr>
@@ -120,193 +121,138 @@ Modify Component<br>
 <%
     } else if (request.getParameter("return").equals("details")) {
 %>
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>';this.form.dosubmit.value='false';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>';this.form.dosubmit.value='false';">
 <%
     }
   } else {
 %>
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= LeadsComponentDetails.getId() %>';this.form.dosubmit.value='false';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>';this.form.dosubmit.value='false';">
 <%
   }
 %>
+<% }else  if("contact".equals(entity)){ %>
+<form name="opportunityForm" action="ExternalContactsOppComponents.do?command=SaveComponent&contactId=<%= ContactDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<a href="ExternalContacts.do">General Contacts</a> > 
+<a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
+<a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>">Contact Details</a> >
+<a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>">Opportunities</a> >
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	  <a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>">Opportunity Details</a> >
+  <%}%>
+<%}else  {%>
+<a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>">Opportunity Details</a> >
+<a href="ExternalContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>">Component Details</a> >
+<%}%>
+Modify Component<br>
+<hr color="#BFBFBB" noshade>
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="containerHeader">
+    <td>
+      <strong><%= toHtml(ContactDetails.getNameFull()) %></strong>
+    </td>
+  </tr>
+  <tr class="containerMenu">
+    <td>
+      <% String param1 = "id=" + ContactDetails.getId(); %>      
+      <dhv:container name="contacts" selected="opportunities" param="<%= param1 %>" />
+    </td>
+  </tr>
+  <tr>
+    <td class="containerBack">
+<input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
+ <% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+	<%}%>
+ <% }else{ %>
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+ <% } %>
+<% }else if("account".equals(entity)){ %>
+<form name="opportunityForm" action="OpportunitiesComponents.do?command=SaveComponent&orgId=<%= OrgDetails.getId() %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="Opportunities.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Opportunities</a> >
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	  <a href="Opportunities.do?command=Details&headerId=<%= ComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>">Opportunity Details</a> >
+  <%}%>
+<%} else {%>
+<a href="Opportunities.do?command=Details&headerId=<%= ComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>">Opportunity Details</a> >
+<a href="OpportunitiesComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>">Component Details</a> >
+<%}%>
+Modify Component<br>
+<hr color="#BFBFBB" noshade>
+<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
+  <tr class="containerHeader">
+    <td>
+      <strong><%= toHtml(OrgDetails.getName()) %></strong>
+    </td>
+  </tr>
+  <tr class="containerMenu">
+    <td>
+      <% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
+      <dhv:container name="accounts" selected="opportunities" param="<%= param1 %>" />
+    </td>
+  </tr>
+  <tr>
+    <td class="containerBack">
+      <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
+<% if ("list".equals(request.getParameter("return"))) {%>
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= ComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+<%} else {%>
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+<%}%>
+<% } %>
+<input type="hidden" name="id" value="<%= ComponentDetails.getId() %>">
+<input type="hidden" name="headerId" value="<%= ComponentDetails.getHeaderId() %>">
+<input type="hidden" name="modified" value="<%= ComponentDetails.getModified() %>">
+<dhv:evaluate if="<%= request.getParameter("return") != null %>">
+  <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
+</dhv:evaluate>
   <input type="reset" value="Reset">
 <dhv:evaluate exp="<%= popUp %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
 <br>
 <%= showError(request, "actionError") %>
-<table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <tr class="title">
-    <td colspan="2">
-      <strong><%= LeadsComponentDetails.getDescription() %></strong>&nbsp;
-    </td>     
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Reassign To
-    </td>
-    <td>
-      <%= UserList.getHtmlSelect("owner", LeadsComponentDetails.getOwner() ) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel" valign="top">
-      Component<br>Type(s)
-    </td>
-  	<td>
-      <table border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td>
-            <select multiple name="selectedList" id="selectedList" size="5">
-            <%if(request.getAttribute("TypeList") != null){ %>
-              <dhv:lookupHtml listName="TypeList" lookupName="TypeSelect"/>
-            <% }else{ %>
-               <dhv:evaluate exp="<%= LeadsComponentDetails.getTypes().isEmpty() %>">
-                  <option value="-1">None Selected</option>
-                </dhv:evaluate>
-                <dhv:evaluate exp="<%= !LeadsComponentDetails.getTypes().isEmpty() %>">
-              <%
-                Iterator i = LeadsComponentDetails.getTypes().iterator();
-                while (i.hasNext()) {
-                LookupElement thisElt = (LookupElement)i.next();
-              %>
-                <option value="<%= thisElt.getCode() %>"><%= thisElt.getDescription() %></option>
-              <%}%>
-              </dhv:evaluate>
-            <% } %>
-            </select>
-            <input type="hidden" name="previousSelection" value="">
-          </td>
-          <td valign="top">
-            &nbsp;[<a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_opportunity_types');">Select</a>]
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr> 
-  <tr class="containerBody">
-    <td class="formLabel">
-      Description
-    </td>
-    <td>
-      <input type="text" size="50" name="description" value="<%= toHtmlValue(LeadsComponentDetails.getDescription()) %>">
-      <font color="red">*</font> <%= showAttribute(request, "componentDescriptionError") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td valign="top" class="formLabel">Additional Notes</td>
-    <td><TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(LeadsComponentDetails.getNotes()) %></TEXTAREA></td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Source
-    </td>
-    <td>
-      <% BusTypeList.setDefaultKey(LeadsComponentDetails.getType());%>
-      <%= BusTypeList.getHtml() %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Prob. of Close
-    </td>
-    <td>
-      <input type="text" size="5" name="closeProb" value="<%= LeadsComponentDetails.getCloseProbValue() %>">%
-      <font color="red">*</font> <%= showAttribute(request, "closeProbError") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Est. Close Date
-    </td>
-    <td>
-      <input type="text" size="10" name="closeDate" value="<%= toHtmlValue(LeadsComponentDetails.getCloseDateString()) %>">
-      <a href="javascript:popCalendar('updateOpp', 'closeDate');">Date</a> (mm/dd/yyyy)
-      <font color="red">*</font> <%= showAttribute(request, "closeDateError") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Low Estimate
-    </td>
-    <td>
-      <input type=text size="10" name="low" value="<%= LeadsComponentDetails.getLowAmount() %>">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Best Guess Estimate
-    </td>
-    <td>
-      <input type="text" size="10" name="guess" value="<%= LeadsComponentDetails.getGuessAmount() %>">
-      <font color="red">*</font> <%= showAttribute(request, "guessError") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      High Estimate
-    </td>
-    <td>
-      <input type="text" size="10" name="high" value="<%= LeadsComponentDetails.getHighAmount() %>">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Est. Term
-    </td>
-    <td>
-      <input type="text" size="5" name="terms" value="<%= LeadsComponentDetails.getTermsString() %>">
-      <%= UnitTypeList.getHtml("units", (LeadsComponentDetails.getUnits() != null ? LeadsComponentDetails.getUnits() : "")) %>
-      <font color="red">*</font> <%= showAttribute(request, "termsError") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Current Stage
-    </td>
-    <td>
-      <%= StageList.getHtmlSelect("stage", LeadsComponentDetails.getStage()) %>
-      <input type="checkbox" name="closeNow" <dhv:evaluate if="<%= (LeadsComponentDetails.getClosed() != null || LeadsComponentDetails.getCloseIt()) %>"> checked</dhv:evaluate>> Closed
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Est. Commission
-    </td>
-    <td>
-      <input type="text" size="5" name="commission" value="<%= LeadsComponentDetails.getCommissionValue() %>">%
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Alert Description
-    </td>
-    <td>
-      <input type="text" size="50" name="alertText" value="<%= toHtmlValue(LeadsComponentDetails.getAlertText()) %>"><br>
-    </td>
-  </tr>
-   <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Alert Date
-    </td>
-    <td>
-      <input type="text" size="10" name="alertDate" value="<%= toHtmlValue(LeadsComponentDetails.getAlertDateStringLongYear()) %>">
-      <a href="javascript:popCalendar('updateOpp', 'alertDate');">Date</a> (mm/dd/yyyy)
-    </td>
-  </tr>
-</table>
+
+<%--  include basic opportunity form --%>
+<%@ include file="opportunity_form.jsp" %>
+
 &nbsp;
 <br>
+
+<% if("pipeline".equals(entity)){ %>
 <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
 	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=ViewOpp';this.form.dosubmit.value='false';">
 	<%} else if(request.getParameter("return").equals("details")) {%>
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= LeadsComponentDetails.getHeaderId() %>';this.form.dosubmit.value='false';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>';this.form.dosubmit.value='false';">
  <%}
  } else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= LeadsComponentDetails.getId() %>';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>';this.form.dosubmit.value='false';">
+  <%}
+ }else if("contact".equals(entity)){ %>
+<input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
+<% if (request.getParameter("return") != null) {%>
+	<% if (request.getParameter("return").equals("list")) {%>
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+	<%}%>
+<%} else {%>
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
+<% }else if("account".equals(entity)){ %>
+<input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
+<input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
+<% if ("list".equals(request.getParameter("return"))) {%>
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= ComponentDetails.getHeaderId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+<%} else {%>
+      <input type="submit" value="Cancel" onClick="javascript:this.form.action='OpportunitiesComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
+<%}%>
+<% } %>
 <input type="reset" value="Reset">
 <dhv:evaluate exp="<%= popUp %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">

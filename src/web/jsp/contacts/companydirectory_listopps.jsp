@@ -24,7 +24,7 @@ Opportunities<br>
   </tr>
   <tr>
     <td class="containerBack">
-<dhv:permission name="contacts-external_contacts-opportunities-add"><a href="ExternalContactsOpps.do?command=AddOpp&contactId=<%= contactDetails.getId() %>">Add an Opportunity</a></dhv:permission>
+<dhv:permission name="contacts-external_contacts-opportunities-add"><a href="ExternalContactsOpps.do?command=Prepare&contactId=<%= contactDetails.getId() %>">Add an Opportunity</a></dhv:permission>
 <center><%= ExternalOppsPagedListInfo.getAlphabeticalPageLinks() %></center>
 <table width="100%" border="0">
   <tr>
