@@ -18,17 +18,17 @@
   </tr>
   <tr class="title">
     <%if(!openEnded){%>
-      <td width="25" valign="top" align="center">
+      <td width="20" valign="top" align="center" nowrap>
         Answer Provided
       </td>
     <%}%>
-    <td width="85%" valign="center" align="left">
+    <td width="60" valign="center" align="left" nowrap>
       Comment Provided
     </td>
-    <td valign="center" align="left">
+    <td valign="center" align="left" nowrap>
       User
     </td>
-    <td valign="center" align="left">
+    <td valign="center" align="left" nowrap>
       Entered
     </td>
   </tr>
@@ -51,14 +51,14 @@
       </td>
     <%}%>
     
-      <td width="80%">
+      <td width="60">
         <%=toHtml(thisAnswer.getComments())%>
       </td>
       <td valign="center" align="left" nowrap>
         <dhv:contactname id="<%=thisAnswer.getContactId()%>" listName="SurveyContactList"/>
       </td>
-      <td valign="center" align="left" >
-        <%= toDateTimeString(thisAnswer.getEntered()) %>
+      <td valign="center" align="left" nowrap>
+        <%= toDateString(thisAnswer.getEntered()) %>
       </td>
       
     </tr>
