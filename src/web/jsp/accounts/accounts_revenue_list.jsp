@@ -25,7 +25,7 @@ Revenue<br>
   </tr>
   <tr>
     <td class="containerBack">
-<dhv:permission name="accounts-accounts-revenue-add"><a href="RevenueManager.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add a new Revenue</a></dhv:permission>
+<dhv:permission name="accounts-accounts-revenue-add"><a href="RevenueManager.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add Revenue</a></dhv:permission>
 <center><%= RevenueListInfo.getAlphabeticalPageLinks() %></center>
 
 <table width="100%" border="0">
@@ -48,19 +48,19 @@ Revenue<br>
     <strong>Action</strong>
   </td>
   </dhv:permission>
-  <td width=30% valign=center align=left>
+  <td width="30%" valign=center align=left>
     <strong><a href="/RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=description">Description</a></strong>
     <%= RevenueListInfo.getSortIcon("description") %>
   </td>  
-  <td width=20% valign=center align=left>
-    <strong><a href="/RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=month">Month</a></strong>
-    <%= RevenueListInfo.getSortIcon("month") %>
+  <td width="20%" valign=center align="center">
+    <strong><a href="/RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=r.month">Month</a></strong>
+    <%= RevenueListInfo.getSortIcon("r.month") %>
   </td>   
-  <td width=20% valign=center align=left>
-    <strong><a href="/RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=year">Year</a></strong>
-    <%= RevenueListInfo.getSortIcon("year") %>
+  <td width="20%" valign=center align="center">
+    <strong><a href="/RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=r.year,r.month">Year</a></strong>
+    <%= RevenueListInfo.getSortIcon("r.year,r.month") %>
   </td>
-  <td width=30% valign=center align=left>
+  <td width="30%" valign=center align="right">
     <strong><a href="/RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=amount">Amount</a></strong>
     <%= RevenueListInfo.getSortIcon("amount") %>
   </td>
@@ -86,16 +86,16 @@ Revenue<br>
         <dhv:permission name="accounts-accounts-revenue-edit"><a href="/RevenueManager.do?command=Modify&orgId=<%= OrgDetails.getOrgId()%>&id=<%=thisRevenue.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-revenue-edit,accounts-accounts-revenue-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-revenue-delete"><a href="javascript:confirmDelete('/RevenueManager.do?command=Delete&orgId=<%= OrgDetails.getOrgId() %>&id=<%=thisRevenue.getId()%>');">Del</a></dhv:permission>
       </td>
       		</dhv:permission>
-      <td width=30% valign=center class="row<%= rowid %>">
+      <td width="30%" valign=center class="row<%= rowid %>">
         <a href="/RevenueManager.do?command=Details&id=<%=thisRevenue.getId()%>"><%= toHtml(thisRevenue.getDescription()) %></a>
       </td>
-      <td width=20% valign=center class="row<%= rowid %>">
+      <td width="20%" valign=center align="center" class="row<%= rowid %>">
         <%= toHtml(thisRevenue.getMonthName()) %>
       </td>
-      <td width=20% valign=center class="row<%= rowid %>" nowrap>
+      <td width="20%" valign=center align="center" class="row<%= rowid %>" nowrap>
         <%= thisRevenue.getYear() %>
       </td>
-      <td width=30% valign=center class="row<%= rowid %>">
+      <td width="30%" valign=center align="right" class="row<%= rowid %>">
         $<%=thisRevenue.getAmountCurrency()%>
       </td>
 		</tr>
