@@ -122,9 +122,13 @@ public class ImportFolders implements CFSDatabaseReaderImportModule {
             DataRecord thisFieldRecord = new DataRecord();
             thisFieldRecord.setName("customFieldData");
             thisFieldRecord.setAction("insert");
-            thisFieldRecord.addField("recordId", String.valueOf(thisData.getRecordId()));
-            thisFieldRecord.addField("fieldId", String.valueOf(thisData.getFieldId()));
-            thisFieldRecord.addField("selectedItemId", String.valueOf(thisData.getSelectedItemId()));
+            thisFieldRecord.addField("recordId", String.valueOf(thisData.getRecordId()), "customFieldRecord", null);
+            thisFieldRecord.addField("fieldId", String.valueOf(thisData.getFieldId()), "customField", null);
+            if (thisData.getType() == CustomField.SELECT) {
+              thisFieldRecord.addField("selectedItemId", String.valueOf(thisData.getSelectedItemId()), "customFieldLookup", null);
+            } else {
+              thisFieldRecord.addField("selectedItemId", String.valueOf(thisData.getSelectedItemId()));
+            }
             thisFieldRecord.addField("enteredValue", String.valueOf(thisData.getEnteredValue()));
             thisFieldRecord.addField("enteredNumber", String.valueOf(thisData.getEnteredNumber()));
             thisFieldRecord.addField("enteredDouble", String.valueOf(thisData.getEnteredDouble()));

@@ -1243,23 +1243,20 @@ public class CustomField extends GenericBean {
    *@since
    */
   public void buildResources(Connection db) throws SQLException {
-    if (System.getProperty("DEBUG") != null) {
-      //System.out.println("CustomField-> buildResources");
-    }
     if (recordId > -1) {
-      Statement st = db.createStatement();
-      ResultSet rs = st.executeQuery(
-          "SELECT * " +
-          "FROM custom_field_data " +
-          "WHERE record_id = " + this.recordId + " " +
-          "AND field_id = " + this.id + " ");
-      //"AND link_module_id = " + this.linkModuleId + " " +
-      //"AND link_item_id = " + this.linkItemId + " ");
+      PreparedStatement pst = db.prepareStatement(
+        "SELECT * " +
+        "FROM custom_field_data " +
+        "WHERE record_id = ? " +
+        "AND field_id = ? ");
+      pst.setInt(1, this.recordId);
+      pst.setInt(2, this.id);
+      ResultSet rs = pst.executeQuery();
       if (rs.next()) {
         buildPopulatedRecord(rs);
       }
       rs.close();
-      st.close();
+      pst.close();
     }
 
     buildElementData(db);
