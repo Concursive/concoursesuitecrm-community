@@ -74,18 +74,18 @@
     </td>
     <td colspan=4>
       <select name="sort">
-      <option value="description">Description</option>
+      <option value="x.description">Description</option>
       <option value="opp_id">Opportunity ID</option>
       <option value="lowvalue">Low Amount</option>
       <option value="guessvalue">Best Guess Amount</option>
       <option value="highvalue">High Amount</option>
       <option value="closeprob">Prob. of Close</option>
-      <option value="closedate">Revenue Start</option>
-      <option value="terms">Terms</option>
-      <option value="alertdate">Alert Date</option>
+      <option value="x.closedate">Revenue Start</option>
+      <option value="x.terms">Terms</option>
+      <option value="x.alertdate">Alert Date</option>
       <option value="commission">Commission</option>
-      <option value="entered">Entered</option>
-      <option value="modified">Modified</option>
+      <option value="x.entered">Entered</option>
+      <option value="x.modified">Modified</option>
       </select>
     </td>
   </tr>

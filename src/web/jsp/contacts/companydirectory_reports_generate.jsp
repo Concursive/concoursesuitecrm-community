@@ -77,7 +77,7 @@
       <option value="c.contact_id">Contact ID</option>
       <option value="type_name">Contact Type</option>
       <option value="c.namefirst">First Name</option>
-      <option value="company">Company</option>
+      <option value="c.company">Company</option>
       <option value="c.title">Title</option>
       <option value="departmentname">Department</option>
       <option value="c.entered">Entered</option>
