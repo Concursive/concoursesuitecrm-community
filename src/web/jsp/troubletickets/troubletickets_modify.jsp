@@ -72,7 +72,7 @@ function ShowSpan(thisID)
   <tr>
     <td bgColor="#F1F0E0">
       <% if (TicketDetails.getClosed() != null) { %>
-      	<font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosed())%></font>
+      	<font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
       <%} else {%>
       &nbsp;
       <%}%>
@@ -327,7 +327,7 @@ function ShowSpan(thisID)
 			<%=toHtml(thisEntry.getEnteredByName())%>
 			</td>
 			<td nowrap valign=center width=150>
-			<%=thisEntry.getEntered()%>
+			<%=thisEntry.getEnteredString()%>
 			</td>
 			<td valign=center>
 			<%=toHtml(thisEntry.getEntryText())%>

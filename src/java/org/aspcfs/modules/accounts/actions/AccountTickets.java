@@ -63,6 +63,7 @@ public final class AccountTickets extends CFSModule {
         newTic.getHistory().buildList(db);
       } else {
         newTic = new Ticket();
+	newTic.setOrgId(tempid);
       }
 
       buildFormElements(context, db, newTic);

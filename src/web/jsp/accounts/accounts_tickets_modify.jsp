@@ -83,7 +83,7 @@ function ShowSpan(thisID)
     <td class="containerBack">
 <form name="details" action="/AccountTickets.do?command=UpdateTicket&auto-populate=true" method="post">    
 <% if (TicketDetails.getClosed() != null) { %>
-  <input type=button value="Reopen"> <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosed())%></font>
+  <input type=button value="Reopen"> <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='/AccountTickets.do?command=TicketDetails&id=<%= TicketDetails.getId() %>'">
 <%} else {%>
   <input type=submit value="Update">
@@ -271,7 +271,7 @@ function ShowSpan(thisID)
 			<%=toHtml(thisEntry.getEnteredByName())%>
     </td>
     <td nowrap valign=center>
-			<%=thisEntry.getEntered()%>
+			<%=thisEntry.getEnteredString()%>
     </td>
     <td valign=center>
 			<%=toHtml(thisEntry.getEntryText())%>

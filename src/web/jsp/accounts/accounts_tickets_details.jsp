@@ -24,7 +24,7 @@
   <tr>
   	<td class="containerBack">
 <% if (TicketDetails.getClosed() != null) { %>
-      <input type=button value="Reopen"> <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosed())%></font>
+      <input type=button value="Reopen"> <font color="red">This ticket was closed on <%=toHtml(TicketDetails.getClosedString())%></font>
 <%} else {%>
       <input type=submit value="Modfiy">
       <input type="submit" value="Delete" onClick="javascript:this.form.action='/AccountTickets.do?command=DeleteTicket&id=<%= TicketDetails.getId() %>'">
@@ -109,7 +109,7 @@
       Entered
     </td>
 		<td valign=top>
-      <%=toHtml(TicketDetails.getEnteredByName())%> - <%=TicketDetails.getEntered()%>
+      <%=toHtml(TicketDetails.getEnteredByName())%> - <%=TicketDetails.getEnteredString()%>
 		</td>
   </tr>
 	<tr class="containerBody">
@@ -117,7 +117,7 @@
       Modified
     </td>
 		<td valign=top>
-      <%=toHtml(TicketDetails.getModifiedByName())%> - <%=TicketDetails.getModified()%>
+      <%=toHtml(TicketDetails.getModifiedByName())%> - <%=TicketDetails.getModifiedString()%>
 		</td>
   </tr>
 </table>
@@ -183,7 +183,7 @@
       <%=toHtml(thisEntry.getEnteredByName())%>
     </td>
     <td nowrap valign=center width=150>
-			<%=thisEntry.getEntered()%>
+			<%=thisEntry.getEnteredString()%>
     </td>
     <td valign=center>
 			<%=toHtml(thisEntry.getEntryText())%>

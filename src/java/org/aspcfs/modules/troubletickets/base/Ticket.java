@@ -40,11 +40,12 @@ public class Ticket extends GenericBean {
 	private int subCat3 = 0;
 	private int severityCode = -1;
 
-	private String entered = "";
 	private int enteredBy = -1;
-	private String modified = null;
 	private int modifiedBy = -1;
-	private String closed = null;
+	
+	private java.sql.Timestamp entered = null;
+	private java.sql.Timestamp modified = null;
+	private java.sql.Timestamp closed = null;
 
 	private String ownerName = "";
 	private String enteredByName = "";
@@ -139,6 +140,23 @@ public class Ticket extends GenericBean {
 		history.setTicketId(this.getId());
 		history.buildList(db);
 	}
+	
+public java.sql.Timestamp getClosed() {
+	return closed;
+}
+public void setClosed(java.sql.Timestamp closed) {
+	this.closed = closed;
+}
+public void setClosed(String tmp) { this.closed = java.sql.Timestamp.valueOf(tmp); }
+
+	public String getClosedString() {
+		String tmp = "";
+		try {
+			return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(closed);
+		} catch (NullPointerException e) {
+		}
+		return tmp;
+	}
 
 
 	/**
@@ -214,6 +232,33 @@ public class Ticket extends GenericBean {
 		}
 		
 		return padded;
+	}
+	
+public java.sql.Timestamp getEntered() { return entered; }
+public java.sql.Timestamp getModified() { return modified; }
+public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
+public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
+
+	public void setEntered(String tmp) { this.entered = java.sql.Timestamp.valueOf(tmp); }
+	public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf(tmp); }
+	
+	public String getModifiedString() {
+		String tmp = "";
+		try {
+			return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+		} catch (NullPointerException e) {
+		}
+		return tmp;
+	}
+
+
+	public String getEnteredString() {
+		String tmp = "";
+		try {
+			return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+		} catch (NullPointerException e) {
+		}
+		return tmp;
 	}
 
 	/**
@@ -613,18 +658,6 @@ public class Ticket extends GenericBean {
 		this.severityCode = Integer.parseInt(tmp);
 	}
 
-
-	/**
-	 *  Sets the Entered attribute of the Ticket object
-	 *
-	 *@param  tmp  The new Entered value
-	 *@since
-	 */
-	public void setEntered(String tmp) {
-		this.entered = tmp;
-	}
-
-
 	/**
 	 *  Sets the EnteredBy attribute of the Ticket object
 	 *
@@ -646,18 +679,6 @@ public class Ticket extends GenericBean {
 		this.enteredBy = Integer.parseInt(tmp);
 	}
 
-
-	/**
-	 *  Sets the Modified attribute of the Ticket object
-	 *
-	 *@param  tmp  The new Modified value
-	 *@since
-	 */
-	public void setModified(String tmp) {
-		this.modified = tmp;
-	}
-
-
 	/**
 	 *  Sets the ModifiedBy attribute of the Ticket object
 	 *
@@ -677,17 +698,6 @@ public class Ticket extends GenericBean {
 	 */
 	public void setModifiedBy(String tmp) {
 		this.modifiedBy = Integer.parseInt(tmp);
-	}
-
-
-	/**
-	 *  Sets the Closed attribute of the Ticket object
-	 *
-	 *@param  tmp  The new Closed value
-	 *@since
-	 */
-	public void setClosed(String tmp) {
-		this.closed = tmp;
 	}
 
 
@@ -1054,17 +1064,6 @@ public class Ticket extends GenericBean {
 
 
 	/**
-	 *  Gets the Entered attribute of the Ticket object
-	 *
-	 *@return    The Entered value
-	 *@since
-	 */
-	public String getEntered() {
-		return entered;
-	}
-
-
-	/**
 	 *  Gets the EnteredBy attribute of the Ticket object
 	 *
 	 *@return    The EnteredBy value
@@ -1074,18 +1073,6 @@ public class Ticket extends GenericBean {
 		return enteredBy;
 	}
 
-
-	/**
-	 *  Gets the Modified attribute of the Ticket object
-	 *
-	 *@return    The Modified value
-	 *@since
-	 */
-	public String getModified() {
-		return modified;
-	}
-
-
 	/**
 	 *  Gets the ModifiedBy attribute of the Ticket object
 	 *
@@ -1094,17 +1081,6 @@ public class Ticket extends GenericBean {
 	 */
 	public int getModifiedBy() {
 		return modifiedBy;
-	}
-
-
-	/**
-	 *  Gets the Closed attribute of the Ticket object
-	 *
-	 *@return    The Closed value
-	 *@since
-	 */
-	public String getClosed() {
-		return closed;
 	}
 
 
@@ -1252,7 +1228,7 @@ public class Ticket extends GenericBean {
 
 		if (this.getCloseIt() == true) {
 			sql.append(
-					", closed = CURRENT_TIMESTAMP, solution = ? ");
+				", closed = CURRENT_TIMESTAMP, solution = ? ");
 		}
 
 		sql.append(
@@ -1463,20 +1439,21 @@ public class Ticket extends GenericBean {
 		enteredByName = rs.getString("eb_name");
 		modifiedByName = rs.getString("mb_name");
 		ownerName = rs.getString("owner_name");
-		closed = rs.getString("closed");
+		
+		closed = rs.getTimestamp("closed");
 
-		java.sql.Timestamp tmpDateCreated = rs.getTimestamp("entered");
-		if (tmpDateCreated != null) {
-			entered = shortDateTimeFormat.format(tmpDateCreated);
-      float ageCheck = ((System.currentTimeMillis() - tmpDateCreated.getTime())/86400000);
-      ageOf = java.lang.Math.round(ageCheck);
-		}	else {
-			entered = "";
+		entered = rs.getTimestamp("entered");
+		modified = rs.getTimestamp("modified");
+		
+		if (entered != null) {
+	      		float ageCheck = ((System.currentTimeMillis() - entered.getTime())/86400000);
+      			ageOf = java.lang.Math.round(ageCheck);
 		}
 
+
 		enteredBy = rs.getInt("enteredby");
-		java.sql.Timestamp tmpLastModified = rs.getTimestamp("modified");
-		modified = tmpLastModified.toString();
+
+		
 		modifiedBy = rs.getInt("modifiedby");
 	}
 

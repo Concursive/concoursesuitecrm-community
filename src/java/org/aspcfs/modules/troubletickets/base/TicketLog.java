@@ -23,9 +23,10 @@ public class TicketLog extends GenericBean {
 	private int assignedTo = -1;
 	private boolean closed = false;
 
-	private String entered = "";
+	private java.sql.Timestamp entered = null;
+	private java.sql.Timestamp modified = null;
+	
 	private int enteredBy = -1;
-	private String modified = null;
 	private int modifiedBy = -1;
 
 	private int priorityCode = -1;
@@ -138,6 +139,33 @@ public void setPriorityName(String priorityName) {
 	public void setId(String tmp) {
 		this.id = Integer.parseInt(tmp);
 	}
+public java.sql.Timestamp getEntered() { return entered; }
+public java.sql.Timestamp getModified() { return modified; }
+public void setEntered(java.sql.Timestamp tmp) { this.entered = tmp; }
+public void setModified(java.sql.Timestamp tmp) { this.modified = tmp; }
+
+	public void setEntered(String tmp) { this.entered = java.sql.Timestamp.valueOf(tmp); }
+	public void setModified(String tmp) { this.modified = java.sql.Timestamp.valueOf(tmp); }
+	
+	public String getModifiedString() {
+		String tmp = "";
+		try {
+			return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(modified);
+		} catch (NullPointerException e) {
+		}
+		return tmp;
+	}
+
+
+	public String getEnteredString() {
+		String tmp = "";
+		try {
+			return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(entered);
+		} catch (NullPointerException e) {
+		}
+		return tmp;
+	}
+
 
 public String getAssignedToName() {
 	return assignedToName;
@@ -241,18 +269,6 @@ public void setSeverityName(String severityName) {
 		this.closed = tmp;
 	}
 
-
-	/**
-	 *  Sets the Entered attribute of the TicketLog object
-	 *
-	 *@param  tmp  The new Entered value
-	 *@since
-	 */
-	public void setEntered(String tmp) {
-		this.entered = tmp;
-	}
-
-
 	/**
 	 *  Sets the EnteredBy attribute of the TicketLog object
 	 *
@@ -261,17 +277,6 @@ public void setSeverityName(String severityName) {
 	 */
 	public void setEnteredBy(int tmp) {
 		this.enteredBy = tmp;
-	}
-
-
-	/**
-	 *  Sets the Modified attribute of the TicketLog object
-	 *
-	 *@param  tmp  The new Modified value
-	 *@since
-	 */
-	public void setModified(String tmp) {
-		this.modified = tmp;
 	}
 
 
@@ -461,18 +466,6 @@ public void setSeverityName(String severityName) {
 		return closed;
 	}
 
-
-	/**
-	 *  Gets the Entered attribute of the TicketLog object
-	 *
-	 *@return    The Entered value
-	 *@since
-	 */
-	public String getEntered() {
-		return entered;
-	}
-
-
 	/**
 	 *  Gets the EnteredBy attribute of the TicketLog object
 	 *
@@ -482,18 +475,6 @@ public void setSeverityName(String severityName) {
 	public int getEnteredBy() {
 		return enteredBy;
 	}
-
-
-	/**
-	 *  Gets the Modified attribute of the TicketLog object
-	 *
-	 *@return    The Modified value
-	 *@since
-	 */
-	public String getModified() {
-		return modified;
-	}
-
 
 	/**
 	 *  Gets the ModifiedBy attribute of the TicketLog object
@@ -723,7 +704,7 @@ public void setSeverityName(String severityName) {
 		pst.setInt(++i, assignedTo);
 		pst.setInt(++i, id);
 		if (!override) {
-			pst.setTimestamp(++i, java.sql.Timestamp.valueOf(this.getModified()));
+			pst.setTimestamp(++i, this.getModified());
 		}
 
 		resultCount = pst.executeUpdate();
@@ -836,17 +817,10 @@ public void setSeverityName(String severityName) {
 		priorityName = rs.getString("priorityname");
 		severityName = rs.getString("severityname");
 
-		java.sql.Timestamp tmpDateCreated = rs.getTimestamp("entered");
-		if (tmpDateCreated != null) {
-			entered = shortDateTimeFormat.format(tmpDateCreated);
-		}
-		else {
-			entered = "";
-		}
+		entered = rs.getTimestamp("entered");
+		modified = rs.getTimestamp("modified");
 
 		enteredBy = rs.getInt("enteredby");
-		java.sql.Timestamp tmpLastModified = rs.getTimestamp("modified");
-		modified = tmpLastModified.toString();
 		modifiedBy = rs.getInt("modifiedby");
 	}
 
