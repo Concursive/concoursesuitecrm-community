@@ -212,7 +212,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
  VALUES (2, 'accountList', 'com.darkhorseventures.cfsbase.OrganizationList', 170, true, 
 'CREATE TABLE account (
        account_id           int NOT NULL,
-       account_name         nvarchar(20) NULL,
+       account_name         nvarchar(80) NULL,
        record_status_id     int NULL,
        address              nvarchar(80) NULL,
        modified             datetime NULL,
@@ -222,6 +222,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
        zip                  nvarchar(11) NULL,
        phone                nvarchar(20) NULL,
        contact              nvarchar(20) NULL,
+       dmv_number           nvarchar(20) NULL,
        entered              datetime NULL,
        enteredby            int NULL,
        modifiedby           int NULL,

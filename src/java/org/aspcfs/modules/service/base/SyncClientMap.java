@@ -187,23 +187,23 @@ public class SyncClientMap {
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
-  public int lookupId(Connection db, int referenceTable, String clientUniqueId) throws SQLException {
+  public int lookupId(Connection db, int referenceTable, String serverId) throws SQLException {
     int resultId = -1;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        "SELECT record_id " +
+        "SELECT cuid " +
         "FROM sync_map " +
         "WHERE client_id = ? " +
         "AND table_id = ? " +
-        "AND cuid = ? ");
+        "AND record_id = ? ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, clientId);
     pst.setInt(++i, referenceTable);
-    pst.setString(++i, clientUniqueId);
+    pst.setString(++i, serverId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      resultId = rs.getInt("record_id");
+      resultId = rs.getInt("cuid");
     }
     rs.close();
     pst.close();
