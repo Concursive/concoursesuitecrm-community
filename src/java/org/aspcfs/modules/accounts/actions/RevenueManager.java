@@ -230,12 +230,15 @@ public final class RevenueManager extends CFSModule {
 
       VerticalNumberAxis vnAxis = (VerticalNumberAxis) chart.getXYPlot().getVerticalAxis();
       vnAxis.setAutoRangeIncludesZero(true);
+      vnAxis.setTickMarksVisible(true);
+      bPlot.setRangeAxis(vnAxis);
       
       HorizontalNumberAxis hnAxis = (HorizontalNumberAxis) chart.getXYPlot().getHorizontalAxis();
       
       hnAxis.setAutoRangeIncludesZero(false);
       hnAxis.setAutoTickUnitSelection(false);
       hnAxis.setVerticalTickLabels(true);
+      hnAxis.setTickMarksVisible(true);
       hnAxis.setAutoRange(false);
 
       Stroke gridStroke = new BasicStroke(0.25f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 0.0f, new float[]{2.0f, 2.0f}, 0.0f);
@@ -246,6 +249,8 @@ public final class RevenueManager extends CFSModule {
         hnAxis.getTickLabelPaint(), hnAxis.getTickLabelInsets(), true, true, hnAxis.getTickMarkStroke(),
         true, new Integer(0), new Range((d.getYear() + 1900), (d.getYear() + 1901)), false, new DateUnit(Calendar.MONTH, 1),
         new SimpleDateFormat("MMM ' ' yy"), true, gridStroke, gridPaint, false, null, null, null);
+      
+      myHorizontalDateAxis.setTickMarksVisible(true);
       
       try{
               bPlot.setDomainAxis(myHorizontalDateAxis);
