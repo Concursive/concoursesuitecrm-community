@@ -80,6 +80,7 @@ public class InitPermissionsAndRoles implements DataReader {
       Iterator sortedCategoryItems = sortedCategoryList.iterator();
       while (sortedCategoryItems.hasNext()) {
         Element category = (Element) sortedCategoryItems.next();
+        String uniqueCategoryId = (String) category.getAttribute("id");
         int categoryLevel = (categoryList.indexOf(category) + 1) * 100;
         DataRecord thisRecord = new DataRecord();
         thisRecord.setName("permissionCategory");
@@ -177,7 +178,7 @@ public class InitPermissionsAndRoles implements DataReader {
           lookupRecord.addField("table", (String) lookup.getAttribute("table"));
           lookupRecord.addField("level", String.valueOf(lookupLevel));
           lookupRecord.addField("description", (String) lookup.getAttribute("description"));
-          lookupRecord.addField("categoryId", String.valueOf(categoryId));
+          lookupRecord.addField("categoryId", uniqueCategoryId);
           writer.save(lookupRecord);
         }
         
