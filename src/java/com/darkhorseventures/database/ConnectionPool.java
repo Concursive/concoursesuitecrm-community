@@ -214,6 +214,16 @@ public class ConnectionPool implements Runnable {
 
 
   /**
+   *  Sets the maxIdleTimeSeconds attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new maxIdleTimeSeconds value
+   */
+  public void setMaxIdleTimeSeconds(int tmp) {
+    this.maxIdleTime = 1000 * tmp;
+  }
+
+
+  /**
    *  Sets the maximum number of milliseconds a connection can checked out and
    *  remain busy for. If the connection is not returned, or not renewed, then
    *  it will be closed. The connection might be in use, or some process may
@@ -244,6 +254,16 @@ public class ConnectionPool implements Runnable {
    */
   public void setMaxDeadTimeSeconds(String tmp) {
     this.maxDeadTime = 1000 * Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the maxDeadTimeSeconds attribute of the ConnectionPool object
+   *
+   *@param  tmp  The new maxDeadTimeSeconds value
+   */
+  public void setMaxDeadTimeSeconds(int tmp) {
+    this.maxDeadTime = 1000 * tmp;
   }
 
 
