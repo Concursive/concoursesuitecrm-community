@@ -1720,6 +1720,22 @@ public class Ticket extends GenericBean {
 
 
   /**
+   *  Gets the assignedDateString attribute of the Ticket object
+   *
+   * @return    The assignedDateString value
+   */
+  public String getAssignedDateString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(assignedDate);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+
+
+
+  /**
    *  Gets the CloseIt attribute of the Ticket object
    *
    *@return    The CloseIt value
@@ -2085,6 +2101,21 @@ public class Ticket extends GenericBean {
 
 
   /**
+   *  Gets the estimatedResolutionDateString attribute of the Ticket object
+   *
+   * @return    The estimatedResolutionDateString value
+   */
+  public String getEstimatedResolutionDateString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(estimatedResolutionDate);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+
+
+  /**
    *  Gets the cause attribute of the Ticket object
    *
    *@return    The cause value
@@ -2178,6 +2209,21 @@ public class Ticket extends GenericBean {
    */
   public java.sql.Timestamp getResolutionDate() {
     return resolutionDate;
+  }
+
+
+  /**
+   *  Gets the resolutionDateString attribute of the Ticket object
+   *
+   * @return    The resolutionDateString value
+   */
+  public String getResolutionDateString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(resolutionDate);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
   }
 
 

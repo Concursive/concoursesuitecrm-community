@@ -55,7 +55,7 @@ Component Details
       <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>
       <% FileItem thisFile = new FileItem(); %>
       <dhv:evaluate if="<%= OpportunityHeader.hasFiles() %>">
-        <%= thisFile.getImageTag() %>
+        <%= thisFile.getImageTag("-23") %>
       </dhv:evaluate>
       <dhv:permission name="accounts-accounts-contacts-opportunities-edit,accounts-accounts-contacts-opportunities-delete">
       <br>

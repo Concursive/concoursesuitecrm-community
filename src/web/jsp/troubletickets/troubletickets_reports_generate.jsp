@@ -104,6 +104,11 @@ New Export
         <option value="solution" >Resolution</option>
         <option value="assignedTo" >Resource Assigned</option>
         <option value="category" >Category</option>
+        <option value="contact" >Contact Name</option>
+        <option value="comment" >Issue Notes</option>
+        <option value="assignmentDate">Assignment Date</option>
+        <option value="estimatedResolutionDate">Estimated Resolution Date</option>
+        <option value="resolutionDate">Resolution Date</option>
       </select>
      </td>
      <td width="25">

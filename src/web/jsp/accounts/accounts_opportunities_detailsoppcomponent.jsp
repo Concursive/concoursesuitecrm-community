@@ -34,7 +34,7 @@ Component Details
       <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>
       <% FileItem thisFile = new FileItem(); %>
       <dhv:evaluate if="<%= OpportunityHeader.hasFiles() %>">
-        <%= thisFile.getImageTag() %>
+        <%= thisFile.getImageTag("-23") %>
       </dhv:evaluate>
 <input type="hidden" name="headerId" value="<%= OppComponentDetails.getHeaderId() %>">
 <input type="hidden" name="id" value="<%= OppComponentDetails.getId() %>">

@@ -250,7 +250,7 @@
        <table cellspacing="0" cellpadding="0" border="0" class="empty">
         <tr>
           <td>
-            <div id="hours"><%= ((serviceContract.getAdjustmentHours() == 0.0) ? "No adjustment" : "" + serviceContract.getAdjustmentHours()) %></div>
+              <div id="hours"><%= ((serviceContract.getAdjustmentHours() == 0.0) ? "No adjustment" : "" + serviceContract.getAdjustmentHours()) %></div>
           </td>
           <td>
             <input type="hidden" name="adjustmentHours" id="adjustmentHours" value="<%=serviceContract.getAdjustmentHours()%>" />
@@ -303,7 +303,7 @@
       </td>
       <td>
         <div id="netRemainingHours"><%= ((serviceContract.getNetHours() == 0.0) ? "No adjustment" : "" + serviceContract.getNetHours()) %></div>
-        <input type="hidden" name="netHours" id="netHours" value="<%=((serviceContract.getNetHours() == 0.0) ? "" : "" + serviceContract.getNetHours())%>" />
+         <input type="hidden" name="netHours" id="netHours" value="<%=((serviceContract.getNetHours() == 0.0) ? "" : "" + serviceContract.getNetHours())%>" />
      </td>
     </tr>
   </dhv:evaluate>

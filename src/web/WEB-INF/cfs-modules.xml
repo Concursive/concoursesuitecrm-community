@@ -150,6 +150,7 @@
     <action name="LeadsCallsForward"/>
     <action name="LeadsComponents"/>
     <action name="LeadsDocuments"/>
+    <action name="LeadsDocumentsFolders"/>
     <action name="LeadsPrototype"/>
     <page title="Pipeline"/>
     <permission value="pipeline-view"/>
@@ -201,6 +202,7 @@
     <action name="RevenueManager"/>
     <action name="AccountTickets"/>
     <action name="AccountsDocuments"/>
+    <action name="AccountsDocumentsFolders"/>
     <action name="AccountsAutoGuide"/>
     <action name="AccountsPrototype"/>
     <action name="AccountTicketsDocuments"/>
@@ -484,6 +486,7 @@
     <action name="TroubleTicketTasks"/>
     <action name="TroubleTicketsFolders"/>
     <action name="TroubleTicketsDocuments"/>
+    <action name="TroubleTicketsDocumentsFolders"/>
     <action name="TroubleTicketActivityLog"/>
     <action name="TroubleTicketMaintenanceNotes"/>
     <page title="Help Desk"/>

@@ -2,19 +2,10 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
-<jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<%-- Initialize the drop-down menus --%>
-<%@ include file="../initPopupMenu.jsp" %>
 <%@ include file="leads_documents_list_menu.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
-<script language="JavaScript" type="text/javascript">
-  <%-- Preload image rollovers for drop-down menu --%>
-  loadImages('select');
-</script>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -43,6 +34,23 @@ Documents
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
+      <%
+        String permission_doc_folders_add = "pipeline-opportunities-documents-add";
+        String permission_doc_files_upload = "pipeline-opportunities-documents-add";
+        String permission_doc_folders_edit = "pipeline-opportunities-documents-add";
+        String documentFolderAdd ="LeadsDocumentsFolders.do?command=Add&headerId="+ opportunityHeader.getId() + addLinkParams(request, "viewSource");
+        String documentFileAdd = "LeadsDocuments.do?command=Add&headerId="+ opportunityHeader.getId() + addLinkParams(request, "viewSource");
+        String documentFolderModify = "LeadsDocumentsFolders.do?command=Modify&headerId="+ opportunityHeader.getId() + addLinkParams(request, "viewSource");
+        String documentFolderList = "LeadsDocuments.do?command=View&headerId="+ opportunityHeader.getId();
+        String documentFileDetails = "LeadsDocuments.do?command=Details&headerId="+ opportunityHeader.getId() + addLinkParams(request, "viewSource");
+        String documentModule = "Pipeline";
+        String specialID = ""+opportunityHeader.getId();
+      %>
+      <%@ include file="../accounts/documents_list.jsp" %>&nbsp;
+    </td>
+  </tr>
+</table>
+<%--
       <dhv:permission name="pipeline-opportunities-documents-add"><a href="LeadsDocuments.do?command=Add&headerId=<%= opportunityHeader.getId() %>&folderId=<%= FileItemList.getFolderId() %><%= addLinkParams(request, "viewSource") %>">Add a Document</a><br></dhv:permission>
       <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
@@ -69,7 +77,7 @@ Documents
 %>      
     <tr class="row<%= rowid %>">
       <td width="10" valign="middle" align="center" nowrap>
-      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+      <%-- Use the unique id for opening the menu, and toggling the graphics -- %>
        <a href="javascript:displayMenu('select<%= i %>','menuFile', '<%= opportunityHeader.getId() %>', '<%= thisFile.getId() %>');"
        onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuFile');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
@@ -106,3 +114,4 @@ Documents
 </td>
 </tr>
 </table>
+--%>

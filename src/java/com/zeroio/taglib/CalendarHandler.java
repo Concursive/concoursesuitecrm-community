@@ -163,11 +163,11 @@ public class CalendarHandler extends TagSupport {
         dateString = "";
       }
       if (!hidden) {
-        // TODO: Add onChange="checkDate(this.value)"
-        this.pageContext.getOut().write(
+      // TODO: Add onChange="checkDate(this.value)"
+      this.pageContext.getOut().write(
             "<input type=\"text\" name=\"" + field + "\" size=\"10\" value=\"" + dateString + "\" />" +
-            "&nbsp;<a href=\"javascript:popCalendar('" + form + "','" + field + "','" + language + "','" + country + "');\">" +
-            "<img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\"></a>");
+          "&nbsp;<a href=\"javascript:popCalendar('" + form + "','" + field + "','" + language + "','" + country + "');\">" +
+          "<img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\"></a>");
       } else {
         this.pageContext.getOut().write(
             "<input type=\"hidden\" name=\"" + field + "\" value=\"" + dateString + "\" />");

@@ -151,7 +151,7 @@ Dashboard
               (<%= thisHeader.getOwnerComponentCount() %>/<%= thisHeader.getComponentCount() %>)
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisHeader.hasFiles() %>">
-              <%= thisFile.getImageTag() %>
+              <%= thisFile.getImageTag("-23") %>
             </dhv:evaluate>
           </td>
           <td width="55" class="row<%= rowid %>">

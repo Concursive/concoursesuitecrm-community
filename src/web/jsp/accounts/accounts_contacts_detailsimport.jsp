@@ -128,7 +128,7 @@
   <td>
     <%= ImportDetails.getTotalFailedRecords() %> &nbsp;
     <dhv:evaluate if="<%= ImportDetails.getFile().hasVersion(Import.ERROR_FILE_VERSION) %>">
-      &nbsp;<%= ImportDetails.getFile().getImageTag() %>[ <a href="javascript:window.location.href='AccountContactsImports.do?command=Download&importId=<%= ImportDetails.getId() %>&fid=<%= ImportDetails.getFile().getId() %>&ver=<%= Import.ERROR_FILE_VERSION %>';">  Download Error File</a> ]
+      &nbsp;<%= ImportDetails.getFile().getImageTag("-23") %>[ <a href="javascript:window.location.href='AccountContactsImports.do?command=Download&importId=<%= ImportDetails.getId() %>&fid=<%= ImportDetails.getFile().getId() %>&ver=<%= Import.ERROR_FILE_VERSION %>';">  Download Error File</a> ]
     </dhv:evaluate>
   </td>
   </tr>

@@ -129,7 +129,7 @@
   </tag>
   
   <tag>
-    <name>folderHierarchy</name> 
+    <name>folderHierarchy</name>
     <tag-class>com.zeroio.taglib.FolderHierarchyHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
@@ -137,6 +137,16 @@
     </display-name>
     <attribute>
       <name>showLastLink</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>module</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>link</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>

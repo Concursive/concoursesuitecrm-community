@@ -35,7 +35,18 @@ Document Details
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
-      <%= showError(request, "actionError") %>
+<%--TODO::START Document folder trails--%>
+<table border="0" cellpadding="4" cellspacing="0" width="100%">
+  <tr>
+    <td>
+      <% String documentLink = "LeadsDocuments.do?command=View&headerId="+opportunityHeader.getId()+addLinkParams(request, "viewSource"); %>
+      <zeroio:folderHierarchy module="Pipeline" link="<%= documentLink %>" showLastLink="true"/> >
+      <%= FileItem.getSubject() %>
+    </td>
+  </tr>
+</table>
+<%--TODO::END Document folder trails--%>
+<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th colspan="7">
@@ -63,7 +74,7 @@ Document Details
         <a href="LeadsDocuments.do?command=Download&headerId=<%= opportunityHeader.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %><%= addLinkParams(request, "viewSource") %>">Download</a>
       </td>
       <td>
-        <%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %>
+        <%= FileItem.getImageTag("-23") %><%= thisVersion.getClientFilename() %>
       </td>
       <td align="right" nowrap>
         <%= thisVersion.getRelativeSize() %> k&nbsp;

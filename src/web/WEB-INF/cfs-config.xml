@@ -594,7 +594,17 @@
     <forward name="SendCallOK" resource="/MyCFS.do?command=SendMessage&amp;actionSource=LeadsCallsForward"/>
     <forward name="SendMessageOK" resource="/pipeline/leads_confirmsend.jsp" layout="nav"/>
     <forward name="ForwardCallOK" resource="/pipeline/leads_forwardcall.jsp" layout="nav"/>
-   </action>
+  </action>
+  <action name="LeadsDocumentsFolders" class="org.aspcfs.modules.pipeline.actions.LeadsDocumentsFolders">
+    <bean name="FileFolder" class="com.zeroio.iteam.base.FileFolder" scope="request" />
+    <forward name="AddOK" resource="/pipeline/leads_documents_folders_add.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/LeadsDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/LeadsDocuments.do?command=View"/>
+    <forward name="InsertOK" resource="/LeadsDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/LeadsDocuments.do?command=View"/>
+    <forward name="MoveOK" resource="/pipeline/leads_documents_folders_move.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/pipeline/leads_documents_popclose.jsp"/>
+  </action>
   <action name="LeadsDocuments" class="org.aspcfs.modules.pipeline.actions.LeadsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="ViewOK" resource="/pipeline/leads_documents_list.jsp" layout="nav"/>
@@ -606,6 +616,8 @@
     <forward name="UpdateOK" resource="/LeadsDocuments.do?command=View"/>
     <forward name="DeleteOK" resource="/LeadsDocuments.do?command=View"/>
     <forward name="DeleteERROR" resource="/LeadsDocuments.do?command=View"/>
+    <forward name="MoveOK" resource="/pipeline/leads_documents_file_move.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/pipeline/leads_documents_popclose.jsp"/>
   </action>
   <action name="LeadsReports" class="org.aspcfs.modules.pipeline.actions.LeadsReports">
     <forward name="ExportListOK" resource="/pipeline/leads_reports.jsp" layout="nav"/>
@@ -876,6 +888,17 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
+  <action name="AccountTicketsDocumentsFolders" class="org.aspcfs.modules.troubletickets.actions.AccountTicketsDocumentsFolders">
+    <bean name="FileFolder" class="com.zeroio.iteam.base.FileFolder" scope="request" />
+    <forward name="AddOK" resource="/accounts/accounts_tickets_documents_folders_add.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/AccountTicketsDocuments.do?command=View"/>
+    <forward name="SaveOK" resource="/AccountTicketsDocuments.do?command=View"/>
+    <forward name="UpdateOK" resource="/AccountTicketsDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/AccountTicketsDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/AccountTicketsDocuments.do?command=View"/>
+    <forward name="MoveOK" resource="/accounts/accounts_tickets_documents_folders_move.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/accounts/accounts_tickets_documents_popclose.jsp"/>
+  </action>
   <action name="AccountTicketsDocuments" class="org.aspcfs.modules.accounts.actions.AccountTicketsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="ViewOK" resource="/accounts/accounts_tickets_documents_list.jsp" layout="nav"/>
@@ -887,6 +910,8 @@
     <forward name="UpdateOK" resource="/AccountTicketsDocuments.do?command=View"/>
     <forward name="DeleteOK" resource="/AccountTicketsDocuments.do?command=View"/>
     <forward name="DeleteERROR" resource="/AccountTicketsDocuments.do?command=View"/>
+    <forward name="MoveOK" resource="/accounts/accounts_tickets_documents_file_move.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/accounts/accounts_tickets_documents_popclose.jsp"/>
   </action>
   <action name="AccountTicketFolders" class="org.aspcfs.modules.accounts.actions.AccountTicketFolders">
     <forward name="FieldRecordListOK" resource="/accounts/accounts_tickets_fields_list.jsp" layout="nav"/>
@@ -897,6 +922,19 @@
     <forward name="UpdateFieldsOK" resource="/accounts/accounts_tickets_fields.jsp" layout="nav"/>
     <forward name="DeleteFieldsOK" resource="/AccountTicketFolders.do?command=Fields"/>
   </action>
+
+  <!-- Accounts Documents Folders -->
+  <action name="AccountsDocumentsFolders" class="org.aspcfs.modules.accounts.actions.AccountsDocumentsFolders">
+    <bean name="FileFolder" class="com.zeroio.iteam.base.FileFolder" scope="request" />
+    <forward name="AddOK" resource="/accounts/accounts_documents_folders_add.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/AccountsDocuments.do?command=View"/>
+    <forward name="InsertOK" resource="/AccountsDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/AccountsDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/AccountsDocuments.do?command=View"/>
+    <forward name="MoveOK" resource="/accounts/accounts_documents_folders_move.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/accounts/accounts_documents_folders_popclose.jsp"/>
+  </action>
+
   <action name="AccountsDocuments" class="org.aspcfs.modules.accounts.actions.AccountsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="ViewOK" resource="/accounts/accounts_documents_list.jsp" layout="nav"/>
@@ -908,6 +946,8 @@
     <forward name="UpdateOK" resource="/AccountsDocuments.do?command=View"/>
     <forward name="DeleteOK" resource="/AccountsDocuments.do?command=View"/>
     <forward name="DeleteERROR" resource="/AccountsDocuments.do?command=View"/>
+    <forward name="MoveOK" resource="/accounts/accounts_documents_file_move.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/accounts/accounts_documents_folders_popclose.jsp"/>
   </action>
   <action name="AccountsPrototype" class="org.aspcfs.modules.prototype.actions.Prototype">
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
@@ -1262,6 +1302,17 @@
     <forward name="FormERROR" resource="/troubletickets/troubletickets_form_invalidnote.jsp" layout="nav"/>
   </action>
 
+  <action name="TroubleTicketsDocumentsFolders" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketsDocumentsFolders">
+    <bean name="FileFolder" class="com.zeroio.iteam.base.FileFolder" scope="request" />
+    <forward name="AddOK" resource="/troubletickets/troubletickets_documents_folders_add.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/TroubleTicketsDocuments.do?command=View"/>
+    <forward name="SaveOK" resource="/TroubleTicketsDocuments.do?command=View"/>
+    <forward name="UpdateOK" resource="/TroubleTicketsDocuments.do?command=View"/>
+    <forward name="DeleteOK" resource="/TroubleTicketsDocuments.do?command=View"/>
+    <forward name="DeleteERROR" resource="/TroubleTicketsDocuments.do?command=View"/>
+    <forward name="MoveOK" resource="/troubletickets/troubletickets_documents_folders_move.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/troubletickets/troubletickets_documents_popclose.jsp"/>
+  </action>
   <action name="TroubleTicketsDocuments" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketsDocuments">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="ViewOK" resource="/troubletickets/troubletickets_documents_list.jsp" layout="nav"/>
@@ -1273,6 +1324,8 @@
     <forward name="UpdateOK" resource="/TroubleTicketsDocuments.do?command=View"/>
     <forward name="DeleteOK" resource="/TroubleTicketsDocuments.do?command=View"/>
     <forward name="DeleteERROR" resource="/TroubleTicketsDocuments.do?command=View"/>
+    <forward name="MoveOK" resource="/troubletickets/troubletickets_documents_file_move.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/troubletickets/troubletickets_documents_popclose.jsp"/>
   </action>
   <action name="TroubleTicketTasks" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketTasks">
     <bean name="TicketTask" class="org.aspcfs.modules.troubletickets.base.TicketTask" scope="request"/>

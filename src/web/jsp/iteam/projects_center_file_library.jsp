@@ -120,7 +120,7 @@
     </td>
     <td class="row<%= rowid %>" align="center" nowrap><%= toHtml(thisFile.getExtension()) %></td>
     <td class="row<%= rowid %>" align="right" nowrap>
-      <%= thisFile.getRelativeSize() %>k&nbsp;
+      <%= thisFile.getRelativeSize() %> k&nbsp;
     </td>
     <td class="row<%= rowid %>" align="center" nowrap>
       <%= thisFile.getVersion() %>&nbsp;

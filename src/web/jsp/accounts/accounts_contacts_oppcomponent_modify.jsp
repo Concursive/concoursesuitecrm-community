@@ -112,7 +112,7 @@ Modify Component
       <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
       <% FileItem thisFile = new FileItem(); %>
       <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
-        <%= thisFile.getImageTag() %>
+        <%= thisFile.getImageTag("-23") %>
       </dhv:evaluate>
       <br>
       <br>

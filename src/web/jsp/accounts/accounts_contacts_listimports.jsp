@@ -94,7 +94,7 @@ View Imports
     <td width="100%" nowrap>
       <a href="AccountContactsImports.do?command=Details&importId=<%= thisImport.getId() %>"><%= toHtmlValue(thisImport.getName()) %></a>
       <dhv:evaluate if="<%= !thisImport.canProcess() && thisImport.getFile().hasVersion(Import.ERROR_FILE_VERSION) %>">
-      &nbsp;<%= thisImport.getFile().getImageTag() %><br />[<a href="javascript:window.location.href='AccountContactsImports.do?command=Download&importId=<%= thisImport.getId() %>&fid=<%= thisImport.getFile().getId() %>&ver=<%= Import.ERROR_FILE_VERSION %>';">Download Error File</a>]
+      &nbsp;<%= thisImport.getFile().getImageTag("-23") %><br />[<a href="javascript:window.location.href='AccountContactsImports.do?command=Download&importId=<%= thisImport.getId() %>&fid=<%= thisImport.getFile().getId() %>&ver=<%= Import.ERROR_FILE_VERSION %>';">Download Error File</a>]
       </dhv:evaluate>
     </td>
     <td>

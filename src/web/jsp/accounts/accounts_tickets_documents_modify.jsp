@@ -40,6 +40,7 @@ Modify Document
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="tId" value="<%= TicketDetails.getId() %>">
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
+  <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
       </form>
     </td>
   </tr>

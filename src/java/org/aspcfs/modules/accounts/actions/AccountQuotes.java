@@ -49,7 +49,6 @@ public final class AccountQuotes extends CFSModule {
       orgid = (String) context.getRequest().getAttribute("orgId");
     }
 
-    System.out.println("orgid : " + orgid);
     //find record permissions for portal users
     /*
      *  if (!isRecordAccessPermitted(context, Integer.parseInt(orgid))) {
@@ -68,7 +67,6 @@ public final class AccountQuotes extends CFSModule {
       quoteList.setOrgId(Integer.parseInt(orgid));
       //quoteList.setBuildDetails(true);
       //quoteList.setBuildTypes(false);
-      System.out.println("building quote list");
       quoteList.buildList(db);
       thisOrganization = new Organization(db, Integer.parseInt(orgid));
 
@@ -111,7 +109,6 @@ public final class AccountQuotes extends CFSModule {
 
       quote = new Quote(db, Integer.parseInt(quoteId));
       quote.buildProducts(db);
-      System.out.println("This is the quote-productList size in Display -> " + quote.getProductList().size());
       quote.retrieveTicket(db);
       context.getRequest().setAttribute("quote", quote);
 

@@ -41,6 +41,7 @@
 %>
   <tr class="row<%= rowid %>">
     <td valign="top">
+      <% for(int j=1;j<thisFolder.getLevel();j++){ %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%}%>
       <img border="0" src="images/treespace.gif" align="absmiddle" height="16" width="19">
       <img alt="" src="images/tree7o.gif" border="0" align="absmiddle" height="16" width="19"/>
       <img border="0" src="images/icons/stock_open-16-19.gif" align="absmiddle">

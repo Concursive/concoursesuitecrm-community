@@ -36,10 +36,11 @@ Modify Document
     <%@ include file="documents_modify_include.jsp" %>
   &nbsp;<br>
   <input type="submit" value=" Update " name="update">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>;">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="tId" value="<%= TicketDetails.getId() %>">
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
+  <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
   </td>
 </tr>
 </table>

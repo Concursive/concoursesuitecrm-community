@@ -4,6 +4,7 @@
 <%@ page import="java.text.DateFormat" %>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
+<jsp:useBean id="folderId" class="java.lang.String"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
   function checkFileForm(form) {
@@ -75,7 +76,7 @@ Add Version
         Wait for file completion message when upload is complete.
       </p>
       <input type="submit" value=" Upload " name="upload">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>';">
+      <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';">
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="id" value="<%= TicketDetails.getId() %>">
       <input type="hidden" name="fid" value="<%= FileItem.getId() %>">

@@ -23,7 +23,19 @@ Document Details
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td class="containerBack">
-      <%= showError(request, "actionError") %>
+<%--TODO::START Document folder trails--%>
+<table border="0" cellpadding="4" cellspacing="0" width="100%">
+  <tr>
+    <td>
+      <% String documentLink = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId(); %>
+      <zeroio:folderHierarchy module="Accounts" link="<%= documentLink %>" showLastLink="true"/> >
+      <%= FileItem.getSubject() %>
+    </td>
+  </tr>
+</table>
+<%--TODO::END Document folder trails--%>
+<%= showError(request, "actionError") %>
+<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th colspan="7">
@@ -51,7 +63,7 @@ Document Details
         <a href="AccountsDocuments.do?command=Download&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>">Download</a>
       </td>
       <td width="100%">
-        <%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %>
+        <%= FileItem.getImageTag("-23") %><%= thisVersion.getClientFilename() %>
       </td>
       <td align="right" nowrap>
         <%= thisVersion.getRelativeSize() %> k&nbsp;

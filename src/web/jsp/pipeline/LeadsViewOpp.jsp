@@ -91,7 +91,7 @@ Search Results
       <a href="Leads.do?command=DetailsOpp&headerId=<%= thisOpp.getHeader().getId() %>&reset=true">
       <%= toHtml(thisOpp.getComponent().getDescription()) %></a>
       <dhv:evaluate if="<%= thisOpp.getHeader().hasFiles() %>">
-        <%= thisFile.getImageTag()%>
+        <%= thisFile.getImageTag("-23")%>
       </dhv:evaluate>
     </td>
     <td valign="top" align="right" nowrap class="row<%= rowid %>">

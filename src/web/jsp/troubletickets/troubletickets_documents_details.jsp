@@ -28,13 +28,18 @@ Details
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
 		<td class="containerBack">
-    <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-      <font color="red">This ticket was closed on
-      <zeroio:tz timestamp="<%= TicketDetails.getClosed() %>" />
-      </font><br>
-      &nbsp;<br>
-    </dhv:evaluate>
-    <%= showError(request, "actionError") %>
+<%--TODO::START Document folder trails--%>
+<table border="0" cellpadding="4" cellspacing="0" width="100%">
+  <tr class="subtab">
+    <td>
+      <% String documentLink = "TroubleTicketsDocuments.do?command=View&tId="+TicketDetails.getId(); %>
+      <zeroio:folderHierarchy module="TroubleTickets" link="<%= documentLink %>" showLastLink="true"/> >
+      <%= FileItem.getSubject() %>
+    </td>
+  </tr>
+</table>
+<%--TODO::END Document folder trails--%>
+<br />
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th colspan="7">

@@ -18,13 +18,14 @@ import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.web.*;
+import com.zeroio.iteam.actions.*;
 
 /**
  *  Description of the Class
  *
- *@author     chris price
- *@created    August 9, 2002
- *@version    $Id: AccountsDocuments.java,v 1.13 2002/09/26 13:08:23 mrajkowski
+ * @author     chris price
+ * @created    August 9, 2002
+ * @version    $Id: AccountsDocuments.java,v 1.13 2002/09/26 13:08:23 mrajkowski
  *      Exp $
  */
 public final class AccountsDocuments extends CFSModule {
@@ -32,37 +33,58 @@ public final class AccountsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-documents-view"))) {
       return ("PermissionError");
     }
-
+    String orgId = (String) context.getRequest().getParameter("orgId");
+    if (orgId == null && !"".equals(orgId)) {
+      orgId = (String) context.getRequest().getAttribute("orgId");
+    }
+    String folderId = context.getRequest().getParameter("folderId");
+    if (folderId == null) {
+      folderId = (String) context.getRequest().getAttribute("folderId");
+    }
     Exception errorMessage = null;
     Connection db = null;
     Organization thisOrg = null;
 
     try {
       db = getConnection(context);
-      thisOrg = addOrganization(context, db);
-      FileItemList documents = new FileItemList();
-      documents.setLinkModuleId(Constants.ACCOUNTS);
-      documents.setLinkItemId(thisOrg.getOrgId());
+      thisOrg = new Organization(db, Integer.parseInt(orgId));
+      context.getRequest().setAttribute("OrgDetails", thisOrg);
 
-      PagedListInfo docListInfo = this.getPagedListInfo(context, "DocListInfo");
-      docListInfo.setLink("AccountsDocuments.do?command=View&orgId=" + thisOrg.getOrgId());
+      //Build the folder list
+      FileFolderList folders = new FileFolderList();
+      if (folderId == null || "-1".equals(folderId) || "0".equals(folderId) || "".equals(folderId)) {
+        folders.setTopLevelOnly(true);
+      } else {
+        folders.setParentId(Integer.parseInt(folderId));
+        //Build array of folder trails
+        ProjectManagementFileFolders.buildHierarchy(db, context);
+      }
+      folders.setLinkModuleId(Constants.ACCOUNTS);
+      folders.setLinkItemId(thisOrg.getOrgId());
+      folders.setBuildItemCount(true);
+      folders.buildList(db);
 
-      //TODO: Not implemented in the JSP, so not implemented here
-      //PagedListInfo documentListInfo = this.getPagedListInfo(context, "AccountDocumentInfo");
-      //documentListInfo.setLink("AccountsDocuments.do?command=View&orgId=" + orgId);
-      //documents.setPagedListInfo(documentListInfo);
+      //Build the file item list
+      FileItemList files = new FileItemList();
+      if (folderId == null || "-1".equals(folderId) || "0".equals(folderId) || "".equals(folderId)) {
+        files.setTopLevelOnly(true);
+      } else {
+        files.setFolderId(Integer.parseInt(folderId));
+      }
+      files.setLinkModuleId(Constants.ACCOUNTS);
+      files.setLinkItemId(thisOrg.getOrgId());
+      files.buildList(db);
 
-      documents.setPagedListInfo(docListInfo);
-      documents.buildList(db);
-      context.getRequest().setAttribute("FileItemList", documents);
+      context.getRequest().setAttribute("OrgDetails", thisOrg);
+      context.getRequest().setAttribute("fileItemList", files);
+      context.getRequest().setAttribute("fileFolderList", folders);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -82,15 +104,14 @@ public final class AccountsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
 
     if (!(hasPermission(context, "accounts-accounts-documents-add"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     Organization thisOrg = null;
@@ -98,6 +119,7 @@ public final class AccountsDocuments extends CFSModule {
     try {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
+      context.getRequest().setAttribute("OrgDetails", thisOrg);
       String folderId = context.getRequest().getParameter("folderId");
       if (folderId != null) {
         context.getRequest().setAttribute("folderId", folderId);
@@ -121,8 +143,8 @@ public final class AccountsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandUpload(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-documents-add")) {
@@ -144,6 +166,9 @@ public final class AccountsDocuments extends CFSModule {
       String id = (String) parts.get("id");
       String subject = (String) parts.get("subject");
       String folderId = (String) parts.get("folderId");
+      if (folderId != null) {
+        context.getRequest().setAttribute("folderId", folderId);
+      }
       db = getConnection(context);
       thisOrg = addOrganization(context, db, id);
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
@@ -195,8 +220,8 @@ public final class AccountsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandAddVersion(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-documents-add")) {
@@ -208,7 +233,7 @@ public final class AccountsDocuments extends CFSModule {
     if (itemId == null) {
       itemId = (String) context.getRequest().getAttribute("fid");
     }
-    String folderId = context.getRequest().getParameter("folderId");
+    String folderId = (String) context.getParameter("folderId");
     if (folderId != null) {
       context.getRequest().setAttribute("folderId", folderId);
     }
@@ -236,8 +261,8 @@ public final class AccountsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandUploadVersion(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-documents-add")) {
@@ -260,6 +285,10 @@ public final class AccountsDocuments extends CFSModule {
       String itemId = (String) parts.get("fid");
       String subject = (String) parts.get("subject");
       String versionId = (String) parts.get("versionId");
+      String folderId = (String) parts.get("folderId");
+      if (folderId != null) {
+        context.getRequest().setAttribute("folderId", folderId);
+      }
       db = getConnection(context);
       thisOrg = addOrganization(context, db, id);
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
@@ -312,18 +341,20 @@ public final class AccountsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
 
     if (!(hasPermission(context, "accounts-accounts-documents-view"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
-
+    String folderId = context.getRequest().getParameter("folderId");
+    if (folderId != null) {
+      context.getRequest().setAttribute("folderId", folderId);
+    }
     String itemId = (String) context.getRequest().getParameter("fid");
 
     try {
@@ -332,6 +363,10 @@ public final class AccountsDocuments extends CFSModule {
 
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
       thisItem.buildVersionList(db);
+      if (folderId != null && !"-1".equals(folderId) && !"0".equals(folderId) && !"".equals(folderId) && !" ".equals(folderId)) {
+        //Build array of folder trails
+        ProjectManagementFileFolders.buildHierarchy(db, context);
+      }
       context.getRequest().setAttribute("FileItem", thisItem);
 
     } catch (Exception e) {
@@ -353,8 +388,8 @@ public final class AccountsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-documents-view")) {
@@ -363,6 +398,7 @@ public final class AccountsDocuments extends CFSModule {
     Exception errorMessage = null;
     String itemId = (String) context.getRequest().getParameter("fid");
     String version = (String) context.getRequest().getParameter("ver");
+    String view = (String) context.getRequest().getParameter("view");
     FileItem thisItem = null;
     Connection db = null;
     Organization thisOrg = null;
@@ -388,7 +424,11 @@ public final class AccountsDocuments extends CFSModule {
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
         if (fileDownload.fileExists()) {
-          fileDownload.sendFile(context);
+          if (view != null && "true".equals(view)) {
+            fileDownload.streamContent(context);
+          } else {
+            fileDownload.sendFile(context);
+          }
           //Get a db connection now that the download is complete
           db = getConnection(context);
           itemToDownload.updateCounter(db);
@@ -406,7 +446,11 @@ public final class AccountsDocuments extends CFSModule {
         fileDownload.setFullPath(filePath);
         fileDownload.setDisplayName(itemToDownload.getClientFilename());
         if (fileDownload.fileExists()) {
-          fileDownload.sendFile(context);
+          if (view != null && "true".equals(view)) {
+            fileDownload.streamContent(context);
+          } else {
+            fileDownload.sendFile(context);
+          }
           //Get a db connection now that the download is complete
           db = getConnection(context);
           itemToDownload.updateCounter(db);
@@ -444,8 +488,8 @@ public final class AccountsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-documents-edit")) {
@@ -479,8 +523,8 @@ public final class AccountsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-documents-edit")) {
@@ -523,8 +567,8 @@ public final class AccountsDocuments extends CFSModule {
   /**
    *  Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-documents-delete")) {
@@ -563,12 +607,12 @@ public final class AccountsDocuments extends CFSModule {
    *  Adds a feature to the Organization attribute of the AccountsDocuments
    *  object
    *
-   *@param  context           The feature to be added to the Organization
+   * @param  context           The feature to be added to the Organization
    *      attribute
-   *@param  db                The feature to be added to the Organization
+   * @param  db                The feature to be added to the Organization
    *      attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   private Organization addOrganization(ActionContext context, Connection db) throws SQLException {
     String organizationId = (String) context.getRequest().getParameter("orgId");
@@ -583,20 +627,87 @@ public final class AccountsDocuments extends CFSModule {
    *  Adds a feature to the Organization attribute of the AccountsDocuments
    *  object
    *
-   *@param  context           The feature to be added to the Organization
+   * @param  context           The feature to be added to the Organization
    *      attribute
-   *@param  db                The feature to be added to the Organization
+   * @param  db                The feature to be added to the Organization
    *      attribute
-   *@param  organizationId    The feature to be added to the Organization
+   * @param  organizationId    The feature to be added to the Organization
    *      attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   private Organization addOrganization(ActionContext context, Connection db, String organizationId) throws SQLException {
     context.getRequest().setAttribute("orgId", organizationId);
     Organization thisOrganization = new Organization(db, Integer.parseInt(organizationId));
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
     return thisOrganization;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandMove(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-documents-edit")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    //Parameters
+    String itemId = (String) context.getRequest().getParameter("fid");
+    Organization thisOrg = null;
+    try {
+      db = getConnection(context);
+      thisOrg = addOrganization(context, db);
+      //Load the file
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
+      context.getRequest().setAttribute("FileItem", thisItem);
+      //Load the folders
+      FileFolderHierarchy hierarchy = new FileFolderHierarchy();
+      hierarchy.setLinkModuleId(Constants.ACCOUNTS);
+      hierarchy.setLinkItemId(thisOrg.getOrgId());
+      hierarchy.build(db);
+      context.getRequest().setAttribute("folderHierarchy", hierarchy);
+      return "MoveOK";
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  context  Description of the Parameter
+   * @return          Description of the Return Value
+   */
+  public String executeCommandSaveMove(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-documents-edit")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    //Parameters
+    String newFolderId = (String) context.getRequest().getParameter("folderId");
+    String itemId = (String) context.getRequest().getParameter("fid");
+    Organization thisOrg = null;
+    try {
+      db = getConnection(context);
+      thisOrg = addOrganization(context, db);
+      //Load the file
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
+      thisItem.updateFolderId(db, Integer.parseInt(newFolderId));
+      return "PopupCloseOK";
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
   }
 
 }

@@ -91,7 +91,7 @@ Opportunities
       <%= toHtml(oppHeader.getDescription()) %></a>
       (<%= oppHeader.getComponentCount() %>)
       <dhv:evaluate if="<%= oppHeader.hasFiles() %>">
-      <%= thisFile.getImageTag() %>
+      <%= thisFile.getImageTag("-23") %>
       </dhv:evaluate>
     </td>  
     <td valign="center" align="right" class="row<%= rowid %>" nowrap>

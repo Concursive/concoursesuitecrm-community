@@ -1,6 +1,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+<jsp:useBean id="folderId" class="java.lang.String"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
   function checkFileForm(form) {
@@ -65,7 +66,6 @@ Upload Document
       Subject
     </td>
     <td>
-      <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>">
       <input type="text" name="subject" size="59" maxlength="255" value="<%= toHtmlValue((String)request.getAttribute("subject")) %>"><font color="red">*</font>
     </td>
   </tr>
@@ -83,9 +83,10 @@ Upload Document
     Wait for file completion message when upload is complete.
   </p>
   <input type="submit" value=" Upload " name="upload">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= OrgDetails.getOrgId() %>">
+  <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>">
 </td>
 </tr>
 </form>

@@ -142,14 +142,10 @@ public final class AccountsProducts extends CFSModule {
       thisItem.buildVersionList(db);
       //TODO: replace the version 1.0 with a constant
       FileItemVersion svgVersion = thisItem.getVersion(Double.parseDouble("1.0"));
-      System.out.println("File item : " + thisItem);
-      System.out.println("svgVersion : " + svgVersion);
       String filePath = this.getPath(context, "accounts") + getDatePath(svgVersion.getModified()) + svgVersion.getFilename();
-      System.out.println("filePath : " + filePath);
       File svgFile = new File(filePath);
       SVGUtils svg = new SVGUtils(svgFile.toURL().toString());
       Vector textItems = svg.getTextElements();
-      System.out.println("textItems : " + textItems);
       context.getRequest().setAttribute("FileItem", thisItem);
       context.getRequest().setAttribute("textItems", textItems);
     } catch (Exception e) {
@@ -195,7 +191,6 @@ public final class AccountsProducts extends CFSModule {
       db = getConnection(context);
       thisOrg = addOrganization(context, db, id);
 
-      System.out.println("org id : " + thisOrg.getOrgId());
 
       // add a dummy order for this new customer product
       Order thisOrder = new Order();
@@ -207,18 +202,15 @@ public final class AccountsProducts extends CFSModule {
       thisOrder.setModifiedBy(this.getUserId(context));
       thisOrder.insert(db);
 
-      System.out.println("Order " + thisOrder.getId() + " Inserted ");
       // add a order product for the above order
       int productId = Integer.parseInt(strproductid);
 
-      System.out.println("product id : " + productId);
 
       OrderProduct thisProduct = new OrderProduct();
       thisProduct.setOrderId(thisOrder.getId());
       thisProduct.setProductId(productId);
       thisProduct.insert(db);
 
-      System.out.println("Product " + thisProduct.getId() + " Inserted ");
 
       // add a customer product record
       CustomerProduct customerProduct = new CustomerProduct();
@@ -229,7 +221,6 @@ public final class AccountsProducts extends CFSModule {
       customerProduct.setModifiedBy(this.getUserId(context));
       customerProduct.insert(db);
 
-      System.out.println("Customer Product " + customerProduct.getId() + " Inserted ");
 
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
         //Update the database with the resulting file
@@ -256,7 +247,6 @@ public final class AccountsProducts extends CFSModule {
           File svgFile = new File(newFileInfo.getLocalFile().getPath());
           File imageFile = new File(newFileInfo.getLocalFile().getPath() + "FS");
           File thumbnailFile = new File(newFileInfo.getLocalFile().getPath() + "TH");
-          System.out.println("path  : " + newFileInfo.getLocalFile().getPath());
           SVGUtils svg = new SVGUtils(svgFile.toURL().toString());
 
           svg.saveAsJPEG(imageFile);
@@ -266,7 +256,6 @@ public final class AccountsProducts extends CFSModule {
           thisItem.setVersion(1.1d);
           thisItem.setSize((int) imageFile.length());
           recordInserted = thisItem.insertVersion(db);
-          System.out.println("svg jpeg created successfully");
 
           svg.saveAsJPEG(imageFile, thumbnailFile, 100, 0);
           thisItem.setSubject("thumbnail");
@@ -275,10 +264,6 @@ public final class AccountsProducts extends CFSModule {
           thisItem.setVersion(1.2d);
           thisItem.setSize((int) thumbnailFile.length());
           recordInserted = thisItem.insertVersion(db);
-          System.out.println("svg jpeg thumbnail created successfully");
-          System.out.println("orgId : " + Integer.toString(thisOrg.getOrgId()));
-          System.out.println("cpid : " + Integer.toString(customerProduct.getId()));
-          System.out.println("fid : " + Integer.toString(thisItem.getId()));
           context.getRequest().setAttribute("orgId", Integer.toString(thisOrg.getOrgId()));
           context.getRequest().setAttribute("cpid", Integer.toString(customerProduct.getId()));
           context.getRequest().setAttribute("fid", Integer.toString(thisItem.getId()));

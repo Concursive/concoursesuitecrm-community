@@ -495,5 +495,21 @@ public class TicketLogList extends ArrayList {
       return value;
     }
   }
+
+
+  /**
+   *  Gets the comments attribute of the TicketLogList object
+   *
+   * @return                   The comments value
+   */
+  public String getComments() {
+    StringBuffer comments = new StringBuffer("");
+    Iterator iterator = (Iterator) this.iterator();
+    while (iterator.hasNext()) {
+      TicketLog log = (TicketLog) iterator.next();
+      comments.append(log.getEntryText() + " | ");
+    }
+    return comments.toString();
+  }
 }
 

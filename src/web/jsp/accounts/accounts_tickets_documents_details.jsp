@@ -30,7 +30,18 @@ Details
       <% String param2 = "id=" + TicketDetails.getId(); %>
       [ <dhv:container name="accountstickets" selected="documents" param="<%= param2 %>"/> ]
       <br><br>
-      <%= showError(request, "actionError") %>
+<%--TODO::START Document folder trails--%>
+<table border="0" cellpadding="4" cellspacing="0" width="100%">
+  <tr class="subtab">
+    <td>
+      <% String documentLink = "AccountTicketsDocuments.do?command=View&tId="+TicketDetails.getId(); %>
+      <zeroio:folderHierarchy module="AccountsTickets" link="<%= documentLink %>" showLastLink="true"/> >
+      <%= FileItem.getSubject() %>
+    </td>
+  </tr>
+</table>
+<%--TODO::END Document folder trails--%>
+<br />
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
         <tr>
           <th colspan="7">
@@ -58,7 +69,7 @@ Details
               <a href="TroubleTicketsDocuments.do?command=Download&tId=<%= TicketDetails.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>">Download</a>
             </td>
             <td width="100%">
-              <%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %>
+              <%= FileItem.getImageTag("-23") %><%= thisVersion.getClientFilename() %>
             </td>
             <td align="right" nowrap>
               <%= thisVersion.getRelativeSize() %> k&nbsp;

@@ -84,7 +84,7 @@ Modify Document
 </table>
   &nbsp;<br>
   <input type="submit" value=" Update " name="update">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View';">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">

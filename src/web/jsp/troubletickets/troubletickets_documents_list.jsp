@@ -3,17 +3,10 @@
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.troubletickets.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
 <jsp:useBean id="TicketDocumentListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
-<jsp:useBean id="FileItemList" class="com.zeroio.iteam.base.FileItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<%-- Initialize the drop-down menus --%>
-<%@ include file="../initPopupMenu.jsp" %>
 <%@ include file="troubletickets_documents_list_menu.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
-<script language="JavaScript" type="text/javascript">
-  <%-- Preload image rollovers for drop-down menu --%>
-  loadImages('select');
-</script>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -37,6 +30,23 @@ Documents
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
 		<td class="containerBack">
+      <%
+        String permission_doc_folders_add = "tickets-tickets-edit";
+        String permission_doc_files_upload = "tickets-tickets-edit";
+        String permission_doc_folders_edit = "tickets-tickets-edit";
+        String documentFolderAdd ="TroubleTicketsDocumentsFolders.do?command=Add&tId="+TicketDetails.getId()+"&column=subject";
+        String documentFileAdd = "TroubleTicketsDocuments.do?command=Add&tId="+TicketDetails.getId();
+        String documentFolderModify = "TroubleTicketsDocumentsFolders.do?command=Add&tId="+TicketDetails.getId();
+        String documentFolderList = "TroubleTicketsDocuments.do?command=View&tId="+TicketDetails.getId()+"&column=subject";
+        String documentFileDetails = "TroubleTicketsDocuments.do?command=Details&tId="+TicketDetails.getId();
+        String documentModule = "HelpDesk";
+        String specialID = ""+TicketDetails.getId();
+      %>
+      <%@ include file="../accounts/documents_list.jsp" %>&nbsp;
+    </td>
+  </tr>
+</table>
+<%--
     <dhv:permission name="tickets-tickets-edit"><a href="TroubleTicketsDocuments.do?command=Add&tId=<%= TicketDetails.getId() %>&folderId=<%= FileItemList.getFolderId() %>">Add a Document</a><br></dhv:permission>
     <center><%= TicketDocumentListInfo.getAlphabeticalPageLinks() %></center>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="TicketDocumentListInfo"/>
@@ -67,7 +77,7 @@ Documents
     %>      
         <tr class="row<%= rowid %>">
           <td width="10" valign="middle" align="center" nowrap>
-            <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+            <%-- Use the unique id for opening the menu, and toggling the graphics -- %>
             <a href="javascript:displayMenu('select<%= i %>','menuFile', '<%= TicketDetails.getId() %>','<%= thisFile.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuFile');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
           </td>
           <td valign="middle" width="100%">
@@ -105,3 +115,4 @@ Documents
     </td>
   </tr>
 </table>
+--%>

@@ -2,6 +2,7 @@
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
+<jsp:useBean id="folderId" class="java.lang.String"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript">
   function checkFileForm(form) {
@@ -98,7 +99,7 @@ Upload New Version
     Wait for file completion message when upload is complete.
   </p>
   <input type="submit" value=" Upload " name="upload">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= OrgDetails.getOrgId() %>">
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">

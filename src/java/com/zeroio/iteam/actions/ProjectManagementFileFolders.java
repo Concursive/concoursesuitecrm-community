@@ -297,7 +297,23 @@ public final class ProjectManagementFileFolders extends CFSModule {
       context.getRequest().setAttribute("Project", thisProject);
       //Load the current folder
       FileFolder thisFolder = new FileFolder(db, Integer.parseInt(itemId));
-      thisFolder.updateParentId(db, Integer.parseInt(newFolderId));
+      int folderId = Integer.parseInt(newFolderId);
+      if (folderId != 0 && folderId != -1) {
+        FileFolder newParent = new FileFolder(db, folderId);
+        FileFolderHierarchy thisHierarchy = new FileFolderHierarchy();
+        thisHierarchy.setLinkModuleId(Constants.PROJECTS_FILES);
+        thisHierarchy.setLinkItemId(thisProject.getId());
+        thisHierarchy.build(db, thisFolder.getId());
+        if (thisHierarchy.getHierarchy().hasFolder(Integer.parseInt(newFolderId))) {
+          thisFolder.buildSubFolders(db);
+          Iterator iterator = (Iterator) thisFolder.getSubFolders().iterator();
+          while (iterator.hasNext()) {
+            FileFolder childFolder = (FileFolder) iterator.next();
+            childFolder.updateParentId(db, thisFolder.getParentId());
+          }
+        }
+      }
+      thisFolder.updateParentId(db, folderId);
       return "PopupCloseOK";
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

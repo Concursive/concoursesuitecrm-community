@@ -47,7 +47,6 @@ public final class AccountOrders extends CFSModule {
       orgid = (String) context.getRequest().getAttribute("orgId");
     }
 
-    System.out.println("orgid : " + orgid);
     //find record permissions for portal users
     /*
      *  if (!isRecordAccessPermitted(context, Integer.parseInt(orgid))) {
@@ -66,7 +65,6 @@ public final class AccountOrders extends CFSModule {
       orderList.setOrgId(Integer.parseInt(orgid));
       //orderList.setBuildDetails(true);
       //orderList.setBuildTypes(false);
-      System.out.println("building order list");
       orderList.buildList(db);
       thisOrganization = new Organization(db, Integer.parseInt(orgid));
     } catch (Exception errorMessage) {

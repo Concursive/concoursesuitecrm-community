@@ -8,16 +8,15 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.aspcfs.utils.*;
+import com.zeroio.iteam.base.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.modules.accounts.base.OrganizationReport;
+import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.contacts.base.*;
 import java.io.*;
 import java.text.*;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.admin.base.UserList;
-import com.zeroio.iteam.base.FileItemList;
-import com.zeroio.iteam.base.FileItem;
 
 /**
  *  Description of the Class
@@ -48,7 +47,6 @@ public class TicketReport extends TicketList {
   protected boolean displayProblem = true;
   protected boolean displayLocation = true;
   protected boolean displaySourceName = true;
-  protected boolean displayContactName = true;
   protected boolean displaySeverity = true;
   protected boolean displayPriority = true;
   protected boolean displayCategory = true;
@@ -61,7 +59,13 @@ public class TicketReport extends TicketList {
   protected boolean displayModified = true;
   protected boolean displayModifiedBy = true;
   protected boolean displayAssignedTo = true;
+  protected boolean displayIssueNotes = true;
   protected boolean displayOrganization = true;
+  protected boolean displayEstimatedResolutionDate = true;
+  protected boolean displayResolutionDate = true;
+  protected boolean displayAssignmentDate = true;
+  protected boolean displayComment = true;
+  protected boolean displayContactName = true;
 
   protected OrganizationReport orgReportJoin = new OrganizationReport();
   protected boolean joinOrgs = false;
@@ -110,6 +114,156 @@ public class TicketReport extends TicketList {
    */
   public void setTdFormat(String tmp) {
     this.tdFormat = tmp;
+  }
+
+
+  /**
+   *  Sets the displayEstimatedResolutionDate attribute of the TicketReport object
+   *
+   * @param  tmp  The new displayEstimatedResolutionDate value
+   */
+  public void setDisplayEstimatedResolutionDate(boolean tmp) {
+    this.displayEstimatedResolutionDate = tmp;
+  }
+
+
+  /**
+   *  Sets the displayEstimatedResolutionDate attribute of the TicketReport object
+   *
+   * @param  tmp  The new displayEstimatedResolutionDate value
+   */
+  public void setDisplayEstimatedResolutionDate(String tmp) {
+    this.displayEstimatedResolutionDate = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the displayResolutionDate attribute of the TicketReport object
+   *
+   * @param  tmp  The new displayResolutionDate value
+   */
+  public void setDisplayResolutionDate(boolean tmp) {
+    this.displayResolutionDate = tmp;
+  }
+
+
+  /**
+   *  Sets the displayResolutionDate attribute of the TicketReport object
+   *
+   * @param  tmp  The new displayResolutionDate value
+   */
+  public void setDisplayResolutionDate(String tmp) {
+    this.displayResolutionDate = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the displayAssignmentDate attribute of the TicketReport object
+   *
+   * @param  tmp  The new displayAssignmentDate value
+   */
+  public void setDisplayAssignmentDate(boolean tmp) {
+    this.displayAssignmentDate = tmp;
+  }
+
+
+  /**
+   *  Sets the displayAssignmentDate attribute of the TicketReport object
+   *
+   * @param  tmp  The new displayAssignmentDate value
+   */
+  public void setDisplayAssignmentDate(String tmp) {
+    this.displayAssignmentDate = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the displayComment attribute of the TicketReport object
+   *
+   * @param  tmp  The new displayComment value
+   */
+  public void setDisplayComment(boolean tmp) {
+    this.displayComment = tmp;
+  }
+
+
+  /**
+   *  Sets the displayComment attribute of the TicketReport object
+   *
+   * @param  tmp  The new displayComment value
+   */
+  public void setDisplayComment(String tmp) {
+    this.displayComment = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the displayIssueNotes attribute of the TicketReport object
+   *
+   * @param  tmp  The new displayIssueNotes value
+   */
+  public void setDisplayIssueNotes(boolean tmp) {
+    this.displayIssueNotes = tmp;
+  }
+
+
+  /**
+   *  Sets the displayIssueNotes attribute of the TicketReport object
+   *
+   * @param  tmp  The new displayIssueNotes value
+   */
+  public void setDisplayIssueNotes(String tmp) {
+    this.displayIssueNotes = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the displayIssueNotes attribute of the TicketReport object
+   *
+   * @return    The displayIssueNotes value
+   */
+  public boolean getDisplayIssueNotes() {
+    return displayIssueNotes;
+  }
+
+
+  /**
+   *  Gets the displayEstimatedResolutionDate attribute of the TicketReport object
+   *
+   * @return    The displayEstimatedResolutionDate value
+   */
+  public boolean getDisplayEstimatedResolutionDate() {
+    return displayEstimatedResolutionDate;
+  }
+
+
+  /**
+   *  Gets the displayResolutionDate attribute of the TicketReport object
+   *
+   * @return    The displayResolutionDate value
+   */
+  public boolean getDisplayResolutionDate() {
+    return displayResolutionDate;
+  }
+
+
+  /**
+   *  Gets the displayAssignmentDate attribute of the TicketReport object
+   *
+   * @return    The displayAssignmentDate value
+   */
+  public boolean getDisplayAssignmentDate() {
+    return displayAssignmentDate;
+  }
+
+
+  /**
+   *  Gets the displayComment attribute of the TicketReport object
+   *
+   * @return    The displayComment value
+   */
+  public boolean getDisplayComment() {
+    return displayComment;
   }
 
 
@@ -272,7 +426,15 @@ public class TicketReport extends TicketList {
     return displayProblem;
   }
 
-  public boolean getDisplayLocation() { return displayLocation; }
+
+  /**
+   *  Gets the displayLocation attribute of the TicketReport object
+   *
+   * @return    The displayLocation value
+   */
+  public boolean getDisplayLocation() {
+    return displayLocation;
+  }
 
 
   /**
@@ -424,7 +586,16 @@ public class TicketReport extends TicketList {
     this.displayProblem = tmp;
   }
 
-  public void setDisplayLocation(boolean tmp) { this.displayLocation = tmp; }
+
+  /**
+   *  Sets the displayLocation attribute of the TicketReport object
+   *
+   * @param  tmp  The new displayLocation value
+   */
+  public void setDisplayLocation(boolean tmp) {
+    this.displayLocation = tmp;
+  }
+
 
   /**
    *  Sets the displaySourceName attribute of the TicketReport object
@@ -756,6 +927,21 @@ public class TicketReport extends TicketList {
     if (!(criteria.contains("assignedTo"))) {
       displayAssignedTo = false;
     }
+    if (!(criteria.contains("contact"))) {
+      displayContactName = false;
+    }
+    if (!(criteria.contains("comment"))) {
+      displayComment = false;
+    }
+    if (!(criteria.contains("assignmentDate"))) {
+      displayAssignmentDate = false;
+    }
+    if (!(criteria.contains("estimatedResolutionDate"))) {
+      displayEstimatedResolutionDate = false;
+    }
+    if (!(criteria.contains("resolutionDate"))) {
+      displayResolutionDate = false;
+    }
     if (!(criteria.contains("organization"))) {
       displayOrganization = false;
     }
@@ -835,7 +1021,6 @@ public class TicketReport extends TicketList {
       if (param.equals("source")) {
         rep.addColumn("Source");
       }
-      //if (displayContactName) { rep.addColumn("Contact Name"); }
       if (param.equals("severity")) {
         rep.addColumn("Severity");
       }
@@ -869,6 +1054,21 @@ public class TicketReport extends TicketList {
       }
       if (param.equals("assignedTo")) {
         rep.addColumn("Resource Assigned");
+      }
+      if (param.equals("contact")) {
+        rep.addColumn("Contact Name");
+      }
+      if (param.equals("comment")) {
+        rep.addColumn("Issue Notes");
+      }
+      if (param.equals("assignmentDate")) {
+        rep.addColumn("Assignment Date");
+      }
+      if (param.equals("estimatedResolutionDate")) {
+        rep.addColumn("Estimated Resolution Date");
+      }
+      if (param.equals("resolutionDate")) {
+        rep.addColumn("Resolution Date");
       }
       if (param.equals("organization")) {
         rep.addColumn("Organization");
@@ -934,6 +1134,21 @@ public class TicketReport extends TicketList {
       if (param.equals("assignedTo")) {
         passedReport.addColumn("Resource Assigned");
       }
+      if (param.equals("contact")) {
+        passedReport.addColumn("Contact Name");
+      }
+      if (param.equals("comment")) {
+        passedReport.addColumn("Issue Notes");
+      }
+      if (param.equals("assignmentDate")) {
+        passedReport.addColumn("Assignment Date");
+      }
+      if (param.equals("estimatedResolutionDate")) {
+        passedReport.addColumn("Estimated Resolution Date");
+      }
+      if (param.equals("resolutionDate")) {
+        passedReport.addColumn("Resolution Date");
+      }
       if (param.equals("organization")) {
         passedReport.addColumn("Organization");
       }
@@ -956,6 +1171,7 @@ public class TicketReport extends TicketList {
     Iterator x = this.iterator();
     while (x.hasNext()) {
       Ticket thisTic = (Ticket) x.next();
+      thisTic.buildHistory(db);
       thisTic.buildContactInformation(db);
       ReportRow thisRow = new ReportRow();
 
@@ -1027,6 +1243,21 @@ public class TicketReport extends TicketList {
             } else {
               thisRow.addCell("Unassigned");
             }
+          }
+          if (param.equals("contact")) {
+            thisRow.addCell(thisTic.getThisContact().getNameLastFirst());
+          }
+          if (param.equals("comment")) {
+            thisRow.addCell(thisTic.getHistory().getComments());
+          }
+          if (param.equals("assignmentDate")) {
+            thisRow.addCell(thisTic.getAssignedDateString());
+          }
+          if (param.equals("estimatedResolutionDate")) {
+            thisRow.addCell(thisTic.getEstimatedResolutionDateString());
+          }
+          if (param.equals("resolutionDate")) {
+            thisRow.addCell(thisTic.getResolutionDateString());
           }
           if (param.equals("organization")) {
             thisRow.addCell(thisTic.getCompanyName());

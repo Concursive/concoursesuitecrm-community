@@ -60,7 +60,7 @@ Opportunity Details
       <strong><%= toHtml(OpportunityHeader.getDescription()) %></strong>
       <% FileItem thisFile = new FileItem(); %>
       <dhv:evaluate if="<%= OpportunityHeader.hasFiles() %>">
-        <%= thisFile.getImageTag() %>
+        <%= thisFile.getImageTag("-23") %>
       </dhv:evaluate>
       <br>
       <dhv:permission name="accounts-accounts-contacts-opportunities-add">

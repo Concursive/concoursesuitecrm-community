@@ -44,16 +44,19 @@
 %>    
   <tr class="row<%= rowid %>">
     <td valign="top">
+      <% for(int j=1;j<thisFolder.getLevel();j++){ %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%}%>
       <img border="0" src="images/treespace.gif" align="absmiddle" height="16" width="19">
       <img alt="" src="images/tree7o.gif" border="0" align="absmiddle" height="16" width="19"/>
       <img border="0" src="images/icons/stock_open-16-19.gif" align="absmiddle">
-    <dhv:evaluate if="<%= FileFolder.getParentId() != thisFolder.getId() %>">  
+    <% if(FileFolder.getParentId() != thisFolder.getId() && (FileFolder.getId() != thisFolder.getId())){  %>
       <a href="ProjectManagementFileFolders.do?command=SaveMove&pid=<%= Project.getId() %>&id=<%= FileFolder.getId() %>&popup=true&folderId=<%= thisFolder.getId() %>&return=ProjectFiles&param=<%= Project.getId() %>&param2=<%= FileFolder.getParentId() %>"><%= toHtml(thisFolder.getSubject()) %></a>
-    </dhv:evaluate>
-    <dhv:evaluate if="<%= FileFolder.getParentId() == thisFolder.getId() %>">
+    <% } else if(FileFolder.getId() == thisFolder.getId()) { %>
+        <%= toHtml(thisFolder.getSubject()) %>
+        (selected folder)
+    <% } else {%>
       <%= toHtml(thisFolder.getSubject()) %>
       (current folder)
-    </dhv:evaluate>
+    <% } %>
     </td>
   </tr>
 <%
