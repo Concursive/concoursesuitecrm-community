@@ -1559,7 +1559,7 @@ public void setServerName(String serverName) {
     pst.setString(++i, thisMessageReplyTo);
     pst.setString(++i, thisMessageSubject);
     //pst.setString(++i, thisMessageText);
-    pst.setString(++i, toHtml(template.getParsedText()));
+    pst.setString(++i, template.getParsedText());
     pst.setTimestamp(++i, modified);
     resultCount = pst.executeUpdate();
     pst.close();
