@@ -91,7 +91,7 @@
       Remember to make backups of your data.<br>
       <br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="#">File Backup Tutorial</a><br>
+      <a href="#">File Backup Strategy</a><br>
       &nbsp;
     </td>
   </tr>
