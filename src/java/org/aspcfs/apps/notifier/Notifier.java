@@ -103,7 +103,6 @@ public class Notifier extends ReportBuilder {
     this.baseName = (String) this.config.get("GATEKEEPER.URL");
     this.dbUser = (String) this.config.get("GATEKEEPER.USER");
     this.dbPass = (String) this.config.get("GATEKEEPER.PASSWORD");
-
     try {
       Class.forName((String) this.config.get("GATEKEEPER.DRIVER"));
       //Build list of sites to process
@@ -119,8 +118,8 @@ public class Notifier extends ReportBuilder {
         Site thisSite = (Site) i.next();
         Class.forName(thisSite.getDatabaseDriver());
         Connection db = DriverManager.getConnection(
-            thisSite.getDatabaseHost(),
-            thisSite.getDatabaseName(),
+            thisSite.getDatabaseUrl(),
+            thisSite.getDatabaseUsername(),
             thisSite.getDatabasePassword());
         this.baseName = thisSite.getSiteCode();
         //TODO: The intent is to move these all out as separate tasks and
