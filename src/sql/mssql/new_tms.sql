@@ -92,7 +92,12 @@ CREATE TABLE ticket (
   scode INT REFERENCES ticket_severity(code),
   critical DATETIME,
   notified DATETIME,
-  custom_data TEXT
+  custom_data TEXT,
+  location VARCHAR(256),
+  assigned_date DATETIME,
+  est_resolution_date DATETIME,
+  resolution_date DATETIME,
+  cause TEXT
 );
 
 CREATE INDEX "ticket_cidx" ON "ticket" ("assigned_to", "closed");

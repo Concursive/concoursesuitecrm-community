@@ -37,7 +37,7 @@ CREATE TABLE task (
   enteredby INT NOT NULL REFERENCES access(user_id),
   priority INTEGER NOT NULL REFERENCES lookup_task_priority,
   description VARCHAR(80),
-  duedate DATE,
+  duedate TIMESTAMP(3),
   reminderid INT,
   notes TEXT,
   sharing INT NOT NULL,

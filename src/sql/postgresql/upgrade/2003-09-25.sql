@@ -14,6 +14,14 @@ ALTER TABLE call_log ADD COLUMN alertdate TIMESTAMP(3);
 UPDATE call_log set alertdate = date_bak;
 ALTER TABLE call_log DROP COLUMN date_bak;
 
+/* call followup_date */
+ALTER TABLE call_log ADD COLUMN date_bak DATE;
+UPDATE call_log set date_bak = followup_date;
+ALTER TABLE call_log DROP COLUMN followup_date;
+ALTER TABLE call_log ADD COLUMN followup_date TIMESTAMP(3);
+UPDATE call_log set followup_date = date_bak;
+ALTER TABLE call_log DROP COLUMN date_bak;
+
 /* task duedate */
 ALTER TABLE task ADD COLUMN date_bak DATE;
 UPDATE task set date_bak = duedate;

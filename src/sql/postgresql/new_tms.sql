@@ -91,7 +91,12 @@ CREATE TABLE ticket (
   scode INT REFERENCES ticket_severity(code),
   critical TIMESTAMP,
   notified TIMESTAMP,
-  custom_data TEXT
+  custom_data TEXT,
+  location VARCHAR(256),
+  assigned_date TIMESTAMP(3),
+  est_resolution_date TIMESTAMP(3),
+  resolution_date TIMESTAMP(3),
+  cause TEXT
 );
 
 CREATE INDEX "ticket_cidx" ON "ticket" USING btree ("assigned_to", "closed");
