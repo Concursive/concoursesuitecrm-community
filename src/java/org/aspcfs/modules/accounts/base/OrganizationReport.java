@@ -484,17 +484,18 @@ public class OrganizationReport extends OrganizationList {
       thisCat.buildResources(db);
 
       Iterator grp = thisCat.iterator();
-      thisGroup = new CustomFieldGroup();
+      
+      while(grp.hasNext()){
       thisGroup = (CustomFieldGroup) grp.next();
       thisGroup.buildResources(db);
 
       Iterator fields = thisGroup.iterator();
-
       if (fields.hasNext()) {
         while (fields.hasNext()) {
           CustomField thisField = (CustomField) fields.next();
           rep.addColumn(thisField.getNameHtml());
         }
+      }
       }
     }
 
@@ -524,7 +525,6 @@ public class OrganizationReport extends OrganizationList {
             CustomFieldRecord thisRec = (CustomFieldRecord) rec.next();
             Iterator grp = thisCat.iterator();
             while (grp.hasNext()) {
-              thisGroup = new CustomFieldGroup();
               thisGroup = (CustomFieldGroup) grp.next();
               thisGroup.buildResources(db);
 
@@ -571,12 +571,10 @@ public class OrganizationReport extends OrganizationList {
 
           ReportRow thisRow = new ReportRow();
           addDataRow(thisRow, thisOrg);
-          //thisRow.addCell(thisCat.getName());
 
           CustomFieldRecord thisRec = (CustomFieldRecord) rec.next();
           Iterator grp = thisCat.iterator();
           while (grp.hasNext()) {
-            thisGroup = new CustomFieldGroup();
             thisGroup = (CustomFieldGroup) grp.next();
             thisGroup.buildResources(db);
 
