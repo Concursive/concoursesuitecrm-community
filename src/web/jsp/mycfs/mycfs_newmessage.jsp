@@ -3,9 +3,9 @@
 <jsp:useBean id="returnUrl" class="java.lang.String" scope="request"/>
 <jsp:useBean id="sendUrl" class="java.lang.String" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<script language="JavaScript" type="text/javascript" src="/javascript/popContacts.js"></script>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <br>
 <script type="text/javascript">
 function sendMessage() {

@@ -4,11 +4,14 @@
 <jsp:useBean id="Locale" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="TimeZone" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form action='/MyCFSSettings.do?command=UpdateSettings' method='post'>
-
+<form action='MyCFSSettings.do?command=UpdateSettings' method='post'>
+<a href="MyCFS.do?command=Home">My Home Page</a> > 
+<a href="MyCFS.do?command=MyProfile">My Settings</a> >
+Locale<br>
+<hr color="#BFBFBB" noshade>
 <dhv:permission name="myhomepage-profile-settings-edit">
 <input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
 <input type="reset" value="Reset">
 </dhv:permission>
 
@@ -54,7 +57,7 @@
 <dhv:permission name="myhomepage-profile-settings-edit">
 <br>
 <input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
 <input type="reset" value="Reset">
 </form>
 </dhv:permission>

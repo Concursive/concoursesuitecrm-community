@@ -2,13 +2,15 @@
 <jsp:useBean id="NoteDetails" class="com.darkhorseventures.cfsbase.CFSNote" scope="request"/>
 <jsp:useBean id="InboxInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <%@ include file="initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<script language="JavaScript" type="text/javascript" src="/javascript/popURL.js"></script>
-<form name="details" action="/MyCFSInbox.do" method="post">
-<a href="/MyCFSInbox.do?command=Inbox">Back to Inbox</a>
-<p>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
+<form name="details" action="MyCFSInbox.do" method="post">
+<a href="MyCFS.do?command=Home">My Home Page</a> >
+<a href="MyCFSInbox.do?command=Inbox">My Mailbox</a> >
+Message Details<br>
+<hr color="#BFBFBB" noshade>
 <input type=button name="action" value="Delete" onClick="document.details.command.value='CFSNoteDelete';document.details.submit()">
-<input type=button name="action" value="Forward" onClick="javascript:window.location.href='/MyCFSInbox.do?command=ForwardMessage&popup=true&forwardType=9&id=<%=NoteDetails.getId()%>&return=/MyCFSInbox.do?command=Inbox&sendUrl=/MyCFSInbox.do?command=SendMessage'">
+<input type=button name="action" value="Forward" onClick="javascript:window.location.href='MyCFSInbox.do?command=ForwardMessage&popup=true&forwardType=9&id=<%=NoteDetails.getId()%>&return=/MyCFSInbox.do?command=Inbox&sendUrl=/MyCFSInbox.do?command=SendMessage'">
   <% if(!InboxInfo.getListView().equalsIgnoreCase("sent")){%>
 <input type=button name="action" value="<%= (NoteDetails.getStatus() != 2?"Archive":"Send to Inbox") %>" onClick="document.details.command.value='CFSNoteTrash';document.details.submit()">
 <%}%>
@@ -50,7 +52,7 @@
 <br>
 <input type=hidden name="command" value="">
 <input type=button name="action" value="Delete" onClick="document.details.command.value='CFSNoteDelete';document.details.submit()">
-<input type=button name="action" value="Forward" onClick="javascript:window.location.href='/MyCFSInbox.do?command=ForwardMessage&popup=true&forwardType=9&id=<%=NoteDetails.getId()%>&return=/MyCFSInbox.do?command=Inbox'">
+<input type=button name="action" value="Forward" onClick="javascript:window.location.href='MyCFSInbox.do?command=ForwardMessage&popup=true&forwardType=9&id=<%=NoteDetails.getId()%>&return=/MyCFSInbox.do?command=Inbox'">
   <% if(!InboxInfo.getListView().equalsIgnoreCase("sent")){%>
 <input type=button name="action" value="<%= (NoteDetails.getStatus() != 2?"Archive":"Send to Inbox") %>" onClick="document.details.command.value='CFSNoteTrash';document.details.submit()">
 <%}%>

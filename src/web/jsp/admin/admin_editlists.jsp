@@ -15,7 +15,6 @@
 <jsp:useBean id="PermissionCategory" class="com.darkhorseventures.cfsbase.PermissionCategory" scope="request"/>
 
 <a href="Admin.do">Setup</a> >
-<a href="Admin.do?command=Manage">System Management</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=PermissionCategory.getId()%>">Configuration Options</a> >
 Lookup Lists<br> 

@@ -16,13 +16,15 @@
     popUp = true;
   }%>
 <dhv:evaluate exp="<%= !popUp %>">
-<a href="MyCFS.do?command=Home">My Home Page</a> > <a href="MyTasks.do?command=ListTasks">My Tasks</a> >
+<a href="MyCFS.do?command=Home">My Home Page</a> > 
+<a href="MyTasks.do?command=ListTasks">My Tasks</a> >
 <%= Task.getId()==-1?"Add":"Update" %> a Task <br>
-  <hr color="#BFBFBB" noshade>
+<hr color="#BFBFBB" noshade>
 </dhv:evaluate>
-<% if (request.getAttribute("actionError") != null) { %>
+<input type="submit" value="<%= Task.getId()==-1?"Save":"Update" %>">
+<input type="hidden" name="return" value="<%= request.getParameter("return") %>">
+<input type="button" value="Cancel" onClick="<%=popUp?"javascript:window.close();":"javascript:window.location.href='MyTasks.do?command=ListTasks';"%>"><br>
 <%= showError(request, "actionError") %>
-<%}%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>

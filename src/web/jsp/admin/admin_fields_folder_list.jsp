@@ -4,9 +4,8 @@
 <jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="ModId" class="java.lang.String" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form name="details" action="/AdminFieldsFolder.do?command=ListFolders" method="post">
+<form name="details" action="AdminFieldsFolder.do?command=ListFolders" method="post">
 <a href="Admin.do">Setup</a> >
-<a href="Admin.do?command=Manage">System Management</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>">Configuration Options</a> >
 Custom Folders<br>

@@ -3,17 +3,16 @@
 <%@ include file="initPage.jsp" %>
 <jsp:useBean id="Role" class="com.darkhorseventures.cfsbase.Role" scope="request"/>
 <jsp:useBean id="PermissionList" class="com.darkhorseventures.cfsbase.PermissionList" scope="request"/>
-<a href="/Admin.do">Setup</a> >
-<a href="/Roles.do">View Roles</a> >
+<a href="Admin.do">Setup</a> >
+<a href="Roles.do">View Roles</a> >
 Update Role
 <hr color="#BFBFBB" noshade>
-<a href="/Roles.do?command=ListRoles">Back to list</a><p>
 <form action='Roles.do?command=UpdateRole&auto-populate=true' method='post'>
 <input type="hidden" name="id" value="<%= Role.getId() %>">
 <input type="hidden" name="modified" value="<%= Role.getModified() %>">
 <dhv:permission name="admin-roles-edit">
   <input type="submit" value="Update" name="Save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Roles.do?command=ListRoles'">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
   <input type="reset" value="Reset">
 </dhv:permission>
 <br>
@@ -125,7 +124,7 @@ Update Role
 <dhv:permission name="admin-roles-edit">
   <br>
   <input type="submit" value="Update" name="Save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='/Roles.do?command=ListRoles'">
+  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
   <input type="reset" value="Reset">
 </dhv:permission>
 </form>

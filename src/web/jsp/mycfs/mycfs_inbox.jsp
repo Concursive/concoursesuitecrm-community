@@ -6,6 +6,9 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/submit.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/popURL.js"></SCRIPT>
+<a href="MyCFS.do?command=Home">My Home Page</a> >
+My Mailbox<br>
+<hr color="#BFBFBB" noshade>
 <a href='javascript:window.location.href="MyCFSInbox.do?command=NewMessage&sendUrl="+escape("/MyCFSInbox.do?command=SendMessage")+"&return="+escape("MyCFSInbox.do?command=Inbox");'>New Message</a>
 <br>
 <center><%= InboxInfo.getAlphabeticalPageLinks() %></center>

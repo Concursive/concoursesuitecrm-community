@@ -1,68 +1,61 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 Setup
 <hr color="#BFBFBB" noshade>
-Customize and configure CFS with the following options:<br>
+Manage CFS by reviewing system usage, configuring specific modules, and configuring system parameters.<br>
 &nbsp;<br>
 <dhv:permission name="admin-reassign-view">
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
       <td>
-        <strong><a href="/Users.do?command=Reassign">Re-Assignments</a></strong>
+        <strong>Usage</strong>
       </td>
     </tr>
     <tr class="containerBody">
       <td>
-        Quickly move data associated with one user to another user.
+        <ul>
+          <li><a href="Admin.do?command=Usage">Check system resources</a></li>
+        </ul>
       </td>
     </tr>
   </table>
   &nbsp;
 </dhv:permission>
   
-<dhv:permission name="admin-users-view">
+<dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
       <td>
-        <strong><a href="/Users.do">Users</a></strong>
+        <strong>Configuration</strong>
       </td>
     </tr>
     <tr class="containerBody">
       <td>
-        Add and modify users, and define user hierarchy.
+        <ul>
+          <dhv:permission name="admin-users-view"><li><a href="Users.do?command=ListUsers">Modify Users</a></li></dhv:permission>
+          <dhv:permission name="admin-roles-view"><li><a href="Roles.do?command=ListRoles">Modify Roles</a></li></dhv:permission>
+          <dhv:permission name="admin-sysconfig-view"><li><a href="Admin.do?command=Config">Configure Modules</a></li></dhv:permission>
+        </ul>
       </td>
     </tr>
   </table>
   &nbsp;
 </dhv:permission>
   
-<dhv:permission name="admin-roles-view">
+<dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
       <td>
-        <strong><a href="/Roles.do">Roles</a></strong>
+        <strong>Global Parameters</strong>
       </td>
     </tr>
     <tr class="containerBody">
       <td>
-        Add and modify roles, and define role permissions.
+        <ul>
+          <li><a href="#">Configure global parameters</a></li>
+        </ul>
       </td>
     </tr>
   </table>
   &nbsp;
 </dhv:permission>
 
-<dhv:permission name="admin-sysconfig-view">
-  <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-    <tr class="title">
-      <td>
-        <strong><a href="/Admin.do?command=Manage">System Management</a></strong>
-      </td>
-    </tr>
-    <tr class="containerBody">
-      <td>
-        Review and configure CFS to meet the specific needs of your organization.
-      </td>
-    </tr>
-  </table>
-  &nbsp;
-</dhv:permission>

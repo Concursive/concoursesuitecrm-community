@@ -3,7 +3,6 @@
 <%@ include file="initPage.jsp" %>
 <jsp:useBean id="PermissionCategory" class="com.darkhorseventures.cfsbase.PermissionCategory" scope="request"/>
 <a href="Admin.do">Setup</a> > 
-<a href="Admin.do?command=Manage">System Management</a> >
 <a href="Admin.do?command=Config">Configure Modules</a> >
 Configuration Options<br>
 <hr color="#BFBFBB" noshade>
@@ -17,7 +16,7 @@ Configuration Options<br>
   <% if (PermissionCategory.getLookups()) { %>
   <dhv:permission name="admin-sysconfig-lists-view">
   <tr>
-    <td><a href="/Admin.do?command=EditLists&moduleId=<%=PermissionCategory.getId()%>">Lookup Lists</a></td>
+    <td><a href="Admin.do?command=EditLists&moduleId=<%=PermissionCategory.getId()%>">Lookup Lists</a></td>
   </tr>
   </dhv:permission>
   <%}%>
@@ -25,7 +24,7 @@ Configuration Options<br>
   <% if (PermissionCategory.getFolders()) { %>
   <dhv:permission name="admin-sysconfig-folders-view">
   <tr>
-    <td><a href="/AdminFieldsFolder.do?modId=<%=PermissionCategory.getId()%>">Custom Folders &amp; Fields</a></td>
+    <td><a href="AdminFieldsFolder.do?modId=<%=PermissionCategory.getId()%>">Custom Folders &amp; Fields</a></td>
   </tr>
   </dhv:permission>
   <%}%>

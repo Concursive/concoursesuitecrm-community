@@ -4,8 +4,7 @@
 <jsp:useBean id="usageList2" class="java.util.ArrayList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <a href="Admin.do">Setup</a> > 
-<a href="Admin.do?command=Manage">System Management</a> >
-Review Usage<br>
+Usage<br>
 <hr color="#BFBFBB" noshade>
 Current Usage and Billing Usage Information<br>
 &nbsp;<br>

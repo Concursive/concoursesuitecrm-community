@@ -3,7 +3,6 @@
 <%@ include file="initPage.jsp" %>
 <jsp:useBean id="PermissionCategoryList" class="com.darkhorseventures.cfsbase.PermissionCategoryList" scope="request"/>
 <a href="Admin.do">Setup</a> > 
-<a href="Admin.do?command=Manage">System Management</a> >
 Configure Modules<br>
 <hr color="#BFBFBB" noshade>
 Setup CFS to meet the specific needs of your organization, including configuration of lookup lists and custom fields.  Choose a CFS module to proceed.<br>
@@ -23,7 +22,7 @@ Setup CFS to meet the specific needs of your organization, including configurati
     <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr class="title">
     <td>
-    <strong><a href="/Admin.do?command=ConfigDetails&moduleId=<%=thisPermissionCat.getId()%>"><%=thisPermissionCat.getCategory()%></a></strong>
+    <strong><a href="Admin.do?command=ConfigDetails&moduleId=<%=thisPermissionCat.getId()%>"><%=thisPermissionCat.getCategory()%></a></strong>
     </td>
     </tr>
     <tr class="containerBody">

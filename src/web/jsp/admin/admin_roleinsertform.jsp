@@ -4,8 +4,8 @@
 <jsp:useBean id="Role" class="com.darkhorseventures.cfsbase.Role" scope="request"/>
 <jsp:useBean id="PermissionList" class="com.darkhorseventures.cfsbase.PermissionList" scope="request"/>
 <body onLoad="javascript:document.forms[0].role.focus();">
-<form action='/Roles.do?command=InsertRole&auto-populate=true' method='post'>
-<a href="/Admin.do">Setup</a> >
+<form action='Roles.do?command=InsertRole&auto-populate=true' method='post'>
+<a href="Admin.do">Setup</a> >
 Add Role<br>
 <hr color="#BFBFBB" noshade>
 <input type="submit" value="Add" name="Save">

@@ -9,7 +9,7 @@
 <jsp:useBean id="StateSelect" class="com.darkhorseventures.webutils.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="com.darkhorseventures.webutils.CountrySelect" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkPhone.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -39,16 +39,19 @@
       }
     }
 </script>
-
-<form action="/MyCFSProfile.do?command=UpdateProfile&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<form action="MyCFSProfile.do?command=UpdateProfile&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<a href="MyCFS.do?command=Home">My Home Page</a> > 
+<a href="MyCFS.do?command=MyProfile">My Settings</a> >
+Personal Information<br>
+<hr color="#BFBFBB" noshade>
 <dhv:permission name="myhomepage-profile-personal-edit">
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 </dhv:permission>
 
 <dhv:permission name="myhomepage-profile-personal-edit" none="true">
-<a href="/MyCFS.do?command=MyProfile">Back to My Profile</a>
+<a href="MyCFS.do?command=MyProfile">Back to My Profile</a>
 </dhv:permission>
 
 <br>
@@ -296,7 +299,7 @@
 <dhv:permission name="myhomepage-profile-personal-edit">
 <br>
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile';this.form.dosubmit.value='false';">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile';this.form.dosubmit.value='false';">
 <input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 </dhv:permission>

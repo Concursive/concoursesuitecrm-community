@@ -2,7 +2,7 @@
 <jsp:useBean id="SelectedList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="moduleId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="SubTitle" class="java.lang.String" scope="request"/>
-<script language="JavaScript" type="text/javascript" src="/javascript/editListForm.js"></script>
+<script language="JavaScript" type="text/javascript" src="javascript/editListForm.js"></script>
 <script language="JavaScript" type="text/javascript">
   function doCheck() {
     if (document.modifyList.dosubmit.value == "false") {
@@ -16,7 +16,6 @@
 </script>
 <form name="modifyList" method="post" action="Admin.do?command=UpdateList" onSubmit="return doCheck();">
 <a href="Admin.do">Setup</a> >
-<a href="Admin.do?command=Manage">System Management</a> >
 <a href="Admin.do?command=Config">System Configuration</a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=moduleId%>">Configuration Options</a> >
 <a href="Admin.do?command=EditLists&moduleId=<%=moduleId%>">Lookup Lists</a> > 

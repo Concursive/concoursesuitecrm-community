@@ -4,16 +4,19 @@
 <jsp:useBean id="EmployeeBean" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <body onLoad="javascript:document.forms[0].password.focus();">
-<form action="/MyCFSPassword.do?command=UpdatePassword&auto-populate=true" method="post">
-
+<form action="MyCFSPassword.do?command=UpdatePassword&auto-populate=true" method="post">
+<a href="MyCFS.do?command=Home">My Home Page</a> > 
+<a href="MyCFS.do?command=MyProfile">My Settings</a> >
+Password<br>
+<hr color="#BFBFBB" noshade>
 <dhv:permission name="myhomepage-profile-password-edit">
 <input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
 <input type="reset" value="Reset">
 </dhv:permission>
 
 <dhv:permission name="myhomepage-profile-password-edit" none="true">
-<a href="/MyCFS.do?command=MyProfile">Back to My Profile</a>
+<a href="MyCFS.do?command=MyProfile">Back to My Profile</a>
 </dhv:permission>
 
 <br>
@@ -33,7 +36,7 @@
 <br>
 <input type=hidden value="<%=User.getId()%>" name="id">
 <input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/MyCFS.do?command=MyProfile'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
 <input type="reset" value="Reset">
 </dhv:permission>
 
