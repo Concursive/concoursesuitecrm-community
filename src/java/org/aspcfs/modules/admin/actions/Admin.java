@@ -358,7 +358,14 @@ public final class Admin extends CFSModule {
       while (k.hasNext()) {
         LookupElement thisElement = (LookupElement) k.next();
         if (thisElement.getCode() == 0) {
-          thisElement.insertElement(db, tblName);
+          int thisCode = -1;
+          if ((thisCode = thisElement.isDisabled(db, tblName)) != -1){
+            thisElement.setCode(thisCode);
+            thisElement.enableElement(db, tblName);
+            thisElement.setNewOrder(db, tblName);
+          }else{
+            thisElement.insertElement(db, tblName);
+          }
         } else {
           thisElement.setNewOrder(db, tblName);
         }
