@@ -629,19 +629,10 @@ public final class Admin extends CFSModule {
    */
   protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
     int moduleId = Integer.parseInt(context.getRequest().getParameter("moduleId"));
-    LookupListList thisList = new LookupListList(db, moduleId);
-    if (moduleId == PermissionCategory.PERMISSION_CAT_ACCOUNTS || moduleId == PermissionCategory.PERMISSION_CAT_CONTACTS) {
-      ContactTypeList contactTypeList = new ContactTypeList();
-      contactTypeList.setIncludeDefinedByUser(this.getUserId(context));
-      contactTypeList.setCategory((moduleId == PermissionCategory.PERMISSION_CAT_ACCOUNTS ? ContactType.ACCOUNT : ContactType.GENERAL));
-      contactTypeList.setShowPersonal(true);
-      contactTypeList.buildList(db);
-      int category = (moduleId == PermissionCategory.PERMISSION_CAT_ACCOUNTS ? PermissionCategory.LOOKUP_ACCOUNTS_CONTACTS_TYPE : PermissionCategory.LOOKUP_CONTACTS_TYPE);
-      LookupListElement thisElement = thisList.getElement(category);
-      if (thisElement != null) {
-        thisElement.setLookupList(contactTypeList.getLookupList("list", 0));
-      }
-    }
+    LookupListList thisList = new LookupListList();
+    thisList.setUserId(this.getUserId(context));
+    thisList.setModuleId(moduleId);
+    thisList.buildList(db);
     context.getRequest().setAttribute("LookupLists", thisList);
   }
 }

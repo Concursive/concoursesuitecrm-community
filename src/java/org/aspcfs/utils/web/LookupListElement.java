@@ -5,6 +5,7 @@ package org.aspcfs.utils.web;
 import java.sql.*;
 import java.util.*;
 import org.aspcfs.utils.*;
+import org.aspcfs.modules.contacts.base.ContactTypeList;
 
 /**
  *  Represents an item from a LookupListLookup table.
@@ -195,6 +196,25 @@ public class LookupListElement {
    */
   public java.sql.Timestamp getEntered() {
     return entered;
+  }
+
+
+  /**
+   *  Builds the lookupList for a module
+   *
+   *@param  db  Description of the Parameter
+   */
+  public void buildLookupList(Connection db, int userId) throws SQLException {
+    if (className.equals("lookuplist")) {
+      setLookupList(new LookupList(db, getTableName()));
+    } else if (className.equals("contacttype")) {
+      ContactTypeList contactTypeList = new ContactTypeList();
+      contactTypeList.setIncludeDefinedByUser(userId);
+      contactTypeList.setCategory(moduleId);
+      contactTypeList.setShowPersonal(true);
+      contactTypeList.buildList(db);
+      setLookupList(contactTypeList.getLookupList("list", 0));
+    }
   }
 
 

@@ -17,6 +17,7 @@ import org.aspcfs.utils.DatabaseUtils;
  */
 public class LookupListList extends HtmlSelect {
   protected int moduleId = -1;
+  protected int userId;
 
 
   /**
@@ -35,6 +36,46 @@ public class LookupListList extends HtmlSelect {
   public LookupListList(Connection db, int moduleId) throws SQLException {
     this.moduleId = moduleId;
     buildList(db);
+  }
+
+
+  /**
+   *  Sets the moduleId attribute of the LookupListList object
+   *
+   *@param  moduleId  The new moduleId value
+   */
+  public void setModuleId(int moduleId) {
+    this.moduleId = moduleId;
+  }
+
+
+  /**
+   *  Sets the userId attribute of the LookupListList object
+   *
+   *@param  userId  The new userId value
+   */
+  public void setUserId(int userId) {
+    this.userId = userId;
+  }
+
+
+  /**
+   *  Gets the userId attribute of the LookupListList object
+   *
+   *@return    The userId value
+   */
+  public int getUserId() {
+    return userId;
+  }
+
+
+  /**
+   *  Gets the moduleId attribute of the LookupListList object
+   *
+   *@return    The moduleId value
+   */
+  public int getModuleId() {
+    return moduleId;
   }
 
 
@@ -63,9 +104,7 @@ public class LookupListList extends HtmlSelect {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       LookupListElement thisLookup = (LookupListElement) i.next();
-      if (thisLookup.getTableName() != null && !"".equals(thisLookup.getTableName())) {
-        thisLookup.setLookupList(new LookupList(db, thisLookup.getTableName()));
-      }
+      thisLookup.buildLookupList(db, userId);
     }
   }
 
