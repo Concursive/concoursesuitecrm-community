@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -139,8 +139,9 @@ public class Survey extends SurveyBase {
   }
 
   public static void removeLink(Connection db, int campaignId) throws SQLException {
-    String sql = "DELETE FROM campaign_survey_link WHERE campaign_id = ? ";
-    PreparedStatement pst = db.prepareStatement(sql);
+    PreparedStatement pst = db.prepareStatement(
+      "DELETE FROM campaign_survey_link " +
+      "WHERE campaign_id = ? ");
     pst.setInt(1, campaignId);
     pst.execute();
     pst.close();

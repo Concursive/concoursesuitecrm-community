@@ -44,6 +44,7 @@ public class Campaign extends GenericBean {
   private int modifiedBy = -1;
   private int enteredBy = -1;
   private java.sql.Date activeDate = null;
+  private java.sql.Date inactiveDate = null;
   private java.sql.Timestamp entered = null;
   private java.sql.Timestamp modified = null;
   private boolean enabled = true;
@@ -53,7 +54,7 @@ public class Campaign extends GenericBean {
   private String subject = null;
   private String message = null;
   private int sendMethodId = -1;
-  
+
   private int files = 0;
   private String deliveryName = null;
   private ContactList contactList = null;
@@ -65,7 +66,7 @@ public class Campaign extends GenericBean {
   private String groupList = "";
   private int groupCount = -1;
   private int approvedBy = -1;
-
+  private java.sql.Timestamp approvalDate = null;
 
   /**
    *  Constructor for the Campaign object
@@ -95,7 +96,13 @@ public class Campaign extends GenericBean {
   public int getSurveyId() {
     return surveyId;
   }
-  
+
+
+  /**
+   *  Gets the activeSurveyId attribute of the Campaign object
+   *
+   *@return    The activeSurveyId value
+   */
   public int getActiveSurveyId() {
     if (active) {
       return surveyId;
@@ -134,13 +141,29 @@ public class Campaign extends GenericBean {
    *@since                    1.1
    */
   public Campaign(Connection db, String campaignId) throws SQLException {
-          queryRecord(db, Integer.parseInt(campaignId));
+    queryRecord(db, Integer.parseInt(campaignId));
   }
-  
+
+
+  /**
+   *  Constructor for the Campaign object
+   *
+   *@param  db                Description of the Parameter
+   *@param  campaignId        Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public Campaign(Connection db, int campaignId) throws SQLException {
-          queryRecord(db, campaignId);
+    queryRecord(db, campaignId);
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  campaignId        Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void queryRecord(Connection db, int campaignId) throws SQLException {
     if (campaignId <= 0) {
       throw new SQLException("Invalid ID specified.");
@@ -148,13 +171,13 @@ public class Campaign extends GenericBean {
     PreparedStatement pst = null;
     ResultSet rs = null;
 
-    String sql = 
-      "SELECT c.*, msg.name as messageName, dt.description as delivery " +
-      "FROM campaign c " +
-      "LEFT JOIN message msg ON (c.message_id = msg.id) " +
-      "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
-      "WHERE c.campaign_id = ? ";
-      //"WHERE c.id = ? ";
+    String sql =
+        "SELECT c.*, msg.name as messageName, dt.description as delivery " +
+        "FROM campaign c " +
+        "LEFT JOIN message msg ON (c.message_id = msg.id) " +
+        "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
+        "WHERE c.campaign_id = ? ";
+    //"WHERE c.id = ? ";
     pst = db.prepareStatement(sql);
     pst.setInt(1, campaignId);
     rs = pst.executeQuery();
@@ -260,15 +283,36 @@ public class Campaign extends GenericBean {
     this.groupList = groupList;
   }
 
-public int getApprovedBy() {
-	return approvedBy;
-}
-public void setApprovedBy(int approvedBy) {
-	this.approvedBy = approvedBy;
-}
-public void setApprovedBy(String approvedBy) {
-	this.approvedBy = Integer.parseInt(approvedBy);
-}
+
+  /**
+   *  Gets the approvedBy attribute of the Campaign object
+   *
+   *@return    The approvedBy value
+   */
+  public int getApprovedBy() {
+    return approvedBy;
+  }
+
+
+  /**
+   *  Sets the approvedBy attribute of the Campaign object
+   *
+   *@param  approvedBy  The new approvedBy value
+   */
+  public void setApprovedBy(int approvedBy) {
+    this.approvedBy = approvedBy;
+  }
+
+
+  /**
+   *  Sets the approvedBy attribute of the Campaign object
+   *
+   *@param  approvedBy  The new approvedBy value
+   */
+  public void setApprovedBy(String approvedBy) {
+    this.approvedBy = Integer.parseInt(approvedBy);
+  }
+
 
   /**
    *  Sets the id attribute of the Campaign object
@@ -379,10 +423,17 @@ public void setApprovedBy(String approvedBy) {
     this.groupId = tmp;
   }
 
+
+  /**
+   *  Sets the groupId attribute of the Campaign object
+   *
+   *@param  tmp  The new groupId value
+   */
   public void setGroupId(String tmp) {
     this.groupId = Integer.parseInt(tmp);
   }
-  
+
+
   /**
    *  Sets the runId attribute of the Campaign object
    *
@@ -393,9 +444,16 @@ public void setApprovedBy(String approvedBy) {
     this.runId = tmp;
   }
 
+
+  /**
+   *  Sets the runId attribute of the Campaign object
+   *
+   *@param  tmp  The new runId value
+   */
   public void setRunId(String tmp) {
     this.runId = Integer.parseInt(tmp);
   }
+
 
   /**
    *  Sets the statusId attribute of the Campaign object
@@ -405,27 +463,55 @@ public void setApprovedBy(String approvedBy) {
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
-    
+
     switch (statusId) {
-      case IDLE: status = IDLE_TEXT; break;
-      case QUEUE: status = QUEUE_TEXT; break;
-      case STARTED: status = STARTED_TEXT; break;
-      case ERROR: status = "Unspecified error"; break;
-      case FINISHED: status = FINISHED_TEXT; break;
-      default: break;
+        case IDLE:
+          status = IDLE_TEXT;
+          break;
+        case QUEUE:
+          status = QUEUE_TEXT;
+          break;
+        case STARTED:
+          status = STARTED_TEXT;
+          break;
+        case ERROR:
+          status = "Unspecified error";
+          break;
+        case FINISHED:
+          status = FINISHED_TEXT;
+          break;
+        default:
+          break;
     }
   }
-  
+
+
+  /**
+   *  Sets the statusId attribute of the Campaign object
+   *
+   *@param  tmp  The new statusId value
+   */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
-    
+
     switch (statusId) {
-      case IDLE: status = IDLE_TEXT; break;
-      case QUEUE: status = QUEUE_TEXT; break;
-      case STARTED: status = STARTED_TEXT; break;
-      case ERROR: status = "Unspecified error"; break;
-      case FINISHED: status = FINISHED_TEXT; break;
-      default: break;
+        case IDLE:
+          status = IDLE_TEXT;
+          break;
+        case QUEUE:
+          status = QUEUE_TEXT;
+          break;
+        case STARTED:
+          status = STARTED_TEXT;
+          break;
+        case ERROR:
+          status = "Unspecified error";
+          break;
+        case FINISHED:
+          status = FINISHED_TEXT;
+          break;
+        default:
+          break;
     }
   }
 
@@ -440,10 +526,17 @@ public void setApprovedBy(String approvedBy) {
     this.owner = tmp;
   }
 
+
+  /**
+   *  Sets the owner attribute of the Campaign object
+   *
+   *@param  tmp  The new owner value
+   */
   public void setOwner(String tmp) {
     this.owner = Integer.parseInt(tmp);
   }
-  
+
+
   /**
    *  Sets the ActiveDate attribute of the Campaign object
    *
@@ -453,14 +546,22 @@ public void setApprovedBy(String approvedBy) {
   public void setActiveDate(java.sql.Date tmp) {
     this.activeDate = tmp;
   }
-  
-    /**
+
+
+  /**
    *  Sets the entered attribute of the Ticket object
    *
    *@param  tmp  The new entered value
    */
   public void setActiveDate(String tmp) {
     this.activeDate = DateUtils.parseDateString(tmp);
+  }
+
+  public void setInactiveDate(java.sql.Date tmp) {
+    this.inactiveDate = tmp;
+  }
+  public void setInactiveDate(String tmp) {
+    this.inactiveDate = DateUtils.parseDateString(tmp);
   }
 
   /**
@@ -503,7 +604,13 @@ public void setApprovedBy(String approvedBy) {
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
   }
-  
+
+
+  /**
+   *  Sets the enteredBy attribute of the Campaign object
+   *
+   *@param  tmp  The new enteredBy value
+   */
   public void setEnteredBy(String tmp) {
     this.enteredBy = Integer.parseInt(tmp);
   }
@@ -519,6 +626,7 @@ public void setApprovedBy(String approvedBy) {
     this.modified = tmp;
   }
 
+
   /**
    *  Sets the modifiedBy attribute of the Campaign object
    *
@@ -528,7 +636,13 @@ public void setApprovedBy(String approvedBy) {
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
   }
-  
+
+
+  /**
+   *  Sets the modifiedBy attribute of the Campaign object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
   public void setModifiedBy(String tmp) {
     this.modifiedBy = Integer.parseInt(tmp);
   }
@@ -541,7 +655,7 @@ public void setApprovedBy(String approvedBy) {
    *@since       1.1
    */
   public void setEnabled(boolean tmp) {
-    enabled = tmp;      
+    enabled = tmp;
   }
 
 
@@ -552,7 +666,7 @@ public void setApprovedBy(String approvedBy) {
    *@since       1.1
    */
   public void setEnabled(String tmp) {
-          enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
+    enabled = ("on".equalsIgnoreCase(tmp) || "true".equalsIgnoreCase(tmp));
   }
 
 
@@ -603,10 +717,10 @@ public void setApprovedBy(String approvedBy) {
     boolean b = false;
 
     PreparedStatement pst = db.prepareStatement(
-      "SELECT group_id " +
-      "FROM campaign_list_groups " +
-      "WHERE campaign_id = ? "
-    );
+        "SELECT group_id " +
+        "FROM campaign_list_groups " +
+        "WHERE campaign_id = ? "
+        );
     pst.setInt(1, this.getId());
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
@@ -644,10 +758,16 @@ public void setApprovedBy(String approvedBy) {
   public void setSendMethodId(String tmp) {
     sendMethodId = Integer.parseInt(tmp);
   }
-  
-public java.sql.Timestamp getModified() {
-	return modified;
-}
+
+
+  /**
+   *  Gets the modified attribute of the Campaign object
+   *
+   *@return    The modified value
+   */
+  public java.sql.Timestamp getModified() {
+    return modified;
+  }
 
 
   /**
@@ -959,6 +1079,7 @@ public java.sql.Timestamp getModified() {
     return modifiedBy;
   }
 
+
   /**
    *  Gets the ModifiedString attribute of the Campaign object
    *
@@ -1176,9 +1297,10 @@ public java.sql.Timestamp getModified() {
 
 
   /**
-   *  Retrieves the file id for this campaign.  A file will exist if a campaign gets executed
-   *  and is configured to output a file.  For example, when the "letter" option is
-   *  selected, a .zip file gets created in which the user can download.
+   *  Retrieves the file id for this campaign. A file will exist if a campaign
+   *  gets executed and is configured to output a file. For example, when the
+   *  "letter" option is selected, a .zip file gets created in which the user
+   *  can download.
    *
    *@param  db                Description of Parameter
    *@exception  SQLException  Description of Exception
@@ -1186,10 +1308,10 @@ public java.sql.Timestamp getModified() {
   public void buildFileCount(Connection db) throws SQLException {
     //TODO: Move this code to the Files object and call getFileCount
     PreparedStatement pst = db.prepareStatement(
-      "SELECT count(*) " +
-      "FROM project_files " +
-      "WHERE link_module_id = ? " +
-      "AND link_item_id = ? ");
+        "SELECT count(*) " +
+        "FROM project_files " +
+        "WHERE link_module_id = ? " +
+        "AND link_item_id = ? ");
     pst.setInt(1, Constants.COMMUNICATIONS);
     pst.setInt(2, id);
     ResultSet rs = pst.executeQuery();
@@ -1199,7 +1321,14 @@ public java.sql.Timestamp getModified() {
     rs.close();
     pst.close();
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildSurveyId(Connection db) throws SQLException {
     if (active) {
       surveyId = ActiveSurvey.getId(db, this.id);
@@ -1296,26 +1425,42 @@ public java.sql.Timestamp getModified() {
    *@since                    1.5
    */
   public boolean insert(Connection db) throws SQLException {
-
     if (!isValid(db)) {
       return false;
     }
 
     StringBuffer sql = new StringBuffer();
-
     try {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO campaign " +
-          "(enteredby, modifiedby, name, message_id, approvedby ) " +
-          "VALUES (?, ?, ?, ?, ?) ");
-
+          "(enteredby, modifiedby, name, message_id, " +
+          "reply_addr, subject, message, send_method_id, " +
+          "inactive_date, approval_date");
+      if (entered != null) {
+        sql.append("entered, ");
+      }
+      sql.append("approvedby ) ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      if (entered != null) {
+        sql.append("?, ");
+      }
+      sql.append("?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
       pst.setString(++i, this.getName());
       pst.setInt(++i, this.getMessageId());
+      pst.setString(++i, replyTo);
+      pst.setString(++i, subject);
+      pst.setString(++i, message);
+      pst.setInt(++i, sendMethodId);
+      pst.setDate(++i, inactiveDate);
+      pst.setTimestamp(++i, approvalDate);
+      if (entered != null) {
+        pst.setTimestamp(++i, entered);
+      }
       if (approvedBy > -1) {
         pst.setInt(++i, this.getApprovedBy());
       } else {
@@ -1325,7 +1470,6 @@ public java.sql.Timestamp getModified() {
       pst.close();
 
       id = DatabaseUtils.getCurrVal(db, "campaign_campaign_id_seq");
-      //id = DatabaseUtils.getCurrVal(db, "campaign_id_seq");
       this.update(db, true);
 
       if (this.getGroupList() != null && !this.getGroupList().equals("")) {
@@ -1403,7 +1547,7 @@ public java.sql.Timestamp getModified() {
           "UPDATE campaign " +
           "SET modified = CURRENT_TIMESTAMP " +
           "WHERE campaign_id = " + id);
-          //"WHERE id = " + id);
+      //"WHERE id = " + id);
       st.close();
 
       db.commit();
@@ -1476,7 +1620,7 @@ public java.sql.Timestamp getModified() {
             "UPDATE campaign " +
             "SET modified = CURRENT_TIMESTAMP " +
             "WHERE campaign_id = " + id);
-            //"WHERE id = " + id);
+        //"WHERE id = " + id);
         st.close();
       }
       db.commit();
@@ -1538,41 +1682,41 @@ public java.sql.Timestamp getModified() {
           "DELETE FROM campaign_list_groups WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-          
+
       pst = db.prepareStatement(
           "DELETE FROM scheduled_recipient WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-      
+
       pst = db.prepareStatement(
           "DELETE FROM campaign_run WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-      
+
       pst = db.prepareStatement(
           "DELETE FROM excluded_recipient WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-      
+
       //Delete any inactive survey links
       pst = db.prepareStatement(
           "DELETE FROM campaign_survey_link WHERE campaign_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-      
+
       //Delete the attached survey
       int activeSurveyId = (ActiveSurvey.getId(db, id));
       if (activeSurveyId > -1) {
         ActiveSurvey thisSurvey = new ActiveSurvey(db, activeSurveyId);
         thisSurvey.delete(db);
       }
-      
+
       pst = db.prepareStatement(
           "DELETE FROM campaign WHERE campaign_id = ? ");
-          //"DELETE FROM campaign WHERE id = ? ");
+      //"DELETE FROM campaign WHERE id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
-      
+
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1604,22 +1748,22 @@ public java.sql.Timestamp getModified() {
     boolean commit = true;
     int resultCount = 0;
     PreparedStatement pst = null;
-    
+
     try {
       commit = db.getAutoCommit();
       if (commit) {
         db.setAutoCommit(false);
       }
       pst = db.prepareStatement(
-        "UPDATE campaign " +
-        "SET status_id = ?, " +
-        "status = ?, " +
-        "active = ?, " +
-        "modifiedby = ?, " +
-        "modified = CURRENT_TIMESTAMP " +
-        "WHERE campaign_id = ? " +
-        //"WHERE id = ? " +
-        "AND status_id IN (" + QUEUE + ", " + ERROR + ") ");
+          "UPDATE campaign " +
+          "SET status_id = ?, " +
+          "status = ?, " +
+          "active = ?, " +
+          "modifiedby = ?, " +
+          "modified = CURRENT_TIMESTAMP " +
+          "WHERE campaign_id = ? " +
+      //"WHERE id = ? " +
+          "AND status_id IN (" + QUEUE + ", " + ERROR + ") ");
       int i = 0;
       pst.setInt(++i, CANCELLED);
       pst.setString(++i, CANCELLED_TEXT);
@@ -1627,15 +1771,15 @@ public java.sql.Timestamp getModified() {
       pst.setInt(++i, modifiedBy);
       pst.setInt(++i, id);
       resultCount = pst.executeUpdate();
-  
+
       if (resultCount == 1) {
         pst = db.prepareStatement(
-          "DELETE FROM scheduled_recipient " +
-          "WHERE campaign_id = ? " +
-          "AND sent_date IS NULL ");
+            "DELETE FROM scheduled_recipient " +
+            "WHERE campaign_id = ? " +
+            "AND sent_date IS NULL ");
         pst.setInt(1, id);
         pst.execute();
-        
+
         //Remove attached survey if campaign has one
         int activeSurveyId = ActiveSurvey.getId(db, id);
         if (activeSurveyId > -1) {
@@ -1643,7 +1787,7 @@ public java.sql.Timestamp getModified() {
           activeSurvey.delete(db);
         }
       }
-  
+
       if (commit) {
         db.commit();
       }
@@ -1682,18 +1826,18 @@ public java.sql.Timestamp getModified() {
 
     try {
       db.setAutoCommit(false);
-      
+
       //See if the campaign is not already active
       pst = db.prepareStatement(
-        "UPDATE campaign " +
-        "SET status_id = ?, " +
-        "status = ?, " +
-        "modifiedby = ?, " +
-        "modified = CURRENT_TIMESTAMP " +
-        "WHERE campaign_id = ? " + 
-        //"WHERE id = ? " +
-        "AND modified = ? " +
-        "AND active = ? ");
+          "UPDATE campaign " +
+          "SET status_id = ?, " +
+          "status = ?, " +
+          "modifiedby = ?, " +
+          "modified = CURRENT_TIMESTAMP " +
+          "WHERE campaign_id = ? " +
+      //"WHERE id = ? " +
+          "AND modified = ? " +
+          "AND active = ? ");
       int i = 0;
       pst.setInt(++i, QUEUE);
       pst.setString(++i, QUEUE_TEXT);
@@ -1703,13 +1847,13 @@ public java.sql.Timestamp getModified() {
       pst.setBoolean(++i, false);
       resultCount = pst.executeUpdate();
       pst.close();
-  
+
       //Activate the campaign...
       if (resultCount == 1) {
         active = true;
         //Lock in the recipients
         insertRecipients(db, userId, userRangeId);
-        
+
         //Lock in the survey
         if (this.surveyId > -1) {
           Survey thisSurvey = new Survey(db, surveyId);
@@ -1720,10 +1864,10 @@ public java.sql.Timestamp getModified() {
           activeSurvey.insert(db);
           this.surveyId = activeSurvey.getId();
         }
-        
+
         //Lock in the message
         Message thisMessage = new Message(db, this.getMessageId());
-     
+
         //Replace tags
         Template template = new Template();
         if (this.surveyId > -1) {
@@ -1736,18 +1880,18 @@ public java.sql.Timestamp getModified() {
         } else {
           template.setText(thisMessage.getMessageText());
         }
-    
+
         //Finalize the campaign activation
         pst = db.prepareStatement(
-          "UPDATE campaign " +
-          "SET active = ?, " +
-          "reply_addr = ?, " +
-          "subject = ?, " +
-          "message = ?, " +
-          "modifiedby = ?, " +
-          "modified = CURRENT_TIMESTAMP " +
-          "WHERE campaign_id = ? ");
-          //"WHERE id = ? ");
+            "UPDATE campaign " +
+            "SET active = ?, " +
+            "reply_addr = ?, " +
+            "subject = ?, " +
+            "message = ?, " +
+            "modifiedby = ?, " +
+            "modified = CURRENT_TIMESTAMP " +
+            "WHERE campaign_id = ? ");
+        //"WHERE id = ? ");
         i = 0;
         pst.setBoolean(++i, true);
         pst.setString(++i, thisMessage.getReplyTo());
@@ -1757,7 +1901,7 @@ public java.sql.Timestamp getModified() {
         pst.setInt(++i, id);
         resultCount = pst.executeUpdate();
         pst.close();
-    
+
         db.commit();
       }
     } catch (SQLException e) {
@@ -1769,9 +1913,9 @@ public java.sql.Timestamp getModified() {
     } finally {
       db.setAutoCommit(true);
     }
-    
+
     if (message != null) {
-      throw new SQLException (message.getMessage());
+      throw new SQLException(message.getMessage());
     }
     return resultCount;
   }
@@ -1786,26 +1930,15 @@ public java.sql.Timestamp getModified() {
    *@since                    1.17
    */
   public int insertRun(Connection db) throws SQLException {
-    int returnCode = -1;
     if (!isValid(db)) {
       return -1;
     }
-
-    String sql = 
-      "INSERT INTO campaign_run " +
-      "(campaign_id, total_contacts, total_sent) " +
-      "VALUES (?, ?, ?) ";
-    int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql);
-    pst.setInt(++i, this.getId());
-    pst.setInt(++i, this.getRecipientCount());
-    pst.setInt(++i, this.getSentCount());
-    pst.execute();
-    pst.close();
-
-    returnCode = DatabaseUtils.getCurrVal(db, "campaign_run_id_seq");
-
-    return returnCode;
+    CampaignRun thisRun = new CampaignRun();
+    thisRun.setCampaignId(this.getId());
+    thisRun.setTotalContacts(this.getRecipientCount());
+    thisRun.setTotalSent(this.getSentCount());
+    thisRun.insert(db);
+    return thisRun.getId();
   }
 
 
@@ -1821,7 +1954,7 @@ public java.sql.Timestamp getModified() {
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
-    
+
     int resultCount = 0;
 
     PreparedStatement pst = null;
@@ -1832,7 +1965,7 @@ public java.sql.Timestamp getModified() {
         "modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE campaign_id = " + id);
-        //"WHERE id = " + id);
+    //"WHERE id = " + id);
     int i = 0;
     pst.setString(++i, name);
     pst.setString(++i, description);
@@ -1856,7 +1989,7 @@ public java.sql.Timestamp getModified() {
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
-    
+
     int resultCount = 0;
 
     PreparedStatement pst = null;
@@ -1870,7 +2003,7 @@ public java.sql.Timestamp getModified() {
         "modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE campaign_id = ? ");
-        //"WHERE id = ? ");
+    //"WHERE id = ? ");
     pst.setInt(++i, messageId);
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, id);
@@ -1879,12 +2012,20 @@ public java.sql.Timestamp getModified() {
 
     return resultCount;
   }
-  
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   public int updateSurvey(Connection db) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
-    
+
     int resultCount = 0;
 
     PreparedStatement pst = null;
@@ -1895,24 +2036,23 @@ public java.sql.Timestamp getModified() {
           "SET modifiedby = ?, " +
           "modified = CURRENT_TIMESTAMP " +
           "WHERE campaign_id = ? ");
-          //"WHERE id = ? ");
       pst.setInt(1, modifiedBy);
       pst.setInt(2, id);
       resultCount = pst.executeUpdate();
-      
+
       pst = db.prepareStatement("DELETE FROM campaign_survey_link WHERE campaign_id = ? ");
       pst.setInt(1, id);
       pst.execute();
-      
+
       if (surveyId > -1) {
         pst = db.prepareStatement(
-          "INSERT INTO campaign_survey_link " +
-          "(campaign_id, survey_id) VALUES (?, ?) ");
+            "INSERT INTO campaign_survey_link " +
+            "(campaign_id, survey_id) VALUES (?, ?) ");
         pst.setInt(1, id);
         pst.setInt(2, surveyId);
         pst.execute();
       }
-      
+
       pst.close();
       db.commit();
       db.setAutoCommit(true);
@@ -1949,7 +2089,7 @@ public java.sql.Timestamp getModified() {
         "send_method_id = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE campaign_id = " + id);
-        //"WHERE id = " + id);
+    //"WHERE id = " + id);
     pst.setInt(++i, messageId);
     pst.setDate(++i, activeDate);
     pst.setInt(++i, sendMethodId);
@@ -2009,24 +2149,31 @@ public java.sql.Timestamp getModified() {
     }
 
     PreparedStatement pst = null;
-    String sql =
+    StringBuffer sql = new StringBuffer();
+    sql.append(
         "UPDATE campaign " +
         "SET description = ?, active_date = ?, " +
-        "enabled = ?, modified = CURRENT_TIMESTAMP, modifiedby = ?, " +
+        "enabled = ?, ");
+    if (override && modified != null) {
+      sql.append("modified = ?, ");
+    } else {
+      sql.append("modified = CURRENT_TIMESTAMP, ");
+    }
+    sql.append("modifiedby = ?, " +
         "active = ?, status_id = ?, status = ?, message_id = ? " +
-        "WHERE campaign_id = ? ";
-        //"WHERE id = ? ";
+        "WHERE campaign_id = ? ");
     int i = 0;
-    pst = db.prepareStatement(sql);
+    pst = db.prepareStatement(sql.toString());
     pst.setString(++i, this.getDescription());
-
     if (activeDate == null) {
       pst.setNull(++i, java.sql.Types.DATE);
     } else {
       pst.setDate(++i, this.getActiveDate());
     }
-
     pst.setBoolean(++i, this.getEnabled());
+    if (override && modified != null) {
+      pst.setTimestamp(++i, modified);
+    }
     pst.setInt(++i, this.getModifiedBy());
     pst.setBoolean(++i, this.getActive());
     pst.setInt(++i, this.getStatusId());
@@ -2040,7 +2187,7 @@ public java.sql.Timestamp getModified() {
     if (statusId == FINISHED) {
       Survey.removeLink(db, this.id);
     }
-    
+
     return resultCount;
   }
 
@@ -2053,33 +2200,32 @@ public java.sql.Timestamp getModified() {
    *@since                    1.5
    */
   protected void buildRecord(ResultSet rs) throws SQLException {
-    
-    ResultSetMetaData meta = rs.getMetaData();
-    
     //campaign table
-    this.setId(rs.getInt(meta.getColumnName(1)));
+    this.setId(rs.getInt("campaign_id"));
     name = rs.getString("name");
     description = rs.getString("description");
     groupId = rs.getInt("list_id");
     messageId = rs.getInt("message_id");
-    replyTo = rs.getString("reply_addr");
-    subject = rs.getString("subject");
-    message = rs.getString("message");
     statusId = rs.getInt("status_id");
     status = rs.getString("status");
     active = rs.getBoolean("active");
     activeDate = rs.getDate("active_date");
-    sendMethodId = rs.getInt("send_method_id");
+    inactiveDate = rs.getDate("inactive_date");
+    approvalDate = rs.getTimestamp("approval_date");
+    approvedBy = rs.getInt("approvedBy");
+    if (rs.wasNull()) {
+      approvedBy = -1;
+    }
     enabled = rs.getBoolean("enabled");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
-    approvedBy = rs.getInt("approvedBy");
-    if (rs.wasNull()) {
-            approvedBy=-1;
-    }
-
+    replyTo = rs.getString("reply_addr");
+    subject = rs.getString("subject");
+    message = rs.getString("message");
+    sendMethodId = rs.getInt("send_method_id");
+    
     //message table
     messageName = rs.getString("messageName");
 

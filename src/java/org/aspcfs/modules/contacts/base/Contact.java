@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2001-2002 Dark Horse Ventures
 
 package com.darkhorseventures.cfsbase;
 
@@ -1391,26 +1391,20 @@ public class Contact extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public String getCampaignMessageRange(Connection db) throws SQLException {
-    Statement st = null;
-    ResultSet rs = null;
+    PreparedStatement pst = db.prepareStatement(
+      "SELECT campaign_id from scheduled_recipient " +
+      "WHERE contact_id = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
     StringBuffer r = new StringBuffer();
-
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        "SELECT campaign_id from scheduled_recipient " +
-        "WHERE contact_id = " + id + " ");
-
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
     while (rs.next()) {
       if (r.length() > 0) {
-        r.append(", " + rs.getInt("campaign_id"));
-      } else {
-        r.append(rs.getInt("campaign_id"));
+        r.append(", ");
       }
+      r.append(rs.getInt("campaign_id"));
     }
     rs.close();
-    st.close();
+    pst.close();
 
     if (r.length() == 0) {
       r.append("''");
@@ -1443,24 +1437,14 @@ public class Contact extends GenericBean {
       return false;
     }
 
-    String sql = "";
-
+    ExcludedRecipient thisRecipient = new ExcludedRecipient();
+    thisRecipient.setCampaignId(campaignId);
+    thisRecipient.setContactId(this.getId());
     if (this.excludedFromCampaign()) {
-      sql =
-          "DELETE FROM excluded_recipient " +
-          "WHERE campaign_id = ? AND contact_id = ? ";
+      thisRecipient.delete(db);
     } else {
-      sql =
-          "INSERT INTO excluded_recipient " +
-          "(campaign_id, contact_id) VALUES (?, ?) ";
+      thisRecipient.insert(db);
     }
-
-    int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql);
-    pst.setInt(++i, campaignId);
-    pst.setInt(++i, this.getId());
-    pst.execute();
-    pst.close();
 
     this.excludedFromCampaign = !excludedFromCampaign;
     return true;

@@ -609,25 +609,27 @@
       <property>modified</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="campaign" table="campaign" uniqueField="campaign_id">
-      <property alias="guid" field="id"/>
-      <property field="name"/>
-      <property field="description"/>
-      <property lookup="searchCriteriaList" field="list_id"/>
-      <property lookup="message" field="message_id"/>
-      <property field="reply_addr"/>
-      <property field="subject"/>
-      <property field="message"/>
-      <property field="status_id"/>
-      <property field="status"/>
-      <property field="active"/>
-      <property field="active_date"/>
-      <property field="send_method_id"/>
-      <property field="inactive_date"/>
-      <property field="approval_date"/>
-      <property lookup="user" field="approvedby"/>
-      <property field="enabled"/>
-      <property lookup="user" field="enteredby"/>
-      <property lookup="user" field="modifiedby"/>
+      <property alias="guid" field="id">id</property>
+      <property field="name">name</property>
+      <property field="description">description</property>
+      <property lookup="searchCriteriaList" field="list_id">groupId</property>
+      <property lookup="message" field="message_id">messageId</property>
+      <property field="reply_addr">replyTo</property>
+      <property field="subject">subject</property>
+      <property field="message">message</property>
+      <property field="status_id">statusId</property>
+      <property field="status">status</property>
+      <property field="active">active</property>
+      <property field="active_date">activeDate</property>
+      <property field="send_method_id">sendMethodId</property>
+      <property field="inactive_date">inactiveDate</property>
+      <property field="approval_date">approvalDate</property>
+      <property lookup="user" field="approvedby">approvedBy</property>
+      <property field="enabled">enabled</property>
+      <property lookup="user" field="enteredby">enteredBy</property>
+      <property lookup="user" field="modifiedby">modifiedBy</property>
+      <property field="entered">entered</property>
+      <property field="modified">modified</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="scheduledRecipient" table="scheduled_recipient" uniqueField="id">
       <property alias="guid" field="id"/>
@@ -663,9 +665,9 @@
       <property field="display_text"/>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="excludedRecipient" table="excluded_recipient" uniqueField="id">
-      <property alias="guid" field="id"/>
-      <property lookup="campaign" field="campaign_id"/>
-      <property lookup="contact" field="contact_id"/>
+      <property alias="guid" field="id">id</property>
+      <property lookup="campaign" field="campaign_id">campaignId</property>
+      <property lookup="contact" field="contact_id">contactId</property>
     </map>
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="recipientList" table="recipient_list" uniqueField="id">
       <property alias="guid" field="id"/>
@@ -678,14 +680,14 @@
       <property lookup="user" field="modifiedby"/>
     </map>   
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="campaignRun" table="campaign_run" uniqueField="id">
-      <property alias="guid" field="id"/>
-      <property lookup="campaign" field="campaign_id"/>
-      <property field="status"/>
-      <property field="run_date"/>
-      <property field="total_contacts"/>
-      <property field="total_sent"/>
-      <property field="total_replied"/>
-      <property field="total_bounced"/>
+      <property alias="guid" field="id">id</property>
+      <property lookup="campaign" field="campaign_id">campaignId</property>
+      <property field="status">status</property>
+      <property field="run_date">runDate</property>
+      <property field="total_contacts">totalContacts</property>
+      <property field="total_sent">totalSent</property>
+      <property field="total_replied">totalReplied</property>
+      <property field="total_bounced">totalBounced</property>
     </map>   
     <map class="com.darkhorseventures.webutils.CustomLookupList" id="campaignListGroups" table="campaign_list_groups">
       <property lookup="campaign" field="campaign_id"/>

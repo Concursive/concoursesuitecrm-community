@@ -817,9 +817,9 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'revenueList', 'com.darkhorseventures.cfsbase.RevenueList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'campaign', 'com.darkhorseventures.webutils.CustomLookupElement');
+ VALUES (4, 'campaign', 'com.darkhorseventures.cfsbase.Campaign');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'campaignList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'campaignList', 'com.darkhorseventures.cfsbase.CampaignList');
  
  INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'scheduledRecipient', 'com.darkhorseventures.webutils.CustomLookupElement');
@@ -841,20 +841,16 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'fieldTypesList', 'com.darkhorseventures.webutils.CustomLookupList');
  
-   INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'excludedRecipient', 'com.darkhorseventures.webutils.CustomLookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'excludedRecipientList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'excludedRecipient', 'com.darkhorseventures.cfsbase.ExcludedRecipient');
  
     INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'recipientList', 'com.darkhorseventures.webutils.CustomLookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'recipientListList', 'com.darkhorseventures.webutils.CustomLookupList');
  
-    INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'campaignRun', 'com.darkhorseventures.webutils.CustomLookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'campaignRunList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'campaignRun', 'com.darkhorseventures.cfsbase.CampaignRun');
  
      INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'campaignListGroups', 'com.darkhorseventures.webutils.CustomLookupElement');
