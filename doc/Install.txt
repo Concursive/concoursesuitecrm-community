@@ -18,7 +18,7 @@
   - Configure IP
   - Turn on port 80 and 443 during install or in iptables later
 
-- Install Postgresql 7.2.3 RPMS for Red Hat 8.0
+- Install Postgresql 7.2.3 RPMS for Red Hat 8.0 (not 7.3.1+)
   Purpose: Database server
   http://www.postgresql.org
   destination: /var/lib/pgsql
@@ -33,13 +33,13 @@
   $ rpm --install [file]
   $ ln -s /usr/java/j2sdk1.4.1 /usr/java/j2se
 
-- Install Apache Tomcat 4.1.12 binary
+- Install Apache Tomcat 4.1.18 binary
   Purpose: Web Server
   http://jakarta.apache.org 
-  file: jakarta-tomcat-4.1.12-LE-jdk14.tar.gz
-  destination: /usr/java/jakarta-tomcat-4.1.12-LE-jdk14
-  $ tar -xvzf jakarta-tomcat-4.1.12-LE-jdk14.tar.gz
-  $ ln -s /usr/java/jakarta-tomcat-4.1.12-LE-jdk14 /usr/java/tomcat
+  file: jakarta-tomcat-4.1.18-LE-jdk14.tar.gz
+  destination: /usr/java/jakarta-tomcat-4.1.18-LE-jdk14
+  $ tar -xvzf jakarta-tomcat-4.1.18-LE-jdk14.tar.gz
+  $ ln -s /usr/java/jakarta-tomcat-4.1.18-LE-jdk14 /usr/java/tomcat
   
 - Install Apache Ant 1.5.1 binary
   Purpose: Deployment utility for compiling and deploying ASPCFS
@@ -76,7 +76,7 @@
   # Add [your name] to sudo users
     $ visudo
 
-  # Add the following to /etc/profile:
+  # Add the following to the bottom of /etc/profile:
     export CATALINA_HOME=/usr/java/tomcat
     export TOMCAT_HOME=${CATALINA_HOME}
     export JAVA_HOME=/usr/java/j2se
@@ -85,13 +85,15 @@
 
   # Remove the GNU Java if installed
     $ rm /usr/bin/java
+    $ rm /usr/bin/javac
     
   # Make the web folders
     $ mkdir /home/cfs
     $ mkdir /home/webapps
     
   # Log back in for changes to take affect, then test:
-  # Java version should say: java version "1.4.1"
+  # Java version should say: 
+  #   Java(TM) 2 Runtime Environment, Standard Edition (build 1.4.1-b21)
     $ java -version
   # Ant version should say: Apache Ant version 1.5.1 compiled on October 2 2002
     $ ant -version
@@ -133,7 +135,7 @@
     
   # Test the web server, Tomcat welcome page should show:
     $ service tomcat start
-    $ mozilla http://127.0.0.1:8080
+    $ links http://127.0.0.1:8080
 
     
 - Configure Postgresql
@@ -151,7 +153,7 @@
   # Verify this line is uncommented: 
     host all 127.0.0.1 255.255.255.255 trust
   # Add the backup server
-    host all 216.54.81.126 255.255.255 trust
+    host all 216.54.81.126 255.255.255.255 trust
   # Save and exit
 
   # Configure Postgresql to accept TCP/IP connections
@@ -187,46 +189,22 @@
     $ cvs -d :pserver:username@216.54.81.126:/usr/local/cvs checkout cfs2
     $ cd ~/cfs2
   
-  # An environment script will need to be created for this system
-    $ cd scripts
-    $ cp env.aspcfs.dakhorseventures.com.sh env.`hostname`.sh
-  # Now modify with correct paths and configuration information
-    $ vi env.`hostname`.sh
-
-  # Initialize the gatekeeper database
-    $ cd ~/cfs2
-    $ createdb cfs2gk
-    $ psql -f database/postgresql/gatekeeper.sql cfs2gk
-    $ cp database/gatekeeper.init ./`hostname`.init
-  # Make changes to sites table for this system
-    $ vi `hostname`.init
-    $ psql -f `hostname`.init cfs2gk
-
-  # Install ASPCFS additional .jars to Apache Tomcat
-    $ cd ~/cfs2
-    $ sudo cp production/common/lib/*.jar /usr/java/tomcat/common/lib/
-
-  # Install the ASPCFS web software (Compile & Install)
-    $ cd ~/cfs2
-    $ sudo sh upgrade_ds
-
-  # Create the first customer database
-    $ sudo sh install_ds [vhost part before .aspcfs.com]
-
-  # Setup Tomcat to use ASPCFS
-    $ sudo cp production/conf/server.xml /usr/java/tomcat/conf/
+  # Configure the web server
+    $ sudo cp src/tomcat/server.xml ${CATALINA_HOME}/conf/
+    $ sudo vi ${CATALINA_HOME}/conf/server.xml #make changes per on-screen directions
   
-  # Setup a temporary SSL certificate
-  # Make changes as necessary... 
-  #  CN=Domain name users will connect by (important!) 
-  #    Either www.something.com or *.something.com
-  #  OU=Organization Unit
-  #  O=Organization
-  #  L=Location (typically city)
-  #  ST=State
-  #  C=Country
-  # The default password corresponds to the password that is set in Tomcat's server.xml
-    $ sudo keytool -genkey -alias ds -keyalg RSA -keysize 1024 -validity 1000 -dname "CN=*.aspcfs.com, OU=ASPCFS, O=Dark Horse Ventures, L=Norfolk, ST=Virginia, C=US" -keystore /home/cfs/keystore -keypass aspcfs -storepass aspcfs
+  # Copy the needed libraries 
+    $ sudo cp lib/*.jar ${CATALINA_HOME}/common/lib/
+
+  # Install the software (Follow on-screen messages until BUILD SUCCESSFUL)
+    $ ant deploy
+  
+  # Install the gatekeeper
+    $ createdb cfs2gk
+    $ ant installgk
+  
+  # Install the database
+    $ ant installdb
   
   # Reload tomcat, must call stop and then start
     $ sudo /sbin/service tomcat stop
