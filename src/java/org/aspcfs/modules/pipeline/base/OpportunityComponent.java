@@ -504,8 +504,8 @@ public class OpportunityComponent extends GenericBean {
    *@since
    */
   public void setLow(String low) {
-    low = replace(low, ",", "");
-    low = replace(low, "$", "");
+    low = StringUtils.replace(low, ",", "");
+    low = StringUtils.replace(low, "$", "");
 
     this.low = Double.parseDouble(low);
   }
@@ -518,8 +518,8 @@ public class OpportunityComponent extends GenericBean {
    *@since
    */
   public void setGuess(String guess) {
-    guess = replace(guess, ",", "");
-    guess = replace(guess, "$", "");
+    guess = StringUtils.replace(guess, ",", "");
+    guess = StringUtils.replace(guess, "$", "");
 
     try {
       this.guess = Double.parseDouble(guess);
@@ -536,8 +536,8 @@ public class OpportunityComponent extends GenericBean {
    *@since
    */
   public void setHigh(String high) {
-    high = replace(high, ",", "");
-    high = replace(high, "$", "");
+    high = StringUtils.replace(high, ",", "");
+    high = StringUtils.replace(high, "$", "");
 
     this.high = Double.parseDouble(high);
   }

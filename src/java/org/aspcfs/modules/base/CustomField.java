@@ -427,7 +427,7 @@ public class CustomField extends GenericBean implements Cloneable {
    *@return    The displayHtml value
    */
   public String getDisplayHtml() {
-    return toHtml(display);
+    return StringUtils.toHtml(display);
   }
 
 
@@ -1018,7 +1018,7 @@ public class CustomField extends GenericBean implements Cloneable {
    *@since
    */
   public String getNameHtml() {
-    return toHtml(name);
+    return StringUtils.toHtml(name);
   }
 
 
@@ -1259,26 +1259,26 @@ public class CustomField extends GenericBean implements Cloneable {
    */
   public String getValueHtml(boolean enableLinks) {
     if (type != SELECT && (enteredValue == null || enteredValue.equals(""))) {
-      return toHtml(enteredValue);
+      return StringUtils.toHtml(enteredValue);
     }
     switch (type) {
         case URL:
           if (enableLinks) {
             return "<a href=\"" + ((enteredValue.indexOf(":") > -1) ? "" : "http://") + enteredValue + "\" target=\"_new\">" + enteredValue + "</a>";
           } else {
-            return toHtml(enteredValue);
+            return StringUtils.toHtml(enteredValue);
           }
         case EMAIL:
           if (enableLinks && enteredValue.indexOf("@") > 0) {
             return "<a href=\"mailto:" + enteredValue + "\">" + enteredValue + "</a>";
           } else {
-            return toHtml(enteredValue);
+            return StringUtils.toHtml(enteredValue);
           }
         case SELECT:
           if (elementData != null) {
-            return toHtml(((LookupList) elementData).getSelectedValue(selectedItemId));
+            return StringUtils.toHtml(((LookupList) elementData).getSelectedValue(selectedItemId));
           } else {
-            return toHtml(enteredValue);
+            return StringUtils.toHtml(enteredValue);
           }
         case CHECKBOX:
           return (selectedItemId == 1 ? "Yes" : "No");
@@ -1288,12 +1288,12 @@ public class CustomField extends GenericBean implements Cloneable {
             NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
             return ("$" + numberFormatter.format(thisAmount));
           } catch (Exception e) {
-            return ("$" + toHtml(enteredValue));
+            return ("$" + StringUtils.toHtml(enteredValue));
           }
         case PERCENT:
-          return (toHtml(enteredValue) + "%");
+          return (StringUtils.toHtml(enteredValue) + "%");
         default:
-          return (toHtml(enteredValue));
+          return (StringUtils.toHtml(enteredValue));
     }
   }
 
@@ -1334,9 +1334,9 @@ public class CustomField extends GenericBean implements Cloneable {
     }
     if (editable) {
       return ("<input type=\"hidden\" name=\"" + hiddenElementName + "\" value=\"" + rowElementId + "\">\n<input type=\"text\" name=\"" + textElementName + "\" " + (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
-          (size.equals("") ? "" : "size=\"" + size + "\" ") + " value=\"" + toHtmlValue(ObjectUtils.getParam(tmpResult, "description")) + "\"> ");
+          (size.equals("") ? "" : "size=\"" + size + "\" ") + " value=\"" + StringUtils.toHtmlValue(ObjectUtils.getParam(tmpResult, "description")) + "\"> ");
     } else {
-      return (toHtmlValue(ObjectUtils.getParam(tmpResult, "description")));
+      return (StringUtils.toHtmlValue(ObjectUtils.getParam(tmpResult, "description")));
     }
   }
 
@@ -1358,7 +1358,7 @@ public class CustomField extends GenericBean implements Cloneable {
     }
     switch (type) {
         case TEXTAREA:
-          return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + toString(enteredValue) + "</textarea>");
+          return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.toString(enteredValue) + "</textarea>");
         case SELECT:
           if (!(((LookupList) elementData).containsKey(-1))) {
             ((LookupList) elementData).addItem(-1, "-- None --");
@@ -1371,14 +1371,14 @@ public class CustomField extends GenericBean implements Cloneable {
         case CHECKBOX:
           return ("<input type=\"checkbox\" name=\"" + elementName + "\" value=\"ON\" " + (selectedItemId == 1 ? "checked" : "") + ">");
         case DATE:
-          return ("<input type=\"text\" name=\"" + elementName + "\" value=\"" + toHtmlValue(enteredValue) + "\"> " +
+          return ("<input type=\"text\" name=\"" + elementName + "\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\"> " +
               "<a href=\"javascript:popCalendar('forms[0]', '" + elementName + "');\">Date</a> (mm/dd/yyyy)");
         case PERCENT:
-          return ("<input type=\"text\" name=\"" + elementName + "\" size=\"8\" value=\"" + toHtmlValue(enteredValue) + "\"> " + "%");
+          return ("<input type=\"text\" name=\"" + elementName + "\" size=\"8\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\"> " + "%");
         case HIDDEN:
-          return ("<input type=\"hidden\" name=\"" + elementName + "\" value=\"" + toHtmlValue(enteredValue) + "\">");
+          return ("<input type=\"hidden\" name=\"" + elementName + "\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\">");
         case DISPLAYTEXT:
-          return (toHtmlValue(enteredValue));
+          return (StringUtils.toHtmlValue(enteredValue));
         case LABEL:
           return this.getDisplayHtml();
         case LINK:
@@ -1397,7 +1397,7 @@ public class CustomField extends GenericBean implements Cloneable {
               "name=\"" + elementName + "\" " +
               (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
               (size.equals("") ? "" : "size=\"" + size + "\" ") +
-              "value=\"" + toHtmlValue(enteredValue) + "\">");
+              "value=\"" + StringUtils.toHtmlValue(enteredValue) + "\">");
     }
   }
 
@@ -1881,8 +1881,8 @@ public class CustomField extends GenericBean implements Cloneable {
 
       if (type == CURRENCY) {
         try {
-          String testString = replace(this.getEnteredValue(), ",", "");
-          testString = replace(testString, "$", "");
+          String testString = StringUtils.replace(this.getEnteredValue(), ",", "");
+          testString = StringUtils.replace(testString, "$", "");
           double testNumber = Double.parseDouble(testString);
           this.setEnteredValue(testString);
           enteredDouble = testNumber;

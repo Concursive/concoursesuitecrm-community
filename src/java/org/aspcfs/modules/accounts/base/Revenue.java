@@ -552,8 +552,8 @@ public class Revenue extends GenericBean {
    *@param  tmp  The new amount value
    */
   public void setAmount(String tmp) {
-    tmp = replace(tmp, ",", "");
-    tmp = replace(tmp, "$", "");
+    tmp = StringUtils.replace(tmp, ",", "");
+    tmp = StringUtils.replace(tmp, "$", "");
     this.amount = Double.parseDouble(tmp);
   }
 
