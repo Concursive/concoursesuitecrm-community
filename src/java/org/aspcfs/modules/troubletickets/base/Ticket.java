@@ -14,8 +14,13 @@ import com.zeroio.iteam.base.FileItem;
 import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.actionlist.base.*;
+import org.aspcfs.modules.tasks.base.TaskList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.actionlist.base.ActionList;
+import org.aspcfs.modules.actionlist.base.ActionItemLog;
+import org.aspcfs.modules.actionlist.base.ActionItemLogList;
 
 /**
  *  Represents a Ticket in CFS
@@ -78,6 +83,7 @@ public class Ticket extends GenericBean {
 
   private TicketLogList history = new TicketLogList();
   private FileItemList files = new FileItemList();
+  private TaskList tasks = new TaskList();
 
   //action list properties
   private int actionId = -1;
@@ -170,6 +176,7 @@ public class Ticket extends GenericBean {
 
     this.buildHistory(db);
     this.buildFiles(db);
+    this.buildTasks(db);
   }
 
 
@@ -196,6 +203,18 @@ public class Ticket extends GenericBean {
     files.setLinkModuleId(Constants.DOCUMENTS_TICKETS);
     files.setLinkItemId(this.getId());
     files.buildList(db);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildTasks(Connection db) throws SQLException {
+    tasks.setTicketId(this.getId());
+    tasks.buildList(db);
   }
 
 
@@ -314,6 +333,26 @@ public class Ticket extends GenericBean {
    */
   public int getActionId() {
     return actionId;
+  }
+
+
+  /**
+   *  Sets the tasks attribute of the Ticket object
+   *
+   *@param  tasks  The new tasks value
+   */
+  public void setTasks(TaskList tasks) {
+    this.tasks = tasks;
+  }
+
+
+  /**
+   *  Gets the tasks attribute of the Ticket object
+   *
+   *@return    The tasks value
+   */
+  public TaskList getTasks() {
+    return tasks;
   }
 
 
@@ -1599,10 +1638,7 @@ public class Ticket extends GenericBean {
       db.setAutoCommit(false);
       sql.append(
           "INSERT INTO ticket (contact_id, problem, pri_code, " +
-          "department_code, cat_code, scode, ");
-      if (orgId > 0) {
-        sql.append("org_id, ");
-      }
+          "department_code, cat_code, scode, org_id, ");
       if (entered != null) {
         sql.append("entered, ");
       }
@@ -1610,10 +1646,7 @@ public class Ticket extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("enteredBy, modifiedBy ) ");
-      sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
-      if (orgId > 0) {
-        sql.append("?, ");
-      }
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
       }
@@ -1623,39 +1656,29 @@ public class Ticket extends GenericBean {
       sql.append("?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
-      if (contactId > -1) {
-        pst.setInt(++i, this.getContactId());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
+      DatabaseUtils.setInt(pst, ++i, this.getContactId());
       pst.setString(++i, this.getProblem());
-
       if (this.getPriorityCode() > 0) {
         pst.setInt(++i, this.getPriorityCode());
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
-
       if (this.getDepartmentCode() > 0) {
         pst.setInt(++i, this.getDepartmentCode());
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
-
       if (this.getCatCode() > 0) {
         pst.setInt(++i, this.getCatCode());
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
-
       if (this.getSeverityCode() > 0) {
         pst.setInt(++i, this.getSeverityCode());
       } else {
         pst.setNull(++i, java.sql.Types.INTEGER);
       }
-      if (orgId > 0) {
-        pst.setInt(++i, orgId);
-      }
+      DatabaseUtils.setInt(pst, ++i, orgId);
       if (entered != null) {
         pst.setTimestamp(++i, entered);
       }
@@ -1732,7 +1755,6 @@ public class Ticket extends GenericBean {
     if (!isValid(db)) {
       return -1;
     }
-
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -1762,29 +1784,22 @@ public class Ticket extends GenericBean {
     } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
-
     if (this.getPriorityCode() > 0) {
       pst.setInt(++i, this.getPriorityCode());
     } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
-
     if (this.getSeverityCode() > 0) {
       pst.setInt(++i, this.getSeverityCode());
     } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
-
     if (this.getCatCode() > 0) {
       pst.setInt(++i, this.getCatCode());
     } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
-    if (assignedTo > -1) {
-      pst.setInt(++i, assignedTo);
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
+    DatabaseUtils.setInt(pst, ++i, assignedTo);
     if (this.getSubCat1() > 0) {
       pst.setInt(++i, this.getSubCat1());
     } else {
@@ -1805,12 +1820,7 @@ public class Ticket extends GenericBean {
     } else {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
-
-    if (contactId > -1) {
-      pst.setInt(++i, this.getContactId());
-    } else {
-      pst.setNull(++i, java.sql.Types.INTEGER);
-    }
+    DatabaseUtils.setInt(pst, ++i, this.getContactId());
     pst.setString(++i, this.getProblem());
     if (override == false) {
       pst.setInt(++i, this.getModifiedBy());
@@ -1825,7 +1835,6 @@ public class Ticket extends GenericBean {
     }
     resultCount = pst.executeUpdate();
     pst.close();
-
     if (this.getCloseIt()) {
       TicketLog thisEntry = new TicketLog();
       thisEntry.setEnteredBy(this.getModifiedBy());
@@ -1837,7 +1846,6 @@ public class Ticket extends GenericBean {
       thisEntry.setClosed(true);
       thisEntry.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
     }
-
     return resultCount;
   }
 
@@ -1854,18 +1862,15 @@ public class Ticket extends GenericBean {
     int result = -1;
     this.setAssignedTo(newOwner);
     result = this.update(db);
-
     if (result == -1) {
       return false;
     }
-
     return true;
   }
 
 
-  //reopen a ticket
   /**
-   *  Description of the Method
+   *  Reopens a ticket so that it can be modified again
    *
    *@param  db                Description of the Parameter
    *@return                   Description of the Return Value
@@ -1887,7 +1892,7 @@ public class Ticket extends GenericBean {
       pst.setInt(++i, this.getId());
       resultCount = pst.executeUpdate();
       pst.close();
-
+      //Update the ticket log
       TicketLog thisEntry = new TicketLog();
       thisEntry.setEnteredBy(this.getModifiedBy());
       thisEntry.setDepartmentCode(this.getDepartmentCode());
@@ -1944,17 +1949,14 @@ public class Ticket extends GenericBean {
     }
     try {
       db.setAutoCommit(false);
-
       //delete any related action list items
       ActionItemLog.deleteLink(db, this.getId(), Constants.TICKET_OBJECT);
-
       //delete all log data
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM ticketlog WHERE ticketid = ?");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-
       //delete the ticket
       pst = db.prepareStatement(
           "DELETE FROM ticket WHERE ticketid = ?");
@@ -2032,18 +2034,12 @@ public class Ticket extends GenericBean {
    */
   protected boolean isValid(Connection db) throws SQLException {
     errors.clear();
-
     if (problem == null || problem.trim().equals("")) {
       errors.put("problemError", "An issue is required");
     }
     if (closeIt == true && (solution == null || solution.trim().equals(""))) {
       errors.put("closedError", "A solution is required when closing a ticket");
     }
-    /*
-     *  if (orgId == -1) {
-     *  errors.put("orgIdError", "You must associate an Account with a Ticket");
-     *  }
-     */
     if (contactId == -1) {
       errors.put("contactIdError", "You must associate a Contact with a Ticket");
     }
@@ -2066,14 +2062,9 @@ public class Ticket extends GenericBean {
   protected void buildRecord(ResultSet rs) throws SQLException {
     //ticket table
     this.setId(rs.getInt("ticketid"));
-    orgId = rs.getInt("org_id");
-    if (rs.wasNull()) {
-      orgId = -1;
-    }
-    contactId = rs.getInt("contact_id");
-    if (rs.wasNull()) {
-      contactId = -1;
-    }
+
+    orgId = DatabaseUtils.getInt(rs, "org_id");
+    contactId = DatabaseUtils.getInt(rs, "contact_id");
     problem = rs.getString("problem");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
@@ -2081,35 +2072,14 @@ public class Ticket extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     closed = rs.getTimestamp("closed");
-    priorityCode = rs.getInt("pri_code");
-    if (rs.wasNull()) {
-      priorityCode = -1;
-    }
+    priorityCode = DatabaseUtils.getInt(rs, "pri_code");
     levelCode = DatabaseUtils.getInt(rs, "level_code");
-    departmentCode = rs.getInt("department_code");
-    if (rs.wasNull()) {
-      departmentCode = -1;
-    }
-    sourceCode = rs.getInt("source_code");
-    if (rs.wasNull()) {
-      sourceCode = -1;
-    }
-    catCode = rs.getInt("cat_code");
-    if (rs.wasNull()) {
-      catCode = 0;
-    }
-    subCat1 = rs.getInt("subcat_code1");
-    if (rs.wasNull()) {
-      subCat1 = 0;
-    }
-    subCat2 = rs.getInt("subcat_code2");
-    if (rs.wasNull()) {
-      subCat2 = 0;
-    }
-    subCat3 = rs.getInt("subcat_code3");
-    if (rs.wasNull()) {
-      subCat3 = 0;
-    }
+    departmentCode = DatabaseUtils.getInt(rs, "department_code");
+    sourceCode = DatabaseUtils.getInt(rs, "source_code");
+    catCode = DatabaseUtils.getInt(rs, "cat_code", 0);
+    subCat1 = DatabaseUtils.getInt(rs, "subcat_code1", 0);
+    subCat2 = DatabaseUtils.getInt(rs, "subcat_code2", 0);
+    subCat3 = DatabaseUtils.getInt(rs, "subcat_code3", 0);
     assignedTo = DatabaseUtils.getInt(rs, "assigned_to");
     solution = rs.getString("solution");
     severityCode = DatabaseUtils.getInt(rs, "scode");
@@ -2137,7 +2107,6 @@ public class Ticket extends GenericBean {
     enteredByName = Contact.getNameLastFirst(rs.getString("eb_namelast"), rs.getString("eb_namefirst"));
     modifiedByName = Contact.getNameLastFirst(rs.getString("mb_namelast"), rs.getString("mb_namefirst"));
     ownerName = Contact.getNameLastFirst(rs.getString("owner_namelast"), rs.getString("owner_namefirst"));
-
     if (entered != null) {
       if (closed != null) {
         //float ageCheck = ((closed.getTime() - entered.getTime()) / 86400000);

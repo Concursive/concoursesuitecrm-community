@@ -73,8 +73,12 @@
       <table>
         <tr>
           <td>
-            <div id="changeowner"><%= Task.getOwnerName() == null ? toHtml(User.getUserRecord().getContact().getNameLastFirst()) : "" %><%= Task.getOwnerName() != null ? Task.getOwnerName() : "" %>
-              <dhv:evaluate exp="<%= !(Task.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
+            <div id="changeowner">
+            <%if(Task.getOwner() > 0){ %>
+              <dhv:username id="<%= Task.getOwner() %>"/>
+            <% }else{ %>
+               <dhv:username id="<%= User.getUserId() %>"/>
+            <%}%>
             </div>
           </td>
           <td>
@@ -122,4 +126,4 @@
     </td>
   </tr>
 </table>
-<%= addHiddenParams(request, "popup|popupType|actionId") %>
+<%= addHiddenParams(request, "popup|popupType|actionId") %> 

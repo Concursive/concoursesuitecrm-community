@@ -105,7 +105,7 @@
 %>
   <tr class="row<%= rowid %>">
     <td align="center" valign="top">
-      <a href="javascript:window.location.href='MyTasksForward.do?command=ForwardMessage&forwardType=<%= Constants.TASKS %>&id=<%=thisTask.getId()%>';">Fwd</a>|<a href="javascript:popURLReturn('MyTasks.do?command=ConfirmDelete&id=<%= thisTask.getId() %>&popup=true','MyTasks.do?command=ListTasks', 'Delete_message','320','200','yes','no');">Del</a>
+      <a href="javascript:window.location.href='MyTasksForward.do?command=ForwardMessage&forwardType=<%= Constants.TASKS %>&id=<%=thisTask.getId()%>';">Fwd</a>|<a href="javascript:popURLReturn('MyTasks.do?command=ConfirmDelete&id=<%= thisTask.getId() %>&popup=true','MyTasks.do?command=ListTasks', 'Delete_task','320','200','yes','no');">Del</a>
     </td>
     <td nowrap align="center" valign="top">
       <%= thisTask.getPriority()==-1?"-NA-":(new Integer(thisTask.getPriority())).toString() %>
@@ -124,9 +124,6 @@
           <a href="javascript:changeImages('image<%= count %>','MyTasks.do?command=ProcessImage&id=box.gif|gif|'+<%= thisTask.getId() %>+'|1','MyTasks.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisTask.getId() %>+'|1');javascript:switchClass('complete<%=count%>');"><img src="images/box.gif" name="image<%= count %>" id="0" border="0" title="Click to change"></a>
 <%
       }
-      int contactId = thisTask.getContactId();
-      String contactName = thisTask.getContactName();
-      int ticketId = thisTask.getTicketId();
 %>
         </td>
         <td valign="top">
@@ -139,8 +136,13 @@
 %>
         </td>
         <td valign="top">
-          <a href="MyTasks.do?command=Modify&id=<%= thisTask.getId() %>"><%= thisTask.getDescription()!=null?thisTask.getDescription():"" %></a>&nbsp; <%=(thisTask.getContactId()==-1)?"":"[<a href=\"ExternalContacts.do?command=ContactDetails&id="+ thisTask.getContact().getId() +"\" title=\""+ thisTask.getContact().getNameLastFirst() +"\"><font color=\"green\">C</font></a>]"%> <%= (thisTask.getTicketId()==-1)?"":"[<a href=\"TroubleTickets.do?command=Details&id=" + ticketId + "\"><font color=\"orange\">T</font></a>]"%>
+          <a href="MyTasks.do?command=Modify&id=<%= thisTask.getId() %>"><%= thisTask.getDescription()!=null?thisTask.getDescription():"" %></a>&nbsp; <%=(thisTask.getContactId()==-1)?"":"[<a href=\"ExternalContacts.do?command=ContactDetails&id="+ thisTask.getContact().getId() +"\" title=\""+ thisTask.getContact().getNameLastFirst() +"\"><font color=\"green\">Contact</font></a>]"%>
         </td>
+        <dhv:evaluate if="<%= thisTask.getType() != Task.GENERAL %>">
+          <td valign="top">
+            &nbsp; [<a href="<%= thisTask.getLinkDetails().getLink() %>"><font color="orange"><%= thisTask.getLinkDetails().getDisplayNameFull() %></font></a>]
+          </td>
+        </dhv:evaluate>
       </tr>
       <% if(thisTask.getHasLinks()){ %>
       <tr style="display:none">
@@ -187,7 +189,11 @@
     </td>
     <%if(TaskListInfo.getFilterValue("listFilter1").equalsIgnoreCase("tasksbyme")){%>
       <td nowrap align="center" valign="top">
-      <%= thisTask.getOwnerName().equals("")?"-NA-":thisTask.getOwnerName() %>
+      <%if(thisTask.getOwner() > 0){ %>
+        <dhv:username id="<%= thisTask.getOwner() %>"/>
+      <% }else{ %>
+        -NA-
+      <%}%>
     </td>
     <%}%>
     <td nowrap align="center" valign="top">

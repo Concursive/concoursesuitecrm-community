@@ -30,6 +30,7 @@ public class TaskList extends ArrayList {
   protected java.sql.Date alertRangeEnd = null;
   protected int categoryId = -1;
   protected int projectId = -1;
+  protected int ticketId = -1;
 
 
   /**
@@ -96,6 +97,26 @@ public class TaskList extends ArrayList {
    */
   public void setAlertRangeStart(java.sql.Date alertRangeStart) {
     this.alertRangeStart = alertRangeStart;
+  }
+
+
+  /**
+   *  Sets the ticketId attribute of the TaskList object
+   *
+   *@param  ticketId  The new ticketId value
+   */
+  public void setTicketId(int ticketId) {
+    this.ticketId = ticketId;
+  }
+
+
+  /**
+   *  Gets the ticketId attribute of the TaskList object
+   *
+   *@return    The ticketId value
+   */
+  public int getTicketId() {
+    return ticketId;
   }
 
 
@@ -269,7 +290,7 @@ public class TaskList extends ArrayList {
     sqlSelect.append(
         "t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
         "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
-        "t.estimatedloetype, t.owner, t.completedate, t.modified, " +
+        "t.estimatedloetype, t.type, t.owner, t.completedate, t.modified, " +
         "t.modifiedby, t.category_id " +
         "FROM task t " +
         "WHERE t.task_id > -1 ");
@@ -296,6 +317,9 @@ public class TaskList extends ArrayList {
     while (i.hasNext()) {
       Task thisTask = (Task) i.next();
       thisTask.buildResources(db);
+      if (thisTask.getType() != Task.GENERAL) {
+        thisTask.buildLinkDetails(db);
+      }
     }
   }
 
@@ -340,6 +364,10 @@ public class TaskList extends ArrayList {
 
     if (projectId > 0) {
       sqlFilter.append("AND t.task_id IN (SELECT task_id FROM tasklink_project WHERE project_id = ?) ");
+    }
+
+    if (ticketId > 0) {
+      sqlFilter.append("AND t.task_id IN (SELECT task_id FROM tasklink_ticket WHERE ticket_id = ?) ");
     }
   }
 
@@ -386,14 +414,19 @@ public class TaskList extends ArrayList {
     if (projectId > 0) {
       pst.setInt(++i, projectId);
     }
+
+    if (ticketId > 0) {
+      pst.setInt(++i, ticketId);
+    }
     return i;
   }
-  
+
+
   /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@param  myContactId       Description of the Parameter
+   *@param  userId            Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */

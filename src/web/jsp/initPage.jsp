@@ -152,9 +152,9 @@ public static String replace(String str, String o, String n) {
   public static String addHiddenParams(HttpServletRequest request, String tmp){
     StringBuffer sb = new StringBuffer();
     StringTokenizer tokens = new StringTokenizer(tmp, "|");
-    while(tokens.hasMoreTokens()){
+    while (tokens.hasMoreTokens()){
        String param = tokens.nextToken();
-       if(request.getParameter(param) != null){
+       if (request.getParameter(param) != null){
         sb.append("<input type=\"hidden\" name=\"" + param + "\" value=\"" + request.getParameter(param) + "\">");
        }
     }
@@ -166,7 +166,7 @@ public static String replace(String str, String o, String n) {
     StringTokenizer tokens = new StringTokenizer(tmp, "|");
     while(tokens.hasMoreTokens()){
      String param = tokens.nextToken();
-     if(request.getParameter(param) != null){
+     if (request.getParameter(param) != null){
        sb.append("&" + param + "=" + request.getParameter(param));
      }
     }
@@ -180,4 +180,17 @@ public static String replace(String str, String o, String n) {
   public static boolean isInLinePopup(HttpServletRequest request){
     return "inline".equals(request.getParameter("popupType"));
   }
-%>  
+  
+  public static String addContainerParams(HttpServletRequest request, String tmp){
+    StringBuffer sb = new StringBuffer();
+    StringTokenizer tokens = new StringTokenizer(tmp, "|");
+    while(tokens.hasMoreTokens()){
+     String param = tokens.nextToken();
+     if (request.getParameter(param) != null){
+       sb.append("|" + param + "=" + request.getParameter(param));
+     }
+    }
+    return sb.toString();
+  }
+  
+%>

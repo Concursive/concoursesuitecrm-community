@@ -15,6 +15,7 @@ import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.communications.base.CampaignList;
+import org.aspcfs.modules.tasks.base.TaskList;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.Constants;
@@ -501,20 +502,22 @@ public final class TroubleTickets extends CFSModule {
     Ticket newTic = null;
     String ticketId = null;
 
-    PagedListInfo ticListInfo = this.getPagedListInfo(context, "TicketDetails");
-    ticListInfo.setColumnToSortBy("entered");
+    PagedListInfo ticTaskListInfo = this.getPagedListInfo(context, "TicketTaskListInfo");
+    ticTaskListInfo.setItemsPerPage(0);
 
     try {
       ticketId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
-      newTic = new Ticket(db, Integer.parseInt(ticketId));
+      newTic = new Ticket();
+      newTic.getTasks().setPagedListInfo(ticTaskListInfo);
+      newTic.queryRecord(db, Integer.parseInt(ticketId));
 
       //check whether or not the owner is an active User
       if (newTic.getAssignedTo() > -1) {
         newTic.checkEnabledOwnerAccount(db);
       }
 
-      newTic.getHistory().setPagedListInfo(ticListInfo);
+      context.getRequest().setAttribute("TaskList", newTic.getTasks());
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1051,14 +1054,9 @@ public final class TroubleTickets extends CFSModule {
     HtmlDialog htmlDialog = new HtmlDialog();
     Ticket ticket = null;
     String id = context.getRequest().getParameter("id");
-    String contactId = context.getRequest().getParameter("contactId");
     Connection db = null;
     try {
       db = this.getConnection(context);
-      Contact thisContact = new Contact(db, contactId);
-      if (!hasAuthority(context, thisContact.getOwner())) {
-        return "PermissionError";
-      }
       ticket = new Ticket(db, Integer.parseInt(id));
       DependencyList dependencies = ticket.processDependencies(db);
       htmlDialog.setTitle("CFS: Confirm Delete");

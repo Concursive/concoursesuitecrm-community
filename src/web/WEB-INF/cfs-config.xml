@@ -143,11 +143,13 @@
     <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="TaskListOK" resource="/tasks/mytasks_list.jsp" layout="nav"/>
-    <forward name="AddTaskOK" resource="/tasks/mytasks_new.jsp" layout="nav"/>
+    <forward name="NewTaskOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=MyTasks"/>
+    <forward name="PrepareTaskOK" resource="/tasks/mytasks_new.jsp" layout="nav"/>
     <forward name="InsertTaskOK" resource="/MyTasks.do?command=ListTasks"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
-    <forward name="AddTaskPopupOK" resource="/tasks/mytasks_new.jsp" layout="style"/>
+    <forward name="NewTaskPopupOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=MyTasks"/>
+    <forward name="PrepareTaskPopupOK" resource="/tasks/mytasks_new.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   
@@ -159,6 +161,15 @@
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="SendMessageOK" resource="/tasks/mytasks_confirmsend.jsp" layout="nav"/>
     <forward name="ForwardMessageOK" resource="/tasks/mytasks_forward.jsp" layout="nav"/>
+  </action>
+  
+  <action name="TaskForm" class="org.aspcfs.modules.tasks.actions.TaskForm">
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
+    <forward name="PrepareTaskOK" resource="noresource"/>
+    <forward name="PrepareTaskPopupOK" resource="noresource"/>
   </action>
   
   <action name="MyCFSPassword" class="org.aspcfs.modules.mycfs.actions.MyCFS">
@@ -956,6 +967,21 @@
     <forward name="SecurityCheck" resource="/login.jsp"/>
     <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
+  </action>
+  <action name="TroubleTicketTasks" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketTasks">
+    <bean name="TicketTask" class="org.aspcfs.modules.troubletickets.base.TicketTask" scope="request"/>
+    <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
+    <forward name="SecurityCheck" resource="/login.jsp"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
+    <forward name="AddTaskOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=TroubleTicketTasks"/>
+    <forward name="PrepareTaskPopupOK" resource="/troubletickets/troubletickets_taskform.jsp" layout="style"/>
+    <forward name="ListTasksOK" resource="/troubletickets/troubletickets_details.jsp" layout="style"/>
+    <forward name="SaveOK" resource="/closepopupandreload.jsp"/>
+    <forward name="SendMessageOK" resource="/troubletickets/troubletickets_confirmsend.jsp" layout="nav"/>
+    <forward name="ForwardMessageOK" resource="/troubletickets/troubletickets_forwardtask.jsp" layout="nav"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
   <!-- End Ticket Module -->
   
