@@ -104,7 +104,7 @@ CREATE TABLE business_process_events (
   year VARCHAR(64) DEFAULT '*',
   task VARCHAR(255),
   extrainfo VARCHAR(255),
-  businessDays VARCHAR(6) DEFAULT 'true',
+  businessdays VARCHAR(6) DEFAULT 'true',
   enabled BOOLEAN DEFAULT false,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   process_id INTEGER NOT NULL REFERENCES business_process
