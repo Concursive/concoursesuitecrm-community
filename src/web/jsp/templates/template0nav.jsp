@@ -26,7 +26,7 @@
 <%
   if (!User.getUserRecord().getContact().getNameFirstLast().equals("")) {
 %>  
-    <%=User.getActualUserId() != User.getUserId() ? "User Aliased To :":"User :"%> <b class="highlight"><%= User.getUserRecord().getContact().getNameFirstLast() %></b> /
+    <%= User.getActualUserId() != User.getUserId() ? "User Aliased To:":"User:" %> <b class="highlight"><%= User.getUserRecord().getContact().getNameFirstLast() %></b> /
 <%}%>      
       <b class="highlight"><%= User.getRole() %></b>
 <%
@@ -34,76 +34,64 @@
 %>      
       <br>
       Manager: <b class="highlight"><%= User.getUserRecord().getManagerUser().getContact().getNameFull() %></b>
-<%}%>      
+<%}%>
     </th>
   </tr>
 </table>
-
 <!-- Main Menu -->
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
-    <!--<td width=10><img border="0" src="images/menu-edge.gif" width="10" height="36"></td>-->
     <%= request.getAttribute("MainMenu") %>
     <td><img border="0" src="images/menu-edge.gif" width="100%" height="36"></td>
   </tr>
 </table>
-<!-- Sub Menu 1 -->
+<!-- Sub Menu -->
 <table border="0" width="100%" cellspacing="0" bgcolor="#006699">
   <tr>
     <td>
       <table border="0" cellspacing="0" bgcolor="#006699">
         <tr>  
           <td height="25" valign="middle" width="5"><font size="1">&nbsp;</font></td>
-<%    
+<%
     Iterator i = ModuleBean.getMenuItems().iterator();
     while (i.hasNext()) {
     	SubmenuItem thisItem = (SubmenuItem)i.next();
-	
     	if (User.getSystemStatus(getServletConfig()).hasPermission(User.getUserId(), thisItem.getPermission())) {
 %>
           <td height="25" align="center" valign="middle" width="0"><b><font color="#FFFFFF" size="1"><%= (thisItem.getAlternateHtml()) %></font></b></td>
           <td width="20">&nbsp;</td>
-	  
-	  <%}%>
 <%
+      }
     }
-%>  
+%>
           <td height="25" valign="middle"><font size="1">&nbsp;</font></td>
         </tr>
-      </table>  
+      </table>
     </td>
   </tr>
 </table>
-
 <table border="0" width="100%">
   <tr>
     <td valign="top">
       <table border="0" width="100%">
-        <!-- The module goes here -->
         <tr>
           <td>
-<!--&nbsp;<br>-->
+<!-- The module goes here -->
 <% String includeModule = (String) request.getAttribute("IncludeModule"); %>          
 <jsp:include page="<%= includeModule %>" flush="true"/>
+<!-- End module -->
           </td>
         </tr>
-        <!-- End module -->
       </table>
     </td>
-    
     <!-- Global Items -->
     <%= request.getAttribute("GlobalItems") %>
     <!-- End Global Items -->
-    
   </tr>
 </table>
-
-<!--hr color="#BFBFBB" noshade-->
 <br>
 <center><%= request.getAttribute("MainMenuSmall") %></center>
 <br>
 <center>(C) 2000-2003 Dark Horse Ventures</center>
 </body>
-
 </html>
-
