@@ -728,6 +728,16 @@ public class CustomField extends GenericBean implements Cloneable {
 
 
   /**
+   *  Sets the recordId attribute of the CustomField object
+   *
+   *@param  tmp  The new recordId value
+   */
+  public void setRecordId(String tmp) {
+    this.recordId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the SelectedItemId attribute of the CustomField object
    *
    *@param  tmp  The new SelectedItemId value
@@ -1588,9 +1598,7 @@ public class CustomField extends GenericBean implements Cloneable {
     if (!this.isValid()) {
       return -1;
     }
-
     StringBuffer sql = new StringBuffer();
-
     sql.append(
         "INSERT INTO custom_field_data " +
         "(record_id, field_id, selected_item_id, entered_value, entered_number, ");
