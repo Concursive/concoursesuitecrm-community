@@ -47,14 +47,20 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
 
     writer.setAutoCommit(true);
     
-    logger.info("ImportCommunications-> Inserting Saved Criteria Elements");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "savedCriteriaElement");
+    logger.info("ImportCommunications-> Inserting Field Types");
+    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "fieldTypes");
     if (!processOK) {
       return false;
     }
-
+    
     logger.info("ImportCommunications-> Inserting Search Field Elements");
     processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "searchFieldElement");
+    if (!processOK) {
+      return false;
+    }
+    
+    logger.info("ImportCommunications-> Inserting Saved Criteria Elements");
+    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "savedCriteriaElement");
     if (!processOK) {
       return false;
     }
@@ -71,11 +77,7 @@ public class ImportCommunications implements CFSDatabaseReaderImportModule {
       return false;
     }
     
-    logger.info("ImportCommunications-> Inserting Field Types");
-    processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "fieldTypes");
-    if (!processOK) {
-      return false;
-    }
+
     
     logger.info("ImportCommunications-> Inserting Excluded Recipients");
     processOK = ImportLookupTables.saveCustomLookupList(writer, db, mappings, "excludedRecipient");
