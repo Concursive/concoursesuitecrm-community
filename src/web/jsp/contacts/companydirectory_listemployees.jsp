@@ -15,28 +15,28 @@ View Employees<br>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
   <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete">
-    <td valign=center align=left>
+    <td valign="center" align="left">
       <strong>Action</strong>
     </td>
   </dhv:permission>
-    <td>
-      <a href="/CompanyDirectory.do?command=ListEmployees&column=c.namelast">
+    <td nowrap>
+      <a href="CompanyDirectory.do?command=ListEmployees&column=c.namelast">
         <strong>Name</strong>
       </a>
       <%= CompanyDirectoryInfo.getSortIcon("c.namelast") %>
     </td>
-    <td>
-      <a href="/CompanyDirectory.do?command=ListEmployees&column=departmentname">
+    <td nowrap>
+      <a href="CompanyDirectory.do?command=ListEmployees&column=departmentname">
         <strong>Department</strong>
       </a>
       <%= CompanyDirectoryInfo.getSortIcon("departmentname") %>
     </td>
-    <td>
-      <a href="/CompanyDirectory.do?command=ListEmployees&column=c.title">
+    <td nowrap>
+      <a href="CompanyDirectory.do?command=ListEmployees&column=c.title">
         <strong>Title</strong>
       </a>
       <%= CompanyDirectoryInfo.getSortIcon("c.title") %>
-    </td>
+    </td nowrap>
     <td nowrap>
       <strong>Business Phone</strong>
     </td>
@@ -53,27 +53,27 @@ View Employees<br>
       }
       Contact thisEmployee = (Contact)i.next();
 %>      
-      <tr>
-        <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete">
-        <td width=8 valign=center nowrap class="row<%= rowid %>">
-          <dhv:permission name="contacts-internal_contacts-edit"><a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId()%>&action=modify&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-internal_contacts-delete"><a href="javascript:popURLReturn('/CompanyDirectory.do?command=ConfirmDelete&id=<%=thisEmployee.getId()%>&popup=true','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');">Del</a></dhv:permission>
-        </td>
-	</dhv:permission>
-        <td class="row<%= rowid %>"><font class="columntext1">
-          <a href="/CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLastFirst()) %></a></font>
-          <dhv:evaluate exp="<%=!(thisEmployee.hasEnabledAccount())%>"><font color="red">*</font></dhv:evaluate>          
-          <%= thisEmployee.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "&nbsp;") %>
-        </td>
-        <td class="row<%= rowid %>">
-          <%= toHtml(thisEmployee.getDepartmentName()) %>
-        </td>
-        <td class="row<%= rowid %>">
-          <%= toHtml(thisEmployee.getTitle()) %>
-        </td>
-        <td class="row<%= rowid %>">
-          <%= toHtml(thisEmployee.getPhoneNumber("Business")) %>
-        </td>
-      </tr>
+  <tr>
+    <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete">
+      <td width="8" valign="center" class="row<%= rowid %>" nowrap>
+        <dhv:permission name="contacts-internal_contacts-edit"><a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId()%>&action=modify&return=list">Edit</a></dhv:permission><dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete" all="true">|</dhv:permission><dhv:permission name="contacts-internal_contacts-delete"><a href="javascript:popURLReturn('/CompanyDirectory.do?command=ConfirmDelete&id=<%=thisEmployee.getId()%>&popup=true','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');">Del</a></dhv:permission>
+      </td>
+    </dhv:permission>
+    <td class="row<%= rowid %>" nowrap><font class="columntext1">
+      <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLastFirst()) %></a></font>
+      <dhv:evaluate exp="<%=!(thisEmployee.hasEnabledAccount())%>"><font color="red">*</font></dhv:evaluate>          
+        <%= thisEmployee.getEmailAddressTag("Business", "<img border=0 src=\"images/email.gif\" alt=\"Send email\" align=\"absmiddle\">", "&nbsp;") %>
+    </td>
+    <td class="row<%= rowid %>">
+      <%= toHtml(thisEmployee.getDepartmentName()) %>
+    </td>
+    <td class="row<%= rowid %>">
+      <%= toHtml(thisEmployee.getTitle()) %>
+    </td>
+    <td class="row<%= rowid %>">
+      <%= toHtml(thisEmployee.getPhoneNumber("Business")) %>
+    </td>
+  </tr>
 <%      
     }
   } else {
