@@ -23,3 +23,7 @@ CREATE TABLE business_process_events (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE business_process_log (
+  process_name VARCHAR(255) UNIQUE NOT NULL,
+  anchor TIMESTAMP(3) NOT NULL
+);
