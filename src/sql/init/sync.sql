@@ -14,30 +14,31 @@ INSERT INTO sync_system (application_name) VALUES ('Fluency');
 /* VPORT */
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (1, 'ticket', 'com.darkhorseventures.cfsbase.Ticket');
+ VALUES (1, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket');
 
 /* AUTO GUIDE */
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'syncClient', 'com.darkhorseventures.cfsbase.SyncClient', 2);
+ VALUES (2, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', 2);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'user', 'com.darkhorseventures.cfsbase.User', 4);
+ VALUES (2, 'user', 'org.aspcfs.modules.admin.base.User', 4);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'account', 'com.darkhorseventures.cfsbase.Organization', 5);
+ VALUES (2, 'account', 'org.aspcfs.modules.accounts.base.Organization', 5);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'accountInventory', 'com.darkhorseventures.autoguide.base.Inventory', 6);
+ VALUES (2, 'accountInventory', 'org.aspcfs.modules.media.autoguide.base.Inventory', 6);
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'inventoryOption', 'com.darkhorseventures.autoguide.base.InventoryOption', 8);
+ VALUES (2, 'inventoryOption', 'org.aspcfs.modules.media.autoguide.base
+.InventoryOption', 8);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (2, 'adRun', 'com.darkhorseventures.autoguide.base.AdRun', 10);
+ VALUES (2, 'adRun', 'org.aspcfs.modules.media.autoguide.base.AdRun', 10);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item)
- VALUES (2, 'tableList', 'com.darkhorseventures.cfsbase.SyncTableList', 12, @FALSE@);
+ VALUES (2, 'tableList', 'org.aspcfs.modules.service.base.SyncTableList', 12, @FALSE@);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'status_master', null, 14);
@@ -46,7 +47,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'system', null, 16);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'userList', 'com.darkhorseventures.cfsbase.UserList', 50, @TRUE@, 
+ VALUES (2, 'userList', 'org.aspcfs.modules.admin.base.UserList', 50, @TRUE@, 
 'CREATE TABLE users (
        user_id              int NOT NULL,
        record_status_id     int NULL,
@@ -68,7 +69,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'makeList', 'com.darkhorseventures.autoguide.base.MakeList', 70, @TRUE@, 
+ VALUES (2, 'makeList', 'org.aspcfs.modules.media.autoguide.base.MakeList', 70, @TRUE@, 
 'CREATE TABLE make (
        make_id              int NOT NULL,
        make_name            nvarchar(20) NULL,
@@ -93,7 +94,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'modelList', 'com.darkhorseventures.autoguide.base.ModelList', 100, @TRUE@, 
+ VALUES (2, 'modelList', 'org.aspcfs.modules.media.autoguide.base.ModelList', 100, @TRUE@, 
 'CREATE TABLE model (
        model_id             int NOT NULL,
        make_id              int NULL,
@@ -128,7 +129,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'vehicleList', 'com.darkhorseventures.autoguide.base.VehicleList', 130, @TRUE@, 
+ VALUES (2, 'vehicleList', 'org.aspcfs.modules.media.autoguide.base.VehicleList', 130, @TRUE@, 
 'CREATE TABLE vehicle (
        year                 nvarchar(4) NOT NULL,
        vehicle_id           int NOT NULL,
@@ -174,7 +175,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'accountList', 'com.darkhorseventures.cfsbase.OrganizationList', 170, @TRUE@, 
+ VALUES (2, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList', 170, @TRUE@, 
 'CREATE TABLE account (
        account_id           int NOT NULL,
        account_name         nvarchar(80) NULL,
@@ -207,7 +208,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'accountInventoryList', 'com.darkhorseventures.autoguide.base.InventoryList', 190, @TRUE@,
+ VALUES (2, 'accountInventoryList', 'org.aspcfs.modules.media.autoguide.base.InventoryList', 190, @TRUE@,
 'CREATE TABLE account_inventory (
        inventory_id         int NOT NULL,
        vin                  nvarchar(20) NULL,
@@ -269,7 +270,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'optionList', 'com.darkhorseventures.autoguide.base.OptionList', 330, @TRUE@,
+ VALUES (2, 'optionList', 'org.aspcfs.modules.media.autoguide.base.OptionList', 330, @TRUE@,
 'CREATE TABLE options (
        option_id            int NOT NULL,
        option_name          nvarchar(20) NULL,
@@ -290,7 +291,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'inventoryOptionList', 'com.darkhorseventures.autoguide.base.InventoryOptionList', 350, @TRUE@,
+ VALUES (2, 'inventoryOptionList', 'org.aspcfs.modules.media.autoguide.base.InventoryOptionList', 350, @TRUE@,
 'CREATE TABLE inventory_options (
        inventory_id         int NOT NULL,
        option_id            int NOT NULL,
@@ -331,7 +332,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'adTypeList', 'com.darkhorseventures.webutils.LookupList', 385, @TRUE@,
+ VALUES (2, 'adTypeList', 'org.aspcfs.utils.web.LookupList', 385, @TRUE@,
 'CREATE TABLE ad_type (
        ad_type_id           int NOT NULL,
        ad_type_name         nvarchar(20) NULL,
@@ -340,7 +341,7 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sy
 );
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, sync_item, create_statement)
- VALUES (2, 'adRunList', 'com.darkhorseventures.autoguide.base.AdRunList', 390, @TRUE@,
+ VALUES (2, 'adRunList', 'org.aspcfs.modules.media.autoguide.base.AdRunList', 390, @TRUE@,
 'CREATE TABLE ad_run (
        ad_run_id            int NOT NULL,
        record_status_id     int NULL,
@@ -487,239 +488,239 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id, cr
 /* CFSWriter */
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupIndustry', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupIndustry', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupIndustryList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupIndustryList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'systemPrefs', 'com.darkhorseventures.webutils.CustomLookupElement');
+ VALUES (4, 'systemPrefs', 'org.aspcfs.utils.web.CustomLookupElement');
 
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'systemModules', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'systemModules', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'systemModulesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'systemModulesList', 'org.aspcfs.utils.web.LookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupContactTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupContactTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupContactTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupContactTypesList', 'org.aspcfs.utils.web.LookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupAccountTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupAccountTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupAccountTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupAccountTypesList', 'org.aspcfs.utils.web.LookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupDepartment', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupDepartment', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupDepartmentList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupDepartmentList', 'org.aspcfs.utils.web.LookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupOrgAddressTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupOrgAddressTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupOrgAddressTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupOrgAddressTypesList', 'org.aspcfs.utils.web.LookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupOrgEmailTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupOrgEmailTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupOrgEmailTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupOrgEmailTypesList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupOrgPhoneTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupOrgPhoneTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupOrgPhoneTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupOrgPhoneTypesList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupInstantMessengerTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupInstantMessengerTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupInstantMessengerTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupInstantMessengerTypesList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupEmploymentTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupEmploymentTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupEmploymentTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupEmploymentTypesList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupLocale', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupLocale', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupLocaleList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupLocaleList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupContactAddressTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupContactAddressTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupContactAddressTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupContactAddressTypesList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupContactEmailTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupContactEmailTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupContactEmailTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupContactEmailTypesList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupContactPhoneTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupContactPhoneTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupContactPhoneTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupContactPhoneTypesList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupStage', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupStage', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupStageList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupStageList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupDeliveryOptions', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupDeliveryOptions', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupDeliveryOptionsList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupDeliveryOptionsList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupCallTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupCallTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupCallTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupCallTypesList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'ticketCategory', 'com.darkhorseventures.cfsbase.TicketCategory');
+ VALUES (4, 'ticketCategory', 'org.aspcfs.modules.troubletickets.base.TicketCategory');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'ticketCategoryList', 'com.darkhorseventures.cfsbase.TicketCategoryList');
+ VALUES (4, 'ticketCategoryList', 'org.aspcfs.modules.troubletickets.base.TicketCategoryList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'ticketSeverity', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'ticketSeverity', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'ticketSeverityList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'ticketSeverityList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupTicketSource', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupTicketSource', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupTicketSourceList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupTicketSourceList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'ticketPriority', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'ticketPriority', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'ticketPriorityList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'ticketPriorityList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupRevenueTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupRevenueTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupRevenueTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupRevenueTypesList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupRevenueDetailTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupRevenueDetailTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupRevenueDetailTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupRevenueDetailTypesList', 'org.aspcfs.utils.web.LookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupSurveyTypes', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'lookupSurveyTypes', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupSurveyTypesList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'lookupSurveyTypesList', 'org.aspcfs.utils.web.LookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'syncClient', 'com.darkhorseventures.cfsbase.SyncClient');
+ VALUES (4, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'user', 'com.darkhorseventures.cfsbase.User');
+ VALUES (4, 'user', 'org.aspcfs.modules.admin.base.User');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'userList', 'com.darkhorseventures.cfsbase.UserList');
+ VALUES (4, 'userList', 'org.aspcfs.modules.admin.base.UserList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'contact', 'com.darkhorseventures.cfsbase.Contact');
+ VALUES (4, 'contact', 'org.aspcfs.modules.contacts.base.Contact');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'contactList', 'com.darkhorseventures.cfsbase.ContactList');
+ VALUES (4, 'contactList', 'org.aspcfs.modules.contacts.base.ContactList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'ticket', 'com.darkhorseventures.cfsbase.Ticket');
+ VALUES (4, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'ticketList', 'com.darkhorseventures.cfsbase.TicketList');
+ VALUES (4, 'ticketList', 'org.aspcfs.modules.troubletickets.base.TicketList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'account', 'com.darkhorseventures.cfsbase.Organization');
+ VALUES (4, 'account', 'org.aspcfs.modules.accounts.base.Organization');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'accountList', 'com.darkhorseventures.cfsbase.OrganizationList');
+ VALUES (4, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'role', 'com.darkhorseventures.cfsbase.Role');
+ VALUES (4, 'role', 'org.aspcfs.modules.admin.base.Role');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'roleList', 'com.darkhorseventures.cfsbase.RoleList');
+ VALUES (4, 'roleList', 'org.aspcfs.modules.admin.base.RoleList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'permissionCategory', 'com.darkhorseventures.cfsbase.PermissionCategory');
+ VALUES (4, 'permissionCategory', 'org.aspcfs.modules.admin.base.PermissionCategory');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'permissionCategoryList', 'com.darkhorseventures.cfsbase.PermissionCategoryList');
+ VALUES (4, 'permissionCategoryList', 'org.aspcfs.modules.admin.base.PermissionCategoryList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'permission', 'com.darkhorseventures.cfsbase.Permission');
+ VALUES (4, 'permission', 'org.aspcfs.modules.admin.base.Permission');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'permissionList', 'com.darkhorseventures.cfsbase.PermissionList');
+ VALUES (4, 'permissionList', 'org.aspcfs.modules.admin.base.PermissionList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'rolePermission', 'com.darkhorseventures.cfsbase.RolePermission');
+ VALUES (4, 'rolePermission', 'org.aspcfs.modules.admin.base.RolePermission');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'rolePermissionList', 'com.darkhorseventures.cfsbase.RolePermissionList');
+ VALUES (4, 'rolePermissionList', 'org.aspcfs.modules.admin.base.RolePermissionList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'opportunity', 'com.darkhorseventures.cfsbase.Opportunity');
+ VALUES (4, 'opportunity', 'org.aspcfs.modules.pipeline.base.Opportunity');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'opportunityList', 'com.darkhorseventures.cfsbase.OpportunityList');
+ VALUES (4, 'opportunityList', 'org.aspcfs.modules.pipeline.base.OpportunityList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'call', 'com.darkhorseventures.cfsbase.Call');
+ VALUES (4, 'call', 'org.aspcfs.modules.contacts.base.Call');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'callList', 'com.darkhorseventures.cfsbase.CallList');
+ VALUES (4, 'callList', 'org.aspcfs.modules.contacts.base.CallList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'customFieldCategory', 'com.darkhorseventures.cfsbase.CustomFieldCategory');
+ VALUES (4, 'customFieldCategory', 'org.aspcfs.modules.base.CustomFieldCategory');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'customFieldCategoryList', 'com.darkhorseventures.cfsbase.CustomFieldCategoryList');
+ VALUES (4, 'customFieldCategoryList', 'org.aspcfs.modules.base.CustomFieldCategoryList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'customFieldGroup', 'com.darkhorseventures.cfsbase.CustomFieldGroup');
+ VALUES (4, 'customFieldGroup', 'org.aspcfs.modules.base.CustomFieldGroup');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'customFieldGroupList', 'com.darkhorseventures.cfsbase.CustomFieldGroupList');
+ VALUES (4, 'customFieldGroupList', 'org.aspcfs.modules.base.CustomFieldGroupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'customField', 'com.darkhorseventures.cfsbase.CustomField');
+ VALUES (4, 'customField', 'org.aspcfs.modules.base.CustomField');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'customFieldList', 'com.darkhorseventures.cfsbase.CustomFieldList');
+ VALUES (4, 'customFieldList', 'org.aspcfs.modules.base.CustomFieldList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'customFieldLookup', 'com.darkhorseventures.webutils.LookupElement');
+ VALUES (4, 'customFieldLookup', 'org.aspcfs.utils.web.LookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'customFieldLookupList', 'com.darkhorseventures.webutils.LookupList');
+ VALUES (4, 'customFieldLookupList', 'org.aspcfs.utils.web.LookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'customFieldRecord', 'com.darkhorseventures.cfsbase.CustomFieldRecord');
+ VALUES (4, 'customFieldRecord', 'org.aspcfs.modules.base.CustomFieldRecord');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'customFieldRecordList', 'com.darkhorseventures.cfsbase.CustomFieldRecordList');
+ VALUES (4, 'customFieldRecordList', 'org.aspcfs.modules.base.CustomFieldRecordList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'contactEmailAddress', 'com.darkhorseventures.cfsbase.ContactEmailAddress');
+ VALUES (4, 'contactEmailAddress', 'org.aspcfs.modules.contacts.base.ContactEmailAddress');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'contactEmailAddressList', 'com.darkhorseventures.cfsbase.ContactEmailAddressList');
+ VALUES (4, 'contactEmailAddressList', 'org.aspcfs.modules.contacts.base.ContactEmailAddressList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'customFieldData', 'com.darkhorseventures.cfsbase.CustomFieldData');
+ VALUES (4, 'customFieldData', 'org.aspcfs.modules.base.CustomFieldData');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupProjectActivity', 'com.darkhorseventures.webutils.CustomLookupElement');
+ VALUES (4, 'lookupProjectActivity', 'org.aspcfs.utils.web.CustomLookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupProjectActivityList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'lookupProjectActivityList', 'org.aspcfs.utils.web.CustomLookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupProjectIssues', 'com.darkhorseventures.webutils.CustomLookupElement');
+ VALUES (4, 'lookupProjectIssues', 'org.aspcfs.utils.web.CustomLookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupProjectIssuesList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'lookupProjectIssuesList', 'org.aspcfs.utils.web.CustomLookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupProjectLoe', 'com.darkhorseventures.webutils.CustomLookupElement');
+ VALUES (4, 'lookupProjectLoe', 'org.aspcfs.utils.web.CustomLookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupProjectLoeList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'lookupProjectLoeList', 'org.aspcfs.utils.web.CustomLookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupProjectPriority', 'com.darkhorseventures.webutils.CustomLookupElement');
+ VALUES (4, 'lookupProjectPriority', 'org.aspcfs.utils.web.CustomLookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupProjectPriorityList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'lookupProjectPriorityList', 'org.aspcfs.utils.web.CustomLookupList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupProjectStatus', 'com.darkhorseventures.webutils.CustomLookupElement');
+ VALUES (4, 'lookupProjectStatus', 'org.aspcfs.utils.web.CustomLookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'lookupProjectStatusList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'lookupProjectStatusList', 'org.aspcfs.utils.web.CustomLookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'project', 'com.zeroio.iteam.base.Project');
@@ -763,109 +764,109 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
  VALUES (4, 'fileDownloadLog', 'com.zeroio.iteam.base.FileDownloadLog');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'contactAddress', 'com.darkhorseventures.cfsbase.ContactAddress');
+ VALUES (4, 'contactAddress', 'org.aspcfs.modules.contacts.base.ContactAddress');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'contactAddressList', 'com.darkhorseventures.cfsbase.ContactAddressList');
+ VALUES (4, 'contactAddressList', 'org.aspcfs.modules.contacts.base.ContactAddressList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'contactPhoneNumber', 'com.darkhorseventures.cfsbase.ContactPhoneNumber');
+ VALUES (4, 'contactPhoneNumber', 'org.aspcfs.modules.contacts.base.ContactPhoneNumber');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'contactPhoneNumberList', 'com.darkhorseventures.cfsbase.ContactPhoneNumberList');
+ VALUES (4, 'contactPhoneNumberList', 'org.aspcfs.modules.contacts.base.ContactPhoneNumberList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'organizationPhoneNumber', 'com.darkhorseventures.cfsbase.OrganizationPhoneNumber');
+ VALUES (4, 'organizationPhoneNumber', 'org.aspcfs.modules.accounts.base.OrganizationPhoneNumber');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'organizationPhoneNumberList', 'com.darkhorseventures.cfsbase.OrganizationPhoneNumberList');
+ VALUES (4, 'organizationPhoneNumberList', 'org.aspcfs.modules.accounts.base.OrganizationPhoneNumberList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'organizationEmailAddress', 'com.darkhorseventures.cfsbase.OrganizationEmailAddress');
+ VALUES (4, 'organizationEmailAddress', 'org.aspcfs.modules.accounts.base.OrganizationEmailAddress');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'organizationEmailAddressList', 'com.darkhorseventures.cfsbase.OrganizationEmailAddressList');
+ VALUES (4, 'organizationEmailAddressList', 'org.aspcfs.modules.accounts.base.OrganizationEmailAddressList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'organizationAddress', 'com.darkhorseventures.cfsbase.OrganizationAddress');
+ VALUES (4, 'organizationAddress', 'org.aspcfs.modules.accounts.base.OrganizationAddress');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'organizationAddressList', 'com.darkhorseventures.cfsbase.OrganizationAddressList');
+ VALUES (4, 'organizationAddressList', 'org.aspcfs.modules.accounts.base.OrganizationAddressList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'ticketLog', 'com.darkhorseventures.cfsbase.TicketLog');
+ VALUES (4, 'ticketLog', 'org.aspcfs.modules.troubletickets.base.TicketLog');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'ticketLogList', 'com.darkhorseventures.cfsbase.TicketLogList');
+ VALUES (4, 'ticketLogList', 'org.aspcfs.modules.troubletickets.base.TicketLogList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'message', 'com.darkhorseventures.cfsbase.Message');
+ VALUES (4, 'message', 'org.aspcfs.modules.communications.base.Message');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'messageList', 'com.darkhorseventures.cfsbase.MessageList');
+ VALUES (4, 'messageList', 'org.aspcfs.modules.communications.base.MessageList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'searchCriteriaElements', 'com.darkhorseventures.cfsbase.SearchCriteriaList');
+ VALUES (4, 'searchCriteriaElements', 'org.aspcfs.modules.communications.base.SearchCriteriaList');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'searchCriteriaElementsList', 'com.darkhorseventures.cfsbase.SearchCriteriaListList');
+ VALUES (4, 'searchCriteriaElementsList', 'org.aspcfs.modules.communications.base.SearchCriteriaListList');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'savedCriteriaElement', 'com.darkhorseventures.cfsbase.SavedCriteriaElement');
+ VALUES (4, 'savedCriteriaElement', 'org.aspcfs.modules.communications.base.SavedCriteriaElement');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'searchFieldElement', 'com.darkhorseventures.webutils.CustomLookupElement');
+ VALUES (4, 'searchFieldElement', 'org.aspcfs.utils.web.CustomLookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'searchFieldElementList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'searchFieldElementList', 'org.aspcfs.utils.web.CustomLookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'revenue', 'com.darkhorseventures.cfsbase.Revenue');
+ VALUES (4, 'revenue', 'org.aspcfs.modules.accounts.base.Revenue');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'revenueList', 'com.darkhorseventures.cfsbase.RevenueList');
+ VALUES (4, 'revenueList', 'org.aspcfs.modules.accounts.base.RevenueList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'campaign', 'com.darkhorseventures.cfsbase.Campaign');
+ VALUES (4, 'campaign', 'org.aspcfs.modules.communications.base.Campaign');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'campaignList', 'com.darkhorseventures.cfsbase.CampaignList');
+ VALUES (4, 'campaignList', 'org.aspcfs.modules.communications.base.CampaignList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'scheduledRecipient', 'com.darkhorseventures.cfsbase.ScheduledRecipient');
+ VALUES (4, 'scheduledRecipient', 'org.aspcfs.modules.communications.base.ScheduledRecipient');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'scheduledRecipientList', 'com.darkhorseventures.cfsbase.ScheduledRecipientList');
+ VALUES (4, 'scheduledRecipientList', 'org.aspcfs.modules.communications.base.ScheduledRecipientList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'accessLog', 'com.darkhorseventures.cfsbase.AccessLog');
+ VALUES (4, 'accessLog', 'org.aspcfs.modules.admin.base.AccessLog');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'accessLogList', 'com.darkhorseventures.cfsbase.AccessLogList');
+ VALUES (4, 'accessLogList', 'org.aspcfs.modules.admin.base.AccessLogList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'accountTypeLevels', 'com.darkhorseventures.cfsbase.AccountTypeLevel');
+ VALUES (4, 'accountTypeLevels', 'org.aspcfs.modules.accounts.base.AccountTypeLevel');
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'fieldTypes', 'com.darkhorseventures.webutils.CustomLookupElement');
+ VALUES (4, 'fieldTypes', 'org.aspcfs.utils.web.CustomLookupElement');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'fieldTypesList', 'com.darkhorseventures.webutils.CustomLookupList');
+ VALUES (4, 'fieldTypesList', 'org.aspcfs.utils.web.CustomLookupList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'excludedRecipient', 'com.darkhorseventures.cfsbase.ExcludedRecipient');
+ VALUES (4, 'excludedRecipient', 'org.aspcfs.modules.communications.base.ExcludedRecipient');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'campaignRun', 'com.darkhorseventures.cfsbase.CampaignRun');
+ VALUES (4, 'campaignRun', 'org.aspcfs.modules.communications.base.CampaignRun');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'campaignRunList', 'com.darkhorseventures.cfsbase.CampaignRunList');
+ VALUES (4, 'campaignRunList', 'org.aspcfs.modules.communications.base.CampaignRunList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (4, 'campaignListGroups', 'com.darkhorseventures.cfsbase.CampaignListGroup');
+ VALUES (4, 'campaignListGroups', 'org.aspcfs.modules.communications.base.CampaignListGroup');
  
 /* Fluency */
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (5, 'ticket', 'com.darkhorseventures.cfsbase.Ticket');
+ VALUES (5, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (5, 'ticketCategory', 'com.darkhorseventures.cfsbase.TicketCategory');
+ VALUES (5, 'ticketCategory', 'org.aspcfs.modules.troubletickets.base.TicketCategory');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (5, 'ticketCategoryList', 'com.darkhorseventures.cfsbase.TicketCategoryList');
+ VALUES (5, 'ticketCategoryList', 'org.aspcfs.modules.troubletickets.base.TicketCategoryList');
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
- VALUES (5, 'syncClient', 'com.darkhorseventures.cfsbase.SyncClient', 2);
+ VALUES (5, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', 2);
  
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (5, 'accountList', 'com.darkhorseventures.cfsbase.OrganizationList');
+ VALUES (5, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (5, 'userList', 'com.darkhorseventures.cfsbase.UserList');
+ VALUES (5, 'userList', 'org.aspcfs.modules.admin.base.UserList');
 INSERT INTO sync_table (system_id, element_name, mapped_class_name)
- VALUES (5, 'contactList', 'com.darkhorseventures.cfsbase.ContactList');
+ VALUES (5, 'contactList', 'org.aspcfs.modules.contacts.base.ContactList');
 

@@ -1,0 +1,17 @@
+<data-import-config>
+  <description>
+    All the accounts & related contacts from a excel file will be read and written to a destination CFS system.
+  </description>
+  <reader class="org.aspcfs.apps.transfer.reader.netdescisions.NetDescAccountsReader">
+    <excelFile>ActToCFS22Jan03.xls</excelFile>
+    <ignoreRow1>true</ignoreRow1>
+    <password/>
+    <processConfigFile/>
+  </reader>
+  <writer class="org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter">
+    <url>http://127.0.0.1/ProcessPacket.do</url>
+    <id>127.0.0.1</id>
+    <code>BZTST27A</code>
+    <systemId>4</systemId>
+  </writer>
+</data-import-config>

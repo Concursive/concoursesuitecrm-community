@@ -1,49 +1,49 @@
 <CFSDatabaseReader>
   <processes>
     <!-- Initialization Data -->
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportLookupTables</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportLookupTables</module>
     <!-- Users, Accounts, Contacts and ownership -->
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportBaseData</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportRoles</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportBaseData</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportRoles</module>
     <!-- Related Data -->
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportOpportunities</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportTickets</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCalls</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportCommunications</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportRevenue</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportProjects</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportDocuments</module>
-    <module>com.darkhorseventures.apps.dataimport.cfsdatabasereader.ImportFolders</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportOpportunities</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportTickets</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportCalls</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportCommunications</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportRevenue</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportProjects</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportDocuments</module>
+    <module>org.aspcfs.apps.transfer.reader.cfsdatabasereader.ImportFolders</module>
   </processes>
   <mappings>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupIndustry" table="lookup_industry"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="systemModules" table="system_modules"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactTypes" table="lookup_contact_types"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupAccountTypes" table="lookup_account_types"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupDepartment" table="lookup_department"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupOrgAddressTypes" table="lookup_orgaddress_types"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupOrgEmailTypes" table="lookup_orgemail_types"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupOrgPhoneTypes" table="lookup_orgphone_types"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupInstantMessengerTypes" table="lookup_instantmessenger_types"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupEmploymentTypes" table="lookup_employment_types"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupLocale" table="lookup_locale"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactAddressTypes" table="lookup_contactaddress_types"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactEmailTypes" table="lookup_contactemail_types"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupContactPhoneTypes" table="lookup_contactphone_types"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupStage" table="lookup_stage"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupDeliveryOptions" table="lookup_delivery_options"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupCallTypes" table="lookup_call_types"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="ticketSeverity" table="ticket_severity"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupTicketSource" table="lookup_ticketsource"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="ticketPriority" table="ticket_priority"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupRevenueTypes" table="lookup_revenue_types"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupRevenueDetailTypes" table="lookup_revenuedetail_types"/>
-    <map class="com.darkhorseventures.webutils.LookupList" id="lookupSurveyTypes" table="lookup_survey_types"/>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="systemPrefs" table="system_prefs">
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupIndustry" table="lookup_industry"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="systemModules" table="system_modules"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupContactTypes" table="lookup_contact_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupAccountTypes" table="lookup_account_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupDepartment" table="lookup_department"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupOrgAddressTypes" table="lookup_orgaddress_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupOrgEmailTypes" table="lookup_orgemail_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupOrgPhoneTypes" table="lookup_orgphone_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupInstantMessengerTypes" table="lookup_instantmessenger_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupEmploymentTypes" table="lookup_employment_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupLocale" table="lookup_locale"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupContactAddressTypes" table="lookup_contactaddress_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupContactEmailTypes" table="lookup_contactemail_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupContactPhoneTypes" table="lookup_contactphone_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupStage" table="lookup_stage"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupDeliveryOptions" table="lookup_delivery_options"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupCallTypes" table="lookup_call_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="ticketSeverity" table="ticket_severity"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupTicketSource" table="lookup_ticketsource"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="ticketPriority" table="ticket_priority"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupRevenueTypes" table="lookup_revenue_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupRevenueDetailTypes" table="lookup_revenuedetail_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupSurveyTypes" table="lookup_survey_types"/>
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="systemPrefs" table="system_prefs">
       <property field="category"/>
       <property field="data"/>
     </map>
-    <map class="com.darkhorseventures.cfsbase.Contact" id="contact">
+    <map class="org.aspcfs.modules.contacts.base.Contact" id="contact">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
       <property>title</property>
@@ -70,7 +70,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.Organization" id="account">
+    <map class="org.aspcfs.modules.accounts.base.Organization" id="account">
       <property alias="guid">id</property>
       <property>name</property>
       <property>url</property>
@@ -91,7 +91,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.User" id="user">
+    <map class="org.aspcfs.modules.admin.base.User" id="user">
       <property alias="guid">id</property>
       <property>username</property>
       <property>encryptedPassword</property>
@@ -110,7 +110,7 @@
       <property>modified</property>
       <property>lastLogin</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.Role" id="role">
+    <map class="org.aspcfs.modules.admin.base.Role" id="role">
       <property alias="guid">id</property>
       <property>role</property>
       <property>description</property>
@@ -120,7 +120,7 @@
       <property lookup="user">modifiedBy</property>
       <property>enabled</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.PermissionCategory" id="permissionCategory">
+    <map class="org.aspcfs.modules.admin.base.PermissionCategory" id="permissionCategory">
       <property alias="guid">id</property>
       <property>category</property>
       <property>description</property>
@@ -130,7 +130,7 @@
       <property>folders</property>
       <property>lookups</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.Permission" id="permission">
+    <map class="org.aspcfs.modules.admin.base.Permission" id="permission">
       <property alias="guid">id</property>
       <property lookup="permissionCategory">categoryId</property>
       <property>permissionLevel</property>
@@ -143,7 +143,7 @@
       <property>enabled</property>
       <property>active</property>
     </map>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="rolePermission" table="role_permission" uniqueField="id">
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="rolePermission" table="role_permission" uniqueField="id">
       <property alias="guid" field="id">id</property>
       <property lookup="role" field="role_id">roleId</property>
       <property lookup="permission" field="permission_id">permissionId</property>
@@ -152,7 +152,7 @@
       <property field="role_edit">edit</property>
       <property field="role_delete">delete</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.Opportunity" id="opportunity">
+    <map class="org.aspcfs.modules.pipeline.base.Opportunity" id="opportunity">
       <property alias="guid">id</property>
       <property lookup="user">owner</property>
       <property>description</property>
@@ -177,7 +177,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.TicketCategory" id="ticketCategory">
+    <map class="org.aspcfs.modules.troubletickets.base.TicketCategory" id="ticketCategory">
       <property alias="guid">id</property>
       <property>categoryLevel</property>
       <property lookup="ticketCategory">parentCode</property>
@@ -185,7 +185,7 @@
       <property>level</property>
       <property>enabled</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.Ticket" id="ticket">
+    <map class="org.aspcfs.modules.troubletickets.base.Ticket" id="ticket">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
       <property lookup="contact">contactId</property>
@@ -210,7 +210,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.CustomFieldCategory" id="customFieldCategory">
+    <map class="org.aspcfs.modules.base.CustomFieldCategory" id="customFieldCategory">
       <property alias="guid">id</property>
       <property lookup="systemModules">moduleId</property>
       <property>name</property>
@@ -224,7 +224,7 @@
       <property>allowMultipleRecords</property>
       <property>readOnly</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.CustomFieldGroup" id="customFieldGroup">
+    <map class="org.aspcfs.modules.base.CustomFieldGroup" id="customFieldGroup">
       <property alias="guid">id</property>
       <property lookup="customFieldCategory">categoryId</property>
       <property>name</property>
@@ -235,7 +235,7 @@
       <property>entered</property>
       <property>enabled</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.CustomField" id="customField">
+    <map class="org.aspcfs.modules.base.CustomField" id="customField">
       <property alias="guid">id</property>
       <property lookup="customFieldGroup">groupId</property>
       <property>name</property>
@@ -250,7 +250,7 @@
       <property>entered</property>
       <property>enabled</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.Call" id="call">
+    <map class="org.aspcfs.modules.contacts.base.Call" id="call">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
       <property lookup="contact">contactId</property>
@@ -265,7 +265,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="lookupProjectActivity" 
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="lookupProjectActivity" 
          table="lookup_project_activity" uniqueField="code">
       <property field="code" alias="guid"/>
       <property field="description"/>
@@ -275,7 +275,7 @@
       <property field="group_id"/>
       <property field="template_id"/>
     </map>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="lookupProjectIssues" 
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="lookupProjectIssues" 
          table="lookup_project_issues" uniqueField="code">
       <property field="code" alias="guid"/>
       <property field="description"/>
@@ -284,7 +284,7 @@
       <property field="enabled"/>
       <property field="group_id"/>
     </map>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="lookupProjectLoe" 
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="lookupProjectLoe" 
          table="lookup_project_loe" uniqueField="code">
       <property field="code" alias="guid"/>
       <property field="description"/>
@@ -294,7 +294,7 @@
       <property field="enabled"/>
       <property field="group_id"/>
     </map>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="lookupProjectPriority" 
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="lookupProjectPriority" 
          table="lookup_project_priority" uniqueField="code">
       <property field="code" alias="guid"/>
       <property field="description"/>
@@ -305,7 +305,7 @@
       <property field="graphic"/>
       <property field="type"/>
     </map>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="lookupProjectStatus" 
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="lookupProjectStatus" 
          table="lookup_project_status" uniqueField="code">
       <property field="code" alias="guid"/>
       <property field="description"/>
@@ -455,7 +455,7 @@
       <property lookup="user">userId</property>
       <property>downloadDate</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.ContactEmailAddress" id="contactEmailAddress">
+    <map class="org.aspcfs.modules.contacts.base.ContactEmailAddress" id="contactEmailAddress">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
       <property lookup="contact">contactId</property>
@@ -467,7 +467,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.ContactAddress" id="contactAddress">
+    <map class="org.aspcfs.modules.contacts.base.ContactAddress" id="contactAddress">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
       <property lookup="contact">contactId</property>
@@ -485,7 +485,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.ContactPhoneNumber" id="contactPhoneNumber">
+    <map class="org.aspcfs.modules.contacts.base.ContactPhoneNumber" id="contactPhoneNumber">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
       <property lookup="contact">contactId</property>
@@ -498,7 +498,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.OrganizationPhoneNumber" id="organizationPhoneNumber">
+    <map class="org.aspcfs.modules.accounts.base.OrganizationPhoneNumber" id="organizationPhoneNumber">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
       <property>number</property>
@@ -510,7 +510,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.OrganizationEmailAddress" id="organizationEmailAddress">
+    <map class="org.aspcfs.modules.accounts.base.OrganizationEmailAddress" id="organizationEmailAddress">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
       <property lookup="lookupOrgEmailTypes">type</property>
@@ -521,7 +521,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.OrganizationAddress" id="organizationAddress">
+    <map class="org.aspcfs.modules.accounts.base.OrganizationAddress" id="organizationAddress">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
       <property>streetAddressLine1</property>
@@ -538,7 +538,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.TicketLog" id="ticketLog">
+    <map class="org.aspcfs.modules.troubletickets.base.TicketLog" id="ticketLog">
       <property alias="guid">id</property>
       <property lookup="ticket">ticketId</property>
       <property>entryText</property>
@@ -554,7 +554,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.Message" id="message">
+    <map class="org.aspcfs.modules.communications.base.Message" id="message">
       <property alias="guid">id</property>
       <property>name</property>
       <property>description</property>
@@ -570,7 +570,7 @@
       <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.SearchCriteriaList" id="searchCriteriaElements">
+    <map class="org.aspcfs.modules.communications.base.SearchCriteriaList" id="searchCriteriaElements">
       <property alias="guid">id</property>
       <property>groupName</property>
       <property>contactSource</property>
@@ -581,7 +581,7 @@
       <property>modified</property>
     </map>
 <!-- Coded directly to handle multiple lookups per field    
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="savedCriteriaElement" table="saved_criteriaelement">
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="savedCriteriaElement" table="saved_criteriaelement">
       <property lookup="searchCriteriaElements" field="id">savedCriteriaListId</property>
       <property lookup="searchFieldElement" field="field">fieldId</property>
       <property field="operator">operator</property>
@@ -589,7 +589,7 @@
       <property field="value">value</property>
     </map>
 -->
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="searchFieldElement" table="search_fields" uniqueField="id">
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="searchFieldElement" table="search_fields" uniqueField="id">
       <property alias="guid" field="id"/>
       <property field="field"/>
       <property field="description"/>
@@ -599,7 +599,7 @@
       <property field="object_class"/>
       <property field="enabled"/>
     </map>
-    <map class="com.darkhorseventures.cfsbase.Revenue" id="revenue">
+    <map class="org.aspcfs.modules.accounts.base.Revenue" id="revenue">
       <property alias="guid">id</property>
       <property lookup="account">orgId</property>
       <property>transactionId</property>
@@ -614,7 +614,7 @@
        <property>entered</property>
       <property>modified</property>
     </map>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="campaign" table="campaign" uniqueField="campaign_id">
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="campaign" table="campaign" uniqueField="campaign_id">
       <property alias="guid" field="id">id</property>
       <property field="name">name</property>
       <property field="description">description</property>
@@ -637,7 +637,7 @@
       <property field="entered">entered</property>
       <property field="modified">modified</property>
     </map>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="scheduledRecipient" table="scheduled_recipient" uniqueField="id">
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="scheduledRecipient" table="scheduled_recipient" uniqueField="id">
       <property alias="guid" field="id">id</property>
       <property lookup="campaign" field="campaign_id">campaignId</property>
       <property lookup="contact" field="contact_id">contactId</property>
@@ -650,7 +650,7 @@
       <property field="reply_date">replyDate</property>
       <property field="bounce_date">bounceDate</property>
     </map>
-    <map class="com.darkhorseventures.cfsbase.AccessLog" id="accessLog">
+    <map class="org.aspcfs.modules.admin.base.AccessLog " id="accessLog">
       <property alias="guid">id</property>
       <property lookup="user">userId</property>
       <property>username</property>
@@ -658,27 +658,27 @@
       <property>browser</property>
       <property>entered</property>
     </map>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="accountTypeLevels" table="account_type_levels">
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="accountTypeLevels" table="account_type_levels">
       <property lookup="account" field="id">orgId</property>
       <property lookup="lookupAccountTypes" field="type_id">typeId</property>
       <property field="level">level</property>
       <property field="entered">entered</property>
       <property field="modified">modified</property>
     </map>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="fieldTypes" table="field_types" uniqueField="id">
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="fieldTypes" table="field_types" uniqueField="id">
       <property alias="guid" field="id"/>
       <property field="data_typeid"/>
       <property field="data_type"/>
       <property field="operator"/>
       <property field="display_text"/>
     </map>
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="excludedRecipient" table="excluded_recipient" uniqueField="id">
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="excludedRecipient" table="excluded_recipient" uniqueField="id">
       <property field="id">id</property>
       <property lookup="campaign" field="campaign_id">campaignId</property>
       <property lookup="contact" field="contact_id">contactId</property>
     </map>
 <!--
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="recipientList" table="recipient_list" uniqueField="id">
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="recipientList" table="recipient_list" uniqueField="id">
       <property alias="guid" field="id"/>
       <property field="name"/>
       <property field="description"/>
@@ -689,7 +689,7 @@
       <property lookup="user" field="modifiedby"/>
     </map>
 -->
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="campaignRun" table="campaign_run" uniqueField="id">
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="campaignRun" table="campaign_run" uniqueField="id">
       <property alias="guid" field="id">id</property>
       <property lookup="campaign" field="campaign_id">campaignId</property>
       <property field="status">status</property>
@@ -699,7 +699,7 @@
       <property field="total_replied">totalReplied</property>
       <property field="total_bounced">totalBounced</property>
     </map>   
-    <map class="com.darkhorseventures.webutils.CustomLookupList" id="campaignListGroups" table="campaign_list_groups">
+    <map class="org.aspcfs.utils.web.CustomLookupList" id="campaignListGroups" table="campaign_list_groups">
       <property lookup="campaign" field="campaign_id">campaignId</property>
       <property lookup="searchCriteriaElements" field="group_id">groupId</property>
     </map>  

@@ -84,7 +84,8 @@ echo ok
 
 cd ${SITEHOME}/${SITECODE}/bin
 
-java -cp .:${CLASSPATH}:${SITEHOME}/${SITECODE}/bin/Notifier.jar com.darkhorseventures.apps.dataimport.DataImport dataImport-config.xml
+#java -cp .:${CLASSPATH}:${SITEHOME}/${SITECODE}/bin/Notifier.jar com.darkhorseventures.apps.dataimport.DataImport dataImport-config.xml
+java -cp .:${CLASSPATH}:${SITEHOME}/${SITECODE}/bin/aspcfs.jar org.aspcfs.apps.transfer.Transfer netDesc-loadAccounts.xml
 
 
 ) >>${LOG} 2>&1 

@@ -182,76 +182,8 @@ public class CFSDatabaseReader implements DataReader {
     if (driver == null || url == null || user == null) {
       return false;
     }
-
-    //Read in modules and mappings to be processed
-    try {
-      File configFile = new File(processConfigFile);
-      XMLUtils xml = new XMLUtils(configFile);
-
-      modules = new ArrayList();
-      xml.getAllChildrenText(xml.getFirstChild("processes"), "module", modules);
-      logger.info("CFSDatabaseReader module count: " + modules.size());
-
-      mappings = new PropertyMapList();
-      ArrayList mapElements = new ArrayList();
-      XMLUtils.getAllChildren(xml.getFirstChild("mappings"), "map", mapElements);
-      Iterator mapItems = mapElements.iterator();
-      while (mapItems.hasNext()) {
-        //Get the map node
-        Element map = (Element) mapItems.next();
-        PropertyMap mapProperties = new PropertyMap();
-        mapProperties.setId((String) map.getAttribute("id"));
-        mapProperties.setTable((String) map.getAttribute("table"));
-        mapProperties.setUniqueField((String) map.getAttribute("uniqueField"));
-
-        //Get any property nodes
-        NodeList nl = map.getChildNodes();
-        for (int i = 0; i < nl.getLength(); i++) {
-          Node n = nl.item(i);
-          if (n.getNodeType() == Node.ELEMENT_NODE && ((Element) n).getTagName().equals("property")) {
-            String nodeText = XMLUtils.getNodeText((Element) n);
-            Property thisProperty = null;
-            if (nodeText != null) {
-              thisProperty = new Property(nodeText);
-            } else {
-              thisProperty = new Property();
-            }
-
-            String lookupValue = ((Element) n).getAttribute("lookup");
-            if (lookupValue != null && !"".equals(lookupValue)) {
-              thisProperty.setLookupValue(lookupValue);
-            }
-
-            String alias = ((Element) n).getAttribute("alias");
-            if (alias != null && !"".equals(alias)) {
-              thisProperty.setAlias(alias);
-            }
-
-            String field = ((Element) n).getAttribute("field");
-            if (field != null && !"".equals(field)) {
-              thisProperty.setField(field);
-            }
-
-            String value = ((Element) n).getAttribute("value");
-            if (value != null && !"".equals(value)) {
-              thisProperty.setValue(value);
-            }
-
-            mapProperties.add(thisProperty);
-          }
-        }
-        if (mappings.containsKey(map.getAttribute("class"))) {
-          mappings.put((String) map.getAttribute("class") + ++count, mapProperties);
-        } else {
-          mappings.put((String) map.getAttribute("class"), mapProperties);
-        }
-      }
-
-    } catch (Exception e) {
-      logger.info("Error reading module configuration-> " + e.toString());
-      return false;
-    }
-
+    modules = new ArrayList();
+    mappings = new PropertyMapList(processConfigFile, modules);
     return true;
   }
 

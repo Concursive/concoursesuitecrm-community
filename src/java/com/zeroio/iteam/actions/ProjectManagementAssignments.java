@@ -10,7 +10,6 @@ package com.zeroio.iteam.actions;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.sql.*;
-import java.util.ArrayList;
 import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.framework.actions.*;
 import com.zeroio.iteam.base.*;
@@ -18,6 +17,16 @@ import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.modules.admin.base.User;
+
+import java.io.*;
+import java.util.*;
+import com.jrefinery.chart.*;
+import com.jrefinery.chart.data.*;
+import com.jrefinery.chart.ui.*;
+import com.jrefinery.data.*;
+import com.jrefinery.chart.entity.StandardEntityCollection;
+import com.jrefinery.chart.tooltips.TimeSeriesToolTipGenerator;
+import java.awt.Color;
 
 /**
  *  Description of the Class
@@ -351,6 +360,107 @@ public final class ProjectManagementAssignments extends CFSModule {
     String param = (String)context.getRequest().getParameter("param");
     if (param == null) param = (String)context.getRequest().getAttribute("param");
     context.getRequest().setAttribute("param", param);
+  }
+  
+  
+  public String executeCommandGantt(ActionContext context) {
+    Exception errorMessage = null;
+    String projectId = (String)context.getRequest().getParameter("pid");
+    Connection db = null;
+    Project thisProject = null;
+    LookupList activityList = null;
+    try {
+      db = getConnection(context);
+      thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      context.getRequest().setAttribute("Project", thisProject);
+      context.getRequest().setAttribute("IncludeSection", ("assignments_add").toLowerCase());
+      thisProject.setBuildRequirementAssignments(true);
+      thisProject.buildRequirementList(db);
+      activityList = new LookupList(db, "lookup_project_activity");
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    //Now that the data is ready, compile it into a Gantt chart
+    GanttSeriesCollection categoryData = new GanttSeriesCollection();
+    Iterator requirements = thisProject.getRequirements().iterator();
+    GanttSeries series = new GanttSeries("Scheduled");
+    while (requirements.hasNext()) {
+      Requirement thisRequirement = (Requirement) requirements.next();
+      Iterator assignments = thisRequirement.getAssignments().iterator();
+      while (assignments.hasNext()) {
+        Assignment thisAssignment = (Assignment) assignments.next();
+        java.util.Date start = thisAssignment.getStartDate();
+        if (start == null) {
+          start = thisAssignment.getAssignDate();
+        }
+        
+        java.util.Date end = null;
+        if (thisAssignment.getComplete()) {
+          end = thisAssignment.getCompleteDate();
+        } else {
+          end = thisAssignment.getDueDate();
+        }
+        
+        if (end == null) {
+          end = start;
+        }
+        
+        if (start != null && end != null) {
+          if (end.before(start)) {
+            end.setTime(start.getTime() + 60000);
+          }
+          
+          TimeAllocation timeFrame = new TimeAllocation(start, end);
+          series.add(thisAssignment.getActivity(), timeFrame);
+          
+          System.out.println("ADDED-----> " + thisAssignment.getRole() + String.valueOf(start) + " " + String.valueOf(end));
+        }
+      }
+    }
+    
+    if (series.getItemCount() > 0) {
+      System.out.println("ProjectManagementAssignments-> Gantt Series: " + series.getItemCount());
+      categoryData.add(series);
+    }
+    
+    System.out.println("ProjectManagementAssignments-> Gantt Categories: " + categoryData.getCategoryCount());
+    
+    IntervalCategoryDataset dataset = categoryData;
+    
+    JFreeChart chart = ChartFactory.createGanttChart(thisProject.getShortDescription(),  // chart title
+        "Task",              // domain axis label
+        "Date",              // range axis label
+        dataset,             // data
+        true,                 // include legend
+        true,                // tooltips
+        false                // urls
+        );
+    chart.setBackgroundPaint(Color.white);
+    int width = 600;
+    int height = 500;
+    try {
+      String realPath = context.getServletContext().getRealPath("/");
+      String filePath = realPath + "graphs" + fs;
+      java.util.Date testDate = new java.util.Date();
+      String fileName = String.valueOf(getUserId(context)) + String.valueOf(testDate.getTime()) + String.valueOf(context.getSession().getCreationTime());
+
+      // Write the chart image
+      File imageFile = new File(filePath + fileName + ".jpg");
+      ChartUtilities.saveChartAsJPEG(imageFile, 1.0f, chart, width, height);
+    } catch (IOException e) {
+      e.printStackTrace(System.out);
+    }
+      
+    addModuleBean(context, "Gantt", "");
+    if (errorMessage == null) {
+      return ("ProjectCenterOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
 }
 

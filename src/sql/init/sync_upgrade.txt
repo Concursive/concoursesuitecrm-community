@@ -1,0 +1,76 @@
+DB Synch Updates
+
+com.darkhorseventures.cfsbase.Ticket - org.aspcfs.modules.troubletickets.base
+com.darkhorseventures.cfsbase.SyncClient - org.aspcfs.modules.service.base.SyncClient
+com.darkhorseventures.cfsbase.User - org.aspcfs.modules.admin.base.User
+com.darkhorseventures.cfsbase.UserList - org.aspcfs.modules.admin.base.UserList
+com.darkhorseventures.cfsbase.Organization - org.aspcfs.modules.accounts.base.Organization
+com.darkhorseventures.cfsbase.OrganizationList - org.aspcfs.modules.accounts.base.OrganizationList
+com.darkhorseventures.cfsbase.OrganizationPhoneNumberList - org.aspcfs.modules.accounts.base.OrganizationPhoneNumberList
+com.darkhorseventures.cfsbase.OrganizationPhoneNumber - org.aspcfs.modules.accounts.base.OrganizationPhoneNumber
+com.darkhorseventures.cfsbase.OrganizationEmailAddress - org.aspcfs.modules.accounts.base.OrganizationEmailAddress
+com.darkhorseventures.cfsbase.OrganizationEmailAddressList - org.aspcfs.modules.accounts.base.OrganizationEmailAddressList
+com.darkhorseventures.cfsbase.OrganizationAddressList - org.aspcfs.modules.accounts.base.OrganizationAddressList
+com.darkhorseventures.cfsbase.OrganizationAddress - org.aspcfs.modules.accounts.base.OrganizationAddress
+com.darkhorseventures.autoguide.base.Inventory - org.aspcfs.modules.media.autoguide.base.Inventory
+com.darkhorseventures.autoguide.base.InventoryList - org.aspcfs.modules.media.autoguide.base.InventoryList
+com.darkhorseventures.autoguide.base.InventoryOption - org.aspcfs.modules.media.autoguide.base
+com.darkhorseventures.autoguide.base.AdRun - org.aspcfs.modules.media.autoguide.base.AdRun
+com.darkhorseventures.cfsbase.SyncTableList - org.aspcfs.modules.service.base.SyncTableList
+com.darkhorseventures.cfsbase.UserList - org.aspcfs.modules.admin.base.UserList
+com.darkhorseventures.autoguide.base.MakeList - org.aspcfs.modules.media.autoguide.base.MakeList
+com.darkhorseventures.autoguide.base.ModelList - org.aspcfs.modules.media.autoguide.base.ModelList
+com.darkhorseventures.autoguide.base.VehicleList-org.aspcfs.modules.media.autoguide.base.VehicleList
+com.darkhorseventures.autoguide.base.OptionList - org.aspcfs.modules.media.autoguide.base.OptionList
+com.darkhorseventures.autoguide.base.InventoryOptionList - org.aspcfs.modules.media.autoguide.base.InventoryOptionList
+com.darkhorseventures.webutils.LookupList - org.aspcfs.utils.web.LookupList
+com.darkhorseventures.webutils.LookupElement - org.aspcfs.utils.web.LookupElement
+com.darkhorseventures.webutils.CustomLookupElement - org.aspcfs.utils.web.CustomLookupElement
+com.darkhorseventures.autoguide.base.AdRunList - org.aspcfs.modules.media.autoguide.base.AdRunList
+com.darkhorseventures.cfsbase.TicketCategory - org.aspcfs.modules.troubletickets.base.TicketCategory								
+com.darkhorseventures.cfsbase.TicketCategoryList -- org.aspcfs.modules.troubletickets.base.TicketCategoryList										
+com.darkhorseventures.cfsbase.Ticket - org.aspcfs.modules.troubletickets.base.Ticket	
+com.darkhorseventures.cfsbase.TicketLog - org.aspcfs.modules.troubletickets.base.TicketLog	
+com.darkhorseventures.cfsbase.TicketLogList - org.aspcfs.modules.troubletickets.base.TicketLogList	
+com.darkhorseventures.cfsbase.TicketList - org.aspcfs.modules.troubletickets.base.TicketList	
+com.darkhorseventures.cfsbase.Contact -- org.aspcfs.modules.contacts.base.Contact
+com.darkhorseventures.cfsbase.ContactList - org.aspcfs.modules.contacts.base.ContactList
+com.darkhorseventures.cfsbase.Role - org.aspcfs.modules.admin.base.Role
+com.darkhorseventures.cfsbase.RoleList - org.aspcfs.modules.admin.base.RoleList
+com.darkhorseventures.cfsbase.PermissionCategory - 	org.aspcfs.modules.admin.base.PermissionCategory										
+com.darkhorseventures.cfsbase.PermissionCategoryList - 	org.aspcfs.modules.admin.base.PermissionCategoryList										
+com.darkhorseventures.cfsbase.Permission - 	org.aspcfs.modules.admin.base.Permission
+com.darkhorseventures.cfsbase.PermissionList -	org.aspcfs.modules.admin.base.PermissionList
+com.darkhorseventures.cfsbase.Permission - org.aspcfs.modules.admin.base.Permission
+com.darkhorseventures.cfsbase.RolePermission - org.aspcfs.modules.admin.base.RolePermission
+com.darkhorseventures.cfsbase.RolePermissionList - org.aspcfs.modules.admin.base.RolePermissionList	
+com.darkhorseventures.cfsbase.Opportunity - org.aspcfs.modules.pipeline.base.Opportunity
+com.darkhorseventures.cfsbase.Call - org.aspcfs.modules.contacts.base.Call
+com.darkhorseventures.cfsbase.CallList - org.aspcfs.modules.contacts.base.CallList
+com.darkhorseventures.cfsbase.CustomFieldCategory -	org.aspcfs.modules.base.CustomFieldCategory			
+com.darkhorseventures.cfsbase.CustomFieldCategoryList - org.aspcfs.modules.base.CustomFieldCategoryList
+com.darkhorseventures.cfsbase.CustomFieldList - org.aspcfs.modules.base.CustomFieldList	
+com.darkhorseventures.cfsbase.CustomFieldRecord - org.aspcfs.modules.base.CustomFieldRecord
+com.darkhorseventures.cfsbase.CustomFieldRecordList -	org.aspcfs.modules.base.CustomFieldRecordList											
+com.darkhorseventures.cfsbase.ContactEmailAddress --org.aspcfs.modules.contacts.base.ContactEmailAddress		
+com.darkhorseventures.cfsbase.ContactEmailAddressList --org.aspcfs.modules.contacts.base.ContactEmailAddressList									
+com.darkhorseventures.cfsbase.ContactPhoneNumberList	 - org.aspcfs.modules.contacts.base.ContactPhoneNumberList	
+com.darkhorseventures.cfsbase.ContactPhoneNumber	 - org.aspcfs.modules.contacts.base.ContactPhoneNumber	
+com.darkhorseventures.cfsbase.CustomFieldData -- 	org.aspcfs.modules.base.CustomFieldData		
+com.darkhorseventures.webutils.CustomLookupList - 	org.aspcfs.utils.web.CustomLookupList
+com.darkhorseventures.cfsbase.MessageList - org.aspcfs.modules.communications.base.MessageList
+com.darkhorseventures.cfsbase.Message - org.aspcfs.modules.communications.base.Message		
+com.darkhorseventures.cfsbase.SearchCriteriaList - org.aspcfs.modules.communications.base.SearchCriteriaList	
+com.darkhorseventures.cfsbase.SearchCriteriaListList - org.aspcfs.modules.communications.base.SearchCriteriaListList	
+com.darkhorseventures.cfsbase.SavedCriteriaElement - org.aspcfs.modules.communications.base.SavedCriteriaElement															
+com.darkhorseventures.cfsbase.Revenue -- org.aspcfs.modules.accounts.base.Revenue
+com.darkhorseventures.cfsbase.RevenueList -- org.aspcfs.modules.accounts.base.RevenueList										
+com.darkhorseventures.cfsbase.AccessLog-org.aspcfs.modules.admin.base.AccessLog 				
+com.darkhorseventures.cfsbase.AccessLogList-org.aspcfs.modules.admin.base.AccessLogList 	
+com.darkhorseventures.cfsbase.AccountTypeLevel-org.aspcfs.modules.accounts.base.AccountTypeLevel										
+com.darkhorseventures.cfsbase.ExcludedRecipient - org.aspcfs.modules.communications.base.ExcludedRecipient
+com.darkhorseventures.cfsbase.CampaignRun -	org.aspcfs.modules.communications.base.CampaignRun
+com.darkhorseventures.cfsbase.CampaignRunList -	org.aspcfs.modules.communications.base.CampaignRunList										
+com.darkhorseventures.cfsbase.ScheduledRecipient -	org.aspcfs.modules.communications.base.ScheduledRecipient
+com.darkhorseventures.cfsbase.ScheduledRecipientList -	org.aspcfs.modules.communications.base.ScheduledRecipientList	
+com.darkhorseventures.cfsbase.Campaign -	org.aspcfs.modules.communications.base.Campaign

@@ -4,30 +4,54 @@ import java.util.*;
 import org.aspcfs.apps.transfer.*;
 import org.aspcfs.utils.*;
 import java.util.logging.*;
+import org.w3c.dom.*;
+import java.io.*;
 
 /**
  *  Contains a list of PropertyMaps, used to translate objects into XML
  *
  *@author     matt rajkowski
  *@created    September 18, 2002
- *@version    $Id$
+ *@version    $Id: PropertyMapList.java,v 1.14.2.1 2003/01/22 23:08:55 akhi_m
+ *      Exp $
  */
 public class PropertyMapList extends HashMap {
+
+  private int count = 0;
   public static Logger logger = Logger.getLogger(Transfer.class.getName());
 
 
-  public PropertyMapList(String configFile){
-    loadMap(configFile);
+  /**
+   *  Constructor for the PropertyMapList object
+   */
+  public PropertyMapList() { }
+
+
+  /**
+   *  Constructor for the PropertyMapList object
+   *
+   *@param  configFile  Description of the Parameter
+   *@param  modules     Description of the Parameter
+   */
+  public PropertyMapList(String configFile, ArrayList modules) {
+    loadMap(configFile, modules);
   }
-  
-  
-  public void loadMap(String mapFile, ArrayList modules){
-      
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  mapFile  Description of the Parameter
+   *@param  modules  Description of the Parameter
+   */
+  public void loadMap(String mapFile, ArrayList modules) {
+
+    try {
       File configFile = new File(mapFile);
       XMLUtils xml = new XMLUtils(configFile);
       xml.getAllChildrenText(xml.getFirstChild("processes"), "module", modules);
-      logger.info("CFSDatabaseReader module count: " + modules.size());
-      
+      logger.info("PropertyMapList module count: " + modules.size());
+
       ArrayList mapElements = new ArrayList();
       XMLUtils.getAllChildren(xml.getFirstChild("mappings"), "map", mapElements);
       Iterator mapItems = mapElements.iterator();
@@ -75,14 +99,18 @@ public class PropertyMapList extends HashMap {
             mapProperties.add(thisProperty);
           }
         }
-        if (mappings.containsKey(map.getAttribute("class"))) {
+        if (this.containsKey(map.getAttribute("class"))) {
           this.put((String) map.getAttribute("class") + ++count, mapProperties);
         } else {
           this.put((String) map.getAttribute("class"), mapProperties);
         }
       }
+    } catch (Exception e) {
+      logger.info("Error reading module configuration-> " + e.toString());
+    }
   }
-  
+
+
   /**
    *  Description of the Method
    *
