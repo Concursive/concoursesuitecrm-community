@@ -94,6 +94,7 @@ public final class ContactsPortal extends CFSModule {
 
       RoleList roleList = new RoleList();
       roleList.setExcludeRoleType(Constants.ROLETYPE_REGULAR);
+      roleList.setEnabledState(Constants.TRUE);
       roleList.buildList(db);
       roleList.setEmptyHtmlSelectRecord("--None--");
       context.getRequest().setAttribute("roleList", roleList);
@@ -173,6 +174,7 @@ public final class ContactsPortal extends CFSModule {
 
       RoleList roleList = new RoleList();
       roleList.setExcludeRoleType(Constants.ROLETYPE_REGULAR);
+      roleList.setEnabledState(Constants.TRUE);
       roleList.buildList(db);
       roleList.setEmptyHtmlSelectRecord("--None--");
       context.getRequest().setAttribute("roleList", roleList);
