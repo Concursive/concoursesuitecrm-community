@@ -1,0 +1,27 @@
+#!/bin/sh
+//bin/true; exec java -classpath .:lib/bsh.jar:build/lib/aspcfs.jar:/usr/java/tomcat/common/lib/servlet-api.jar bsh.Interpreter "$0" "$@"
+
+/* Servlet API is required and may not be set */
+
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.StringUtils;
+
+if (bsh.args.length == 0) {
+  print("Usage:");
+  print("  TestPacket [filename] <url>");
+  print("");
+  print("The specified file will be sent to either 127.0.0.1 or the specified url");
+  System.exit(0);
+}
+String filename = bsh.args[0];
+
+String url = "http://127.0.0.1/ProcessPacket.do";
+if (bsh.args.length > 1) {
+  url = bsh.args[1];
+}
+
+
+String xml = StringUtils.loadText(filename);
+System.out.println(HTTPUtils.sendPacket(url, xml));
+System.exit(0);
+
