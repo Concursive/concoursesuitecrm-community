@@ -110,7 +110,7 @@
       <property>description</property>
       <property lookup="account">accountLink</property>
       <property>contactLink</property>
-      <property alias="closeDate">closeDateString</property>
+      <property>closeDate</property>
       <property>closeProb</property>
       <property>terms</property>
       <property>units</property>
@@ -121,7 +121,7 @@
       <property alias="stageDate">stageDateString</property>
       <property>commission</property>
       <property>type</property>
-      <property alias="alertDate">alertDateString</property>
+      <property>alertDate</property>
       <property lookup="user">enteredBy</property>
       <property lookup="user">modifiedBy</property>
       <property>alertText</property>

@@ -9,6 +9,7 @@ import java.text.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import com.darkhorseventures.utils.DatabaseUtils;
+import com.darkhorseventures.utils.DateUtils;
 
 /**
  *  Description of the Class
@@ -205,7 +206,7 @@ public class Ticket extends GenericBean {
    *@param  tmp  The new closed value
    */
   public void setClosed(String tmp) {
-    this.closed = java.sql.Timestamp.valueOf(tmp);
+    this.closed = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -308,7 +309,7 @@ public void setCompanyEnabled(boolean companyEnabled) {
    *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
-    this.entered = java.sql.Timestamp.valueOf(tmp);
+    this.entered = DateUtils.parseTimestampString(tmp);
   }
 
 
@@ -318,7 +319,7 @@ public void setCompanyEnabled(boolean companyEnabled) {
    *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
-    this.modified = java.sql.Timestamp.valueOf(tmp);
+    this.modified = DateUtils.parseTimestampString(tmp);
   }
 
 
