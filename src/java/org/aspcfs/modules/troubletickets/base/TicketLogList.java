@@ -89,7 +89,12 @@ public class TicketLogList extends Vector {
       if (current.getAssignedTo() != prev.getAssignedTo()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Re-assigned to " + tempLog.getAssignedToName() + " ]");
+        
+        if (tempLog.getAssignedToName() != null) {
+          tempLog.setEntryText("[ Re-assigned to " + tempLog.getAssignedToName() + " ]");
+        } else {
+          tempLog.setEntryText("[ Ticket is un-assigned ]");
+        }
         this.addElement(tempLog);
       }
 
