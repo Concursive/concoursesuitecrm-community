@@ -10,17 +10,20 @@ import org.aspcfs.utils.*;
  *
  *@author     matt rajkowski
  *@created    November 11, 2002
- *@version    $Id$
+ *@version    $Id: ComponentContext.java,v 1.5 2003/01/13 21:41:16 mrajkowski
+ *      Exp $
  */
 public class ComponentContext extends HashMap {
-  public static final int TEXT_ENCODING = 0;
-  public static final int XML_ENCODING = 1;
-  public static final int HTML_ENCODING = 2;
+  public final static int TEXT_ENCODING = 0;
+  public final static int XML_ENCODING = 1;
+  public final static int HTML_ENCODING = 2;
 
+  private WorkflowManager manager = null;
   private String processName = null;
   private BusinessProcess process = null;
   private Object previousObject = null;
   private Object thisObject = null;
+  private AbstractList objects = null;
 
 
   /**
@@ -70,6 +73,26 @@ public class ComponentContext extends HashMap {
 
 
   /**
+   *  Sets the objects attribute of the ComponentContext object
+   *
+   *@param  tmp  The new objects value
+   */
+  public void setObjects(AbstractList tmp) {
+    this.objects = tmp;
+  }
+
+
+  /**
+   *  Sets the manager attribute of the ComponentContext object
+   *
+   *@param  tmp  The new manager value
+   */
+  public void setManager(WorkflowManager tmp) {
+    this.manager = tmp;
+  }
+
+
+  /**
    *  Gets the processName attribute of the ComponentContext object
    *
    *@return    The processName value
@@ -106,6 +129,16 @@ public class ComponentContext extends HashMap {
    */
   public Object getThisObject() {
     return thisObject;
+  }
+
+
+  /**
+   *  Gets the objects attribute of the ComponentContext object
+   *
+   *@return    The objects value
+   */
+  public AbstractList getObjects() {
+    return objects;
   }
 
 
@@ -182,12 +215,40 @@ public class ComponentContext extends HashMap {
 
 
   /**
+   *  Gets the parameterAsBoolean attribute of the ComponentContext object
+   *
+   *@param  parameterName  Description of the Parameter
+   *@return                The parameterAsBoolean value
+   */
+  public boolean getParameterAsBoolean(String parameterName) {
+    try {
+      return (Boolean.valueOf(this.getParameter(parameterName))).booleanValue();
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+
+  /**
    *  Gets the parameter attribute of the ComponentContext object
    *
    *@param  parameterName  Description of the Parameter
    *@return                The parameter value
    */
   public String getParameter(String parameterName) {
+    return getParameter(parameterName, thisObject, previousObject);
+  }
+
+
+  /**
+   *  Gets the parameter attribute of the ComponentContext object
+   *
+   *@param  parameterName   Description of the Parameter
+   *@param  thisObject      Description of the Parameter
+   *@param  previousObject  Description of the Parameter
+   *@return                 The parameter value
+   */
+  public String getParameter(String parameterName, Object thisObject, Object previousObject) {
     String param = (String) this.get(parameterName);
     if (param != null) {
       if (param.indexOf("${") > -1) {
@@ -197,7 +258,7 @@ public class ComponentContext extends HashMap {
         Iterator i = templateVariables.iterator();
         while (i.hasNext()) {
           String variable = (String) i.next();
-          String value = retrieveContextValue(variable);
+          String value = retrieveContextValue(variable, thisObject, previousObject);
           if (System.getProperty("DEBUG") != null) {
             System.out.println("ComponentContext-> " + parameterName + ": ${" + variable + "} = " + value);
           }
@@ -205,10 +266,15 @@ public class ComponentContext extends HashMap {
         }
         return template.getParsedText();
       } else {
-        System.out.println("ComponentContext-> " + parameterName + ": " + param);
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("ComponentContext-> " + parameterName + ": " + param);
+        }
         return param;
       }
     } else {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("ComponentContext-> " + parameterName + ": not found");
+      }
       return null;
     }
   }
@@ -247,6 +313,20 @@ public class ComponentContext extends HashMap {
    *@return        Description of the Return Value
    */
   public String retrieveContextValue(String param) {
+    return retrieveContextValue(param, thisObject, previousObject);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  param           Description of the Parameter
+   *@param  thisObject      Description of the Parameter
+   *@param  previousObject  Description of the Parameter
+   *@return                 Description of the Return Value
+   */
+  public String retrieveContextValue(String param, Object thisObject, Object previousObject) {
+    //Get the parameter
     int encoding = TEXT_ENCODING;
     if (param.indexOf(":xml") > -1) {
       encoding = XML_ENCODING;
@@ -255,7 +335,7 @@ public class ComponentContext extends HashMap {
       encoding = HTML_ENCODING;
       param = param.substring(0, param.indexOf(":html"));
     }
-    
+    //Return it with the specified encoding, default to plain text
     String value = null;
     if (param.indexOf(".") > -1) {
       if (param.indexOf("this.") == 0) {
@@ -271,16 +351,55 @@ public class ComponentContext extends HashMap {
     }
     if (value != null) {
       switch (encoding) {
-        case XML_ENCODING:
-          value = XMLUtils.toXMLValue(value);
-          break;
-        case HTML_ENCODING:
-          value = HTTPUtils.toHtmlValue(value);
-          break;
-        default: break;
+          case XML_ENCODING:
+            value = XMLUtils.toXMLValue(value);
+            break;
+          case HTML_ENCODING:
+            value = HTTPUtils.toHtmlValue(value);
+            break;
+          default:
+            break;
       }
     }
     return value;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  parameterName  Description of the Parameter
+   *@return                Description of the Return Value
+   */
+  public boolean hasParameter(String parameterName) {
+    return this.containsKey(parameterName);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean hasObjects() {
+    return (objects != null);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  component  Description of the Parameter
+   *@return            Description of the Return Value
+   */
+  public boolean execute(String component) {
+    try {
+      System.out.println("ComponentContext-> NOT IMPLEMENTED");
+      return false;
+      //return manager.executeComponent(this, component);
+    } catch (Exception e) {
+      return false;
+    }
   }
 }
 
