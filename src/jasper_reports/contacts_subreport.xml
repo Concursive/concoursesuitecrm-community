@@ -76,7 +76,7 @@ AND (con.status_id IS NULL OR con.status_id = 7)]]></queryString>
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
+						isPrintWhenDetailOverflows="true"/>
 					<subreportParameter  name="contact_id">
 						<subreportParameterExpression><![CDATA[$F{contact_id}]]></subreportParameterExpression>
 					</subreportParameter>

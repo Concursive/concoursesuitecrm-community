@@ -19,11 +19,11 @@
 		 isSummaryNewPage="false">
 	<parameter name="date_start" isForPrompting="true" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[start date]]></parameterDescription>
-		<defaultValueExpression ><![CDATA[(java.sql.Timestamp.valueOf("2004-01-01 00:00:00"))]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[(java.sql.Timestamp.valueOf("2004-01-01 00:00:00"))]]></defaultValueExpression>
 	</parameter>
 	<parameter name="date_end" isForPrompting="true" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[end date]]></parameterDescription>
-		<defaultValueExpression ><![CDATA[(java.sql.Timestamp.valueOf("2004-12-31 00:00:00"))]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[(java.sql.Timestamp.valueOf("2004-12-31 00:00:00"))]]></defaultValueExpression>
 	</parameter>
 	<parameter name="year_part" isForPrompting="false" class="java.lang.String">
 		<parameterDescription><![CDATA[t.entered]]></parameterDescription>
@@ -52,17 +52,11 @@ ORDER BY $P!{year_part}, $P!{month_part}, $P!{day_part}, co.namelast, co.namefir
 	<field name="namefirst" class="java.lang.String"/>
 	<field name="namelast" class="java.lang.String"/>
 	<variable name="date_wise" class="java.lang.String" resetType="Group" resetGroup="date_wise" calculation="Nothing">
-		<variableExpression><![CDATA[(new SimpleDateFormat("MMMM dd, yyyy")).format($F{entered})]]></variableExpression>
-		<initialValueExpression><![CDATA[""]]></initialValueExpression>
-	</variable>
+		<variableExpression><![CDATA[(new SimpleDateFormat("MMMM dd, yyyy")).format($F{entered})]]></variableExpression>		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
 	<variable name="total_vol" class="java.lang.Integer" resetType="Group" resetGroup="date_wise" calculation="Count">
-		<variableExpression><![CDATA[$F{assigned_to} == null ? new Integer(1) :$F{assigned_to}]]></variableExpression>
-		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>
-	</variable>
+		<variableExpression><![CDATA[$F{assigned_to} == null ? new Integer(1) :$F{assigned_to}]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
 	<variable name="volume" class="java.lang.Integer" resetType="Group" resetGroup="assignee" calculation="Count">
-		<variableExpression><![CDATA[$F{assigned_to} == null ? new Integer(1) :$F{assigned_to}]]></variableExpression>
-		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>
-	</variable>
+		<variableExpression><![CDATA[$F{assigned_to} == null ? new Integer(1) :$F{assigned_to}]]></variableExpression>		<initialValueExpression><![CDATA[new Integer(0)]]></initialValueExpression>	</variable>
 		<group  name="date_wise" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$V{date_wise}]]></groupExpression>
 			<groupHeader>
@@ -95,7 +89,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, $P!{day_part}, co.namelast, co.namefir
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
+						isPrintWhenDetailOverflows="true"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>

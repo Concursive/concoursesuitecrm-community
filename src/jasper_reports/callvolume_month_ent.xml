@@ -19,13 +19,13 @@
 		 isSummaryNewPage="false">
 	<parameter name="date_start" isForPrompting="true" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[start date]]></parameterDescription>
-		<defaultValueExpression ><![CDATA[(java.sql.Timestamp.valueOf("2004-01-01 00:00:00"))]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[(java.sql.Timestamp.valueOf("2004-01-01 00:00:00"))]]></defaultValueExpression>
 	</parameter>
 	<parameter name="date_end" isForPrompting="true" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[end date]]></parameterDescription>
-		<defaultValueExpression ><![CDATA[(java.sql.Timestamp.valueOf("2004-12-31 00:00:00"))]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[(java.sql.Timestamp.valueOf("2004-12-31 00:00:00"))]]></defaultValueExpression>
 	</parameter>
-  <parameter name="year_part" isForPrompting="false" class="java.lang.String">
+	<parameter name="year_part" isForPrompting="false" class="java.lang.String">
 		<parameterDescription><![CDATA[t.entered]]></parameterDescription>
 		<defaultValueExpression><![CDATA["date_part('year', t.entered)"]]></defaultValueExpression>
 	</parameter>
@@ -48,17 +48,11 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.enteredby
 	<field name="namelast" class="java.lang.String"/>
 	<field name="namefirst" class="java.lang.String"/>
 	<variable name="month_yr" class="java.lang.String" resetType="Group" resetGroup="month_yr" calculation="Nothing">
-		<variableExpression><![CDATA[(new SimpleDateFormat("MMMM yyyy")).format($F{entered})]]></variableExpression>
-		<initialValueExpression><![CDATA[""]]></initialValueExpression>
-	</variable>
+		<variableExpression><![CDATA[(new SimpleDateFormat("MMMM yyyy")).format($F{entered})]]></variableExpression>		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
 	<variable name="total_vol" class="java.lang.Long" resetType="Group" resetGroup="month_yr" calculation="Count">
-		<variableExpression><![CDATA[$F{enteredby}]]></variableExpression>
-		<initialValueExpression><![CDATA[new Long(0)]]></initialValueExpression>
-	</variable>
+		<variableExpression><![CDATA[$F{enteredby}]]></variableExpression>		<initialValueExpression><![CDATA[new Long(0)]]></initialValueExpression>	</variable>
 	<variable name="volume" class="java.lang.Long" resetType="Group" resetGroup="enteredby" calculation="Count">
-		<variableExpression><![CDATA[$F{enteredby}]]></variableExpression>
-		<initialValueExpression><![CDATA[new Long(0)]]></initialValueExpression>
-	</variable>
+		<variableExpression><![CDATA[$F{enteredby}]]></variableExpression>		<initialValueExpression><![CDATA[new Long(0)]]></initialValueExpression>	</variable>
 		<group  name="month_yr" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$V{month_yr}]]></groupExpression>
 			<groupHeader>
@@ -91,7 +85,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.enteredby
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
+						isPrintWhenDetailOverflows="true"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
@@ -183,7 +177,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.enteredby
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
+						isPrintWhenDetailOverflows="true"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
@@ -218,7 +212,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.enteredby
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
+						isPrintWhenDetailOverflows="true"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
@@ -243,7 +237,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.enteredby
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
+						isPrintWhenDetailOverflows="true"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
@@ -261,7 +255,7 @@ ORDER BY $P!{year_part}, $P!{month_part}, co.namelast, co.namefirst, t.enteredby
 						isPrintRepeatedValues="true"
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
+						isPrintWhenDetailOverflows="true"/>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
