@@ -211,7 +211,7 @@ public class GenericBean implements Serializable {
    *@param  tmp  The new onlyWarnings value
    */
   public void setOnlyWarnings(String tmp) {
-    this.onlyWarnings = "on".equals(tmp);
+    this.onlyWarnings = "on".equalsIgnoreCase(tmp);
   }
 
 
