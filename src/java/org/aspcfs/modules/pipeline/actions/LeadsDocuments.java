@@ -501,9 +501,7 @@ public final class LeadsDocuments extends CFSModule {
       db = getConnection(context);
       int opportunityId = addOpportunity(context, db);
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), opportunityId, Constants.DOCUMENTS_OPPORTUNITIES);
-      if (thisItem.getEnteredBy() == this.getUserId(context)) {
-        recordDeleted = thisItem.delete(db, this.getPath(context, "opportunities"));
-      }
+      recordDeleted = thisItem.delete(db, this.getPath(context, "opportunities"));
     } catch (Exception e) {
       errorMessage = e;
     } finally {

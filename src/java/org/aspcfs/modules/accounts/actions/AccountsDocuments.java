@@ -539,9 +539,7 @@ public final class AccountsDocuments extends CFSModule {
       db = getConnection(context);
       thisOrg = addOrganization(context, db);
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisOrg.getOrgId(), Constants.ACCOUNTS);
-      if (thisItem.getEnteredBy() == this.getUserId(context)) {
-        recordDeleted = thisItem.delete(db, this.getPath(context, "accounts"));
-      }
+      recordDeleted = thisItem.delete(db, this.getPath(context, "accounts"));
     } catch (Exception e) {
       errorMessage = e;
     } finally {

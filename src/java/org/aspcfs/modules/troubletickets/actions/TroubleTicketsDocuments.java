@@ -579,9 +579,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
       int ticketId = addTicket(context, db);
 
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
-      if (thisItem.getEnteredBy() == this.getUserId(context)) {
-        recordDeleted = thisItem.delete(db, this.getPath(context, "tickets"));
-      }
+      recordDeleted = thisItem.delete(db, this.getPath(context, "tickets"));
     } catch (Exception e) {
       errorMessage = e;
     } finally {
