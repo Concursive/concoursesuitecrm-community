@@ -156,7 +156,7 @@ Add Contact<br>
   }
 %>
 </table>
-&nbsp;<br>
+<div align="center" style="padding:3px;">Note: All international phone numbers must be preceded by a "+" symbol.</div>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td valign=center align=left>
