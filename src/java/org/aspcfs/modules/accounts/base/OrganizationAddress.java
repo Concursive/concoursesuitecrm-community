@@ -84,7 +84,10 @@ public class OrganizationAddress extends Address {
       this.delete(db);
     }
   }
-
+  
+  public void insert(Connection db) throws SQLException {
+          insert(db, this.getOrgId(), this.getEnteredBy());
+  }
 
   public void insert(Connection db, int orgId, int enteredBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
