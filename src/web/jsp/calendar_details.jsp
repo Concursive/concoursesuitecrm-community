@@ -50,14 +50,14 @@ function switchStyle(E){
     <td width="100%" valign="top">
       <table width="100%" cellspacing="0" cellpadding="0" border="0">
 <dhv:evaluate exp="<%= CalendarInfo.isAgendaView() %>">      
-        <tr>
+        <tr class="weekSelector">
           <td colspan="2">
-            <strong><%= toFullDateString(Calendar.getInstance().getTime()) %> (Today)</strong>
+            <strong><%= toFullDateString(Calendar.getInstance().getTime()) %> <font color="#006699">(Today)</font></strong>
           </td>
         </tr>
 </dhv:evaluate>
 <%
-   Iterator days = (CompanyCalendar.getEvents(20)).iterator();
+   Iterator days = (CompanyCalendar.getEvents(100)).iterator();
    if (days.hasNext()) {
      boolean showToday = false;
      int count = 0;
@@ -71,20 +71,25 @@ function switchStyle(E){
           ((thisCal.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) &&
           (thisCal.get(Calendar.YEAR) == today.get(Calendar.YEAR)));
 %>
-    <dhv:evaluate exp="<%= !isToday %>">
+    <dhv:evaluate exp="<%= (CalendarInfo.isAgendaView() && !isToday && count == 0) %>">
         <tr>
-          <td colspan="2">
-            <strong><%= toFullDateString(thisDay.getDate()) %></strong>
+          <td valign="top" nowrap>
+            &nbsp;
+          </td>
+          <td valign="top">
+            No scheduled actions found.
+          </td>
+        </tr>
+        <tr style="visibility:none">
+          <td style="visibility:none">
+            <br>
           </td>
         </tr>
     </dhv:evaluate>
-    <dhv:evaluate exp="<%= (CalendarInfo.isAgendaView() && isToday && thisDay.size() == 0) %>">
-        <tr>
-          <td valign="top" nowrap>
-            &nbsp;&nbsp;
-          </td>
-          <td width="100%" valign="top">
-            No scheduled actions found.
+    <dhv:evaluate exp="<%= !isToday %>">
+        <tr class="weekSelector">
+          <td colspan="2">
+            <strong><%= toFullDateString(thisDay.getDate()) %></strong>
           </td>
         </tr>
     </dhv:evaluate>
@@ -102,18 +107,18 @@ function switchStyle(E){
 %>
       <tr>
         <td colspan="2">
-          <table width="100%" cellspacing="0" cellpadding="0" border="0" marginheight="0" marginwidth="0">
+          <table cellspacing="0" cellpadding="0" border="0" marginheight="0" marginwidth="0">
             <tr>
-              <td nowrap><%= thisEvent.getIcon(CalendarEventList.EVENT_TYPES[i])%><a href="javascript:changeImages('detailsimage<%=toFullDateString(thisDay.getDate()) + i%>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertdetails<%=toFullDateString(thisDay.getDate()) + i%>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%=count==0?"images/arrowdown.gif":"images/arrowright.gif"%>" name="detailsimage<%=toFullDateString(thisDay.getDate()) + i%>" id="<%=count==0?"0":"1"%>" border=0 title="Click To View Details"><%=CalendarEvent.getNamePlural(CalendarEventList.EVENT_TYPES[i]) %></a>&nbsp;(<%= categoryCount %>)</td>
+              <td><%= thisEvent.getIcon(CalendarEventList.EVENT_TYPES[i])%><a href="javascript:changeImages('detailsimage<%=toFullDateString(thisDay.getDate()) + i%>','images/arrowdown.gif','images/arrowright.gif');javascript:switchStyle(document.getElementById('alertdetails<%=toFullDateString(thisDay.getDate()) + i%>'));" onMouseOver="window.status='View Details';return true;" onMouseOut="window.status='';return true;"><img src="<%=count==0?"images/arrowdown.gif":"images/arrowright.gif"%>" name="detailsimage<%=toFullDateString(thisDay.getDate()) + i%>" id="<%=count==0?"0":"1"%>" border=0 title="Click To View Details"><%=CalendarEvent.getNamePlural(CalendarEventList.EVENT_TYPES[i]) %></a>&nbsp;(<%= categoryCount %>)</td>
             </tr>
           </table>
-          <table width="100%" cellspacing="0" cellpadding="0" marginheight="0" marginwidth="0" border="0" id="alertdetails<%= toFullDateString(thisDay.getDate()) + i %>" style="<%=count==0?"display:":"display:none"%>">
+          <table cellspacing="0" cellpadding="0" marginheight="0" marginwidth="0" border="0" id="alertdetails<%= toFullDateString(thisDay.getDate()) + i %>" style="<%=count==0?"display:":"display:none"%>">
 <%
            }
 %>
             <tr>
               <td style="visibility:hidden" width="18">i</td>
-              <td nowrap>
+              <td>
                 <li><%=thisEvent.getCategory().equalsIgnoreCase("task")?thisEvent.getIcon():""%>&nbsp;<%= thisEvent.getLink() %><%= thisEvent.getSubject() %></a></li>
               </td>
             </tr>
@@ -142,9 +147,9 @@ function switchStyle(E){
 %>
         <tr>
           <td valign="top" nowrap>
-            &nbsp;&nbsp;
+            &nbsp;
           </td>
-          <td width="100%" valign="top">
+          <td valign="top">
             No scheduled actions found.
           </td>
         </tr>
