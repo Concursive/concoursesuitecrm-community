@@ -901,7 +901,11 @@ public final class CampaignManager extends CFSModule {
       db = this.getConnection(context);
       campaign = new Campaign(db, campaignId);
       campaign.setActiveDate(context.getRequest().getParameter("activeDate"));
-      campaign.setActive(context.getRequest().getParameter("active"));
+      
+      if (context.getRequest().getParameter("active") != null) {
+              campaign.setActive(context.getRequest().getParameter("active"));
+      }
+      
       campaign.setModifiedBy(this.getUserId(context));
       campaign.setSendMethodId(Integer.parseInt(context.getRequest().getParameter("sendMethodId")));
       resultCount = campaign.updateSchedule(db);
