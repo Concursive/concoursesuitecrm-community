@@ -225,7 +225,7 @@ public class ImportBaseData implements CFSDatabaseReaderImportModule {
       
       Iterator phones = phoneList.iterator();
       while (phones.hasNext()) {
-              ContactPhoneNumber phone = (ContactPhoneNumber)phones.next();
+              OrganizationPhoneNumber phone = (OrganizationPhoneNumber)phones.next();
               DataRecord phoneRecord = mappings.createDataRecord(phone, "insert");
               writer.save(phoneRecord);
               writer.commit();
