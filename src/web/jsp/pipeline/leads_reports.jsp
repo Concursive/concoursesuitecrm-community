@@ -89,6 +89,6 @@ Reports<br>
 <br>
 <dhv:pagedListControl object="LeadRptListInfo" tdClass="row1"/>
 <%} else {%>
-  <tr><td colspan="6">No reports found.</td></tr>
+  <tr class="row2"><td colspan="6">No reports found.</td></tr>
 </table>
 <%}%>

@@ -169,8 +169,8 @@ else{%>
     <%
     }
     else {%>
-      <tr bgcolor="white">
-        <td colspan="4" valign="center">
+      <tr>
+        <td class="row2" colspan="4" valign="center">
           No contacts matched query.
         </td>
       </tr>
