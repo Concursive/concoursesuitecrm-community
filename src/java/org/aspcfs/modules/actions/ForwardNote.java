@@ -45,7 +45,10 @@ public final class ForwardNote extends CFSModule {
 				thisNote.setBody("----Original Message----\nFrom: " + thisNote.getSentName() + "\nTo: " +
 					thisUser.getNameFirst() + " " + thisUser.getNameLast() + 
 					"\nSubject: " + thisNote.getSubject() + "\n\n" + thisNote.getBody());
-				thisNote.setSubject("Fwd: " + thisNote.getSubject());
+				
+				if (!(thisNote.getSubject().startsWith("Fwd:"))) {
+					thisNote.setSubject("Fwd: " + thisNote.getSubject());
+				}
 			 }
 		 
 			 list.buildList(db);

@@ -6,8 +6,8 @@
 <form name="details" action="/MyCFSInbox.do" method="post">
 <a href="/MyCFSInbox.do?command=Inbox">Back to Inbox</a>
 <p>
-<input type=button name="action" value="Delete" onClick="document.details.command.value='CFSNoteDelete';document.details.submit()">
-<input type=button name="action" value="<%= (NoteDetails.getStatus() != 2?"Trash":"Un-Trash") %>" onClick="document.details.command.value='CFSNoteTrash';document.details.submit()">
+<input type=button name="action" value="Delete Message" onClick="document.details.command.value='CFSNoteDelete';document.details.submit()">
+<input type=button name="action" value="<%= (NoteDetails.getStatus() != 2?"Archive Message":"Send to Inbox") %>" onClick="document.details.command.value='CFSNoteTrash';document.details.submit()">
 <input type=hidden name="id" value="<%= NoteDetails.getId() %>">
 <input type=hidden name="type" value="<%= NoteDetails.getType() %>">
 <br>&nbsp;
@@ -45,6 +45,6 @@
 
 <br>
 <input type=hidden name="command" value="">
-<input type=button name="action" value="Delete" onClick="document.details.command.value='CFSNoteDelete';document.details.submit()">
-<input type=button name="action" value="<%= (NoteDetails.getStatus() != 2?"Trash":"Un-Trash") %>" onClick="document.details.command.value='CFSNoteTrash';document.details.submit()">
+<input type=button name="action" value="Delete Message" onClick="document.details.command.value='CFSNoteDelete';document.details.submit()">
+<input type=button name="action" value="<%= (NoteDetails.getStatus() != 2?"Archive Message":"Send to Inbox") %>" onClick="document.details.command.value='CFSNoteTrash';document.details.submit()">
 </form>

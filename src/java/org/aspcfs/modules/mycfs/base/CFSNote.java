@@ -88,7 +88,7 @@ public String getStatusText () {
 	} else if (status == 1) {
 		return ("Read");
 	} else {
-		return ("Trashed");
+		return ("Archived");
 	}
 }
 
