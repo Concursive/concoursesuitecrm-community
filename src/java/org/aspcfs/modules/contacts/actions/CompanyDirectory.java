@@ -423,23 +423,5 @@ public final class CompanyDirectory extends CFSModule {
       return ("SystemError");
     }
   }
-
-
-  /**
-   *  Description of the Method
-   *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since           1.10
-   */
-  public String executeCommandViewCalendar(ActionContext context) {
-    addModuleBean(context, "Company Profile", "Company Calendar");
-    CalendarView companyCalendar = new CalendarView(context.getRequest());
-    companyCalendar.addHolidays();
-    companyCalendar.setMonthArrows(true);
-    context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
-    return "CalendarOK";
-  }
-
 }
 

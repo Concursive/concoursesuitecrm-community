@@ -186,7 +186,6 @@
   <!-- Contacts & Resources Module -->
   <action name="CompanyDirectory" class="org.aspcfs.modules.contacts.actions.CompanyDirectory">
     <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
-    <forward name="CalendarOK" resource="/contacts/companydirectory_calendar.jsp" layout="nav"/>
     <forward name="ListEmployeesOK" resource="/contacts/companydirectory_listemployees.jsp" layout="nav"/>
     <forward name="EmployeeDetailsOK" resource="/contacts/companydirectory_employeedetails.jsp" layout="nav"/>
     <forward name="EmployeeDetailsUpdateOK" resource="/CompanyDirectory.do?command=EmployeeDetails"/>
