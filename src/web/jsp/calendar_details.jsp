@@ -66,7 +66,7 @@ function reloadCalendar(){
               int currYear = tmpCal.get(Calendar.YEAR);
               DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
                %>
-            <%= toFullDateString(formatter.parse(currMonth  + "/" + currDay + "/" + currYear)) %><font color="#006699">(Today)</font></strong>
+            <%= toFullDateString(formatter.parse(currMonth  + "/" + currDay + "/" + currYear)) %> <font color="#006699">(Today)</font></strong>
           </td>
         </tr>
 </dhv:evaluate>
