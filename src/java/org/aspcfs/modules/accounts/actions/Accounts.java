@@ -1157,7 +1157,6 @@ public final class Accounts extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandFields(ActionContext context) {
-
     if (!(hasPermission(context, "accounts-accounts-folders-view"))) {
       return ("PermissionError");
     }
@@ -1167,13 +1166,15 @@ public final class Accounts extends CFSModule {
     Organization thisOrganization = null;
     String recordId = null;
     boolean showRecords = true;
-
+    String selectedCatId = null;
+    
     try {
       String orgId = context.getRequest().getParameter("orgId");
       db = this.getConnection(context);
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
 
+      //Show a list of the different folders available in Accounts
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
       thisList.setLinkModuleId(Constants.ACCOUNTS);
       thisList.setIncludeEnabled(Constants.TRUE);
@@ -1182,7 +1183,8 @@ public final class Accounts extends CFSModule {
       thisList.buildList(db);
       context.getRequest().setAttribute("CategoryList", thisList);
 
-      String selectedCatId = (String) context.getRequest().getParameter("catId");
+      //See which one is currently selected or use the default
+      selectedCatId = (String) context.getRequest().getParameter("catId");
       if (selectedCatId == null) {
         selectedCatId = (String) context.getRequest().getAttribute("catId");
       }
@@ -1191,50 +1193,53 @@ public final class Accounts extends CFSModule {
       }
       context.getRequest().setAttribute("catId", selectedCatId);
 
-      recordId = context.getRequest().getParameter("recId");
-      String recordDeleted = (String) context.getRequest().getAttribute("recordDeleted");
-      if (recordDeleted != null) {
-        recordId = null;
-      }
+      if (Integer.parseInt(selectedCatId) > 0) {
+        //See if a specific record has been chosen from the list
+        recordId = context.getRequest().getParameter("recId");
+        String recordDeleted = (String) context.getRequest().getAttribute("recordDeleted");
+        if (recordDeleted != null) {
+          recordId = null;
+        }
 
-      CustomFieldCategory thisCategory = thisList.getCategory(Integer.parseInt(selectedCatId));
-      if (recordId == null && thisCategory.getAllowMultipleRecords()) {
-        //The user didn't request a specific record, so show a list
-        //of records matching this category that the user can choose from
-        PagedListInfo folderListInfo = this.getPagedListInfo(context, "AccountFolderInfo");
-        folderListInfo.setLink("/Accounts.do?command=Fields&orgId=" + orgId + "&catId=" + selectedCatId);
-
-        CustomFieldRecordList recordList = new CustomFieldRecordList();
-        recordList.setLinkModuleId(Constants.ACCOUNTS);
-        recordList.setLinkItemId(thisOrganization.getOrgId());
-        recordList.setCategoryId(thisCategory.getId());
-        recordList.buildList(db);
-        recordList.buildRecordColumns(db, thisCategory);
-        context.getRequest().setAttribute("Records", recordList);
-      } else {
-        //The user requested a specific record, or this category only
-        //allows a single record.
-        thisCategory.setLinkModuleId(Constants.ACCOUNTS);
-        thisCategory.setLinkItemId(thisOrganization.getOrgId());
-        if (recordId != null) {
-          thisCategory.setRecordId(Integer.parseInt(recordId));
+        //Now build the specified or default category
+        CustomFieldCategory thisCategory = thisList.getCategory(Integer.parseInt(selectedCatId));
+        if (recordId == null && thisCategory.getAllowMultipleRecords()) {
+          //The user didn't request a specific record, so show a list
+          //of records matching this category that the user can choose from
+          PagedListInfo folderListInfo = this.getPagedListInfo(context, "AccountFolderInfo");
+          folderListInfo.setLink("/Accounts.do?command=Fields&orgId=" + orgId + "&catId=" + selectedCatId);
+  
+          CustomFieldRecordList recordList = new CustomFieldRecordList();
+          recordList.setLinkModuleId(Constants.ACCOUNTS);
+          recordList.setLinkItemId(thisOrganization.getOrgId());
+          recordList.setCategoryId(thisCategory.getId());
+          recordList.buildList(db);
+          recordList.buildRecordColumns(db, thisCategory);
+          context.getRequest().setAttribute("Records", recordList);
         } else {
-          thisCategory.buildRecordId(db);
-          recordId = String.valueOf(thisCategory.getRecordId());
+          //The user requested a specific record, or this category only
+          //allows a single record.
+          thisCategory.setLinkModuleId(Constants.ACCOUNTS);
+          thisCategory.setLinkItemId(thisOrganization.getOrgId());
+          if (recordId != null) {
+            thisCategory.setRecordId(Integer.parseInt(recordId));
+          } else {
+            thisCategory.buildRecordId(db);
+            recordId = String.valueOf(thisCategory.getRecordId());
+          }
+          thisCategory.setIncludeEnabled(Constants.TRUE);
+          thisCategory.setIncludeScheduled(Constants.TRUE);
+          thisCategory.setBuildResources(true);
+          thisCategory.buildResources(db);
+          showRecords = false;
+  
+          if (thisCategory.getRecordId() > -1) {
+            CustomFieldRecord thisRecord = new CustomFieldRecord(db, thisCategory.getRecordId());
+            context.getRequest().setAttribute("Record", thisRecord);
+          }
         }
-        thisCategory.setIncludeEnabled(Constants.TRUE);
-        thisCategory.setIncludeScheduled(Constants.TRUE);
-        thisCategory.setBuildResources(true);
-        thisCategory.buildResources(db);
-        showRecords = false;
-
-        if (thisCategory.getRecordId() > -1) {
-          CustomFieldRecord thisRecord = new CustomFieldRecord(db, thisCategory.getRecordId());
-          context.getRequest().setAttribute("Record", thisRecord);
-        }
+        context.getRequest().setAttribute("Category", thisCategory);
       }
-      context.getRequest().setAttribute("Category", thisCategory);
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -1243,7 +1248,9 @@ public final class Accounts extends CFSModule {
 
     if (errorMessage == null) {
       addModuleBean(context, "View Accounts", "Custom Fields Details");
-      if (recordId == null && showRecords) {
+      if (Integer.parseInt(selectedCatId) <= 0) {
+        return ("FieldsEmptyOK");
+      } else if (recordId == null && showRecords) {
         return ("FieldRecordListOK");
       } else {
         return ("FieldsOK");

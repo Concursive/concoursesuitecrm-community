@@ -189,6 +189,7 @@
     <forward name="SearchContactsFormOK" resource="/companydirectory_searchcontacts.jsp" layout="nav"/>
     <forward name="ListOppsOK" resource="/companydirectory_listopps.jsp" layout="nav"/>
     <forward name="AddOppOK" resource="/companydirectory_addopp.jsp" layout="nav"/>
+    <forward name="FieldsEmptyOK" resource="/companydirectory_nofields.jsp" layout="nav"/>
     <forward name="FieldsOK" resource="/companydirectory_fields.jsp" layout="nav"/>
     <forward name="FieldRecordListOK" resource="/companydirectory_fields_list.jsp" layout="nav"/>
     <forward name="ContactDetailsModifyOK" resource="/companydirectory_contactmodifyform.jsp" layout="nav"/>
@@ -373,6 +374,7 @@
     <forward name="InsertOK" resource="/accounts_details.jsp" layout="nav"/>
     <forward name="FieldRecordListOK" resource="/accounts_fields_list.jsp" layout="nav"/>
     <forward name="AddFolderRecordOK" resource="/accounts_fields_add.jsp" layout="nav"/>
+    <forward name="FieldsEmptyOK" resource="/accounts_nofields.jsp" layout="nav"/>
     <forward name="FieldsOK" resource="/accounts_fields.jsp" layout="nav"/>
     <forward name="ReportsOK" resource="/accounts_reports.jsp" layout="nav"/>
     <forward name="ModifyFieldsOK" resource="/accounts_fields_modify.jsp" layout="nav"/>
