@@ -199,8 +199,11 @@ function removeValue(index) {
 					tempArray[i] = searchCriteria[i+offset];
 				}
 		}
-		delete searchCriteria
-		searchCriteria = new Array();
+		
+    for (j=0; j<searchCriteria.length; j++) {
+      searchCriteria[j] = null;
+    }
+    
 		for (i=0; i < tempArray.length; i++){
 			if (tempArray[i] != null) {
 				searchCriteria[i] = tempArray[i];
@@ -246,18 +249,9 @@ function removeValues(){
 				}
 		}
 		
-    alert("before delete");
-    //delete searchCriteria;
-    alert("after delete");
     for (j=0; j<searchCriteria.length; j++) {
-      alert(j+"::"+searchCriteria.length);
       searchCriteria[j] = null;
     }
-    
-		//searchCriteria = new Array();
-    alert("after new");
-    
-    alert("four " + tempArray.length);
 		
     for (i=0; i < tempArray.length; i++){
 			if (tempArray[i] != null) {
@@ -295,8 +289,10 @@ function saveValues(){
 	} else {
           
 		if (searchCriteria.length != searchList.length) {
-			delete searchCriteria
-			searchCriteria = new Array();
+          
+          for (j=0; j<searchCriteria.length; j++) {
+            searchCriteria[j] = null;
+          }
       
 			for (count=0; count<(searchList.length); count++) {
 				searchCriteria[count] = searchList.options[count].value;
