@@ -1357,8 +1357,22 @@ public void setCompanyEnabled(boolean companyEnabled) {
     try {
       db.setAutoCommit(false);
       sql.append(
-          "INSERT INTO TICKET (org_id, contact_id, problem, enteredby, modifiedby, pri_code, department_code, cat_code, scode ) " +
-          "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? ) ");
+          "INSERT INTO TICKET (org_id, contact_id, problem, pri_code, department_code, cat_code, scode, ");
+                if (entered != null) {
+                        sql.append("entered, ");
+                }
+                if (modified != null) {
+                        sql.append("modified, ");
+                }        
+      sql.append("enteredBy, modifiedBy ) ");
+      sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
+                if (entered != null) {
+                        sql.append("?, ");
+                }
+                if (modified != null) {
+                        sql.append("?, ");
+                }      
+      sql.append("?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getOrgId());
@@ -1368,8 +1382,6 @@ public void setCompanyEnabled(boolean companyEnabled) {
 	      pst.setNull(++i, java.sql.Types.INTEGER);
       }
       pst.setString(++i, this.getProblem());
-      pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getModifiedBy());
       
         if (this.getPriorityCode() > 0) {
                 pst.setInt(++i, this.getPriorityCode());
@@ -1395,6 +1407,15 @@ public void setCompanyEnabled(boolean companyEnabled) {
       } else {
                 pst.setNull(++i, java.sql.Types.INTEGER);
       }
+      
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
+        if (modified != null) {
+                pst.setTimestamp(++i, modified);
+        }
+      pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());
         
       pst.execute();
       pst.close();

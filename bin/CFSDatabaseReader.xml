@@ -107,7 +107,7 @@
       <property lookup="user">owner</property>
       <property>description</property>
       <property lookup="account">accountLink</property>
-      <property>contactLink</property>
+      <property lookup="contact">contactLink</property>
       <property>closeDate</property>
       <property>closeProb</property>
       <property>terms</property>
@@ -116,7 +116,7 @@
       <property>guess</property>
       <property>high</property>
       <property lookup="lookupStage">stage</property>
-      <property alias="stageDate">stageDateString</property>
+      <property>stageDate</property>
       <property>commission</property>
       <property>type</property>
       <property>alertDate</property>

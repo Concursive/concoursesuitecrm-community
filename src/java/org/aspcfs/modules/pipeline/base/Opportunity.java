@@ -12,6 +12,7 @@ import javax.servlet.http.*;
 import com.darkhorseventures.controller.*;
 import com.darkhorseventures.utils.*;
 import com.zeroio.iteam.base.FileItemList;
+import com.darkhorseventures.utils.DateUtils;
 
 /**
  *  Description of the Class
@@ -190,13 +191,7 @@ public void setAlertText(String alertText) {
    *@param  tmp  The new alertDate value
    */
   public void setAlertDate(String tmp) {
-    try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
-      alertDate = new java.sql.Date(new java.util.Date().getTime());
-      alertDate.setTime(tmpDate.getTime());
-    } catch (Exception e) {
-      alertDate = null;
-    }
+    this.alertDate = DateUtils.parseDateString(tmp);
   }
   
   public boolean getAccountEnabled() {
@@ -246,7 +241,7 @@ public void setEnabled(boolean enabled) {
    *@param  tmp  The new closeDate value
    */
   public void setCloseDate(String tmp) {
-    closeDate = DateUtils.parseDateString(tmp);
+    this.closeDate = DateUtils.parseDateString(tmp);
   }
 
 
@@ -256,13 +251,7 @@ public void setEnabled(boolean enabled) {
    *@param  tmp  The new stageDate value
    */
   public void setStageDate(String tmp) {
-    try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(3).parse(tmp);
-      stageDate = new java.sql.Date(new java.util.Date().getTime());
-      stageDate.setTime(tmpDate.getTime());
-    } catch (Exception e) {
-      stageDate = null;
-    }
+    this.stageDate = DateUtils.parseDateString(tmp);
   }
 
 
@@ -300,10 +289,9 @@ public void setEnabled(boolean enabled) {
 
 
   /**
-   *  Sets the Entered attribute of the Opportunity object
+   *  Sets the entered attribute of the Opportunity object
    *
-   *@param  tmp  The new Entered value
-   *@since
+   *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
@@ -311,10 +299,9 @@ public void setEnabled(boolean enabled) {
 
 
   /**
-   *  Sets the Modified attribute of the Opportunity object
+   *  Sets the modified attribute of the Opportunity object
    *
-   *@param  tmp  The new Modified value
-   *@since
+   *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
@@ -1515,8 +1502,22 @@ public void setEnabled(boolean enabled) {
       
       sql.append(
         "INSERT INTO opportunity " +
-        "(acctlink, contactlink, enteredby, modifiedby, owner, closedate, stage, description) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
+        "(acctlink, contactlink, owner, closedate, stage, description, ");
+              if (entered != null) {
+                      sql.append("entered, ");
+              }
+              if (modified != null) {
+                      sql.append("modified, ");
+              }  
+        sql.append("enteredBy, modifiedBy ) ");
+        sql.append("VALUES (?, ?, ?, ?, ?, ?, ");
+              if (entered != null) {
+                      sql.append("?, ");
+              }
+              if (modified != null) {
+                      sql.append("?, ");
+              }
+        sql.append("?, ?) ");
         
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -1533,12 +1534,19 @@ public void setEnabled(boolean enabled) {
 	      pst.setNull(++i, java.sql.Types.INTEGER);
       }
       
-      pst.setInt(++i, this.getEnteredBy());
-      pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getOwner());
       pst.setDate(++i, this.getCloseDate());
       pst.setInt(++i, this.getStage());
       pst.setString(++i, this.getDescription());
+      
+        if (entered != null) {
+                pst.setTimestamp(++i, entered);
+        }
+        if (modified != null) {
+                pst.setTimestamp(++i, modified);
+        }
+      pst.setInt(++i, this.getEnteredBy());
+      pst.setInt(++i, this.getModifiedBy());        
       pst.execute();
       pst.close();
       
