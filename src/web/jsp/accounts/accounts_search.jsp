@@ -22,7 +22,7 @@ Search Accounts<br>
   </tr>
   <tr>
     <td class="formLabel">
-      Name
+      Account Name
     </td>
     <td>
       <input type="text" size="35" name="searchName" value="<%= SearchOrgListInfo.getSearchOptionValue("searchName") %>">
@@ -30,7 +30,7 @@ Search Accounts<br>
   </tr>
   <tr>
     <td class="formLabel">
-      Number
+      Phone Number
     </td>
     <td>
       <input type="text" size="35" name="searchAccountNumber" value="<%= SearchOrgListInfo.getSearchOptionValue("searchAccountNumber") %>">
@@ -38,7 +38,7 @@ Search Accounts<br>
   </tr>
   <tr>
     <td class="formLabel">
-      Type
+      Account Type
     </td>
     <td>
       <%= TypeSelect.getHtmlSelect("listFilter1", SearchOrgListInfo.getFilterKey("listFilter1")) %>
@@ -46,7 +46,7 @@ Search Accounts<br>
   </tr>
   <tr>
     <td class="formLabel">
-      From
+      Source
     </td>
     <td align="left" valign="bottom">
       <select size="1" name="listView">

@@ -71,7 +71,7 @@ Search Contacts<br>
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      Type
+      Contact Type
     </td>
     <td>
       <%= ContactTypeList.getHtmlSelect("listFilter1", SearchContactsInfo.getFilterKey("listFilter1")) %>
@@ -79,7 +79,7 @@ Search Contacts<br>
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      From 
+      Source
     </td>
     <td>
       <select size="1" name="listView">

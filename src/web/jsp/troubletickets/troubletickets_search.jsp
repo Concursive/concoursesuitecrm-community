@@ -20,7 +20,7 @@ Search Form<br>
   </tr>
   <tr>
     <td class="formLabel">
-      Number
+      Ticket Number
     </td>
     <td>
       <input type="text" size="10" name="searchcodeId" value="">
@@ -28,7 +28,7 @@ Search Form<br>
   </tr>
   <tr>
     <td class="formLabel">
-      Description
+      <dhv:label name="tickets-problem">Issue</dhv:label>
     </td>
     <td>
       <input type="text" size="40" name="searchDescription" value="">
