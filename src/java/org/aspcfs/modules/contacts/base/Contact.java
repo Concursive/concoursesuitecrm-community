@@ -2299,7 +2299,7 @@ public class Contact extends GenericBean {
       }
     }
     //Prevent personal contacts from being associated with acctions
-    if (orgId > 0 && typeList.contains(String.valueOf(PERSONAL_TYPE))) {
+    if (orgId > 0 && typeList != null && typeList.contains(String.valueOf(PERSONAL_TYPE))) {
       errors.put("personalContactError", "Account Contact cannot be personal");
     }
     if (hasErrors()) {
