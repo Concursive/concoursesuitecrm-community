@@ -18,7 +18,6 @@
       <permission name="myhomepage-miner" attributes="va-d" description="Industry News records" enabled="false"/>
       <permission name="myhomepage-inbox" attributes="v---" description="My Mailbox"/>
       <permission name="myhomepage-tasks" attributes="vaed" description="My Tasks"/>
-      <permission name="contacts-internal_contacts" attributes="vaed" description="Employees"/>
       <permission name="myhomepage-reassign" attributes="v-e-" description="Re-assign Items"/>
       <permission name="myhomepage-profile" attributes="v---" description="My Profile"/>
       <permission name="myhomepage-profile-personal" attributes="v-e-" description="Personal Information"/>
@@ -32,7 +31,6 @@
       <lookup constantId="2" class="lookupList" table="lookup_contactemail_types" description="Email Types"/>
       <lookup constantId="3" class="lookupList" table="lookup_contactaddress_types" description="Address Types"/>
       <lookup constantId="4" class="lookupList" table="lookup_contactphone_types" description="Phone Types"/>
-      <lookup constantId="5" class="lookupList" table="lookup_department" description="Departments"/>
       <permission name="contacts" attributes="v---" description="Access to Contacts module"/>
       <permission name="contacts-external_contacts" attributes="vaed" description="General Contact Records"/>
       <permission name="contacts-external_contacts-reports" attributes="va-d" description="Export Contact Data"/>
@@ -107,6 +105,11 @@
       <permission name="tickets-reports" attributes="vaed" description="Export Ticket Data"/>
       <permission name="tickets-tickets-tasks" attributes="vaed" description="Tasks"/>
       <report file="tickets_department.xml" type="user" permission="tickets-tickets" title="Tickets by Department" description="What tickets are there in each department?"/>
+    </category>
+    <category id="1111031131" name="Employees" folders="false" lookups="true">
+      <lookup constantId="1111031132" class="lookupList" table="lookup_department" description="Departments"/>
+      <permission name="employees" attributes="v---" description="Access to Employee module"/>
+      <permission name="contacts-internal_contacts" attributes="vaed" description="Employees"/>
     </category>
     <category id="16" name="Reports" folders="false" lookups="false">
       <permission name="reports" attributes="v---" description="Access to Reports module"/>

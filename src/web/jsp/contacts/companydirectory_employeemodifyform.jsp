@@ -81,7 +81,7 @@
 <table class="trails">
 <tr>
 <td>
-  <a href="MyCFS.do?command=Home">My Home Page</a> > 
+  <a href="CompanyDirectory.do?command=ListEmployees">Employees</a> >
   <% if (request.getParameter("return") != null) {%>
     <% if (request.getParameter("return").equals("list")) {%>
     <a href="CompanyDirectory.do?command=ListEmployees">View Employees</a> >

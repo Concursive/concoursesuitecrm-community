@@ -52,7 +52,9 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_CONTACTS_EMAIL = 2;
   public final static int LOOKUP_CONTACTS_ADDRESS = 3;
   public final static int LOOKUP_CONTACTS_PHONE = 4;
-  public final static int LOOKUP_CONTACTS_DEPT = 5;
+  
+  public final static int PERMISSION_CAT_EMPLOYEES = 1111031131;
+  public final static int LOOKUP_CONTACTS_DEPT = 1111031132;
 
   public final static int PERMISSION_CAT_TICKETS = 8;
   public final static int LOOKUP_TICKETS_SOURCE = 1;
