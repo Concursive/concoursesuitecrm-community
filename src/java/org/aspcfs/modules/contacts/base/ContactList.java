@@ -1207,6 +1207,7 @@ public void setIncludeEnabled(int includeEnabled) {
       }
 
       if (areaCodeRange != null) {
+        //TODO: Update this with the new phone number logic
         sqlFilter.append("AND c.contact_id in (select distinct contact_id from contact_phone where phone_type = 1 and substr(number,0,4) in (" + areaCodeRange + ")) ");
       }
 
@@ -1250,10 +1251,16 @@ public void setIncludeEnabled(int includeEnabled) {
         sqlFilter.append("AND c.org_id IN (SELECT org_id FROM organization WHERE owner IN (" + accountOwnerIdRange + ")) ");
       }
 
-      if (personalId != -1) {
-        sqlFilter.append("AND (c.type_id != 2 OR (c.type_id = 2 AND c.owner = ?) ) ");
-      } else {
-        sqlFilter.append("AND c.type_id != 2 ");
+      //Decide which contacts can be shown
+      switch (personalId) {
+        //System needs to get all contacts
+        case -2: break;
+        //Typical contact list
+        case -1: sqlFilter.append("AND c.type_id != 2 "); break;
+        //Typical contact list by a specific user
+        default:
+          sqlFilter.append("AND (c.type_id != 2 OR (c.type_id = 2 AND c.owner = ?) ) ");
+          break;
       }
 
       if (ignoreTypeIdList.size() > 0) {
@@ -1347,8 +1354,10 @@ public void setIncludeEnabled(int includeEnabled) {
         pst.setString(++i, company);
       }
 
-      if (personalId != -1) {
-        pst.setInt(++i, personalId);
+      switch (personalId) {
+        case -2: break;
+        case -1: break;
+        default: pst.setInt(++i, personalId); break;
       }
 
       if (ignoreTypeIdList.size() > 0) {

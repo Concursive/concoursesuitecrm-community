@@ -468,6 +468,10 @@ public void setEnabled(boolean enabled) {
   public void setModifiedBy(int modifiedBy) {
     this.modifiedBy = modifiedBy;
   }
+  
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -1532,7 +1536,7 @@ public void setEnabled(boolean enabled) {
    *@exception  SQLException  Description of Exception
    *@since                    1.1
    */
-  protected boolean insert(Connection db) throws SQLException {
+  public boolean insert(Connection db) throws SQLException {
 
     if (!isValid(db)) {
       return false;

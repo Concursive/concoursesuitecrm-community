@@ -26,11 +26,11 @@ public class ImportOpportunities implements CFSDatabaseReaderImportModule {
     this.mappings = mappings;
     
     logger.info("ImportOpportunities-> Inserting Opps");
-    writer.setAutoCommit(false);
+    //writer.setAutoCommit(false);
     OpportunityList oppList = new OpportunityList();
     oppList.buildList(db);
     mappings.saveList(writer, oppList, "insert");
-    writer.commit();
+    //writer.commit();
     
     //update owners
     

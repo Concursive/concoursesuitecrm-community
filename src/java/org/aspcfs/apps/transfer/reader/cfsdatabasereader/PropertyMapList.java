@@ -28,11 +28,12 @@ public class PropertyMapList extends HashMap {
   }
   
   public void saveList(DataWriter writer, AbstractList list, String action) {
+    boolean processOK = true;
     Iterator i = list.iterator();
-    while (i.hasNext()) {
+    while (i.hasNext() && processOK) {
       Object object = i.next();
       DataRecord thisRecord = createDataRecord(object, action);
-      writer.save(thisRecord);
+      processOK = writer.save(thisRecord);
     }
   }
 }

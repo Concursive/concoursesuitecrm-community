@@ -649,6 +649,13 @@ public void setYTD(double YTD) {
     this.miner_only = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
   }
 
+  public void setMinerOnly(boolean tmp) {
+    this.miner_only = tmp;
+  }
+  
+  public void setMinerOnly(String tmp) {
+    this.miner_only = ("true".equalsIgnoreCase(tmp) || "on".equalsIgnoreCase(tmp));
+  }
 
   /**
    *  Sets the AddressList attribute of the Organization object
@@ -1188,7 +1195,9 @@ public boolean getEnabled() {
   public boolean getMiner_only() {
     return miner_only;
   }
-
+  public boolean getMinerOnly() {
+    return miner_only;
+  }
 
   /**
    *  Gets the EnteredBy attribute of the Organization object

@@ -40,22 +40,23 @@
     <map class="com.darkhorseventures.webutils.LookupList" id="lookupRevenueDetailTypes" table="lookup_revenuedetail_types"/>
     <map class="com.darkhorseventures.webutils.LookupList" id="lookupSurveyTypes" table="lookup_survey_types"/>
     <map class="com.darkhorseventures.cfsbase.Contact" id="contact">
-      <property>guid</property>
+      <property alias="guid">id</property>
       <property lookup="account">orgId</property>
       <property>title</property>
-      <property>department</property>
+      <property lookup="lookupDepartment">department</property>
       <property>nameSalutation</property>
       <property>nameFirst</property>
       <property>nameMiddle</property>
       <property>nameLast</property>
       <property>nameSuffix</property>
-      <property lookup="">typeId</property>
+      <property lookup="lookupContactTypes">typeId</property>
       <property>site</property>
       <property>notes</property>
       <property>locale</property>
       <property>employeeId</property>
-      <property lookup="">employmentType</property>
+      <property lookup="lookupEmploymentTypes">employmentType</property>
       <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
       <property>enabled</property>
       <property lookup="user">owner</property>
       <property>custom1</property>
@@ -63,13 +64,14 @@
       <property lookup="user">userId</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Organization" id="account">
-      <property>guid</property>
+      <property alias="guid">id</property>
       <property>name</property>
       <property>url</property>
       <property>notes</property>
-      <property lookup="">industry</property>
-      <property>miner_only</property>
+      <property lookup="lookupIndustry">industry</property>
+      <property>minerOnly</property>
       <property lookup="user">enteredBy</property>
+      <property lookup="user">modifiedBy</property>
       <property>contactEndDate</property>
       <property>alertDate</property>
       <property>alertText</property>
@@ -95,7 +97,7 @@
       <property lookup="user">alias</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Role" id="role">
-      <property>guid</property>
+      <property alias="guid">id</property>
       <property>role</property>
       <property>description</property>
       <property>enteredBy</property>
@@ -103,10 +105,10 @@
       <property>enabled</property>
     </map>
     <map class="com.darkhorseventures.cfsbase.Opportunity" id="opportunity">
-      <property>guid</property>
+      <property alias="guid">id</property>
       <property lookup="user">owner</property>
       <property>description</property>
-      <property>accountLink</property>
+      <property lookup="account">accountLink</property>
       <property>contactLink</property>
       <property>closeDate</property>
       <property>closeProb</property>
@@ -115,7 +117,7 @@
       <property>low</property>
       <property>guess</property>
       <property>high</property>
-      <property>stage</property>
+      <property lookup="lookupStage">stage</property>
       <property>stageDate</property>
       <property>commission</property>
       <property>type</property>
