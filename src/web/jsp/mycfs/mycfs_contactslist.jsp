@@ -24,9 +24,9 @@
 <form name="contactListView" method="post" action="ContactsList.do?command=ContactList">
 <!-- Make sure that when the list selection changes previous selected entries are saved -->
   <input type="hidden" name="letter">
-  <table width="20%" border="0">
+  <table width="100%" border="0">
     <tr>
-      <td align="left">
+      <td nowrap>
         <select size="1" name="listView" onChange="javascript:setFieldSubmit('listFilter1','-1','contactListView');">
         <%
           Iterator filters = Filters.iterator();
@@ -37,7 +37,7 @@
         <%}%>
          </select>
       </td>
-      <td>
+      <td nowrap>
 <% 
   if (ContactListInfo.getListView().equals("employees")) {
     DepartmentList.setSelectSize(1); 
@@ -55,6 +55,9 @@
           <option value="0">--None--</option>
         </select>
 <%}%>
+      </td>
+      <td width="100%">
+        <%--<dhv:pagedListStatus object="ContactListInfo"/>--%>
       </td>
     </tr>
   </table>
@@ -145,10 +148,8 @@
     </tr>
 <%
     }
+  } else {
 %>
-    <br>
-<%
-  } else {%>
     <tr>
       <td class="row2" colspan="4">
         No contacts matched query.
@@ -165,6 +166,7 @@
     <input type="hidden" name="campaign" value="<%= (request.getParameter("campaign") != null ? request.getParameter("campaign") : "") %>">
     <input type="hidden" name="filters" value="<%= (request.getParameter("filters") != null ? request.getParameter("filters") : "")%>">
   </table>
+  <br>
 <% if("list".equals(request.getParameter("listType"))){ %>
   <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','contactListView');">
   <input type="button" value="Cancel" onClick="javascript:window.close()">
@@ -172,8 +174,6 @@
   <a href="javascript:SetChecked(0,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Clear All</a>
 <%}%>
   <dhv:pagedListControl object="ContactListInfo" showForm="false" resetList="false"/>
-  <br>
-  <br>
 </form>
 <%} else {%>
 <%-- The final submit --%>
@@ -197,8 +197,8 @@
     }
 %>
   <script>
-    recipientEmails[<%=count%>] = "<%=email%>";
-    recipientIds[<%=count%>] = "<%=id%>";
+    recipientEmails[<%= count %>] = "<%=email%>";
+    recipientIds[<%= count %>] = "<%=id%>";
   </script>
 <%	
   }
