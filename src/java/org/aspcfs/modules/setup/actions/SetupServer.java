@@ -60,8 +60,13 @@ public class SetupServer extends CFSModule {
             license.setEdition(previousRegistration.getEdition());
             license.setText2(previousRegistration.getText2());
           } else {
-            license.setEdition("Free Edition (5-seat binary)");
-            license.setText2(StringUtils.randomString(7,7) + "5");
+            if (license.getText().startsWith("ENTERPRISE-")) {
+              license.setEdition("Enterprise Edition");
+              license.setText2(StringUtils.randomString(7,7) + "-1");
+            } else {
+              license.setEdition("Free Edition (5-seat binary)");
+              license.setText2(StringUtils.randomString(7,7) + "5");
+            }
           }
           //save the registration
           Registration registration = new Registration();
