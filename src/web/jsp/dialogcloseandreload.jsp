@@ -3,6 +3,6 @@
 <jsp:useBean id="refreshUrl" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <% System.out.println(" Action Error -- > " + request.getAttribute("actionError"));%>
-<body onLoad="javascript:parent.opener.window.location.href='<%=refreshUrl%><%= request.getAttribute("actionError") != null ? "&actionError=" + request.getAttribute("actionError") :""%>';javascript:parent.window.close()">
+<body onLoad="javascript:parent.opener.window.location.href='<%=refreshUrl%><%= addLinkParams(request, "popup") %><%= request.getAttribute("actionError") != null ? "&actionError=" + request.getAttribute("actionError") :""%>';javascript:parent.window.close()">
 
 

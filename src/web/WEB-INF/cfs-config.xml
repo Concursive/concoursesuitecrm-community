@@ -915,6 +915,52 @@
     <forward name="ViewAllOK" resource="/help/help_viewall.jsp" layout="style"/>
   </action>
   
+  <action name="QA" class="org.aspcfs.modules.help.actions.QA">
+    <bean name="Help" class="org.aspcfs.modules.help.base.HelpItem" scope="request" />
+    <forward name="QAPopupOK" resource="/qa/qa.jsp" layout="style"/>
+    <forward name="ProcessOK" resource="/closepopup.jsp"/>
+    <forward name="ViewAllOK" resource="/qa/aq_viewall.jsp" layout="style"/>
+    <forward name="ModifyIntroPopupOK" resource="/qa/qa_intro_form.jsp" layout="style"/>
+    <forward name="SaveIntroPopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
+  
+  <action name="HelpFeatures" class="org.aspcfs.modules.help.actions.QA">
+    <bean name="Feature" class="org.aspcfs.modules.help.base.HelpFeature" scope="request" />
+    <forward name="FeaturePreparePopupOK" resource="/qa/qa_feature_form.jsp" layout="style"/>
+    <forward name="FeatureModifyPopupOK" resource="/qa/qa_feature_form.jsp" layout="style"/>
+    <forward name="FeatureDeleteOK" resource="/qa/qa.jsp" layout="style"/>
+    <forward name="FeatureInsertPopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="FeatureReInsertPopupOK" resource="/redirectpopupandreload.jsp" layout="style"/>
+    <forward name="FeatureUpdatePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
+  
+  <action name="HelpRules" class="org.aspcfs.modules.help.actions.QA">
+    <bean name="Rule" class="org.aspcfs.modules.help.base.HelpBusinessRule" scope="request" />
+    <forward name="RulePreparePopupOK" resource="/qa/qa_rule_form.jsp" layout="style"/>
+    <forward name="RuleModifyPopupOK" resource="/qa/qa_rule_form.jsp" layout="style"/>
+    <forward name="RuleDeleteOK" resource="/qa/qa.jsp" layout="style"/>
+    <forward name="RuleInsertPopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="RuleUpdatePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
+  
+  <action name="HelpNotes" class="org.aspcfs.modules.help.actions.QA">
+    <bean name="Note" class="org.aspcfs.modules.help.base.HelpNote" scope="request" />
+    <forward name="NotePreparePopupOK" resource="/qa/qa_note_form.jsp" layout="style"/>
+    <forward name="NoteModifyPopupOK" resource="/qa/qa_note_form.jsp" layout="style"/>
+    <forward name="NoteDeleteOK" resource="/qa/qa.jsp" layout="style"/>
+    <forward name="NoteInsertPopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="NoteUpdatePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
+  
+  <action name="HelpTips" class="org.aspcfs.modules.help.actions.QA">
+    <bean name="Tip" class="org.aspcfs.modules.help.base.HelpTip" scope="request" />
+    <forward name="TipPreparePopupOK" resource="/qa/qa_tip_form.jsp" layout="style"/>
+    <forward name="TipModifyPopupOK" resource="/qa/qa_tip_form.jsp" layout="style"/>
+    <forward name="TipDeleteOK" resource="/qa/qa.jsp" layout="style"/>
+    <forward name="TipInsertPopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="TipUpdatePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
+  
   <action name="Search" class="org.aspcfs.modules.search.actions.Search">
     <forward name="SearchOK" resource="/search/search_results.jsp" layout="nav"/>
   </action>
