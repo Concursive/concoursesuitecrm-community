@@ -73,7 +73,7 @@
         useURIValidationHack="false" disableUploadTimeout="true">
       <Factory className="org.apache.coyote.tomcat4.CoyoteServerSocketFactory" 
           clientAuth="false" protocol="TLS"
-          keystoreFile="/home/cfs/webapps/ROOT/WEB-INF/keystore" 
+          keystoreFile="/home/cfs/webapps/ROOT/WEB-INF/fileLibrary/keystore" 
           keystorePass="aspcfs" keystoreType="JKS"/>
     </Connector>
     <Engine name="Web" defaultHost="localhost" debug="0">
