@@ -21,6 +21,7 @@ public class HelpNoteList extends ArrayList {
   private int linkHelpId = -1;
   private boolean completeOnly = false;
   private int enteredBy = -1;
+  private boolean ignoreDone = false;
 
 
   /**
@@ -71,7 +72,8 @@ public class HelpNoteList extends ArrayList {
   public int getEnteredBy() {
     return enteredBy;
   }
-
+  
+  public void setIgnoreDone(boolean tmp) { this.ignoreDone = tmp; }
 
   /**
    *  Gets the pagedListInfo attribute of the HelpNoteList object
@@ -101,6 +103,8 @@ public class HelpNoteList extends ArrayList {
   public boolean getCompleteOnly() {
     return completeOnly;
   }
+  
+  public boolean getIgnoreDone() { return ignoreDone; }
 
 
   /**
@@ -138,8 +142,8 @@ public class HelpNoteList extends ArrayList {
       int maxRecords = rs.getInt("recordcount");
       pagedListInfo.setMaxRecords(maxRecords);
     }
-    pst.close();
     rs.close();
+    pst.close();
 
     //Determine the offset, based on the filter, for the first record to show
     if (!pagedListInfo.getCurrentLetter().equals("")) {
@@ -212,6 +216,9 @@ public class HelpNoteList extends ArrayList {
 
     if (completeOnly) {
       sqlFilter.append("AND t.complete = ? ");
+    }
+    if (ignoreDone) {
+      sqlFilter.append("AND hf.description NOT LIKE 'DONE:%' ");
     }
   }
 
