@@ -289,7 +289,7 @@ public final class ExternalContacts extends CFSModule {
     }
 
     if (!hasAuthority(context, thisItem.getEnteredBy())) {
-        return ("PermissionError");
+      return ("PermissionError");
     }
     return ("ReportHtmlOK");
   }
@@ -773,7 +773,7 @@ public final class ExternalContacts extends CFSModule {
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
-      if (! (hasAuthority(context, thisContact.getOwner()) || OpportunityHeaderList.isComponentOwner(db, getUserId(context)))) {
+      if (!(hasAuthority(context, thisContact.getOwner()) || OpportunityHeaderList.isComponentOwner(db, getUserId(context)))) {
         return ("PermissionError");
       }
 
@@ -832,6 +832,7 @@ public final class ExternalContacts extends CFSModule {
     }
 
     Exception errorMessage = null;
+    String id = context.getRequest().getParameter("id");
 
     Contact thisContact = (Contact) context.getFormBean();
 
@@ -845,7 +846,8 @@ public final class ExternalContacts extends CFSModule {
     int resultCount = 0;
 
     try {
-      if (!hasAuthority(context, thisContact.getOwner())) {
+      Contact oldContact = new Contact(db, id);
+      if (!hasAuthority(context, oldContact.getOwner())) {
         return ("PermissionError");
       }
       thisContact.setRequestItems(context.getRequest());

@@ -817,13 +817,14 @@ public final class Opportunities extends CFSModule {
     OpportunityComponent component = (OpportunityComponent) context.getFormBean();
     component.setTypeList(context.getRequest().getParameterValues("selectedList"));
 
-    if (!hasAuthority(context, component.getOwner())) {
-      return ("PermissionError");
-    }
     String orgId = context.getRequest().getParameter("orgId");
 
     try {
       db = this.getConnection(context);
+      OpportunityComponent oldComponent = new OpportunityComponent(db, component.getId()); 
+      if (!hasAuthority(context, oldComponent.getOwner())) {
+        return ("PermissionError");
+      }
       component.setModifiedBy(getUserId(context));
       resultCount = component.update(db, context);
       if (resultCount == 1) {

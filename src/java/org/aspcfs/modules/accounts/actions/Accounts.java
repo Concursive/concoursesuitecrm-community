@@ -901,9 +901,6 @@ public final class Accounts extends CFSModule {
     Organization updatedOrg = null;
 
     Organization newOrg = (Organization) context.getFormBean();
-    if (!(hasAuthority(context, newOrg.getOwner()))) {
-      return ("PermissionError");
-    }
 
     newOrg.setTypeList(context.getRequest().getParameterValues("selectedList"));
     newOrg.setModifiedBy(getUserId(context));
@@ -921,6 +918,10 @@ public final class Accounts extends CFSModule {
       String orgId = context.getRequest().getParameter("orgId");
       int tempid = Integer.parseInt(orgId);
       db = this.getConnection(context);
+      updatedOrg = new Organization(db, tempid);
+      if (!(hasAuthority(context, updatedOrg.getOwner()))) {
+        return ("PermissionError");
+      }
 
       resultCount = newOrg.update(db);
       if (resultCount == -1) {
@@ -928,7 +929,6 @@ public final class Accounts extends CFSModule {
       } else {
         //if this is an individual account, populate and update the primary contact
         if (context.getRequest().getParameter("form_type").equalsIgnoreCase("individual")) {
-          updatedOrg = new Organization(db, tempid);
           updatedOrg.updatePrimaryContact();
           ((Contact) updatedOrg.getPrimaryContact()).setRequestItems(context.getRequest());
           ((Contact) updatedOrg.getPrimaryContact()).update(db);
