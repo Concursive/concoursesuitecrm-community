@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>
 <jsp:useBean id="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
 <jsp:useBean id="BusTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
@@ -102,7 +102,11 @@ Modify Opportunity<br>
 
 <tr class="title">
   <td colspan=2 valign=center align=left>
-    <strong>Modify an Opportunity</strong>
+    <strong><%=OppDetails.getDescription()%></strong>
+      <% if (OppDetails.hasFiles()) { %>
+      <% FileItem thisFile = new FileItem(); %>
+      <%= thisFile.getImageTag()%>
+      <%}%>         
   </td>     
 </tr>
 
@@ -161,7 +165,7 @@ Modify Opportunity<br>
 
 <tr class="containerBody">
   <td nowrap class="formLabel">
-    Type of Business
+    Source
   </td>
   <td valign=center>
     <%= BusTypeList.getHtml() %>

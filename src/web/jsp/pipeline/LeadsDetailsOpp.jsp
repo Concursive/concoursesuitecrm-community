@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OpportunityDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
@@ -29,6 +29,10 @@ Opportunity Details<br>
 	<dhv:evaluate exp="<%=(OpportunityDetails.getContactLink() > -1)%>">
 	<dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
 	</dhv:evaluate>
+        <% if (OpportunityDetails.hasFiles()) { %>
+      <% FileItem thisFile = new FileItem(); %>
+      <%= thisFile.getImageTag()%>
+      <%}%>  
     </td>
   </tr>
   <tr class="containerMenu">

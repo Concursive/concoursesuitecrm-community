@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="OpportunityList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
 <jsp:useBean id="OpportunityPagedInfo" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
@@ -54,6 +54,7 @@ Opportunities<br>
 
 <%
 	Iterator j = OpportunityList.iterator();
+  FileItem thisFile = new FileItem();
 	
 	if ( j.hasNext() ) {
 		int rowid = 0;
@@ -76,6 +77,9 @@ Opportunities<br>
     <td width=100% valign=center class="row<%= rowid %>">
       <a href="/Opportunities.do?command=Details&id=<%=thisOpp.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">
       <%= toHtml(thisOpp.getDescription()) %></a>
+      <% if (thisOpp.hasFiles()) { %>
+      <%= thisFile.getImageTag()%>
+      <%}%>
     </td>
     <td width=125 valign=center nowrap class="row<%= rowid %>">
       $<%= thisOpp.getGuessCurrency() %>

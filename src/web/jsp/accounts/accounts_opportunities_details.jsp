@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
 <%@ include file="initPage.jsp" %>
@@ -34,6 +34,10 @@ Opportunity Details<br>
   <tr class="title">
     <td colspan=2 valign=center align=left>
       <strong><%= toHtml(OppDetails.getDescription()) %></strong>
+      <% if (OppDetails.hasFiles()) { %>
+      <% FileItem thisFile = new FileItem(); %>
+      <%= thisFile.getImageTag()%>
+      <%}%>  
     </td>
   </tr>
   <tr class="containerBody">

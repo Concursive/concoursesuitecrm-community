@@ -73,6 +73,7 @@ public class Opportunity extends GenericBean {
   private boolean hasEnabledOwnerAccount = true;
   private ArrayList typeList = null;
   private LookupList types = new LookupList();
+  private FileItemList files = new FileItemList();
   
   
   /**
@@ -146,6 +147,8 @@ public class Opportunity extends GenericBean {
     }
     rs.close();
     pst.close();
+    
+    this.buildFiles(db);
   }
 
 
@@ -669,6 +672,23 @@ public class Opportunity extends GenericBean {
     this.units = units;
   }
 
+  public void setFiles(FileItemList files) {
+    this.files = files;
+  }
+  public FileItemList getFiles() {
+    return files;
+  }
+  
+  public void buildFiles(Connection db) throws SQLException {
+    files.clear();
+    files.setLinkModuleId(Constants.PIPELINE);
+    files.setLinkItemId(this.getId());
+    files.buildList(db);
+  }  
+  
+  public boolean hasFiles() {
+    return (files != null && files.size() > 0);
+  }  
 
   /**
    *  Sets the CloseProb attribute of the Opportunity object

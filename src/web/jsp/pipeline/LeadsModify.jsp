@@ -1,5 +1,5 @@
 <%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.*" %>
+<%@ page import="java.util.*,com.darkhorseventures.cfsbase.*,com.darkhorseventures.webutils.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="OpportunityDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
 <jsp:useBean id="BusTypeList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="StageList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
@@ -86,6 +86,10 @@
           <dhv:permission name="contacts-view,contacts-external_contacts-view">[ <a href="ExternalContacts.do?command=ContactDetails&id=<%=OpportunityDetails.getContactLink()%>">Go to this Contact</a> ]</dhv:permission>
         </dhv:evaluate>
       </dhv:evaluate>
+      <% if (OpportunityDetails.hasFiles()) { %>
+      <% FileItem thisFile = new FileItem(); %>
+      <%= thisFile.getImageTag()%>
+      <%}%>        
     </td>
   </tr>
   <dhv:evaluate exp="<%= !popUp %>">
@@ -185,7 +189,7 @@ Reassign To
 
 <tr class="containerBody">
   <td nowrap class="formLabel">
-    Type of Business
+    Source
   </td>
   <td colspan=1 valign=center>
     <%= BusTypeList.getHtml() %>

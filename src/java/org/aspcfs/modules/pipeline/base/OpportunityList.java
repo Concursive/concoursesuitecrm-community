@@ -441,6 +441,7 @@ public void setCloseDateEnd(String tmp) {
       }
       ++count;
       Opportunity thisOpp = new Opportunity(rs);
+      thisOpp.buildFiles(db);
       this.addElement(thisOpp);
     }
     rs.close();
