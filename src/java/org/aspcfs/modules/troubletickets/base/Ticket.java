@@ -649,6 +649,10 @@ public void setCompanyEnabled(boolean companyEnabled) {
   public void setLevelCode(int tmp) {
     this.levelCode = tmp;
   }
+  
+  public void setLevelCode(String tmp) {
+    this.levelCode = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -1362,10 +1366,33 @@ public void setCompanyEnabled(boolean companyEnabled) {
       pst.setString(++i, this.getProblem());
       pst.setInt(++i, this.getEnteredBy());
       pst.setInt(++i, this.getModifiedBy());
-      pst.setInt(++i, this.getPriorityCode());
-      pst.setInt(++i, this.getDepartmentCode());
+      
+        if (this.getPriorityCode() > 0) {
+                pst.setInt(++i, this.getPriorityCode());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
+    
+        if (this.getDepartmentCode() > 0) {
+                pst.setInt(++i, this.getDepartmentCode());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
+        
       pst.setInt(++i, this.getCatCode());
-      pst.setInt(++i, this.getSeverityCode());
+      
+        if (this.getCatCode() > 0) {
+                pst.setInt(++i, this.getCatCode());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
+        
+      if (this.getSeverityCode() > 0) {
+                pst.setInt(++i, this.getSeverityCode());
+      } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+      }
+        
       pst.execute();
       pst.close();
 
@@ -1441,15 +1468,46 @@ public void setCompanyEnabled(boolean companyEnabled) {
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, departmentCode);
+        
+        if (this.getDepartmentCode() > 0) {
+                pst.setInt(++i, this.getDepartmentCode());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
+    
     pst.setInt(++i, priorityCode);
-    pst.setInt(++i, severityCode);
-    pst.setInt(++i, catCode);
+        if (this.getSeverityCode() > 0) {
+                pst.setInt(++i, this.getSeverityCode());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
+        if (this.getCatCode() > 0) {
+                pst.setInt(++i, this.getCatCode());
+        } else {
+                pst.setNull(++i, java.sql.Types.INTEGER);
+        }
     pst.setInt(++i, assignedTo);
-    pst.setInt(++i, this.getSubCat1());
-    pst.setInt(++i, this.getSubCat2());
-    pst.setInt(++i, this.getSubCat3());
-    pst.setInt(++i, this.getSourceCode());
+    if (this.getSubcat1() > 0) {
+            pst.setInt(++i, this.getSubcat1());
+    } else {
+            pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    if (this.getSubcat2() > 0) {
+            pst.setInt(++i, this.getSubcat2());
+    } else {
+            pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    if (this.getSubcat3() > 0) {
+            pst.setInt(++i, this.getSubcat3());
+    } else {
+            pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+    if (this.getSourceCode() > 0) {
+            pst.setInt(++i, this.getSourceCode());
+    } else {
+            pst.setNull(++i, java.sql.Types.INTEGER);
+    }
+      
     pst.setInt(++i, this.getContactId());
     pst.setString(++i, this.getProblem());
 
@@ -1608,16 +1666,41 @@ public void setCompanyEnabled(boolean companyEnabled) {
     modifiedBy = rs.getInt("modifiedby");
     closed = rs.getTimestamp("closed");
     priorityCode = rs.getInt("pri_code");
+    if (rs.wasNull()) {
+            priorityCode = -1;
+    }
     levelCode = rs.getInt("level_code");
     departmentCode = rs.getInt("department_code");
+    if (rs.wasNull()) {
+            departmentCode = -1;
+    }
     sourceCode = rs.getInt("source_code");
+    if (rs.wasNull()) {
+            sourceCode = -1;
+    }
     catCode = rs.getInt("cat_code");
+    if(rs.wasNull()) {
+            catCode = 0;
+    }
     subCat1 = rs.getInt("subcat_code1");
+    if(rs.wasNull()) {
+            subCat1 = 0;
+    }
     subCat2 = rs.getInt("subcat_code2");
+    if(rs.wasNull()) {
+            subCat2 = 0;
+    }
     subCat3 = rs.getInt("subcat_code3");
+    if(rs.wasNull()) {
+            subCat3 = 0;
+    }
     assignedTo = rs.getInt("assigned_to");
     solution = rs.getString("solution");
     severityCode = rs.getInt("scode");
+    
+    if(rs.wasNull()) {
+            severityCode = -1;
+    }
 
     //organization table
     companyName = rs.getString("orgname");
