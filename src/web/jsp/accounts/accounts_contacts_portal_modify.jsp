@@ -33,13 +33,11 @@ Contact Details
         [ <dhv:container name="accountscontacts" selected="portal" param="<%= param1 %>"/> ]
       <br />    <br />
   <input	type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />
-  <input	type="reset" value="Reset" />
   <input type="button" value="Cancel" onClick="window.location.href='ContactsPortal.do?command=View&contactId=<%=ContactDetails.getId()%>';this.form.dosubmit.value='false';" />
   <br /> <br />
   <%@ include file="accounts_contacts_portal_include.jsp" %>
   <br />
-  <input	type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />
-  <input	type="reset" value="Reset" />
+  <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />
   <input type="button" value="Cancel" onClick="window.location.href='ContactsPortal.do?command=View&contactId=<%=ContactDetails.getId()%>';this.form.dosubmit.value='false';" />
   <input type="hidden" name="dosubmit" value="true" />
   </td>

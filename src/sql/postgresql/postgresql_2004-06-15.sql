@@ -3328,6 +3328,10 @@ SELECT pg_catalog.setval ('help_notes_note_id_seq', 1, false);
 
 SELECT pg_catalog.setval ('help_tips_tip_id_seq', 2, true);
 
+-- cleanup
+DELETE FROM action_item_log WHERE item_id IN (SELECT item_id FROM action_item WHERE link_item_id NOT IN (SELECT contact_id FROM contact));
+DELETE FROM action_item WHERE link_item_id NOT IN (SELECT contact_id FROM contact);
+UPDATE contact SET employee = true WHERE employee = false AND org_id = 0;
 
 INSERT INTO database_version (script_filename, script_version) VALUES ('postgresql_2004-06-15.sql', '2004-06-15');
 

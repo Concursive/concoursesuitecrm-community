@@ -20,7 +20,6 @@ Update Role
 <dhv:permission name="admin-roles-edit">
   <input type="submit" value="Update" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
-  <input type="reset" value="Reset">
 </dhv:permission>
 <br>
 <%= showError(request, "actionError") %>
@@ -147,6 +146,5 @@ Update Role
   <br>
   <input type="submit" value="Update" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
-  <input type="reset" value="Reset">
 </dhv:permission>
 </form>

@@ -55,7 +55,7 @@ Start by choosing an existing message or create a new one:<br>
 <br>
 <input type="submit" value="Send Message">
 <input type="button" value="Cancel" onClick="javascript:window.close();">
-<input type="reset" value="Reset"><br>
+<br>
 <input type="hidden" name="contactId" value="<%= request.getParameter("contactId") %>">
 </form>
 </body>

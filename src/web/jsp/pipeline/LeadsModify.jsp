@@ -58,7 +58,6 @@
 <%} else {%>
     	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
-      <input type="reset" value="Reset">
       <dhv:evaluate exp="<%= popUp %>">
         <input type="button" value="Cancel" onclick="javascript:window.close();"> 
       </dhv:evaluate>
@@ -92,7 +91,6 @@
 <%} else {%>
     	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
-      <input type="reset" value="Reset">
       <input type="hidden" name="dosubmit" value="true">
     </td>
   </tr>

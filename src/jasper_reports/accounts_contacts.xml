@@ -26,9 +26,6 @@
 	<parameter name="TRUE" isForPrompting="false" class="java.lang.Boolean">
 		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="approved" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(org.aspcfs.modules.base.Import.PROCESSED_APPROVED)]]></defaultValueExpression>
-	</parameter>
 	<queryString><![CDATA[SELECT
 o.name as name,
 o.org_id as org_id,
@@ -41,7 +38,7 @@ LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id)
 WHERE o.org_id > 0
 AND o.owner = $P{userid}
 AND o.enabled = $P{TRUE}
-AND o.status_id IS NULL OR o.status_id = $P{approved}
+AND (o.status_id IS NULL OR o.status_id = 7)
 ORDER BY o.name]]></queryString>
 	<field name="name" class="java.lang.String"/>
 	<field name="org_id" class="java.lang.Integer"/>

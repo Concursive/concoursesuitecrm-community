@@ -38,8 +38,9 @@ public final class LookupSelector extends CFSModule {
     if (context.getRequest().getParameter("previousSelection") != null) {
       int j = 0;
       StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("previousSelection"), "|");
+      StringTokenizer st1 = new StringTokenizer(context.getRequest().getParameter("previousSelectionDisplay"), "|");
       while (st.hasMoreTokens()) {
-        selectedList.put(new Integer(st.nextToken()), "");
+        selectedList.put(new Integer(st.nextToken()), st1.nextToken());
         j++;
       }
     } else {

@@ -2195,21 +2195,21 @@ public class Contact extends GenericBean {
             "DELETE FROM contact_phone " +
             "WHERE contact_id = ?");
         pst.setInt(1, this.getId());
-        pst.executeUpdate();
+        pst.execute();
         pst.close();
 
         pst = db.prepareStatement(
             "DELETE FROM contact_emailaddress " +
             "WHERE contact_id = ?");
         pst.setInt(1, this.getId());
-        pst.executeUpdate();
+        pst.execute();
         pst.close();
 
         pst = db.prepareStatement(
             "DELETE FROM contact_address " +
             "WHERE contact_id = ? ");
         pst.setInt(1, this.getId());
-        pst.executeUpdate();
+        pst.execute();
         pst.close();
 
         // For history, keep this contact if they previously received a comm. message
@@ -2226,7 +2226,7 @@ public class Contact extends GenericBean {
             "DELETE FROM excluded_recipient " +
             "WHERE contact_id = ? ");
         pst.setInt(1, this.getId());
-        pst.executeUpdate();
+        pst.execute();
         pst.close();
 
         // delete all types associated with this contact
@@ -2234,7 +2234,7 @@ public class Contact extends GenericBean {
             "DELETE FROM contact_type_levels " +
             "WHERE contact_id = ? ");
         pst.setInt(1, this.getId());
-        pst.executeUpdate();
+        pst.execute();
         pst.close();
 
         // delete all task links associated with this contact
@@ -2242,7 +2242,7 @@ public class Contact extends GenericBean {
             "DELETE FROM tasklink_contact " +
             "WHERE contact_id = ? ");
         pst.setInt(1, this.getId());
-        pst.executeUpdate();
+        pst.execute();
         pst.close();
 
         // delete all inbox message links associated with this contact
@@ -2250,7 +2250,23 @@ public class Contact extends GenericBean {
             "DELETE FROM cfsinbox_messagelink " +
             "WHERE sent_to = ? ");
         pst.setInt(1, this.getId());
-        pst.executeUpdate();
+        pst.execute();
+        pst.close();
+        
+        // delete the action item log data for this contact
+        pst = db.prepareStatement(
+            "DELETE FROM action_item_log " +
+            "WHERE item_id IN (SELECT item_id FROM action_item WHERE link_item_id = ?) ");
+        pst.setInt(1, this.getId());
+        pst.execute();
+        pst.close();
+        
+        // delete from any action list this contact appeared on
+        pst = db.prepareStatement(
+            "DELETE FROM action_item " +
+            "WHERE link_item_id = ? ");
+        pst.setInt(1, this.getId());
+        pst.execute();
         pst.close();
         
         // finally, delete the contact
@@ -2258,7 +2274,7 @@ public class Contact extends GenericBean {
             "DELETE FROM contact " +
             "WHERE contact_id = ?");
         pst.setInt(1, this.getId());
-        pst.executeUpdate();
+        pst.execute();
         pst.close();
         db.commit();
       } catch (SQLException e) {

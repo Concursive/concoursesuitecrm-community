@@ -52,6 +52,10 @@
       return false;
     }
   }
+
+  function resetNumericFieldValue(fieldId){
+  document.getElementById(fieldId).value = -1;
+ }
 </script>
 <%-- start details --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -193,6 +197,7 @@
           <input type="hidden" name="contractId" id="contractId" value="<%= asset.getContractId() %>">
           <%= showAttribute(request, "contractIdError") %>
           [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled', <%=OrgDetails.getOrgId()%>);">Select</a>]
+          &nbsp [<a href="javascript:changeDivContent('addServiceContract','None Selected');javascript:resetNumericFieldValue('contractId');">Clear</a>] 
         </td>
       </tr>
     </table>

@@ -1,3 +1,4 @@
+<%-- Copyright 2004 Dark Horse Ventures, All rights reserved. --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page  import="java.util.*,org.aspcfs.modules.base.*,org.aspcfs.controller.*" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -6,6 +7,7 @@
 <%
   response.setHeader("Pragma", "no-cache"); // HTTP 1.0
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+  response.setHeader("Expires", "-1");
 %>
 <html>
 <head>

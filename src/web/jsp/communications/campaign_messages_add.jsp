@@ -29,13 +29,11 @@ Add Message
 <%-- End Trails --%>
 <input type="submit" value="Save Message">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
-<input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
 <%@ include file="message_include.jsp" %>
 <br>
 <input type="submit" value="Save Message">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
-<input type="reset" value="Reset">
 </form>
 </body>

@@ -74,16 +74,27 @@
       return true;
     }
   }
-function resetNumericFieldValue(fieldId){
-  document.getElementById(fieldId).value = -1;
-}
-function checkForm(form) {
-  if (form.closeNow.checked && form.solution.value == "") { 
-   alert("Resolution needs to be filled in when closing a ticket");
-   return false;
+  function resetNumericFieldValue(fieldId){
+    document.getElementById(fieldId).value = -1;
   }
-  return true;
-}
+  function checkForm(form) {
+    formTest = true;
+    message = "";
+    if (form.problem.value == "") { 
+      message += "- Check that <dhv:label name="ticket.issue">Issue</dhv:label> is entered\r\n";
+      formTest = false;
+    }
+    if (form.closeNow.checked && form.solution.value == "") { 
+      message += "- Resolution needs to be filled in when closing a ticket\r\n";
+      formTest = false;
+    }
+    if (formTest == false) {
+      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      return false;
+    } else {
+      return true;
+    }
+  }
 </script>
 <body>
 <%-- Trails --%>
@@ -209,7 +220,7 @@ Modify Ticket
            <table cellspacing="0" cellpadding="0" border="0" class="empty">
             <tr>
               <td>
-                <div id="addLaborCategory"><%= (TicketDetails.getProductId() != -1) ? TicketDetails.getProductSku() :"None Selected" %></div>
+                <div id="addLaborCategory"><%= toHtml((TicketDetails.getProductId() != -1) ? TicketDetails.getProductSku() :"None Selected") %></div>
               </td>
               <td>
                 <input type="hidden" name="productId" id="productId" value="<%=  TicketDetails.getProductId() %>">

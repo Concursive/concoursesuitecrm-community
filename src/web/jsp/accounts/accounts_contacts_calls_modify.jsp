@@ -24,7 +24,7 @@
 <% if (!"list".equals(request.getParameter("return"))){ %>
 <a href="AccountContactsCalls.do?command=Details&id=<%=CallDetails.getId()%>&contactId=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Call  Details</a> >
 <% } %>
-Update Call
+Modify Call
 </td>
 </tr>
 </table>
@@ -49,7 +49,6 @@ Update Call
       <%}else {%>
           <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsCalls.do?command=Details&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
       <%}%>
-      <input type="reset" value="Reset">
       <br>
       <%= showError(request, "actionError") %>
       <%@ include file="../contacts/call_include.jsp" %>
@@ -61,7 +60,6 @@ Update Call
       <%}else {%>
           <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsCalls.do?command=Details&id=<%= CallDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
       <%}%>
-      <input type="reset" value="Reset">
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
       <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">

@@ -95,7 +95,6 @@ Add a Call
 <%-- Begin the container contents --%>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
-      <input type="reset" value="Reset">
       <br>
       <%= showError(request, "actionError") %>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
@@ -174,7 +173,6 @@ Add a Call
       <br>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
-      <input type="reset" value="Reset">
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="oppHeaderId" value=<%= opportunityHeader.getId() %>>
       <input type="hidden" name="headerId" value=<%= opportunityHeader.getId() %>>

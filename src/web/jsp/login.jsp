@@ -11,6 +11,7 @@
 <%
   response.setHeader("Pragma", "no-cache"); // HTTP 1.0
   response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+  response.setHeader("Expires", "-1");
 %>
 <%@ include file="initPage.jsp" %>
 <html>
@@ -130,7 +131,6 @@
                 <td align="right">&nbsp;</td>
                 <td>
                   <input type="submit" value="Login" name="action">
-                  <input type="reset" value="Reset">
                 </td>
               </tr>
               </table>

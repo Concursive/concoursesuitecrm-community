@@ -118,7 +118,6 @@ Add Opportunity
       <br>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOpps.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
-      <input type="reset" value="Reset">
       <br>
       <%= showError(request, "actionError") %>  
       <%--  include basic opportunity form --%>
@@ -128,7 +127,6 @@ Add Opportunity
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsOpps.do?command=DetailsOpp&id=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
       <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
-      <input type="reset" value="Reset">
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
       <input type="hidden" name="actionSource" value="AccountContactsOppComponents">

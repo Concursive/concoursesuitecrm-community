@@ -56,7 +56,7 @@ function checkForm(form) {
       formTest = false;
   }
   
-  if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
+  if ((!form.component_alertDate.value == "") && (!checkAlertDate(form.component_alertDate.value))) { 
       alertMessage += "Alert Date is before today's date\r\n";
   }
     
@@ -97,7 +97,6 @@ Add Opportunity
     <td class="containerBack">
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
 <%--  include basic opportunity form --%>
@@ -106,7 +105,6 @@ Add Opportunity
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
     </td>
   </tr>

@@ -17,7 +17,8 @@ import org.aspcfs.modules.troubletickets.base.*;
  *
  *@author     akhi_m
  *@created    May 22, 2003
- *@version    $Id$
+ *@version    $Id: CategoryEditor.java,v 1.5 2004/04/01 16:14:05 mrajkowski Exp
+ *      $
  */
 public class CategoryEditor {
 
@@ -519,7 +520,6 @@ public class CategoryEditor {
             if (categoryList.containsKey(new Integer(parentCode))) {
               parentCategory = (TicketCategoryDraft) categoryList.get(new Integer(parentCode));
             }
-
             StringTokenizer st1 = new StringTokenizer(catList, "|");
             while (st1.hasMoreTokens()) {
               int catId = Integer.parseInt(st1.nextToken());
@@ -583,17 +583,15 @@ public class CategoryEditor {
         TicketCategoryDraft parentCategory = (TicketCategoryDraft) categoryList.get(new Integer(thisCategory.getParentCode()));
         parentCategory.removeChild(thisCategory.getId());
       }
-
       //check if it is a top level category
       if (thisCategory.getParentCode() == 0) {
-        topCategoryList.remove(new Integer(thisCategory.getId()));
+        topCategoryList.remove(thisCategory);
       }
       thisCategory.delete(db, tableName);
     } else {
       thisCategory.setEnabled(enabled);
       thisCategory.update(db, tableName);
     }
-
     if (thisCategory.getShortChildList() != null) {
       Iterator i = thisCategory.getShortChildList().iterator();
       while (i.hasNext()) {

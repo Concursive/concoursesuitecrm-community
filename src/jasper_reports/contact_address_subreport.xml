@@ -38,7 +38,7 @@ AND c_addr.contact_id = $P{contact_id}]]></queryString>
 (($F{addrline3} != null && !$F{addrline3}.equals("")) ? "\n" + $F{addrline3}:"") +  
 (($F{city} != null && !$F{city}.equals("")) ? "\n" + $F{city}:"") +
 (($F{state} != null && !$F{state}.equals("")) ? ", " + $F{state}:"") +
-(($F{postalcode} != null && !$F{postalcode}.equals("")) ? " - " + $F{postalcode}:"") +
+(($F{postalcode} != null && !$F{postalcode}.equals("")) ? " " + $F{postalcode}:"") +
 (($F{country} != null && !$F{country}.equals("")) ? "\n" + $F{country}:"")]]></variableExpression>		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
 		<background>
 			<band height="0"  isSplitAllowed="true" >
@@ -74,7 +74,7 @@ AND c_addr.contact_id = $P{contact_id}]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[(($F{addr_type} != null && !$F{addr_type}.equals("")) ? $F{addr_type} + " address" : "")]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[(($F{addr_type} != null && !$F{addr_type}.equals("")) ? $F{addr_type} + " address " : "")]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"

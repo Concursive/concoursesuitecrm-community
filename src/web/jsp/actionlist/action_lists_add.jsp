@@ -54,7 +54,6 @@ New Action List
 </dhv:evaluate>
 <input type="submit" value="Save">
 <input type="button" value="Cancel" onClick="javascript:window.location.href='<%= cancelURL %>'">
-<input type="reset" value="Reset">
 <br>
 <br>
 
@@ -70,7 +69,6 @@ New Action List
 
 <input type="submit" value="Save">
 <input type="button" value="Cancel" onClick="javascript:window.location.href='<%= cancelURL %>'">
-<input type="reset" value="Reset">
 <dhv:evaluate if="<%= request.getParameter("return") != null %>">
 <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 </dhv:evaluate>

@@ -27,7 +27,6 @@ Modify Item
       <%}else{ %>
         <input type="button" value="Cancel" onClick="window.location.href='ProductsCatalog.do?command=ViewProductDetails&productId=<%=productDetails.getId()%>&moduleId=<%= PermissionCategory.getId() %>';" />
       <%}%>
-      <input	type="reset" value="Reset" />
       <br /> <br />
       <%@ include file="product_include.jsp" %>
       <br />
@@ -37,7 +36,6 @@ Modify Item
       <%}else{ %>
         <input type="button" value="Cancel" onClick="window.location.href='ProductsCatalog.do?command=ViewProductDetails&productId=<%=productDetails.getId()%>&moduleId=<%= PermissionCategory.getId() %>';" />
       <%}%>
-      <input	type="reset" value="Reset" />
       <input type="hidden" name="dosubmit" value="true" />
     </td>
   </tr>

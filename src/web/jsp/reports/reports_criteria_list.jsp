@@ -21,7 +21,7 @@
 <td>
 <a href="Reports.do">Reports</a> >
 <a href="Reports.do">Queue</a> >
-<a href="Reports.do?command=RunReport">Add</a> >
+<a href="Reports.do?command=RunReport">Modules</a> >
 <a href="Reports.do?command=ListReports&categoryId=<%= category.getId() %>"><%= toHtml(category.getCategory()) %></a> >
 Criteria List
 </td>

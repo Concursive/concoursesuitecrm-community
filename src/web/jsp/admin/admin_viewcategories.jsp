@@ -5,10 +5,6 @@
 <jsp:useBean id="categoryEditor" class="org.aspcfs.modules.admin.base.CategoryEditor" scope="request"/>
 <%
   HashMap selectedCategories = (HashMap) request.getSession().getAttribute("selectedCategories" + categoryEditor.getConstantId());
-  //if (selectedCategories == null) {
-  //  selectedCategories = new HashMap();
-  //  request.getSession().setAttribute("selectedCategories" + categoryEditor.getConstantId(), selectedCategories);
-  //}
 %>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/confirmDelete.js"></script>
@@ -39,17 +35,23 @@ function loadCategories(level) {
 function loadTopCategories() {
   var url = "AdminCategories.do?command=CategoryJSList&constantId=<%= request.getParameter("constantId") %>&categoryId=-1&level=-1";
   window.frames['server_commands'].location.href=url;
-  processButtons('0');
+  for (i = 1; i < <%= categoryEditor.getMaxLevels() %>; i++){
+    document.getElementById('edit' + i).disabled = true;
+  }
 }
 
 function editCategory(level){
   var categoryId = -1;
   var tmpLevel = parseInt(level) -1;
   if(tmpLevel > -1){
-    categoryId =  document.getElementById('level' + tmpLevel).options[document.getElementById('level' + tmpLevel).selectedIndex].value;
+    if (document.getElementById('level' + tmpLevel).selectedIndex > -1) {
+      categoryId =  document.getElementById('level' + tmpLevel).options[document.getElementById('level' + tmpLevel).selectedIndex].value;
+    }
   }
-  var url = "AdminCategories.do?command=Modify&constantId=<%= request.getParameter("constantId") %>&categoryId=" + categoryId + '&level=' + level;
-  popURL(url, 'Modify_Category','540','250','yes','no');
+  if (tmpLevel == -1 || categoryId > -1) {
+    var url = "AdminCategories.do?command=Modify&constantId=<%= request.getParameter("constantId") %>&categoryId=" + categoryId + '&level=' + level;
+    popURL(url, 'Modify_Category','540','250','yes','no');
+  }
 }
 
 function confirmReset(url, msg) {

@@ -24,9 +24,6 @@
 		<defaultValueExpression><![CDATA["/home/matt/source/dhv/cfs2/src/jasper_reports/new/"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="WhereClause" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="approved" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(org.aspcfs.modules.base.Import.PROCESSED_APPROVED)]]></defaultValueExpression>
-	</parameter>
 	<queryString><![CDATA[SELECT 
 con.namefirst,con.namelast,con.contact_id,con.title,
 lct.description as contact_type,
@@ -35,7 +32,7 @@ FROM contact con
 LEFT JOIN contact_type_levels ctl ON (con.contact_id = ctl.contact_id)
 LEFT JOIN lookup_contact_types lct ON (ctl.type_id = lct.code)
 WHERE con.org_id = $P{org_id}
-AND con.status_id IS NULL OR con.status_id = $P{approved}]]></queryString>
+AND (con.status_id IS NULL OR con.status_id = 7)]]></queryString>
 	<field name="contact_type" class="java.lang.String"/>
 	<field name="namelast" class="java.lang.String"/>
 	<field name="namefirst" class="java.lang.String"/>
@@ -43,31 +40,10 @@ AND con.status_id IS NULL OR con.status_id = $P{approved}]]></queryString>
 	<field name="title" class="java.lang.String"/>
 	<variable name="address" class="java.lang.String" resetType="Page" calculation="Nothing">
 		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
-	<variable name="cont_types" class="java.lang.String" resetType="Group" resetGroup="contactName" calculation="Nothing">
-		<variableExpression><![CDATA[($V{cont_types} != null ? ($V{cont_types} + ($V{cont_types}.length() > 0 ? ", " : "") + ($F{contact_type} != null ? $F{contact_type} : "")) : "")]]></variableExpression>		<initialValueExpression><![CDATA[""]]></initialValueExpression>	</variable>
 		<group  name="contactName" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$F{contact_id}]]></groupExpression>
 			<groupHeader>
 			<band height="38"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="contactName"  hyperlinkType="None" >					<reportElement
-						mode="Opaque"
-						x="232"
-						y="0"
-						width="106"
-						height="35"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						printWhenGroupChanges="contactName"
-						isPrintWhenDetailOverflows="true"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="SansSerif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$V{cont_types}]]></textFieldExpression>
-				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="contactName"  hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="4"
@@ -104,9 +80,6 @@ AND con.status_id IS NULL OR con.status_id = $P{approved}]]></queryString>
 					<subreportParameter  name="contact_id">
 						<subreportParameterExpression><![CDATA[$F{contact_id}]]></subreportParameterExpression>
 					</subreportParameter>
-					<subreportParameter  name="path">
-						<subreportParameterExpression><![CDATA[$P{path}]]></subreportParameterExpression>
-					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "contact_address_subreport.jasper"]]></subreportExpression>
 				</subreport>
@@ -126,9 +99,6 @@ AND con.status_id IS NULL OR con.status_id = $P{approved}]]></queryString>
 						isPrintWhenDetailOverflows="false"/>
 					<subreportParameter  name="contact_id">
 						<subreportParameterExpression><![CDATA[$F{contact_id}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter  name="path">
-						<subreportParameterExpression><![CDATA[$P{path}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "contact_phone_subreport.jasper"]]></subreportExpression>
@@ -169,9 +139,6 @@ AND con.status_id IS NULL OR con.status_id = $P{approved}]]></queryString>
 					<subreportParameter  name="contact_id">
 						<subreportParameterExpression><![CDATA[$F{contact_id}]]></subreportParameterExpression>
 					</subreportParameter>
-					<subreportParameter  name="path">
-						<subreportParameterExpression><![CDATA[$P{path}]]></subreportParameterExpression>
-					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "contact_email_subreport.jasper"]]></subreportExpression>
 				</subreport>
@@ -191,6 +158,26 @@ AND con.status_id IS NULL OR con.status_id = $P{approved}]]></queryString>
 						isPrintWhenDetailOverflows="false"/>
 					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
 				</line>
+				<subreport  isUsingCache="true">
+					<reportElement
+						mode="Opaque"
+						x="229"
+						y="0"
+						width="104"
+						height="14"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="true"/>
+					<subreportParameter  name="contact_id">
+						<subreportParameterExpression><![CDATA[$F{contact_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "contact_type_subreport.jasper"]]></subreportExpression>
+				</subreport>
 			</band>
 			</groupHeader>
 			<groupFooter>

@@ -93,7 +93,6 @@
   <input type="submit" value="Save & Clone" onClick="this.form.saveAndClone.value='true';return checkForm(this.form);">
   </dhv:evaluate>
   <input type="button" value="Cancel" onClick="javascript:<%= popUp ? "window.close();" : "window.location.href='Contacts.do?command=View&orgId=" + OrgDetails.getOrgId() + "'" %>">
-  <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -180,7 +179,6 @@
   <input type="submit" value="Save & Clone" onClick="this.form.saveAndClone.value='true';return checkForm(this.form);">
   </dhv:evaluate>
   <input type="button" value="Cancel" onClick="javascript:<%= popUp ? "window.close();" : "window.location.href='Contacts.do?command=View&orgId=" + OrgDetails.getOrgId() + "'" %>">
-  <input type="reset" value="Reset">
   </td>
   </tr>
 </table>

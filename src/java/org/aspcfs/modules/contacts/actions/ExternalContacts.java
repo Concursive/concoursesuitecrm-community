@@ -1380,12 +1380,14 @@ public final class ExternalContacts extends CFSModule {
     String category = context.getRequest().getParameter("category");
     String contactId = context.getRequest().getParameter("contactId");
     String previousSelection = context.getRequest().getParameter("previousSelection");
+    String previousSelectionDisplay = context.getRequest().getParameter("previousSelectionDisplay");
 
     if (previousSelection != null) {
       int j = 0;
       StringTokenizer st = new StringTokenizer(previousSelection, "|");
+      StringTokenizer st1 = new StringTokenizer(previousSelectionDisplay, "|");
       while (st.hasMoreTokens()) {
-        selectedList.put(new Integer(st.nextToken()), "");
+        selectedList.put(new Integer(st.nextToken()), st1.nextToken());
         j++;
       }
     } else {

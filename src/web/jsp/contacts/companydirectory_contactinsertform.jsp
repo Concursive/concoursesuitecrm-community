@@ -108,7 +108,6 @@
   <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
   </dhv:evaluate>
   <input type="submit" value="Cancel" onClick="<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "javascript:this.form.action='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';" %>">
-<input type=reset value="Reset">
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -252,7 +251,6 @@
   </dhv:evaluate>
   <input type="submit" value="Cancel" onClick="<%= (isPopup(request)  && !isInLinePopup(request)) ? "javascript:window.close();" : "javascript:this.form.action='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';" %>">
   <input type="hidden" name="dosubmit" value="true">
-  <input type="reset" value="Reset">
 <input type="hidden" name="source" value="<%= toHtmlValue(request.getParameter("source")) %>">
 <%= addHiddenParams(request, "popup|popupType|actionId") %>
 </form>

@@ -29,7 +29,6 @@ Add Call
     <td class="containerBack">
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
-      <input type="reset" value="Reset">
       <br>
       <%= showError(request, "actionError") %>
       <%@ include file="call_include.jsp" %>
@@ -37,7 +36,6 @@ Add Call
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsCalls.do?command=View&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
 <br>

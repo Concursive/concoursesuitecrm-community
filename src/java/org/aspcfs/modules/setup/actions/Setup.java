@@ -815,6 +815,7 @@ public class Setup extends CFSModule {
         thisContact.addType(Contact.EMPLOYEE_TYPE);
         thisContact.setNameFirst(bean.getNameFirst());
         thisContact.setNameLast(bean.getNameLast());
+        thisContact.setEmployee(true);
         thisContact.setEnteredBy(0);
         thisContact.setModifiedBy(0);
         //AccessTypeList accessTypes = this.getSystemStatus(context).getAccessTypeList(db, AccessType.EMPLOYEES);

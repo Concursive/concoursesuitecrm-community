@@ -18,10 +18,10 @@
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
 	<parameter name="ticketid" isForPrompting="true" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(6)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new Integer(1)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="path" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression><![CDATA["/home/ananth/jasper_reports/"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["/home/ananth/source/crm/src/jasper_reports/"]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT t.ticketid, 
 t.problem AS issue, t.location, 
@@ -715,7 +715,7 @@ Resolution Date]]></text>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[($F{dept} != null ? $F{dept} : "") + " / " + ($V{res_assg} != null ? $V{res_assg} : "")]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[($F{dept} != null ? $F{dept} : "") + (($F{dept} != null && $V{res_assg} != null) ?  " / "  : "" ) + ($V{res_assg} != null ? $V{res_assg} : "")]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Opaque"

@@ -37,7 +37,6 @@ Add a Campaign
 <%-- End Trails --%>
   <input type="submit" value="Insert" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignManager.do?command=View';">
-  <input type="reset" value="Reset">
   <br>
   <%= showError(request, "actionError") %>
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
@@ -66,7 +65,6 @@ Add a Campaign
   <br>
   <input type="submit" value="Insert" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignManager.do?command=View';">
-  <input type="reset" value="Reset">
   <input type="hidden" name="dosubmit" value="true">
 </form>
 </body>

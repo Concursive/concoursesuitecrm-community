@@ -13,6 +13,5 @@
 <br>
 <input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
 <input type="submit" value="Cancel" onClick="javascript:window.close();">
-<input type="reset" value="Reset">
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </form>

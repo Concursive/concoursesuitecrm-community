@@ -101,7 +101,6 @@ Modify Vehicle
     <td class="containerBack">
 <input type="submit" value="Update">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
 <input type="hidden" name="id" value="<%= InventoryDetails.getId() %>">
 <input type="hidden" name="modified" value="<%= InventoryDetails.getModified() %>">
 <input type="hidden" name="dosubmit" value="true">
@@ -340,7 +339,6 @@ Modify Vehicle
 <br>
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
     </td>
   </tr>
 </table>

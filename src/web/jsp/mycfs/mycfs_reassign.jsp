@@ -208,7 +208,6 @@ Re-assignments
 <dhv:permission name="myhomepage-reassign-edit">
 <input type="submit" value="Update" />
 <input type="button" value="Cancel" onClick="javascript:window.location.href='MyCFS.do?command=Home'" />
-<input type="reset" value="Reset" />
 <input type="hidden" name="userId" value="<%= SourceUser.getId() %>" />
 </dhv:permission>
 </form>

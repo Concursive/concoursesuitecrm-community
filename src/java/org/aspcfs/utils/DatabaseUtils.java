@@ -139,6 +139,72 @@ public class DatabaseUtils {
 
 
   /**
+   *  Useful when generating a SQL order by clause to sort by year for the
+   *  given timestamp field
+   *
+   *@param  db         Description of the Parameter
+   *@param  fieldname  Description of the Parameter
+   *@return            The yearPart value
+   */
+  public static String getYearPart(Connection db, String fieldname) {
+    switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          return "date_part('year', " + fieldname + ")";
+        case DatabaseUtils.MSSQL:
+          return "DATEPART(YY, " + fieldname + ")";
+        case DatabaseUtils.ORACLE:
+          return "";
+        default:
+          return "";
+    }
+  }
+
+
+  /**
+   *  Useful when generating a SQL order by clause to sort by month for the
+   *  given timestamp field
+   *
+   *@param  db         Description of the Parameter
+   *@param  fieldname  Description of the Parameter
+   *@return            The orderByMonth value
+   */
+  public static String getMonthPart(Connection db, String fieldname) {
+    switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          return "date_part('month', " + fieldname + ")";
+        case DatabaseUtils.MSSQL:
+          return "DATEPART(MM, " + fieldname + ")";
+        case DatabaseUtils.ORACLE:
+          return "";
+        default:
+          return "";
+    }
+  }
+
+
+  /**
+   *  Useful when generating a SQL order by clause to sort by day for the given
+   *  timestamp field
+   *
+   *@param  db         Description of the Parameter
+   *@param  fieldname  Description of the Parameter
+   *@return            The orderByDay value
+   */
+  public static String getDayPart(Connection db, String fieldname) {
+    switch (DatabaseUtils.getType(db)) {
+        case DatabaseUtils.POSTGRESQL:
+          return "date_part('day', " + fieldname + ")";
+        case DatabaseUtils.MSSQL:
+          return "DATEPART(DD, " + fieldname + ")";
+        case DatabaseUtils.ORACLE:
+          return "";
+        default:
+          return "";
+    }
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  tmp           Description of the Parameter

@@ -19,11 +19,23 @@
 		 isSummaryNewPage="false">
 	<parameter name="date_start" isForPrompting="true" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[start date]]></parameterDescription>
-		<defaultValueExpression ><![CDATA[(java.sql.Timestamp.valueOf("2004-04-01 00:00:00"))]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA[(java.sql.Timestamp.valueOf("2004-01-01 00:00:00"))]]></defaultValueExpression>
 	</parameter>
 	<parameter name="date_end" isForPrompting="true" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[end date]]></parameterDescription>
-		<defaultValueExpression ><![CDATA[(java.sql.Timestamp.valueOf("2004-04-01 00:00:00"))]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA[(java.sql.Timestamp.valueOf("2004-12-31 00:00:00"))]]></defaultValueExpression>
+	</parameter>
+	<parameter name="year_part" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[t.entered]]></parameterDescription>
+		<defaultValueExpression><![CDATA["date_part('year', t.entered)"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="month_part" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[t.entered]]></parameterDescription>
+		<defaultValueExpression><![CDATA["date_part('month', t.entered)"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="day_part" isForPrompting="false" class="java.lang.String">
+		<parameterDescription><![CDATA[t.entered]]></parameterDescription>
+		<defaultValueExpression><![CDATA["date_part('day', t.entered)"]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT t.entered,
 t.assigned_to,
@@ -34,13 +46,13 @@ LEFT JOIN contact co ON (t.assigned_to = co.user_id)
 WHERE t.ticketid > 0
 AND t.entered >= $P{date_start}
 AND t.entered <= $P{date_end}
-order by t.entered,t.assigned_to,co.namelast]]></queryString>
+ORDER BY $P!{year_part}, $P!{month_part}, $P!{day_part}, co.namelast, co.namefirst, t.assigned_to]]></queryString>
 	<field name="entered" class="java.sql.Timestamp"/>
 	<field name="assigned_to" class="java.lang.Integer"/>
 	<field name="namefirst" class="java.lang.String"/>
 	<field name="namelast" class="java.lang.String"/>
 	<variable name="date_wise" class="java.lang.String" resetType="Group" resetGroup="date_wise" calculation="Nothing">
-		<variableExpression><![CDATA[(new SimpleDateFormat("MM/dd/yyyy")).format($F{entered})]]></variableExpression>
+		<variableExpression><![CDATA[(new SimpleDateFormat("MMMM dd, yyyy")).format($F{entered})]]></variableExpression>
 		<initialValueExpression><![CDATA[""]]></initialValueExpression>
 	</variable>
 	<variable name="total_vol" class="java.lang.Integer" resetType="Group" resetGroup="date_wise" calculation="Count">
@@ -54,12 +66,12 @@ order by t.entered,t.assigned_to,co.namelast]]></queryString>
 		<group  name="date_wise" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$V{date_wise}]]></groupExpression>
 			<groupHeader>
-			<band height="13"  isSplitAllowed="true" >
+			<band height="30"  isSplitAllowed="true" >
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="0"
+						y="17"
 						width="535"
 						height="13"
 						forecolor="#8080FF"
@@ -71,30 +83,11 @@ order by t.entered,t.assigned_to,co.namelast]]></queryString>
 						isPrintWhenDetailOverflows="false"/>
 					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
 				</rectangle>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="3"
-						y="1"
-						width="35"
-						height="11"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[Date:]]></text>
-				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="date_wise"  hyperlinkType="None" >					<reportElement
 						mode="Transparent"
-						x="40"
-						y="0"
-						width="189"
+						x="1"
+						y="17"
+						width="318"
 						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -106,8 +99,62 @@ order by t.entered,t.assigned_to,co.namelast]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$V{date_wise}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$V{date_wise} == null ? "":$V{date_wise}]]></textFieldExpression>
 				</textField>
+				<rectangle radius="0" >
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="2"
+						width="535"
+						height="15"
+						forecolor="#000000"
+						backcolor="#000000"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
+				</rectangle>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="181"
+						y="2"
+						width="178"
+						height="14"
+						forecolor="#FFFFFF"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Assignee]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Transparent"
+						x="359"
+						y="2"
+						width="171"
+						height="14"
+						forecolor="#FFFFFF"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Volume]]></text>
+				</staticText>
 			</band>
 			</groupHeader>
 			<groupFooter>
@@ -171,11 +218,11 @@ order by t.entered,t.assigned_to,co.namelast]]></queryString>
 		<group  name="assignee" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$F{assigned_to}]]></groupExpression>
 			<groupHeader>
-			<band height="17"  isSplitAllowed="true" >
+			<band height="15"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false" evaluationTime="Group" evaluationGroup="assignee"  hyperlinkType="None" >					<reportElement
 						mode="Transparent"
 						x="181"
-						y="2"
+						y="0"
 						width="167"
 						height="15"
 						forecolor="#000000"
@@ -188,12 +235,12 @@ order by t.entered,t.assigned_to,co.namelast]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{assigned_to}  == null ? "unassigned" : (org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{namelast},$F{namefirst}))]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{assigned_to}  == null ? "Unassigned" : (org.aspcfs.modules.contacts.base.Contact.getNameLastFirst($F{namelast},$F{namefirst}))]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="assignee"  hyperlinkType="None" >					<reportElement
 						mode="Transparent"
 						x="359"
-						y="2"
+						y="0"
 						width="169"
 						height="15"
 						forecolor="#000000"
@@ -250,61 +297,7 @@ order by t.entered,t.assigned_to,co.namelast]]></queryString>
 			</band>
 		</pageHeader>
 		<columnHeader>
-			<band height="15"  isSplitAllowed="true" >
-				<rectangle radius="0" >
-					<reportElement
-						mode="Opaque"
-						x="0"
-						y="0"
-						width="535"
-						height="15"
-						forecolor="#000000"
-						backcolor="#000000"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<graphicElement stretchType="NoStretch" pen="None" fill="Solid" />
-				</rectangle>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="181"
-						y="0"
-						width="178"
-						height="14"
-						forecolor="#FFFFFF"
-						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[Assignee]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="359"
-						y="0"
-						width="171"
-						height="14"
-						forecolor="#FFFFFF"
-						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[Volume]]></text>
-				</staticText>
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</columnHeader>
 		<detail>
@@ -389,10 +382,10 @@ order by t.entered,t.assigned_to,co.namelast]]></queryString>
 				</textField>
 				<staticText>
 					<reportElement
-						mode="Opaque"
-						x="154"
+						mode="Transparent"
+						x="0"
 						y="6"
-						width="175"
+						width="534"
 						height="18"
 						forecolor="#000000"
 						backcolor="#FFFFFF"

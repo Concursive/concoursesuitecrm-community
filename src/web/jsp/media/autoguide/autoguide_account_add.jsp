@@ -98,7 +98,6 @@ Add Vehicle
     <td class="containerBack">
 <input type="submit" value="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 <br>
 <%= showError(request, "actionError") %>
@@ -312,7 +311,6 @@ Add Vehicle
 <br>
 <input type="submit" value="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
     </td>
   </tr>
 </table>

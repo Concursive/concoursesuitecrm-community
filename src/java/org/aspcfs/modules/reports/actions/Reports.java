@@ -16,6 +16,7 @@ import com.zeroio.webutils.FileDownload;
 import org.aspcfs.utils.JasperReportUtils;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Actions for working with Pipeline Management reports. Code originally from
@@ -310,6 +311,19 @@ public final class Reports extends CFSModule {
       //TODO: Move this into ParameterList.java
       params.addParam("user_name", (getUser(context, getUserId(context))).getContact().getNameFirstLast());
       params.addParam("path_icons", context.getServletContext().getRealPath("/") + "images" + fs + "icons" + fs);
+      //Set some database specific parameters
+      if (params.getParameter("year_part") != null) {
+        Parameter thisParam = params.getParameter("year_part");
+        params.addParam("year_part", DatabaseUtils.getYearPart(db, thisParam.getDescription()));
+      }
+      if (params.getParameter("month_part") != null) {
+        Parameter thisParam = params.getParameter("month_part");
+        params.addParam("month_part", DatabaseUtils.getMonthPart(db, thisParam.getDescription()));
+      }
+      if (params.getParameter("day_part") != null) {
+        Parameter thisParam = params.getParameter("day_part");
+        params.addParam("day_part", DatabaseUtils.getDayPart(db, thisParam.getDescription()));
+      }
       //Populate a criteria record which will be used in the report
       Criteria thisCriteria = new Criteria();
       thisCriteria.setReportId(report.getId());

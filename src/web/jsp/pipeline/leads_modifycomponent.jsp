@@ -127,7 +127,6 @@ Modify Component
 <%
   }
 %>
-<input type="reset" value="Reset">
 <dhv:evaluate exp="<%= popUp %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
@@ -147,7 +146,6 @@ Modify Component
  } else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
-<input type="reset" value="Reset">
 <dhv:evaluate exp="<%= popUp %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>

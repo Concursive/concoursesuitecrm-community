@@ -19,7 +19,6 @@ Password
 <dhv:permission name="myhomepage-profile-password-edit">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
-<input type="reset" value="Reset">
 </dhv:permission>
 <br>
 <%= showError(request, "actionError") %>
@@ -38,7 +37,6 @@ Password
 <input type="hidden" value="<%= User.getId() %>" name="id">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
-<input type="reset" value="Reset">
 </dhv:permission>
 </form>
 </body>

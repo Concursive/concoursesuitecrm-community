@@ -122,7 +122,6 @@ Modify Contact
     <%} else {%>
     <input type="submit" value="Cancel" onClick="javascript:this.form.action='Contacts.do?command=Details&id=<%= ContactDetails.getId() %>'">
     <%}%>
-<input type=reset value="Reset">
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -216,7 +215,6 @@ Modify Contact
     <%} else {%>
     <input type="submit" value="Cancel" onClick="javascript:this.form.action='Contacts.do?command=Details&id=<%= ContactDetails.getId() %>'">
     <%}%>
-  <input type="reset" value="Reset">
   <input type="hidden" name="owner" value="<%= ContactDetails.getOwner() %>">
   </td>
   </tr>

@@ -9,21 +9,24 @@ function popLookupSelectMultiple(displayFieldId,highLightedId,table) {
   var posy = (screen.height - height)/2;
   
   var selectedIds = "";
+  var selectedDisplays ="";
   
   for (count=0; count<(document.getElementById(displayFieldId).length); count++) {
           
           if (document.getElementById(displayFieldId).options[count].value > -1) {
                   if (selectedIds.length > 0) {
                           selectedIds = selectedIds + "|";
+                          selectedDisplays = selectedDisplays + "|";
                   }
                           
                   selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value;
+                  selectedDisplays = selectedDisplays + document.getElementById(displayFieldId).options[count].text;
           }
           
   }
   
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  var newwin=window.open('LookupSelector.do?command=PopupSelector&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&table=' + table + '', title, params);
+  var newwin=window.open('LookupSelector.do?command=PopupSelector&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&previousSelectionDisplay=' + selectedDisplays + '&table=' + table + '', title, params);
   newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
@@ -43,21 +46,24 @@ function popContactTypeSelectMultiple(displayFieldId, category, contactId) {
   var posy = (screen.height - height)/2;
   
   var selectedIds = "";
+  var selectedDisplays ="";
   
   for (count=0; count<(document.getElementById(displayFieldId).length); count++) {
           
           if (document.getElementById(displayFieldId).options[count].value > -1) {
                   if (selectedIds.length > 0) {
                           selectedIds = selectedIds + "|";
+                          selectedDisplays = selectedDisplays + "|";
                   }
                           
                   selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value;
+                  selectedDisplays = selectedDisplays + document.getElementById(displayFieldId).options[count].text;
           }
           
   }
   
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  var newwin=window.open('ExternalContacts.do?command=PopupSelector&reset=true&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&category=' +  category + '&contactId=' + contactId , title, params);
+  var newwin=window.open('ExternalContacts.do?command=PopupSelector&reset=true&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&previousSelectionDisplay=' + selectedDisplays + '&category=' +  category + '&contactId=' + contactId , title, params);
   newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)

@@ -34,7 +34,6 @@
       <td class="containerBack">
         <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
         <input type="button" value="Cancel" onClick="window.location.href='AccountsServiceContracts.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
-        <input type="reset" value="Reset" />
         <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
         <br />
 <%= showError(request, "actionError") %>
@@ -43,7 +42,6 @@
         <br />
         <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
         <input type="button" value="Cancel" onClick="window.location.href='AccountsServiceContracts.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
-        <input type="reset" value="Reset" />
         <input type="hidden" name="dosubmit" value="true" />
       </td>
     </tr>

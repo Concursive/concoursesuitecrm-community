@@ -115,8 +115,6 @@ Modify Component
  <% }else{ %>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
  <% } %>
-
-  <input type="reset" value="Reset">
 <dhv:evaluate exp="<%= isPopup(request)  && !isInLinePopup(request) %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
@@ -137,7 +135,6 @@ Modify Component
 <%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
 <%}%>
-<input type="reset" value="Reset">
 <dhv:evaluate exp="<%= isPopup(request)  && !isInLinePopup(request) %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>

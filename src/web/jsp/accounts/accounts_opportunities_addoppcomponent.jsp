@@ -99,7 +99,6 @@ Add Component
       <br>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>  
 
@@ -112,7 +111,6 @@ Add Component
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getId() %>';this.form.dosubmit.value='false';">
 <input type="hidden" name="orgId" value="<%=request.getParameter("orgId")%>">
-<input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
 <%-- End container contents --%>

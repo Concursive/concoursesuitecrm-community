@@ -16,7 +16,6 @@
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="button" value="Cancel" onClick="javascript:window.close();">
-<input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
 </form>

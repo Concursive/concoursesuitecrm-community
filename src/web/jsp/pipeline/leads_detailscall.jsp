@@ -100,7 +100,7 @@ Call Details
             Alert Date
           </td>
           <td>
-          <dhv:tz timestamp="<%= CallDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
+          <dhv:tz timestamp="<%= CallDetails.getAlertDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>" default="&nbsp;"/>
           </td>
         </tr>
         <tr class="containerBody">

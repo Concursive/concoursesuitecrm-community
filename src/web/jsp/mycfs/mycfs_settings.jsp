@@ -19,7 +19,6 @@ Location
 <dhv:permission name="myhomepage-profile-settings-edit,myhomepage-profile-view">
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
-<input type="reset" value="Reset">
 </dhv:permission>
 <br>
 &nbsp;
@@ -53,6 +52,5 @@ Location
 <br>
 <input type="submit" value="Update" name="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
-<input type="reset" value="Reset">
 </form>
 </dhv:permission>

@@ -47,7 +47,6 @@ Modify
   <% }else{ %>
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignManager.do?command=ViewDetails';">
   <% } %>
-  <input type="reset" value="Reset">
   <br>
   <%= showError(request, "actionError") %>
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
@@ -80,6 +79,5 @@ Modify
   <% }else{ %>
   <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignManager.do?command=ViewDetails';">
   <% } %>
-  <input type="reset" value="Reset">
 </form>
 </body>

@@ -88,14 +88,14 @@
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
     } else {
-      if(alertMessage != ""){
-        return confirmAction(alertMessage);
-      }else{
       var test = document.addAccount.selectedList;
       if (test != null) {
-        return selectAllOptions(document.addAccount.selectedList);
+        selectAllOptions(document.addAccount.selectedList);
       }
-     }
+      if(alertMessage != ""){
+        confirmAction(alertMessage);
+      }
+      return true;
     }
   }
   function resetFormElements() {
@@ -228,7 +228,6 @@ Add Account
 <%-- End Trails --%>
 <input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %><iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -1132,7 +1131,6 @@ Where do you want to go after this action is complete?<br />
 <br />
 <input type="submit" value="Insert" name="Save" onClick="this.form.dosubmit.value='true';" />
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Search';this.form.dosubmit.value='false';" />
-<input type="reset" value="Reset" />
 <input type="hidden" name="dosubmit" value="true" />
 </form>
 </body>

@@ -28,7 +28,7 @@ Add Viewpoint
     <td class="containerBack">
       <input type="submit" value="Add" name="Save">
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
-      <input type="reset" value="Reset"><br>
+      <br>
       <%= showError(request, "actionError") %>
       <input type="hidden" name="userId" value="<%= UserRecord.getId() %>">
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
@@ -98,7 +98,6 @@ Add Viewpoint
   <br>
   <input type="submit" value="Add" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
-  <input type="reset" value="Reset">
 </td></tr>
 </table>
 </form>

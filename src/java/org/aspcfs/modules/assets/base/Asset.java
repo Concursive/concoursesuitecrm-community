@@ -1279,7 +1279,7 @@ public class Asset extends GenericBean {
       Dependency ticDependency = new Dependency();
       ticDependency.setName("Tickets");
       ticDependency.setCount(TicketList.retrieveRecordCount(db, Constants.ASSETS, this.getId()));
-      ticDependency.setCanDelete(true);
+      ticDependency.setCanDelete(false);
       dependencyList.add(ticDependency);
 
     } catch (SQLException e) {

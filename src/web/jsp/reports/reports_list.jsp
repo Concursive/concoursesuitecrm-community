@@ -12,7 +12,7 @@
 <td>
 <a href="Reports.do">Reports</a> >
 <a href="Reports.do">Queue</a> >
-<a href="Reports.do?command=RunReport">Add</a> >
+<a href="Reports.do?command=RunReport">Modules</a> >
 <%= toHtml(category.getCategory()) %>
 </td>
 </tr>

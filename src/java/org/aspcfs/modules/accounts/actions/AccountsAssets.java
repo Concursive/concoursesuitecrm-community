@@ -281,9 +281,14 @@ public class AccountsAssets extends CFSModule {
       htmlDialog.setTitle("Dark Horse CRM: Account Management - Asset");
       DependencyList dependencies = thisAsset.processDependencies(db);
       htmlDialog.addMessage(dependencies.getHtmlString());
-      htmlDialog.setHeader("The asset you are requesting to delete has the following dependencies within Dark Horse CRM:");
-      htmlDialog.addButton("Delete All", "javascript:window.location.href='AccountsAssets.do?command=Delete&action=delete&orgId=" + orgId + "&id=" + id + "'");
-      htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+      if (dependencies.canDelete()){
+        htmlDialog.setHeader("The asset you are requesting to delete has the following dependencies within Dark Horse CRM:");
+        htmlDialog.addButton("Delete All", "javascript:window.location.href='AccountsAssets.do?command=Delete&action=delete&orgId=" + orgId + "&id=" + id + "'");
+        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+      }else{
+        htmlDialog.setHeader("The asset cannot be deleted because it has the following dependencies within Dark Horse CRM:");
+        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {

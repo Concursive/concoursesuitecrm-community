@@ -44,7 +44,6 @@ Headlines
 </table>
 &nbsp;<br>
 <input type="submit" value="Insert">
-<input type="reset" value="Clear">
 </form>
 </dhv:permission>
 <center><%= HeadlineListInfo.getAlphabeticalPageLinks() %></center>
@@ -96,7 +95,7 @@ Headlines
 <dhv:permission name="myhomepage-miner-delete">
 	&nbsp;<br>
   <input type="submit" name="action" value="Delete Checked">
-  <input type="reset" value="Clear"><br>
+  <br>
 </dhv:permission>
 <br>
 <dhv:pagedListControl object="HeadlineListInfo" tdClass="row1"/>

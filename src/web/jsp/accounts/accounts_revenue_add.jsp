@@ -29,7 +29,6 @@ Add Revenue
 <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
 <input type="submit" value="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='RevenueManager.do?command=View'">
-<input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -85,7 +84,6 @@ Add Revenue
 &nbsp;<br>
 <input type="submit" value="Save">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='RevenueManager.do?command=View'">
-<input type="reset" value="Reset">
     </td>
   </tr>
 </table>

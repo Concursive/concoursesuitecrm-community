@@ -54,7 +54,6 @@ Personal Information
 <dhv:permission name="myhomepage-profile-personal-edit">
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
 </dhv:permission>
 <br>
 <%= showError(request, "actionError") %>
@@ -317,7 +316,6 @@ Personal Information
 <br>
 <input type="submit" value="Update" name="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile';this.form.dosubmit.value='false';">
-<input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 </dhv:permission>
 <input type="hidden" name="accessType" value="<%= EmployeeBean.getAccessType() %>">

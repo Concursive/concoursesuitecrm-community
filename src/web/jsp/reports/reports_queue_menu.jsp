@@ -18,7 +18,7 @@
     confirmDelete('Reports.do?command=DeleteReport&id=' + thisQueueId);
   }
   function stream() {
-    popURL('Reports.do?command=StreamReport&id=' + thisQueueId, 'PDF_REPORT','640','480','yes','yes');
+    popURL('Reports.do?command=StreamReport&id=' + thisQueueId + '&popup=true', 'PDF_REPORT','640','480','yes','yes');
   }
   function download() {
     window.location.href = 'Reports.do?command=DownloadReport&id=' + thisQueueId;

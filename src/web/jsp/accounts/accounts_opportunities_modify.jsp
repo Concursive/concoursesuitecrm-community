@@ -39,7 +39,7 @@ Modify Opportunity
 <%} else {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <%}%>
-      <input type="reset" value="Reset"><br>
+      <br>
       <%= showError(request, "actionError") %>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
       <tr>
@@ -67,7 +67,6 @@ Modify Opportunity
       <%} else {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Opportunities.do?command=Details&headerId=<%= opportunityHeader.getId() %>&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
       <%}%>
-      <input type="reset" value="Reset">
       <input type="hidden" name="dosubmit" value="true">
     </td>
   </tr>

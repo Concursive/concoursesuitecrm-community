@@ -38,7 +38,6 @@
       <%}else{ %>
         <input type="button" value="Cancel" onClick="window.location.href='AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>';this.form.dosubmit.value='false';" />
       <%}%>
-      <input type="reset" value="Reset">
       <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
       <input type="hidden" name="id" value="<%= serviceContract.getId() %>" />
       <input type="hidden" name="return" value="<%= request.getParameter("return") %>" />
@@ -56,7 +55,6 @@
   <%
   }
   %>
-  <input type="reset" value="Reset">
   <input type="hidden" name="dosubmit" value="true" />
   </td>
   </tr>

@@ -82,8 +82,8 @@ public class DependencyList extends ArrayList {
       html.append("&nbsp;&nbsp;There are no dependencies for this action.<br />");
     }
     if (!canDelete){
-      html.append("(*) The dependencies preventing this item from being deleted.<br />");
-      html.append("Some of these may not be accessible if they are not owned by you.<br />");
+      html.append("<br />(*) Indicates any dependency preventing this item from being deleted.");
+      html.append("<br />NOTE: Some of these may not be accessible if they are not owned by you.<br />");
     }
     return html.toString();
   }

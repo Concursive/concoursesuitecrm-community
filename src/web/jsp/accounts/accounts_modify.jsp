@@ -228,14 +228,14 @@
       alert("Form could not be saved, please check the following:\r\n\r\n" + message);
       return false;
     } else {
-      if(alertMessage != ""){
-        return confirmAction(alertMessage);
-      }else{
       var test = document.addAccount.selectedList;
       if (test != null) {
-        return selectAllOptions(document.addAccount.selectedList);
+        selectAllOptions(document.addAccount.selectedList);
       }
-     }
+      if(alertMessage != ""){
+        confirmAction(alertMessage);
+      }
+      return true;
     }
   }
   
@@ -298,7 +298,6 @@ Modify Account
 <%} else {%>
       <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <%}%>
-      <input type="reset" value="Reset">
 <dhv:evaluate exp="<%= popUp %>">
       <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>
@@ -1019,7 +1018,6 @@ Modify Account
 <%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
 <%}%>
-<input type="reset" value="Reset">
 <dhv:evaluate exp="<%= popUp %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();">
 </dhv:evaluate>

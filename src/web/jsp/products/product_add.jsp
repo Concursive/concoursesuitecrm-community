@@ -24,14 +24,12 @@ Add Item
     <td>
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
       <input type="button" value="Cancel" onClick="window.location.href='ProductsCatalog.do?command=ListAllProducts&moduleId=<%= PermissionCategory.getId() %>';" />
-      <input type="reset" value="Reset" />
       <br />
       <br />
       <%@ include file="product_include.jsp" %>
       <br />
       <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
       <input type="button" value="Cancel" onClick="window.location.href='ProductsCatalog.do?command=ListAllProducts&moduleId=<%= PermissionCategory.getId() %>';" />
-      <input type="reset" value="Reset" />
       <input type="hidden" name="dosubmit" value="true" />
   </td>
   </tr>

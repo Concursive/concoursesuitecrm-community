@@ -69,7 +69,8 @@
         </td>
       </tr>
       </dhv:permission>
-      <dhv:permission name="accounts-accounts-contacts-edit">
+      <!--
+       <dhv:permission name="accounts-accounts-contacts-edit">
       <tr>
         <td>
           <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
@@ -79,6 +80,7 @@
         </td>
       </tr>
       </dhv:permission>
+      -->
       <dhv:permission name="accounts-accounts-contacts-delete">
       <tr>
         <td>

@@ -111,7 +111,6 @@ Modify Call
 <dhv:evaluate exp="<%= popUp %>">
       <input type="button" value="Cancel" onClick="javascript:window.close();">
 </dhv:evaluate>
-      <input type="reset" value="Reset">
       <br>
       <%= showError(request, "actionError") %>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
@@ -184,7 +183,6 @@ Modify Call
 <dhv:evaluate exp="<%= popUp %>">
       <input type="button" value="Cancel" onClick="javascript:window.close();">
 </dhv:evaluate>
-      <input type="reset" value="Reset">
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="contactId" value="<%=CallDetails.getContactId()%>">
       <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">

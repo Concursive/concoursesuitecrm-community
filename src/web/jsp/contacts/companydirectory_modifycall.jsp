@@ -46,7 +46,6 @@ Modify Call
   <dhv:evaluate exp="<%= isPopup(request)  && !isInLinePopup(request) %>">
     <input type="button" value="Cancel" onclick="javascript:window.close();"> 
   </dhv:evaluate>
-    <input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
 
@@ -64,7 +63,6 @@ Modify Call
 <dhv:evaluate exp="<%= isPopup(request)  && !isInLinePopup(request) %>">
   <input type="button" value="Cancel" onclick="javascript:window.close();"> 
 </dhv:evaluate>
-<input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 </td>
 </tr>

@@ -3993,7 +3993,10 @@ ALTER TABLE [help_tips] ADD
 	)
 GO
 
-
+-- cleanup
+DELETE FROM action_item_log WHERE item_id IN (SELECT item_id FROM action_item WHERE link_item_id NOT IN (SELECT contact_id FROM contact));
+DELETE FROM action_item WHERE link_item_id NOT IN (SELECT contact_id FROM contact);
+UPDATE contact SET employee = 1 WHERE employee = 0 AND org_id = 0;
 
 INSERT [database_version] ([script_filename],[script_version])VALUES('mssql_2004-06-15.sql','2004-06-15');
 

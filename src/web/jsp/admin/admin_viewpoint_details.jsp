@@ -27,7 +27,6 @@ Update Viewpoint
 <dhv:permission name="admin-roles-edit">
   <input type="submit" value="Update" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
-  <input type="reset" value="Reset">
   <br>
 </dhv:permission>
 <%= showError(request, "actionError") %>
@@ -95,7 +94,6 @@ Update Viewpoint
   <br>
   <input type="submit" value="Update" name="Save">
   <input type="submit" value="Cancel" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
-  <input type="reset" value="Reset">
 </dhv:permission>
 </td></tr>
 </table>

@@ -25,8 +25,8 @@
 		<parameterDescription><![CDATA[End Date To]]></parameterDescription>
 		<defaultValueExpression><![CDATA[java.sql.Timestamp.valueOf("2004-12-01 00:00:00")]]></defaultValueExpression>
 	</parameter>
-	<parameter name="approved" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[new Integer(org.aspcfs.modules.base.Import.PROCESSED_APPROVED)]]></defaultValueExpression>
+	<parameter name="path" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression><![CDATA["/home/ananth/source/crm/src/jasper_reports/"]]></defaultValueExpression>
 	</parameter>
 	<queryString><![CDATA[SELECT
 o.account_number as account_number,
@@ -46,7 +46,7 @@ LEFT JOIN lookup_industry i ON (o.industry_temp_code = i.code)
 LEFT JOIN account_type_levels atl ON (o.org_id = atl.org_id) 
 LEFT JOIN lookup_account_types lat ON (atl.type_id = lat.code)
 WHERE o.org_id > 0
-AND o.status_id IS NULL OR o.status_id = $P{approved}
+AND (o.status_id IS NULL OR o.status_id = 7)
 AND o.contract_end >= $P{date_start}
 AND o.contract_end < $P{date_end}
 ORDER BY o.contract_end, lat.level]]></queryString>
@@ -376,27 +376,6 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{name}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Group" evaluationGroup="name"  hyperlinkType="None" >					<reportElement
-						mode="Transparent"
-						x="209"
-						y="1"
-						width="99"
-						height="14"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						positionType="Float"
-						isPrintRepeatedValues="false"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						printWhenGroupChanges="name"
-						isPrintWhenDetailOverflows="false">
-							<printWhenExpression><![CDATA[new Boolean($V{acct_type} != null)]]></printWhenExpression>
-						</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
-						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$V{acct_type}]]></textFieldExpression>
-				</textField>
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
@@ -413,6 +392,26 @@ new Integer(0)]]></variableExpression>		<initialValueExpression><![CDATA[new Int
 						isPrintWhenDetailOverflows="false"/>
 					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
 				</line>
+				<subreport  isUsingCache="true">
+					<reportElement
+						mode="Opaque"
+						x="210"
+						y="1"
+						width="103"
+						height="14"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false"/>
+					<subreportParameter  name="acct_id">
+						<subreportParameterExpression><![CDATA[$F{org_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression  class="java.lang.String"><![CDATA[$P{path} + "account_type_subreport.jasper"]]></subreportExpression>
+				</subreport>
 			</band>
 			</groupHeader>
 			<groupFooter>

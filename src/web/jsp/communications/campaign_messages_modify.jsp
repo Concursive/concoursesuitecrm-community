@@ -65,7 +65,6 @@ Modify Message
 <%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>'">
 <%}%>
-<input type="reset" value="Reset">
 <br>
 <%= showError(request, "actionError") %>
 <%@ include file="message_include.jsp" %>
@@ -78,6 +77,5 @@ Modify Message
 <%} else {%>
 <input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>'">
 <%}%>
-<input type="reset" value="Reset">
 </form>
 </body>

@@ -72,7 +72,6 @@ function checkForm(form) {
 <br>
 <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
 <input type="submit" value="Cancel" onClick="javascript:window.close();">
-<input type="reset" value="Reset">
 <input type="hidden" name="dosubmit" value="true">
 </form>
 </body>

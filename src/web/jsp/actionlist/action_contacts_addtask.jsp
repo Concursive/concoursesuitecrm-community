@@ -12,7 +12,7 @@
 <br>
 <input type="submit" value="<%= Task.getId()==-1?"Save":"Update" %>">
 <input type="button" value="Cancel" onClick="javascript:window.close();">
-<input type="reset" value="Reset"><br>
+<br>
 <input type="hidden" name="contactId" value="<%= request.getParameter("contactId") %>">
 </form>
 </body>
