@@ -26,7 +26,7 @@ PermissionCategory thisCategory = new PermissionCategory(db, categoryId);
 rs = st.executeQuery(
   "SELECT count(permission_id) AS recordcount " +
   "FROM permission " +
-  "WHERE permission = 'tickets-tasks'");
+  "WHERE permission = 'tickets-tickets-tasks'");
 rs.next();
 hasPermission = (rs.getInt("recordcount") > 0);
 print("Permission Status: tickets-tickets-tasks " + hasPermission);
