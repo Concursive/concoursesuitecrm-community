@@ -40,7 +40,7 @@ CREATE TABLE lookup_industry (
 
 CREATE TABLE access_log (
   id INT IDENTITY PRIMARY KEY,
-  user_id INT NOT REFERENCES access(user_id),
+  user_id INT NOT NULL REFERENCES access(user_id),
   username VARCHAR(80) NOT NULL,
   ip VARCHAR(15),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
