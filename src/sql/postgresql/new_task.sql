@@ -47,7 +47,7 @@ CREATE TABLE task (
   modifiedby INT REFERENCES access(user_id),
   estimatedloe FLOAT,
   estimatedloetype INTEGER REFERENCES lookup_task_loe,
-  owner INTEGER REFERENCES contact(contact_id),
+  owner INTEGER REFERENCES access(user_id),
   completedate TIMESTAMP(3),
   category_id INTEGER REFERENCES lookup_task_category
 );
