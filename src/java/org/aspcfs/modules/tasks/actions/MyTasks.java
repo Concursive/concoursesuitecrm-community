@@ -145,12 +145,13 @@ public final class MyTasks extends CFSModule {
       //make sure that either the task is owned by the user or that it was entered by the user(view mode applies in this case)
       if (!hasAuthority(context, thisTask.getOwner())) {
         if (hasAuthority(context, thisTask.getEnteredBy())) {
+          context.getRequest().setAttribute("Task", thisTask);
           return this.getReturn(context, "TaskDetails");
         }
         return ("PermissionError");
       }
-      context.getRequest().setAttribute("Task", thisTask);
       addModuleBean(context, "My Tasks", "Task Home");
+      context.getRequest().setAttribute("Task", thisTask);
       return this.getReturn(context, "NewTask");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
