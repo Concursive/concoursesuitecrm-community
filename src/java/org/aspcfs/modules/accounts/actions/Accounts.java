@@ -495,6 +495,11 @@ public final class Accounts extends CFSModule {
 
       LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
       context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
+      
+      LookupList accountTypeList = new LookupList(db, "lookup_account_types");
+      accountTypeList.setSelectSize(3);
+      accountTypeList.setMultiple(true);
+      context.getRequest().setAttribute("AccountTypeList", accountTypeList);
 
     } catch (Exception e) {
       errorCode = 1;
@@ -781,6 +786,7 @@ public final class Accounts extends CFSModule {
     boolean recordInserted = false;
 
     Organization newOrg = (Organization) context.getFormBean();
+    newOrg.setTypeList(context.getRequest().getParameterValues("selectedList"));
     Organization insertedOrg = null;
 
     newOrg.setEnteredBy(getUserId(context));
@@ -839,6 +845,7 @@ public final class Accounts extends CFSModule {
 
     Organization newOrg = (Organization) context.getFormBean();
     newOrg.setRequestItems(context.getRequest());
+    newOrg.setTypeList(context.getRequest().getParameterValues("selectedList"));
 
     try {
       String orgId = context.getRequest().getParameter("orgId");
@@ -970,6 +977,11 @@ public final class Accounts extends CFSModule {
 
       LookupList emailTypeList = new LookupList(db, "lookup_orgemail_types");
       context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
+      
+      LookupList accountTypeList = new LookupList(db, "lookup_account_types");
+      accountTypeList.setSelectSize(3);
+      accountTypeList.setMultiple(true);
+      context.getRequest().setAttribute("AccountTypeList", accountTypeList);
 
     } catch (Exception e) {
       errorMessage = e;

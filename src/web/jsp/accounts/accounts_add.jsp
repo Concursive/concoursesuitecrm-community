@@ -2,6 +2,7 @@
 <jsp:useBean id="OrgPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="AccountTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
@@ -48,6 +49,15 @@
     <td colspan=2 valign=center align=left>
       <strong>Add a New Account</strong>
     </td>     
+  </tr>
+  
+   <tr>
+    <td nowrap class="formLabel">
+      Account Type(s)
+    </td>
+    <td>
+      <%= AccountTypeList.getHtmlSelect("selectedList", 0) %>
+    </td>
   </tr>
   
     <tr>

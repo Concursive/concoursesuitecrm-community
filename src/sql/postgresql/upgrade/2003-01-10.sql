@@ -32,6 +32,8 @@ CREATE TABLE sync_table (
 
 /* RUN sync.init as well */
 
+/* 05/09/2002 - ds21 up to date */
+
 CREATE TABLE lookup_account_types (
   code SERIAL PRIMARY KEY,
   description VARCHAR(50) NOT NULL,
@@ -54,3 +56,30 @@ CREATE TABLE account_type_levels (
 )
 ;
 
+DROP TABLE search_fields;
+drop SEQUENCE search_fields_id_seq; 
+
+CREATE TABLE search_fields (
+  id serial PRIMARY KEY,
+  field varchar(80),
+  description VARCHAR(255),
+  searchable BOOLEAN NOT NULL DEFAULT 't',
+  field_typeID int NOT NULL DEFAULT -1,
+  table_name varchar(80),
+  object_class varchar(80)
+);
+
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('company', 'Company Name', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('namefirst', 'Contact First Name', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('namelast', 'Contact Last Name', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('entered', 'Entered Date', true, 1);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('zip', 'Zip Code', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('areacode', 'Area Code', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('city', 'City', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('typeId', 'Contact Type', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('contactId', 'Contact ID', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('accountTypeId', 'Account Type', true, 0);
+INSERT INTO search_fields (field, description, searchable, field_typeid) VALUES ('title', 'Contact Title', false, 0);
+
+
+/* */

@@ -10,6 +10,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.zeroio.iteam.base.FileItemList;
 import com.darkhorseventures.utils.*;
+import com.darkhorseventures.webutils.LookupList;
 
 /**
  *@author     chris
@@ -51,6 +52,9 @@ public class Organization extends GenericBean {
   private String ownerName = "";
   private String enteredByName = "";
   private String modifiedByName = "";
+  
+  private LookupList types = new LookupList();
+  private ArrayList typeList = null;
 
 
   /**
@@ -107,6 +111,7 @@ public class Organization extends GenericBean {
 
     if (rs.next()) {
       buildRecord(rs);
+      buildTypes(db);
     } else {
       rs.close();
       st.close();
@@ -121,6 +126,103 @@ public class Organization extends GenericBean {
     addressList.buildList(db);
     emailAddressList.setOrgId(this.getOrgId());
     emailAddressList.buildList(db);
+  }
+  
+  public ArrayList getTypeList() {
+	return typeList;
+}
+public void setTypeList(ArrayList typeList) {
+	this.typeList = typeList;
+}
+
+public void setTypeList(String[] criteriaString) {
+	if (criteriaString != null) {
+		String[] params = criteriaString;
+		typeList = new ArrayList(Arrays.asList(params));
+	} else {
+		typeList = new ArrayList();
+	}
+
+	this.typeList = typeList;
+}
+
+  public void buildTypes (Connection db) throws SQLException {
+	types.setSelectSize(3);
+	types.setMultiple(true);
+	  
+	Statement st = null;
+	ResultSet rs = null;
+	
+	StringBuffer sql = new StringBuffer();
+	sql.append(
+        "SELECT atl.*, la.description as type_name " +
+        "FROM account_type_levels atl " +
+        "LEFT JOIN lookup_account_types la ON (atl.type_id = la.code) " +
+        "WHERE atl.id = " + orgId + " ORDER BY atl.level ");
+	
+	st = db.createStatement();
+	rs = st.executeQuery(sql.toString());
+	
+	while(rs.next()) {
+		types.appendItem(rs.getInt("type_id"), rs.getString("type_name")); 
+	}
+	
+	rs.close();
+	st.close();
+  }
+  
+  public boolean insertType(Connection db, int type_id, int level) throws SQLException {
+    if (orgId == -1) {
+      throw new SQLException("No Organization ID Specified");
+    }
+
+    StringBuffer sql = new StringBuffer();
+    
+    try {
+      db.setAutoCommit(false);
+      
+      sql.append(
+          "INSERT INTO account_type_levels " +
+          "(id, type_id, level) " +
+          "VALUES (?, ?, ?) ");
+
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql.toString());
+      pst.setInt(++i, this.getOrgId());
+      pst.setInt(++i, type_id);
+      pst.setInt(++i, level);
+      pst.execute();
+      pst.close();
+      
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      db.setAutoCommit(true);
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return true;
+  }
+  
+  public boolean resetType(Connection db) throws SQLException {
+    if (this.getOrgId() == -1) {
+      throw new SQLException("Organization ID not specified");
+    }
+
+    Statement st = db.createStatement();
+
+    try {
+      db.setAutoCommit(false);
+      st.executeUpdate("DELETE FROM account_type_levels WHERE id = " + this.getOrgId());
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+    } finally {
+      db.setAutoCommit(true);
+      st.close();
+    }
+    return true;
   }
 
 
@@ -163,6 +265,21 @@ public class Organization extends GenericBean {
     this.errorMessage = tmp;
   }
 
+public LookupList getTypes() {
+	return types;
+}
+public void setTypes(LookupList types) {
+	this.types = types;
+}
+
+
+  public void listTypes ()     {        
+  	for (int i = 0; i < typeList.size(); i++) {
+		String val = (String)typeList.get(i);  
+	        System.out.println(val);        
+  	}
+  }
+  
 
   /**
    *  Sets the Owner attribute of the Organization object
@@ -1125,6 +1242,7 @@ public class Organization extends GenericBean {
         thisEmailAddress.process(db, this.getOrgId(), this.getEnteredBy(), this.getModifiedBy());
       }
 
+
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -1202,6 +1320,21 @@ public class Organization extends GenericBean {
 
     resultCount = pst.executeUpdate();
     pst.close();
+    
+	resetType(db);
+	int lvlcount = 0;
+	
+	for (int k = 0; k < typeList.size(); k++) {
+		String val = (String)typeList.get(k);
+		
+		if ( val != null && !(val.equals("")) ) {
+			int type_id = Integer.parseInt((String)typeList.get(k));  
+			lvlcount++;
+			insertType(db, type_id, lvlcount);    
+		} else {
+			lvlcount--;
+		}
+	}
 
     return resultCount;
   }

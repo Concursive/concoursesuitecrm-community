@@ -20,7 +20,6 @@ public class LookupList extends HtmlSelect {
   private int selectSize = 1;
   private boolean multiple = false;
 
-
   /**
    *  Constructor for the LookupList object. Generates an empty list, which is
    *  not very useful.
@@ -60,7 +59,6 @@ public class LookupList extends HtmlSelect {
     rs.close();
     st.close();
   }
-
 
   /**
    *  Constructor for the LookupList object
@@ -208,8 +206,40 @@ public class LookupList extends HtmlSelect {
       return thisSelect.getHtml(selectName, lookupDefault);
     }
   }
-
-
+  
+  public boolean containsKey(int key) {
+	Iterator i = this.iterator();
+	boolean keyFound = false;
+	
+	while (i.hasNext()) {
+		LookupElement thisElement = (LookupElement) i.next();
+	
+		if (thisElement.getEnabled() == true && thisElement.getCode() == key) {
+			keyFound = true;
+		}
+	}
+	
+	return keyFound;
+  }
+  
+  public String valuesAsString() {
+	Iterator i = this.iterator();
+	String result = "";
+	int count = 0;
+	
+	while (i.hasNext()) {
+		LookupElement thisElement = (LookupElement) i.next();
+		if (count > 0) 
+			result += ", " + thisElement.getDescription();
+		else 
+			result += thisElement.getDescription();
+			
+		count++;
+	}
+	
+	return result;
+  }
+  
   /**
    *  Gets the HtmlSelect attribute of the ContactEmailTypeList object
    *
@@ -240,6 +270,31 @@ public class LookupList extends HtmlSelect {
       if (defaultValue.equals(thisElement.getDescription())) {
         keyFound = true;
       }
+      if (thisElement.getDefaultItem()) {
+        lookupDefault = thisElement.getDescription();
+      }
+    }
+
+    return thisSelect.getHtml(selectName, defaultValue);
+  }
+  
+  public String getHtmlSelect(String selectName, LookupList ms) {
+    HtmlSelect thisSelect = new HtmlSelect();
+    thisSelect.setSelectSize(selectSize);
+    thisSelect.setJsEvent(jsEvent);
+    thisSelect.setMultiple(multiple);
+    thisSelect.setMultipleSelects(ms);
+    Iterator i = this.iterator();
+
+    boolean keyFound = false;
+    String lookupDefault = null;
+
+    while (i.hasNext()) {
+      LookupElement thisElement = (LookupElement) i.next();
+
+      if (thisElement.getEnabled() == true) {
+        thisSelect.addItem(thisElement.getCode(), thisElement.getDescription());
+      } 
       if (thisElement.getDefaultItem()) {
         lookupDefault = thisElement.getDescription();
       }

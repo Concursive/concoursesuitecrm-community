@@ -1,9 +1,11 @@
+<%@ taglib uri="WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="IndustryList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgAddressTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgEmailTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="OrgDetails" class="com.darkhorseventures.cfsbase.Organization" scope="request"/>
 <jsp:useBean id="OrgPhoneTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
+<jsp:useBean id="AccountTypeList" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <%@ include file="initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="/javascript/checkDate.js"></script>
@@ -72,6 +74,19 @@
     </td>
     <td valign=center>
       <%= UserList.getHtmlSelect("owner", OrgDetails.getOwner() ) %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      Account Type(s)
+    </td>
+    <td>
+	<dhv:evaluate exp="<%=OrgDetails.getTypes().isEmpty()%>">
+		<%= AccountTypeList.getHtmlSelect("selectedList", 0) %>
+	</dhv:evaluate>
+	<dhv:evaluate exp="<%=!(OrgDetails.getTypes().isEmpty())%>">
+		<%= AccountTypeList.getHtmlSelect("selectedList", OrgDetails.getTypes()) %>
+	</dhv:evaluate>
     </td>
   </tr>
   <tr class="containerBody">

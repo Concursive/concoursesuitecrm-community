@@ -31,7 +31,6 @@ public class LookupElement {
    */
   public LookupElement() { }
 
-
   /**
    *  Constructor for the LookupElement object
    *

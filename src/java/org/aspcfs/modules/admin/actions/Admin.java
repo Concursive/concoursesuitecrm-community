@@ -222,55 +222,62 @@ public final class Admin extends CFSModule {
 				context.getRequest().setAttribute("ListLabel", "Contacts and Resources: Contact Type");
 			}
 			else if (id == 2) {
+				LookupList atl = new LookupList(db, "lookup_account_types");
+				atl.setSelectSize(8);
+				atl.setMultiple(true);
+				context.getRequest().setAttribute("SelectedList", atl);
+				context.getRequest().setAttribute("ListLabel", "Account Management: Account Type");
+			}
+			else if (id == 3) {
 				LookupList departmentList = new LookupList(db, "lookup_department");
 				departmentList.setSelectSize(8);
 				departmentList.setMultiple(true);
 				context.getRequest().setAttribute("SelectedList", departmentList);
 				context.getRequest().setAttribute("ListLabel", "Contacts and Resources: Department");
 			}
-			else if (id == 3) {
+			else if (id == 4) {
 				LookupList sourceList = new LookupList(db, "lookup_ticketsource");
 				sourceList.setSelectSize(8);
 				sourceList.setMultiple(true);
 				context.getRequest().setAttribute("SelectedList", sourceList);
 				context.getRequest().setAttribute("ListLabel", "Tickets: Ticket Source");
 			}
-			else if (id == 4) {
+			else if (id == 5) {
 				LookupList severityList = new LookupList(db, "ticket_severity");
 				severityList.setSelectSize(8);
 				severityList.setMultiple(true);
 				context.getRequest().setAttribute("SelectedList", severityList);
 				context.getRequest().setAttribute("ListLabel", "Tickets: Ticket Severity ");
 			}
-			else if (id == 5) {
+			else if (id == 6) {
 				LookupList priorityList = new LookupList(db, "ticket_priority");
 				priorityList.setSelectSize(8);
 				priorityList.setMultiple(true);
 				context.getRequest().setAttribute("SelectedList", priorityList);
 				context.getRequest().setAttribute("ListLabel", "Tickets: Ticket Priority");
 			}
-			else if (id == 6) {
+			else if (id == 7) {
 				LookupList contactEmailTypeList = new LookupList(db, "lookup_contactemail_types");
 				contactEmailTypeList.setSelectSize(8);
 				contactEmailTypeList.setMultiple(true);
 				context.getRequest().setAttribute("SelectedList", contactEmailTypeList);
 				context.getRequest().setAttribute("ListLabel", "Contacts and Resources: Contact Email Type");
 			}
-			else if (id == 7) {
+			else if (id == 8) {
 				LookupList contactPhoneTypeList = new LookupList(db, "lookup_contactphone_types");
 				contactPhoneTypeList.setSelectSize(8);
 				contactPhoneTypeList.setMultiple(true);
 				context.getRequest().setAttribute("SelectedList", contactPhoneTypeList);
 				context.getRequest().setAttribute("ListLabel", "Contacts and Resources: Contact Phone Type");
 			}
-			else if (id == 8) {
+			else if (id == 9) {
 				LookupList contactAddressTypeList = new LookupList(db, "lookup_contactaddress_types");
 				contactAddressTypeList.setSelectSize(8);
 				contactAddressTypeList.setMultiple(true);
 				context.getRequest().setAttribute("SelectedList", contactAddressTypeList);
 				context.getRequest().setAttribute("ListLabel", "Contacts and Resources: Contact Address Type");
 			}
-			else if (id == 9) {
+			else if (id == 10) {
 				LookupList stageList = new LookupList(db, "lookup_stage");
 				stageList.setSelectSize(8);
 				stageList.setMultiple(true);
@@ -306,27 +313,30 @@ public final class Admin extends CFSModule {
 			context.getRequest().setAttribute("ContactTypeList", newList);
 		}
 		else if (which == 2) {
-			context.getRequest().setAttribute("DepartmentList", newList);
+			context.getRequest().setAttribute("AccountTypeList", newList);
 		}
 		else if (which == 3) {
-			context.getRequest().setAttribute("SourceList", newList);
+			context.getRequest().setAttribute("DepartmentList", newList);
 		}
 		else if (which == 4) {
-			context.getRequest().setAttribute("SeverityList", newList);
+			context.getRequest().setAttribute("SourceList", newList);
 		}
 		else if (which == 5) {
-			context.getRequest().setAttribute("PriorityList", newList);
+			context.getRequest().setAttribute("SeverityList", newList);
 		}
 		else if (which == 6) {
-			context.getRequest().setAttribute("ContactEmailTypeList", newList);
+			context.getRequest().setAttribute("PriorityList", newList);
 		}
 		else if (which == 7) {
-			context.getRequest().setAttribute("ContactPhoneTypeList", newList);
+			context.getRequest().setAttribute("ContactEmailTypeList", newList);
 		}
 		else if (which == 8) {
-			context.getRequest().setAttribute("ContactAddressTypeList", newList);
+			context.getRequest().setAttribute("ContactPhoneTypeList", newList);
 		}
 		else if (which == 9) {
+			context.getRequest().setAttribute("ContactAddressTypeList", newList);
+		}
+		else if (which == 10) {
 			context.getRequest().setAttribute("StageList", newList);
 		}
 	}
@@ -352,6 +362,7 @@ public final class Admin extends CFSModule {
 		LookupList contactPhoneTypeList = new LookupList(db, "lookup_contactphone_types");
 		LookupList contactAddressTypeList = new LookupList(db, "lookup_contactaddress_types");
 		LookupList stageList = new LookupList(db, "lookup_stage");
+		LookupList atl = new LookupList(db, "lookup_account_types");
 		
 		context.getRequest().setAttribute("SeverityList", severityList);
 		context.getRequest().setAttribute("PriorityList", priorityList);
@@ -362,6 +373,7 @@ public final class Admin extends CFSModule {
 		context.getRequest().setAttribute("ContactPhoneTypeList", contactPhoneTypeList);
 		context.getRequest().setAttribute("ContactAddressTypeList", contactAddressTypeList);
 		context.getRequest().setAttribute("StageList", stageList);
+		context.getRequest().setAttribute("AccountTypeList", atl);
 	}
 
 
@@ -392,8 +404,16 @@ public final class Admin extends CFSModule {
 		else {
 			tableName = "lookup_contact_types";
 		}
-
+		
 		if (ignore != 2) {
+			LookupList atl = new LookupList(db, "lookup_account_types");
+			context.getRequest().setAttribute("AccountTypeList", atl);
+		}
+		else {
+			tableName = "lookup_account_types";
+		}
+
+		if (ignore != 3) {
 			LookupList departmentList = new LookupList(db, "lookup_department");
 			context.getRequest().setAttribute("DepartmentList", departmentList);
 		}
@@ -401,7 +421,7 @@ public final class Admin extends CFSModule {
 			tableName = "lookup_department";
 		}
 
-		if (ignore != 3) {
+		if (ignore != 4) {
 			LookupList sourceList = new LookupList(db, "lookup_ticketsource");
 			context.getRequest().setAttribute("SourceList", sourceList);
 		}
@@ -409,7 +429,7 @@ public final class Admin extends CFSModule {
 			tableName = "lookup_ticketsource";
 		}
 
-		if (ignore != 4) {
+		if (ignore != 5) {
 			LookupList severityList = new LookupList(db, "ticket_severity");
 			context.getRequest().setAttribute("SeverityList", severityList);
 		}
@@ -417,7 +437,7 @@ public final class Admin extends CFSModule {
 			tableName = "ticket_severity";
 		}
 
-		if (ignore != 5) {
+		if (ignore != 6) {
 			LookupList priorityList = new LookupList(db, "ticket_priority");
 			context.getRequest().setAttribute("PriorityList", priorityList);
 		}
@@ -425,7 +445,7 @@ public final class Admin extends CFSModule {
 			tableName = "ticket_priority";
 		}
 
-		if (ignore != 6) {
+		if (ignore != 7) {
 			LookupList contactEmailTypeList = new LookupList(db, "lookup_contactemail_types");
 			context.getRequest().setAttribute("ContactEmailTypeList", contactEmailTypeList);
 		}
@@ -433,7 +453,7 @@ public final class Admin extends CFSModule {
 			tableName = "lookup_contactemail_types";
 		}
 
-		if (ignore != 7) {
+		if (ignore != 8) {
 			LookupList contactPhoneTypeList = new LookupList(db, "lookup_contactphone_types");
 			context.getRequest().setAttribute("ContactPhoneTypeList", contactPhoneTypeList);
 		}
@@ -441,7 +461,7 @@ public final class Admin extends CFSModule {
 			tableName = "lookup_contactphone_types";
 		}
 
-		if (ignore != 8) {
+		if (ignore != 9) {
 			LookupList contactAddressTypeList = new LookupList(db, "lookup_contactaddress_types");
 			context.getRequest().setAttribute("ContactAddressTypeList", contactAddressTypeList);
 		}
@@ -449,7 +469,7 @@ public final class Admin extends CFSModule {
 			tableName = "lookup_contactaddress_types";
 		}
 		
-		if (ignore != 9) {
+		if (ignore != 10) {
 			LookupList stageList = new LookupList(db, "lookup_stage");
 			context.getRequest().setAttribute("StageList", stageList);
 		}

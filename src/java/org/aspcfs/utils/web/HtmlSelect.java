@@ -2,6 +2,7 @@ package com.darkhorseventures.webutils;
 
 import java.util.*;
 import java.sql.*;
+import com.darkhorseventures.webutils.LookupList;
 
 /**
  *  LookupTable generates an HTML SELECT dropdown or list box, optionally from a
@@ -30,6 +31,7 @@ public class HtmlSelect extends ArrayList {
 	protected StringBuffer rowList = new StringBuffer();
 
 	protected boolean built = false;
+	protected LookupList multipleSelects = null;
 
 	/**
 	 *  Constructor for an HTML select box. Creates an HTML select box or series of
@@ -147,8 +149,7 @@ public class HtmlSelect extends ArrayList {
 	public void setSelectSize(int tmp) {
 		this.selectSize = tmp;
 	}
-	
-	
+
 	/**
 	*  Set a manual entry that appears first in the list, like Any or None, etc.
 	*
@@ -217,7 +218,13 @@ public class HtmlSelect extends ArrayList {
 			}
 		}
 	}
-
+	
+	public LookupList getMultipleSelects() {
+		return multipleSelects;
+	}
+	public void setMultipleSelects(LookupList multipleSelects) {
+		this.multipleSelects = multipleSelects;
+	}
 
 	/**
 	 *  Sets the TypeTimeZone attribute of the HtmlSelect object
@@ -521,12 +528,19 @@ public class HtmlSelect extends ArrayList {
       while (values.hasMoreTokens()) {
         tmp2 += "|" + values.nextToken();
       }
+      
+
+      
       String optionChecked = "";
       String optionSelected = "";
-      if ((tmp2.equals(this.defaultValue)) ||
+      
+      if ( multipleSelects != null && multipleSelects.containsKey( Integer.parseInt(tmp1) ) ) { 
+		optionSelected = "selected ";
+		optionChecked = " checked";
+      } else if ( (tmp2.equals(this.defaultValue)) ||
            (tmp1.equals(this.defaultValue)) ||
           (rowSelect == processedRowCount) ||
-          (tmp1.equals(this.defaultKey))) {
+          (tmp1.equals(this.defaultKey)) ) {
         optionSelected = "selected ";
         optionChecked = " checked";
       }

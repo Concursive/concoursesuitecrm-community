@@ -40,6 +40,14 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
+      Acct. Type(s)
+    </td>
+    <td>  
+    <%=OrgDetails.getTypes().valuesAsString() %>
+     </td>
+  </tr> 
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
       Acct. Number
     </td>
     <td width=100%>

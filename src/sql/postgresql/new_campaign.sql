@@ -138,7 +138,7 @@ CREATE TABLE search_fields (
   description VARCHAR(255),
   searchable BOOLEAN NOT NULL DEFAULT 't',
   field_typeID int NOT NULL DEFAULT -1,
-	table_name varchar(80),
+  table_name varchar(80),
   object_class varchar(80)
 );
 
