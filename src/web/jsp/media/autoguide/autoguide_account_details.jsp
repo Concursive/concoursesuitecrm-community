@@ -154,7 +154,7 @@ Vehicle Details<br>
     <td class="PhotoDetail">
       <span>
 <dhv:evaluate exp="<%= InventoryItem.hasPictureId() %>">
-        <a href="javascript:popURL('autoguide_popup_photo.jsp?id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>&ver=1.0&popup=true','Photo','760','550','yes','yes');"><img src="AutoGuide.do?command=ShowImage&id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>" border="0"/></a>
+        <a href="javascript:popURL('media/autoguide/autoguide_popup_photo.jsp?id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>&ver=1.0&popup=true','Photo','760','550','yes','yes');"><img src="AutoGuide.do?command=ShowImage&id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>" border="0"/></a>
 </dhv:evaluate>
 <dhv:evaluate exp="<%= !InventoryItem.hasPictureId() %>">
         <img src="images/vehicle_unavailable.gif" border="0"/>
