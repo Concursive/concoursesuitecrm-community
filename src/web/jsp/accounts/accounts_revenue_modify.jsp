@@ -7,13 +7,13 @@
 <jsp:useBean id="YearList" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
 <jsp:useBean id="UserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<form name="modify" action="/RevenueManager.do?command=Update&auto-populate=true&orgId=<%=Revenue.getOrgId()%>" method="post">
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
-<a href="/RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Revenue</a> >
+<form name="modify" action="RevenueManager.do?command=Update&auto-populate=true&orgId=<%=Revenue.getOrgId()%>" method="post">
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<a href="RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Revenue</a> >
 <% if (request.getParameter("return") == null) {%>
-	<a href="/RevenueManager.do?command=Details&id=<%=Revenue.getId()%>">Revenue Details</a> >
+	<a href="RevenueManager.do?command=Details&id=<%=Revenue.getId()%>">Revenue Details</a> >
 <%}%>
 Modify Revenue<br>
 <hr color="#BFBFBB" noshade>
@@ -42,10 +42,10 @@ Modify Revenue<br>
 
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='/RevenueManager.do?command=View&orgId=<%= Revenue.getOrgId() %>'">
+	<input type="submit" value="Cancel" onClick="javascript:this.form.action='RevenueManager.do?command=View&orgId=<%= Revenue.getOrgId() %>'">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/RevenueManager.do?command=Details&id=<%= Revenue.getId() %>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='RevenueManager.do?command=Details&id=<%= Revenue.getId() %>'">
 <%}%>
 <input type="reset" value="Reset">
 <br>
@@ -118,9 +118,9 @@ Modify Revenue<br>
 &nbsp;<br>
 <input type="submit" value="Update" name="Save">
 <% if (request.getParameter("return") != null && request.getParameter("return").equals("list")) {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/RevenueManager.do?command=View&orgId=<%= Revenue.getOrgId() %>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='RevenueManager.do?command=View&orgId=<%= Revenue.getOrgId() %>'">
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='/RevenueManager.do?command=Details&id=<%= Revenue.getId() %>'">
+<input type="submit" value="Cancel" onClick="javascript:this.form.action='RevenueManager.do?command=Details&id=<%= Revenue.getId() %>'">
 <%}%>
 <input type="reset" value="Reset">
   </td>
