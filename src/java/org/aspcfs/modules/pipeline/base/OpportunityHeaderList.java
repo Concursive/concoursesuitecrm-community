@@ -641,12 +641,12 @@ public class OpportunityHeaderList extends Vector {
 
     //Get the opportunity if user is owner in any one of the components of that opportunity
     if (owner != -1) {
-      sqlFilter.append("OR ( (x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.owner = ? " + (queryOpenOnly ? "AND oc.closed IS NULL " : "") + (queryClosedOnly ? "AND oc.closed IS NOT NULL " : "") + "))" + (orgId != -1 ? " AND (x.acctlink = ?)" : "") + (contactId != -1 ? " AND (x.contactlink = ?)" : "") + " ) ");
+      sqlFilter.append("AND x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.owner = ? ) ");
     }
 
     //Get the opportunity if user or anyone in user's hierarchy is owner in any one of the components of that opportunity
     if (ownerIdRange != null) {
-      sqlFilter.append("OR ( (x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.owner IN (" + ownerIdRange + ") " + (queryOpenOnly ? "AND oc.closed IS NULL " : "") + (queryClosedOnly ? "AND oc.closed IS NOT NULL " : "") + "))" + (orgId != -1 ? "AND (x.acctlink = ?) " : "") + (contactId != -1 ? "AND (contactlink = ?) " : "") + ") ");
+      sqlFilter.append("AND x.opp_id IN (SELECT opp_id from opportunity_component oc where oc.owner IN (" + ownerIdRange + ") ) "); 
     }
   }
 
@@ -689,24 +689,8 @@ public class OpportunityHeaderList extends Vector {
 
     if (owner != -1) {
       pst.setInt(++i, owner);
-      if (orgId != -1) {
-        pst.setInt(++i, orgId);
-      }
-
-      if (contactId != -1) {
-        pst.setInt(++i, contactId);
-      }
     }
-
-    if (ownerIdRange != null) {
-      if (orgId != -1) {
-        pst.setInt(++i, orgId);
-      }
-
-      if (contactId != -1) {
-        pst.setInt(++i, contactId);
-      }
-    }
+    
     return i;
   }
 
