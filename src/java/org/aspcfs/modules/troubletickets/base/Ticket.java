@@ -1564,7 +1564,7 @@ public class Ticket extends GenericBean {
     try {
       db.setAutoCommit(false);
       sql.append(
-          "INSERT INTO TICKET (org_id, contact_id, problem, pri_code, " +
+          "INSERT INTO ticket (org_id, contact_id, problem, pri_code, " +
           "department_code, cat_code, scode, ");
       if (entered != null) {
         sql.append("entered, ");
