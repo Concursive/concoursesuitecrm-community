@@ -32,7 +32,7 @@ User Details
 </dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate exp="<%=(UserRecord.getEnabled())%>">
-<dhv:permission name="admin-users-edit">
+<dhv:permission name="admin-users-delete">
   <input type="button" name="action" value="Disable" onClick="javascript:window.location.href='Users.do?command=DisableUserConfirm&id=<%= UserRecord.getId() %>'">
 </dhv:permission>
 </dhv:evaluate>
@@ -95,7 +95,7 @@ User Details
 </dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate exp="<%=(UserRecord.getEnabled())%>">
-<dhv:permission name="admin-users-edit">
+<dhv:permission name="admin-users-delete">
   <input type="button" name="action" value="Disable" onClick="javascript:window.location.href='Users.do?command=DisableUserConfirm&id=<%= UserRecord.getId() %>'">
 </dhv:permission>
 </dhv:evaluate>
