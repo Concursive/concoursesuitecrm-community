@@ -395,6 +395,7 @@ public class PilotOnlineReader implements DataReader {
         inventoryList.setAdRunDateStart(new java.sql.Date(runDateStart.getTime().getTime()));
         inventoryList.setAdRunDateEnd(new java.sql.Date(runDateEnd.getTime().getTime()));
         inventoryList.setBuildPictureId(true);
+        inventoryList.setBuildOptions(true);
         inventoryList.buildList(db);
         Iterator inventory = inventoryList.iterator();
         while (inventory.hasNext()) {
