@@ -377,7 +377,7 @@ public final class Quotes extends CFSModule {
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
-  public String executeCommandSaveNotes(ActionContext context) {
+/*  public String executeCommandSaveNotes(ActionContext context) {
     int quoteId = -1;
     String quoteIdString = (String) context.getRequest().getParameter("quoteId");
     String customerString = (String) context.getRequest().getParameter("customer");
@@ -415,7 +415,7 @@ public final class Quotes extends CFSModule {
     }
     return executeCommandDisplay(context);
   }
-
+*/
 
   /**
    *  Description of the Method
