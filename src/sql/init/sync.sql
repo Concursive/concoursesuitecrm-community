@@ -17,6 +17,9 @@ INSERT INTO sync_table (system_id, element_name, mapped_class_name)
 /* AUTO GUIDE */
 
 INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
+ VALUES (2, 'syncClient', 'com.darkhorseventures.cfsbase.SyncClient', 10);
+ 
+INSERT INTO sync_table (system_id, element_name, mapped_class_name, order_id)
  VALUES (2, 'user', 'com.darkhorseventures.cfsbase.User', 20);
 
  
