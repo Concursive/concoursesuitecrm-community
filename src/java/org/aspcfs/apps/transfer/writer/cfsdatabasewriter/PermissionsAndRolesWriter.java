@@ -83,6 +83,26 @@ public class PermissionsAndRolesWriter implements DataWriter {
 
 
   public boolean isConfigured() {
+    String tmpUrl = System.getProperty("url");
+    if (tmpUrl != null) {
+      url = tmpUrl;
+    }
+    
+    String tmpDriver = System.getProperty("driver");
+    if (tmpDriver != null) {
+      driver = tmpDriver;
+    }
+    
+    String tmpUser = System.getProperty("user");
+    if (tmpUser != null) {
+      user = tmpUser;
+    }
+    
+    String tmpPass = System.getProperty("pass");
+    if (tmpPass != null) {
+      pass = tmpPass;
+    }
+    
     if (url == null) {
       return false;
     }

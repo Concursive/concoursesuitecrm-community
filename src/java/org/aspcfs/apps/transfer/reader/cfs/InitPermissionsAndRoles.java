@@ -40,6 +40,11 @@ public class InitPermissionsAndRoles implements DataReader {
   public boolean isConfigured() {
     boolean configOK = true;
 
+    String tmpFile = System.getProperty("processConfigFile");
+    if (tmpFile != null && !"".equals(tmpFile)) {
+      processConfigFile = tmpFile;
+    }
+    
     File configFile = new File(processConfigFile);
     if (!configFile.exists()) {
       logger.info("InitPermissionsAndRoles-> Config: process config file not found");
