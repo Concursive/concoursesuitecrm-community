@@ -1,4 +1,4 @@
-//Copyright 2001 Dark Horse Ventures
+//Copyright 2002 Dark Horse Ventures
 //The createFilter method and the prepareFilter method need to have the same
 //number of parameters if modified.
 
@@ -19,7 +19,7 @@ import com.darkhorseventures.utils.DatabaseUtils;
  *@created    August 15, 2002
  *@version    $Id$
  */
-public class TaskList extends Vector {
+public class TaskList extends ArrayList {
   protected int enteredBy = -1;
   protected PagedListInfo pagedListInfo = null;
   protected int owner = -1;
@@ -29,6 +29,8 @@ public class TaskList extends Vector {
   protected boolean tasksAssignedByMeOnly = false;
   protected java.sql.Date alertRangeStart = null;
   protected java.sql.Date alertRangeEnd = null;
+  protected int categoryId = -1;
+  protected int projectId = -1;
 
 
   /**
@@ -117,6 +119,9 @@ public class TaskList extends Vector {
     this.alertRangeEnd = alertRangeEnd;
   }
 
+  public void setCategoryId(int tmp) { this.categoryId = tmp; }
+  public void setProjectId(int tmp) { this.projectId = tmp; }
+
 
   /**
    *  Gets the enteredBy attribute of the TaskList object
@@ -186,7 +191,7 @@ public class TaskList extends Vector {
       pagedListInfo.setDefaultSort("t.priority", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY t.priority DESC ");
+      sqlOrder.append("ORDER BY t.priority, description ");
     }
 
     //Need to build a base SQL statement for returning records
@@ -197,12 +202,11 @@ public class TaskList extends Vector {
     }
     sqlSelect.append(
         "t.task_id, t.entered, t.enteredby, t.priority, t.description, " +
-        "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, t.estimatedloetype, t.owner, t.completedate, t.modified, " +
-        "c.namelast as lastname,c.namefirst as firstname " +
+        "t.duedate, t.notes, t.sharing, t.complete, t.estimatedloe, " +
+        "t.estimatedloetype, t.owner, t.completedate, t.modified, " +
+        "t.category_id " +
         "FROM task t " +
-        "LEFT JOIN contact c ON (t.owner = c.contact_id) " +
         "WHERE t.task_id > -1 ");
-
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -220,7 +224,7 @@ public class TaskList extends Vector {
       ++count;
       Task thisTask = new Task(rs);
       thisTask.buildResources(db);
-      this.addElement(thisTask);
+      this.add(thisTask);
     }
     rs.close();
     pst.close();
@@ -244,9 +248,9 @@ public class TaskList extends Vector {
     if (tasksAssignedToMeOnly) {
       sqlFilter.append("AND t.owner = ? ");
     } else if (tasksAssignedByMeOnly) {
-      sqlFilter.append("AND t.owner != ? ");
-    } else {
-      sqlFilter.append("OR t.owner = ? ");
+      sqlFilter.append("AND t.owner != ? AND t.owner IS NOT NULL ");
+    } else if (owner > 0) {
+      sqlFilter.append("AND (t.owner IS NOT NULL OR t.owner = ?) ");
     }
 
     if (completeEnabled) {
@@ -259,6 +263,14 @@ public class TaskList extends Vector {
 
     if (alertRangeEnd != null) {
       sqlFilter.append("AND t.duedate <= ? ");
+    }
+   
+    if (categoryId > 0) {
+      sqlFilter.append("AND t.category_id = ? ");
+    }
+   
+    if (projectId > 0) {
+      sqlFilter.append("AND t.task_id IN (SELECT task_id FROM tasklink_project WHERE project_id = ?) ");
     }
   }
 
@@ -277,7 +289,7 @@ public class TaskList extends Vector {
       pst.setInt(++i, enteredBy);
     }
 
-    if (owner != -1) {
+    if (tasksAssignedToMeOnly || tasksAssignedByMeOnly || owner > 0) {
       pst.setInt(++i, owner);
     }
 
@@ -293,6 +305,13 @@ public class TaskList extends Vector {
       pst.setDate(++i, alertRangeEnd);
     }
 
+    if (categoryId > 0) {
+      pst.setInt(++i, categoryId);
+    }
+    
+    if (projectId > 0) {
+      pst.setInt(++i, projectId);
+    }
     return i;
   }
 
@@ -306,33 +325,21 @@ public class TaskList extends Vector {
    *@exception  SQLException  Description of the Exception
    */
   public static int pendingCount(Connection db, int myContactId) throws SQLException {
-    ResultSet rs = null;
-    String sql = "";
-    try {
-      db.setAutoCommit(false);
-      sql = "SELECT count(*) as taskcount " +
-          "FROM task " +
-          "WHERE owner = ? AND complete =" + DatabaseUtils.getFalse(db) + " ";
-
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql);
-      pst.setInt(++i, myContactId);
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        if (rs.getInt("taskcount") != 0) {
-          return rs.getInt("taskcount");
-        }
-      }
-      pst.close();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-      db.setAutoCommit(true);
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
+    int toReturn = 0;
+    String sql = 
+      "SELECT count(*) as taskcount " +
+      "FROM task " +
+      "WHERE owner = ? AND complete =" + DatabaseUtils.getFalse(db) + " ";
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql);
+    pst.setInt(++i, myContactId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      toReturn = rs.getInt("taskcount");
     }
-    return 0;
+    rs.close();
+    pst.close();
+    return toReturn;
   }
 
 
