@@ -1517,7 +1517,7 @@ public class Campaign extends GenericBean {
         "UPDATE campaign " +
         "SET status_id = ?, " +
         "status = ?, " +
-        "active = true, " +
+        "active = " + DatabaseUtils.getTrue(db) + ", " +
         "reply_addr = ?, " +
         "subject = ?, " +
         "message = ?, " +

@@ -4,6 +4,7 @@ package com.darkhorseventures.cfsbase;
 
 import java.util.Vector;
 import java.sql.*;
+import com.darkhorseventures.utils.DatabaseUtils;
 
 /**
  *  Contains a list of SearchField objects
@@ -34,7 +35,7 @@ public class SearchFieldList extends Vector {
     ResultSet rs = st.executeQuery(
         "SELECT * " +
         "FROM search_fields " +
-        "WHERE searchable = true ");
+        "WHERE searchable = " + DatabaseUtils.getTrue(db) + " ");
     while (rs.next()) {
       SearchField thisSearchField = new SearchField(rs);
       this.addElement(thisSearchField);
