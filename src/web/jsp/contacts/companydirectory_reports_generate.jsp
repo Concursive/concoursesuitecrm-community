@@ -120,7 +120,7 @@ Generate New Report<br>
       <select name="type" onchange='update();'>
       <option value=1>Contact Listing</option>
         <% if (CategoryList.size() > 0) {%>
-          <option value="4">Accounts w/Folders</option>
+          <option value="4">Contacts w/Folders</option>
         <% } %>
       </select>
       <span name="new0" ID="new0" style="position:relative; visibility:hidden">&nbsp;:&nbsp;
