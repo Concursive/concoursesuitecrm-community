@@ -51,17 +51,17 @@ Response
 %>      
     <tr class="row<%= rowid %>">
       <td valign="middle" width="30" align="left" nowrap>
-        <a href="CampaignManager.do?command=ResponseDetails&id=<%= Campaign.getId() %>&contactId=<%= thisResponse.getContactId() %>"><%= toHtml(thisResponse.getContact().getNameLastFirst()) %></a>
+        <a href="CampaignManager.do?command=ResponseDetails&id=<%= Campaign.getId() %>&contactId=<%= thisResponse.getContactId() %>&responseId=<%= thisResponse.getId() %>"><%= toHtml(thisResponse.getContact().getNameLastFirst()) %></a>
       </td>
       <td valign="middle" align="left" nowrap>
         <%= toDateTimeString(thisResponse.getEntered()) %>&nbsp;
       </td>
       <td align="left"><%= toHtml(thisResponse.getIpAddress()) %>&nbsp;</td>
       <td align="left" valign="middle" align="left"  nowrap>
-        <%= thisResponse.getContact().getEmailAddress("BUSSINESS") %> &nbsp;
+        <%= thisResponse.getContact().getEmailAddress("BUSINESS") %> &nbsp;
       </td>
       <td align="left" valign="middle" align="left" nowrap>
-        <%= thisResponse.getContact().getPhoneNumber("BUSSINESS") %>&nbsp;
+        <%= thisResponse.getContact().getPhoneNumber("BUSINESS") %>&nbsp;
       </td>
     </tr>
 <%}%>
