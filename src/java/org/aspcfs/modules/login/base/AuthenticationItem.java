@@ -286,6 +286,7 @@ public class AuthenticationItem {
       System.out.println("AuthenticationItem-> GateKeeper: " + gkHost);
       System.out.println("AuthenticationItem-> ServerName: " + serverName);
       System.out.println("AuthenticationItem-> SiteCode: " + siteCode);
+      System.out.println("AuthenticationItem-> Driver: " + gkDriver);
     }
     ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
     ConnectionElement gk = new ConnectionElement(gkHost, gkUser, gkUserPw);
@@ -293,6 +294,9 @@ public class AuthenticationItem {
     if (!"true".equals((String) context.getServletContext().getAttribute("WEBSERVER.ASPMODE"))) {
       // This system is not configured with the sites table, must be a binary version
       gk.setDbName(prefs.get("GATEKEEPER.DATABASE"));
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("AuthenticationItem-> Database: " + gk.getDbName());
+      }
       return gk;
     }
     Connection db = null;

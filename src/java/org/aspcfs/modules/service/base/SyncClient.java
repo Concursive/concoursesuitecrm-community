@@ -68,6 +68,9 @@ public class SyncClient extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public SyncClient(Connection db, int clientId) throws SQLException {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("SyncClient-> Looking up: " + clientId);
+    }
     PreparedStatement pst = null;
     ResultSet rs = null;
     StringBuffer sql = new StringBuffer();
@@ -76,7 +79,7 @@ public class SyncClient extends GenericBean {
         "FROM sync_client " +
         "WHERE client_id = ? ");
     pst = db.prepareStatement(sql.toString());
-    pst.setInt(1, id);
+    pst.setInt(1, clientId);
     rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
