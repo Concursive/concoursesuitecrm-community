@@ -190,6 +190,14 @@ public final class MyCFS extends CFSModule {
 		Exception errorMessage = null;
 
 		String whereClause = new String();
+		UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
+		
+		UserList newUserList = new UserList();
+		newUserList.setManagerId(getUserId(context));
+		newUserList.setBuildHierarchy(true);
+		newUserList.setMyId(getUserId(context));
+		newUserList.setMyValue(thisUser.getNameLast() + ", " + thisUser.getNameFirst());
+		newUserList.setIncludeMe(true);
 
 		//	
 		//	Alerts Selection
@@ -224,6 +232,9 @@ public final class MyCFS extends CFSModule {
 			StringBuffer sql = new StringBuffer();
 			
 			db = this.getConnection(context);
+			
+			newUserList.buildList(db);
+			context.getRequest().setAttribute("NewUserList", newUserList);
 			
 			LookupList indSelect = new LookupList(db, "lookup_industry");
 			indSelect.setJsEvent("onChange=\"document.forms['miner_select'].submit();\"");

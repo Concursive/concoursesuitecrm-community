@@ -2,6 +2,7 @@
 <jsp:useBean id="NewsList" class="java.util.Vector" scope="request"/>
 <jsp:useBean id="IndSelect" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
 <jsp:useBean id="CompanyCalendar" class="com.darkhorseventures.utils.CalendarView" scope="request"/>
+<jsp:useBean id="NewUserList" class="com.darkhorseventures.cfsbase.UserList" scope="request"/>
 <jsp:useBean id="alertPaged" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <table bgcolor=white border=0 width="100%">
 
@@ -19,11 +20,21 @@
 
     <td bgcolor=white valign=top width=100%>
     <table bgcolor=white width=100% border=1 cellpadding=4 cellspacing=0 bordercolorlight="#000000" bordercolor="#FFFFFF">
+    
+    <tr bgcolor="#DEE0FA"><td valign=center>
+    <table bgcolor="#DEE0FA" width=100% cellspacing="0" cellpadding="0" border="0">
+    
     <tr bgcolor="#DEE0FA">
-    <td colspan=3 valign=center>
+    <td width=60% valign=center>
     <strong>Alerts</strong>
     </td>
+    <td valign=center align=right>
+    <%= NewUserList.getHtmlSelect("userId",0) %>
+    </td>
     </tr>
+    
+    </table>
+    </td></tr>
 
 	<tr><td>
 	<%=CompanyCalendar.displayEvents().toString()%>
