@@ -50,7 +50,7 @@ public class PermissionHandler extends TagSupport {
    *@param  tmp  The new None value
    *@since       1.1
    */
-  public void setNone(boolean tmp) {
+  public void setNone(String tmp) {
     Boolean checkNone = new Boolean(tmp);
     this.hasNone = checkNone.booleanValue();
   }
