@@ -253,11 +253,11 @@ public class Notifier extends ReportBuilder {
         }
         thisNotification.setFrom((String) this.config.get("EMAILADDRESS"));
         thisNotification.setSiteCode(baseName);
-        thisNotification.setSubject("CFS Opportunity" + (relationshipName != null ? ": " + StringUtils.toHtml(relationshipName) : ""));
+        thisNotification.setSubject("CRM Opportunity" + (relationshipName != null ? ": " + StringUtils.toHtml(relationshipName) : ""));
         thisNotification.setMessageToSend(
             NOREPLY_DISCLAIMER + "<br>" +
             "<br>" +
-            "The following opportunity component in CFS has an alert set:<br>" +
+            "The following opportunity component in Dark Horse CRM has an alert set:<br>" +
             "<br>" +
             (relationshipType != null ?
             relationshipType + ": " + StringUtils.toHtml(relationshipName) + "<br>" : "") +
@@ -320,7 +320,7 @@ public class Notifier extends ReportBuilder {
         thisNotification.setMessageToSend(
             NOREPLY_DISCLAIMER + "<br>" +
             "<br>" +
-            "The following activity in CFS has an alert set: <br>" +
+            "The following activity in Dark Horse CRM has an alert set: <br>" +
             "<br>" +
             "Contact: " + StringUtils.toHtml(thisCall.getContactName()) + "<br>" +
             "Notes: " + StringUtils.toHtml(thisCall.getNotes()) + "<br>" +
@@ -698,7 +698,7 @@ public class Notifier extends ReportBuilder {
       schema = "https";
     }
     return ("<a href=\"" + schema + "://" + siteInfo.getVirtualHost() + "/" + url + "\">" +
-        "View in CFS" +
+        "View in Dark Horse CRM" +
         "</a>");
   }
 
