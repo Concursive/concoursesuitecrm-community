@@ -5,17 +5,17 @@
 <jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="Record" class="com.darkhorseventures.cfsbase.CustomFieldRecord" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<script language="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></script>
-<form name="details" action="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>" method="post">
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<form name="details" action="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>" method="post">
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <dhv:evaluate if="<%= (Category.getAllowMultipleRecords() && Record == null) %>">
 List of Folder Records
 </dhv:evaluate>
 
 <dhv:evaluate if="<%= (Category.getAllowMultipleRecords() && Record != null) %>">
-<a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>">List of Folder Records</a> >
+<a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>">List of Folder Records</a> >
 Folder Record Details
 </dhv:evaluate>
 
@@ -48,8 +48,8 @@ Folder Record Details
   &nbsp;<br>
 <% } %>
 <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
-<dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='/Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
-<dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="Delete Folder Record" onClick="javascript:this.form.action='/Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
+<dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="Delete Folder Record" onClick="javascript:this.form.action='Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
 <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
 <br>&nbsp;<br>
 </dhv:permission>
@@ -119,8 +119,8 @@ Folder Record Details
 &nbsp;
 <br>
 <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
-<dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='/Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
-<dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="Delete Folder Record" onClick="javascript:this.form.action='/Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
+<dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
+<dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="Delete Folder Record" onClick="javascript:this.form.action='Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
 </dhv:evaluate>
 </td></tr>
 </table>

@@ -5,11 +5,11 @@
 <jsp:useBean id="Category" class="com.darkhorseventures.cfsbase.CustomFieldCategory" scope="request"/>
 <jsp:useBean id="Records" class="com.darkhorseventures.cfsbase.CustomFieldRecordList" scope="request"/>
 <%@ include file="initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="/javascript/confirmDelete.js"></SCRIPT>
-<form name="details" action="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>" method="post">
-<a href="/Accounts.do">Account Management</a> > 
-<a href="/Accounts.do?command=View">View Accounts</a> >
-<a href="/Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<form name="details" action="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>" method="post">
+<a href="Accounts.do">Account Management</a> > 
+<a href="Accounts.do?command=View">View Accounts</a> >
+<a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 List of Folder Records<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
@@ -34,7 +34,7 @@ List of Folder Records<br>
     &nbsp;<br>
     This folder can have multiple records...<br>
     &nbsp;<br>
-    <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>"><dhv:permission name="accounts-accounts-folders-add"><a href="/Accounts.do?command=AddFolderRecord&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= (String)request.getAttribute("catId") %>">Add a record to this folder</a><br>&nbsp;<br></dhv:permission></dhv:evaluate>
+    <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>"><dhv:permission name="accounts-accounts-folders-add"><a href="Accounts.do?command=AddFolderRecord&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= (String)request.getAttribute("catId") %>">Add a record to this folder</a><br>&nbsp;<br></dhv:permission></dhv:evaluate>
     <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
       <tr class="title">
         <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
@@ -70,13 +70,13 @@ List of Folder Records<br>
         <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
         <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <dhv:permission name="accounts-accounts-folders-edit"><a href="/Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-folders-delete"><a href="javascript:confirmDelete('/Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>');">Del</a></dhv:permission>
+          <dhv:permission name="accounts-accounts-folders-edit"><a href="Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete" all="true">|</dhv:permission><dhv:permission name="accounts-accounts-folders-delete"><a href="javascript:confirmDelete('Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>');">Del</a></dhv:permission>
           </td>
         </dhv:permission>
         </dhv:evaluate>
       
         <td align="left" width="100%" nowrap class="row<%= rowid %>">
-          <a href="/Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
+          <a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
         </td>
         <td nowrap class="row<%= rowid %>">
           <%= toHtml(thisRecord.getEnteredString()) %>

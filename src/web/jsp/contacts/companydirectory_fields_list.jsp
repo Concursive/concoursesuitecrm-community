@@ -10,7 +10,7 @@
 <a href="ExternalContacts.do">Contacts &amp; Resources</a> > 
 <a href="ExternalContacts.do?command=ListContacts">View Contacts</a> >
 <a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
-Folders<br>
+List of Folder Records<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="containerHeader">
@@ -30,7 +30,9 @@ Folders<br>
   CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
   if (CategoryList.size() > 0) {
 %>
-    <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><%= (Category.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif' alt='Folder is read-only'>":"") %><br>
+    Folder: <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><%= (Category.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif' alt='Folder is read-only'>":"") %><br>
+    &nbsp;<br>
+    This folder can have multiple records...<br>
     &nbsp;<br>
     <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>"><dhv:permission name="contacts-external_contacts-folders-add"><a href="ExternalContacts.do?command=AddFolderRecord&contactId=<%= ContactDetails.getId() %>&catId=<%=(String)request.getAttribute("catId") %>">Add a record to this folder</a><br>&nbsp;<br></dhv:permission></dhv:evaluate>
     <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
