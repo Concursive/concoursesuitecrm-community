@@ -43,7 +43,7 @@ function checkForm(form) {
 <tr>
 <td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
-<a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>">My Action Lists</a> >
+<a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>">Action Lists</a> >
 New Action List
 </td>
 </tr>

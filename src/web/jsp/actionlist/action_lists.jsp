@@ -16,7 +16,7 @@
 <tr>
 <td>
 <a href="MyCFS.do?command=Home">My Home Page</a> >
-My Action Lists
+Action Lists
 </td>
 </tr>
 </table>
