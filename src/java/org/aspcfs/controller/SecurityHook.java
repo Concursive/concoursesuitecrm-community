@@ -86,23 +86,29 @@ public class SecurityHook implements ControllerHook {
       SystemStatus systemStatus = (SystemStatus) globalStatus.get(ce.getUrl());
       if (systemStatus == null) {
         //NOTE: This happens when the context is reloaded and the user's
-        //session was serialized and reloaded
+        //session was serialized and reloaded, but the systemStatus isn't reloaded
         Connection db = null;
         try {
           db = ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).getConnection(ce);
           systemStatus = SecurityHook.retrieveSystemStatus(servlet.getServletConfig().getServletContext(), db, ce);
-          systemStatus.getSessionManager().addUser(request, userSession.getUserId());
         } catch (Exception e) {
         } finally {
           ((ConnectionPool) servlet.getServletConfig().getServletContext().getAttribute("ConnectionPool")).free(db);
         }
       }
       request.setAttribute("moduleAction", action);
-
       //Check the session manager to see if this session is valid
       SessionManager thisManager = systemStatus.getSessionManager();
       UserSession sessionInfo = thisManager.getUserSession(userSession.getActualUserId());
-      if (sessionInfo != null && !sessionInfo.getId().equals(request.getSession().getId()) && !action.toUpperCase().startsWith("LOGIN")) {
+      //The context reloaded and didn't reload the sessionManager userSession, 
+      //so add the user back
+      if (sessionInfo == null) {
+        request.getSession().setMaxInactiveInterval(systemStatus.getSessionTimeout());
+        thisManager.addUser(request, userSession.getActualUserId());
+      }
+      //If the user has a different session than what's in the manager, log the user out
+      if (sessionInfo != null && 
+          !sessionInfo.getId().equals(request.getSession().getId())) {
         if (request.getSession(false) != null) {
           request.getSession(false).invalidate();
         }
@@ -111,7 +117,7 @@ public class SecurityHook implements ControllerHook {
         request.setAttribute("LoginBean", failedSession);
         return "SecurityCheck";
       }
-
+      //Check to see if new permissions should be loaded...
       //Calling getHierarchyCheck() and getPermissionCheck() will block the
       //user until hierarchy and permisions have been rebuilt
       if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck()) ||
@@ -130,7 +136,7 @@ public class SecurityHook implements ControllerHook {
               System.out.println("SecurityHook-> Updating user session with new user record");
             }
           }
-
+          //Reload contact info
           User updatedUser = userSession.getUserRecord();
           if (userSession.getHierarchyCheck().before(systemStatus.getHierarchyCheck())) {
             updatedUser.setBuildContact(true);
