@@ -1,5 +1,5 @@
 <%@ page import="java.util.*,org.aspcfs.modules.*" %>
-<jsp:useBean id="NoteDetails" class="org.aspcfs.modules.CFSNote" scope="request"/>
+<jsp:useBean id="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
 <jsp:useBean id="InboxInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
