@@ -54,7 +54,7 @@ public class User extends GenericBean {
   protected int modifiedBy = -1;
   protected boolean enabled = true;
   protected Contact contact = new Contact();
-  protected Vector permissions = new Vector();
+  protected ArrayList permissions = new ArrayList();
   protected UserList childUsers = null;
   protected double YTD = 0;
 
@@ -314,7 +314,7 @@ public class User extends GenericBean {
    *
    *@param  permissions  The new permissions value
    */
-  public void setPermissions(Vector permissions) {
+  public void setPermissions(ArrayList permissions) {
     this.permissions = permissions;
   }
 
@@ -895,7 +895,7 @@ public class User extends GenericBean {
    *
    *@return    The permissions value
    */
-  public Vector getPermissions() {
+  public ArrayList getPermissions() {
     return permissions;
   }
 
@@ -1803,9 +1803,6 @@ public class User extends GenericBean {
         "LEFT JOIN role r ON (a.role_id = r.role_id) " +
         "WHERE a.user_id > -1 ");
     if (userId > -1) {
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("User-> Retrieving user ID: " + userId);
-      }
       sql.append("AND a.user_id = ? ");
     } else {
       sql.append(
@@ -2119,16 +2116,16 @@ public class User extends GenericBean {
     while (i.hasNext()) {
       Permission thisPermission = (Permission) i.next();
       if (thisPermission.getAdd()) {
-        permissions.addElement(thisPermission.getName() + "-add");
+        permissions.add(thisPermission.getName() + "-add");
       }
       if (thisPermission.getView()) {
-        permissions.addElement(thisPermission.getName() + "-view");
+        permissions.add(thisPermission.getName() + "-view");
       }
       if (thisPermission.getEdit()) {
-        permissions.addElement(thisPermission.getName() + "-edit");
+        permissions.add(thisPermission.getName() + "-edit");
       }
       if (thisPermission.getDelete()) {
-        permissions.addElement(thisPermission.getName() + "-delete");
+        permissions.add(thisPermission.getName() + "-delete");
       }
     }
   }
