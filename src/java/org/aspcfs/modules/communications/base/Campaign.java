@@ -466,12 +466,12 @@ public class Campaign extends GenericBean {
     }
   }
   
-public String getDeliveryName() {
-	return deliveryName;
-}
-public void setDeliveryName(String deliveryName) {
-	this.deliveryName = deliveryName;
-}
+  public String getDeliveryName() {
+    return deliveryName;
+  }
+  public void setDeliveryName(String deliveryName) {
+    this.deliveryName = deliveryName;
+  }
 
 
   /**

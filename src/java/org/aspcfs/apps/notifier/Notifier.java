@@ -11,6 +11,7 @@ import com.darkhorseventures.cfsmodule.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
+import com.zeroio.iteam.base.*;
 
 /**
  *  Application that processes various kinds of Alerts in CFS, generating
@@ -26,35 +27,27 @@ public class Notifier extends ReportBuilder {
 
 
   /**
-   *  Constructor for the Notifier object
-   *
-   *@since
-   */
-  public Notifier() { }
-
-
-  /**
-   *  Starts the process. Processes all of the enabled sites in the database.
+   *  Constructor for the Notifier object public Notifier() { } ** Starts the
+   *  process. Processes all of the enabled sites in the database.
    *
    *@param  args  Description of Parameter
-   *@since
    */
   public static void main(String args[]) {
 
     Notifier thisNotifier = new Notifier();
     thisNotifier.loadConfig();
-    
+
     System.out.println("Generating and sending reports... ");
 
-    thisNotifier.baseName = (String)thisNotifier.config.get("GKHOST");
-    thisNotifier.dbUser = (String)thisNotifier.config.get("GKUSER");
-    thisNotifier.dbPass = (String)thisNotifier.config.get("GKUSERPW");
+    thisNotifier.baseName = (String) thisNotifier.config.get("GKHOST");
+    thisNotifier.dbUser = (String) thisNotifier.config.get("GKUSER");
+    thisNotifier.dbPass = (String) thisNotifier.config.get("GKUSERPW");
 
     if (thisNotifier.baseName.equals("debug")) {
       thisNotifier.sendAdminReport("Notifier manual sendmail test");
     } else {
       try {
-        Class.forName((String)thisNotifier.config.get("DatabaseDriver"));
+        Class.forName((String) thisNotifier.config.get("DatabaseDriver"));
 
         Vector siteList = new Vector();
 
@@ -125,7 +118,6 @@ public class Notifier extends ReportBuilder {
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
-   *@since
    */
   private String buildOpportunityAlerts(Connection db) throws SQLException {
     Report thisReport = new Report();
@@ -182,7 +174,8 @@ public class Notifier extends ReportBuilder {
 
 
   /**
-   *  Description of the Method
+   *  Processes a list of calls to see if any alerts are due today that haven't
+   *  already been alerted.
    *
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
@@ -248,8 +241,7 @@ public class Notifier extends ReportBuilder {
    *@param  db                Description of Parameter
    *@param  dbName            Description of Parameter
    *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since
+   *@exception  Exception     Description of Exception
    */
   private String buildCommunications(Connection db, String dbName) throws Exception {
     Report thisReport = new Report();
@@ -342,7 +334,7 @@ public class Notifier extends ReportBuilder {
         }
       }
       if (campaignCount > 0) {
-        outputLetterLog(thisCampaign, letterLog, dbName);
+        outputLetterLog(thisCampaign, letterLog, dbName, db);
         outputFaxLog(faxLog);
         thisCampaign.setStatusId(Campaign.FINISHED);
         thisCampaign.setStatus(Campaign.FINISHED_TEXT);
@@ -357,7 +349,9 @@ public class Notifier extends ReportBuilder {
 
 
   /**
-   *  Description of the Method
+   *  Processes the XML config file... quits if not found. The config file
+   *  template is processed by ANT when the source id deployed for server
+   *  settings.
    */
   private void loadConfig() {
     File file = new File("notifier.xml");
@@ -387,7 +381,9 @@ public class Notifier extends ReportBuilder {
             }
           }
         }
-        if (value == null) value = "";
+        if (value == null) {
+          value = "";
+        }
         config.put(name, value);
       }
     } catch (Exception e) {
@@ -397,7 +393,7 @@ public class Notifier extends ReportBuilder {
 
 
   /**
-   *  Description of the Method
+   *  Reads in the XML config file
    *
    *@param  file                              Description of Parameter
    *@return                                   Description of the Returned Value
@@ -416,7 +412,8 @@ public class Notifier extends ReportBuilder {
 
 
   /**
-   *  Description of the Method
+   *  From a list of fax entries, a script is exported and executed to kick-off
+   *  the fax process.
    *
    *@param  faxLog  Description of Parameter
    *@return         Description of the Returned Value
@@ -479,19 +476,23 @@ public class Notifier extends ReportBuilder {
 
 
   /**
-   *  Description of the Method
+   *  Saves a list of contacts to a file and inserts a file reference in the
+   *  database.
    *
-   *@param  thisCampaign  Description of Parameter
-   *@param  letterLog     Description of Parameter
-   *@return               Description of the Returned Value
+   *@param  thisCampaign   Description of Parameter
+   *@param  contactReport  Description of Parameter
+   *@param  dbName         Description of Parameter
+   *@param  db             Description of Parameter
+   *@return                Description of the Returned Value
+   *@exception  Exception  Description of Exception
    */
-  private boolean outputLetterLog(Campaign thisCampaign, ContactReport contactReport, String dbName) throws Exception {
+  private boolean outputLetterLog(Campaign thisCampaign, ContactReport contactReport, String dbName, Connection db) throws Exception {
     System.out.println("Notifier-> Outputting letter log");
     if (contactReport == null || contactReport.size() == 0) {
       return false;
     }
     String fs = System.getProperty("file.separator");
-    String filePath = (String)config.get("FileLibrary") + fs + dbName + fs + "communications" + fs + "id" + thisCampaign.getId() + fs + CFSModule.getDatePath(new java.util.Date()) + fs;
+    String filePath = (String) config.get("FileLibrary") + fs + dbName + fs + "communications" + fs + "id" + thisCampaign.getId() + fs + CFSModule.getDatePath(new java.util.Date()) + fs;
     String[] fields = {"nameLast", "nameMiddle", "nameFirst", "company", "title", "department", "businessPhone", "businessAddress", "city", "state", "zip", "country"};
     contactReport.setCriteria(fields);
     contactReport.setFilePath(filePath);
@@ -499,38 +500,39 @@ public class Notifier extends ReportBuilder {
     contactReport.setModifiedBy(0);
     contactReport.setHeader("Communications mail merge");
     contactReport.buildReportBaseInfo();
-		contactReport.buildReportHeaders();
+    contactReport.buildReportHeaders();
     contactReport.buildReportData(null);
-    contactReport.save();
+    int fileSize = contactReport.save();
     CFSModule.saveTextFile(thisCampaign.getMessage(), filePath + contactReport.getFilenameToUse() + ".txt");
+
+//    FileInputStream fis = new FileInputStream(selectedFile);
+//    long size = selectedFile.length();   /* size of the file */
+//    byte[] content = new byte[(int)size];  /*byte array to hold contents */
+//    int length = fis.read(content);   /*read into byte array*/
+//    fis.close();
+//    ZipEntry ze = new ZipEntry(filename);  /* new zip entry */
+//    ze.setMethod(ZipEntry.DEFLATED);  /*compression is deflated */
+//    FileOutputStream fos = new FileOutputStream("Krish.zip");
+//    ZipOutputStream zos = new ZipOutputStream(fos);
+//    zos.putNextEntry(ze);
+//    zos.write(content, 0, (int)size);   /*write into zip file*/
+//    zos.closeEntry();
+//    zos.finish();
+//    zos.close();
+//    fos.close(); 
+
+    FileItem thisItem = new FileItem();
+    thisItem.setLinkModuleId(Constants.COMMUNICATIONS);
+    thisItem.setLinkItemId(thisCampaign.getId());
+    thisItem.setEnteredBy(thisCampaign.getEnteredBy());
+    thisItem.setModifiedBy(thisCampaign.getModifiedBy());
+    thisItem.setSubject(thisCampaign.getName());
+    thisItem.setClientFilename(contactReport.getFilenameToUse());
+    thisItem.setFilename(contactReport.getFilenameToUse());
+    thisItem.setSize(fileSize);
+    thisItem.insert(db);
+
     return true;
   }
-
-  /*
-   *  private String buildReport1(Connection db) throws SQLException {
-   *  /Customers LOS Passed
-   *  String whereLosPassed =
-   *  "WHERE org_id in " +
-   *  " (SELECT DISTINCT org_id FROM location l, location_los los " +
-   *  "  WHERE l.rec_id = los.location_id " +
-   *  "  AND los.los_status = 2 " +
-   *  "  AND los.date_completed >= CURRENT_TIMESTAMP - 1)";
-   *  Report rep = new Report();
-   *  rep.setBorderSize(0);
-   *  rep.addColumn("Company");
-   *  Customer ds2 = new Customer();
-   *  Vector customerList = ds2.getCustomerList(db, whereLosPassed);
-   *  rep.setHeader("LOS Passed Report for " + start.toString() + "<br>" + "Total Records: " + customerList.size());
-   *  java.util.Iterator i = customerList.iterator();
-   *  while (i.hasNext()) {
-   *  Customer thisCustomer = (Customer)i.next();
-   *  ReportRow thisRow = new ReportRow();
-   *  thisRow.addCell(thisCustomer.getName());
-   *  rep.addRow(thisRow);
-   *  ++totalRecords;
-   *  }
-   *  return (rep.getHtml());
-   *  }
-   */
 }
 
