@@ -54,6 +54,7 @@ Dashboard
         </tr>
         <tr>
           <td style="text-align: center;">
+            <img src="images/icons/stock_chart-reorganize-16.gif" align="absMiddle" alt="" />
             <%= GraphTypeList.getHtml() %>&nbsp;
           </td>
         </tr>

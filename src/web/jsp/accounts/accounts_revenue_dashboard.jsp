@@ -52,6 +52,7 @@ Revenue Dashboard
         </tr>
         <tr>
           <td width="275" valign="center" colspan="2" style="text-align: center;">
+            <img src="images/icons/stock_chart-reorganize-16.gif" align="absMiddle" alt="" />
             Type&nbsp;
             <% if (request.getParameter("type") != null) { %>
               <%= RevenueTypeList.getHtmlSelect("type", Integer.parseInt(request.getParameter("type"))) %>&nbsp;
