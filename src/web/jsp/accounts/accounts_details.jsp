@@ -85,7 +85,7 @@ Account Details<br>
       Web Site URL
     </td>
     <td>
-      <a href="<%= toHtml(OrgDetails.getUrl()) %>" target="_new"><%=toHtml(OrgDetails.getUrl()) %></a>&nbsp;
+      <a href="<%= toHtml(OrgDetails.getUrlString()) %>" target="_new"><%= toHtml(OrgDetails.getUrl()) %></a>&nbsp;
     </td>
   </tr>
 </dhv:evaluate>
@@ -120,7 +120,7 @@ Account Details<br>
       Revenue
     </td>
     <td>
-       <%= OrgDetails.getRevenue() %>&nbsp;
+       $<%= OrgDetails.getRevenueCurrency() %>&nbsp;
     </td>
   </tr>
 </dhv:evaluate>

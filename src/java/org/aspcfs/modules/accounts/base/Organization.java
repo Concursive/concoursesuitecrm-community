@@ -18,7 +18,6 @@ import org.aspcfs.modules.base.*;
 import org.aspcfs.modules.troubletickets.base.TicketList;
 import org.aspcfs.modules.pipeline.base.OpportunityList;
 
-
 /**
  *@author     chris
  *@created    July 12, 2001
@@ -127,7 +126,7 @@ public class Organization extends GenericBean {
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
-    } 
+    }
     rs.close();
     pst.close();
     if (orgId == -1) {
@@ -1258,6 +1257,19 @@ public class Organization extends GenericBean {
 
 
   /**
+   *  Gets the revenue attribute of the Organization object, formatted as
+   *  US currency
+   *
+   *@return    The revenueCurrency value
+   */
+  public String getRevenueCurrency() {
+    NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+    String amountOut = numberFormatter.format(revenue);
+    return amountOut;
+  }
+
+
+  /**
    *  Gets the Employees attribute of the Organization object
    *
    *@return    The Employees value
@@ -1326,6 +1338,22 @@ public class Organization extends GenericBean {
    *@return    The Url value
    */
   public String getUrl() {
+    return url;
+  }
+
+
+  /**
+   *  Gets the urlString attribute of the Organization object when a url or link
+   *  needs to be displayed
+   *
+   *@return    The urlString value
+   */
+  public String getUrlString() {
+    if (url != null) {
+      if (url.indexOf("://") == -1) {
+        return "http://" + url;
+      }
+    }
     return url;
   }
 
