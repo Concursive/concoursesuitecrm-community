@@ -10,6 +10,8 @@
   Update the permissions tables with module code
   
   ALTER TABLE account_type_levels RENAME COLUMN id TO org_id
+  
+  CREATE project_files constaints 
 
 */
 
@@ -28,11 +30,11 @@ WHERE user_id = -1
 
 GO
 
+/* TODO: CHECK THIS VALUE BEFORE RUNNING */
 ALTER TABLE access_log DROP CONSTRAINT DF_access_log_user_id
 
 GO
 
-/* RECREATE THIS TABLE */
 DROP TABLE system_prefs
 GO
 CREATE TABLE system_prefs (
@@ -57,7 +59,7 @@ CREATE TABLE usage_log (
 )
 GO
 
-/* Verify existing entries */
+/* TODO: Verify existing entries for insert afterwards */
 DROP TABLE lookup_contact_types
 GO
 CREATE TABLE lookup_contact_types (
@@ -96,13 +98,17 @@ ALTER TABLE contact ALTER COLUMN owner INT NULL
 ALTER TABLE contact ADD primary_contact BIT NULL
 
 ALTER TABLE permission_category ADD [folders] [bit] NULL DEFAULT 0
+GO
 UPDATE permission_category SET folders = 0
+GO
 ALTER TABLE permission_category ALTER COLUMN [folders] [bit] NOT NULL
-
+GO
 ALTER TABLE permission_category ADD [lookups] [bit] NULL DEFAULT 0
+GO
 UPDATE permission_category SET lookups = 0
+GO
 ALTER TABLE permission_category ALTER COLUMN [lookups] [bit] NOT NULL
-
+GO
 
 DROP TABLE news
 GO
@@ -690,8 +696,6 @@ CREATE TABLE project_team (
   modifiedby INTEGER NOT NULL REFERENCES access(user_id)
 )
 GO
-/* CREATE project_files constaints */
-
 
 DROP TABLE recipient_list
 DROP TABLE saved_criteriaelement
@@ -1196,7 +1200,6 @@ INSERT INTO lookup_task_priority (level, description) VALUES (3, '3');
 INSERT INTO lookup_task_priority (level, description) VALUES (4, '4');
 INSERT INTO lookup_task_priority (level, description) VALUES (5, '5');
 
-/* Manually update sync table with correct mapped_class_name */
 UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.service.base.SyncClient' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.SyncClient'
 UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.admin.base.User' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.User'
 UPDATE sync_table SET mapped_class_name = 'org.aspcfs.modules.accounts.base.Organization' WHERE mapped_class_name = 'com.darkhorseventures.cfsbase.Organization'
@@ -1222,10 +1225,8 @@ INSERT INTO lookup_ticketsource (level,description) VALUES (1,'Phone');
 INSERT INTO lookup_ticketsource (level,description) VALUES (2,'Email');
 INSERT INTO lookup_ticketsource (level,description) VALUES (3,'Letter');
 INSERT INTO lookup_ticketsource (level,description) VALUES (4,'Other');
+GO
 
-
-
-/* Foreign Keys */
 
 ALTER TABLE [dbo].[access_log] ADD 
 	 FOREIGN KEY 
@@ -1605,14 +1606,12 @@ ALTER TABLE [dbo].[organization_phone] ADD
 	)
 GO
 
-/* Fix contact types */
 INSERT INTO contact_type_levels
 SELECT contact_id, type_id, 0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
 FROM contact
 WHERE type_id IS NOT NULL
 GO
 
-/* Permissions Tables */
 UPDATE permission_category SET folders = 1, lookups = 1 WHERE category = 'Account Management'
 UPDATE permission_category SET folders = 1, lookups = 1 WHERE category = 'Contacts & Resources'
 UPDATE permission_category SET folders = 0, lookups = 0 WHERE category = 'Auto Guide'
@@ -1627,7 +1626,7 @@ UPDATE permission_category SET folders = 0, lookups = 0 WHERE category = 'System
 UPDATE permission_category SET folders = 0, lookups = 0 WHERE category = 'My Home Page'
 GO
 
-/* Verify these values in existing data before inserting */
+/* TODO: Verify these values in existing data before inserting */
 INSERT INTO module_field_categorylink (module_id, category_id) VALUES (5, 1);
 INSERT INTO module_field_categorylink (module_id, category_id) VALUES (3, 2);
 GO
@@ -1650,12 +1649,14 @@ GO
 UPDATE permission 
 SET permission = 'myhomepage-reassign'
 WHERE permission = 'admin-reassign';
+GO
 
 UPDATE permission
 SET category_id = permission_category.category_id
 FROM permission_category
 WHERE permission = 'myhomepage-reassign'
 AND permission_category.category = 'My Home Page';
+GO
 
 UPDATE permission_category
 SET category = 'General Contacts'
@@ -1668,7 +1669,7 @@ INSERT INTO permission (category_id, permission, level, permission_view, permiss
 INSERT INTO permission (category_id, permission, level, permission_view, permission_add, permission_edit, permission_delete, description) VALUES (9, 'admin-usage', 45, 1, 0, 0, 0, 'System Usage')
 GO
 
-/* VERIFY THESE ENTRIES AS WELL */
+/* TODO: VERIFY THESE ENTRIES BEFORE INSTALL */
 UPDATE lookup_lists_lookup SET category_id = 1 WHERE module_id = 5
 UPDATE lookup_lists_lookup SET category_id = 2 WHERE module_id = 3
 UPDATE lookup_lists_lookup SET category_id = 4 WHERE module_id = 4
