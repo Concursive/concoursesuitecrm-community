@@ -10,7 +10,11 @@
 <tr>
 <td>
 <a href="Accounts.do">Accounts</a> > 
-<a href="Accounts.do?command=View">View Accounts</a> >
+<% if (request.getParameter("return") == null) { %>
+<a href="Accounts.do?command=Search">Search Results</a> >
+<%} else if (request.getParameter("return").equals("dashboard")) {%>
+<a href="Accounts.do?command=Dashboard">Dashboard</a> >
+<%}%>
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>">Account Details</a> >
 <a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
 <a href="Contacts.do?command=Details&id=<%=ContactDetails.getId()%>">Contact Details</a> >
@@ -30,7 +34,6 @@ Messages
         [ <dhv:container name="accountscontacts" selected="messages" param="<%= param1 %>"/> ]
       <br>
       <br>
-      <center><%= AccountContactMessageListInfo.getAlphabeticalPageLinks() %></center>
       <table width="100%" border="0">
         <tr>
           <td align="left">
