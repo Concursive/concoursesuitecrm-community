@@ -109,19 +109,14 @@ public final class ProjectManagement extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandEnterpriseView(ActionContext context) {
-
     if (!(hasPermission(context, "projects-enterprise-view"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
     Connection db = null;
     ProjectList projects = new ProjectList();
-
     try {
       db = getConnection(context);
       //Project Info
@@ -185,7 +180,7 @@ public final class ProjectManagement extends CFSModule {
     try {
       db = getConnection(context);
       LookupList departmentList = new LookupList(db, "lookup_department");
-      departmentList.addItem(0, "--None--");
+      departmentList.addItem(-1, "--None--");
       context.getRequest().setAttribute("DepartmentList", departmentList);
 
       ProjectList projectList = new ProjectList();
@@ -215,14 +210,11 @@ public final class ProjectManagement extends CFSModule {
    *
    *@param  context  Description of Parameter
    *@return          Description of the Returned Value
-   *@since
    */
   public String executeCommandInsertProject(ActionContext context) {
-
     if (!(hasPermission(context, "projects-projects-add"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
@@ -263,11 +255,9 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandModifyProject(ActionContext context) {
-
     if (!(hasPermission(context, "projects-projects-edit"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
     Connection db = null;
 
@@ -281,7 +271,7 @@ public final class ProjectManagement extends CFSModule {
       context.getRequest().setAttribute("IncludeSection", ("modifyproject").toLowerCase());
 
       LookupList departmentList = new LookupList(db, "lookup_department");
-      departmentList.addItem(0, "--None--");
+      departmentList.addItem(-1, "--None--");
       context.getRequest().setAttribute("DepartmentList", departmentList);
     } catch (Exception e) {
       errorMessage = e;
@@ -307,19 +297,14 @@ public final class ProjectManagement extends CFSModule {
    *@since
    */
   public String executeCommandUpdateProject(ActionContext context) {
-
     if (!(hasPermission(context, "projects-projects-edit"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
     Project thisProject = (Project) context.getFormBean();
     //thisProject.setRequestItems(context.getRequest());
-
     Connection db = null;
     int resultCount = 0;
-
     try {
       db = this.getConnection(context);
       thisProject.setModifiedBy(this.getUserId(context));
@@ -327,7 +312,7 @@ public final class ProjectManagement extends CFSModule {
       if (resultCount == -1) {
         processErrors(context, thisProject.getErrors());
         LookupList departmentList = new LookupList(db, "lookup_department");
-        departmentList.addItem(0, "--None--");
+        departmentList.addItem(-1, "--None--");
         context.getRequest().setAttribute("DepartmentList", departmentList);
       }
     } catch (SQLException e) {
