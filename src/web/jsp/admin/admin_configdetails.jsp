@@ -26,7 +26,14 @@
   </tr>
   </dhv:permission>
 <%}%>
-<% if (!PermissionCategory.getLookups() && !PermissionCategory.getFolders()) { %>
+<% if (PermissionCategory.getCategories()) { %>
+  <dhv:permission name="admin-sysconfig-folders-view">
+  <tr>
+    <td><a href="AdminCategories.do?command=View&moduleId=<%= PermissionCategory.getId() %>">Categories</a></td>
+  </tr>
+  </dhv:permission>
+<%}%>
+<% if (!PermissionCategory.getLookups() && !PermissionCategory.getFolders() && !PermissionCategory.getCategories()) { %>
   <tr>
     <td>Nothing to configure in this CFS module.</td>
   </tr>
