@@ -166,6 +166,60 @@
     </submenu>
   </container>
   
+  <!-- Submenu used in the TroubleTickets module -->
+  <container name="tickets">
+    <separator value=" | "/>
+    <long_css on="containerOn" off="containerOff"/>
+    <short_css on="containerOn" off="containerOff"/>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="TroubleTickets.do?command=Details&amp;id=${id}"/>
+    </submenu>
+    <submenu name="tasks">
+      <long_html value="Tasks"/>
+      <permission value=""/>
+      <link value="TroubleTicketTasks.do?command=List&amp;ticketId=${id}"/>
+    </submenu>
+    <submenu name="documents">
+      <long_html value="Documents"/>
+      <permission value=""/>
+      <link value="TroubleTicketsDocuments.do?command=View&amp;tId=${id}"/>
+    </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value=""/>
+      <link value="TroubleTickets.do?command=ViewHistory&amp;id=${id}"/>
+    </submenu>
+  </container>
+  
+  <!-- Submenu used in the TroubleTickets module -->
+  <container name="accountstickets">
+    <separator value=" | "/>
+    <long_css on="containerOn" off="containerOff"/>
+    <short_css on="containerOn" off="containerOff"/>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="AccountTickets.do?command=TicketDetails&amp;id=${id}"/>
+    </submenu>
+    <submenu name="tasks">
+      <long_html value="Tasks"/>
+      <permission value=""/>
+      <link value="AccountTicketTasks.do?command=List&amp;ticketId=${id}"/>
+    </submenu>
+    <submenu name="documents">
+      <long_html value="Documents"/>
+      <permission value=""/>
+      <link value="AccountTicketsDocuments.do?command=View&amp;tId=${id}"/>
+    </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value=""/>
+      <link value="AccountTickets.do?command=ViewHistory&amp;id=${id}"/>
+    </submenu>
+  </container>
+  
   <!-- Submenu used in the Auto Guide section of the Accounts module -->
   <container name="AutoGuideAccountInventory">
     <separator value=" | "/>
