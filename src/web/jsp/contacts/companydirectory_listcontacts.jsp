@@ -60,6 +60,11 @@ View Contacts<br>
     <td>
       <strong>Phone: Mobile</strong>
     </td>
+    <dhv:evaluate exp="<%= "all".equals(ExternalContactsInfo.getListView()) %>">
+      <td>
+        <strong>Owner</strong>
+      </td>
+    </dhv:evaluate>
   </tr>
 <%    
 	Iterator i = ContactList.iterator();
@@ -96,6 +101,11 @@ View Contacts<br>
         <td class="row<%= rowid %>" nowrap>
           <%= toHtml(thisContact.getPhoneNumber("Mobile")) %>
         </td>
+        <dhv:evaluate exp="<%= "all".equals(ExternalContactsInfo.getListView()) %>">
+          <td class="row<%= rowid %>" nowrap>
+            <%= toHtml(thisContact.getOwnerName()) %>
+          </td>
+        </dhv:evaluate>
       </tr>
 <%
     }
