@@ -7,14 +7,14 @@
     <url>jdbc:microsoft:sqlserver://127.0.0.1:1433;DatabaseName=cdb_cfs;SelectMethod=cursor</url>
     <user>dhv_appuser</user>
     <password>@pus3r</password>
-    <pictureSourcePath>c:\tomcat\webapps\cfs\WEB-INF\fileLibrary\cdb_cfs\autoguide</pictureSourcePath>
-    <pictureDestinationPath>c:\tomcat\webapps\cfs\WEB-INF\fileLibrary\cdb_cfs\autoguide\outgoing\pilotonline</pictureDestinationPath>
-<!--
+    <pictureSourcePath>d:\tomcat\webapps\cfs\WEB-INF\fileLibrary\cdb_cfs\autoguide</pictureSourcePath>
+    <pictureDestinationPath>d:\tomcat\webapps\cfs\WEB-INF\fileLibrary\cdb_cfs\autoguide\outgoing\pilotonline</pictureDestinationPath>
     <ftpData>ftp://auto_guide:autoguide@ftp2.hamptonroads.com:./</ftpData>
     <ftpPictures>ftp://auto_guide:autoguide@ftp1.hamptonroads.com:./auto_guide</ftpPictures>
--->
-    <ftpData>ftp://anonymous:guest@127.0.0.1:./</ftpData>
+<!--    
+    <ftpData>ftp://anonymous:guest@127.0.0.1:./test</ftpData>
     <ftpPictures>ftp://anonymous:guest@127.0.0.1:./pix</ftpPictures>
+-->
     <logUrl>http://dhv.aspcfs.com/ProcessPacket.do</logUrl>
     <logId>dhv.aspcfs.com</logId>
     <logCode>BZTST27A</logCode>
