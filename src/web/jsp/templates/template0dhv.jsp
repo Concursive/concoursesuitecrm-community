@@ -27,7 +27,7 @@
           <td width="100%"><img src="images/spaceb2.gif" width="100%" height="30"></td>
         </tr>
         <tr>
-          <td><img src="images/dhv/dhv3.gif" width="339" height="11"></td>
+          <td><img src="images/dhv3.gif" width="339" height="11"></td>
           <td width="100%"><img src="images/spaceg1.gif" width="100%" height="11"></td>
         </tr>
       </table>
