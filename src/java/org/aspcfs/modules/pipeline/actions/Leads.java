@@ -558,7 +558,7 @@ public final class Leads extends CFSModule {
         //TODO: Set a max date for less records
         realFullOppList.setUnits("M");
         realFullOppList.setOwnerIdRange(range);
-        realFullOppList.setQueryOpenOnly(true);
+        realFullOppList.setExcludeClosedComponents(true);
         realFullOppList.buildList(db);
       }
 

@@ -30,7 +30,7 @@ public class OpportunityList extends ArrayList {
   public final static int TRUE = 1;
   public final static int FALSE = 0;
   protected int includeEnabled = 1;
-  
+
   //NOTE: this class is not meant to be sync'd, sync the base classes
   //OpportunityHeaderList and OpportunityComponentList
 
@@ -53,6 +53,7 @@ public class OpportunityList extends ArrayList {
   protected int stage = -1;
   private boolean queryOpenOnly = false;
   private boolean queryClosedOnly = false;
+  private boolean excludeClosedComponents = false;
   private boolean buildComponentInfo = false;
   private int typeId = 0;
 
@@ -236,6 +237,26 @@ public class OpportunityList extends ArrayList {
    */
   public void setAccountOwnerIdRange(String accountOwnerIdRange) {
     this.accountOwnerIdRange = accountOwnerIdRange;
+  }
+
+
+  /**
+   *  Sets the excludeClosedComponents attribute of the OpportunityList object
+   *
+   *@param  excludeClosedComponents  The new excludeClosedComponents value
+   */
+  public void setExcludeClosedComponents(boolean excludeClosedComponents) {
+    this.excludeClosedComponents = excludeClosedComponents;
+  }
+
+
+  /**
+   *  Gets the excludeClosedComponents attribute of the OpportunityList object
+   *
+   *@return    The excludeClosedComponents value
+   */
+  public boolean getExcludeClosedComponents() {
+    return excludeClosedComponents;
   }
 
 
@@ -799,6 +820,10 @@ public class OpportunityList extends ArrayList {
     }
     if (typeId > 0) {
       sqlFilter.append("AND oc.id IN (select ocl.opp_id from opportunity_component_levels ocl where ocl.type_id = ?) ");
+    }
+
+    if (excludeClosedComponents) {
+      sqlFilter.append("AND oc.closed IS NULL ");
     }
   }
 
