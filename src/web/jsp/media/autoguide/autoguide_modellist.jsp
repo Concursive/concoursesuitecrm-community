@@ -5,16 +5,22 @@
 </head>
 <body onload='page_init();'>
 <script language='Javascript'>
+function newOpt(param, value) {
+  var newOpt = parent.document.createElement("OPTION");
+	newOpt.text=param;
+	newOpt.value=value;
+  return newOpt;
+}
 function page_init() {
   var list = parent.document.forms['addVehicle'].elements['vehicle_modelId'];
   list.options.length = 0;
-  list.options[list.length] = new Option("--None--", "-1");
+  list.options[list.length] = newOpt("--None--", "-1");
 <%
   Iterator i = ModelList.iterator();
   while (i.hasNext()) {
     Model thisModel = (Model)i.next();
 %>
-  list.options[list.length] = new Option("<%= thisModel.getName() %>", "<%= thisModel.getId() %>");
+  list.options[list.length] = newOpt("<%= thisModel.getName() %>", "<%= thisModel.getId() %>");
 <%
   }
 %>

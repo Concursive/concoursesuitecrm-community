@@ -106,7 +106,6 @@
       <%= MakeSelect.getHtml("vehicle_makeId", InventoryDetails.getVehicle().getMakeId()) %>
       <font color=red>*</font> <%= showAttribute(request, "makeIdError") %>
       <%= showAttribute(request, "modelError") %>
-      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
     </td>
   </tr>
   <tr class="containerBody">
@@ -267,6 +266,7 @@
 <input type="reset" value="Reset">
     </td>
   </tr>
+  <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </table>
 </form>
 </body>
