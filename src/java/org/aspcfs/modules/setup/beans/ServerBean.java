@@ -25,6 +25,7 @@ public class ServerBean extends GenericBean {
   private String timeZone = null;
   private String currency = null;
   private String language = null;
+  private String country = null;
 
 
   /**
@@ -138,6 +139,26 @@ public class ServerBean extends GenericBean {
 
 
   /**
+   *  Gets the country attribute of the ServerBean object
+   *
+   *@return    The country value
+   */
+  public String getCountry() {
+    return country;
+  }
+
+
+  /**
+   *  Sets the country attribute of the ServerBean object
+   *
+   *@param  tmp  The new country value
+   */
+  public void setCountry(String tmp) {
+    this.country = tmp;
+  }
+
+
+  /**
    *  Gets the configured attribute of the ServerBean object
    *
    *@return    The configured value
@@ -210,6 +231,12 @@ public class ServerBean extends GenericBean {
     }
   }
 
+
+  /**
+   *  Gets the currencyDefault attribute of the ServerBean object
+   *
+   *@return    The currencyDefault value
+   */
   public String getCurrencyDefault() {
     if (currency != null) {
       return currency;
@@ -217,7 +244,13 @@ public class ServerBean extends GenericBean {
       return NumberFormat.getCurrencyInstance().getCurrency().getCurrencyCode();
     }
   }
-  
+
+
+  /**
+   *  Gets the languageDefault attribute of the ServerBean object
+   *
+   *@return    The languageDefault value
+   */
   public String getLanguageDefault() {
     if (language != null) {
       return language;
@@ -225,6 +258,21 @@ public class ServerBean extends GenericBean {
       return "en_US";
     }
   }
+
+
+  /**
+   *  Gets the countryDefault attribute of the ServerBean object
+   *
+   *@return    The countryDefault value
+   */
+  public String getCountryDefault() {
+    if (country != null) {
+      return country;
+    } else {
+      return "UNITED STATES";
+    }
+  }
+
 
   /**
    *  Gets the valid attribute of the ServerBean object

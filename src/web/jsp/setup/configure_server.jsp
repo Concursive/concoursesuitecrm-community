@@ -12,6 +12,7 @@
 <%@ page import="org.aspcfs.utils.web.HtmlSelectCurrency" %>
 <%@ page import="org.aspcfs.utils.web.HtmlSelect" %>
 <jsp:useBean id="server" class="org.aspcfs.modules.setup.beans.ServerBean" scope="request"/>
+<jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <body onLoad="javascript:document.forms[0].email.focus();">
@@ -74,6 +75,26 @@
           <td>
             <% HtmlSelect selectLanguage = HtmlSelectLanguage.getSelect("language", server.getLanguageDefault());
             selectLanguage.addItem(-1, "None Selected", 0); %><%= selectLanguage.getHtml() %><font color="red">*</font>
+          </td>
+        </tr>
+      </table>
+      <br>
+    </td>
+  </tr>
+  <%-- Country --%>
+  <tr class="sectionTitle">
+    <th>Default Country</th>
+  </tr>
+  <tr>
+    <td>
+      Which country should Dark Horse CRM use as the default for mailing addresses?
+      <table border="0" class="empty">
+        <tr>
+          <td class="formLabel">
+            Country:
+          </td>
+          <td>
+            <%= CountrySelect.getHtml("country", server.getCountryDefault()) %>
           </td>
         </tr>
       </table>

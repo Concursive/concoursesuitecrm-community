@@ -111,6 +111,7 @@ public class Upgrade extends CFSModule {
           upgradeSQL(context, db, "2004-08-30.sql");
           upgradeBSH(context, script, "2004-08-19.bsh");
           upgradeBSH(context, script, "2004-08-20.bsh");
+          upgradeBSH(context, script, "2004-08-31.bsh");
           installLog.add("2004-08-30 database changes installed");
           buildHelp = true;
         }

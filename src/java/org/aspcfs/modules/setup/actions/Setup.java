@@ -711,6 +711,7 @@ public class Setup extends CFSModule {
       prefs.add("SYSTEM.TIMEZONE", bean.getTimeZone());
       prefs.add("SYSTEM.CURRENCY", bean.getCurrency());
       prefs.add("SYSTEM.LANGUAGE", bean.getLanguage());
+      prefs.add("SYSTEM.COUNTRY", bean.getCountry());
       prefs.save();
       return "ConfigureServerOK";
     } catch (Exception e) {

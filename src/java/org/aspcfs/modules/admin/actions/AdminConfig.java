@@ -117,6 +117,9 @@ public final class AdminConfig extends CFSModule {
     if ("SYSTEM.LANGUAGE".equals(module)) {
       return "ModifyLanguageOK";
     }
+    if ("SYSTEM.COUNTRY".equals(module)) {
+      return "ModifyCountryOK";
+    }
     if ("LICENSE".equals(module)) {
       return "ModifyLicenseOK";
     }
@@ -173,6 +176,11 @@ public final class AdminConfig extends CFSModule {
     String language = context.getRequest().getParameter("language");
     if (language != null) {
       prefs.add("SYSTEM.LANGUAGE", language);
+    }
+    //Process the request
+    String country = context.getRequest().getParameter("country");
+    if (country != null) {
+      prefs.add("SYSTEM.COUNTRY", country);
     }
     //Save the prefs...
     prefs.save();

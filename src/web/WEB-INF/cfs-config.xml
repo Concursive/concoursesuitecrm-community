@@ -1411,6 +1411,7 @@
     <forward name="ModifyCurrencyOK" resource="/admin/admin_modify_currency.jsp" layout="nav"/>
     <forward name="ModifyLanguageOK" resource="/admin/admin_modify_language.jsp" layout="nav"/>
     <forward name="ModifyLicenseOK" resource="/admin/admin_modify_license.jsp" layout="nav"/>
+    <forward name="ModifyCountryOK" resource="/admin/admin_modify_country.jsp" layout="nav"/>
     <forward name="LicenseUpdatedOK" resource="/admin/admin_modify_license_updated.jsp" layout="nav"/>
     <forward name="LicenseCheckOK" resource="/admin/admin_modify_license_ok.jsp" layout="nav"/>
     <forward name="LicenseCheckERROR" resource="/admin/admin_modify_license_error.jsp" layout="nav"/>
