@@ -21,21 +21,16 @@
   function checkForm(form) {
       formTest = true;
       message = "";
-      
-      <%
-      		for (int i=1; i<=(EmployeeBean.getPhoneNumberList().size()+1); i++) {
-		
-      %>		
-				
-			
-			
-		<dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkPhone(form.phone<%=i%>number.value)) { 
-			message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
-			formTest = false;
-		}
-      
-      <%}%>
-      
+<%
+      for (int i=1; i<=(EmployeeBean.getPhoneNumberList().size()+1); i++) {
+%>		
+<dhv:evaluate exp="<%=(i>1)%>">else </dhv:evaluate>if (!checkPhone(form.phone<%=i%>number.value)) { 
+          message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
+          formTest = false;
+        }
+<%
+      }
+%>
       if (formTest == false) {
         alert("Form could not be saved, please check the following:\r\n\r\n" + message);
         return false;
@@ -82,7 +77,7 @@
       <font color="red">*</font> <%= showAttribute(request, "nameLastError") %>
     </td>
   </tr>
-  <tr><td nowrap class="formLabel">Department</td><td><%=EmployeeBean.getDepartmentName() %></td></tr>
+  <tr><td nowrap class="formLabel">Department</td><td><%= toHtml(EmployeeBean.getDepartmentName()) %></td></tr>
   <tr>
     <td nowrap class="formLabel">Title</td>
     <td><input type="text" name="title" value="<%= toHtmlValue(EmployeeBean.getTitle()) %>"></td>
@@ -139,9 +134,9 @@
     <td>
       <input type="hidden" name="phone<%= icount %>id" value="<%= thisPhoneNumber.getId() %>">
       <%= ContactPhoneTypeList.getHtmlSelect("phone" + icount + "type", thisPhoneNumber.getType()) %>
-      <!--input type=text size=3 name="phone<%= icount %>ac" maxlength=3 value="<%= toHtmlValue(thisPhoneNumber.getAreaCode()) %>">-
+      <%--input type=text size=3 name="phone<%= icount %>ac" maxlength=3 value="<%= toHtmlValue(thisPhoneNumber.getAreaCode()) %>">-
       <input type=text size=3 name="phone<%= icount %>pre" maxlength=3 value="<%= toHtmlValue(thisPhoneNumber.getPrefix()) %>">-
-      <input type=text size=4 name="phone<%= icount %>number" maxlength=4 value="<%= toHtmlValue(thisPhoneNumber.getPostfix()) %>">ext. -->
+      <input type=text size=4 name="phone<%= icount %>number" maxlength=4 value="<%= toHtmlValue(thisPhoneNumber.getPostfix()) %>">ext. --%>
       <input type=text size=20 name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
       <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10" value="<%= toHtmlValue(thisPhoneNumber.getExtension()) %>">
       <dhv:permission name="myhomepage-profile-personal-edit"><input type="checkbox" name="phone<%= icount %>delete" value="on">mark to remove</dhv:permission>
@@ -153,9 +148,9 @@
   <tr>
     <td>
       <%= ContactPhoneTypeList.getHtmlSelect("phone" + (++icount) + "type", "Business") %>
-      <!--input type=text size=3 name="phone<%= icount %>ac" maxlength=3>-
+      <%--input type=text size=3 name="phone<%= icount %>ac" maxlength=3>-
       <input type=text size=3 name="phone<%= icount %>pre" maxlength=3>-
-      <input type=text size=4 name="phone<%= icount %>number" maxlength=4>ext. -->
+      <input type=text size=4 name="phone<%= icount %>number" maxlength=4>ext. --%>
       <input type=text size=20 name="phone<%= icount %>number">&nbsp;ext.
       <input type=text size=5 name="phone<%= icount %>ext" maxlength=10>
     </td>
@@ -232,7 +227,7 @@
     </td>
     <td>
     <%=CountrySelect.getHtml("address"+acount+"country")%>
-      <!--input type=text size=28 name="address<%= acount %>country" maxlength=80 value="<%= toHtmlValue(thisAddress.getCountry()) %>"-->
+      <%--input type=text size=28 name="address<%= acount %>country" maxlength=80 value="<%= toHtmlValue(thisAddress.getCountry()) %>"--%>
     </td>
   </tr>
   <tr><td colspan="2">&nbsp;</td></tr>
@@ -277,7 +272,7 @@
     </td>
     <td>
     	<%=StateSelect.getHtml("address"+acount+"state")%>
-      <!--input type=text size=28 name="address<%= acount %>state" maxlength=80-->
+      <%--input type=text size=28 name="address<%= acount %>state" maxlength=80--%>
     </td>
   </tr>
   <tr>
@@ -294,7 +289,7 @@
     </td>
     <td>
     	<%=CountrySelect.getHtml("address"+acount+"country")%>
-      <!--input type=text size=28 name="address<%= acount %>country" maxlength=80-->
+      <%--input type=text size=28 name="address<%= acount %>country" maxlength=80--%>
     </td>
   </tr>
 </table>
