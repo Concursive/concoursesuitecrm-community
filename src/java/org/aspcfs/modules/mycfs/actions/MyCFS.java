@@ -327,9 +327,9 @@ public final class MyCFS extends CFSModule {
 			while (m.hasNext()) {
 				Call thisCall = (Call) m.next();
 				if (thisCall.getOppId() == -1 && thisCall.getContactId() > -1) {
-					companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), "Contact Call", thisCall.getContactId());
+					companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), "Contact Call", thisCall.getContactId(), thisCall.getId());
 				} else {
-					companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), "Opportunity Call", thisCall.getOppId());
+					companyCalendar.addEvent(thisCall.getAlertDateStringLongYear(), "", thisCall.getSubject(), "Opportunity Call", thisCall.getOppId(), thisCall.getId());
 				}
 	
 			}
@@ -350,7 +350,7 @@ public final class MyCFS extends CFSModule {
 				Iterator assignmentList = thisProject.getAssignments().iterator();
 				while (assignmentList.hasNext()) {
 					com.zeroio.iteam.base.Assignment thisAssignment = (com.zeroio.iteam.base.Assignment) assignmentList.next();
-					companyCalendar.addEvent(thisAssignment.getDueDate(), thisAssignment.getRole(), "Assignment", thisAssignment.getProjectId());
+					companyCalendar.addEvent(thisAssignment.getDueDate(), thisAssignment.getRole(), "Assignment", thisAssignment.getProjectId(), thisAssignment.getId());
 				}
 			}
 			

@@ -19,6 +19,7 @@ public class CalendarEvent implements Comparable {
 	protected String icon = "";
 	
 	protected int id = -1;
+	protected int idsub = -1;
 
 	protected String details = "";
 	//Body of the event
@@ -102,6 +103,12 @@ public class CalendarEvent implements Comparable {
 		this.icon = icon;
 	}
 
+public int getIdsub() {
+	return idsub;
+}
+public void setIdsub(int idsub) {
+	this.idsub = idsub;
+}
 
 	/**
 	 *  Sets the Day attribute of the CalendarEvent object
@@ -148,11 +155,11 @@ public String getLink() {
 	} else if (category.equalsIgnoreCase("Account")) {
 		return "<a href=\"/Accounts.do?command=Details&orgId=" + id + "\">";
 	} else if (category.equalsIgnoreCase("Assignment")) {
-		return "<a href=\"/ProjectManagement.do?command=PersonalView&pid=" + id + "\">";
+		return "<a href=\"/ProjectManagementAssignments.do?command=Modify&aid=" + idsub + "&pid=" + id + "\">";
 	} else if (category.equalsIgnoreCase("Contact Call")) {
-		return "<a href=\"/ExternalContacts.do?command=ContactDetails&id=" + id + "\">";
+		return "<a href=\"/ExternalContactsCalls.do?command=Details&id=" + idsub + "&contactId=" + id + "\">";
 	} else if (category.equalsIgnoreCase("Opportunity Call")) {
-		return "<a href=\"/Leads.do?command=DetailsOpp&id=" + id + "\">";
+		return "<a href=\"/LeadsCalls.do?command=Details&id=" + idsub + "&oppId=" + id + "\">";
 	}   
 		
 	return link; 

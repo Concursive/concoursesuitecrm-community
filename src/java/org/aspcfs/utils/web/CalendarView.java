@@ -938,6 +938,14 @@ public class CalendarView {
       addEvent(eventDateString, "", subject, category, id);
     }
   }
+  
+  public void addEvent(java.sql.Timestamp eventDate, String subject, String category, int idmain, int idsub) {
+    if (eventDate != null) {
+      SimpleDateFormat shortDateFormat = new SimpleDateFormat("M/d/yyyy");
+      String eventDateString = shortDateFormat.format(eventDate);
+      addEvent(eventDateString, "", subject, category, idmain, idsub);
+    }
+  }
 
   /**
    *  Adds an event to the calendar
@@ -992,6 +1000,37 @@ public class CalendarView {
     tmp.setCategory(category);
     tmp.setId(id);
 
+    //Check to see if the eventList already has dailyEvents for the eventDate
+    Vector dailyEvents = null;
+    if (eventList.containsKey(eventDate)) {
+      dailyEvents = (Vector)eventList.get(eventDate);
+    } else {
+      dailyEvents = new Vector();
+    }
+
+    //Add the event to the list
+    dailyEvents.addElement(tmp);
+
+    //Add the events to the eventList
+    this.eventList.put(eventDate, dailyEvents);
+  }
+  
+  public void addEvent(String eventDate, String eventTime, String subject, String category, int idmain, int idsub) { 
+    System.out.println("date is now: " + category + " " + eventDate);
+    //Create a calendar event object
+    CalendarEvent tmp = new CalendarEvent();
+    StringTokenizer st = new StringTokenizer(eventDate, "/");
+    if (st.hasMoreTokens()) {
+      tmp.setMonth(st.nextToken());
+      tmp.setDay(st.nextToken());
+      tmp.setYear(st.nextToken());
+    }
+    tmp.setTime(eventTime);
+    tmp.setSubject(subject);
+    tmp.setCategory(category);
+    tmp.setId(idmain);
+    tmp.setIdsub(idsub);
+	
     //Check to see if the eventList already has dailyEvents for the eventDate
     Vector dailyEvents = null;
     if (eventList.containsKey(eventDate)) {
