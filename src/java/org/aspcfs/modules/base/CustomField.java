@@ -171,6 +171,9 @@ public class CustomField extends GenericBean {
     this.level = tmp;
   }
 
+public int getRecordId() {
+	return recordId;
+}
 
   /**
    *  Sets the Type attribute of the CustomField object

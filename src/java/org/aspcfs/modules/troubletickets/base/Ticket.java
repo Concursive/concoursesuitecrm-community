@@ -103,8 +103,8 @@ public class Ticket extends GenericBean {
 		StringBuffer sql = new StringBuffer();
 		sql.append(
 				"SELECT t.*, o.name as orgname, ld.description as dept, tp.description as ticpri, " +
-        "ts.description as ticsev, tc.description as catname, " +
-        "ct_eb.namelast || ', ' || ct_eb.namefirst as eb_name, ct_mb.namelast || ', ' || ct_mb.namefirst as mb_name, ct_owner.namelast || ', ' || ct_owner.namefirst as owner_name,  " +
+        			"ts.description as ticsev, tc.description as catname, " +
+        			"ct_eb.namelast || ', ' || ct_eb.namefirst as eb_name, ct_mb.namelast || ', ' || ct_mb.namefirst as mb_name, ct_owner.namelast || ', ' || ct_owner.namefirst as owner_name,  " +
 				"lu_ts.description as sourcename " +
 				"FROM ticket t " +
 				"LEFT JOIN organization o ON (t.org_id = o.org_id) " +

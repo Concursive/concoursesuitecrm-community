@@ -51,6 +51,7 @@ public class Report {
   private int borderSize = 1;
   private boolean showColumnHeaderWhenNoRecords = false;
   private boolean showColumnHeaders = true;
+  protected static boolean newLine = true;
 
 
   /**
@@ -354,12 +355,17 @@ public class Report {
       while (i.hasNext()) {
         ReportColumn thisColumn = (ReportColumn)i.next();
         String tmp = checkNull(thisColumn.getName());
-        ascii.append(tmp);
-        if (i.hasNext()) {
-          ascii.append(delimitedCharacter);
-        }
+        //ascii.append(tmp);
+	ascii.append(prepareToWrite(tmp));
+        //if (i.hasNext()) {
+          //ascii.append(delimitedCharacter);
+	//  newLine = false;
+        //} else {
+	//  newline = true;
+	//}
       }
       ascii.append("\r\n");
+      newLine = true;
     }
 
     //Draw the data
@@ -371,12 +377,17 @@ public class Report {
       while (j.hasNext()) {
         ReportCell thisCell = (ReportCell)j.next();
         String tmp = checkNull(thisCell.getData());
-        ascii.append(tmp);
-        if (j.hasNext()) {
-          ascii.append(delimitedCharacter);
-        }
+        //ascii.append(tmp);
+	ascii.append(prepareToWrite(tmp));
+        //if (j.hasNext()) {
+	//  newLine = false;
+          //ascii.append(delimitedCharacter);
+        //} else {
+	//  newLine = true;
+	//}
       }
       ascii.append("\r\n");
+      newLine = true;
     }
 
     //Draw footer
@@ -568,6 +579,49 @@ public class Report {
           ((ReportRow)left).getCell(compareColumn).compareIntTo(((ReportRow)right).getCell(compareColumn)));
     }
   }
+  
+  private static String prepareToWrite(String value){
+	StringBuffer ascii = new StringBuffer();
+        boolean quote = false;
+        if (value.length() > 0){
+            for (int i=0; i<value.length(); i++){
+                char c = value.charAt(i);
+                if (c=='"' || c==',' || c=='\n' || c=='\r'){
+                    quote = true;
+                }
+            }
+        } else if (newLine) {
+            // always quote an empty token that is the first
+            // on the line, as it may be the only thing on the 
+            // line.  If it were not quoted in that case,
+            // an empty line has no tokens.
+            quote = true;
+        }
+        if (newLine){
+            newLine = false;
+        } else {
+            ascii.append(",");
+        }
+        if (quote){
+            ascii.append(escapeAndQuote(value));
+        } else {
+            ascii.append(value);
+        }
+	
+	return ascii.toString();
+    }
+
+    /**
+     * enclose the value in quotes and escape the quote
+     * and comma characters that are inside.
+     *
+     * @param value needs to be escaped and quoted
+     * @return the value, escaped and quoted.
+     */
+    private static String escapeAndQuote(String value){
+        String s = StringHelper.replace(value, "\"", "\"\"");
+        return (new StringBuffer(2 + s.length())).append("\"").append(s).append("\"").toString();
+    }
 
 
   /**

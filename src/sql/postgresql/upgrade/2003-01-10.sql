@@ -34,3 +34,5 @@ CREATE TABLE cfsinbox_messagelink (
   enabled BOOLEAN NOT NULL DEFAULT 't',
   sent_from INT NOT NULL
 );
+
+

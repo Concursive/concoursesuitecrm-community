@@ -23,6 +23,9 @@ import com.jrefinery.chart.data.*;
 import com.jrefinery.chart.ui.*;
 import com.jrefinery.util.ui.*;
 
+import com.zeroio.iteam.base.*;
+import com.zeroio.webutils.*;
+
 /**
  *  Description of the Class
  *
@@ -538,6 +541,298 @@ public final class Leads extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+  }
+  
+  public String executeCommandGenerateForm(ActionContext context) {
+	addModuleBean(context, "Reports", "Generate new");
+	return("GenerateFormOK");
+  }
+  
+  public String executeCommandDeleteReport(ActionContext context) {
+    Exception errorMessage = null;
+    boolean recordDeleted = false;
+
+    String projectId = (String)context.getRequest().getParameter("pid");
+    String itemId = (String)context.getRequest().getParameter("fid");
+
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      
+      //-1 is the project ID for non-projects
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+      
+      if (thisItem.getEnteredBy() == this.getUserId(context)) {
+        recordDeleted = thisItem.delete(db, this.getPath(context, "lead-reports"));
+	
+	String filePath1 = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
+	java.io.File fileToDelete1 = new java.io.File(filePath1);
+	if (!fileToDelete1.delete()) {
+		System.err.println("FileItem-> Tried to delete file: " + filePath1);
+	}
+	
+	String filePath2 = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+	java.io.File fileToDelete2 = new java.io.File(filePath2);
+	if (!fileToDelete2.delete()) {
+		System.err.println("FileItem-> Tried to delete file: " + filePath2);
+	}
+	
+      }
+
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    addModuleBean(context, "Reports", "Reports del");
+    
+    if (errorMessage == null) {
+      if (recordDeleted) {
+        return ("DeleteReportOK");
+      } else {
+        return ("DeleteReportERROR");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandDownloadCSVReport(ActionContext context) {
+    Exception errorMessage = null;
+
+    String itemId = (String)context.getRequest().getParameter("fid");
+    FileItem thisItem = null;
+    
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    //Start the download
+    try {
+      FileItem itemToDownload = null;
+      itemToDownload = thisItem;
+      
+      //itemToDownload.setEnteredBy(this.getUserId(context));
+      String filePath = this.getPath(context, "lead-reports") + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename() + ".csv";
+      
+      FileDownload fileDownload = new FileDownload();
+      fileDownload.setFullPath(filePath);
+      fileDownload.setDisplayName(itemToDownload.getClientFilename());
+      if (fileDownload.fileExists()) {
+        fileDownload.sendFile(context);
+        //Get a db connection now that the download is complete
+        db = getConnection(context);
+        itemToDownload.updateCounter(db);
+      } else {
+        System.err.println("PMF-> Trying to send a file that does not exist");
+      }
+    } catch (java.net.SocketException se) {
+      //User either cancelled the download or lost connection
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    if (errorMessage == null) {
+      return ("-none-");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandShowReportHtml(ActionContext context) {
+	Exception errorMessage = null;
+	
+	String projectId = (String)context.getRequest().getParameter("pid");
+	String itemId = (String)context.getRequest().getParameter("fid");
+	
+	Connection db = null;
+	
+	try {
+		db = getConnection(context);
+	
+		//-1 is the project ID for non-projects
+		FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+	
+		String filePath = this.getPath(context, "lead-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+		String textToShow = this.includeFile(filePath);
+		context.getRequest().setAttribute("ReportText", textToShow);
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	return ("ReportHtmlOK");
+  }
+  
+  public String executeCommandExportReport(ActionContext context) {
+	Exception errorMessage = null;
+	boolean recordInserted = false;
+	Connection db = null;
+	String subject = context.getRequest().getParameter("subject");
+	
+	Report rep = new Report();
+	rep.setDelimitedCharacter(",");
+	
+	rep.setHeader("CFS Pipeline Management: " + subject);
+	
+	rep.addColumn("Description");
+	rep.addColumn("Contact/Organization");
+	rep.addColumn("Owner");
+	rep.addColumn("Amount");
+	rep.addColumn("Stage");
+	rep.addColumn("Stage Date");
+	rep.addColumn("Prob. of Close");
+	rep.addColumn("Revenue Start");
+	rep.addColumn("Terms");
+	rep.addColumn("Alert Date");
+	rep.addColumn("Commission");
+	rep.addColumn("Entered");
+	rep.addColumn("Entered By");
+	rep.addColumn("Modified");
+	rep.addColumn("Modified By");
+		
+	String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
+	
+	String filePath = this.getPath(context, "lead-reports");
+	
+	SimpleDateFormat formatter1 = new SimpleDateFormat ("yyyy");
+	String datePathToUse1 = formatter1.format(new java.util.Date());
+	SimpleDateFormat formatter2 = new SimpleDateFormat ("MMdd");
+	String datePathToUse2 = formatter2.format(new java.util.Date());
+	filePath += datePathToUse1 + fs + datePathToUse2 + fs;
+	
+	SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddhhmmss");
+	String filenameToUse = formatter.format(new java.util.Date());
+	
+	File f = new File(filePath);
+	f.mkdirs();
+
+    	OpportunityList oppList = new OpportunityList();
+	
+	try {
+		db = this.getConnection(context);
+		oppList.setOwnerIdRange(this.getUserRange(context));
+		//oppList.setOwner(this.getUserId(context));
+	
+		oppList.buildList(db);
+		
+		Iterator m = oppList.iterator();
+		while (m.hasNext()) {
+			Opportunity thisOpp = (Opportunity) m.next();
+			ReportRow thisRow = new ReportRow();
+			
+			thisRow.addCell(thisOpp.getDescription(), tdNumStart);
+			thisRow.addCell(thisOpp.getAccountName());
+			thisRow.addCell(thisOpp.getOwnerName());
+			thisRow.addCell("$" + thisOpp.getGuessCurrency());
+			thisRow.addCell(thisOpp.getStageName());
+			thisRow.addCell(thisOpp.getStageDateString());
+			thisRow.addCell(thisOpp.getCloseProbValue());
+			thisRow.addCell(thisOpp.getCloseDateString());
+			thisRow.addCell(thisOpp.getTermsString());
+			thisRow.addCell(thisOpp.getAlertDateString());
+			thisRow.addCell(thisOpp.getCommissionPercent());
+			thisRow.addCell(thisOpp.getEnteredString());
+			thisRow.addCell(thisOpp.getEnteredByName());
+			thisRow.addCell(thisOpp.getModifiedString());
+			thisRow.addCell(thisOpp.getModifiedByName());
+						
+			rep.addRow(thisRow);
+		}
+		
+		rep.saveHtml(filePath + filenameToUse + ".html");
+		rep.saveDelimited(filePath + filenameToUse + ".csv");
+
+		File fileLink = new File(filePath + filenameToUse + ".csv");
+		
+		FileItem thisItem = new FileItem();
+		thisItem.setLinkModuleId(Constants.LEADS_REPORTS);
+		thisItem.setLinkItemId(0);
+		thisItem.setProjectId(-1);
+		thisItem.setEnteredBy(getUserId(context));
+		thisItem.setModifiedBy(getUserId(context));
+		thisItem.setSubject(subject);
+		thisItem.setClientFilename(filenameToUse + ".csv");
+		thisItem.setFilename(filenameToUse);
+		thisItem.setSize((int)fileLink.length());
+		thisItem.insert(db);
+		
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+
+	
+	if (errorMessage == null) {
+		return executeCommandReports(context);
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+  }
+  
+  
+  public String executeCommandReports(ActionContext context) {
+	Exception errorMessage = null;
+	Connection db = null;
+	
+	FileItemList files = new FileItemList();
+	files.setLinkModuleId(Constants.LEADS_REPORTS);
+	files.setLinkItemId(-1);
+	
+	PagedListInfo rptListInfo = this.getPagedListInfo(context, "LeadRptListInfo");
+	rptListInfo.setLink("/Leads.do?command=Reports");
+	  
+	try {
+		db = this.getConnection(context);
+		files.setPagedListInfo(rptListInfo);
+		
+		if ("all".equals(rptListInfo.getListView())) {
+			files.setOwnerIdRange(this.getUserRange(context));
+		} else {
+			files.setOwner(this.getUserId(context));
+		}
+		
+		files.buildList(db);
+		
+		Iterator i = files.iterator();
+		while (i.hasNext()) {
+			FileItem thisItem = (FileItem)i.next();
+			Contact enteredBy = this.getUser(context, thisItem.getEnteredBy()).getContact();
+			Contact modifiedBy = this.getUser(context, thisItem.getModifiedBy()).getContact();
+			thisItem.setEnteredByString(enteredBy.getNameFirstLast());
+			thisItem.setModifiedByString(modifiedBy.getNameFirstLast());
+		}
+	
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	if (errorMessage == null) {
+		addModuleBean(context, "Reports", "ViewReports");
+		context.getRequest().setAttribute("FileList", files);
+		return("ReportsOK");
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+
   }
 
 

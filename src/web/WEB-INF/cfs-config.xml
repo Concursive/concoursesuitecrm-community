@@ -124,7 +124,12 @@
     <forward name="ContactDeleteOK" resource="/ExternalContacts.do?command=ListContacts"/>
     <forward name="MessageDetailsOK" resource="/companydirectory_message_details.jsp" layout="nav"/>
     <forward name="ViewMessagesOK" resource="/companydirectory_view_messages.jsp" layout="nav"/>
-  </action>
+    <forward name="ReportsOK" resource="/companydirectory_reports.jsp" layout="nav"/>
+    <forward name="GenerateFormOK" resource="/companydirectory_reports_generate.jsp" layout="nav"/>
+    <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
+    <forward name="DeleteReportOK" resource="/ExternalContacts.do?command=Reports"/>
+    <forward name="DeleteReportERROR" resource="/ExternalContacts.do?command=Reports"/>
+</action>
   <action name="ExternalContactsOpps" class="com.darkhorseventures.cfsmodule.ExternalContactsOpps">
     <bean name="OppDetails" class="com.darkhorseventures.cfsbase.Opportunity" scope="request"/>
     <forward name="SecurityCheck" resource="/login.jsp"/>
@@ -168,6 +173,11 @@
     <forward name="OppListOK" resource="/LeadsViewOpp.jsp" layout="nav"/>
     <forward name="OppDetailsOK" resource="/LeadsDetailsOpp.jsp" layout="nav"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
+    <forward name="ReportsOK" resource="/leads_reports.jsp" layout="nav"/>
+    <forward name="GenerateFormOK" resource="/leads_reports_generate.jsp" layout="nav"/>
+    <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
+    <forward name="DeleteReportOK" resource="/Leads.do?command=Reports"/>
+    <forward name="DeleteReportERROR" resource="/Leads.do?command=Reports"/>
   </action>
   <action name="LeadsCalls" class="com.darkhorseventures.cfsmodule.LeadsCalls">
     <bean name="CallDetails" class="com.darkhorseventures.cfsbase.Call" scope="request"/>
@@ -218,8 +228,13 @@
     <forward name="FieldRecordListOK" resource="/accounts_fields_list.jsp" layout="nav"/>
     <forward name="AddFolderRecordOK" resource="/accounts_fields_add.jsp" layout="nav"/>
     <forward name="FieldsOK" resource="/accounts_fields.jsp" layout="nav"/>
+    <forward name="ReportsOK" resource="/accounts_reports.jsp" layout="nav"/>
     <forward name="ModifyFieldsOK" resource="/accounts_fields_modify.jsp" layout="nav"/>
     <forward name="UpdateFieldsOK" resource="/accounts_fields.jsp" layout="nav"/>
+    <forward name="GenerateFormOK" resource="/accounts_reports_generate.jsp" layout="nav"/>
+    <forward name="DeleteReportOK" resource="/Accounts.do?command=Reports"/>
+    <forward name="DeleteReportERROR" resource="/Accounts.do?command=Reports"/>
+    <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
   </action>
   <action name="Contacts" class="com.darkhorseventures.cfsmodule.Contacts">
     <bean name="ContactDetails" class="com.darkhorseventures.cfsbase.Contact" scope="request"/>

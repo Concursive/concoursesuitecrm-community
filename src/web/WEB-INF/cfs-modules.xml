@@ -120,6 +120,13 @@
       <link value="/CompanyDirectory.do?command=ListEmployees"/>
     </submenu>
     
+    <submenu name="Reports">
+      <permission value="contacts-reports"/>
+      <long_html value="Reports"/>
+      <short_html value="Reports"/>
+      <link value="/ExternalContacts.do?command=Reports"/>
+    </submenu>
+    
     <!--submenu name="Other Resources">
       <permission value="contacts-other-view"/>
       <long_html value="Resources"/>
@@ -192,7 +199,7 @@
       <permission value="pipeline-reports-view"/>
       <long_html value="Reports"/>
       <short_html value="Reports"/>
-      <link value="/Leads.do?module=Reports&amp;include=pipeline_reports.htm"/>
+      <link value="/Leads.do?command=Reports"/>
     </submenu>
     
     <!--submenu name="Alerts">
@@ -248,6 +255,13 @@
       <long_html value="View Accounts"/>
       <short_html value="View&lt;br&gt;Accounts"/>
       <link value="/Accounts.do?command=View"/>
+    </submenu>
+    
+    <submenu name="Reports">
+      <permission value="accounts-reports"/>
+      <long_html value="Reports"/>
+      <short_html value="Reports"/>
+      <link value="/Accounts.do?command=Reports"/>
     </submenu>
     
     <!--submenu name="Reports">

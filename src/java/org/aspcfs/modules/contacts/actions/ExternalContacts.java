@@ -4,12 +4,14 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.theseus.actions.*;
 import java.sql.*;
-import java.util.Vector;
+import java.util.*;
 import java.io.*;
-import java.sql.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
+import com.zeroio.iteam.base.*;
+import com.zeroio.webutils.*;
+import java.text.*;
 
 /**
  *  Description of the Class
@@ -20,6 +22,324 @@ import com.darkhorseventures.webutils.*;
  *      Exp $
  */
 public final class ExternalContacts extends CFSModule {
+	
+public String executeCommandReports(ActionContext context) {
+	Exception errorMessage = null;
+	Connection db = null;
+	
+	FileItemList files = new FileItemList();
+	files.setLinkModuleId(Constants.CONTACTS_REPORTS);
+	files.setLinkItemId(-1);
+	
+	PagedListInfo rptListInfo = this.getPagedListInfo(context, "ContactRptListInfo");
+	rptListInfo.setLink("/ExternalContacts.do?command=Reports");
+	  
+	try {
+		db = this.getConnection(context);
+		files.setPagedListInfo(rptListInfo);
+		
+		if ("all".equals(rptListInfo.getListView())) {
+			files.setOwnerIdRange(this.getUserRange(context));
+		} else {
+			files.setOwner(this.getUserId(context));
+		}
+		
+		files.buildList(db);
+		
+		Iterator i = files.iterator();
+		while (i.hasNext()) {
+			FileItem thisItem = (FileItem)i.next();
+			Contact enteredBy = this.getUser(context, thisItem.getEnteredBy()).getContact();
+			Contact modifiedBy = this.getUser(context, thisItem.getModifiedBy()).getContact();
+			thisItem.setEnteredByString(enteredBy.getNameFirstLast());
+			thisItem.setModifiedByString(modifiedBy.getNameFirstLast());
+		}
+	
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	if (errorMessage == null) {
+		addModuleBean(context, "Reports", "ViewReports");
+		context.getRequest().setAttribute("FileList", files);
+		return("ReportsOK");
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+
+  }
+  
+  public String executeCommandDownloadCSVReport(ActionContext context) {
+    Exception errorMessage = null;
+
+    String itemId = (String)context.getRequest().getParameter("fid");
+    FileItem thisItem = null;
+    
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    //Start the download
+    try {
+      FileItem itemToDownload = null;
+      itemToDownload = thisItem;
+      
+      //itemToDownload.setEnteredBy(this.getUserId(context));
+      String filePath = this.getPath(context, "contact-reports") + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename() + ".csv";
+      
+      FileDownload fileDownload = new FileDownload();
+      fileDownload.setFullPath(filePath);
+      fileDownload.setDisplayName(itemToDownload.getClientFilename());
+      if (fileDownload.fileExists()) {
+        fileDownload.sendFile(context);
+        //Get a db connection now that the download is complete
+        db = getConnection(context);
+        itemToDownload.updateCounter(db);
+      } else {
+        System.err.println("PMF-> Trying to send a file that does not exist");
+      }
+    } catch (java.net.SocketException se) {
+      //User either cancelled the download or lost connection
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    if (errorMessage == null) {
+      return ("-none-");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  
+  public String executeCommandDeleteReport(ActionContext context) {
+    Exception errorMessage = null;
+    boolean recordDeleted = false;
+
+    String projectId = (String)context.getRequest().getParameter("pid");
+    String itemId = (String)context.getRequest().getParameter("fid");
+
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      
+      //-1 is the project ID for non-projects
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+      
+      if (thisItem.getEnteredBy() == this.getUserId(context)) {
+        recordDeleted = thisItem.delete(db, this.getPath(context, "contact-reports"));
+	
+	String filePath1 = this.getPath(context, "contact-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
+	java.io.File fileToDelete1 = new java.io.File(filePath1);
+	if (!fileToDelete1.delete()) {
+		System.err.println("FileItem-> Tried to delete file: " + filePath1);
+	}
+	
+	String filePath2 = this.getPath(context, "contact-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+	java.io.File fileToDelete2 = new java.io.File(filePath2);
+	if (!fileToDelete2.delete()) {
+		System.err.println("FileItem-> Tried to delete file: " + filePath2);
+	}
+	
+      }
+
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    addModuleBean(context, "Reports", "Reports del");
+    
+    if (errorMessage == null) {
+      if (recordDeleted) {
+        return ("DeleteReportOK");
+      } else {
+        return ("DeleteReportERROR");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+  
+  public String executeCommandGenerateForm(ActionContext context) {
+	addModuleBean(context, "Reports", "Generate new");
+	return("GenerateFormOK");
+  }
+  
+  public String executeCommandShowReportHtml(ActionContext context) {
+	Exception errorMessage = null;
+	
+	String projectId = (String)context.getRequest().getParameter("pid");
+	String itemId = (String)context.getRequest().getParameter("fid");
+	
+	Connection db = null;
+	
+	try {
+		db = getConnection(context);
+	
+		//-1 is the project ID for non-projects
+		FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+	
+		String filePath = this.getPath(context, "contact-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+		String textToShow = this.includeFile(filePath);
+		context.getRequest().setAttribute("ReportText", textToShow);
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	return ("ReportHtmlOK");
+  }
+  
+  public String executeCommandExportReport(ActionContext context) {
+	Exception errorMessage = null;
+	boolean recordInserted = false;
+	Connection db = null;
+	String subject = context.getRequest().getParameter("subject");
+	
+	String[] params = null;
+	String[] names = null;
+	ArrayList newList = null;
+	
+	if (context.getRequest().getParameterValues("fields") != null) {
+		params = context.getRequest().getParameterValues("fields");
+		newList = new ArrayList(Arrays.asList(params));
+	} else {
+		newList = new ArrayList();
+	}
+	
+	Report rep = new Report();
+	rep.setDelimitedCharacter(",");
+	
+	rep.setHeader("CFS Contacts and Resources: " + subject);
+	
+	rep.addColumn("Type");
+	rep.addColumn("Last Name", "Last Name");
+	rep.addColumn("First Name", "First Name");
+	rep.addColumn("Middle Name", "Middle Name");
+	rep.addColumn("Company");
+	rep.addColumn("Title");
+	rep.addColumn("Department");
+	rep.addColumn("Entered");
+	rep.addColumn("Entered By");
+	rep.addColumn("Modified");
+	rep.addColumn("Modified By");
+	rep.addColumn("Owner");
+	rep.addColumn("Business Email");
+	rep.addColumn("Business Phone");
+	rep.addColumn("Business Address");
+	rep.addColumn("City");
+	rep.addColumn("State");
+	rep.addColumn("Zip");
+	rep.addColumn("Country");
+	rep.addColumn("Notes");
+		
+	String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
+	
+	String filePath = this.getPath(context, "contact-reports");
+	
+	SimpleDateFormat formatter1 = new SimpleDateFormat ("yyyy");
+	String datePathToUse1 = formatter1.format(new java.util.Date());
+	SimpleDateFormat formatter2 = new SimpleDateFormat ("MMdd");
+	String datePathToUse2 = formatter2.format(new java.util.Date());
+	filePath += datePathToUse1 + fs + datePathToUse2 + fs;
+	
+	SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddhhmmss");
+	String filenameToUse = formatter.format(new java.util.Date());
+	
+	File f = new File(filePath);
+	f.mkdirs();
+
+    	ContactList contactList = new ContactList();
+	
+	try {
+		db = this.getConnection(context);
+		contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+      		contactList.setPersonalId(this.getUserId(context));
+	        contactList.setOwnerIdRange(this.getUserRange(context));
+        	//contactList.setOwner(this.getUserId(context));
+		contactList.buildList(db);
+		
+		Iterator m = contactList.iterator();
+		while (m.hasNext()) {
+			Contact thisContact = (Contact) m.next();
+			ReportRow thisRow = new ReportRow();
+			
+			thisRow.addCell(thisContact.getTypeName(), tdNumStart);
+			thisRow.addCell(thisContact.getNameLast());
+			thisRow.addCell(thisContact.getNameFirst());
+			thisRow.addCell(thisContact.getNameMiddle());
+			thisRow.addCell(thisContact.getCompany());
+			thisRow.addCell(thisContact.getDepartmentName());
+			thisRow.addCell(thisContact.getTitle());
+			thisRow.addCell(thisContact.getEnteredString());
+			thisRow.addCell(thisContact.getEnteredByName());
+			thisRow.addCell(thisContact.getModifiedString());
+			thisRow.addCell(thisContact.getModifiedByName());
+			thisRow.addCell(thisContact.getOwnerName());
+			thisRow.addCell(thisContact.getEmailAddress("Business"));
+			thisRow.addCell(thisContact.getPhoneNumber("Business"));
+			thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine1() + " " + thisContact.getAddress("Business").getStreetAddressLine2());
+			thisRow.addCell(thisContact.getAddress("Business").getCity());
+			thisRow.addCell(thisContact.getAddress("Business").getState());
+			thisRow.addCell(thisContact.getAddress("Business").getZip());
+			thisRow.addCell(thisContact.getAddress("Business").getCountry());
+			thisRow.addCell(thisContact.getNotes());
+			
+			
+						
+			rep.addRow(thisRow);
+		}
+		
+		rep.saveHtml(filePath + filenameToUse + ".html");
+		rep.saveDelimited(filePath + filenameToUse + ".csv");
+
+		File fileLink = new File(filePath + filenameToUse + ".csv");
+		
+		FileItem thisItem = new FileItem();
+		thisItem.setLinkModuleId(Constants.CONTACTS_REPORTS);
+		thisItem.setLinkItemId(0);
+		thisItem.setProjectId(-1);
+		thisItem.setEnteredBy(getUserId(context));
+		thisItem.setModifiedBy(getUserId(context));
+		thisItem.setSubject(subject);
+		thisItem.setClientFilename(filenameToUse + ".csv");
+		thisItem.setFilename(filenameToUse);
+		thisItem.setSize((int)fileLink.length());
+		thisItem.insert(db);
+		
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+
+	
+	if (errorMessage == null) {
+		return executeCommandReports(context);
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+  }
+  
 
   /**
    *  Generates a list of external contacts

@@ -662,6 +662,17 @@ public class Organization extends GenericBean {
     }
     return tmp;
   }
+  
+  public String[] getAsValuesArray() {
+	  String[] temp = new String[5];
+	  temp[0] = this.getName();
+	  temp[1] = this.getUrl();
+	  temp[2] = this.getOwnerName();
+	  temp[3] = this.getEnteredByName();
+	  temp[4] = this.getModifiedByName();
+	  
+	  return temp;
+  }
 
 
 

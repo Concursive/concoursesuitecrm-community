@@ -9,6 +9,7 @@ import com.darkhorseventures.controller.RecentItem;
 import java.sql.*;
 import java.util.*;
 import java.text.*;
+import java.io.*;
 
 /**
  *  Base class for all modules
@@ -123,6 +124,23 @@ public class CFSModule {
     UserBean thisUser = (UserBean)context.getSession().getAttribute("User");
     return (thisUser.hasPermission(permission));
   }
+  
+  protected static String includeFile(String sourceFile){
+    StringBuffer HTMLBuffer = new StringBuffer();
+    String desc;
+    char[] chars = null;
+    int c;	
+    FileReader in;
+    try {
+       File inputFile = new File(sourceFile);
+       in = new FileReader(inputFile);
+      while ((c = in.read()) != -1) HTMLBuffer.append((char) c);
+      in.close();	
+    } catch (IOException ex) {
+      HTMLBuffer.append(ex.toString());
+    }
+    return HTMLBuffer.toString();
+  } 
 
 
   /**

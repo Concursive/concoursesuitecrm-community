@@ -4,12 +4,14 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.theseus.actions.*;
 import java.sql.*;
-import java.util.Vector;
-import java.util.Iterator;
+import java.util.*;
 import com.darkhorseventures.utils.*;
 import com.darkhorseventures.cfsbase.*;
 import com.darkhorseventures.webutils.*;
 import java.text.*;
+import java.io.*;
+import com.zeroio.iteam.base.*;
+import com.zeroio.webutils.*;
 
 /**
  *  Description of the Class
@@ -33,6 +35,512 @@ public final class Accounts extends CFSModule {
     context.getRequest().setAttribute("IncludePage", includePage);
     addModuleBean(context, module, module);
     return ("IncludeOK");
+  }
+  
+  public String executeCommandReports(ActionContext context) {
+	Exception errorMessage = null;
+	Connection db = null;
+	
+	FileItemList files = new FileItemList();
+	files.setLinkModuleId(Constants.ACCOUNTS_REPORTS);
+	files.setLinkItemId(-1);
+	
+	PagedListInfo rptListInfo = this.getPagedListInfo(context, "RptListInfo");
+	rptListInfo.setLink("/Accounts.do?command=Reports");
+	  
+	try {
+		db = this.getConnection(context);
+		files.setPagedListInfo(rptListInfo);
+		
+		if ("all".equals(rptListInfo.getListView())) {
+			files.setOwnerIdRange(this.getUserRange(context));
+		} else {
+			files.setOwner(this.getUserId(context));
+		}
+		
+		files.buildList(db);
+		
+		Iterator i = files.iterator();
+		while (i.hasNext()) {
+			FileItem thisItem = (FileItem)i.next();
+			Contact enteredBy = this.getUser(context, thisItem.getEnteredBy()).getContact();
+			Contact modifiedBy = this.getUser(context, thisItem.getModifiedBy()).getContact();
+			thisItem.setEnteredByString(enteredBy.getNameFirstLast());
+			thisItem.setModifiedByString(modifiedBy.getNameFirstLast());
+		}
+	
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	if (errorMessage == null) {
+		addModuleBean(context, "Reports", "ViewReports");
+		context.getRequest().setAttribute("FileList", files);
+		return("ReportsOK");
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+
+  }
+  
+  public String executeCommandDownloadCSVReport(ActionContext context) {
+    Exception errorMessage = null;
+
+    String itemId = (String)context.getRequest().getParameter("fid");
+    FileItem thisItem = null;
+    
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    //Start the download
+    try {
+      FileItem itemToDownload = null;
+      itemToDownload = thisItem;
+      
+      //itemToDownload.setEnteredBy(this.getUserId(context));
+      String filePath = this.getPath(context, "account-reports") + getDatePath(itemToDownload.getEntered()) + itemToDownload.getFilename() + ".csv";
+      
+      FileDownload fileDownload = new FileDownload();
+      fileDownload.setFullPath(filePath);
+      fileDownload.setDisplayName(itemToDownload.getClientFilename());
+      if (fileDownload.fileExists()) {
+        fileDownload.sendFile(context);
+        //Get a db connection now that the download is complete
+        db = getConnection(context);
+        itemToDownload.updateCounter(db);
+      } else {
+        System.err.println("PMF-> Trying to send a file that does not exist");
+      }
+    } catch (java.net.SocketException se) {
+      //User either cancelled the download or lost connection
+    } catch (Exception e) {
+      errorMessage = e;
+      System.out.println(e.toString());
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    if (errorMessage == null) {
+      return ("-none-");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+  
+  public String executeCommandShowReportHtml(ActionContext context) {
+	Exception errorMessage = null;
+	
+	String projectId = (String)context.getRequest().getParameter("pid");
+	String itemId = (String)context.getRequest().getParameter("fid");
+	
+	Connection db = null;
+	
+	try {
+		db = getConnection(context);
+	
+		//-1 is the project ID for non-projects
+		FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+	
+		String filePath = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+		String textToShow = this.includeFile(filePath);
+		context.getRequest().setAttribute("ReportText", textToShow);
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+	
+	return ("ReportHtmlOK");
+  }
+  
+  public String executeCommandGenerateForm(ActionContext context) {
+	addModuleBean(context, "Reports", "Generate new");
+	return("GenerateFormOK");
+  }
+  
+  public void setBaseAccountReportInfo( ArrayList newList, ReportRow thisRow, Organization thisOrg, String tdNumStart) {
+	if ((newList.contains("1"))) {	thisRow.addCell(thisOrg.getName(), tdNumStart);	}
+	if ((newList.contains("2"))) {	thisRow.addCell(thisOrg.getAccountNumber()); }
+	if ((newList.contains("3"))) {	thisRow.addCell(thisOrg.getUrl()); }
+	if ((newList.contains("4"))) {	thisRow.addCell(thisOrg.getTicker()); }
+	if ((newList.contains("5"))) {	thisRow.addCell(thisOrg.getEmployees());}
+	if ((newList.contains("6"))) {	thisRow.addCell(thisOrg.getEnteredString());}
+	if ((newList.contains("7"))) {	thisRow.addCell(thisOrg.getEnteredByName());}
+	if ((newList.contains("8"))) {	thisRow.addCell(thisOrg.getModifiedString());}
+	if ((newList.contains("9"))) {	thisRow.addCell(thisOrg.getModifiedByName());}
+	if ((newList.contains("10"))) { thisRow.addCell(thisOrg.getOwnerName());}
+	if ((newList.contains("11"))) { thisRow.addCell(thisOrg.getContractEndDateString());}
+	if ((newList.contains("12"))) { thisRow.addCell(thisOrg.getNotes());}
+  }
+  
+  public String executeCommandExportReport(ActionContext context) {
+	Exception errorMessage = null;
+	boolean recordInserted = false;
+	Connection db = null;
+	String subject = context.getRequest().getParameter("subject");
+	String type = context.getRequest().getParameter("type");
+	
+	String[] params = null;
+	String[] names = null;
+	ArrayList newList = null;
+	int lastId = -1;
+	
+	if (context.getRequest().getParameterValues("fields") != null) {
+		params = context.getRequest().getParameterValues("fields");
+		newList = new ArrayList(Arrays.asList(params));
+	} else {
+		newList = new ArrayList();
+	}
+	
+	Report rep = new Report();
+	rep.setDelimitedCharacter(",");
+	
+	rep.setHeader("CFS Accounts: " + subject);
+	
+	if ((newList.contains("1"))) {	rep.addColumn("Account", "Account Name"); }
+	if ((newList.contains("2"))) {	rep.addColumn("Account No."); }
+	if ((newList.contains("3"))) {	rep.addColumn("URL"); }
+	if ((newList.contains("4"))) {	rep.addColumn("Ticker"); }
+	if ((newList.contains("5"))) {	rep.addColumn("Employees"); }
+	if ((newList.contains("6"))) { rep.addColumn("Entered"); }
+	if ((newList.contains("7"))) {	rep.addColumn("Entered By"); }
+	if ((newList.contains("8"))) { rep.addColumn("Modified");}
+	if ((newList.contains("9"))) {	rep.addColumn("Modified By");}
+	if ((newList.contains("10"))) { rep.addColumn("Owner"); }
+	if ((newList.contains("11"))) { rep.addColumn("Contract End Date"); }
+	if ((newList.contains("12"))) { rep.addColumn("Notes"); }
+	
+	String tdNumStart = "valign='top' align='right' bgcolor='#FFFFFF' nowrap";
+	String filePath = this.getPath(context, "account-reports");
+	
+	SimpleDateFormat formatter1 = new SimpleDateFormat ("yyyy");
+	String datePathToUse1 = formatter1.format(new java.util.Date());
+	SimpleDateFormat formatter2 = new SimpleDateFormat ("MMdd");
+	String datePathToUse2 = formatter2.format(new java.util.Date());
+	filePath += datePathToUse1 + fs + datePathToUse2 + fs;
+	
+	SimpleDateFormat formatter = new SimpleDateFormat ("yyyyMMddhhmmss");
+	String filenameToUse = formatter.format(new java.util.Date());
+	
+	File f = new File(filePath);
+	f.mkdirs();
+
+    	OrganizationList organizationList = new OrganizationList();
+	ContactList contactList = new ContactList();
+	TicketList ticList = new TicketList();
+	Organization ctOrg = null;
+	
+	CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+        thisList.setLinkModuleId(Constants.ACCOUNTS);
+        thisList.setIncludeEnabled(Constants.TRUE);
+        thisList.setIncludeScheduled(Constants.TRUE);
+        thisList.setBuildResources(true);
+	
+	CustomFieldRecordList recordList = new CustomFieldRecordList();
+	CustomFieldGroup thisGroup = new CustomFieldGroup();
+	
+	try {
+		db = this.getConnection(context);
+		
+		//Accounts with Folders
+		if (type.equals("4")) {
+			
+			rep.addColumn("Folder Name");
+			rep.addColumn("Record Name");
+			rep.addColumn("Group Name");
+			rep.addColumn("Field Name");
+			rep.addColumn("Field Value");
+			rep.addColumn("Entered");
+			rep.addColumn("Modified");
+			
+			thisList.buildList(db);	
+		
+			organizationList.setMinerOnly(false);
+			organizationList.buildList(db);
+			
+			Iterator m = organizationList.iterator();
+			
+			while (m.hasNext()) {
+				Organization thisOrg = (Organization) m.next();
+				
+				Iterator cat = thisList.iterator();
+				while (cat.hasNext()) {
+					CustomFieldCategory thisCat = (CustomFieldCategory) cat.next();
+					
+					recordList = new CustomFieldRecordList();
+					recordList.setLinkModuleId(Constants.ACCOUNTS);
+					recordList.setLinkItemId(thisOrg.getOrgId());
+					recordList.setCategoryId(thisCat.getId());
+					recordList.buildList(db);
+					
+					Iterator rec = recordList.iterator();
+					
+					while (rec.hasNext()) {
+						CustomFieldRecord thisRec = (CustomFieldRecord) rec.next();
+						Iterator grp = thisCat.iterator();
+						while (grp.hasNext()) {
+							thisGroup = new CustomFieldGroup();
+							thisGroup = (CustomFieldGroup)grp.next();
+							thisGroup.buildResources(db);
+							
+							Iterator fields = thisGroup.iterator();
+							if (fields.hasNext()) {
+								while (fields.hasNext()) {
+									ReportRow thisRow = new ReportRow();
+									CustomField thisField = (CustomField)fields.next();
+									
+									thisField.setRecordId(thisRec.getId());
+									thisField.buildResources(db);
+							
+									setBaseAccountReportInfo( newList, thisRow, thisOrg, tdNumStart);
+								
+									thisRow.addCell(thisCat.getName());
+									thisRow.addCell(thisCat.getName() + " #" + thisRec.getId());
+									thisRow.addCell(thisGroup.getName());
+									thisRow.addCell(thisField.getNameHtml());
+									thisRow.addCell(thisField.getValueHtml());
+									thisRow.addCell(thisRec.getEnteredString());
+									thisRow.addCell(thisRec.getModifiedDateTimeString());
+									
+									rep.addRow(thisRow);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		//Accounts with tickets report
+		else if (type.equals("3")) {
+			rep.addColumn("Ticket ID");
+			rep.addColumn("Problem");
+			rep.addColumn("Ticket Source");
+			rep.addColumn("Severity");
+			rep.addColumn("Priority");
+			rep.addColumn("Category");
+			rep.addColumn("Assigned Dept.");
+			rep.addColumn("Assigned To");
+			rep.addColumn("Solution");
+			rep.addColumn("Date Closed");
+			rep.addColumn("Entered");
+			rep.addColumn("Entered By");
+			rep.addColumn("Modified");
+			rep.addColumn("Modified By");
+			
+			ticList.buildList(db);
+			
+			Iterator t = ticList.iterator();
+			while (t.hasNext()) {
+				Ticket thisTic = (Ticket)t.next();
+				
+				if (thisTic.getOrgId() > -1) {
+					System.out.println("this: " + thisTic.getOrgId() + " Last: " + lastId);
+					if (thisTic.getOrgId() != lastId) {
+						System.out.println("I am getting a new Org...");
+						ctOrg = new Organization(db, thisTic.getOrgId());
+					}
+					
+					ReportRow thisRow = new ReportRow();
+					
+					setBaseAccountReportInfo( newList, thisRow, ctOrg, tdNumStart);
+					
+					thisRow.addCell(thisTic.getId());
+					thisRow.addCell(thisTic.getProblem());
+					thisRow.addCell(thisTic.getSourceName());
+					thisRow.addCell(thisTic.getSeverityName());
+					thisRow.addCell(thisTic.getPriorityName());
+					thisRow.addCell(thisTic.getCategoryName());
+					thisRow.addCell(thisTic.getDepartmentName());
+					thisRow.addCell(thisTic.getOwnerName());
+					thisRow.addCell(thisTic.getSolution());
+					thisRow.addCell(thisTic.getClosedString());
+					thisRow.addCell(thisTic.getEnteredString());
+					thisRow.addCell(thisTic.getEnteredByName());
+					thisRow.addCell(thisTic.getModifiedString());
+					thisRow.addCell(thisTic.getModifiedByName());
+					
+					rep.addRow(thisRow);
+					lastId = thisTic.getOrgId();
+				}
+				
+				
+			}
+			
+	 	}
+		
+		//Accounts with contacts report
+		else if (type.equals("2")) {
+			
+			rep.addColumn("Contact Type");
+			rep.addColumn("Last Name");
+			rep.addColumn("First Name");
+			rep.addColumn("Middle Name");
+			rep.addColumn("Department");
+			rep.addColumn("Title");
+			rep.addColumn("Owner");
+			rep.addColumn("Business Email");
+			rep.addColumn("Business Phone");
+			rep.addColumn("Business Address");
+			rep.addColumn("City");
+			rep.addColumn("State");
+			rep.addColumn("Zip");
+			rep.addColumn("Country");
+			rep.addColumn("Notes");
+			
+			contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+			contactList.setPersonalId(this.getUserId(context));
+			contactList.setOwnerIdRange(this.getUserRange(context));
+			//contactList.setOwner(this.getUserId(context));
+			contactList.buildList(db);
+			
+			Iterator c = contactList.iterator();
+			while (c.hasNext()) {
+				Contact thisContact = (Contact)c.next();
+				
+				if (thisContact.getOrgId() > 0) {
+					System.out.println("this: " + thisContact.getOrgId() + " Last: " + lastId);
+					if (thisContact.getOrgId() != lastId) {
+						System.out.println("I am getting a new Org...");
+						ctOrg = new Organization(db, thisContact.getOrgId());
+					}
+					
+					ReportRow thisRow = new ReportRow();
+					
+					setBaseAccountReportInfo( newList, thisRow, ctOrg, tdNumStart);
+					
+					thisRow.addCell(thisContact.getTypeName());
+					thisRow.addCell(thisContact.getNameLast());
+					thisRow.addCell(thisContact.getNameFirst());
+					thisRow.addCell(thisContact.getNameMiddle());
+					thisRow.addCell(thisContact.getDepartmentName());
+					thisRow.addCell(thisContact.getTitle());
+					thisRow.addCell(thisContact.getOwnerName());
+					thisRow.addCell(thisContact.getEmailAddress("Business"));
+					thisRow.addCell(thisContact.getPhoneNumber("Business"));
+					thisRow.addCell(thisContact.getAddress("Business").getStreetAddressLine1() + " " + thisContact.getAddress("Business").getStreetAddressLine2());
+					thisRow.addCell(thisContact.getAddress("Business").getCity());
+					thisRow.addCell(thisContact.getAddress("Business").getState());
+					thisRow.addCell(thisContact.getAddress("Business").getZip());
+					thisRow.addCell(thisContact.getAddress("Business").getCountry());
+					thisRow.addCell(thisContact.getNotes());
+					
+					rep.addRow(thisRow);
+					lastId = thisContact.getOrgId();
+				}
+				
+				
+			}
+		//All accounts or accounts w/folders
+	 	} else {
+		
+			organizationList.setMinerOnly(false);
+			organizationList.buildList(db);
+			
+			Iterator m = organizationList.iterator();
+			while (m.hasNext()) {
+				Organization thisOrg = (Organization) m.next();
+				
+				ReportRow thisRow = new ReportRow();
+				
+				setBaseAccountReportInfo( newList, thisRow, thisOrg, tdNumStart);
+
+				rep.addRow(thisRow);
+			}
+		}
+		
+		rep.saveHtml(filePath + filenameToUse + ".html");
+		rep.saveDelimited(filePath + filenameToUse + ".csv");
+
+		File fileLink = new File(filePath + filenameToUse + ".csv");
+		
+		FileItem thisItem = new FileItem();
+		thisItem.setLinkModuleId(Constants.ACCOUNTS_REPORTS);
+		thisItem.setLinkItemId(0);
+		thisItem.setProjectId(-1);
+		thisItem.setEnteredBy(getUserId(context));
+		thisItem.setModifiedBy(getUserId(context));
+		thisItem.setSubject(subject);
+		thisItem.setClientFilename(filenameToUse + ".csv");
+		thisItem.setFilename(filenameToUse);
+		thisItem.setSize((int)fileLink.length());
+		thisItem.insert(db);
+		
+	} catch (Exception e) {
+		errorMessage = e;
+	} finally {
+		this.freeConnection(context, db);
+	}
+
+	
+	if (errorMessage == null) {
+		return executeCommandReports(context);
+	} else {
+		context.getRequest().setAttribute("Error", errorMessage);
+		return ("SystemError");
+	}
+  }
+  
+  public String executeCommandDeleteReport(ActionContext context) {
+    Exception errorMessage = null;
+    boolean recordDeleted = false;
+
+    String projectId = (String)context.getRequest().getParameter("pid");
+    String itemId = (String)context.getRequest().getParameter("fid");
+
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      
+      //-1 is the project ID for non-projects
+      FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), -1);
+      
+      if (thisItem.getEnteredBy() == this.getUserId(context)) {
+        recordDeleted = thisItem.delete(db, this.getPath(context, "account-reports"));
+	
+	String filePath1 = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".csv";
+	java.io.File fileToDelete1 = new java.io.File(filePath1);
+	if (!fileToDelete1.delete()) {
+		System.err.println("FileItem-> Tried to delete file: " + filePath1);
+	}
+	
+	String filePath2 = this.getPath(context, "account-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
+	java.io.File fileToDelete2 = new java.io.File(filePath2);
+	if (!fileToDelete2.delete()) {
+		System.err.println("FileItem-> Tried to delete file: " + filePath2);
+	}
+	
+      }
+
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+    
+    addModuleBean(context, "Reports", "Reports del");
+    
+    if (errorMessage == null) {
+      if (recordDeleted) {
+        return ("DeleteReportOK");
+      } else {
+        return ("DeleteReportERROR");
+      }
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
   }
 
 
