@@ -36,7 +36,7 @@
       <%= thisFile.getImageTag() %><a href="ProjectManagementFiles.do?command=Details&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>"><%= toHtml(thisFile.getSubject()) %></a>
     </td>
     <td valign="middle" align="center">
-      <%= toHtml(thisFile.getExtension()) %>
+      <%= toHtml(thisFile.getExtension()) %>&nbsp;
     </td>
     <td align="right" valign="middle">
       <%= thisFile.getRelativeSize() %> k&nbsp;

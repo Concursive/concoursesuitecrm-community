@@ -16,13 +16,10 @@
         <option <%= AutoGuideDirectoryInfo.getOptionValue("list") %>>List View</option>
         <option <%= AutoGuideDirectoryInfo.getOptionValue("slides") %>>Ad View</option>
       </select>
-      &nbsp;
       <% listFilterSelect.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\""); %>
 			View: <%= listFilterSelect.getHtml("listFilter1", AutoGuideDirectoryInfo.getFilterKey("listFilter1")) %>
-      &nbsp;
       <% statusFilterSelect.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\""); %>
 			Status: <%= statusFilterSelect.getHtml("listFilter2", AutoGuideDirectoryInfo.getFilterKey("listFilter2")) %>
-      &nbsp;
       <% MakeSelect.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\""); %>
 			Make: <%= MakeSelect.getHtml("listFilter3", AutoGuideDirectoryInfo.getFilterKey("listFilter3")) %>
       <%= showAttribute(request, "actionError") %>

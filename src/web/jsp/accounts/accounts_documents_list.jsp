@@ -50,7 +50,7 @@
       <td valign="middle" width="100%">
         <a href="AccountsDocuments.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getSubject()) %></a>
       </td>
-      <td align="center"><%= toHtml(thisFile.getExtension()) %></td>
+      <td align="center"><%= toHtml(thisFile.getExtension()) %>&nbsp;</td>
       <td align="center" valign="middle" nowrap>
         <%= thisFile.getRelativeSize() %> k&nbsp;
       </td>

@@ -50,14 +50,14 @@
       FileItem thisFile = (FileItem)j.next();
 %>      
     <tr class="row<%= rowid %>">
-      <td width="10" valign="middle" align="center" rowspan="2" nowrap>
+      <td width="10" valign="middle" align="center" nowrap>
         <a href="LeadsDocuments.do?command=Download&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>">Download</a><br>
         <dhv:permission name="pipeline-opportunities-documents-edit"><a href="LeadsDocuments.do?command=Modify&fid=<%= thisFile.getId() %>&oppId=<%= OpportunityDetails.getId()%>">Edit</a></dhv:permission><dhv:permission name="pipeline-opportunities-documents-edit,pipeline-opportunities-documents-delete" all="true">|</dhv:permission><dhv:permission name="pipeline-opportunities-documents-delete"><a href="javascript:confirmDelete('LeadsDocuments.do?command=Delete&fid=<%=thisFile.getId() %>&oppId=<%= OpportunityDetails.getId() %>');">Del</a></dhv:permission>
       </td>
       <td valign="middle" width="100%">
         <a href="LeadsDocuments.do?command=Details&oppId=<%= OpportunityDetails.getId() %>&fid=<%= thisFile.getId() %>"><%= thisFile.getImageTag() %><%= toHtml(thisFile.getSubject()) %></a>
       </td>
-      <td align="center"><%= thisFile.getExtension() %></td>
+      <td align="center"><%= thisFile.getExtension() %>&nbsp;</td>
       <td align="center" valign="middle" nowrap>
         <%= thisFile.getRelativeSize() %> k&nbsp;
       </td>
