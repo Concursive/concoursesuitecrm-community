@@ -2673,19 +2673,15 @@ public class Organization extends GenericBean {
     contractEndDate = rs.getTimestamp("contract_end");
     alertDate = rs.getTimestamp("alertdate");
     alertText = rs.getString("alert");
-    contractEndDateTimeZone = rs.getString("contract_end_timezone");
-    alertDateTimeZone = rs.getString("alertdate_timezone");
-
-    //contacts as accounts
     nameSalutation = rs.getString("nameSalutation");
     nameLast = rs.getString("nameLast");
     nameFirst = rs.getString("nameFirst");
     nameMiddle = rs.getString("nameMiddle");
     nameSuffix = rs.getString("nameSuffix");
-
-    //import information
     importId = DatabaseUtils.getInt(rs, "import_id");
     statusId = DatabaseUtils.getInt(rs, "status_id");
+    alertDateTimeZone = rs.getString("alertdate_timezone");
+    contractEndDateTimeZone = rs.getString("contract_end_timezone");
 
     //contact table
     ownerName = Contact.getNameLastFirst(rs.getString("o_namelast"), rs.getString("o_namefirst"));
