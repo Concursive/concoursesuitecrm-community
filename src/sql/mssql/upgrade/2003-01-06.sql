@@ -1005,3 +1005,39 @@ INSERT INTO lookup_task_priority (level, description) VALUES (3, '3');
 INSERT INTO lookup_task_priority (level, description) VALUES (4, '4');
 INSERT INTO lookup_task_priority (level, description) VALUES (5, '5');
 
+/* 10/25/2002 */
+
+CREATE TABLE sync_log (
+  log_id INT IDENTITY PRIMARY KEY,
+  system_id INT NOT NULL REFERENCES sync_system(system_id),
+  client_id INT NOT NULL REFERENCES sync_client(client_id),
+  ip VARCHAR(15),
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+)
+
+GO
+
+CREATE TABLE sync_transaction_log (
+  transaction_id INT IDENTITY PRIMARY KEY,
+  log_id INT NOT NULL REFERENCES sync_log(log_id),
+  reference_id VARCHAR(50),
+  element_name VARCHAR(255),
+  action VARCHAR(20),
+  link_item_id INT,
+  status_code INT,
+  record_count INT,
+  message TEXT
+)
+
+GO
+
+CREATE TABLE process_log (
+  process_id INT IDENTITY PRIMARY KEY,
+  system_id INT NOT NULL REFERENCES sync_system(system_id),
+  client_id INT NOT NULL REFERENCES sync_client(client_id),
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  process_name VARCHAR(255),
+  process_version VARCHAR(20),
+  status INT,
+  message TEXT
+)

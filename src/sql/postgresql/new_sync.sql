@@ -41,7 +41,7 @@ CREATE TABLE sync_map (
   record_id INT NOT NULL,
   cuid INT NOT NULL,
   complete BOOLEAN DEFAULT false,
-  status_date TIMESTAMP
+  status_date TIMESTAMP(3)
 );
 
 CREATE UNIQUE INDEX idx_sync_map ON sync_map (client_id, table_id, record_id);
@@ -51,4 +51,35 @@ CREATE TABLE sync_conflict_log (
   table_id INT NOT NULL REFERENCES sync_table(table_id),
   record_id INT NOT NULL,
   status_date TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE sync_log (
+  log_id SERIAL PRIMARY KEY,
+  system_id INT NOT NULL REFERENCES sync_system(system_id),
+  client_id INT NOT NULL REFERENCES sync_client(client_id),
+  ip VARCHAR(15),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE sync_transaction_log (
+  transaction_id SERIAL PRIMARY KEY,
+  log_id INT NOT NULL REFERENCES sync_log(log_id),
+  reference_id VARCHAR(50),
+  element_name VARCHAR(255),
+  action VARCHAR(20),
+  link_item_id INT,
+  status_code INT,
+  record_count INT,
+  message TEXT
+);
+
+CREATE TABLE process_log (
+  process_id SERIAL PRIMARY KEY,
+  system_id INT NOT NULL REFERENCES sync_system(system_id),
+  client_id INT NOT NULL REFERENCES sync_client(client_id),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  process_name VARCHAR(255),
+  process_version VARCHAR(20),
+  status INT,
+  message TEXT
 );
