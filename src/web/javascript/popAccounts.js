@@ -8,10 +8,10 @@ function popAccountsListSingle(hiddenFieldId, displayFieldId, params) {
   width  =  '575';
   height =  '400';
   resize =  'yes';
-  bars   =  'no';
+  bars   =  'yes';
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
-  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  var windowParams = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + ',screenX=' + posx + ',screenY=' + posy;
   if(params != ''){
     params = '&' + params;
   }
