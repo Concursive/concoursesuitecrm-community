@@ -18,7 +18,7 @@ usage ()
 {
 	printf "\nUsage: ${PROGNAME} site_code\n\n"
 	printf "Where:\n"
-	printf "    site_code       is the target directory under ${SITEHOME}\n"
+	printf "    site_code   is the target directory under ${SITEHOME} to deploy\n"
 	printf "\n"
 	exit 1
 }
@@ -79,7 +79,7 @@ fi
 #############################################################################
 echo ok
 
-rm -f ${DIRDST}/html/index.jsp
+# rm -f ${DIRDST}/html/index.jsp
 
 ant -DSITECODE=${SITECODE} lib
 ##/home/${SITECODE}/bin/restart 
