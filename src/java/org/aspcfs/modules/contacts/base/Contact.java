@@ -2191,10 +2191,27 @@ public class Contact extends GenericBean {
       out.append(nameLast);
     }
     if (nameFirst != null && nameFirst.trim().length() > 0) {
-      if (nameLast.length() > 0) {
+      if (out.length() > 0) {
         out.append(", ");
       }
       out.append(nameFirst);
+    }
+    if (out.toString().length() == 0) {
+      return null;
+    }
+    return out.toString().trim();
+  }
+  
+  public static String getNameFirstLast(String nameFirst, String nameLast) {
+    StringBuffer out = new StringBuffer();
+    if (nameFirst != null && nameFirst.trim().length() > 0) {
+      out.append(nameFirst);
+    }
+    if (nameLast != null && nameLast.trim().length() > 0) {
+      if (out.length() > 0) {
+        out.append(" ");
+      }
+      out.append(nameLast);
     }
     if (out.toString().length() == 0) {
       return null;
