@@ -310,6 +310,7 @@
     <action name="CampaignManager"/>
     <action name="CampaignManagerGroup"/>
     <action name="CampaignManagerMessage"/>
+    <action name="CampaignManagerSurvey"/>
     <page title="Communications Manager"/>
     <permission value="campaign-view"/>
     <long_html value="Communications"/>
@@ -343,6 +344,13 @@
       <long_html value="Create Messages"/>
       <short_html value="Create&lt;br&gt;Messages"/>
       <link value="/CampaignManagerMessage.do?command=View"/>
+    </submenu>
+    
+    <submenu name="ManageSurveys">
+      <permission value="campaign-campaigns-surveys-view"/>
+      <long_html value="Create Surveys"/>
+      <short_html value="Create&lt;br&gt;Surveys"/>
+      <link value="/CampaignManagerSurvey.do?command=View"/>
     </submenu>
     
     <!--submenu name="QuiComm">

@@ -19,3 +19,6 @@ INSERT INTO permission (category_id, permission, permission_view, permission_add
 
 UPDATE permission_category SET level = 55 WHERE level = 35;
 
+INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (6, 'campaign-campaigns-surveys', true, true, true, true, 'Campaign Survey Records', 60);
+
+
