@@ -789,6 +789,52 @@ public final class AccountTickets extends CFSModule {
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
+   */
+  public String executeCommandViewHistory(ActionContext context) {
+
+    if (!(hasPermission(context, "accounts-accounts-tickets-view"))) {
+      return ("PermissionError");
+    }
+
+    Exception errorMessage = null;
+    Connection db = null;
+    Ticket thisTic = null;
+    String ticketId = null;
+
+    try {
+      ticketId = context.getRequest().getParameter("id");
+      db = this.getConnection(context);
+      thisTic = new Ticket();
+      thisTic.setBuildHistory(true);
+      thisTic.queryRecord(db, Integer.parseInt(ticketId));
+
+      //check whether or not the owner is an active User
+      if (thisTic.getAssignedTo() > -1) {
+        thisTic.checkEnabledOwnerAccount(db);
+      }
+    } catch (Exception e) {
+      errorMessage = e;
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "View Tickets", "Ticket Details");
+    if (errorMessage == null) {
+      context.getRequest().setAttribute("TicketDetails", thisTic);
+      addRecentItem(context, thisTic);
+      return ("ViewHistoryOK");
+    } else {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    *@deprecated      Replaced combobox with a pop-up
    */
   public String executeCommandOrganizationJSList(ActionContext context) {
