@@ -81,12 +81,12 @@
     <tr>
       <td class="containerBack">
   <input type="hidden" name="orgId" value="<%= request.getParameter("orgId") %>">
-  <input type=submit value="Save" onClick="return checkForm(this.form)">
   <dhv:evaluate exp="<%= !popUp %>">
+  <input type=submit value="Save" onClick="return checkForm(this.form)">
   <input type=submit value="Save & Clone" onClick="this.form.saveAndClone.value='true';return checkForm(this.form);">
-  </dhv:evaluate>
   <input type="button" value="Cancel" onClick="javascript:<%= popUp ? "window.close();" : "window.location.href='Contacts.do?command=View&orgId=" + OrgDetails.getOrgId() + "'" %>">
-<input type=reset value="Reset">
+  <input type=reset value="Reset">
+  </dhv:evaluate>
 <br>
 <%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
