@@ -120,7 +120,7 @@
       <td width="50%">
         &nbsp;Category:<br>
         &nbsp;
-        <%= DepartmentList.getHtmlSelect("departmentId", 0) %>
+        <%= DepartmentList.getHtmlSelect("departmentId", -1) %>
         <br>&nbsp;
       </td>    
       <td width="2" bgcolor="#808080">&nbsp;</td>
