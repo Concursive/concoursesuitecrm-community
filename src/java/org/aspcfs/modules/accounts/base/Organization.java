@@ -2215,6 +2215,19 @@ public class Organization extends GenericBean {
     resultCount = pst.executeUpdate();
     pst.close();
 
+    // When an account name gets updated,
+    // the stored org_name in contact needs to be updated
+    pst = db.prepareStatement(
+        "UPDATE contact " +
+        "SET org_name = ? " +
+        "WHERE org_id = ? " +
+        "AND org_name NOT LIKE ? ");
+    pst.setString(1, name);
+    pst.setInt(2, orgId);
+    pst.setString(1, name);
+    pst.executeUpdate();
+    pst.close();
+
     //Remove all account types, add new list
     if (this.getMinerOnly() == false && typeList != null) {
       resetType(db);
