@@ -101,12 +101,12 @@ public class Organization extends GenericBean {
         "ct_owner.namelast as o_namelast, ct_owner.namefirst as o_namefirst, " +
         "ct_eb.namelast as eb_namelast, ct_eb.namefirst as eb_namefirst, " +
         "ct_mb.namelast as mb_namelast, ct_mb.namefirst as mb_namefirst, " +
-        "i.name as industry_name " +
+        "i.description as industry_name " +
         "FROM organization o " +
         "LEFT JOIN contact ct_owner ON (o.owner = ct_owner.user_id) " +
         "LEFT JOIN contact ct_eb ON (o.enteredby = ct_eb.user_id) " +
         "LEFT JOIN contact ct_mb ON (o.modifiedby = ct_mb.user_id) " +
-        "LEFT JOIN industry_temp i ON (o.industry_temp_code = i.code) " +
+        "LEFT JOIN lookup_industry i ON (o.industry_temp_code = i.code) " +
         "WHERE o.org_id = " + org_id + " ");
 
     Statement st = null;
