@@ -140,7 +140,8 @@ public final class Roles extends CFSModule {
     Role thisRole = (Role) context.getFormBean();
     thisRole.setRequestItems(context.getRequest());
     thisRole.setModifiedBy(getUserId(context));
-
+    thisRole.setRoleType(0);
+    
     try {
       db = this.getConnection(context);
       resultCount = thisRole.update(db);
@@ -274,7 +275,8 @@ public final class Roles extends CFSModule {
     thisRole.setRequestItems(context.getRequest());
     thisRole.setEnteredBy(getUserId(context));
     thisRole.setModifiedBy(getUserId(context));
-
+    thisRole.setRoleType(0);
+    
     Connection db = null;
     try {
       db = this.getConnection(context);
