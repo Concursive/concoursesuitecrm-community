@@ -281,6 +281,10 @@ public final class Admin extends CFSModule {
           selectedList = new LookupList(db, "lookup_stage");
           subTitle = "Pipeline Management: Stage";
         } 
+        if (sublist == PermissionCategory.LOOKUP_LEADS_TYPE) {
+          selectedList = new LookupList(db, "lookup_opportunity_types");
+          subTitle = "Pipeline Management: Opportunity Type";
+        }         
       }
       
       if (module == PermissionCategory.PERMISSION_CAT_CONTACTS) {
@@ -359,6 +363,8 @@ public final class Admin extends CFSModule {
     if (moduleId == PermissionCategory.PERMISSION_CAT_LEADS) {
       LookupList stageList = new LookupList(db, "lookup_stage");
       context.getRequest().setAttribute("StageList", stageList);
+      LookupList typeList = new LookupList(db, "lookup_opportunity_types");
+      context.getRequest().setAttribute("OpportunityTypeList", typeList);
     } else if (moduleId == PermissionCategory.PERMISSION_CAT_ACCOUNTS) {
       LookupList atl = new LookupList(db, "lookup_account_types");
       LookupList rtl = new LookupList(db, "lookup_revenue_types");

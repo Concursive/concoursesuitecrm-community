@@ -22,6 +22,7 @@ public class PermissionCategory extends GenericBean {
   
   public static final int PERMISSION_CAT_LEADS = 4;
   public static final int LOOKUP_LEADS_STAGE = 1;
+  public static final int LOOKUP_LEADS_TYPE = 2;
   
   public static final int PERMISSION_CAT_ACCOUNTS = 1;
   public static final int LOOKUP_ACCOUNTS_TYPE = 1;
