@@ -2602,9 +2602,14 @@ public class Organization extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   protected boolean isValid(Connection db) throws SQLException {
-    if ((name == null || name.trim().equals("")) && (nameLast == null || nameLast.trim().equals(""))) {
-      errors.put("nameError", "Organization name is required.");
-      errors.put("nameLastError", "Last name is required.");
+    if (this.primaryContact != null) {
+      if (nameLast == null || nameLast.trim().equals("")) {
+        errors.put("nameLastError", "Last name is required.");
+      }
+    } else {
+      if (name == null || name.trim().equals("")) {
+        errors.put("nameError", "Organization name is required.");
+      }
     }
     if (hasErrors()) {
       //Check warnings
