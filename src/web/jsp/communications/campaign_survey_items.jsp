@@ -2,7 +2,7 @@
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="ItemList" class="org.aspcfs.modules.communications.base.ActiveSurveyQuestionItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-View Items<br>
+Item List<br>
 <hr color="#BFBFBB" noshade>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
