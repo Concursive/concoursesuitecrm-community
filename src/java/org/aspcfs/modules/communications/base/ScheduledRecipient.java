@@ -422,26 +422,16 @@ public class ScheduledRecipient {
     try {
       db.setAutoCommit(false);
       sql.append(
-          "INSERT INTO scheduled_recipient (campaign_id, contact_id, run_id, status_id, status, status_date, scheduled_date, " +
+          "INSERT INTO scheduled_recipient " +
+          "(campaign_id, contact_id, run_id, status_id, status, status_date, scheduled_date, " +
           "sent_date, reply_date, bounce_date) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setInt(++i, this.getCampaignId());
-      if (campaignId > -1) {
-        pst.setInt(++i, this.getCampaignId());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
       pst.setInt(++i, this.getContactId());
-      if (campaignId > -1) {
-        pst.setInt(++i, this.getContactId());
-      } else {
-        pst.setNull(++i, java.sql.Types.INTEGER);
-      }
-
-      pst.setInt(++i, this.getRunId());
+      DatabaseUtils.setInt(pst, ++i, runId);
       pst.setInt(++i, this.getStatusId());
       pst.setString(++i, this.getStatus());
       if (statusDate != null) {
