@@ -152,4 +152,87 @@ INSERT INTO permission (category_id, permission, permission_view, permission_add
 INSERT INTO permission_category (category, level) VALUES ('Help', 100);
 INSERT INTO permission (category_id, permission, permission_view, permission_add, permission_edit, permission_delete, description, level) VALUES (10, 'help', true, false, false, false, 'Access to Help System', 10);
 
+/* ADMIN */
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 1, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 2, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 3, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 4, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 5, true, false, false, false);
 
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 7, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 8, true, false, true, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 9, true, false, true, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 10, true, false, true, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 11, true, false, false, false);
+
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 12, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 13, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 14, true, true, true, true);
+
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 46, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 47, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 49, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 50, true, false, true, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 51, true, false, true, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 52, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (1, 53, true, false, false, false);
+
+/* DEFAULT USER */
+
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 1, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 2, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 3, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 4, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 5, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 6, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 7, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 8, true, false, true, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 9, true, false, true, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 10, true, false, true, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 11, true, false, false, false);
+
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 12, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 13, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 14, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 15, true, true, false, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 16, true, true, true, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 17, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 18, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 19, true, true, true, true);
+
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 20, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 21, true, false, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 22, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 23, true, true, false, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 24, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 25, true, true, true, true);
+
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 26, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 27, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 28, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 29, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 30, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 31, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 32, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 33, true, true, false, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 34, true, false, false, false);
+
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 35, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 36, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 37, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 38, true, true, true, true);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 39, true, true, true, true);
+
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 40, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 41, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 42, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 43, true, true, true, true);
+
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 44, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 45, true, true, true, true);
+
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 46, true, false, false, false);
+INSERT INTO role_permission (role_id, permission_id, role_view, role_add, role_edit, role_delete) values (2, 48, true, false, false, false);
+
+UPDATE access SET role_id = 2;
+UPDATE access SET role_id = 1 WHERE user_id = 0;
