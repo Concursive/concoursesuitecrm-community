@@ -245,6 +245,7 @@ public class ConnectionPool implements Runnable {
               // Freed up a spot for anybody waiting
               return (getConnection(requestElement));
             } else {
+              requestElement.renew();
               busyConnections.put(existingConnection, requestElement);
               return (existingConnection);
             }
