@@ -8,34 +8,19 @@
   
 */
 import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.admin.base.Role;
 
 //Insert Customer Role into role table
-pst = db.prepareStatement(
-  "INSERT INTO role " +
-  "(role, description, enabled, role_type, enteredBy, modifiedBy) " +
-  "VALUES(?,?,?,?,?,?) ");
-
-pst.setString(1,"Customer");
-pst.setString(2,"Customer Portal User");
-pst.setBoolean(3,true);
-pst.setInt(4,1);
-pst.setInt(5,0);
-pst.setInt(6,0);
-pst.execute();
-pst.close();
-
-st = db.createStatement();
-rs = st.executeQuery(
-  "SELECT role_id " +
-  "FROM role " +
-  "WHERE role = 'Customer'");
-
-roleId = 0;
-if(rs.next()){
-  roleId = rs.getInt("role_id");  
-}
-rs.close();
-st.close();
+Role thisRole = new Role();
+thisRole.setRole("Customer");
+thisRole.setDescription("Customer Portal User");
+thisRole.setEnabled(true);
+thisRole.setRoleType(1);
+thisRole.setEnteredBy(0);
+thisRole.setModifiedBy(0);
+thisRole.insert(db);
+roleId = thisRole.getId();
 
 //List view permissions 
 viewPermissions = new ArrayList();
