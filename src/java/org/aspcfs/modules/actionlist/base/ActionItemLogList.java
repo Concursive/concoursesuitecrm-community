@@ -203,20 +203,22 @@ public class ActionItemLogList extends ArrayList {
    * @exception  SQLException  Description of the Exception
    * @deprecated
    */
-  public static ActionList isItemLinked(Connection db, int linkItemId) throws SQLException {
+  public static ActionList isItemLinked(Connection db, int linkItemId, int type) throws SQLException {
     ActionList thisList = null;
     int actionListId = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT action_id " +
         "FROM action_item ai, action_item_log al " +
-        "WHERE  al.link_item_id = ? AND ai.item_id = al.item_id ");
+        "WHERE  al.link_item_id = ? AND al.type =? AND ai.item_id = al.item_id ");
     pst.setInt(1, linkItemId);
+    pst.setInt(2, type);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       actionListId = rs.getInt("action_id");
     }
     rs.close();
     pst.close();
+
     if (actionListId > 0) {
       thisList = new ActionList();
       thisList.queryRecord(db, actionListId);
