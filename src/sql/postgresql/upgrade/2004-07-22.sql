@@ -97,10 +97,12 @@ CREATE INDEX "call_opp_id_idx" ON "call_log" (opp_id);
 ALTER table contact_phone ADD COLUMN primary_number boolean;
 ALTER table contact_phone ALTER primary_number set default false;
 update contact_phone set primary_number = false;
+ALTER TABLE contact_phone ADD CONSTRAINT contact_phone_primnum_not_null CHECK(primary_number IS NOT NULL);
 
 ALTER table contact_address ADD COLUMN primary_address boolean;
 ALTER table contact_address ALTER primary_address set default false;
 update contact_address set primary_address = false;
+ALTER TABLE contact_address ADD CONSTRAINT contact_address_primaddr_not_null CHECK(primary_address IS NOT NULL);
 
 /* Ticket Performance */
 CREATE INDEX "ticket_problem_idx" ON "ticket" (problem);

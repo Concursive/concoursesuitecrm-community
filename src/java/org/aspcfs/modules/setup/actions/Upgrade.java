@@ -123,6 +123,37 @@ public class Upgrade extends CFSModule {
           }
           buildHelp = true;
         }
+        String dbVersionToCheck = "2004-08-30";
+        if (!isInstalled(db, dbVersionToCheck)) {
+          switch (DatabaseUtils.getType(db)) {
+              case DatabaseUtils.POSTGRESQL:
+                System.out.println("Upgrade-> Executing PostgreSQL script " + dbVersionToCheck);
+                // SQL Script
+                DatabaseUtils.executeSQL(db,
+                    context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "postgresql_" + dbVersionToCheck + ".sql");
+                // Bean Shell Script
+                script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "2004-08-19.bsh");
+                script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "2004-08-20.bsh");
+                installLog.add(dbVersionToCheck + " Database changes installed");
+                break;
+              case DatabaseUtils.MSSQL:
+                System.out.println("Upgrade-> Executing MSSQL script " + dbVersionToCheck);
+                // SQL Script
+                DatabaseUtils.executeSQL(db,
+                    context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "mssql_" + dbVersionToCheck + ".sql");
+                // Bean Shell Script
+                script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "2004-08-19.bsh");
+                script.source(context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs + "2004-08-20.bsh");
+                installLog.add(dbVersionToCheck + " Database changes installed");
+                break;
+              default:
+                if (System.getProperty("DEBUG") != null) {
+                  System.out.println("Upgrade-> * Database could not be determined: " + DatabaseUtils.getType(db));
+                }
+                break;
+          }
+          buildHelp = true;
+        }
         if (buildHelp) {
           // Install the help (blank tables should already exist)
           ImportHelp help = new ImportHelp();
