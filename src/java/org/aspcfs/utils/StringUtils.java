@@ -148,6 +148,27 @@ public class StringUtils {
 
 
   /**
+   *  This method converts HTML back to text.  Used especially for converting
+   *  a hidden html form element into a text area
+   *
+   *@param  s  Description of the Parameter
+   *@return    Description of the Return Value
+   */
+  public static String fromHtmlValue(String s) {
+    if (s != null) {
+      String htmlReady = s.trim();
+      htmlReady = replace(htmlReady, "&quot;", "\"");
+      htmlReady = replace(htmlReady, "&lt;", "<");
+      htmlReady = replace(htmlReady, "&gt;", ">");
+      htmlReady = replace(htmlReady, "<br>", "\r\n");
+      return (htmlReady);
+    } else {
+      return ("");
+    }
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  s  Description of the Parameter
