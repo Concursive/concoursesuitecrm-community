@@ -96,7 +96,7 @@ public class ParameterList extends ArrayList {
         //Auto-populate the user's range based on selected type
         if (param.getName().equals("userid_range_source")) {
           if (param.getValue().equals("all")) {
-            //TOOD:"All" wouldn't work, need to swap the _where clause
+            //TODO:"All" wouldn't work, need to swap the _where clause
             addParam("userid_range", "");
           } else if (param.getValue().equals("hierarchy")) {
             addParam("userid_range", UserUtils.getUserIdRange(request));

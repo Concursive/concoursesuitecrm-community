@@ -410,7 +410,23 @@ public class Parameter extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public void prepareContext(HttpServletRequest request, Connection db) throws SQLException {
-    if (name.startsWith("lookup_")) {
+    if (name.startsWith("lookup_state")) {
+      //Nothing, this object is static
+    } else if (name.startsWith("lookup_ticket_severity") && !name.endsWith("_where")) {
+      //Special case because of table name
+      LookupList select = new LookupList(db, "ticket_severity");
+      select.addItem(-1, "All");
+      request.setAttribute(name, select);
+    } else if (name.startsWith("lookup_ticket_priority") && !name.endsWith("_where")) {
+      //Special case because of table name
+      LookupList select = new LookupList(db, "ticket_priority");
+      select.addItem(-1, "All");
+      request.setAttribute(name, select);
+    } else if (name.startsWith("lookup_call_result") && !name.endsWith("_where")) {
+      //TODO: Add call result object here
+      
+    } else if (name.startsWith("lookup_") && !name.endsWith("_where")) {
+      //Perform this one last, just in case other names start with lookup_
       LookupList select = new LookupList(db, name);
       select.addItem(-1, "All");
       request.setAttribute(name, select);
@@ -427,12 +443,19 @@ public class Parameter extends GenericBean {
    */
   public String getHtml(HttpServletRequest request) {
     if (name.equals("userid_range_source")) {
+      //User Id combo box
       return HtmlSelectRecordSource.getSelect(name, value).getHtml();
     } else if (name.startsWith("date_")) {
       //Date Field
-      return "<input type='text' size='10' name='" + name + "' value='" + HTTPUtils.toHtmlValue(value) + "'/>\r\n" +
-          "<a href=\"javascript:popCalendar('paramForm', '" + name + "');\"><img src=\"images/icons/stock_form-date-field-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/></a> (mm/dd/yyyy)";
-    } else if (name.startsWith("lookup_") && !name.endsWith("_max") && !name.endsWith("_min")) {
+      return "<input type='text' size='10' name='" + name + "' " +
+          "value='" + HTTPUtils.toHtmlValue(value) + "'/>\r\n" +
+          "<a href=\"javascript:popCalendar('paramForm', '" + name + "');\">" +
+          "<img src=\"images/icons/stock_form-date-field-16.gif\" " +
+          "border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/></a> (mm/dd/yyyy)";
+    } else if (name.startsWith("lookup_state")) {
+      //State/Province drop-down
+      return (new StateSelect()).getHtml(name);
+    } else if (name.startsWith("lookup_") && !name.endsWith("_where")) {
       //Lookup Lists
       LookupList select = (LookupList) request.getAttribute(name);
       if (value != null) {
@@ -443,6 +466,38 @@ public class Parameter extends GenericBean {
     } else if (name.startsWith("percent_") && !name.endsWith("_max") && !name.endsWith("_min")) {
       //Percent drop-down
       return HtmlSelectProbabilityRange.getSelect(name, value).getHtml();
+    } else if (name.startsWith("text_")) {
+      //Text Field
+      int defaultSize = 30;
+      int maxLength = -1;
+      if (name.indexOf(":") > -1) {
+        maxLength = Integer.parseInt(name.substring(name.indexOf(":") + 1));
+        if (maxLength > 40) {
+          defaultSize = 40;
+        } else {
+          defaultSize = maxLength;
+        }
+      }
+      return "<input type=\"text\" size=\"" + defaultSize + "\" " + 
+          (maxLength == -1 ? "" : "maxlength=\"" + maxLength + "\" ") + 
+          "name=\"" + name + "\" " +
+          "value=\"" + HTTPUtils.toHtmlValue(value) + "\"/>";
+    } else if (name.startsWith("number_")) {
+      //Number Field
+      int defaultSize = 30;
+      int maxLength = -1;
+      if (name.indexOf(":") > -1) {
+        maxLength = Integer.parseInt(name.substring(name.indexOf(":") + 1));
+        if (maxLength > 40) {
+          defaultSize = 40;
+        } else {
+          defaultSize = maxLength;
+        }
+      }
+      return "<input type=\"text\" size=\"" + defaultSize + "\" " + 
+          (maxLength == -1 ? "" : "maxlength=\"" + maxLength + "\" ") + 
+          "name=\"" + name + "\" " +
+          "value=\"" + HTTPUtils.toHtmlValue(value) + "\"/>";
     }
     return "Parameter type not supported";
   }
