@@ -73,7 +73,7 @@
     </td>
     <td>
       <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
-      <input type="text" name="subject" size="59" maxlength="255">
+      <input type="text" name="subject" size="59" maxlength="255"><font color="red">*</font>
     </td>
   </tr>
   <tr class="containerBody">

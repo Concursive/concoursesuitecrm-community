@@ -38,7 +38,7 @@
 <body onLoad="document.inputForm.subject.focus();">
 <a href="Accounts.do?command=View">Back to Account List</a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
-  <form method="post" name="inputForm" action="AccountsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
+  <form method="post" name="inputForm" action="AccountsDocuments.do?command=UploadVersion" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
   <tr class="containerHeader">
     <td>
       <strong><%= toHtml(OrgDetails.getName()) %></strong>
@@ -71,7 +71,7 @@
     </td>
     <td>
       <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
-      <input type="text" name="subject" size="59" maxlength="255" value="<%= FileItem.getSubject() %>">
+      <input type="text" name="subject" size="59" maxlength="255" value="<%= FileItem.getSubject() %>"><font color="red">*</font>
     </td>
   </tr>
   <tr class="containerBody">

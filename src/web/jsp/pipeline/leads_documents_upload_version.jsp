@@ -74,7 +74,7 @@
     </td>
     <td>
       <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
-      <input type="text" name="subject" size="59" maxlength="255" value="<%= FileItem.getSubject() %>">
+      <input type="text" name="subject" size="59" maxlength="255" value="<%= FileItem.getSubject() %>"><font color="red">*</font>
     </td>
   </tr>
   <tr class="containerBody">
