@@ -194,26 +194,17 @@ public final class MyCFS extends CFSModule {
 		//	Alerts Selection
 		//
 		
-		HtmlSelect alertsListSelect = new HtmlSelect();
-		alertsListSelect.setSelectName("alerts");
-		alertsListSelect.addItem(0, "Opportunities");
-		alertsListSelect.addItem(1, "Leads Contacted");
-		alertsListSelect.addItem(2, "Presentations");
-		alertsListSelect.addItem(3, "Proposals");
-		alertsListSelect.addItem(4, "Contracts Signed");
-		
 		String alertsRequest = (String) context.getRequest().getParameter("alerts");
 		if (alertsRequest == null) { alertsRequest = "0"; }
 			
 		int i_alerts = Integer.parseInt(alertsRequest);
-		alertsListSelect.setDefaultKey(i_alerts);
-		alertsListSelect.build();
 
 		Vector newsList = new Vector();
 		
 		String industryCheck = context.getRequest().getParameter("industry");
 		
 		OpportunityList alertOpps = new OpportunityList();
+		CallList alertCalls = new CallList();
 		
 		Connection db = null;
 		Statement st = null;
@@ -224,6 +215,8 @@ public final class MyCFS extends CFSModule {
 		//companyCalendar.addHolidays();
 		companyCalendar.setMonthArrows(true);
 		companyCalendar.setFrontPageView(true);
+		companyCalendar.setNumberOfCells(35);
+		companyCalendar.setShowSubject(false);
 		
 
 		try {
@@ -297,11 +290,11 @@ public final class MyCFS extends CFSModule {
 			st.close();
 
 			//I'm just going to put the alertOpps here
-			PagedListInfo alertOppsPaged = new PagedListInfo();
-			alertOppsPaged.setMaxRecords(5);
-			alertOppsPaged.setColumnToSortBy("alertdate");
+			PagedListInfo alertPaged = new PagedListInfo();
+			alertPaged.setMaxRecords(5);
+			alertPaged.setColumnToSortBy("alertdate");
 
-			alertOpps.setPagedListInfo(alertOppsPaged);
+			alertOpps.setPagedListInfo(alertPaged);
 			alertOpps.setEnteredBy(getUserId(context));
 			alertOpps.setHasAlertDate(true);
 			alertOpps.buildList(db);
@@ -310,7 +303,20 @@ public final class MyCFS extends CFSModule {
 			if ( n.hasNext() ) {
 				while (n.hasNext()) {
 					Opportunity thisOpp = (Opportunity)n.next();
-					companyCalendar.addEvent(thisOpp.getAlertDate(),"","<font color=red>A</font>","");
+					companyCalendar.addEvent(thisOpp.getAlertDate(),"",thisOpp.getDescription(),"Opportunity");
+				}
+			}
+			
+			alertCalls.setPagedListInfo(alertPaged);
+			alertCalls.setEnteredBy(getUserId(context));
+			alertCalls.setHasAlertDate(true);
+			alertCalls.buildList(db);
+			
+			Iterator m = alertCalls.iterator();
+			if ( m.hasNext() ) {
+				while (m.hasNext()) {
+					Call thisCall = (Call)m.next();
+					companyCalendar.addEvent(thisCall.getAlertDate(),"",thisCall.getSubject(),"Call");
 				}
 			}
 
@@ -325,8 +331,6 @@ public final class MyCFS extends CFSModule {
 		if (errorMessage == null) {
 			context.getRequest().setAttribute("CompanyCalendar", companyCalendar);
 			context.getRequest().setAttribute("NewsList", newsList);
-			context.getRequest().setAttribute("AlertsListSelection", alertsListSelect);
-			context.getRequest().setAttribute("AlertOppsList", alertOpps);
 			return ("HomeOK");
 		}
 		else {

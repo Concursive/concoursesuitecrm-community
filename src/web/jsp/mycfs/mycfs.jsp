@@ -1,26 +1,12 @@
 <%@ page import="java.util.*,com.darkhorseventures.cfsbase.*" %>
 <jsp:useBean id="NewsList" class="java.util.Vector" scope="request"/>
 <jsp:useBean id="IndSelect" class="com.darkhorseventures.webutils.LookupList" scope="request"/>
-<jsp:useBean id="AlertsListSelection" class="com.darkhorseventures.webutils.HtmlSelect" scope="request"/>
-<jsp:useBean id="AlertOppsList" class="com.darkhorseventures.cfsbase.OpportunityList" scope="request"/>
 <jsp:useBean id="CompanyCalendar" class="com.darkhorseventures.utils.CalendarView" scope="request"/>
+<jsp:useBean id="alertPaged" class="com.darkhorseventures.webutils.PagedListInfo" scope="session"/>
 <table bgcolor=white border=0 width="100%">
 
 	<tr>
 	<td valign=top bgcolor=white width=300>
-	<!--table bgcolor=white width=275 border=1 cellpadding=2 cellspacing=0 bordercolorlight="#000000" bordercolor="#FFFFFF">
-		<tr bgcolor="#DEE0FA">
-		<td width=100% valign=center align=center colspan=2>
-		<strong>Current Weather</strong>
-		</td>
-		</tr>
-		
-		<tr><td valign=center>
-		<a href="http://oap.weather.com/fcgi-bin/oap/redirect_magnet?loc_id=USVA0557&par=internal&site=magnet&code=357451&promo=english">
-		<img border=0 width=270 height=140 SRC="http://oap.weather.com/fcgi-bin/oap/generate_magnet?loc_id=USVA0557&code=357451"></a>
-		</td>
-		</tr>
-	</table-->
 	
   <%  
     CompanyCalendar.setBorderSize(1);
@@ -34,69 +20,16 @@
     <td bgcolor=white valign=top width=100%>
     <table bgcolor=white width=100% border=1 cellpadding=4 cellspacing=0 bordercolorlight="#000000" bordercolor="#FFFFFF">
     <tr bgcolor="#DEE0FA">
-    <td valign=center>
+    <td colspan=3 valign=center>
     <strong>Alerts</strong>
     </td>
     </tr>
-    
-    <%
-	Iterator n = AlertOppsList.iterator();
-		
-	if ( n.hasNext() ) {
-		int rowid = 0;
-		while (n.hasNext()) {
-			if (rowid != 1) {
-				rowid = 1;
-			} else {
-				rowid = 2;
-			}
-	          	
-			Opportunity thisOpp = (Opportunity)n.next();
-%>    
-			<tr>
-			<td class="row<%= rowid %>" valign=center>[<%=thisOpp.getAlertDate()%>] <a href="/Leads.do?command=DetailsOpp&id=<%= thisOpp.getId() %>&orgId=<%= thisOpp.getAccountLink() %>&contactId=<%= thisOpp.getContactLink() %>&return=list"><%=thisOpp.getDescription()%></a></td>
-			<!--td class="row<%= rowid %>" valign=center><%=thisOpp.getAccountName()%></td>
-			<td class="row<%= rowid %>" valign=center width=100><%=thisOpp.getAlertDate()%></td-->
-			</tr>
-<%    		}
-	}
-%>
-    
-    
-    
+
+	<tr><td>
+	<%=CompanyCalendar.displayEvents().toString()%>
     
     </table>
-    <!--table bgcolor=white width=100% border=1 cellpadding=4 cellspacing=0 class="pagedlist" bordercolorlight="#000000" bordercolor="#FFFFFF">
-      <form name="alerts" type="post" action="MyCFS.do">
-      <input type=hidden name="auto-populate" value="true">
-      <input type=hidden name=command value="Home">
-      <tr bgcolor="#DEE0FA">
-        <td width=100% valign=center align=center>
-          <strong>Alerts</strong>
-        </td>
-      </tr>
-      <tr>
-        <td bgcolor=white>
-          Select Alert Type:
-<%
-          AlertsListSelection.setJsEvent ("onChange=\"document.forms['alerts'].submit();\"");
-%>
-          <%= AlertsListSelection.getHtml() %>
-        </td>
-      </tr>
-      </form>
-    </table-->
-   <!--table border=0 cellpadding=2 cellspacing=1 width="100%" bgcolor="#D4D4D4">
-     <tr bgcolor=white>
-     <th align=left>Description</th>
-     <th align=left width=150>Account</th>
-     <th width=100 align=left>Alert Date</th>
-     </tr>
 
-
-
-
-    </table-->
 <!-- End Table:Alerts -->
 </td>
 <!-- end ZZ:row one -->
