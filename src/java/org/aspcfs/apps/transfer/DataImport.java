@@ -91,6 +91,7 @@ public class DataImport {
         //Execute the read/write process
         ((DataReader) reader).execute((DataWriter) writer);
 
+        ((DataWriter) writer).close();
       } else {
         logger.info("A Reader and Writer need to be specified in the configuration file");
         System.exit(0);
