@@ -32,12 +32,15 @@ Add Folder Record
   <tr>
     <td class="containerBack">
       Folder: <strong><%= Category.getName() %></strong><br>
-      &nbsp;<br>
-      <input type="submit" value="Save" onClick="javascript:this.form.action='ExternalContacts.do?command=InsertFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>'">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>'"><br>
-      &nbsp;<br>
+      <dhv:evaluate exp="<%= !Category.isEmpty() %>">
+        &nbsp;<br>
+        <input type="submit" value="Save" onClick="javascript:this.form.action='ExternalContacts.do?command=InsertFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>'">
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>'"><br>
+        &nbsp;<br>
+      </dhv:evaluate>
 <%
   Iterator groups = Category.iterator();
+  if(groups.hasNext()){
   while (groups.hasNext()) {
     CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
 %>    
@@ -77,9 +80,19 @@ Add Folder Record
 </table>
 &nbsp;
 <%}%>
-<br>
-<input type="submit" value="Save" onClick="javascript:this.form.action='ExternalContacts.do?command=InsertFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>'">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>'">
-</td></tr>
+    <dhv:evaluate exp="<%= !Category.isEmpty() %>">
+        <br>
+        <input type="submit" value="Save" onClick="javascript:this.form.action='ExternalContacts.do?command=InsertFields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>'">
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>&catId=<%= Category.getId() %>'">
+        </td></tr>
+    </dhv:evaluate>
+<%}else{%>
+  <tr class="containerBody">
+      <td colspan=2>
+        <font color="#9E9E9E">No groups available.</font>
+      </td>
+    </tr>
+<%}%>
+
 </table>
 </form>

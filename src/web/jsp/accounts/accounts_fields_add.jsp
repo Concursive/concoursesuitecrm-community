@@ -32,15 +32,18 @@ Add Folder Record
   <tr>
     <td class="containerBack">
       Folder: <strong><%= Category.getName() %></strong><br>
-      &nbsp;<br>
-      <input type="submit" value="Save" onClick="javascript:this.form.action='Accounts.do?command=InsertFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'"><br>
-      &nbsp;<br>
+      <dhv:evaluate exp="<%= !Category.isEmpty() %>">
+        &nbsp;<br>
+        <input type="submit" value="Save" onClick="javascript:this.form.action='Accounts.do?command=InsertFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'">
+        <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'"><br>
+        &nbsp;<br>
+      </dhv:evaluate>
 <%
   Iterator groups = Category.iterator();
-  while (groups.hasNext()) {
+  if (groups.hasNext()) {
+    while (groups.hasNext()) {
     CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
-%>    
+%>
 <table cellpadding="4" cellspacing="0" border="1" width="100%" bordercolorlight="#000000" bordercolor="#FFFFFF">
   <tr class="title">
     <td colspan=2 valign=center align=left>
@@ -77,9 +80,19 @@ Add Folder Record
 </table>
 &nbsp;
 <%}%>
-<br>
-<input type="submit" value="Save" onClick="javascript:this.form.action='Accounts.do?command=InsertFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'">
-</td></tr>
+  <dhv:evaluate exp="<%= !Category.isEmpty() %>">
+    <br>
+    <input type="submit" value="Save" onClick="javascript:this.form.action='Accounts.do?command=InsertFields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'">
+    <input type="submit" value="Cancel" onClick="javascript:this.form.action='Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>'">
+    </td></tr>
+  </dhv:evaluate>
+  
+<%}else{%>
+  <tr class="containerBody">
+      <td colspan=2>
+        <font color="#9E9E9E">No groups available.</font>
+      </td>
+    </tr>
+<%}%>
 </table>
 </form>
