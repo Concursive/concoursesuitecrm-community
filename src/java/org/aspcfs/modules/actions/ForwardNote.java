@@ -123,7 +123,7 @@ public final class ForwardNote extends CFSModule {
 				mail.setTo(tempUser.getContact().getEmailAddress("Business"));
 				
 				mail.setSubject(thisNote.getSubject());
-				mail.setBody(thisNote.getBody());
+				mail.setBody("This message was sent to your CFS Inbox by " + thisNote.getSentName() + "<br><br>" + thisNote.getBody());
 				
 				if (mail.send() == 2) {
 					System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
