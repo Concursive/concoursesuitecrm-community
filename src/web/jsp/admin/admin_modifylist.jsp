@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="SelectedList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -22,6 +22,7 @@
 <jsp:useBean id="moduleId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="SubTitle" class="java.lang.String" scope="request"/>
 <jsp:useBean id="category" class="java.lang.String" scope="request"/>
+<%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/editListForm.js"></script>
 <script language="JavaScript" type="text/javascript">
   function doCheck() {
@@ -40,11 +41,11 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=moduleId%>"><%=PermissionCategory.getCategory()%></a> >
-<a href="Admin.do?command=EditLists&moduleId=<%=moduleId%>">Lookup Lists</a> > 
-Edit List
+<a href="Admin.do?command=EditLists&moduleId=<%=moduleId%>"><dhv:label name="admin.lookupLists">Lookup Lists</dhv:label></a> > 
+<dhv:label name="admin.editList">Edit List</dhv:label>
 </td>
 </tr>
 </table>
@@ -52,7 +53,7 @@ Edit List
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="3">
-      <strong><%= SubTitle %></strong>
+      <strong><%= toHtml(SubTitle) %></strong>
     </th>
   </tr>
   <tr>
@@ -60,17 +61,17 @@ Edit List
       <table width="100%" cellspacing="0" cellpadding="2" border="0" class="empty">
         <tr>
           <td valign="center">
-            New Option
+            <dhv:label name="admin.newOption">New Option</dhv:label>
           </td>
         </tr>
         <tr>
           <td valign="center">
-            <input type="text" name="newValue" value="" size="25" maxlength="50">
+            <input type="text" name="newValue" value="" size="25" maxlength="300">
           </td>
         </tr>
         <tr>
           <td valign="center">
-            <input type="button" value="Add >" onclick="javascript:addValues()">
+            <input type="button" name="addButton" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onclick="javascript:addValues()">
           </td>
         </tr>
       </table>
@@ -79,22 +80,22 @@ Edit List
       <table width="100%" cellspacing="0" cellpadding="2" border="0" class="empty">
         <tr>
           <td valign="center">
-            <input type="button" value="Up" onclick="javascript:moveOptionUp(document.modifyList.selectedList)">
+            <input type="button" value="<dhv:label name="global.button.Up">Up</dhv:label>" onclick="javascript:moveOptionUp(document.modifyList.selectedList)">
           </td>
         </tr>
         <tr>
           <td valign="center">
-            <input type="button" value="Down" onclick="javascript:moveOptionDown(document.modifyList.selectedList)">
+            <input type="button" value="<dhv:label name="global.button.Down">Down</dhv:label>" onclick="javascript:moveOptionDown(document.modifyList.selectedList)">
           </td>
         </tr>
         <tr>
           <td valign="center">
-            <input type="button" value="Remove" onclick="javascript:removeValues()">
+            <input type="button" value="<dhv:label name="button.remove">Remove</dhv:label>" onclick="javascript:removeValues()">
           </td>
         </tr>
         <tr>
           <td valign="center">
-            <input type="button" value="Sort" onclick="javascript:sortSelect(document.modifyList.selectedList)">
+            <input type="button" value="<dhv:label name="button.sort">Sort</dhv:label>" onclick="javascript:sortSelect(document.modifyList.selectedList)">
           </td>
         </tr>
       </table>
@@ -110,8 +111,8 @@ Edit List
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="tableName" value="<%= SelectedList.getTableName() %>">
       <input type="hidden" name="category" value="<%= category %>">
-      <input type="submit" value="Save Changes" onClick="javascript:this.form.dosubmit.value='true';">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='Admin.do?command=EditLists'">
+      <input type="submit" value="<dhv:label name="button.saveChanges">Save Changes</dhv:label>" onClick="javascript:this.form.dosubmit.value='true';">
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='Admin.do?command=EditLists'">
     </td>
   </tr>
 </table>

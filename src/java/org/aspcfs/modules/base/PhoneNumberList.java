@@ -138,6 +138,25 @@ public class PhoneNumberList extends Vector {
 
 
   /**
+   *  Returns the phone number that is marked as primary or 
+   * returns the only (or last) phone number in the list.
+   *
+   *@return    The primaryPhoneNumber value
+   */
+  public String getPrimaryPhoneNumber() {
+    Iterator i = this.iterator();
+    PhoneNumber thisNumber = null;
+    while (i.hasNext()) {
+      thisNumber = (PhoneNumber) i.next();
+      if (thisNumber.getPrimaryNumber()) {
+        break;
+      }
+    }
+    return ((thisNumber == null)? "": thisNumber.getPhoneNumber());
+  }
+
+
+  /**
    *  Builds a base SQL where statement for filtering records to be used by
    *  sqlSelect and sqlCount
    *

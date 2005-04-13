@@ -20,6 +20,7 @@ import java.util.*;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.modules.base.*;
 
 /**
  *  This represents a List of Orders
@@ -34,7 +35,100 @@ public class OrderList extends ArrayList {
   private int sourceId = -1;
   private int statusId = -1;
   private int typeId = -1;
+  private int categoryId = -1;
   private boolean buildResources = false;
+  private int closedOnly = Constants.UNDEFINED;
+  private boolean typeExists = false;
+
+
+  /**
+   *  Sets the typeExists attribute of the OrderList object
+   *
+   * @param  tmp  The new typeExists value
+   */
+  public void setTypeExists(boolean tmp) {
+    this.typeExists = tmp;
+  }
+
+
+  /**
+   *  Sets the typeExists attribute of the OrderList object
+   *
+   * @param  tmp  The new typeExists value
+   */
+  public void setTypeExists(String tmp) {
+    this.typeExists = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the typeExists attribute of the OrderList object
+   *
+   * @return    The typeExists value
+   */
+  public boolean getTypeExists() {
+    return typeExists;
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the OrderList object
+   *
+   * @param  tmp  The new categoryId value
+   */
+  public void setCategoryId(int tmp) {
+    this.categoryId = tmp;
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the OrderList object
+   *
+   * @param  tmp  The new categoryId value
+   */
+  public void setCategoryId(String tmp) {
+    this.categoryId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the closedOnly attribute of the OrderList object
+   *
+   * @param  tmp  The new closedOnly value
+   */
+  public void setClosedOnly(int tmp) {
+    this.closedOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the closedOnly attribute of the OrderList object
+   *
+   * @param  tmp  The new closedOnly value
+   */
+  public void setClosedOnly(String tmp) {
+    this.closedOnly = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the closedOnly attribute of the OrderList object
+   *
+   * @return    The closedOnly value
+   */
+  public int getClosedOnly() {
+    return closedOnly;
+  }
+
+
+  /**
+   *  Gets the categoryId attribute of the OrderList object
+   *
+   * @return    The categoryId value
+   */
+  public int getCategoryId() {
+    return categoryId;
+  }
 
 
   /**
@@ -231,8 +325,11 @@ public class OrderList extends ArrayList {
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
         " FROM order_entry oe " +
-        " WHERE oe.order_id > -1 ");
-
+        " LEFT JOIN organization org ON (oe.org_id = org.org_id) " +
+        " LEFT JOIN lookup_order_status loes ON ( oe.status_id = loes.code ) " +
+        " LEFT JOIN contact ct_billing ON (oe.billing_contact_id = ct_billing.contact_id) " +
+        " WHERE oe.order_id > -1 "
+        );
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
@@ -262,7 +359,7 @@ public class OrderList extends ArrayList {
       pagedListInfo.setDefaultSort("oe.entered", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY order_id");
+      sqlOrder.append("ORDER BY oe.order_id");
     }
     //Build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -273,10 +370,11 @@ public class OrderList extends ArrayList {
     sqlSelect.append(
         "   oe.order_id, oe.parent_id, oe.org_id, oe.quote_id, oe.sales_id, oe.orderedby, oe.billing_contact_id, oe.source_id, " +
         "   oe.grand_total, oe.status_id, oe.contract_date, oe.status_date, oe.expiration_date, oe.order_terms_id, oe.order_type_id, " +
-        "   oe.description, oe.notes, oe.entered, oe.enteredby, oe.modified, oe.modifiedby, " +
+        "   oe.description, oe.notes, oe.entered, oe.enteredby, oe.modified, oe.modifiedby, oe.submitted, " +
         "   org.name, ct_billing.namelast, ct_billing.namefirst, ct_billing.namemiddle " +
         " FROM order_entry oe " +
         " LEFT JOIN organization org ON (oe.org_id = org.org_id) " +
+        " LEFT JOIN lookup_order_status loes ON ( oe.status_id = loes.code ) " +
         " LEFT JOIN contact ct_billing ON (oe.billing_contact_id = ct_billing.contact_id) " +
         " WHERE oe.order_id > -1 "
         );
@@ -331,6 +429,22 @@ public class OrderList extends ArrayList {
     if (typeId > -1) {
       sqlFilter.append("AND oe.order_type_id = ? ");
     }
+    if (closedOnly == Constants.TRUE) {
+      sqlFilter.append(" AND loes.description IN ( 'Closed' , 'Complete', 'Cancelled', 'Rejected' ) ");
+    } else if (closedOnly == Constants.FALSE) {
+      sqlFilter.append(" AND loes.description NOT IN ( 'Closed' , 'Complete', 'Cancelled', 'Rejected' ) ");
+    }
+    if (categoryId > -1) {
+      sqlFilter.append(
+          " AND oe.order_id IN (SELECT order_id " +
+          " FROM order_product " +
+          " WHERE product_id IN (SELECT product_id " +
+          " FROM product_catalog_category_map pccm " +
+          " WHERE pccm.category_id = ? )) ");
+    }
+    if (typeExists) {
+      sqlFilter.append("AND oe.order_type_id IS NOT NULL ");
+    }
   }
 
 
@@ -354,6 +468,9 @@ public class OrderList extends ArrayList {
     }
     if (typeId > -1) {
       pst.setInt(++i, typeId);
+    }
+    if (categoryId > -1) {
+      pst.setInt(++i, categoryId);
     }
     return i;
   }

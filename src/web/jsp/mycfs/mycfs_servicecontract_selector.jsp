@@ -31,11 +31,10 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popServiceContracts.js"></script>
 <%
   if (!"true".equals(request.getParameter("finalsubmit"))) {
-     String source = request.getParameter("source");
 %>
 <%-- Navigating the contact list --%>
 <br>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ServiceContractListInfo" showHiddenParams="true" enableJScript="true" />
+<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ServiceContractListInfo" showHiddenParams="true" enableJScript="true" form="serviceContractListView"/>
 <br>
 
 <form name="serviceContractListView" method="post" action="ServiceContractSelector.do?command=ListServiceContracts">
@@ -43,22 +42,22 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="20%">
-      <strong>Service Contract Number</strong>
+      <strong><dhv:label name="accounts.accountasset_include.ServiceContractNumber">Service Contract Number</dhv:label></strong>
     </th>
     <th width="20%">
-      <strong>Category</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Category">Category</dhv:label></strong>
     </th>
     <th width="20%" nowrap>
-      <strong>Type</strong>
+      <strong><dhv:label name="accounts.accounts_add.Type">Type</dhv:label></strong>
     </th>
     <th width="20%">
-      <strong>Current Contract Date</strong>
+      <strong><dhv:label name="account.sc.currentContractDate">Current Contract Date</dhv:label></strong>
     </th>
     <th width="20%" nowrap>
-      <strong>End Date</strong>
+      <strong><dhv:label name="product.endDate">End Date</dhv:label></strong>
     </th>
   </tr>
   
@@ -80,7 +79,7 @@
   %>  
         <input type="checkbox" name="serviceContract<%= i %>" value="<%= contractId %>" <%= (selectedServiceContracts.indexOf(contractId) != -1 ? " checked" : "") %> onClick="highlight(this,'<%=User.getBrowserId()%>');">
 <%} else {%>
-        <a href="javascript:document.serviceContractListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%= i %>','serviceContractListView');">Add</a>
+        <a href="javascript:document.serviceContractListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%= i %>','serviceContractListView');"><dhv:label name="button.add">Add</dhv:label></a>
 <%}%>
         <input type="hidden" name="hiddenServiceContractId<%= i %>" value="<%= contractId %>" />
       </td>
@@ -107,7 +106,7 @@
     %>
     <tr>
       <td colspan="6">
-        No service contracts found.
+        <dhv:label name="account.sc.noServiceContractsFound">No service contracts found.</dhv:label>
       </td>
     </tr>
   <%}%>
@@ -122,12 +121,12 @@
  <dhv:pagedListControl object="ServiceContractListInfo" /> 
 
 <% if("list".equals(request.getParameter("listType"))){ %>
-  <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','serviceContractListView');">
-  <input type="button" value="Cancel" onClick="javascript:window.close()">
-  <a href="javascript:SetChecked(1,'serviceContract','serviceContractListView','<%=User.getBrowserId()%>');">Check All</a>
-  <a href="javascript:SetChecked(0,'serviceContract','serviceContractListView','<%=User.getBrowserId()%>');">Clear All</a>
+  <input type="button" value="<dhv:label name="button.done">Done</dhv:label>" onClick="javascript:setFieldSubmit('finalsubmit','true','serviceContractListView');">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
+  <a href="javascript:SetChecked(1,'serviceContract','serviceContractListView','<%=User.getBrowserId()%>');"><dhv:label name="quotes.checkAll">Check All</dhv:label></a>
+  <a href="javascript:SetChecked(0,'serviceContract','serviceContractListView','<%=User.getBrowserId()%>');"><dhv:label name="quotes.clearAll">Clear All</dhv:label></a>
 <%}else{%>
-  <input type="button" value="Cancel" onClick="javascript:window.close()">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
 <%}%>
 </form>
 

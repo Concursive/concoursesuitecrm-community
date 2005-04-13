@@ -38,20 +38,21 @@
 <tr>
 <td>
 <a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
-Export Data
+<dhv:label name="accounts.accounts_relationships_view.ExportData">Export Data</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:permission name="tickets-reports-add"><a href="TroubleTickets.do?command=GenerateForm">Generate new export</a></dhv:permission>
+<dhv:permission name="tickets-reports-add"><a href="TroubleTickets.do?command=GenerateForm"><dhv:label name="accounts.accounts_reports.GenerateNewExport">Generate new export</dhv:label></a></dhv:permission>
 <dhv:permission name="tickets-reports-add" none="true"><br></dhv:permission>
-<center><%= TicketRptListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="TicketRptListInfo"/></center></dhv:include>
 <table width="100%" border="0">
   <tr>
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= TicketRptListInfo.getOptionValue("my") %>>My Exported Data</option>
-        <option <%= TicketRptListInfo.getOptionValue("all") %>>All Exported Data</option>
+      <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= TicketRptListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_reports.MyExportedData">My Exported Data</dhv:label></option>
+        <option <%= TicketRptListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_reports.AllExportedData">All Exported Data</dhv:label></option>
       </select>
     </td>
     <td>
@@ -62,22 +63,22 @@ Export Data
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th>
-      <strong>Subject</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></strong>
     </th>
     <th>
-      <strong>Size</strong>
+      <strong><dhv:label name="accounts.accounts_documents_details.Size">Size</dhv:label></strong>
     </th>
     <th nowrap>
-      <strong>Create Date</strong>
+      <strong><dhv:label name="accounts.accounts_reports.CreateDate">Create Date</dhv:label></strong>
     </th>
     <th nowrap>
-      <strong>Created By</strong>
+      <strong><dhv:label name="accounts.accounts_reports.CreatedBy">Created By</dhv:label></strong>
     </th>
     <th nowrap>
-      <strong>D/L</strong>
+      <strong><dhv:label name="accounts.accounts_documents_details.DL">D/L</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -118,7 +119,7 @@ Export Data
 <%} else {%>
   <tr class="containerBody">
     <td colspan="6">
-      No exported data found.
+      <dhv:label name="accounts.accounts_reports.NoExporteddataFound">No exported data found.</dhv:label>
     </td>
   </tr>
 </table>

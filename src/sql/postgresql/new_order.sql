@@ -70,7 +70,8 @@ CREATE TABLE order_entry (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id)
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  submitted TIMESTAMP(3)
 );
 
 -- Each order can contain multiple products
@@ -197,24 +198,8 @@ CREATE TABLE lookup_creditcard_types (
 	enabled BOOLEAN DEFAULT true
 );
 
-CREATE TABLE order_payment (
-	payment_id SERIAL PRIMARY KEY,
-	order_id INT NOT NULL REFERENCES order_entry(order_id),
-	payment_method_id INT NOT NULL REFERENCES lookup_payment_methods(code),
-	payment_amount FLOAT,
-  authorization_ref_number VARCHAR(30),
-  authorization_code VARCHAR(30),
-  authorization_date TIMESTAMP(3),
-	-- record keeping
-	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	enteredby INT NOT NULL REFERENCES access(user_id),
-  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id)
-);
-
 CREATE TABLE payment_creditcard (
 	creditcard_id SERIAL PRIMARY KEY,
-	payment_id INT NOT NULL REFERENCES order_payment(payment_id),
 	-- credit card information
 	card_type INT REFERENCES lookup_creditcard_types(code),
 	card_number VARCHAR(300),
@@ -227,12 +212,12 @@ CREATE TABLE payment_creditcard (
 	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id)
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  order_id INTEGER REFERENCES order_entry(order_id)
 );
 
 CREATE TABLE payment_eft (
 	bank_id SERIAL PRIMARY KEY,
-	payment_id INT NOT NULL REFERENCES order_payment(payment_id),
 	-- bank details
 	bank_name VARCHAR(300),
 	routing_number VARCHAR(300),
@@ -243,7 +228,8 @@ CREATE TABLE payment_eft (
 	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INT NOT NULL REFERENCES access(user_id)
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  order_id INTEGER REFERENCES order_entry(order_id)
 );
 
 -- List of products created by the ordering of a product
@@ -267,11 +253,57 @@ CREATE TABLE customer_product_history (
   history_id SERIAL PRIMARY KEY,
   customer_product_id INTEGER NOT NULL REFERENCES customer_product(customer_product_id),
   org_id INTEGER NOT NULL REFERENCES organization(org_id),
-  order_id INTEGER REFERENCES order_entry(order_id),
+  order_id INTEGER NOT NULL REFERENCES order_entry(order_id),
   product_start_date TIMESTAMP(3),
   product_end_date TIMESTAMP(3),
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  order_item_id INTEGER NOT NULL REFERENCES order_product(item_id)
+);
+
+-- Each order_payment has an associated status
+-- Example: Pending, In Progress, Approved, Declined
+CREATE TABLE lookup_payment_status (
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+	enabled BOOLEAN DEFAULT true
+);
+
+CREATE TABLE order_payment (
+	payment_id SERIAL PRIMARY KEY,
+	order_id INT NOT NULL REFERENCES order_entry(order_id),
+  payment_method_id INT NOT NULL REFERENCES lookup_payment_methods(code),
+	payment_amount FLOAT,
+  authorization_ref_number VARCHAR(30),
+  authorization_code VARCHAR(30),
+  authorization_date TIMESTAMP(3),
+	-- record keeping
+	entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	enteredby INT NOT NULL REFERENCES access(user_id),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modifiedby INT NOT NULL REFERENCES access(user_id),
+  order_item_id INT REFERENCES order_product(item_id),
+  history_id INT REFERENCES customer_product_history(history_id),
+	date_to_process TIMESTAMP(3),
+  creditcard_id INTEGER REFERENCES payment_creditcard(creditcard_id),
+  bank_id INTEGER REFERENCES payment_eft(bank_id),
+  status_id INTEGER REFERENCES lookup_payment_status(code)
+);
+
+-- Each order_payment has a status, as the status changes,
+-- the previous status is stored here for reference and tracking
+CREATE TABLE order_payment_status (
+  payment_status_id SERIAL PRIMARY KEY,
+  payment_id INTEGER NOT NULL REFERENCES order_payment(payment_id),
+  status_id INTEGER REFERENCES lookup_payment_status(code),
+  -- record keeping
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  enteredby INT NOT NULL REFERENCES access(user_id),
+  modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id)
 );
+

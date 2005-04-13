@@ -15,6 +15,9 @@
  */
 package org.aspcfs.utils;
 
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.database.ConnectionPool;
+
 import java.sql.*;
 import java.text.*;
 import java.util.*;
@@ -34,6 +37,7 @@ public class DatabaseUtils {
   public final static int POSTGRESQL = 1;
   public final static int MSSQL = 2;
   public final static int ORACLE = 3;
+  public final static int FIREBIRD = 4;
 
   public final static String CRLF = System.getProperty("line.separator");
 
@@ -52,6 +56,8 @@ public class DatabaseUtils {
           return "1";
         case DatabaseUtils.ORACLE:
           return "true";
+        case DatabaseUtils.FIREBIRD:
+          return "1";
         default:
           return "true";
     }
@@ -72,6 +78,8 @@ public class DatabaseUtils {
           return "0";
         case DatabaseUtils.ORACLE:
           return "false";
+        case DatabaseUtils.FIREBIRD:
+          return "0";
         default:
           return "false";
     }
@@ -91,6 +99,8 @@ public class DatabaseUtils {
         case DatabaseUtils.MSSQL:
           return "CURRENT_TIMESTAMP";
         case DatabaseUtils.ORACLE:
+          return "CURRENT_TIMESTAMP";
+        case DatabaseUtils.FIREBIRD:
           return "CURRENT_TIMESTAMP";
         default:
           return "CURRENT_TIMESTAMP";
@@ -116,6 +126,8 @@ public class DatabaseUtils {
       return MSSQL;
     } else if ("net.sourceforge.jtds.jdbc.TdsConnection".equals(databaseName)) {
       return MSSQL;
+    } else if ("org.firebirdsql.jdbc.FBDriver".equals(databaseName)) {
+      return FIREBIRD;
     } else if (databaseName.indexOf("oracle") > -1) {
       return ORACLE;
     } else {
@@ -138,6 +150,8 @@ public class DatabaseUtils {
           return (date + "::date");
         case DatabaseUtils.MSSQL:
           return ("CONVERT(char(10), " + date + ", 101)");
+        case DatabaseUtils.FIREBIRD:
+          return ("EXTRACT(DATE FROM " + date + ")");
         default:
           return "";
     }
@@ -145,7 +159,41 @@ public class DatabaseUtils {
 
 
   /**
-   *  Gets the currVal attribute of the DatabaseUtils class
+   *  Gets the nextSeq attribute of the DatabaseUtils class, used before an
+   *  insert statement has been executed
+   *
+   *@param  db                Description of the Parameter
+   *@param  sequenceName      Description of the Parameter
+   *@return                   The nextSeq value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int getNextSeq(Connection db, String sequenceName) throws SQLException {
+    int typeId = DatabaseUtils.getType(db);
+    if (typeId != FIREBIRD) {
+      return -1;
+    }
+    int id = -1;
+    Statement st = db.createStatement();
+    ResultSet rs = null;
+    switch (typeId) {
+        case DatabaseUtils.FIREBIRD:
+          rs = st.executeQuery("SELECT GEN_ID (" + sequenceName + ",1) FROM RDB$DATABASE");
+          break;
+        default:
+          break;
+    }
+    if (rs.next()) {
+      id = rs.getInt(1);
+    }
+    rs.close();
+    st.close();
+    return id;
+  }
+
+
+  /**
+   *  Gets the currVal attribute of the DatabaseUtils class, used after an
+   *  insert statement has been executed
    *
    *@param  db                Description of the Parameter
    *@param  sequenceName      Description of the Parameter
@@ -153,15 +201,22 @@ public class DatabaseUtils {
    *@exception  SQLException  Description of the Exception
    */
   public static int getCurrVal(Connection db, String sequenceName) throws SQLException {
+    int typeId = DatabaseUtils.getType(db);
+    if (typeId != POSTGRESQL && typeId != MSSQL) {
+      return -1;
+    }
     int id = -1;
     Statement st = db.createStatement();
     ResultSet rs = null;
-    switch (DatabaseUtils.getType(db)) {
+    switch (typeId) {
         case DatabaseUtils.POSTGRESQL:
           rs = st.executeQuery("SELECT currval('" + sequenceName + "')");
           break;
         case DatabaseUtils.MSSQL:
           rs = st.executeQuery("SELECT @@IDENTITY");
+          break;
+        case DatabaseUtils.FIREBIRD:
+          // Cannot be retrieved after the insert since another record might
           break;
         default:
           break;
@@ -189,6 +244,8 @@ public class DatabaseUtils {
           return "date_part('year', " + fieldname + ")";
         case DatabaseUtils.MSSQL:
           return "DATEPART(YY, " + fieldname + ")";
+        case DatabaseUtils.FIREBIRD:
+          return "EXTRACT(YEAR FROM " + fieldname + ")";
         case DatabaseUtils.ORACLE:
           return "";
         default:
@@ -211,6 +268,8 @@ public class DatabaseUtils {
           return "date_part('month', " + fieldname + ")";
         case DatabaseUtils.MSSQL:
           return "DATEPART(MM, " + fieldname + ")";
+        case DatabaseUtils.FIREBIRD:
+          return "EXTRACT(MONTH FROM " + fieldname + ")";
         case DatabaseUtils.ORACLE:
           return "";
         default:
@@ -233,6 +292,8 @@ public class DatabaseUtils {
           return "date_part('day', " + fieldname + ")";
         case DatabaseUtils.MSSQL:
           return "DATEPART(DD, " + fieldname + ")";
+        case DatabaseUtils.FIREBIRD:
+          return "EXTRACT(DAY FROM " + fieldname + ")";
         case DatabaseUtils.ORACLE:
           return "";
         default:
@@ -643,6 +704,17 @@ public class DatabaseUtils {
     st.close();
     if (System.getProperty("DEBUG") != null) {
       System.out.println("Executed " + tCount + " total statements");
+    }
+  }
+
+  public static void renewConnection(ActionContext context, Connection db) {
+    //Connections are usually checked out and expire, this will renew the expiration
+    //time
+    if (db != null) {
+      ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+      if (sqlDriver != null) {
+        sqlDriver.renew(db);
+      }
     }
   }
 }

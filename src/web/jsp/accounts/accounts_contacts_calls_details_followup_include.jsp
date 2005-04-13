@@ -19,12 +19,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Follow-up Activity Reminder</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.FollowupActivityReminder">Follow-up Activity Reminder</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Description
+      <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
     </td>
     <td>
       <%= toHtml(CallDetails.getAlertText()) %>
@@ -32,7 +32,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="top">
-      Notes
+      <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
     </td>
     <td>
       <%= toHtml(CallDetails.getFollowupNotes()) %>
@@ -40,7 +40,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Type
+      <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
     </td>
     <td>
       <%= toHtmlValue(CallDetails.getAlertCallType()) %>&nbsp;
@@ -48,7 +48,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Priority
+     <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label>
     </td>
     <td>
       <%= toHtml(CallDetails.getPriorityString()) %>
@@ -56,7 +56,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel" valign="top">
-      Due Date
+      <dhv:label name="accounts.accounts_calls_list.DueDate">Due Date</dhv:label>
     </td>
     <td>
       <zeroio:tz timestamp="<%= CallDetails.getAlertDate() %>" default="&nbsp;" timeZone="<%= CallDetails.getAlertDateTimeZone() %>" showTimeZone="true" default="&nbsp;" />
@@ -68,19 +68,21 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Reminder
+      <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Reminder">Reminder</dhv:label>
     </td>
     <td>
       <% if(CallDetails.getReminderId() > -1){ %>
-        <%= CallDetails.getReminderId() %><%= ReminderTypeList.getSelectedValue(CallDetails.getReminderTypeId()) %>&nbsp; before due date  
+        <%= CallDetails.getReminderId() %>
+        <%= ReminderTypeList.getSelectedValue(CallDetails.getReminderTypeId()) %> 
+        <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.BeforeDueDate">before due date</dhv:label>
       <% }else{ %>
-        None
+        <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.None">None</dhv:label>
       <% } %>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Assigned to...
+      <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.AssignedTo">Assigned to...</dhv:label>
     </td>
     <td>
       <dhv:username id="<%= CallDetails.getOwner() %>"/>

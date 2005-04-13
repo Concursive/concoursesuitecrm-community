@@ -16,15 +16,12 @@
 package org.aspcfs.modules.contacts.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
 
 /**
  *  Basic Contact object.<br>
@@ -57,6 +54,19 @@ public final class ContactForm extends CFSModule {
 
       LookupList addressTypeList = systemStatus.getLookupList(db, "lookup_contactaddress_types");
       context.getRequest().setAttribute("ContactAddressTypeList", addressTypeList);
+
+      LookupList textMessageAddressTypeList = systemStatus.getLookupList(db, "lookup_textmessage_types");
+      context.getRequest().setAttribute("ContactTextMessageAddressTypeList", textMessageAddressTypeList);
+
+      LookupList sources = new LookupList(db, "lookup_contact_source");
+      sources.addItem(-1, systemStatus.getLabel("accounts.accounts_contacts_calls_details_followup_include.None"));
+      context.getRequest().setAttribute("SourceList", sources);
+
+      LookupList ratings = new LookupList(db, "lookup_contact_rating");
+      ratings.addItem(-1, systemStatus.getLabel("accounts.accounts_contacts_calls_details_followup_include.None"));
+      context.getRequest().setAttribute("RatingList", ratings);
+
+
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -64,9 +74,9 @@ public final class ContactForm extends CFSModule {
       this.freeConnection(context, db);
     }
     if (newContact != null && newContact.getId() > 0) {
-      return this.getReturn(context, "PrepareModify");
+      return getReturn(context, "PrepareModify");
     } else {
-      return this.getReturn(context, "PrepareAdd");
+      return getReturn(context, "PrepareAdd");
     }
   }
 }

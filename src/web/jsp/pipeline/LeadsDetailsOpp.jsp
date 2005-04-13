@@ -39,65 +39,56 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> >
+<a href="Leads.do"><dhv:label name="pipeline.pipeline">Pipeline</dhv:label></a> >
 <% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
-	<a href="Leads.do?command=Dashboard">Dashboard</a> >
+	<a href="Leads.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
 <% }else{ %>
-	<a href="Leads.do?command=Search">Search Results</a> >
+	<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <% } %>
-Opportunity Details
+<dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:formMessage showSpace="false" />
-<dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<%-- Begin container --%>
-<%@ include file="leads_details_header_include.jsp" %>
-<% String param1 = "id=" + opportunityHeader.getId(); 
-   String param2 = addLinkParams(request, "viewSource");
-%>
-<dhv:container name="opportunities" selected="details" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <%-- Begin container content --%>
-      <dhv:permission name="pipeline-opportunities-add">
-        <a href="LeadsComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Add a Component</a><br>
-      </dhv:permission>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsComponentListInfo"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-  <tr>
-    <th align="center" nowrap>
-      <strong>Action</strong>
-    </th>
-    <th nowrap>
-      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.description<%= addLinkParams(request, "viewSource") %>">Component</a></strong>
-      <%= LeadsComponentListInfo.getSortIcon("oc.description") %>
-    </th>
-    <th nowrap>
-      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.closed<%= addLinkParams(request, "viewSource") %>">Status</a></strong>
-      <%= LeadsComponentListInfo.getSortIcon("oc.closed") %>
-    </th>
-    <th align="center" nowrap>
-      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.guessvalue<%= addLinkParams(request, "viewSource") %>">Guess<br>Amount</a></strong>
-      <%= LeadsComponentListInfo.getSortIcon("oc.guessvalue") %>
-    </th>
-    <th nowrap>
-      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.closedate<%= addLinkParams(request, "viewSource") %>">Close Date</a></strong>
-      <%= LeadsComponentListInfo.getSortIcon("oc.closedate") %>
-    </th>
-    <th nowrap>
-      <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=stage<%= addLinkParams(request, "viewSource") %>">Current Stage</a></strong>
-      <%= LeadsComponentListInfo.getSortIcon("stage") %>
-    </th>
-    <th>
-      <strong>Owner</strong>
-    </th>
-  </tr>
+<dhv:container name="opportunities" selected="details" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
+  <dhv:permission name="pipeline-opportunities-add">
+    <a href="LeadsComponents.do?command=Prepare&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_opps_details.AddAComponent">Add a Component</dhv:label></a><br>
+  </dhv:permission>
+  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="LeadsComponentListInfo"/>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <th align="center" nowrap>
+        &nbsp;
+      </th>
+      <th nowrap>
+        <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.description<%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_opps_details.Component">Component</dhv:label></a></strong>
+        <%= LeadsComponentListInfo.getSortIcon("oc.description") %>
+      </th>
+      <th nowrap>
+        <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.closed<%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></a></strong>
+        <%= LeadsComponentListInfo.getSortIcon("oc.closed") %>
+      </th>
+      <th align="center" nowrap>
+        <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.guessvalue<%= addLinkParams(request, "viewSource") %>">Guess<br><dhv:label name="accounts.accounts_revenue_add.Amount">Amount</dhv:label></a></strong>
+        <%= LeadsComponentListInfo.getSortIcon("oc.guessvalue") %>
+      </th>
+      <th nowrap>
+        <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=oc.closedate<%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_opps_details.CloseDate">Close Date</dhv:label></a></strong>
+        <%= LeadsComponentListInfo.getSortIcon("oc.closedate") %>
+      </th>
+      <th nowrap>
+        <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=stage<%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label></a></strong>
+        <%= LeadsComponentListInfo.getSortIcon("stage") %>
+      </th>
+      <th>
+        <strong><dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label></strong>
+      </th>
+    </tr>
 <%
 	Iterator j = ComponentList.iterator();
 	if ( j.hasNext() ) {
@@ -108,50 +99,52 @@ Opportunity Details
         rowid = (rowid != 1?1:2);
         OpportunityComponent thisComponent = (OpportunityComponent)j.next();
 %>      
-  <tr class="row<%= rowid %>">
-    <td width="8" valign="top" align="center" nowrap>
-      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-       <a href="javascript:displayMenu('select<%= i %>','menuOpp', '<%= thisComponent.getId() %>');"
-       onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
-    </td>
-    <td width="100%" valign="top">
-      <a href="LeadsComponents.do?command=DetailsComponent&id=<%= thisComponent.getId() %><%= addLinkParams(request, "viewSource") %>">
-      <%= toHtml(thisComponent.getDescription()) %></a>
-    </td>
-    <td valign="top" align="center" nowrap>
-      <%= thisComponent.getClosed() != null ? "<font color=\"red\">closed</font>" : "<font color=\"green\">open</font>" %>
-    </td>
-    <td valign="top" align="right" nowrap>
-      <zeroio:currency value="<%= thisComponent.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
-    </td>
-    <td valign="top" align="center" nowrap>
-      <% if(!User.getTimeZone().equals(thisComponent.getCloseDateTimeZone())){%>
-      <zeroio:tz timestamp="<%= thisComponent.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% } else { %>
-      <zeroio:tz timestamp="<%= thisComponent.getCloseDate() %>" dateOnly="true" timeZone="<%= thisComponent.getCloseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% } %>
-    </td>
-    <td valign="top" align="center" nowrap>
-      <%= toHtml(thisComponent.getStageName()) %>
-    </td>
-    <td valign="top" align="center" nowrap>
-      <dhv:username id="<%= thisComponent.getOwner() %>"/>
-    </td>
-  </tr>
+    <tr class="row<%= rowid %>">
+      <td width="8" valign="top" align="center" nowrap>
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+         <a href="javascript:displayMenu('select<%= i %>','menuOpp', '<%= thisComponent.getId() %>');"
+         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+      </td>
+      <td width="100%" valign="top">
+        <a href="LeadsComponents.do?command=DetailsComponent&id=<%= thisComponent.getId() %><%= addLinkParams(request, "viewSource") %>">
+        <%= toHtml(thisComponent.getDescription()) %></a>
+      </td>
+      <td valign="top" align="center" nowrap>
+        <% if(thisComponent.getClosed() != null) {%>
+         <font color="red"><dhv:label name="project.closed.lowercase">closed</dhv:label></font>
+        <%} else {%>
+         <font color="green"><dhv:label name="project.open.lowercase">open</dhv:label></font>
+        <%}%>
+      </td>
+      <td valign="top" align="right" nowrap>
+        <zeroio:currency value="<%= thisComponent.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      </td>
+      <td valign="top" align="center" nowrap>
+        <% if(!User.getTimeZone().equals(thisComponent.getCloseDateTimeZone())){%>
+        <zeroio:tz timestamp="<%= thisComponent.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+        <% } else { %>
+        <zeroio:tz timestamp="<%= thisComponent.getCloseDate() %>" dateOnly="true" timeZone="<%= thisComponent.getCloseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+        <% } %>
+      </td>
+      <td valign="top" align="center" nowrap>
+        <%= toHtml(thisComponent.getStageName()) %>
+      </td>
+      <td valign="top" align="center" nowrap>
+        <dhv:username id="<%= thisComponent.getOwner() %>"/>
+      </td>
+    </tr>
 <%}%>
 <%} else {%>
-  <tr class="containerBody">
-    <td colspan="7">
-      No opportunity components found.
-    </td>
-  </tr>
+    <tr class="containerBody">
+      <td colspan="7">
+        <dhv:label name="accounts.accounts_contacts_opps_details.NoOpportunityComponentsFound">No opportunity components found.</dhv:label>
+      </td>
+    </tr>
 <%}%>
-</table>
-<br>
-<dhv:pagedListControl object="LeadsComponentListInfo"/>
-&nbsp;<br>
-<dhv:permission name="pipeline-opportunities-edit"><input type="button" value="Rename Opportunity" onClick="javascript:window.location.href='Leads.do?command=ModifyOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>';"></dhv:permission>
-<dhv:permission name="pipeline-opportunities-delete"><input type="button" value="Delete Opportunity" onClick="javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%= opportunityHeader.getId() %>&popup=true<%= addLinkParams(request, "viewSource") %>','Leads.do?command=Search', 'Delete_opp','320','200','yes','no')"></dhv:permission>
-</td>
-</tr>
-</table>
+  </table>
+  <br>
+  <dhv:pagedListControl object="LeadsComponentListInfo"/>
+  &nbsp;<br>
+  <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.RenameOpportunity">Rename Opportunity</dhv:label>" onClick="javascript:window.location.href='Leads.do?command=ModifyOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>';"></dhv:permission>
+  <dhv:permission name="pipeline-opportunities-delete"><input type="button" value="<dhv:label name="global.button.DeleteOpportunity">Delete Opportunity</dhv:label>" onClick="javascript:popURLReturn('Leads.do?command=ConfirmDelete&id=<%= opportunityHeader.getId() %>&popup=true<%= addLinkParams(request, "viewSource") %>','Leads.do?command=Search', 'Delete_opp','320','200','yes','no')"></dhv:permission>
+</dhv:container>

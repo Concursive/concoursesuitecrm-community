@@ -15,21 +15,27 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.products.base.*;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.modules.products.base.CustomerProduct;
+import org.aspcfs.modules.products.base.ProductCatalog;
+import org.aspcfs.modules.quotes.base.QuoteList;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.modules.troubletickets.base.TicketCategory;
+import org.aspcfs.modules.troubletickets.base.TicketCategoryList;
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  *  Maintains Tickets related to an Account
@@ -130,7 +136,7 @@ public final class AccountTickets extends CFSModule {
       context.getRequest().setAttribute("OrgDetails", newOrg);
 
       //getting current date in mm/dd/yyyy format
-      String currentDate = this.getCurrentDateAsString(context);
+      String currentDate = getCurrentDateAsString(context);
       context.getRequest().setAttribute("currentDate", currentDate);
       return ("AddTicketOK");
     } catch (Exception errorMessage) {
@@ -153,9 +159,9 @@ public final class AccountTickets extends CFSModule {
       return ("PermissionError");
     }
     Connection db = null;
-    int resultCount = 0;
     boolean recordInserted = false;
     boolean contactRecordInserted = false;
+    boolean isValid = true;
     Contact nc = null;
     Ticket newTicket = null;
     //Parameters
@@ -187,7 +193,6 @@ public final class AccountTickets extends CFSModule {
       String temporgId = context.getRequest().getParameter("orgId");
       int tempid = Integer.parseInt(temporgId);
       
-
       // set ticket source to Web for tickets inserted by portal user
       if (isPortalUser(context)){
         LookupList sourceList = new LookupList(db, "lookup_ticketsource");
@@ -203,17 +208,24 @@ public final class AccountTickets extends CFSModule {
       context.getRequest().setAttribute("OrgDetails", newOrg);
 
       if (nc != null) {
-        contactRecordInserted = nc.insert(db);
+        isValid = this.validateObject(context, db, nc) && isValid;
+        if (isValid) {
+          contactRecordInserted = nc.insert(db);
+        }
         if (contactRecordInserted) {
           newTic.setContactId(nc.getId());
-        } else {
-          processErrors(context, nc.getErrors());
         }
         if (contactRecordInserted) {
-          recordInserted = newTic.insert(db);
+          isValid = this.validateObject(context, db, newTic);
+          if (isValid) {
+            recordInserted = newTic.insert(db);
+          }
         }
       } else {
-        recordInserted = newTic.insert(db);
+        isValid = this.validateObject(context, db, newTic) && isValid;
+        if (isValid) {
+          recordInserted = newTic.insert(db);
+        }
       }
       if (recordInserted) {
         //Reload the ticket for the details page... redundant to do here
@@ -233,23 +245,19 @@ public final class AccountTickets extends CFSModule {
         }
 
         addRecentItem(context, newTicket);
-        
         processInsertHook(context, newTic);
-      } else {
-        processErrors(context, newTic.getErrors());
       }
       addModuleBean(context, "View Accounts", "Ticket Insert ok");
       if (recordInserted) {
         return ("InsertTicketOK");
-      } else {
-        return (executeCommandAddTicket(context));
       }
-    } catch (Exception errorMessage) {
-      context.getRequest().setAttribute("Error", errorMessage);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    return (executeCommandAddTicket(context));
   }
 
 
@@ -272,6 +280,8 @@ public final class AccountTickets extends CFSModule {
       // Load the ticket
       Ticket newTic = new Ticket();
       newTic.setBuildHistory(true);
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      newTic.setSystemStatus(systemStatus);
       newTic.queryRecord(db, Integer.parseInt(ticketId));
       
       //find record permissions for portal users
@@ -281,7 +291,12 @@ public final class AccountTickets extends CFSModule {
       if (newTic.getProductId() != -1){
         ProductCatalog product = new ProductCatalog(db, newTic.getProductId());
         context.getRequest().setAttribute("product", product);
-      }
+         
+        QuoteList quoteList = new QuoteList();
+        quoteList.setTicketId(newTic.getId());
+        quoteList.buildList(db);
+        context.getRequest().setAttribute("quoteList", quoteList);
+     }
       
       // check wether or not the customer product id exists
       if (newTic.getCustomerProductId() != -1){
@@ -289,7 +304,6 @@ public final class AccountTickets extends CFSModule {
         customerProduct.buildFileList(db);
         context.getRequest().setAttribute("customerProduct", customerProduct);
       }
-
       if (newTic.getAssignedTo() > 0) {
         newTic.checkEnabledOwnerAccount(db);
       }
@@ -329,22 +343,25 @@ public final class AccountTickets extends CFSModule {
     int orgId = Integer.parseInt(context.getRequest().getParameter("orgId"));
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       Ticket ticket = new Ticket(db, Integer.parseInt(id));
       DependencyList dependencies = ticket.processDependencies(db);
       //Prepare the dialog based on the dependencies
       HtmlDialog htmlDialog = new HtmlDialog();
-      htmlDialog.setTitle("Centric CRM: Confirm Delete");
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       } else if (dependencies.canDelete()){
-        htmlDialog.addMessage(dependencies.getHtmlString());
-        htmlDialog.setHeader("This object has the following dependencies within Centric CRM:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
-        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+        htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       } else {
-        htmlDialog.setHeader("This ticket cannot be deleted because it is associated with an activities form.");
-        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+        htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
+        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       }
       context.getSession().setAttribute("Dialog", htmlDialog);
       return ("ConfirmDeleteOK");
@@ -447,10 +464,12 @@ public final class AccountTickets extends CFSModule {
       //Load the user list the ticket can be assigned to
       UserList userList = new UserList();
       userList.setEmptyHtmlSelectRecord("-- None --");
+      userList.setHidden(Constants.FALSE);
       userList.setBuildContact(true);
       userList.setBuildContactDetails(false);
       userList.setDepartment(newTic.getDepartmentCode());
       userList.setExcludeDisabledIfUnselected(true);
+      userList.setExcludeExpiredIfUnselected(true);
       userList.setRoleType(Constants.ROLETYPE_REGULAR);
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
@@ -515,7 +534,7 @@ public final class AccountTickets extends CFSModule {
       addModuleBean(context, "View Accounts", "View Tickets");
 
       //getting current date in mm/dd/yyyy format
-      String currentDate = this.getCurrentDateAsString(context);
+      String currentDate = getCurrentDateAsString(context);
       context.getRequest().setAttribute("currentDate", currentDate);
 
       return ("ModifyTicketOK");
@@ -539,15 +558,13 @@ public final class AccountTickets extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-tickets-edit")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
 
     int catCount = 0;
     TicketCategory thisCat = null;
     boolean catInserted = false;
-
-    boolean smartCommentsResult = true;
+    boolean isValid = true;
 
     Ticket newTic = (Ticket) context.getFormBean();
     if (newTic.getAssignedTo() > -1 && newTic.getAssignedDate() == null){
@@ -563,7 +580,6 @@ public final class AccountTickets extends CFSModule {
       for (catCount = 0; catCount < 4; catCount++) {
         if ((context.getRequest().getParameter("newCat" + catCount + "chk") != null && context.getRequest().getParameter("newCat" + catCount + "chk").equals("on") && context.getRequest().getParameter("newCat" + catCount) != null && !(context.getRequest().getParameter("newCat" + catCount).equals("")))) {
           thisCat = new TicketCategory();
-
           if (catCount == 0) {
             thisCat.setParentCode(0);
           } else if (catCount == 1) {
@@ -573,12 +589,13 @@ public final class AccountTickets extends CFSModule {
           } else {
             thisCat.setParentCode(newTic.getSubCat2());
           }
-
           thisCat.setDescription(context.getRequest().getParameter("newCat" + catCount));
           thisCat.setLevel(catCount);
           thisCat.setCategoryLevel(catCount);
-          catInserted = thisCat.insert(db);
-
+          isValid = this.validateObject(context, db, thisCat) && isValid;
+          if (isValid) {
+            catInserted = thisCat.insert(db);
+          }
           if (catInserted == true) {
             if (catCount == 0) {
               newTic.setCatCode(thisCat.getId());
@@ -595,35 +612,25 @@ public final class AccountTickets extends CFSModule {
       //Get the previousTicket, update the ticket, then send both to a hook
       Ticket previousTicket = new Ticket(db, newTic.getId());
       newTic.setModifiedBy(getUserId(context));
-      resultCount = newTic.update(db);
+      isValid = this.validateObject(context, db, newTic) && isValid;
+      if (isValid) {
+        resultCount = newTic.update(db);
+      }
       if (resultCount == 1) {
         processUpdateHook(context, previousTicket, newTic);
       }
 
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
 
-    if (resultCount == -1) {
-      processErrors(context, newTic.getErrors());
+    if (resultCount == 1 && isValid) {
+      return ("UpdateTicketOK");
     }
-
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        return (executeCommandModifyTicket(context));
-      } else if (resultCount == 1) {
-
-        return ("UpdateTicketOK");
-      } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return (executeCommandModifyTicket(context));
   }
 
 
@@ -661,10 +668,12 @@ public final class AccountTickets extends CFSModule {
     context.getRequest().setAttribute("CategoryList", categoryList);
 
     UserList userList = new UserList();
+    userList.setHidden(Constants.FALSE);
     userList.setEmptyHtmlSelectRecord("-- None --");
     userList.setBuildContact(true);
     userList.setBuildContactDetails(false);
     userList.setExcludeDisabledIfUnselected(true);
+    userList.setExcludeExpiredIfUnselected(true);
     userList.setRoleType(Constants.ROLETYPE_REGULAR);
     if (newTic.getDepartmentCode() > 0) {
       userList.setDepartment(newTic.getDepartmentCode());
@@ -780,6 +789,9 @@ public final class AccountTickets extends CFSModule {
       String departmentCode = context.getRequest().getParameter("departmentCode");
       db = this.getConnection(context);
       UserList userList = new UserList();
+      userList.setEnabled(Constants.TRUE);
+      userList.setHidden(Constants.FALSE);
+      userList.setExpired(Constants.FALSE);
       userList.setEmptyHtmlSelectRecord("-- None --");
       if ((departmentCode != null) && (!"0".equals(departmentCode))) {
         userList.setBuildContact(true);
@@ -815,6 +827,8 @@ public final class AccountTickets extends CFSModule {
       //Load the ticket
       Ticket thisTic = new Ticket();
       thisTic.setBuildHistory(true);
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      thisTic.setSystemStatus(systemStatus);
       thisTic.queryRecord(db, Integer.parseInt(ticketId));
       //Load the organization
       Organization thisOrganization = new Organization(db, thisTic.getOrgId());

@@ -15,24 +15,33 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.zeroio.iteam.base.FileItemList;
-import com.darkhorseventures.framework.beans.*;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.utils.web.LookupElement;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.troubletickets.base.TicketList;
-import org.aspcfs.modules.pipeline.base.OpportunityList;
-import org.aspcfs.modules.assets.base.AssetList;
-import org.aspcfs.modules.servicecontracts.base.ServiceContractList;
 import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.iteam.utils.ProjectUtils;
+import org.aspcfs.controller.ObjectValidator;
+import org.aspcfs.modules.assets.base.AssetList;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.communications.base.RecipientList;
+import org.aspcfs.modules.contacts.base.CallList;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.modules.pipeline.base.OpportunityList;
+import org.aspcfs.modules.quotes.base.QuoteList;
+import org.aspcfs.modules.relationships.base.*;
+import org.aspcfs.modules.servicecontracts.base.ServiceContractList;
+import org.aspcfs.modules.troubletickets.base.TicketList;
+import org.aspcfs.modules.quotes.base.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  *@author     chris
@@ -190,8 +199,6 @@ public class Organization extends GenericBean {
     } else {
       typeList = new ArrayList();
     }
-
-    this.typeList = typeList;
   }
 
 
@@ -1503,6 +1510,37 @@ public class Organization extends GenericBean {
 
 
   /**
+   *  Gets the primaryEmailAddress attribute of the Organization object
+   *
+   *@return    The primaryEmailAddress value
+   */
+  public String getPrimaryEmailAddress() {
+    return emailAddressList.getPrimaryEmailAddress();
+  }
+
+
+  /**
+   *  Gets the primaryPhoneNumber attribute of the Organization object
+   *
+   *@return    The primaryPhoneNumber value
+   */
+  public String getPrimaryPhoneNumber() {
+    return phoneNumberList.getPrimaryPhoneNumber();
+  }
+
+
+  /**
+   *  Gets the primaryAddress attribute of the Organization object
+   *
+   *@return    The primaryAddress value
+   */
+  public Address getPrimaryAddress() {
+    return addressList.getPrimaryAddress();
+  }
+
+
+
+  /**
    *  Gets the Enteredby attribute of the Organization object
    *
    *@return    The Enteredby value
@@ -1593,16 +1631,27 @@ public class Organization extends GenericBean {
     DependencyList dependencyList = new DependencyList();
     try {
       Dependency contactDependency = new Dependency();
-      contactDependency.setName("Contacts");
+      contactDependency.setName("contacts");
       contactDependency.setCount(ContactList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
       contactDependency.setCanDelete(true);
 
-      //finding if any of the account contacts have user accounts
       if (contactDependency.getCount() > 0) {
         ContactList contactList = new ContactList();
         contactList.setOrgId(this.orgId);
         contactList.buildList(db);
         Iterator itr = contactList.iterator();
+
+        // For history, keep this contact if they previously received a comm. message
+        while (itr.hasNext()){
+          Contact contact = (Contact) itr.next();
+          if (RecipientList.retrieveRecordCount(db, Constants.CONTACTS, contact.getId()) > 0) {
+            contactDependency.setCanDelete(false);
+            break;
+          }
+        }
+
+        //finding if any of the account contacts have user accounts
+        itr = contactList.iterator();
         //Setting canDelete to false if an account contact has had portal access
         while (itr.hasNext()) {
           Contact contact = (Contact) itr.next();
@@ -1616,8 +1665,20 @@ public class Organization extends GenericBean {
       }
       dependencyList.add(contactDependency);
 
+      //Check if there exist any relationships
+      Dependency relationshipDependency = new Dependency();
+      relationshipDependency.setName("relationships");
+      RelationshipList thisList = new RelationshipList();
+      thisList.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
+      thisList.setObjectIdMapsFrom(this.getOrgId());
+      thisList.setBuildDualMappings(true);
+      thisList.buildList(db);
+      relationshipDependency.setCount(thisList.getNumberOfRelationships());
+      relationshipDependency.setCanDelete(true);
+      dependencyList.add(relationshipDependency);
+
       Dependency revenueDependency = new Dependency();
-      revenueDependency.setName("Revenue");
+      revenueDependency.setName("revenue");
       revenueDependency.setCount(RevenueList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
       revenueDependency.setCanDelete(true);
       dependencyList.add(revenueDependency);
@@ -1629,37 +1690,49 @@ public class Organization extends GenericBean {
       }
 
       Dependency oppDependency = new Dependency();
-      oppDependency.setName("Opportunities");
+      oppDependency.setName("opportunities");
       oppDependency.setCount(oppCount);
       oppDependency.setCanDelete(false);
       dependencyList.add(oppDependency);
 
       Dependency scDependency = new Dependency();
-      scDependency.setName("Service Contracts");
+      scDependency.setName("contracts");
       scDependency.setCount(ServiceContractList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
       scDependency.setCanDelete(true);
       dependencyList.add(scDependency);
 
       Dependency assetDependency = new Dependency();
-      assetDependency.setName("Assets");
+      assetDependency.setName("assets");
       assetDependency.setCount(AssetList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
       assetDependency.setCanDelete(true);
       dependencyList.add(assetDependency);
 
       Dependency ticDependency = new Dependency();
-      ticDependency.setName("Tickets");
+      ticDependency.setName("tickets");
       ticDependency.setCount(TicketList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
       ticDependency.setCanDelete(true);
       dependencyList.add(ticDependency);
 
       Dependency docDependency = new Dependency();
-      docDependency.setName("Documents");
+      docDependency.setName("documents");
       docDependency.setCount(FileItemList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
       docDependency.setCanDelete(true);
       dependencyList.add(docDependency);
 
+      Dependency quoteDependency = new Dependency();
+      quoteDependency.setName("quotes");
+      quoteDependency.setCount(QuoteList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
+      quoteDependency.setCanDelete(true);
+      dependencyList.add(quoteDependency);
+
+      Dependency projectDependency = new Dependency();
+      projectDependency.setName("projects");
+      projectDependency.setCount(ProjectUtils.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
+      projectDependency.setCanDelete(true);
+      dependencyList.add(projectDependency);
+
       Dependency folderDependency = new Dependency();
-      folderDependency.setName("Folders");
+      folderDependency.setName("folders");
       folderDependency.setCount(CustomFieldRecordList.retrieveRecordCount(db, Constants.ACCOUNTS, this.getId()));
       folderDependency.setCanDelete(true);
       dependencyList.add(folderDependency);
@@ -1812,13 +1885,14 @@ public class Organization extends GenericBean {
     boolean success = false;
 
     sql.append(
-        "UPDATE organization set enabled = " + DatabaseUtils.getFalse(db) + " " +
+        "UPDATE organization set enabled = ? " +
         "WHERE org_id = ? ");
 
     sql.append("AND modified = ? ");
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
+    pst.setBoolean(++i, false);
     pst.setInt(++i, orgId);
 
     pst.setTimestamp(++i, this.getModified());
@@ -1870,16 +1944,6 @@ public class Organization extends GenericBean {
     }
 
     return success;
-  }
-
-
-  /**
-   *  Description of the Method
-   */
-  public void listTypes() {
-    for (int i = 0; i < typeList.size(); i++) {
-      String val = (String) typeList.get(i);
-    }
   }
 
 
@@ -1953,19 +2017,17 @@ public class Organization extends GenericBean {
    *
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   *@exception  Exception     Description of the Exception
    */
-  public boolean insert(Connection db) throws SQLException {
-
-    if (!isValid(db)) {
-      return false;
-    }
+  public boolean insert(Connection db) throws Exception {
 
     StringBuffer sql = new StringBuffer();
-
+    boolean doCommit = false;
     try {
       modifiedBy = enteredBy;
-      db.setAutoCommit(false);
+      if ((doCommit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       sql.append("INSERT INTO ORGANIZATION (name, industry_temp_code, url, miner_only, owner, duplicate_id, ");
       sql.append("notes, employees, revenue, ticker_symbol, account_number, nameFirst, nameLast, nameMiddle, ");
       if (entered != null) {
@@ -2036,7 +2098,10 @@ public class Organization extends GenericBean {
       if (nameLast != null && !"".equals(nameLast)) {
         primaryContact.setOrgId(orgId);
         primaryContact.setOrgName(this.getName());
-        boolean contactInserted = primaryContact.insert(db);
+        boolean contactInserted = ObjectValidator.validate(null, db, primaryContact);
+        if (contactInserted) {
+          contactInserted = primaryContact.insert(db);
+        }
         if (!contactInserted) {
           throw new SQLException("Contact could not be inserted");
         }
@@ -2066,14 +2131,19 @@ public class Organization extends GenericBean {
         thisEmailAddress.process(db, orgId, this.getEnteredBy(), this.getModifiedBy());
       }
       this.update(db, true);
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
-
     return true;
   }
 
@@ -2087,11 +2157,11 @@ public class Organization extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int i = -1;
-    if (!isValid(db)) {
-      return -1;
-    }
+    boolean doCommit = false;
     try {
-      db.setAutoCommit(false);
+      if ((doCommit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       i = this.update(db, false);
       //Process the phone numbers if there are any
       Iterator iphone = phoneNumberList.iterator();
@@ -2113,12 +2183,18 @@ public class Organization extends GenericBean {
         OrganizationEmailAddress thisEmailAddress = (OrganizationEmailAddress) iemail.next();
         thisEmailAddress.process(db, this.getOrgId(), this.getEnteredBy(), this.getModifiedBy());
       }
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
     return i;
   }
@@ -2213,10 +2289,6 @@ public class Organization extends GenericBean {
    */
   public int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
-
-    if (!isValid(db)) {
-      return -1;
-    }
 
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
@@ -2337,6 +2409,14 @@ public class Organization extends GenericBean {
     try {
       db.setAutoCommit(false);
 
+      //build the relationship list(both from and to mappings)
+      RelationshipList thisList = new RelationshipList();
+      thisList.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
+      thisList.setObjectIdMapsFrom(this.getOrgId());
+      thisList.setBuildDualMappings(true);
+      thisList.buildList(db);
+      thisList.delete(db);
+
       //Tickets have accounts, contacts, assets, service contracts related, so delete them first
       TicketList ticketList = new TicketList();
       ticketList.setOrgId(this.getOrgId());
@@ -2388,6 +2468,16 @@ public class Organization extends GenericBean {
       callList.delete(db);
       callList = null;
 
+      //Delete all the associated quotes
+      QuoteList quotes = new QuoteList();
+      quotes.setOrgId(this.getOrgId());
+      quotes.buildList(db);
+      quotes.delete(db);
+      quotes = null;
+
+      //Delete all the project associations
+      ProjectUtils.removeAccounts(db,this.getOrgId());
+
       //Save for next to last since other records related to contacts
       if (contactDelete) {
         ContactList contactList = new ContactList();
@@ -2396,7 +2486,7 @@ public class Organization extends GenericBean {
         contactList.delete(db);
         contactList = null;
       }
-
+      
       this.resetType(db);
 
       Statement st = db.createStatement();
@@ -2595,57 +2685,6 @@ public class Organization extends GenericBean {
 
 
   /**
-   *  Gets the Valid attribute of the Organization object
-   *
-   *@param  db                Description of Parameter
-   *@return                   The Valid value
-   *@exception  SQLException  Description of Exception
-   */
-  protected boolean isValid(Connection db) throws SQLException {
-    if (this.primaryContact != null) {
-      if (nameLast == null || nameLast.trim().equals("")) {
-        errors.put("nameLastError", "Last name is required.");
-      }
-    } else {
-      if (name == null || name.trim().equals("")) {
-        errors.put("nameError", "Organization name is required.");
-      }
-    }
-    if (hasErrors()) {
-      //Check warnings
-      checkWarnings();
-      onlyWarnings = false;
-      return false;
-    } else {
-      //Do not check for warnings if it was found that only warnings existed
-      // in the previous call to isValid for the same form.
-      if (!onlyWarnings) {
-        //Check for warnings if there are no errors
-        checkWarnings();
-        if (hasWarnings()) {
-          onlyWarnings = true;
-          return false;
-        }
-      }
-      return true;
-    }
-  }
-
-
-  /**
-   *  Generates warnings that need to be reviewed before the form can be
-   *  submitted.
-   */
-  protected void checkWarnings() {
-    if ((errors.get("alertDateError") == null) && (alertDate != null)) {
-      if (alertDate.before(new java.util.Date())) {
-        warnings.put("alertDateWarning", "Alert date is earlier than current date or set to current date");
-      }
-    }
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  rs                Description of Parameter
@@ -2695,28 +2734,6 @@ public class Organization extends GenericBean {
 
     //industry_temp table
     industryName = rs.getString("industry_name");
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   */
-  private boolean hasRelatedRecords(Connection db) throws SQLException {
-    Statement st = db.createStatement();
-    ResultSet rs = st.executeQuery(
-        "SELECT count(*) as count " +
-        "FROM opportunity_component " +
-        "WHERE acctlink = " + this.getOrgId());
-    rs.next();
-    int recordCount = rs.getInt("count");
-    rs.close();
-    st.close();
-
-    return (recordCount > 0);
   }
 
 

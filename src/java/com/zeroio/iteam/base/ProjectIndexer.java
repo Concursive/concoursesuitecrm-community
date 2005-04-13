@@ -15,13 +15,18 @@
  */
 package com.zeroio.iteam.base;
 
-import org.apache.lucene.index.IndexWriter;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
-import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.io.IOException;
-import com.zeroio.utils.ContentUtils;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *  Class for working with the Lucene search engine
@@ -42,7 +47,7 @@ public class ProjectIndexer implements Indexer {
    *@exception  SQLException  Description of the Exception
    *@exception  IOException   Description of the Exception
    */
-  public static void add(IndexWriter writer, Connection db) throws SQLException, IOException {
+  public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT project_id, title, shortdescription, requestedby, requesteddept, modified " +
@@ -61,6 +66,7 @@ public class ProjectIndexer implements Indexer {
       project.setModified(rs.getTimestamp("modified"));
       // add the document
       ProjectIndexer.add(writer, project, false);
+      DatabaseUtils.renewConnection(context, db);
     }
     rs.close();
     pst.close();

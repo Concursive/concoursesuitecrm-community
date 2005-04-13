@@ -88,20 +88,16 @@ public class ContactEmailAddress extends EmailAddress {
       throw new SQLException("Valid Email Address ID not specified.");
     }
 
-    Statement st = null;
-    ResultSet rs = null;
-    StringBuffer sql = new StringBuffer();
-    sql.append("SELECT * " +
+    PreparedStatement pst = db.prepareStatement("SELECT * " +
         "FROM contact_emailaddress c, lookup_contactemail_types l " +
         "WHERE c.emailaddress_type = l.code " +
         "AND emailaddress_id = " + emailAddressId + " ");
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     }
     rs.close();
-    st.close();
+    pst.close();
     if (this.getId() == -1) {
       throw new SQLException("Email record not found.");
     }

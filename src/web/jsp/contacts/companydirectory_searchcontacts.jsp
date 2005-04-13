@@ -36,14 +36,14 @@
     document.forms['searchContact'].searchFirstName.focus();
   }
 </script>
-<body onLoad="javascript:document.forms[0].searchFirstName.focus();">
+<body onLoad="javascript:document.searchContact.searchFirstName.focus();">
 <form name="searchContact" action="ExternalContacts.do?command=SearchContacts&auto-populate=true" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do">Contacts</a> > 
-Search Contacts
+<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<dhv:label name="contact.searchContacts">Search Contacts</dhv:label>
 </td>
 </tr>
 </table>
@@ -51,12 +51,12 @@ Search Contacts
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Search Contacts</strong>
+      <strong><dhv:label name="contact.searchContacts">Search Contacts</dhv:label></strong>
     </th>
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      First Name
+      <dhv:label name="accounts.accounts_add.FirstName">First Name</dhv:label>
     </td>
     <td>
       <input type="text" size="35" name="searchFirstName" value="<%= SearchContactsInfo.getSearchOptionValue("searchFirstName") %>">
@@ -64,7 +64,7 @@ Search Contacts
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      Middle Name
+      <dhv:label name="accounts.accounts_add.MiddleName">Middle Name</dhv:label>
     </td>
     <td>
       <input type="text" size="35" name="searchMiddleName" value="<%= SearchContactsInfo.getSearchOptionValue("searchMiddleName") %>">
@@ -72,7 +72,7 @@ Search Contacts
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      Last Name
+      <dhv:label name="accounts.accounts_add.LastName">Last Name</dhv:label>
     </td>
     <td>
       <input type="text" size="35" name="searchLastName" value="<%= SearchContactsInfo.getSearchOptionValue("searchLastName") %>">
@@ -80,7 +80,7 @@ Search Contacts
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      Company
+      <dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label>
     </td>
     <td>
       <input type="text" size="35" name="searchCompany" value="<%= SearchContactsInfo.getSearchOptionValue("searchCompany") %>">
@@ -88,7 +88,7 @@ Search Contacts
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      Title
+      <dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label>
     </td>
     <td>
       <input type="text" size="35" name="searchTitle" value="<%= SearchContactsInfo.getSearchOptionValue("searchTitle") %>">
@@ -96,7 +96,7 @@ Search Contacts
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      Contact Type
+      <dhv:label name="accounts.accounts_contacts_add.ContactType">Contact Type</dhv:label>
     </td>
     <td>
       <%= ContactTypeList.getHtmlSelect("listFilter1", SearchContactsInfo.getFilterKey("listFilter1")) %>
@@ -104,21 +104,21 @@ Search Contacts
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      Source
+      <dhv:label name="contact.source">Source</dhv:label>
     </td>
     <td>
       <select size="1" name="listView">
-        <option <%= SearchContactsInfo.getOptionValue("my") %>>My Contacts</option>
-        <option <%= SearchContactsInfo.getOptionValue("all") %>>All Contacts</option>
-        <option <%= SearchContactsInfo.getOptionValue("hierarchy") %>>Controlled-Hierarchy Contacts</option>
-        <option <%= SearchContactsInfo.getOptionValue("archived") %>>Archived Contacts</option>
+        <option <%= SearchContactsInfo.getOptionValue("my") %>><dhv:label name="contact.myContacts">My Contacts</dhv:label></option>
+        <option <%= SearchContactsInfo.getOptionValue("all") %>><dhv:label name="actionList.allContacts">All Contacts</dhv:label></option>
+        <option <%= SearchContactsInfo.getOptionValue("hierarchy") %>><dhv:label name="contact.controlledHierarchyContacts">Controlled-Hierarchy Contacts</dhv:label></option>
+        <option <%= SearchContactsInfo.getOptionValue("archived") %>><dhv:label name="contact.archivedContacts">Archived Contacts</dhv:label></option>
       </select>
     </td>
   </tr>
 </table>
 <br>
-<input type="submit" value="Search">
-<input type="button" value="Clear" onClick="javascript:clearForm();">
+<input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">
+<input type="button" value="<dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label>" onClick="javascript:clearForm();">
 <input type="hidden" name="doSearch" value="true">
 <input type="hidden" name="source" value="searchForm">
 </form>

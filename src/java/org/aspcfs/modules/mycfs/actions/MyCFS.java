@@ -15,34 +15,33 @@
  */
 package org.aspcfs.modules.mycfs.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.mycfs.base.*;
-import org.aspcfs.utils.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.accounts.base.OrganizationList;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.UserList;
-import org.aspcfs.modules.login.beans.UserBean;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.modules.accounts.base.OrganizationList;
-import org.aspcfs.modules.pipeline.base.OpportunityHeader;
-import org.aspcfs.modules.mycfs.beans.CalendarBean;
-import org.aspcfs.modules.mycfs.base.CalendarEventList;
-import org.aspcfs.modules.tasks.base.Task;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.accounts.base.NewsArticleList;
-import com.zeroio.iteam.base.*;
-import java.sql.*;
-import java.lang.reflect.*;
-import java.util.*;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.mycfs.base.AlertType;
+import org.aspcfs.modules.mycfs.base.CFSNote;
+import org.aspcfs.modules.mycfs.base.CFSNoteList;
+import org.aspcfs.modules.mycfs.base.CalendarEventList;
+import org.aspcfs.modules.mycfs.beans.CalendarBean;
+import org.aspcfs.modules.tasks.base.Task;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.CalendarView;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.DateFormat;
-import org.aspcfs.modules.quotes.base.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.quotes.base.*;
+import java.util.*;
 /**
  *  The MyCFS module.
  *
@@ -306,7 +305,6 @@ public final class MyCFS extends CFSModule {
       return ("PermissionError");
     }
     addModuleBean(context, "Customize Headlines", "");
-    int headlines = 0;
     boolean existsAlready = false;
     Connection db = null;
     String name = context.getRequest().getParameter("name");
@@ -394,7 +392,7 @@ public final class MyCFS extends CFSModule {
       db = this.getConnection(context);
       CFSNote newNote = new CFSNote();
       context.getRequest().setAttribute("Note", newNote);
-
+      context.getRequest().setAttribute("forwardType",""+Constants.CFSNOTE);
       //check if there are any recipients specified
       //Uncomment when action lists send message needs to be implemented
       /*
@@ -434,6 +432,7 @@ public final class MyCFS extends CFSModule {
     Connection db = null;
     boolean savecopy = false;
     boolean copyrecipients = false;
+    int noteType = Integer.parseInt((String) context.getRequest().getParameter("forwardType"));
     HashMap selectedList = (HashMap) context.getSession().getAttribute("finalContacts");
     HashMap errors = null;
     if (selectedList == null) {
@@ -444,7 +443,6 @@ public final class MyCFS extends CFSModule {
     thisNote.setModifiedBy(getUserId(context));
     thisNote.setReplyId(getUserId(context));
     thisNote.setType(CFSNote.CALL);
-
     if (context.getRequest().getParameter("subject") != null) {
       thisNote.setSubject(context.getRequest().getParameter("subject"));
     } else {
@@ -464,89 +462,97 @@ public final class MyCFS extends CFSModule {
     if (context.getRequest().getParameter("mailrecipients") != null) {
       copyrecipients = true;
     }
-
+    boolean isValid = false;
     Contact thisContact = null;
     User thisRecord = (User) ((UserBean) context.getSession().getAttribute("User")).getUserRecord();
     thisRecord.setBuildContact(true);
 
     try {
       db = this.getConnection(context);
-      thisRecord.buildResources(db);
-      if (selectedList.size() != 0) {
-        String replyAddr = thisRecord.getContact().getEmailAddress("Business");
-        int count = -1;
-        int contactId = -1;
-        boolean firstTime = true;
-        String email = "";
-        Set s = selectedList.keySet();
-        Iterator i = s.iterator();
-        while (i.hasNext()) {
-          this.renewConnection(context,db);
-          count++;
-          Integer hashKey = (Integer) i.next();
-          contactId = hashKey.intValue();
-
-          if (selectedList.get(hashKey) != null) {
-            Object st = selectedList.get(hashKey);
-            email = st.toString();
-          }
-          boolean isUser = false;
-
-          thisContact = new Contact();
-          thisContact.setId(hashKey.intValue());
-          thisContact.setBuildDetails(true);
-          thisContact.build(db);
-          thisContact.checkUserAccount(db);
-          thisNote.setSentTo(contactId);
-
-          if ((!email.startsWith("P:")) && (copyrecipients || !thisContact.hasAccount())) {
-            SMTPMessage mail = new SMTPMessage();
-            mail.setHost(getPref(context, "MAILSERVER"));
-            mail.setFrom(getPref(context, "EMAILADDRESS"));
-            if (replyAddr != null && !(replyAddr.equals(""))) {
-              mail.addReplyTo(replyAddr);
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      isValid = this.validateObject(context, db, thisNote);
+      if (isValid) {
+        thisRecord.buildResources(db);
+        if (selectedList.size() != 0) {
+          String replyAddr = thisRecord.getContact().getPrimaryEmailAddress();
+          int count = -1;
+          int contactId = -1;
+          String email = "";
+          Set s = selectedList.keySet();
+          Iterator i = s.iterator();
+          while (i.hasNext() && isValid) {
+            count++;
+            Integer hashKey = (Integer) i.next();
+            contactId = hashKey.intValue();
+            if (selectedList.get(hashKey) != null) {
+              Object st = selectedList.get(hashKey);
+              email = st.toString();
             }
-            mail.setType("text/html");
-            mail.setTo(email);
-            mail.setSubject(thisNote.getSubject());
-            mail.setBody("The following message was sent to your Centric CRM inbox by " + thisRecord.getContact().getNameFirstLast() + ".  This copy has been sent to your email account at the request of the sender.<br><br>--- Original Message ---<br><br>" + StringUtils.toHtml(thisNote.getBody()));
-            if (System.getProperty("DEBUG") != null) {
-              System.out.println("Sending Mail .. " + thisNote.getBody());
-            }
-            if (mail.send() == 2) {
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("MyCFS-> Send error: " + mail.getErrorMsg() + "<br><br>");
+            thisContact = new Contact();
+            thisContact.setId(hashKey.intValue());
+            thisContact.setBuildDetails(true);
+            thisContact.build(db);
+            thisContact.checkUserAccount(db);
+            thisNote.setSentTo(contactId);
+            if ((!email.startsWith("P:")) && (copyrecipients || !thisContact.hasAccount())) {
+              SMTPMessage mail = new SMTPMessage();
+              mail.setHost(getPref(context, "MAILSERVER"));
+              mail.setFrom(getPref(context, "EMAILADDRESS"));
+              if (replyAddr != null && !(replyAddr.equals(""))) {
+                mail.addReplyTo(replyAddr);
               }
-              System.err.println(mail.getErrorMsg());
+              mail.setType("text/html");
+              mail.setTo(email);
+              mail.setSubject(thisNote.getSubject());
+              String message = systemStatus.getLabel("mail.body.emailContactWithBody");
+              HashMap map = new HashMap();
+              map.put("${thisRecord.contact.nameFirstLast}", thisRecord.getContact().getNameFirstLast());
+              map.put("${thisNote.body}", StringUtils.toHtml(thisNote.getBody()));
+              Template template = new Template(message);
+              template.setParseElements(map);
+              mail.setBody(template.getParsedText());
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("Sending Mail .. " + thisNote.getBody());
+              }
+              if (mail.send() == 2) {
+                if (System.getProperty("DEBUG") != null) {
+                  System.out.println("MyCFS-> Send error: " + mail.getErrorMsg() + "<br><br>");
+                }
+                System.err.println(mail.getErrorMsg());
+                if (errors == null) {
+                  errors = new HashMap();
+                }
+                errors.put("contact" + thisContact.getId(), systemStatus.getLabel("mail.contactErrorMessage") + mail.getErrorMsg());
+             } else {
+                if (System.getProperty("DEBUG") != null) {
+                  System.out.println("MyCFS-> Sending message to " + email);
+                }
+                //Message is sent. Insert the note
+                recordInserted = thisNote.insert(db);
+                recordInserted = thisNote.insertLink(db, thisContact.hasAccount());
+              }
+            } else if (email.startsWith("P:") && !thisContact.hasAccount()) {
               if (errors == null) {
                 errors = new HashMap();
               }
-              errors.put("contact" + thisContact.getId(), "Following error occured while sending to this contact " + mail.getErrorMsg());
+              errors.put("contact" + thisContact.getId(), systemStatus.getLabel("mail.contactNoEmailAddress"));
+            } else if (email.startsWith("P:") && (thisContact.hasAccount() && (thisContact.getOrgId() != 0))) {
+              if (errors == null) {
+                errors = new HashMap();
+              }
+              errors.put("contact" + thisContact.getId(), systemStatus.getLabel("mail.contactNoEmailAddress"));
             } else {
-              if (System.getProperty("DEBUG") != null) {
-                System.out.println("MyCFS-> Sending message to " + email);
-              }
-              //Message is sent. Insert the note
               recordInserted = thisNote.insert(db);
-              if (!recordInserted) {
-                processErrors(context, thisNote.getErrors());
-              }
               recordInserted = thisNote.insertLink(db, thisContact.hasAccount());
-              if (!recordInserted) {
-                processErrors(context, thisNote.getErrors());
-              }
             }
-          } else if (email.startsWith("P:") && !thisContact.hasAccount()) {
-            if (errors == null) {
-              errors = new HashMap();
-            }
-            errors.put("contact" + thisContact.getId(), "Message could not be sent since contact does not have an email address");
-          } else if (email.startsWith("P:") && (thisContact.hasAccount() && (thisContact.getOrgId() != 0))) {
-            if (errors == null) {
-              errors = new HashMap();
-            }
-            errors.put("contact" + thisContact.getId(), "Message could not be sent since contact does not have an email address");
           }
+
+        } else {
+          isValid = false;
+          if (errors == null) {
+            errors = new HashMap();
+          }
+          errors.put("contactsError", systemStatus.getLabel("mail.contactsNotSelected"));
         }
       }
       context.getSession().removeAttribute("DepartmentList");
@@ -557,7 +563,6 @@ public final class MyCFS extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-
     if (context.getAction().getActionName().equals("ExternalContactsCallsForward")) {
       addModuleBean(context, "External Contacts", "");
     } else if (context.getAction().getActionName().equals("MyCFSInbox")) {
@@ -568,7 +573,17 @@ public final class MyCFS extends CFSModule {
     if (errors != null) {
       processErrors(context, errors);
     }
-    return this.getReturn(context, "SendMessage");
+    if (isValid) {
+      return ("SendMessageOK");
+    }
+    if (noteType == Constants.CFSNOTE) {
+      return executeCommandNewMessage(context);
+    } else if (noteType == Constants.TASKS) {
+      return executeCommandForwardMessage(context);
+    } else {
+      context.getRequest().setAttribute("Error", new Exception("Programming Error: Please check code"));
+      return "SystemError";
+    }
   }
 
 
@@ -589,12 +604,22 @@ public final class MyCFS extends CFSModule {
 
     context.getSession().removeAttribute("selectedContacts");
     context.getSession().removeAttribute("finalContacts");
-
+    String originalMessage = "\n\n----Original Message----\n";
+    String from = "From: ";
+    String fwd = "Fwd: ";
+    String sent = "Sent: ";
+    String to = "To: ";
+    String subject = "Subject: ";
+    String taskDetails = "------Task Details------\n\n";
+    String task = "Task: ";
+    String dueDate = "Due Date: ";
+    String relevantNotes = "Relevant Notes: ";
     try {
-
       String msgId = context.getRequest().getParameter("id");
       int noteType = Integer.parseInt(context.getRequest().getParameter("forwardType"));
+      context.getRequest().setAttribute("forwardType", ""+noteType);
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       newNote = new CFSNote();
       if (noteType == Constants.CFSNOTE) {
         //For a sent message myId is a user_id else its a contactId
@@ -603,7 +628,6 @@ public final class MyCFS extends CFSModule {
         } else {
           myId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
         }
-
         newNote = new CFSNote(db, Integer.parseInt(msgId), myId, inboxInfo.getListView());
         HashMap recipients = newNote.buildRecipientList(db);
         Iterator i = recipients.keySet().iterator();
@@ -615,24 +639,36 @@ public final class MyCFS extends CFSModule {
             recipientList.append(",");
           }
         }
-        newNote.setSubject("Fwd: " + StringUtils.toString(newNote.getSubject()));
+        originalMessage = systemStatus.getLabel("mail.label.originalMessage");
+        from = systemStatus.getLabel("mail.label.from");
+        fwd = systemStatus.getLabel("mail.label.forward");
+        sent = systemStatus.getLabel("mail.label.sent");
+        to = systemStatus.getLabel("mail.label.to");
+        subject = systemStatus.getLabel("mail.label.subject.colon");
+        newNote.setSubject(fwd + StringUtils.toString(newNote.getSubject()));
         newNote.setBody(
-            "\n\n----Original Message----\n" +
-            "From: " + StringUtils.toString(newNote.getSentName()) + "\n" +
-            "Sent: " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, newNote.getEntered()) + "\n" +
-            "To: " + recipientList.toString() + "\n" +
-            "Subject: " + StringUtils.toString(newNote.getSubject()) +
+            originalMessage +
+            from + StringUtils.toString(newNote.getSentName()) + "\n" +
+            sent + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, newNote.getEntered()) + "\n" +
+            to + recipientList.toString() + "\n" +
+            subject + StringUtils.toString(newNote.getSubject()) +
             "\n\n" +
             StringUtils.toString(newNote.getBody()) + "\n\n");
       } else if (noteType == Constants.TASKS) {
         Task thisTask = new Task(db, Integer.parseInt(msgId));
+        context.getRequest().setAttribute("TaskId", msgId);
         String userName = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getNameLastFirst();
+        taskDetails = systemStatus.getLabel("mail.label.taskDetails");
+        task = systemStatus.getLabel("mail.label.task");
+        from = systemStatus.getLabel("mail.label.from");
+        dueDate = systemStatus.getLabel("mail.label.dueDate");
+        relevantNotes = systemStatus.getLabel("mail.label.relevantNotes");
         newNote.setBody(
-            "------Task Details------\n\n" +
-            "Task:" + StringUtils.toString(thisTask.getDescription()) + "\n" +
-            "From: " + StringUtils.toString(userName) + "\n" +
-            "Due Date: " + (thisTask.getDueDate() != null ? DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisTask.getDueDate()) : "-NA-") + "\n" +
-            ("".equals(thisTask.getNotes()) ? "" : "Relevant Notes: " + StringUtils.toString(thisTask.getNotes())) + "\n\n");
+            taskDetails +
+            task + StringUtils.toString(thisTask.getDescription()) + "\n" +
+            from + StringUtils.toString(userName) + "\n" +
+            dueDate + (thisTask.getDueDate() != null ? DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisTask.getDueDate()) : "-NA-") + "\n" +
+            ("".equals(thisTask.getNotes()) ? "" : relevantNotes + StringUtils.toString(thisTask.getNotes())) + "\n\n");
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -661,14 +697,28 @@ public final class MyCFS extends CFSModule {
   public String executeCommandReplyToMessage(ActionContext context) {
     Connection db = null;
     CFSNote newNote = null;
+    int noteType = Integer.parseInt(context.getRequest().getParameter("forwardType"));
+    context.getRequest().setAttribute("forwardType", ""+Constants.CFSNOTE);
     PagedListInfo inboxInfo = this.getPagedListInfo(context, "InboxInfo");
+    String originalMessage = "\n\n----Original Message----\n";
+    String from = "From: ";
+    String sent = "Sent: ";
+    String to = "To: ";
+    String subject = "Subject: ";
+    String reply = "Reply: ";
     if (!(hasPermission(context, "myhomepage-inbox-view"))) {
       return ("PermissionError");
     }
     try {
       String msgId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
-      int myId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      int myId = -1;
+      if (inboxInfo.getListView().equals("sent")) {
+        myId = getUserId(context);
+      } else {
+        myId = ((UserBean) context.getSession().getAttribute("User")).getUserRecord().getContact().getId();
+      }
       String listView = inboxInfo.getListView();
       newNote = new CFSNote(db, Integer.parseInt(msgId), myId, listView);
       HashMap recipients = newNote.buildRecipientList(db);
@@ -681,13 +731,19 @@ public final class MyCFS extends CFSModule {
           recipientList.append(",");
         }
       }
+      originalMessage = systemStatus.getLabel("mail.label.originalMessage");
+      from = systemStatus.getLabel("mail.label.from");
+      sent = systemStatus.getLabel("mail.label.sent");
+      to = systemStatus.getLabel("mail.label.to");
+      subject = systemStatus.getLabel("mail.label.subject.colon");
+      reply = systemStatus.getLabel("mail.label.reply");
       newNote.setSubject("Reply: " + StringUtils.toString(newNote.getSubject()));
       newNote.setBody(
-          "\n\n----Original Message----\n" +
-          "From: " + StringUtils.toString(newNote.getSentName()) + "\n" +
-          "Sent: " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, newNote.getEntered()) + "\n" +
-          "To: " + recipientList.toString() + "\n" +
-          "Subject: " + StringUtils.toString(newNote.getSubject()) +
+          originalMessage +
+          from + StringUtils.toString(newNote.getSentName()) + "\n" +
+          sent + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, newNote.getEntered()) + "\n" +
+          to + recipientList.toString() + "\n" +
+          subject + StringUtils.toString(newNote.getSubject()) +
           "\n\n" +
           StringUtils.toString(newNote.getBody()) + "\n\n");
 
@@ -705,7 +761,7 @@ public final class MyCFS extends CFSModule {
         thisList = new HashMap();
         context.getSession().setAttribute("finalContacts", thisList);
       }
-      String recipientEmail = recipient.getEmailAddress("Business");
+      String recipientEmail = recipient.getPrimaryEmailAddress();
       thisList.put(new Integer(sender.getContactId()), recipientEmail);
       if (context.getSession().getAttribute("selectedContacts") != null) {
         HashMap tmp = (HashMap) context.getSession().getAttribute("selectedContacts");
@@ -719,7 +775,7 @@ public final class MyCFS extends CFSModule {
     }
     addModuleBean(context, "MyInbox", "Message Reply");
     context.getRequest().setAttribute("Note", newNote);
-    return this.getReturn(context, "ReplyMessage");
+    return getReturn(context, "ReplyMessage");
   }
 
 
@@ -745,6 +801,7 @@ public final class MyCFS extends CFSModule {
     //this is how we get the multiple-level heirarchy...recursive function.
     UserList shortChildList = thisRec.getShortChildList();
     UserList newUserList = thisRec.getFullChildList(shortChildList, new UserList());
+    newUserList = UserList.sortEnabledUsers(newUserList, new UserList());
     newUserList.setMyId(getUserId(context));
     newUserList.setMyValue(thisUser.getContact().getNameLastFirst());
     newUserList.setIncludeMe(true);
@@ -755,11 +812,10 @@ public final class MyCFS extends CFSModule {
 
     CalendarBean calendarInfo = (CalendarBean) context.getSession().getAttribute("CalendarInfo");
     if (calendarInfo == null) {
-      calendarInfo = new CalendarBean();
+      calendarInfo = new CalendarBean(thisRec.getLocale());
       if (hasPermission(context, "myhomepage-tasks-view")) {
         calendarInfo.addAlertType("Task", "org.aspcfs.modules.tasks.base.TaskListScheduledActions", "Tasks");
       }
-
       if (hasPermission(context, "contacts-external_contacts-calls-view") || hasPermission(context, "accounts-accounts-contacts-calls-view")) {
         calendarInfo.addAlertType("Call", "org.aspcfs.modules.contacts.base.CallListScheduledActions", "Activities");
       }
@@ -778,30 +834,12 @@ public final class MyCFS extends CFSModule {
       if (hasPermission(context, "products-view") || hasPermission(context, "tickets-tickets-view")) {
         calendarInfo.addAlertType("Ticket", "org.aspcfs.modules.troubletickets.base.TicketListScheduledActions", "Tickets");
       }
-      int userId = this.getUserId(context);
-      if (context.getRequest().getParameter("userId") != null){
-        userId = Integer.parseInt(context.getRequest().getParameter("userId"));
-        if (userId == this.getUserId(context)) {
-          Integer tmpUserId = (Integer) context.getSession().getAttribute("calendarUserId");
-          if (tmpUserId != null) {
-            context.getSession().removeAttribute("calendarUserId");
-          }
-        } else {
-          context.getSession().setAttribute("calendarUserId", new Integer(userId));
-        }
-      } else if (context.getSession().getAttribute("calendarUserId") != null) {
-        userId = ((Integer) context.getSession().getAttribute("calendarUserId")).intValue();
+      if (hasPermission(context, "projects-projects-view")) {
+        calendarInfo.addAlertType("Project Ticket", "org.aspcfs.modules.troubletickets.base.ProjectTicketListScheduledActions", "Project Tickets");
       }
-      calendarInfo.setSelectedUserId(userId);
-      calendarInfo.setSelectedUserName(this.getUser(context, userId).getContact().getNameLastFirst());
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
-    }else{
-      Integer tmpUserId = (Integer) context.getSession().getAttribute("calendarUserId");
-      if (tmpUserId != null) {
-        calendarInfo.setSelectedUserId(tmpUserId.intValue());
-      } else {
-        calendarInfo.setSelectedUserId(-1);
-      }
+    } else {
+      calendarInfo.setSelectedUserId(-1);
     }
     return "HomeOK";
   }
@@ -828,14 +866,15 @@ public final class MyCFS extends CFSModule {
     try {
       db = this.getConnection(context);
       calendarInfo.update(db, context);
-      companyCalendar = new CalendarView(calendarInfo);
-      companyCalendar.addHolidays();
-
-      //check if the user's account is expiring
-      
       int userId = this.getUserId(context);
       User thisUser = this.getUser(context, userId);
-      if (context.getRequest().getParameter("userId") != null){
+      // Use the user's locale
+      companyCalendar = new CalendarView(calendarInfo, thisUser.getLocale());
+      companyCalendar.setSystemStatus(this.getSystemStatus(context));
+      companyCalendar.addHolidays();
+      
+      //check if the user's account is expiring
+      if (context.getRequest().getParameter("userId") != null) {
         userId = Integer.parseInt(context.getRequest().getParameter("userId"));
         if (userId == this.getUserId(context)) {
           Integer tmpUserId = (Integer) context.getSession().getAttribute("calendarUserId");
@@ -850,7 +889,7 @@ public final class MyCFS extends CFSModule {
       }
       if (thisUser.getExpires() != null) {
         String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
-        companyCalendar.addEvent(expiryDate, CalendarEventList.EVENT_TYPES[9],"Your user login expires");
+        companyCalendar.addEvent(expiryDate, CalendarEventList.EVENT_TYPES[9], "Your user login expires");
       }
 
       //create events depending on alert type
@@ -874,14 +913,14 @@ public final class MyCFS extends CFSModule {
           //set userId
           method = Class.forName(thisAlert.getClassName()).getMethod("setUserId", new Class[]{Class.forName("java.lang.String")});
           method.invoke(thisInstance, new Object[]{String.valueOf(userId)});
-          
+
           //set Start and End Dates
           method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Timestamp")});
-          java.sql.Timestamp startDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarStartDate(context)));
+          java.sql.Timestamp startDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarStartDate(context), Locale.US));
           method.invoke(thisInstance, new Object[]{startDate});
 
           method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeEnd", new Class[]{Class.forName("java.sql.Timestamp")});
-          java.sql.Timestamp endDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarEndDate(context)));
+          java.sql.Timestamp endDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarEndDate(context), Locale.US));
           method.invoke(thisInstance, new Object[]{endDate});
 
           //Add Events
@@ -918,21 +957,22 @@ public final class MyCFS extends CFSModule {
     CalendarView companyCalendar = null;
     addModuleBean(context, "Home", "");
     String returnPage = context.getRequest().getParameter("return");
-    calendarInfo = (CalendarBean) context.getSession().getAttribute(returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
+    String beanName = (returnPage != null ? returnPage + "CalendarInfo" : "CalendarInfo");
+    calendarInfo = (CalendarBean) context.getSession().getAttribute(beanName);
     if (calendarInfo == null) {
-      calendarInfo = new CalendarBean();
-      context.getSession().setAttribute("CalendarInfo", calendarInfo);
+      calendarInfo = new CalendarBean(this.getUser(context, this.getUserId(context)).getLocale());
+      context.getSession().setAttribute(beanName, calendarInfo);
     }
-
     try {
       db = this.getConnection(context);
       calendarInfo.update(db, context);
-      companyCalendar = new CalendarView(calendarInfo);
-      //companyCalendar.updateParams();
-      //check if the user's account is expiring
       int userId = this.getUserId(context);
       User thisUser = this.getUser(context, userId);
-      if (context.getRequest().getParameter("userId") != null){
+      // Use the user's locale
+      companyCalendar = new CalendarView(calendarInfo, thisUser.getLocale());
+      companyCalendar.setSystemStatus(this.getSystemStatus(context));
+      // check if user account is expiring
+      if (context.getRequest().getParameter("userId") != null) {
         userId = Integer.parseInt(context.getRequest().getParameter("userId"));
         if (userId == this.getUserId(context)) {
           Integer tmpUserId = (Integer) context.getSession().getAttribute("calendarUserId");
@@ -949,6 +989,12 @@ public final class MyCFS extends CFSModule {
         String expiryDate = DateUtils.getServerToUserDateString(this.getUserTimeZone(context), DateFormat.SHORT, thisUser.getExpires());
         companyCalendar.addEventCount(CalendarEventList.EVENT_TYPES[9], expiryDate, new Integer(1));
       }
+      
+      User selectedUser = new User();
+      selectedUser.setBuildContact(true);
+      selectedUser.buildRecord(db, userId);
+      context.getRequest().setAttribute("SelectedUser", selectedUser);
+      
       //Use reflection to invoke methods on scheduler classes
       String param1 = "org.aspcfs.utils.web.CalendarView";
       String param2 = "java.sql.Connection";
@@ -968,13 +1014,13 @@ public final class MyCFS extends CFSModule {
         //set userId
         method = Class.forName(thisAlert.getClassName()).getMethod("setUserId", new Class[]{Class.forName("java.lang.String")});
         method.invoke(thisInstance, new Object[]{String.valueOf(userId)});
-        
+
         //set Start and End Dates
-        java.sql.Timestamp startDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarStartDate(context)));
+        java.sql.Timestamp startDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarStartDate(context), Locale.US));
         method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeStart", new Class[]{Class.forName("java.sql.Timestamp")});
         method.invoke(thisInstance, new Object[]{startDate});
 
-        java.sql.Timestamp endDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarEndDate(context)));
+        java.sql.Timestamp endDate = DatabaseUtils.parseTimestamp(DateUtils.getUserToServerDateTimeString(calendarInfo.getTimeZone(), DateFormat.SHORT, DateFormat.LONG, companyCalendar.getCalendarEndDate(context), Locale.US));
         method = Class.forName(thisAlert.getClassName()).getMethod("setAlertRangeEnd", new Class[]{Class.forName("java.sql.Timestamp")});
         method.invoke(thisInstance, new Object[]{endDate});
 
@@ -1139,7 +1185,8 @@ public final class MyCFS extends CFSModule {
     }
     //Prepare the action
     Connection db = null;
-    int resultCount = 0;
+    int resultCount = -1;
+    boolean isValid = false;
     //Process the request
     Contact thisContact = (Contact) context.getFormBean();
     thisContact.setRequestItems(context);
@@ -1147,9 +1194,11 @@ public final class MyCFS extends CFSModule {
     thisContact.setModifiedBy(getUserId(context));
     try {
       db = this.getConnection(context);
-      resultCount = thisContact.update(db);
-      if (resultCount == -1) {
-        processErrors(context, thisContact.getErrors());
+      isValid = this.validateObject(context, db, thisContact);
+      if (isValid) {
+        resultCount = thisContact.update(db);
+      }
+      if (resultCount == -1 || !isValid) {
         buildFormElements(context, db);
       } else {
         //If the user is in the cache, update the contact record
@@ -1162,11 +1211,12 @@ public final class MyCFS extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (resultCount == -1) {
-      return (executeCommandMyCFSProfile(context));
-    } else if (resultCount == 1) {
+    if (resultCount == 1) {
       return ("UpdateProfileOK");
     } else {
+      if (resultCount == -1 || !isValid) {
+        return (executeCommandMyCFSProfile(context));
+      }
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return ("UserError");
     }
@@ -1202,6 +1252,39 @@ public final class MyCFS extends CFSModule {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandMyCFSWebdav(ActionContext context) {
+    //TODO: determine the webdav permission
+    /*
+     *  if (!(hasPermission(context, "myhomepage-profile-password-edit"))) {
+     *  return ("PermissionError");
+     *  }
+     */
+    if (!(hasPermission(context, "myhomepage-profile-password-edit"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      User thisUser = new User(db, this.getUserId(context));
+      thisUser.setBuildContact(false);
+      thisUser.buildResources(db);
+      context.getRequest().setAttribute("User", thisUser);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    }
+    this.freeConnection(context, db);
+    addModuleBean(context, "MyProfile", "");
+    return ("WebdavOK");
+  }
+
+
+  /**
    *  The password was modified
    *
    *@param  context  Description of Parameter
@@ -1220,6 +1303,7 @@ public final class MyCFS extends CFSModule {
       User thisUser = new User(db, this.getUserId(context));
       thisUser.setBuildContact(false);
       thisUser.buildResources(db);
+      tempUser.setUsername(thisUser.getUsername());
       resultCount = tempUser.updatePassword(db, context, thisUser.getPassword());
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -1235,6 +1319,45 @@ public final class MyCFS extends CFSModule {
       return (executeCommandMyCFSPassword(context));
     } else if (resultCount == 1) {
       return ("UpdatePasswordOK");
+    } else {
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandActivateWebdav(ActionContext context) {
+    if (!hasPermission(context, "myhomepage-profile-password-edit")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    int resultCount = 0;
+    User tempUser = (User) context.getFormBean();
+    try {
+      db = getConnection(context);
+      User thisUser = new User(db, this.getUserId(context));
+      thisUser.setBuildContact(false);
+      thisUser.buildResources(db);
+      resultCount = tempUser.activateWebdav(db, thisUser.getUsername(), thisUser.getPassword());
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (resultCount == -1) {
+      processErrors(context, tempUser.getErrors());
+      context.getRequest().setAttribute("NewUser", tempUser);
+      return (executeCommandMyCFSWebdav(context));
+    }
+    if (resultCount == 1) {
+      return ("ActivateWebdavOK");
     } else {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return ("UserError");
@@ -1312,8 +1435,9 @@ public final class MyCFS extends CFSModule {
    */
 
   protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
+    SystemStatus systemStatus = this.getSystemStatus(context);
     LookupList departmentList = new LookupList(db, "lookup_department");
-    departmentList.addItem(0, "--None--");
+    departmentList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
     context.getRequest().setAttribute("DepartmentList", departmentList);
 
     LookupList phoneTypeList = new LookupList(db, "lookup_contactphone_types");

@@ -205,33 +205,5 @@ public class UserSetupBean extends GenericBean {
     return password2;
   }
 
-
-  /**
-   *  Gets the valid attribute of the UserSetupBean object
-   *
-   *@return    The valid value
-   */
-  public boolean isValid() {
-    errors.clear();
-    if (nameFirst == null || "".equals(nameFirst.trim())) {
-      errors.put("nameFirstError", "First Name is a required field");
-    }
-    if (nameLast == null || "".equals(nameLast.trim())) {
-      errors.put("nameLastError", "Last Name is a required field");
-    }
-    if (email == null || "".equals(email.trim())) {
-      errors.put("emailError", "Email is a required field");
-    }
-    if (username == null || "".equals(username.trim())) {
-      errors.put("usernameError", "Username is a required field");
-    }
-    if (password1 == null || "".equals(password1.trim())) {
-      errors.put("password1Error", "Password is a required field");
-    }
-    if (password2 == null || "".equals(password2.trim())) {
-      errors.put("password2Error", "Password is a required field");
-    }
-    return (!hasErrors());
-  }
 }
 

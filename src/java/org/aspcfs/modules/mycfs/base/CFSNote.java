@@ -755,9 +755,6 @@ public class CFSNote extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid(db)) {
-      return false;
-    }
     StringBuffer sql = new StringBuffer();
     try {
       db.setAutoCommit(false);
@@ -877,9 +874,6 @@ public class CFSNote extends GenericBean {
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
 
-    if (!isValid(db)) {
-      return -1;
-    }
 
     try {
       db.setAutoCommit(false);
@@ -1019,32 +1013,6 @@ public class CFSNote extends GenericBean {
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;
-  }
-
-
-  /**
-   *  Gets the valid attribute of the CFSNote object
-   *
-   *@param  db                Description of Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of Exception
-   */
-  protected boolean isValid(Connection db) throws SQLException {
-    errors.clear();
-
-    if (body == null || body.trim().equals("")) {
-      errors.put("bodyError", "Body is required");
-    }
-
-    if (subject == null || subject.trim().equals("")) {
-      errors.put("messageSubjectError", "Subject is required");
-    }
-
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
 

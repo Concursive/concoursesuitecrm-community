@@ -126,9 +126,6 @@ public class Template {
         } else if (valueEncoding == XMLEncoding) {
           value = XMLUtils.toXMLValue(value);
         }
-        if (System.getProperty("DEBUG") != null) {
-          System.out.println("Template-> Replacing text: " + key + ", " + value);
-        }
         text = StringUtils.replace(text, key, value);
       }
     }
@@ -216,6 +213,50 @@ public class Template {
       }
     }
     return variables;
+  }
+
+
+  /**
+   *  Gets the keyValuePairs attribute of the Template object
+   *
+   *@return    The keyValuePairs value
+   */
+  public HashMap getKeyValuePairs() {
+    HashMap keyValues = new HashMap();
+    String key = "";
+    String value = "";
+    if (text != null) {
+      int posCount = 0;
+      int loc = -1;
+      while ((loc = text.indexOf("${", posCount)) > -1) {
+        int endLoc = text.indexOf("}", loc);
+        if (text.substring(loc + 2, endLoc).indexOf("=") > 0){
+          key = text.substring(loc + 2, endLoc).split("=")[0];
+          value = text.substring(loc + 2, endLoc).split("=")[1];
+          keyValues.put(key, value);
+        }else{
+          keyValues.put(key, "");
+        }
+        posCount = endLoc;
+      }
+    }
+    return keyValues;
+  }
+
+  public void populateVariables(Object object) {
+    ArrayList variables = getVariables();
+    Iterator i = variables.iterator();
+    while (i.hasNext()) {
+      String variableName = (String) i.next();
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Template-> populateVariebles: " + variableName);
+      }
+      String value = ObjectUtils.getParam(object, variableName);
+      if (value == null) {
+        value = "";
+      }
+      addParseElement("${" + variableName + "}", value);
+    }
   }
 }
 

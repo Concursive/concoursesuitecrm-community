@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%-- reusable opportunity form --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -29,7 +29,7 @@
     String entity = "pipeline";
     if("contact".equals(request.getParameter("entity"))){
         entity = "contact";
-    }else if("account".equals(request.getParameter("entity"))){
+    } else if("account".equals(request.getParameter("entity"))){
         entity = "account";
     }
 %>
@@ -37,47 +37,55 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Opportunity details</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></strong>
     </th>     
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Description
+      <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
     </td>
     <td>
-      <input type="text" size="50" name="<%= opportunityHeader.getId() > 0 ? "description" : "header_description"%>" value="<%= toHtmlValue(opportunityHeader.getDescription()) %>">
+      <input type="text" size="50" maxlength="80" name="<%= opportunityHeader.getId() > 0 ? "description" : "header_description"%>" value="<%= toHtmlValue(opportunityHeader.getDescription()) %>">
       <font color="red">*</font> <%= showAttribute(request, "descriptionError") %>
     </td>
   </tr>  
 </table>
-&nbsp;<br>
+<br />
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong><%= (ComponentDetails.getId() > 0 ? "Update" : "Add") %> a Component</strong>
+      <strong>
+<% if(ComponentDetails.getId() > 0) {%>
+  <dhv:label name="opp.updateAComponent">Update a Component</dhv:label>
+<%} else {%>
+  <dhv:label name="opp.addAComponent">Add a Component</dhv:label>
+<%}%></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Component Description
+      <dhv:label name="pipeline.componentDescription">Component Description</dhv:label>
     </td>
     <td>
-      <input type="text" size="50" name="<%= opportunityHeader.getId() > 0 ? "description" : "component_description" %>" value="<%= toHtmlValue(ComponentDetails.getDescription()) %>">
+      <input type="text" size="50" maxlength="80" name="<%= opportunityHeader.getId() > 0 ? "description" : "component_description" %>" value="<%= toHtmlValue(ComponentDetails.getDescription()) %>">
       <font color="red">*</font> <%= showAttribute(request, "componentDescriptionError") %>
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Assign To
+      <dhv:label name="actionList.assignTo">Assign To</dhv:label>
     </td>
     <td valign="center">
       <%= UserList.getHtmlSelect((opportunityHeader.getId() > 0 ? "owner" : "component_owner"), ComponentDetails.getOwner()) %>
+      <%= showAttribute(request, "ownerError") %>
+      <%= showWarningAttribute(request, "ownerWarning") %>
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel" valign="top">
-      Component<br>Type(s)
+      <dhv:label name="accounts.accounts_contacts_opps_details.Component">Component</dhv:label><br />
+      <dhv:label name="pipeline.types">Type(s)</dhv:label>
     </td>
     <td>
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
@@ -87,10 +95,10 @@
               <%if(request.getAttribute("TypeList") != null){ %>
                <dhv:lookupHtml listName="TypeList" lookupName="TypeSelect"/>
               <% }else{ %>
-               <dhv:evaluate exp="<%= ComponentDetails.getTypes().isEmpty() %>">
-                  <option value="-1">None Selected</option>
+               <dhv:evaluate if="<%= ComponentDetails.getTypes().isEmpty() %>">
+                  <option value="-1"><dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label></option>
                 </dhv:evaluate>
-                <dhv:evaluate exp="<%= !ComponentDetails.getTypes().isEmpty() %>">
+                <dhv:evaluate if="<%= !ComponentDetails.getTypes().isEmpty() %>">
               <%
                 Iterator i = ComponentDetails.getTypes().iterator();
                 while (i.hasNext()) {
@@ -104,7 +112,7 @@
             <input type="hidden" name="previousSelection" value="">
           </td>
           <td valign="top">
-            &nbsp;[<a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_opportunity_types');">Select</a>]
+            &nbsp;[<a href="javascript:popLookupSelectMultiple('selectedList','1','lookup_opportunity_types');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
           </td>
         </tr>
       </table>
@@ -114,23 +122,29 @@
   <dhv:evaluate if="<%= opportunityHeader.getId() == -1%>">
   <tr class="containerBody">
     <td nowrap valign="top" class="formLabel">
-      Associate With
+      <dhv:label name="account.opportunities.associateWith">Associate With</dhv:label>
     </td>
     <td>
       <table cellspacing="0" cellpadding="0" border="0" class="empty">
           <tr>
               <td>
-                <input type="radio" name="<%= opportunityHeader.getId() > 0 ? "type" : "opp_type" %>" value="org"  onclick=<%= "\"javascript:document.forms['opportunityForm']." + (opportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink")  + ".value = '-1';\" " %><dhv:evaluate exp="<%=opportunityHeader.getAccountLink() > -1 || "org".equals(request.getParameter(opportunityHeader.getId() > 0 ? "type" : "opp_type")) %>">checked</dhv:evaluate>>
+                <input type="radio" name="<%= opportunityHeader.getId() > 0 ? "type" : "opp_type" %>" value="org"  onclick=<%= "\"javascript:document.forms['opportunityForm']." + (opportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink")  + ".value = '-1';\" " %><dhv:evaluate if="<%=opportunityHeader.getAccountLink() > -1 || "org".equals(request.getParameter(opportunityHeader.getId() > 0 ? "type" : "opp_type")) %>">checked</dhv:evaluate>>
               </td>
               <td>
-                Account:&nbsp;
+                <dhv:label name="account.account.colon">Account:</dhv:label>&nbsp;
               </td>
               <td>
-                <div id="changeaccount"><%= opportunityHeader.getAccountLink() != -1 ? opportunityHeader.getAccountName() : "None Selected" %></div>
+                <div id="changeaccount">
+                  <% if(opportunityHeader.getAccountLink() != -1) {%>
+                    <%= toHtml(opportunityHeader.getAccountName()) %>
+                  <%} else {%>
+                    <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+                  <%}%>
+                </div>
               </td>
               <td>
                 <input type="hidden" name="<%= opportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink" %>" id="<%= opportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink" %>" value="<%= opportunityHeader.getAccountLink() %>">&nbsp;<font color="red">*</font> <%= showAttribute(request, "acctContactError") %>
-                &nbsp;[<a href="<%= "javascript:document.forms['opportunityForm']." + (opportunityHeader.getId() > 0 ? "type[0]" : "opp_type[0]") + ".checked='t';popAccountsListSingle('" + (opportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink" ) + "','changeaccount');" %>" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;">Select</a>]
+                &nbsp;[<a href="<%= "javascript:document.forms['opportunityForm']." + (opportunityHeader.getId() > 0 ? "type[0]" : "opp_type[0]") + ".checked='t';popAccountsListSingle('" + (opportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink" ) + "','changeaccount');" %>" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
               </td>
             </tr>
        </table>
@@ -140,14 +154,20 @@
             <input type="radio" name="<%= opportunityHeader.getId() > 0 ? "type" : "opp_type"%>" value="contact" onclick=<%= "\"javascript:document.forms['opportunityForm']." + (opportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink")  + ".value = '-1';\" " %> <dhv:evaluate if="<%= opportunityHeader.getContactLink() > -1 || "contact".equals(request.getParameter(opportunityHeader.getId() > 0 ? "type" : "opp_type"))%>">checked</dhv:evaluate>>
           </td>
           <td>
-            Contact:&nbsp;
+            <dhv:label name="account.contact.colon">Contact:</dhv:label>&nbsp;
           </td>
           <td>
-            <div id="changecontact"><%= String.valueOf(opportunityHeader.getContactLink()).equals("-1")?"None Selected":"&nbsp;" + opportunityHeader.getContactName()%></div>
+            <div id="changecontact">
+              <% if(!String.valueOf(opportunityHeader.getContactLink()).equals("-1")) {%>
+                <%= toHtml("&nbsp;" + opportunityHeader.getContactName()) %>
+              <%} else {%>
+                <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+              <%}%>
+            </div>
           </td>
           <td>
             <input type="hidden" name="<%= opportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink" %>" id="<%= opportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink" %>" value="<%= opportunityHeader.getContactLink() == -1 ? -1 : opportunityHeader.getContactLink() %>">
-            &nbsp;[<a href=<%= "\"javascript:document.forms['opportunityForm']." + (opportunityHeader.getId() > 0 ? "type[1]" : "opp_type[1]") + ".checked='t';popContactsListSingle('" + (opportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink" ) + "','changecontact','reset=true&filters=mycontacts|accountcontacts');\" "%> onMouseOver="window.status='Select a Contact';return true;" onMouseOut="window.status='';return true;">Select</a>]
+            &nbsp;[<a href=<%= "\"javascript:document.forms['opportunityForm']." + (opportunityHeader.getId() > 0 ? "type[1]" : "opp_type[1]") + ".checked='t';popContactsListSingle('" + (opportunityHeader.getId() > 0 ? "contactLink" : "header_contactLink" ) + "','changecontact','reset=true&filters=mycontacts|accountcontacts');\" "%> onMouseOver="window.status='Select a Contact';return true;" onMouseOut="window.status='';return true;"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
           </td>
         </tr>
       </table>
@@ -160,12 +180,12 @@
     <input type="hidden" name="<%= opportunityHeader.getId() > 0 ? "accountLink" : "header_accountLink" %>" value="<%= OrgDetails.getOrgId() %>">
   <% } %>
   <tr class="containerBody">
-    <td valign="top" nowrap class="formLabel">Additional Notes</td>
+    <td valign="top" nowrap class="formLabel"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.AdditionalNotes">Additional Notes</dhv:label></td>
     <td><TEXTAREA NAME="<%= opportunityHeader.getId() > 0 ? "notes" : "component_notes" %>" ROWS="3" COLS="50"><%= toString(ComponentDetails.getNotes()) %></TEXTAREA></td>
   </tr>  
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Source
+      <dhv:label name="contact.source">Source</dhv:label>
     </td>
     <td>
       <% BusTypeList.setDefaultKey(ComponentDetails != null ? ComponentDetails.getType() : "");%>
@@ -174,7 +194,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Prob. of Close
+      <dhv:label name="accounts.accounts_contacts_oppcomponent_add.ProbOfClose">Prob. of Close</dhv:label>
     </td>
     <td>
       <input type="text" size="5" name="<%= opportunityHeader.getId() > 0 ? "closeProb" : "component_closeProb" %>" value="<%= ComponentDetails.getCloseProbValue() %>">%
@@ -183,7 +203,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Est. Close Date
+      <dhv:label name="accounts.accounts_contacts_oppcomponent_add.EstCloseDate">Est. Close Date</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="opportunityForm" field="<%= opportunityHeader.getId() > 0 ? "closeDate" : "component_closeDate" %>" timestamp="<%= ComponentDetails.getCloseDate() %>" timeZone="<%= ComponentDetails.getCloseDateTimeZone() %>" showTimeZone="true" />
@@ -192,7 +212,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Low Estimate
+      <dhv:label name="accounts.accounts_contacts_oppcomponent_add.LowEstimate">Low Estimate</dhv:label>
     </td>
     <td>
       <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
@@ -202,7 +222,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Best Guess Estimate
+      <dhv:label name="pipeline.bestGuessEstimate">Best Guess Estimate</dhv:label>
     </td>
     <td>
       <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
@@ -213,7 +233,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      High Estimate
+      <dhv:label name="accounts.accounts_contacts_oppcomponent_add.HighEstimate">High Estimate</dhv:label>
     </td>
     <td>
       <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
@@ -223,7 +243,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Est. Term
+      <dhv:label name="accounts.accounts_contacts_oppcomponent_add.EstTerm">Est. Term</dhv:label>
     </td>
     <td>
       <input type="text" size="5" name="<%= opportunityHeader.getId() > 0 ? "terms" : "component_terms" %>" value="<%= toHtmlValue(ComponentDetails.getTermsString()) %>">
@@ -234,16 +254,16 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Current Stage
+      <dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label>
     </td>
     <td>
       <%= StageList.getHtmlSelect((opportunityHeader.getId() > 0 ? "stage" : "component_stage"),ComponentDetails.getStage()) %>
-      <input type="checkbox" name="<%= opportunityHeader.getId() > 0 ? "closeNow" : "component_closeNow" %>" value="true" <%= ComponentDetails.getCloseIt() ? " checked" : ""%>>Close this component
+      <input type="checkbox" name="<%= opportunityHeader.getId() > 0 ? "closeNow" : "component_closeNow" %>" value="true" <%= ComponentDetails.getCloseIt() ? " checked" : ""%>><dhv:label name="pipeline.closeThisComponent">Close this component</dhv:label>
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Est. Commission
+      <dhv:label name="accounts.accounts_contacts_oppcomponent_details.EstCommission">Est. Commission</dhv:label>
     </td>
     <td>
       <input type="text" size="5" name="<%= opportunityHeader.getId() > 0 ? "commission" : "component_commission" %>" value="<%= ComponentDetails.getCommissionValue() %>">%
@@ -252,15 +272,15 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Alert Description
+      <dhv:label name="accounts.accounts_add.AlertDescription">Alert Description</dhv:label>
     </td>
     <td>
-      <input type="text" size="50" name="<%= opportunityHeader.getId() > 0 ? "alertText" : "component_alertText" %>" value="<%= toHtmlValue(ComponentDetails.getAlertText()) %>"><br>
+      <input type="text" maxlength="100" size="50" name="<%= opportunityHeader.getId() > 0 ? "alertText" : "component_alertText" %>" value="<%= toHtmlValue(ComponentDetails.getAlertText()) %>"><br>
     </td>
   </tr>
    <tr class="containerBody">
     <td nowrap class="formLabel">
-      Alert Date
+      <dhv:label name="accounts.accounts_add.AlertDate">Alert Date</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="opportunityForm" field="<%= opportunityHeader.getId() > 0 ? "alertDate" : "component_alertDate" %>" timestamp="<%= ComponentDetails.getAlertDate() %>" timeZone="<%= ComponentDetails.getAlertDateTimeZone() %>" showTimeZone="true" />

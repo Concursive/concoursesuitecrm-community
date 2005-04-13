@@ -33,102 +33,95 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> >
+<a href="Leads.do"><dhv:label name="pipeline.pipeline">Pipeline</dhv:label></a> >
 <% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
-	<a href="Leads.do?command=Dashboard">Dashboard</a> >
+	<a href="Leads.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
 <% }else{ %>
-	<a href="Leads.do?command=Search">Search Results</a> >
+	<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <% } %>
-<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> >
-<a href="LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Activities</a> >
-Activity Details
+<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> >
+<a href="LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_calls_list.Activities">Activities</dhv:label></a> >
+<dhv:label name="accounts.accounts_contacts_calls_add.ActivityDetails">Activity Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<%@ include file="leads_details_header_include.jsp" %>
 <% String param1 = "id=" + opportunityHeader.getId(); 
    String param2 = addLinkParams(request, "viewSource");
 %>
-<dhv:container name="opportunities" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
-      <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" value="Complete" onClick="javascript:window.location.href='LeadsCalls.do?command=Complete&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>'"></dhv:permission>
-     </dhv:evaluate>
-     <% if("pending".equals(request.getParameter("view")) || CallDetails.getStatusId() != Call.CANCELED){ %>
-      <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" onclick="javascript:window.location.href='LeadsCalls.do?command=Modify&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>';" value="Modify"></dhv:permission>
-      <%}%>
-      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
-      <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" value="Cancel Pending Activity" onClick="javascript:window.location.href='LeadsCalls.do?command=Cancel&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= addLinkParams(request, "viewSource") %>';"></dhv:permission></dhv:evaluate>
-      <dhv:evaluate exp="<%= !isPopup(request) %>">
-      <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='LeadsCallsForward.do?command=ForwardCall&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>'"></dhv:permission>
-      </dhv:evaluate>
-      <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br>&nbsp;</dhv:permission>
-      
-      <% if("pending".equals(request.getParameter("view"))){ %>
-        <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
-        <%-- include follow up activity details --%>
-        <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
-        </dhv:evaluate>
-        &nbsp;
-        <%-- include completed activity details --%>
-        <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
-      <% }else{ %>
-        <%-- include completed activity details --%>
-        <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
-        &nbsp;
-        <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
-        <%-- include follow up activity details --%>
-        <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
-        </dhv:evaluate>
-      <% } %>
-      
-      &nbsp;
-      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-        <tr>
-          <th colspan="2">
-            <strong>Record Information</strong>  
-          </th>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel" nowrap>
-            Entered
-          </td>
-          <td>
-            <dhv:username id="<%= CallDetails.getEnteredBy() %>"/>
-            <zeroio:tz timestamp="<%= CallDetails.getEntered() %>" />
-          </td>
-        </tr>
-        <tr class="containerBody">
-          <td class="formLabel" nowrap>
-            Modified
-          </td>
-          <td>
-            <dhv:username id="<%= CallDetails.getModifiedBy() %>"/>
-            <zeroio:tz timestamp="<%= CallDetails.getModified() %>" />
-          </td>
-        </tr>
-      </table>
-      <br>
-      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
-      <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" value="Complete" onClick="javascript:window.location.href='LeadsCalls.do?command=Complete&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>'"></dhv:permission>
-     </dhv:evaluate>
-     <% if("pending".equals(request.getParameter("view")) || CallDetails.getStatusId() != Call.CANCELED){ %>
-      <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" onclick="javascript:window.location.href='LeadsCalls.do?command=Modify&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>';" value="Modify"></dhv:permission>
-      <%}%>
-      <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
-      <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" value="Cancel Pending Activity" onClick="javascript:window.location.href='LeadsCalls.do?command=Cancel&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= addLinkParams(request, "viewSource") %>';"></dhv:permission></dhv:evaluate>
-      <dhv:evaluate exp="<%= !isPopup(request) %>">
-      <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" name="action" value="Forward" onClick="javascript:window.location.href='LeadsCallsForward.do?command=ForwardCall&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>'"></dhv:permission>
-      </dhv:evaluate>
-      <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br>&nbsp;</dhv:permission>
-    </td>
-  </tr>
-</table>
+<dhv:container name="opportunities" selected="calls" object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
+  <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+    <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='LeadsCalls.do?command=Complete&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>'"></dhv:permission>
+  </dhv:evaluate>
+  <% if("pending".equals(request.getParameter("view")) || CallDetails.getStatusId() != Call.CANCELED){ %>
+  <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" onclick="javascript:window.location.href='LeadsCalls.do?command=Modify&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>';" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:permission>
+  <%}%>
+  <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+    <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" value="<dhv:label name="global.button.CancelPendingActivity">Cancel Pending Activity</dhv:label>" onClick="javascript:window.location.href='LeadsCalls.do?command=Cancel&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= addLinkParams(request, "viewSource") %>';"></dhv:permission>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= !isPopup(request) %>">
+    <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" name="action" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='LeadsCallsForward.do?command=ForwardCall&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>'"></dhv:permission>
+  </dhv:evaluate>
+  <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br>&nbsp;</dhv:permission>
+  <% if("pending".equals(request.getParameter("view"))){ %>
+    <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
+    <%-- include follow up activity details --%>
+    <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
+    </dhv:evaluate>
+    &nbsp;
+    <%-- include completed activity details --%>
+    <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
+  <% }else{ %>
+    <%-- include completed activity details --%>
+    <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
+    &nbsp;
+    <dhv:evaluate if="<%= CallDetails.getAlertDate() != null %>">
+    <%-- include follow up activity details --%>
+    <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
+    </dhv:evaluate>
+  <% } %>
+  &nbsp;
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><dhv:label name="accounts.accounts_contacts_calls_details.RecordInformation">Record Information</dhv:label></strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
+      </td>
+      <td>
+        <dhv:username id="<%= CallDetails.getEnteredBy() %>"/>
+        <zeroio:tz timestamp="<%= CallDetails.getEntered() %>" />
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>
+      </td>
+      <td>
+        <dhv:username id="<%= CallDetails.getModifiedBy() %>"/>
+        <zeroio:tz timestamp="<%= CallDetails.getModified() %>" />
+      </td>
+    </tr>
+  </table>
+  <br>
+  <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+  <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" value="<dhv:label name="global.button.complete">Complete</dhv:label>" onClick="javascript:window.location.href='LeadsCalls.do?command=Complete&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>'"></dhv:permission>
+  </dhv:evaluate>
+  <% if("pending".equals(request.getParameter("view")) || CallDetails.getStatusId() != Call.CANCELED){ %>
+  <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" onclick="javascript:window.location.href='LeadsCalls.do?command=Modify&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>';" value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:permission>
+  <%}%>
+  <dhv:evaluate if="<%= "pending".equals(request.getParameter("view")) %>">
+  <dhv:permission name="pipeline-opportunities-calls-edit"><input type="button" value="<dhv:label name="global.button.CancelPendingActivity">Cancel Pending Activity</dhv:label>" onClick="javascript:window.location.href='LeadsCalls.do?command=Cancel&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %>&action=cancel<%= addLinkParams(request, "viewSource") %>';"></dhv:permission></dhv:evaluate>
+  <dhv:evaluate if="<%= !isPopup(request) %>">
+  <dhv:permission name="pipeline-opportunities-calls-view"><input type="button" name="action" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='LeadsCallsForward.do?command=ForwardCall&headerId=<%= opportunityHeader.getId() %>&id=<%= CallDetails.getId() %><%= addLinkParams(request, "viewSource") %>'"></dhv:permission>
+  </dhv:evaluate>
+  <dhv:permission name="pipeline-opportunities-calls-edit,pipeline-opportunities-calls-delete"><br>&nbsp;</dhv:permission>
+</dhv:container>
 

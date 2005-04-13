@@ -15,10 +15,13 @@
  */
 package org.aspcfs.utils;
 
-import dori.jasper.engine.*;
-import dori.jasper.engine.util.*;
-import java.io.*;
-import java.sql.*;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.util.JRLoader;
+
+import java.io.File;
+import java.sql.Connection;
 import java.util.HashMap;
 
 /**
@@ -45,7 +48,7 @@ public class JasperReportUtils {
       System.out.println("JasperReportUtils-> Checking report: " + filename);
     }
     System.setProperty("jasper.reports.compiler.class",
-        "dori.jasper.engine.design.JRBshCompiler");
+        "net.sf.jasperreports.engine.design.JRBshCompiler");
     //Check to see if the .jasper exists
     String jasperFilename = filename.substring(0, filename.lastIndexOf(".xml"));
     File jasperFile = new File(jasperFilename + ".jasper");

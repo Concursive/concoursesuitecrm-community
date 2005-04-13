@@ -15,27 +15,29 @@
  */
 package com.zeroio.iteam.utils;
 
-import java.io.ByteArrayInputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
-import com.zeroio.iteam.base.Requirement;
-import com.zeroio.iteam.base.Assignment;
 import com.isavvix.tools.FileInfo;
-import java.util.*;
-// Excel
+import com.zeroio.iteam.base.Assignment;
+import com.zeroio.iteam.base.Requirement;
+import com.zeroio.iteam.base.TeamMemberList;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-// XML
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
 import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  Imports data from other formats into an outline
@@ -93,8 +95,6 @@ public class AssignmentImporter {
       // get the first sheet
       HSSFSheet sheet = hssfworkbook.getSheetAt(0);
       // define objects for housing spreadsheet data
-      HSSFCell currentStateCell = null;
-      HSSFCell currentSalesCell = null;
       HSSFRow currentRow = sheet.getRow(0);
       // parse each row, create and insert into a new requirement with a tree
       int rows = sheet.getPhysicalNumberOfRows();
@@ -214,7 +214,17 @@ public class AssignmentImporter {
               assignment.setEnteredBy(requirement.getEnteredBy());
               assignment.setModifiedBy(requirement.getModifiedBy());
               assignment.setStatusId(1);
-              assignment.setPriorityId(2);
+              // Make sure a valid priority is set
+              if (assignment.getPriorityId() < 1 || assignment.getPriorityId() > 3) {
+                assignment.setPriorityId(2);
+              }
+              // Make sure user is on team, before adding, else unset the field
+              if (assignment.getUserAssignedId() > 0) {
+                if (!TeamMemberList.isOnTeam(db, requirement.getProjectId(), assignment.getUserAssignedId())) {
+                  assignment.setUserAssignedId(-1);
+                }
+              }
+              // Insert the assignment
               assignment.insert(db);
               if (System.getProperty("DEBUG") != null) {
                 System.out.println("AssignmentImporter-> Assignment Inserted: " + assignment.getId());

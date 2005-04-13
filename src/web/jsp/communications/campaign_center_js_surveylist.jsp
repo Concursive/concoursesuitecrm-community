@@ -19,9 +19,9 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*" %>
 <jsp:useBean id="surveyList" class="org.aspcfs.modules.communications.base.SurveyList" scope="request"/>
-<html>
-<head>
-</head>
+<%
+  String form = request.getParameter("form");
+%>
 <body onload="page_init();">
 <script language="JavaScript">
 function newOpt(param, value) {
@@ -31,9 +31,9 @@ function newOpt(param, value) {
   return newOpt;
 }
 function page_init() {
-  var list = parent.document.forms[0].elements['surveyId'];
+  var list = parent.document.<%= form %>.elements['surveyId'];
   list.options.length = 0;
-  list.options[list.length] = newOpt("--None--", "-1");
+  list.options[list.length] = newOpt(label("option.none","--None--"), "-1");
 <%
   Iterator list1 = surveyList.iterator();
   while (list1.hasNext()) {
@@ -47,5 +47,3 @@ function page_init() {
 }
 </script>
 </body>
-</html>
-

@@ -33,7 +33,7 @@
   }
   //Menu link functions
   function deletePreference() {
-    if(confirm('Are you sure you would like to delete the preference')) {
+    if(confirm(label("delete.preference", "Are you sure you would like to delete the preference"))) {
       window.location.href='Contacts.do?command=DeleteCommunicationsPreference&contactId='+thisContactId+'&preferenceId='+thisPreferenceId;
     }
   }
@@ -47,7 +47,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete
+          <dhv:label name="global.button.delete">Delete</dhv:label>
         </td>
       </tr>
       </dhv:permission>

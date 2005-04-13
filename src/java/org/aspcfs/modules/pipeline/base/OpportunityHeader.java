@@ -15,19 +15,26 @@
  */
 package org.aspcfs.modules.pipeline.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.iteam.base.FileItemList;
-import org.aspcfs.modules.actionlist.base.*;
+import org.aspcfs.modules.actionlist.base.ActionItemLog;
+import org.aspcfs.modules.actionlist.base.ActionItemLogList;
+import org.aspcfs.modules.actionlist.base.ActionList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.contacts.base.CallList;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.quotes.base.QuoteList;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
 
 /**
  *  An OpportunityHeader is a top level description for all of the components
@@ -221,7 +228,7 @@ public class OpportunityHeader extends GenericBean {
    *@return          The totalValue value
    */
   public double getTotalValue(int divisor) {
-    return (java.lang.Math.round(totalValue) / divisor);
+    return (java.lang.Math.round(totalValue) / (double) divisor);
   }
 
 
@@ -241,6 +248,9 @@ public class OpportunityHeader extends GenericBean {
    *@return    The shortDescription value
    */
   public String getShortDescription() {
+    if (description == null) {
+      return null;
+    }
     if (description.length() <= 40) {
       return description;
     } else {
@@ -767,30 +777,6 @@ public class OpportunityHeader extends GenericBean {
 
 
   /**
-   *  Gets the Valid attribute of the Opportunity object
-   *
-   *@return                   The Valid value
-   *@exception  SQLException  Description of Exception
-   */
-  public boolean isValid() throws SQLException {
-    if (description == null || description.trim().equals("")) {
-      errors.put("descriptionError", "Description cannot be left blank");
-    }
-    if (contactLink == -1 && accountLink == -1) {
-      errors.put("acctContactError", "An Account or a Contact needs to be selected");
-    }
-    if (hasErrors()) {
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Opportunity Header-> Cannot insert: object is not valid");
-      }
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -798,14 +784,14 @@ public class OpportunityHeader extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     if (this.getAccountLink() == -1 && this.getContactLink() == -1) {
       throw new SQLException("You must associate an Opportunity Header with an account or contact.");
     }
+    boolean doCommit = false;
     try {
-      db.setAutoCommit(false);
+      if ((doCommit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       StringBuffer sql = new StringBuffer();
       sql.append(
           "INSERT INTO opportunity_header " +
@@ -843,12 +829,18 @@ public class OpportunityHeader extends GenericBean {
       pst.close();
 
       id = DatabaseUtils.getCurrVal(db, "opportunity_header_opp_id_seq");
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -903,9 +895,6 @@ public class OpportunityHeader extends GenericBean {
     if (id == -1) {
       throw new SQLException("Opportunity Header ID was not specified");
     }
-    if (!isValid()) {
-      return -1;
-    }
     try {
       db.setAutoCommit(false);
       resultCount = this.update(db, false);
@@ -939,7 +928,7 @@ public class OpportunityHeader extends GenericBean {
     rs = pst.executeQuery();
     if (rs.next()) {
       Dependency thisDependency = new Dependency();
-      thisDependency.setName("Calls");
+      thisDependency.setName("calls");
       thisDependency.setCount(rs.getInt("callcount"));
       thisDependency.setCanDelete(true);
       dependencyList.add(thisDependency);
@@ -956,7 +945,7 @@ public class OpportunityHeader extends GenericBean {
     rs = pst.executeQuery();
     if (rs.next()) {
       Dependency thisDependency = new Dependency();
-      thisDependency.setName("Documents");
+      thisDependency.setName("documents");
       thisDependency.setCount(rs.getInt("documentcount"));
       thisDependency.setCanDelete(true);
       dependencyList.add(thisDependency);
@@ -970,7 +959,7 @@ public class OpportunityHeader extends GenericBean {
     rs = pst.executeQuery();
     if (rs.next()) {
       Dependency thisDependency = new Dependency();
-      thisDependency.setName("Components");
+      thisDependency.setName("components");
       thisDependency.setCount(rs.getInt("componentcount"));
       thisDependency.setCanDelete(true);
       dependencyList.add(thisDependency);
@@ -978,10 +967,26 @@ public class OpportunityHeader extends GenericBean {
     rs.close();
     pst.close();
 
+    //Quotes dependencies
+    sql =
+        "SELECT COUNT(*) as quotecount " +
+        "FROM quote_entry qe WHERE qe.opp_id = ? ";
+    i = 0;
+    pst = db.prepareStatement(sql);
+    pst.setInt(++i, this.getId());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      Dependency thisDependency = new Dependency();
+      thisDependency.setName("quotes");
+      thisDependency.setCount(rs.getInt("quotecount"));
+      thisDependency.setCanDelete(true);
+      dependencyList.add(thisDependency);
+    }
+
     ActionList actionList = ActionItemLogList.isItemLinked(db, this.getId(), Constants.OPPORTUNITY_OBJECT);
     if (actionList != null) {
       Dependency thisDependency = new Dependency();
-      thisDependency.setName(actionList.getDescription());
+      thisDependency.setName("actionLists");
       thisDependency.setCount(1);
       thisDependency.setCanDelete(true);
       dependencyList.add(thisDependency);
@@ -1005,8 +1010,28 @@ public class OpportunityHeader extends GenericBean {
     //delete any action list items associated
     ActionItemLog.deleteLink(db, this.getId(), Constants.OPPORTUNITY_OBJECT);
 
-    //delete opportunity
+    //delete the quotes
+    QuoteList quoteList = new QuoteList();
+    quoteList.setHeaderId(this.getId());
+    quoteList.buildList(db);
+    quoteList.delete(db);
+
+    //delete the call list
+    CallList callList = new CallList();
+    callList.setOppHeaderId(id);
+    callList.buildList(db);
+    callList.delete(db);
+    callList = null;
+
+    //delete opportunity component
     PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM opportunity_component WHERE opp_id = ? ");
+    pst.setInt(1, id);
+    pst.executeUpdate();
+    pst.close();
+
+    //delete opportunity
+    pst = db.prepareStatement(
         "DELETE FROM opportunity_header WHERE opp_id = ? ");
     pst.setInt(1, id);
     pst.executeUpdate();
@@ -1052,6 +1077,9 @@ public class OpportunityHeader extends GenericBean {
       db.setAutoCommit(false);
       this.resetType(db);
 
+      //delete any action list items associated
+      ActionItemLog.deleteLink(db, this.getId(), Constants.OPPORTUNITY_OBJECT);
+
       CallList callList = new CallList();
       callList.setOppHeaderId(id);
       callList.buildList(db);
@@ -1065,6 +1093,12 @@ public class OpportunityHeader extends GenericBean {
       fileList.delete(db, baseFilePath);
       fileList = null;
 
+      //delete the quotes
+      QuoteList quoteList = new QuoteList();
+      quoteList.setHeaderId(this.getId());
+      quoteList.buildList(db);
+      quoteList.delete(db);
+  
       //delete components
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM opportunity_component " +

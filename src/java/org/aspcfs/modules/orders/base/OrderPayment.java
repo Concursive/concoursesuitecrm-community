@@ -33,18 +33,276 @@ import org.aspcfs.modules.base.DependencyList;
 public class OrderPayment extends GenericBean {
   private int id = -1;
   private int orderId = -1;
+  private int orderItemId = -1;
+  private int historyId = -1;
   private int paymentMethodId = -1;
   private double amount = 0;
 
   private String authorizationRefNumber = null;
   private String authorizationCode = null;
   private Timestamp authorizationDate = null;
-
+  private Timestamp dateToProcess = null;
+  private int creditCardId = -1;
+  private int bankId = -1;
   private Timestamp entered = null;
   private int enteredBy = -1;
   private Timestamp modified = null;
   private int modifiedBy = -1;
+  private int statusId = -1;
+  //resources
+  private String status = null;
+  private boolean buildOrderPaymentStatusList = false;
+  private OrderPaymentStatusList orderPaymentStatusList = null;
 
+
+  /**
+   *  Sets the dateToProcess attribute of the OrderPayment object
+   *
+   * @param  tmp  The new dateToProcess value
+   */
+  public void setDateToProcess(Timestamp tmp) {
+    this.dateToProcess = tmp;
+  }
+
+
+  /**
+   *  Sets the dateToProcess attribute of the OrderPayment object
+   *
+   * @param  tmp  The new dateToProcess value
+   */
+  public void setDateToProcess(String tmp) {
+    this.dateToProcess = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the creditCardId attribute of the OrderPayment object
+   *
+   * @param  tmp  The new creditCardId value
+   */
+  public void setCreditCardId(int tmp) {
+    this.creditCardId = tmp;
+  }
+
+
+  /**
+   *  Sets the creditCardId attribute of the OrderPayment object
+   *
+   * @param  tmp  The new creditCardId value
+   */
+  public void setCreditCardId(String tmp) {
+    this.creditCardId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the bankId attribute of the OrderPayment object
+   *
+   * @param  tmp  The new bankId value
+   */
+  public void setBankId(int tmp) {
+    this.bankId = tmp;
+  }
+
+
+  /**
+   *  Sets the bankId attribute of the OrderPayment object
+   *
+   * @param  tmp  The new bankId value
+   */
+  public void setBankId(String tmp) {
+    this.bankId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the orderItemId attribute of the OrderPayment object
+   *
+   * @param  tmp  The new orderItemId value
+   */
+  public void setOrderItemId(int tmp) {
+    this.orderItemId = tmp;
+  }
+
+
+  /**
+   *  Sets the orderItemId attribute of the OrderPayment object
+   *
+   * @param  tmp  The new orderItemId value
+   */
+  public void setOrderItemId(String tmp) {
+    this.orderItemId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the historyId attribute of the OrderPayment object
+   *
+   * @param  tmp  The new historyId value
+   */
+  public void setHistoryId(int tmp) {
+    this.historyId = tmp;
+  }
+
+
+  /**
+   *  Sets the historyId attribute of the OrderPayment object
+   *
+   * @param  tmp  The new historyId value
+   */
+  public void setHistoryId(String tmp) {
+    this.historyId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the OrderPayment object
+   *
+   * @param  tmp  The new statusId value
+   */
+  public void setStatusId(int tmp) {
+    this.statusId = tmp;
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the OrderPayment object
+   *
+   * @param  tmp  The new statusId value
+   */
+  public void setStatusId(String tmp) {
+    this.statusId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the status attribute of the OrderPayment object
+   *
+   * @param  tmp  The new status value
+   */
+  public void setStatus(String tmp) {
+    this.status = tmp;
+  }
+
+
+  /**
+   *  Sets the buildPaymentStatusList attribute of the OrderPayment object
+   *
+   * @param  tmp  The new buildPaymentStatusList value
+   */
+  public void setBuildOrderPaymentStatusList(boolean tmp) {
+    this.buildOrderPaymentStatusList = tmp;
+  }
+
+
+  /**
+   *  Sets the buildPaymentStatusList attribute of the OrderPayment object
+   *
+   * @param  tmp  The new buildPaymentStatusList value
+   */
+  public void setBuildOrderPaymentStatusList(String tmp) {
+    this.buildOrderPaymentStatusList = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the orderPaymentStatusList attribute of the OrderPayment object
+   *
+   * @param  tmp  The new orderPaymentStatusList value
+   */
+  public void setOrderPaymentStatusList(OrderPaymentStatusList tmp) {
+    this.orderPaymentStatusList = tmp;
+  }
+
+
+  /**
+   *  Gets the buildPaymentStatusList attribute of the OrderPayment object
+   *
+   * @return    The buildPaymentStatusList value
+   */
+  public boolean getBuildOrderPaymentStatusList() {
+    return buildOrderPaymentStatusList;
+  }
+
+
+  /**
+   *  Gets the orderPaymentStatusList attribute of the OrderPayment object
+   *
+   * @return    The orderPaymentStatusList value
+   */
+  public OrderPaymentStatusList getOrderPaymentStatusList() {
+    return orderPaymentStatusList;
+  }
+
+
+  /**
+   *  Gets the status attribute of the OrderPayment object
+   *
+   * @return    The status value
+   */
+  public String getStatus() {
+    return status;
+  }
+
+
+  /**
+   *  Gets the statusId attribute of the OrderPayment object
+   *
+   * @return    The statusId value
+   */
+  public int getStatusId() {
+    return statusId;
+  }
+
+
+  /**
+   *  Gets the orderItemId attribute of the OrderPayment object
+   *
+   * @return    The orderItemId value
+   */
+  public int getOrderItemId() {
+    return orderItemId;
+  }
+
+
+  /**
+   *  Gets the historyId attribute of the OrderPayment object
+   *
+   * @return    The historyId value
+   */
+  public int getHistoryId() {
+    return historyId;
+  }
+
+
+  /**
+   *  Gets the dateToProcess attribute of the OrderPayment object
+   *
+   * @return    The dateToProcess value
+   */
+  public Timestamp getDateToProcess() {
+    return dateToProcess;
+  }
+
+
+  /**
+   *  Gets the creditCardId attribute of the OrderPayment object
+   *
+   * @return    The creditCardId value
+   */
+  public int getCreditCardId() {
+    return creditCardId;
+  }
+
+
+  /**
+   *  Gets the bankId attribute of the OrderPayment object
+   *
+   * @return    The bankId value
+   */
+  public int getBankId() {
+    return bankId;
+  }
 
 
   /**
@@ -389,10 +647,10 @@ public class OrderPayment extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT op.payment_id, op.order_id, op.payment_method_id, op.payment_amount, " +
-        " 			 op.authorization_ref_number, op.authorization_code, op.authorization_date, " +
-        "				 op.entered, op.enteredby, op.modified, op.modifiedby " +
+        " SELECT op.*, ps.description AS status_description " +
         " FROM order_payment op " +
+        " LEFT JOIN lookup_payment_status ps " +
+        " ON ( op.status_id = ps.code ) " +
         " WHERE op.payment_id = ? "
         );
     pst.setInt(1, id);
@@ -405,6 +663,22 @@ public class OrderPayment extends GenericBean {
     if (this.id == -1) {
       throw new SQLException("Payment Entry not found");
     }
+    if (buildOrderPaymentStatusList) {
+      buildStatusList(db);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void buildStatusList(Connection db) throws SQLException {
+    orderPaymentStatusList = new OrderPaymentStatusList();
+    orderPaymentStatusList.setPaymentId(this.getId());
+    orderPaymentStatusList.buildList(db);
   }
 
 
@@ -423,11 +697,19 @@ public class OrderPayment extends GenericBean {
     authorizationRefNumber = rs.getString("authorization_ref_number");
     authorizationCode = rs.getString("authorization_code");
     authorizationDate = rs.getTimestamp("authorization_date");
-
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = DatabaseUtils.getInt(rs, "modifiedby");
+    orderItemId = DatabaseUtils.getInt(rs, "order_item_id");
+    historyId = DatabaseUtils.getInt(rs, "history_id");
+    dateToProcess = rs.getTimestamp("date_to_process");
+    creditCardId = DatabaseUtils.getInt(rs, "creditcard_id");
+    bankId = DatabaseUtils.getInt(rs, "bank_id");
+    statusId = DatabaseUtils.getInt(rs, "status_id");
+
+    //lookup_payment_status table
+    status = rs.getString("status_description");
   }
 
 
@@ -440,14 +722,11 @@ public class OrderPayment extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
-    if (!isValid(db)) {
-      return result;
-    }
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-        " INSERT INTO order_payment(order_id, payment_method_id, payment_amount, " +
-        " 	authorization_ref_number, authorization_code, authorization_date "
+        "INSERT INTO order_payment(order_id, order_item_id, history_id, payment_method_id, payment_amount, " +
+        " 	authorization_ref_number, authorization_code, authorization_date, status_id, "
         );
     if (entered != null) {
       sql.append(" entered, ");
@@ -456,8 +735,8 @@ public class OrderPayment extends GenericBean {
     if (modified != null) {
       sql.append(" modified, ");
     }
-    sql.append(" modifiedby )");
-    sql.append("VALUES( ?, ?, ?, ?, ?, ?, ");
+    sql.append(" modifiedby, date_to_process, creditcard_id, bank_id )");
+    sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
     }
@@ -465,10 +744,12 @@ public class OrderPayment extends GenericBean {
     if (modified != null) {
       sql.append("?, ");
     }
-    sql.append("? )");
+    sql.append("?, ?, ?, ? )");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, this.getOrderId());
+    DatabaseUtils.setInt(pst, ++i, this.getOrderItemId());
+    DatabaseUtils.setInt(pst, ++i, this.getHistoryId());
     // payment method cannot be null since
     // an order must be associated with payment details either credit card or EFT details
     pst.setInt(++i, this.getPaymentMethodId());
@@ -476,6 +757,7 @@ public class OrderPayment extends GenericBean {
     pst.setString(++i, this.getAuthorizationRefNumber());
     pst.setString(++i, this.getAuthorizationCode());
     pst.setTimestamp(++i, this.getAuthorizationDate());
+    DatabaseUtils.setInt(pst, ++i, this.getStatusId());
     if (entered != null) {
       pst.setTimestamp(++i, this.getEntered());
     }
@@ -484,10 +766,14 @@ public class OrderPayment extends GenericBean {
       pst.setTimestamp(++i, this.getModified());
     }
     pst.setInt(++i, this.getModifiedBy());
-
+    DatabaseUtils.setTimestamp(pst, ++i, this.getDateToProcess());
+    DatabaseUtils.setInt(pst, ++i, this.getCreditCardId());
+    DatabaseUtils.setInt(pst, ++i, this.getBankId());
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "order_payment_payment_id_seq");
+
+    insertPaymentStatus(db);
     result = true;
     return result;
   }
@@ -504,35 +790,36 @@ public class OrderPayment extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Order ID not specified");
     }
+    boolean commit = true;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
 
-      // TODO : map a payment to the corresponding type of payment details and delete that detail
-      // delete all the credit card details associated with this payment
-      // delete all the eft(Electronic Fund Transfer) details associated with this payment
-      // delete the payment
-
-      PreparedStatement pst = null;
-      pst = db.prepareStatement(" DELETE FROM payment_creditcard WHERE payment_id = ? ");
+      OrderPaymentStatusList statusList = new OrderPaymentStatusList();
+      statusList.setPaymentId(this.getId());
+      statusList.buildList(db);
+      statusList.delete(db);
+      statusList = null;
+      
+      PreparedStatement pst = db.prepareStatement("DELETE FROM order_payment WHERE payment_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
 
-      pst = db.prepareStatement(" DELETE FROM payment_eft WHERE payment_id = ? ");
-      pst.setInt(1, this.getId());
-      pst.execute();
-      pst.close();
-
-      pst = db.prepareStatement(" DELETE FROM order_payment WHERE order_id = ? ");
-      pst.setInt(1, this.getId());
-      pst.execute();
-      pst.close();
-
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      e.printStackTrace(System.out);
+      if (commit) {
+        db.rollback();
+      }
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -547,52 +834,61 @@ public class OrderPayment extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
-    sql.append(" UPDATE order_payment " +
+    sql.append("UPDATE order_payment " +
         " SET payment_method_id = ?, " +
+        "     order_item_id = ?, " +
+        "     history_id = ?, " +
         "     payment_amount = ?, " +
         "     authorization_ref_number = ?, " +
         "     authorization_code = ?, " +
         "     authorization_date = ?, " +
-        "     entered = ?, " +
-        "     enteredby = ?, " +
+        "     status_id = ?, " +
         "     modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
-        "     modifiedby = ? , " +
+        "     modifiedby = ? " +
         " WHERE payment_id = ? ");
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     // payment method cannot be null since
     // an order must be associated with payment details either credit card or EFT details
-    pst.setInt(++i, this.getPaymentMethodId());
+    DatabaseUtils.setInt(pst, ++i, this.getPaymentMethodId());
+    DatabaseUtils.setInt(pst, ++i, this.getOrderItemId());
+    DatabaseUtils.setInt(pst, ++i, this.getHistoryId());
     DatabaseUtils.setDouble(pst, ++i, this.getAmount());
     pst.setString(++i, this.getAuthorizationRefNumber());
     pst.setString(++i, this.getAuthorizationCode());
-    pst.setTimestamp(++i, this.getAuthorizationDate());
-    pst.setTimestamp(++i, this.getEntered());
-    pst.setInt(++i, this.getEnteredBy());
+    DatabaseUtils.setTimestamp(pst, ++i, this.getAuthorizationDate());
+    DatabaseUtils.setInt(pst, ++i, this.getStatusId());
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
 
     resultCount = pst.executeUpdate();
     pst.close();
+    insertPaymentStatus(db);
     return resultCount;
   }
 
-
+  
   /**
-   *  Gets the valid attribute of the OrderPayment object
+   *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
-  public boolean isValid(Connection db) throws SQLException {
-    return true;
+  public void insertPaymentStatus(Connection db) throws SQLException {
+    OrderPaymentStatus thisStatus = new OrderPaymentStatus();
+    thisStatus.setPaymentId(this.getId());
+    thisStatus.setStatusId(this.getStatusId());
+    // the enteredby field and modifiedby for this status should
+    // be the user who is modifying the status
+    thisStatus.setEnteredBy(this.getModifiedBy());
+    thisStatus.setModifiedBy(this.getModifiedBy());
+    thisStatus.insert(db);
   }
 }
 

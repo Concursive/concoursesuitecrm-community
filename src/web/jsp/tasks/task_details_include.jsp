@@ -25,12 +25,12 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Task Details</strong>
+      <strong><dhv:label name="tasks.taskDetails">Task Details</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Description
+      <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
     </td>
     <td>
       <%= toHtmlValue(Task.getDescription()) %>
@@ -38,7 +38,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Due Date
+      <dhv:label name="accounts.accounts_calls_list.DueDate">Due Date</dhv:label>
     </td>
     <td>
       <zeroio:tz timestamp="<%= Task.getDueDate() %>" dateOnly="true" timeZone="<%= Task.getDueDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
@@ -49,32 +49,36 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td class="formLabel">Priority</td>
+    <td class="formLabel"><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></td>
     <td>
       <%= PriorityList.getSelectedValue(Task.getPriority()) %>
     </td>
   </tr>
   <tr class="containerBody"> 
-    <td class="formLabel">Status</td>
+    <td class="formLabel"><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>
     <td>
       <% if(Task.getComplete()){ %>
         <img src="images/box-checked.gif">
       <% }else{ %>
-        Pending
+        <dhv:label name="tasks.pending">Pending</dhv:label>
       <% } %>
     </td>
   </tr>
   <tr class="containerBody"> 
     <td class="formLabel">
-      Sharing
+      <dhv:label name="tasks.sharing">Sharing</dhv:label>
     </td>
     <td>
-      <%= ((Task.getSharing()==1) ? "personal" : "public") %>
+<% if(Task.getSharing()==1) {%>
+  <dhv:label name="tasks.personal.lowercase">personal</dhv:label>
+<%} else {%>
+  <dhv:label name="tasks.public.lowercase">public</dhv:label>
+<%}%>
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel" valign="top">
-      Assigned To
+      <dhv:label name="accounts.accounts_contacts_calls_list.AssignedTo">Assigned To</dhv:label>
     </td>
     <td>
          <dhv:username id="<%= Task.getOwner() %>"/>
@@ -82,7 +86,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel" valign="top">
-      Estimated LOE
+      <dhv:label name="tasks.estimatedLOE">Estimated LOE</dhv:label>
     </td>
     <td>
       <dhv:evaluate if="<%= (Task.getEstimatedLOE() != -1.0) %>">
@@ -91,17 +95,21 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td valign="top" nowrap class="formLabel">Notes</td>
+    <td valign="top" nowrap class="formLabel"><dhv:label name="accounts.accounts_add.Notes">Notes</dhv:label></td>
     <td>
       <%= !"".equals(toHtml(Task.getNotes())) ?  toHtml(Task.getNotes()) : "&nbsp;"%>
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel" valign="top">
-      Link Contact
+      <dhv:label name="tasks.linkContact">Link Contact</dhv:label>
     </td>
     <td>
-         <%= Task.getContactName()!=null?Task.getContactName():"None"%>
+      <% if(Task.getContactName()!=null) {%>
+        <%= toHtml(Task.getContactName()) %>
+      <%} else {%>
+        <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.None">None</dhv:label>
+      <%}%>
     </td>
   </tr>
 </table>

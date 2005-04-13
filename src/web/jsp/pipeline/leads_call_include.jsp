@@ -22,6 +22,7 @@
 <jsp:useBean id="callResultList" class="org.aspcfs.modules.contacts.base.CallResultList" scope="request"/>
 <jsp:useBean id="ReminderTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="PriorityList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
@@ -40,41 +41,41 @@
     message = "";
     alertMessage = "";
     
-    if (form.subject.value == "") { 
-      message += "- Blank records cannot be saved\r\n";
+    if (checkNullString(form.subject.value)) { 
+      message += label("specify.blank.records","- Blank records cannot be saved\r\n");
       formTest = false;
     }
     
     if (form.contactId.value == "-1") { 
-      message += "- Please specify a contact\r\n";
+      message += label("specify.contact","- Please specify a contact\r\n");
       formTest = false;
     }
 
     if (form.callTypeId.value == "0") { 
-      message += "- Please specify a type\r\n";
+      message += label("specify.type","- Please specify a type\r\n");
       formTest = false;
     }
     
     if(form.hasFollowup != null && form.hasFollowup.checked){
-    if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
-      message += "- Please specify an alert date\r\n";
+    if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
+      message += label("specify.alert.date", "- Please specify an alert date\r\n");
       formTest = false;
     }
-    if (form.alertText.value == "") { 
-      message += "- Please specify an alert description\r\n";
+    if (checkNullString(form.alertText.value)) { 
+      message += label("specify.alert.description", "- Please specify an alert description\r\n");
       formTest = false;
     }
     if (form.alertCallTypeId.value == "0") { 
-      message += "- Please specify an alert type\r\n";
+      message += label("specify.alert.type","- Please specify an alert type\r\n");
       formTest = false;
     }
     if (form.reminder[1].checked && !checkNumber(form.reminderId.value)) { 
-      message += "- Check that the reminder is entered correctly\r\n";
+      message += label("check.reminder","- Check that the reminder is entered correctly\r\n");
       formTest = false;
     }
     }
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     } else {
       if(alertMessage != ""){
@@ -104,15 +105,12 @@
   }
   
   function toggleSpan(cb, tag) {
-    var form = document.forms[0];
+    var form = document.addCall;
     if (cb.checked) {
       if (form.alertText.value == "") {
         form.alertText.value = form.subject.value;
       }
       showSpan(tag);
-      if (window.scrollTo) {
-        window.scrollTo(0, 1000);
-      }
       form.alertCallTypeId.focus();
     } else {
       hideSpan(tag);
@@ -126,7 +124,7 @@
   }
   
   function addFollowup(hours, typeId){
-    var form = document.forms[0];
+    var form = document.addCall;
     var selectedIndex = 0;
     var callTypes = form.alertCallTypeId;
     

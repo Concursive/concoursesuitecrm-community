@@ -49,7 +49,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete
+          <dhv:label name="global.button.delete">Delete</dhv:label>
         </td>
       </tr>
       </dhv:permission>

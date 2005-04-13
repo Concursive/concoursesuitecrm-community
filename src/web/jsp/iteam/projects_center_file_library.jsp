@@ -15,13 +15,14 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="SKIN" class="java.lang.String" scope="application"/>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
+<jsp:useBean id="currentFolder" class="com.zeroio.iteam.base.FileFolder" scope="request"/>
 <jsp:useBean id="fileFolderList" class="com.zeroio.iteam.base.FileFolderList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -44,40 +45,47 @@
 <br>
 <zeroio:permission name="project-documents-folders-add">
 <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle">
-<a href="ProjectManagementFileFolders.do?command=Add&pid=<%= Project.getId() %>&parentId=<%= Project.getFiles().getFolderId() %>&folderId=<%= Project.getFiles().getFolderId() %>">New Folder</a>
+<a href="ProjectManagementFileFolders.do?command=Add&pid=<%= Project.getId() %>&parentId=<%= Project.getFiles().getFolderId() %>&folderId=<%= Project.getFiles().getFolderId() %>"><dhv:label name="documents.documents.newFolder">New Folder</dhv:label></a>
 </zeroio:permission>
 <zeroio:permission name="project-documents-folders-add,project-documents-files-upload" if="all">
 |
 </zeroio:permission>
 <zeroio:permission name="project-documents-files-upload">
 <img src="images/icons/stock_insert-file-16.gif" border="0" align="absmiddle">
-<a href="ProjectManagementFiles.do?command=Add&pid=<%= Project.getId() %>&folderId=<%= Project.getFiles().getFolderId() %>">Submit File</a>
+<a href="ProjectManagementFiles.do?command=Add&pid=<%= Project.getId() %>&folderId=<%= Project.getFiles().getFolderId() %>"><dhv:label name="documents.documents.submitFile">Submit File</dhv:label></a>
 </zeroio:permission>
 <dhv:evaluate if="<%= Project.getFiles().getFolderId() != -1 %>">
 <zeroio:permission name="project-documents-folders-edit">
   <zeroio:permission name="project-documents-folders-add,project-documents-files-upload" if="any">
 |
   </zeroio:permission>
-<img src="images/icons/stock_rename-page-16.gif" border="0" align="absmiddle">
-<a href="ProjectManagementFileFolders.do?command=Modify&pid=<%= Project.getId() %>&folderId=<%= Project.getFiles().getFolderId() %>&id=<%= Project.getFiles().getFolderId() %>&parentId=<%= Project.getFiles().getFolderId() %>">Rename Folder</a>
+<img src="images/icons/stock_rename-page-16.gif" border="0" align="absmiddle" />
+<a href="ProjectManagementFileFolders.do?command=Modify&pid=<%= Project.getId() %>&folderId=<%= Project.getFiles().getFolderId() %>&id=<%= Project.getFiles().getFolderId() %>&parentId=<%= Project.getFiles().getFolderId() %>"><dhv:label name="accounts.accounts_documents_list_menu.RenameFolder">Rename Folder</dhv:label></a>
+</zeroio:permission>
+<zeroio:permission name="project-documents-folders-delete">
+  <zeroio:permission name="project-documents-folders-add,project-documents-files-upload,project-documents-folders-edit" if="any">
+|
+  </zeroio:permission>
+<img src="images/icons/stock_left-with-subpoints-16.gif" border="0" align="absmiddle" />
+<a href="javascript:confirmDelete('ProjectManagementFileFolders.do?command=Delete&pid=<%= Project.getId() %>&folderId=<%= currentFolder.getParentId() %>&id=<%= Project.getFiles().getFolderId() %>');">Delete Folder</a>
 </zeroio:permission>
 </dhv:evaluate>
 <zeroio:permission name="project-documents-folders-add,project-documents-files-upload,project-documents-folders-edit" if="any">
-<br>
-&nbsp;<br>
+<br />
+<br />
 </zeroio:permission>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-    <th width="8" align="center" nowrap><strong>Action</strong></th>
-    <th width="100%"><strong>File</strong></th>
-    <th align="center"><strong>Type</strong></th>
-    <th align="center"><strong>Size</strong></th>
-    <th align="center"><strong>Version</strong></th>
-    <th align="center" nowrap><strong>Date Modified</strong></th>
+    <th width="8" align="center" nowrap>&nbsp;</th>
+    <th width="100%" nowrap><strong><dhv:label name="contacts.companydirectory_confirm_importupload.File">File</dhv:label></strong></th>
+    <th align="center" nowrap><strong><dhv:label name="accounts.accounts_add.Type">Type</dhv:label></strong></th>
+    <th align="center" nowrap><strong><dhv:label name="accounts.accounts_documents_details.Size">Size</dhv:label></strong></th>
+    <th align="center" nowrap><strong><dhv:label name="accounts.accounts_documents_details.Version">Version</dhv:label></strong></th>
+    <th align="center" nowrap><strong><dhv:label name="documents.documents.dateModified">Date Modified</dhv:label></strong></th>
   </tr>
 <dhv:evaluate if="<%= Project.getFiles().size() == 0 && fileFolderList.size() == 0 %>">
   <tr class="row2">
-    <td colspan="6">No files to display.</td>
+    <td colspan="6"><dhv:label name="project.noFilesToDisplay">No files to display.</dhv:label></td>
   </tr>
 </dhv:evaluate>
 <%
@@ -87,27 +95,45 @@
     FileFolder thisFolder = (FileFolder) folders.next();
     rowid = (rowid != 1?1:2);
 %>
-  <tr>
-    <td class="row<%= rowid %>" align="center" nowrap>
+  <tr class="row<%= rowid %>">
+    <td align="center" nowrap>
       <a href="javascript:displayMenu('select_<%= SKIN %>fo<%= thisFolder.getId() %>', 'menuFolder', <%= thisFolder.getId() %>, -1, <%= thisFolder.getDisplay() %>)"
          onMouseOver="over(0, 'fo<%= thisFolder.getId() %>')"
          onmouseout="out(0, 'fo<%= thisFolder.getId() %>'); hideMenu('menuFolder');"><img 
         src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %>fo<%= thisFolder.getId() %>" id="select_<%= SKIN %>fo<%= thisFolder.getId() %>" align="absmiddle" border="0"></a>
     </td>
-    <td class="row<%= rowid %>" width="100%">
-      <img src="images/stock_folder-23.gif" border="0" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=File_<%= thisFolder.getDisplay() == -1?"Library":"Gallery" %>&pid=<%= Project.getId() %>&folderId=<%= thisFolder.getId() %><%= thisFolder.getDisplay() == 2?"&details=true":"" %>"><%= toHtml(thisFolder.getSubject()) %></a>
+    <td width="100%">
+      <table border="0" cellpadding="0" cellspacing="0" class="empty">
+        <tr>
+          <td valign="top" nowrap>
+            <img src="images/stock_folder-23.gif" border="0" align="absmiddle">&nbsp;
+          </td>
+          <td valign="top">
+            <a href="ProjectManagement.do?command=ProjectCenter&section=File_<%= thisFolder.getDisplay() == -1?"Library":"Gallery" %>&pid=<%= Project.getId() %>&folderId=<%= thisFolder.getId() %><%= thisFolder.getDisplay() == 2?"&details=true":"" %>"><%= toHtml(thisFolder.getSubject()) %></a>
+          </td>
+        </tr>
+      </table>
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap>
-      folder
+    <td align="center" nowrap>
+<%--  <dhv:evaluate if="<%= thisFolder.getDisplay() == FileFolder.VIEW_LIBRARY %>"> --%>
+      <dhv:label name="project.folder.lowercase">folder</dhv:label>
+<%--  </dhv:evaluate>
+      <dhv:evaluate if="<%= thisFolder.getDisplay() == FileFolder.VIEW_GALLERY %>">images</dhv:evaluate>
+      <dhv:evaluate if="<%= thisFolder.getDisplay() == FileFolder.VIEW_SLIDESHOW %>">slideshow</dhv:evaluate>
+--%>
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap>
-      <%= thisFolder.getItemCount() %> item<%= (thisFolder.getItemCount() == 1?"":"s") %>
+    <td align="center" nowrap>
+      <%= thisFolder.getItemCount() %>
+      <% if(thisFolder.getItemCount() == 1) {%>
+        <dhv:label name="project.item.lowercase">item</dhv:label>
+      <%} else {%>
+        <dhv:label name="project.items.lowercase">items</dhv:label>
+      <%}%>
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap>
+    <td align="center" nowrap>
       --
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap>
+    <td align="center" nowrap>
       <zeroio:tz timestamp="<%= thisFolder.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/><br />
       <dhv:username id="<%= thisFolder.getModifiedBy() %>"/>
     </td>
@@ -120,25 +146,33 @@
     rowid = (rowid != 1?1:2);
     FileItem thisFile = (FileItem)i.next();
 %>    
-  <tr>
-    <td class="row<%= rowid %>" align="center" nowrap>
+  <tr class="row<%= rowid %>">
+    <td align="center" nowrap>
       <a href="javascript:displayMenu('select_<%= SKIN %>fi<%= thisFile.getId() %>', 'menuFile', -1, <%= thisFile.getId() %>, -1)"
          onMouseOver="over(0, 'fi<%= thisFile.getId() %>')"
          onmouseout="out(0, 'fi<%= thisFile.getId() %>'); hideMenu('menuFile');"><img 
         src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %>fi<%= thisFile.getId() %>" id="select_<%= SKIN %>fi<%= thisFile.getId() %>" align="absmiddle" border="0"></a>
     </td>
-    <td class="row<%= rowid %>" width="100%">
-      <%= thisFile.getImageTag("-23") %>
-      <a href="ProjectManagementFiles.do?command=Details&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>&folderId=<%= request.getParameter("folderId") %>"><%= toHtml(thisFile.getSubject()) %></a>
+    <td width="100%">
+      <table border="0" cellpadding="0" cellspacing="0" class="empty">
+        <tr>
+          <td valign="top" nowrap>
+            <%= thisFile.getImageTag("-23") %>&nbsp;
+          </td>
+          <td valign="top">
+            <a href="ProjectManagementFiles.do?command=Details&pid=<%= Project.getId() %>&fid=<%= thisFile.getId() %>&folderId=<%= request.getParameter("folderId") %>"><%= toHtml(thisFile.getSubject()) %></a>
+          </td>
+        </tr>
+      </table>
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap><%= toHtml(thisFile.getExtension()) %></td>
-    <td class="row<%= rowid %>" align="right" nowrap>
-      <%= thisFile.getRelativeSize() %> k&nbsp;
+    <td align="center" nowrap><%= toHtml(thisFile.getExtension()) %></td>
+    <td align="right" nowrap>
+      <%= thisFile.getRelativeSize() %> <dhv:label name="admin.oneThousand.abbreviation">k</dhv:label>&nbsp;
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap>
+    <td align="center" nowrap>
       <%= thisFile.getVersion() %>&nbsp;
     </td>
-    <td class="row<%= rowid %>" align="center" nowrap>
+    <td align="center" nowrap>
       <zeroio:tz timestamp="<%= thisFile.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/><br />
       <dhv:username id="<%= thisFile.getModifiedBy() %>"/>
     </td>

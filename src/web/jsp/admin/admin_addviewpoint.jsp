@@ -24,65 +24,60 @@
 <jsp:useBean id="Viewpoint" class="org.aspcfs.modules.admin.base.Viewpoint" scope="request"/>
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/submit.js"></script>
-<form action='Viewpoints.do?command=InsertViewpoint&auto-populate=true' method='post'>
+<form name="viewpointForm" action="Viewpoints.do?command=InsertViewpoint&auto-populate=true" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Users.do?command=ListUsers">View Users</a> >
-<a href="Users.do?command=UserDetails&id=<%= request.getParameter("userId") %>">User Details</a> >
-<a href="Viewpoints.do?command=ListViewpoints&userId=<%= request.getParameter("userId") %>">Viewpoints</a> >
-Add Viewpoint
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Users.do?command=ListUsers"><dhv:label name="admin.viewUsers">View Users</dhv:label></a> >
+<a href="Users.do?command=UserDetails&id=<%= request.getParameter("userId") %>"><dhv:label name="admin.userDetails">User Details</dhv:label></a> >
+<a href="Viewpoints.do?command=ListViewpoints&userId=<%= request.getParameter("userId") %>"><dhv:label name="users.viewpoints.long_html">Viewpoints</dhv:label></a> >
+<dhv:label name="admin.addViewpoint">Add Viewpoint</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
-<% String param1 = "id=" + UserRecord.getId(); %>
-<dhv:container name="users" selected="viewpoints" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <input type="submit" value="Add" name="Save">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
-      <br />
-      <dhv:formMessage />
-      <input type="hidden" name="userId" value="<%= UserRecord.getId() %>">
-<table cellpadding="4" cellspacing="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-	    <strong>Select a Contact</strong>
-	  </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Contact
-    </td>
-    <td valign="bottom">
-      <table class="empty">
-        <tr>
-          <td>
-            <div id="changecontact">None</div>
-          </td>
-          <td>
-            <font color="red">*</font><%= showAttribute(request, "ContactError") %>
-            <input type="hidden" name="vpUserId" id="contactid" value="-1">
-            [<a href="javascript:popContactsListSingle('contactid','changecontact','usersOnly=true&reset=true&filters=employees');">Change Contact</a>]&nbsp;
-            [<a href="javascript:document.forms[0].vpUserId.value='-1';javascript:changeDivContent('changecontact','None');">Clear Contact</a>]
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
-&nbsp;
-<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
-  <tr>
-    <th nowrap colspan="2">
-      <strong>Select Permissions</strong>
-    </th>
-  </tr>
+<dhv:container name="users" selected="viewpoints" object="UserRecord" param="<%= "id=" + UserRecord.getId() %>">
+  <input type="submit" value="<dhv:label name="button.add">Add</dhv:label>" name="Save">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
+  <br />
+  <dhv:formMessage />
+  <input type="hidden" name="userId" value="<%= UserRecord.getId() %>">
+  <table cellpadding="4" cellspacing="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><dhv:label name="admin.selectAContact">Select a Contact</dhv:label></strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
+      </td>
+      <td valign="bottom">
+        <table class="empty">
+          <tr>
+            <td>
+              <div id="changecontact"><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.None">None</dhv:label></div>
+            </td>
+            <td>
+              <font color="red">*</font><%= showAttribute(request, "ContactError") %>
+              <input type="hidden" name="vpUserId" id="contactid" value="-1">
+              [<a href="javascript:popContactsListSingle('contactid','changecontact','usersOnly=true&reset=true&filters=employees');"><dhv:label name="admin.changeContact">Change Contact</dhv:label></a>]&nbsp;
+              [<a href="javascript:document.viewpointForm.vpUserId.value='-1';javascript:changeDivContent('changecontact',label('label.none','None'));"><dhv:label name="admin.clearContact">Clear Contact</dhv:label></a>]
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <br />
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+    <tr>
+      <th nowrap colspan="2">
+        <strong><dhv:label name="admin.selectPermission">Select Permissions</dhv:label></strong>
+      </th>
+    </tr>
 <%
   Iterator i = PermissionList.iterator();
   int idCount = 0;
@@ -91,32 +86,30 @@ Add Viewpoint
     Permission thisPermission = (Permission)i.next();
     if (PermissionList.isNewCategory(thisPermission.getCategoryName())) {
 %>
-  <tr class="row1">
-    <td>
-      <%= toHtml(thisPermission.getCategoryName()) %>
-    </td>
-    <td width="40" align="center">Access</td>
-  </tr>
+    <tr class="row1">
+      <td>
+        <%= toHtml(thisPermission.getCategoryName()) %>
+      </td>
+      <td width="40" align="center"><dhv:label name="admin.access">Access</dhv:label></td>
+    </tr>
 <%
    }
 %>
-  <tr class="containerBody">
-    <td align="center">
-      <input type="checkbox" value="ON" name="permission<%= idCount %>view" <%= (Viewpoint.getPermissionList().hasPermission(thisPermission.getName(), "view"))?"checked":"" %>>
-    </td>
-    <td width="100%">
-      <input type="hidden" name="permission<%= idCount %>id" value="<%= thisPermission.getId() %>">
-      <%= toHtml(thisPermission.getDescription()) %>
-    </td>
-  </tr>
+    <tr class="containerBody">
+      <td align="center">
+        <input type="checkbox" value="ON" name="permission<%= idCount %>view" <%= (Viewpoint.getPermissionList().hasPermission(thisPermission.getName(), "view"))?"checked":"" %>>
+      </td>
+      <td width="100%">
+        <input type="hidden" name="permission<%= idCount %>id" value="<%= thisPermission.getId() %>">
+        <%= toHtml(thisPermission.getDescription()) %>
+      </td>
+    </tr>
 <%
   }
 %>
-</table>
+  </table>
   <br>
-  <input type="submit" value="Add" name="Save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
-</td></tr>
-</table>
+  <input type="submit" value="<dhv:label name="button.add">Add</dhv:label>" name="Save">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Viewpoints.do?command=ListViewpoints'">
+</dhv:container>
 </form>
-

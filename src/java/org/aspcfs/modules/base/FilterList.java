@@ -82,34 +82,34 @@ public class FilterList extends ArrayList {
    */
   public String getDisplayName(String name) {
     switch (source) {
-        case Constants.CONTACTS:
-          if (name.equals("all")) {
-            return "All Contacts";
-          } else if (name.equals("employees")) {
-            return "Employees";
-          } else if (name.equals("mycontacts")) {
-            return "My Contacts";
-          } else if (name.equals("accountcontacts")) {
-            return "Account Contacts";
-          } else if (name.equals("myprojects")) {
-            return "My Projects";
-          }
-        case Constants.ACCOUNTS:
-          if (name.equals("all")) {
-            return "All Accounts";
-          } else if (name.equals("my")) {
-            return "My Accounts";
-          } else if (name.equals("disabled")) {
-            return "Disabled Accounts";
-          }
-        case Constants.ASSETS:
-          if (name.equals("allassets")) {
-            return "All Assets";
-          } else if (name.equals("undercontract")) {
-            return "Assets under Contract";
-          }
-        default:
-          return "-None-";
+      case Constants.CONTACTS:
+        if (name.equals("all")) {
+          return "All Contacts";
+        } else if (name.equals("employees")) {
+          return "Employees";
+        } else if (name.equals("mycontacts")) {
+          return "My Contacts";
+        } else if (name.equals("accountcontacts")) {
+          return "Account Contacts";
+        } else if (name.equals("myprojects")) {
+          return "My Projects";
+        }
+      case Constants.ACCOUNTS:
+        if (name.equals("all")) {
+          return "All Accounts";
+        } else if (name.equals("my")) {
+          return "My Accounts";
+        } else if (name.equals("disabled")) {
+          return "Disabled Accounts";
+        }
+      case Constants.ASSETS:
+        if (name.equals("allassets")) {
+          return "All Assets";
+        } else if (name.equals("undercontract")) {
+          return "Assets under Contract";
+        }
+      default:
+        return "-None-";
     }
   }
 
@@ -138,20 +138,20 @@ public class FilterList extends ArrayList {
    */
   public void buildDefaultFilters() {
     switch (source) {
-        case Constants.CONTACTS:
-          for (int i = 0; i < Array.getLength(CONTACT_FILTERS); i++) {
-            this.add(new Filter(CONTACT_FILTERS[i], getDisplayName(CONTACT_FILTERS[i])));
-          }
-          break;
-        case Constants.ACCOUNTS:
-          for (int i = 0; i < Array.getLength(ACCOUNT_FILTERS); i++) {
-            this.add(new Filter(ACCOUNT_FILTERS[i], getDisplayName(ACCOUNT_FILTERS[i])));
-          }
-          break;
-        case Constants.ASSETS:
-          for (int i = 0; i < Array.getLength(ASSET_FILTERS); i++) {
-            this.add(new Filter(ASSET_FILTERS[i], getDisplayName(ASSET_FILTERS[i])));
-          }
+      case Constants.CONTACTS:
+        for (int i = 0; i < Array.getLength(CONTACT_FILTERS); i++) {
+          this.add(new Filter(CONTACT_FILTERS[i], getDisplayName(CONTACT_FILTERS[i])));
+        }
+        break;
+      case Constants.ACCOUNTS:
+        for (int i = 0; i < Array.getLength(ACCOUNT_FILTERS); i++) {
+          this.add(new Filter(ACCOUNT_FILTERS[i], getDisplayName(ACCOUNT_FILTERS[i])));
+        }
+        break;
+      case Constants.ASSETS:
+        for (int i = 0; i < Array.getLength(ASSET_FILTERS); i++) {
+          this.add(new Filter(ASSET_FILTERS[i], getDisplayName(ASSET_FILTERS[i])));
+        }
     }
   }
 

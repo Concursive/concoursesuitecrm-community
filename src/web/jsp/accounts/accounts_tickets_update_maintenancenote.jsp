@@ -37,45 +37,36 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=ticketDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="Accounts.do?command=ViewTickets&orgId=<%=ticketDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
 <a href="AccountTickets.do?command=TicketDetails&id=<%=ticketDetails.getId()%>"><dhv:label name="accounts.tickets.details">Ticket Details</dhv:label></a> >
-<a href="AccountTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>">Maintenance Notes</a> >
-Modify Maintenance Note
+<a href="AccountTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>"><dhv:label name="tickets.maintenancenotes.long_html">Maintenance Notes</dhv:label></a> >
+<dhv:label name="ticket.modifyMaintenanceNote">Modify Maintenance Note</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<dhv:container name="accounts" selected="tickets" param="<%= "orgId=" + ticketDetails.getOrgId() %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <%@ include file="accounts_ticket_header_include.jsp" %>
-      <% String param2 = "id=" + ticketDetails.getId(); %>
-      [ <dhv:container name="accountstickets" selected="maintenancenotes" param="<%= param2 %>"/> ]
-      <br />
-      <br />
-      <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />
-      <%if ("list".equals(request.getParameter("return"))) { %>
-        <input type="button" value="Cancel" onClick="window.location.href='AccountTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />
-      <%}else{ %>
-        <input type="button" value="Cancel" onClick="window.location.href='AccountTicketMaintenanceNotes.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>';this.form.dosubmit.value='false';" />
-      <%}%>
-      <br /><br />
-      <%@ include file="../troubletickets/troubletickets_update_maintenancenote_include.jsp" %>
-      <br />
-      <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />
-      <%if ("list".equals(request.getParameter("return"))) { %>
-        <input type="button" value="Cancel" onClick="window.location.href='AccountTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />
-      <%}else{ %>
-        <input type="button" value="Cancel" onClick="window.location.href='AccountTicketMaintenanceNotes.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>';this.form.dosubmit.value='false';" />
-      <%}%>
-      <input type="hidden" name="dosubmit" value="true" />
-     </td>
-    </tr> 
- </td>
- </tr>
-</table>
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:container name="accountstickets" selected="maintenancenotes" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>">
+    <%@ include file="accounts_ticket_header_include.jsp" %>
+    <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+    <%if ("list".equals(request.getParameter("return"))) { %>
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />
+    <%}else{ %>
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountTicketMaintenanceNotes.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>';this.form.dosubmit.value='false';" />
+    <%}%>
+    <br /><br />
+    <%= showError(request, "actionError") %>
+    <%@ include file="../troubletickets/troubletickets_update_maintenancenote_include.jsp" %>
+    <br />
+    <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+    <%if ("list".equals(request.getParameter("return"))) { %>
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />
+    <%}else{ %>
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountTicketMaintenanceNotes.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>';this.form.dosubmit.value='false';" />
+    <%}%>
+    <input type="hidden" name="dosubmit" value="true" />
+  </dhv:container>
+</dhv:container>
 </form>

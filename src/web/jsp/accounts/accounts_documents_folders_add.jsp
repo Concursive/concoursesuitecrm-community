@@ -32,11 +32,11 @@
     var formTest = true;
     var messageText = "";
     if (form.subject.value == "") {
-      messageText += "- Name is required\r\n";
+      messageText += label("Name.required", "- Name is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The form could not be submitted.          \r\nPlease verify the following:\r\n\r\n" + messageText;
+      messageText = label("Form.not.submitted", "The form could not be submitted.          \r\nPlease verify the following:\r\n\r\n") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
@@ -44,26 +44,27 @@
     return true;
   }
 </script>
+<form method="POST" name="inputForm" action="AccountsDocumentsFolders.do?command=Save&auto-populate=true" onSubmit="return checkForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-<a href="AccountsDocuments.do?command=List&orgId=<%=OrgDetails.getOrgId()%>">Documents</a> >
-Modify Folder
+<a href="AccountsDocuments.do?command=List&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></a> >
+<% if(fileFolder.getId() > -1) {%>
+  <dhv:label name="accounts.accounts_documents_folders_add.ModifyFolder">Modify Folder</dhv:label>
+<%} else {%>
+  <dhv:label name="documents.documents.newFolder">New Folder</dhv:label>
+<%}%>
+
+
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>
-<dhv:container name="accounts" selected="documents" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-		<td class="containerBack">
-<form method="POST" name="inputForm" action="AccountsDocumentsFolders.do?command=Save&auto-populate=true" onSubmit="return checkForm(this);">
+<dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>
@@ -76,18 +77,24 @@ String documentModule = "Accounts";
   </tr>
 </table>
 <br>
-  <input type="submit" value=" Save " name="save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';"><br />
+  <input type="submit" value=" <dhv:label name="global.button.save">Save</dhv:label> " name="save" />
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';" /><br />
   <dhv:formMessage />
   <br />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        <strong><%= (fileFolder.getId() > -1 ? "Rename" : "New" ) %> Folder</strong>
+        <strong>
+          <% if(fileFolder.getId() > -1) {%>
+            <dhv:label name="accounts.accounts_documents_list_menu.RenameFolder">Rename Folder</dhv:label>
+          <%} else {%>
+            <dhv:label name="documents.documents.newFolder">New Folder</dhv:label>
+          <%}%>
+        </strong>
       </th>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel">Name</td>
+      <td nowrap class="formLabel"><dhv:label name="contacts.name">Name</dhv:label></td>
       <td>
         <input type="text" name="subject" size="59" maxlength="255" value="<%= toHtmlValue(fileFolder.getSubject()) %>">
         <input type="hidden" name="display" value="-1"/>
@@ -102,10 +109,8 @@ String documentModule = "Accounts";
   <input type="hidden" name="parentId" value="<%= fileFolder.getParentId() %>">
   <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
   <input type="hidden" name="dosubmit" value="true">
-  <input type="submit" value=" Save " name="save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';"><br>
+  <input type="submit" value=" <dhv:label name="global.button.save">Save</dhv:label> " name="save" />
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';" /><br />
+</dhv:container>
 </form>
-</td>
-</tr>
-</table>
 </body>

@@ -1,0 +1,26 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  Insert documents record into webdav table
+*/
+/*insert into webdav (category_id, class_name, enteredby, modifiedby) values (22,'org.aspcfs.modules.documents.webdav.DocumentsWebdavContext', 0,0);*/ 
+
+import org.aspcfs.modules.admin.base.*;
+
+print("Inserting new record into webdav...");
+
+int documentsId = PermissionCategory.lookupId(db, "Documents");
+
+if (1 == 1) {
+  pst = db.prepareStatement(
+    "INSERT INTO webdav " +
+    "(category_id, class_name,  enteredby, modifiedby) " +
+    "VALUES (?, ?, ?, ?) ");
+  pst.setInt(1, documentsId);
+  pst.setString(2, "org.aspcfs.modules.documents.webdav.DocumentsWebdavContext");
+  pst.setInt(3, 0);
+  pst.setInt(4, 0);
+  
+  pst.executeUpdate();
+}

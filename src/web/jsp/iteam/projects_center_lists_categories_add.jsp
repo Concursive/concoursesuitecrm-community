@@ -32,11 +32,11 @@ function checkForm(form) {
   var messageText = "";
   //Check required fields
   if (form.description.value == "") {    
-    messageText += "- Name is a required field\r\n";
+    messageText += label("name.required","- Name is a required field\r\n");
     formTest = false;
   }
   if (formTest == false) {
-    messageText = "The form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+    messageText = label("Form.not.submitted","The form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
     form.dosubmit.value = "true";
     alert(messageText);
     return false;
@@ -50,31 +50,41 @@ function checkForm(form) {
   <tr class="subtab">
     <td>
       <img border="0" src="images/icons/stock_list_enum2-16.gif" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=<%= Project.getId() %>">Lists</a> >
-      <%= category.getId() == -1 ? "Add" : "Update" %>
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=<%= Project.getId() %>"><dhv:label name="project.lists">Lists</dhv:label></a> >
+      <%if(category.getId() == -1) {%>
+        <dhv:label name="button.add">Add</dhv:label>
+      <%} else {%>
+        <dhv:label name="button.update">Update</dhv:label>
+      <%}%>
     </td>
   </tr>
 </table>
-<br>
-  <input type="submit" value=" Save ">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=<%= Project.getId() %>';"><br>
+<br />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=<%= Project.getId() %>';"><br>
   <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        <strong><%= category.getId()==-1?"Add":"Update" %> List</strong>
+        <strong>
+          <%if( category.getId()==-1) {%>
+            <dhv:label name="project.addList">Add List</dhv:label>
+          <%} else {%>
+            <dhv:label name="project.updateList">Update List</dhv:label>
+          <%}%>
+          </strong>
       </th>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel">Name</td>
+      <td nowrap class="formLabel"><dhv:label name="contacts.name">Name</dhv:label></td>
       <td>
         <input type="text" name="description" size="57" maxlength="80" value="<%= toHtmlValue(category.getDescription()) %>"><font color=red>*</font> <%= showAttribute(request, "descriptionError") %>
       </td>
     </tr>
   </table>
-  <br>
-  <input type="submit" value=" Save ">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=<%= Project.getId() %>';">
+  <br />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=<%= Project.getId() %>';">
   <input type="hidden" name="level" value="<%= category.getLevel() %>">
   <input type="hidden" name="enabled" value="<%= category.getEnabled() %>">
   <input type="hidden" name="defaultItem" value="<%= category.getDefaultItem() %>">

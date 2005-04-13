@@ -34,34 +34,32 @@
     </td>
   </tr>
 </table>
-<br>
+<br />
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th colspan="7">
-      <strong>File Versions</strong>
+      <strong><dhv:label name="documents.documents.fileVersions">File Versions</dhv:label></strong>
     </th>
   </tr>
   <tr>
-    <th align="center" nowrap>
-      Action
-    </th>
+    <th width="8">&nbsp;</th>
     <th width="100%">
-      File
+      <dhv:label name="contacts.companydirectory_confirm_importupload.File">File</dhv:label>
     </th>
     <th align="center" nowrap>
-      Size
+      <dhv:label name="accounts.accounts_documents_details.Size">Size</dhv:label>
     </th>
     <th align="center" nowrap>
-      Version
+      <dhv:label name="accounts.accounts_documents_details.Version">Version</dhv:label>
     </th>
     <th align="center" nowrap>
-      Submitted
+      <dhv:label name="accounts.accounts_documents_details.Submitted">Submitted</dhv:label>
     </th>
     <th align="center" nowrap>
-      Sent By
+      <dhv:label name="accounts.accounts_documents_details.SentBy">Sent By</dhv:label>
     </th>
     <th align="center" nowrap>
-      D/L
+      <dhv:label name="accounts.accounts_documents_details.DL">D/L</dhv:label>
     </th>
   </tr>
 <%          
@@ -75,13 +73,13 @@
     <td rowspan="2" valign="middle" nowrap>
       <zeroio:permission name="project-documents-files-download">
         <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        <a href="ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>">Download</a><br />
+        <a href="ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>"><dhv:label name="accounts.accounts_documents_details.Download">Download</dhv:label></a><br />
         <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        <a href="javascript:popURL('ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>&view=true', 'Content', 640,480, 1, 1);">View File Contents</a><br />
+        <a href="javascript:popURL('ProjectManagementFiles.do?command=Download&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>&view=true', 'Content', 640,480, 1, 1);"><dhv:label name="accounts.accounts_documents_list_menu.ViewFileContents">View File Contents</dhv:label></a><br />
       </zeroio:permission>
       <zeroio:permission name="project-documents-files-delete">
         <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
-        <a href="javascript:confirmDelete('ProjectManagementFiles.do?command=Delete&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>&folderId=<%= FileItem.getFolderId() %>');">Delete Version</a><br />
+        <a href="javascript:confirmDelete('ProjectManagementFiles.do?command=Delete&pid=<%= Project.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>&folderId=<%= FileItem.getFolderId() %>');"><dhv:label name="project.deleteVersion">Delete Version</dhv:label></a><br />
       </zeroio:permission>
       &nbsp;
     </td>

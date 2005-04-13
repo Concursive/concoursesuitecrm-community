@@ -15,8 +15,10 @@
  */
 package org.aspcfs.modules.base;
 
-import java.util.*;
+import org.aspcfs.controller.SystemStatus;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  Description of the Class
@@ -24,9 +26,11 @@ import java.util.*;
  *@author     Mathur
  *@created    December 18, 2002
  *@version    $Id$
+ *      $
  */
 public class DependencyList extends ArrayList {
   private String title = null;
+  private SystemStatus systemStatus = null;
 
 
   /**
@@ -36,6 +40,26 @@ public class DependencyList extends ArrayList {
    */
   public void setTitle(String title) {
     this.title = title;
+  }
+
+
+  /**
+   *  Sets the systemStatus attribute of the DependencyList object
+   *
+   *@param  tmp  The new systemStatus value
+   */
+  public void setSystemStatus(SystemStatus tmp) {
+    this.systemStatus = tmp;
+  }
+
+
+  /**
+   *  Gets the systemStatus attribute of the DependencyList object
+   *
+   *@return    The systemStatus value
+   */
+  public SystemStatus getSystemStatus() {
+    return systemStatus;
   }
 
 
@@ -83,24 +107,50 @@ public class DependencyList extends ArrayList {
       if (thisDependency.getCount() > 0) {
         ++count;
         html.append("&nbsp;&nbsp;");
-        if (thisDependency.getCanDelete()){
+        if (thisDependency.getCanDelete()) {
           html.append("- ");
-        }else{
+        } else {
           html.append("* ");
           canDelete = false;
         }
-        html.append(thisDependency.getName() + " (" + thisDependency.getCount() + ")");
+        if (systemStatus != null) {
+          html.append(systemStatus.getLabel("dependency."+thisDependency.getName()) + " (" + thisDependency.getCount() + ")");
+        }
         html.append("<br />");
       }
     }
     if (count == 0) {
-      html.append("&nbsp;&nbsp;There are no dependencies for this action.<br />");
+      if (systemStatus != null) {
+        html.append("&nbsp;&nbsp;"+systemStatus.getLabel("dependency.noDependencyForAction")+"<br />");
+      }
     }
-    if (!canDelete){
-      html.append("<br />(*) Indicates any dependency preventing this item from being deleted.");
-      html.append("<br />NOTE: Some of these may not be accessible if they are not owned by you.<br />");
+    if (!canDelete) {
+      if (systemStatus != null) {
+        html.append("<br />(*) "+systemStatus.getLabel("dependency.preventingDeletion"));
+        html.append("<br />"+systemStatus.getLabel("dependency.note")+"<br />");
+      }
     }
     return html.toString();
+  }
+
+
+  /**
+   *  Gets the dependency attribute of the DependencyList object
+   *
+   *@param  name  Description of the Parameter
+   *@return       The dependency value
+   */
+  public int getDependencyCount(String name) {
+    Iterator iterator = (Iterator) this.iterator();
+    int result = 0;
+    while (iterator.hasNext()) {
+      Dependency dependency = (Dependency) iterator.next();
+      if (dependency.getName().equals(name)) {
+        result = dependency.getCount();
+        break;
+      }
+    }
+    return result;
   }
 }
 

@@ -419,11 +419,6 @@ public class Viewpoint extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid(db)) {
-      return false;
-    }
-
-    Exception errorMessage = null;
     try {
       db.setAutoCommit(false);
       StringBuffer sql = new StringBuffer();
@@ -444,7 +439,6 @@ public class Viewpoint extends GenericBean {
         sql.append("?, ");
       }
       sql.append("?) ");
-
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       DatabaseUtils.setInt(pst, ++i, userId);
@@ -464,13 +458,10 @@ public class Viewpoint extends GenericBean {
       insertPermissions(db);
       db.commit();
     } catch (Exception e) {
-      errorMessage = e;
       db.rollback();
+      throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
-    }
-    if (errorMessage != null) {
-      throw new SQLException(errorMessage.getMessage());
     }
     return true;
   }
@@ -487,11 +478,6 @@ public class Viewpoint extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("ID was not specified");
     }
-
-    if (!isValid(db)) {
-      return -1;
-    }
-
     int resultCount = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE viewpoint " +
@@ -507,7 +493,6 @@ public class Viewpoint extends GenericBean {
     pst.setTimestamp(++i, modified);
     resultCount = pst.executeUpdate();
     pst.close();
-
     deletePermissions(db);
     insertPermissions(db);
     return resultCount;
@@ -628,7 +613,6 @@ public class Viewpoint extends GenericBean {
       db.setAutoCommit(true);
     }
     if (recordCount == 0) {
-      errors.put("actionError", "Viewpoint could not be deleted because it no longer exists.");
       return false;
     } else {
       return true;
@@ -657,27 +641,6 @@ public class Viewpoint extends GenericBean {
    */
   public void buildPermissions(Connection db) throws SQLException {
     permissionList = new ViewpointPermissionList(db, id);
-  }
-
-
-  /**
-   *  Gets the valid attribute of the Viewpoint object
-   *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  private boolean isValid(Connection db) throws SQLException {
-
-    if (!isVpUserValid(db)) {
-      errors.put("ContactError", "Contact has to be selected");
-    }
-
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
 

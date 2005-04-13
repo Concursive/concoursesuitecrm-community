@@ -19,9 +19,12 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.*;
 import java.io.IOException;
 import com.zeroio.utils.ContentUtils;
+import com.darkhorseventures.framework.actions.ActionContext;
 
 /**
  *  Class for working with the Lucene search engine
@@ -42,7 +45,7 @@ public class IssueCategoryIndexer implements Indexer {
    *@exception  SQLException  Description of the Exception
    *@exception  IOException   Description of the Exception
    */
-  public static void add(IndexWriter writer, Connection db) throws SQLException, IOException {
+  public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT category_id, project_id, subject, description, modified " +
@@ -60,6 +63,7 @@ public class IssueCategoryIndexer implements Indexer {
       issueCategory.setModified(rs.getTimestamp("modified"));
       // add the document
       IssueCategoryIndexer.add(writer, issueCategory, false);
+      DatabaseUtils.renewConnection(context, db);
     }
     rs.close();
     pst.close();
@@ -78,7 +82,7 @@ public class IssueCategoryIndexer implements Indexer {
   public static void add(IndexWriter writer, IssueCategory issueCategory, boolean modified) throws IOException {
     // add the document
     Document document = new Document();
-    document.add(Field.Keyword("type", "issueCategory"));
+    document.add(Field.Keyword("type", "issuecategory"));
     document.add(Field.Keyword("issueCategoryKeyId", String.valueOf(issueCategory.getId())));
     document.add(Field.Keyword("issueCategoryId", String.valueOf(issueCategory.getId())));
     document.add(Field.Keyword("projectId", String.valueOf(issueCategory.getProjectId())));

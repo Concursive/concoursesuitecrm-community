@@ -15,23 +15,21 @@
  */
 package org.aspcfs.modules.reports.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.modules.actions.CFSModule;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.modules.admin.base.PermissionCategoryList;
-import org.aspcfs.modules.admin.base.PermissionCategory;
-import org.aspcfs.modules.reports.base.*;
-import dori.jasper.engine.*;
-import dori.jasper.engine.util.*;
-import java.io.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.webutils.FileDownload;
-import org.aspcfs.utils.JasperReportUtils;
-import org.aspcfs.utils.web.LookupList;
+import net.sf.jasperreports.engine.JasperReport;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.admin.base.PermissionCategoryList;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.reports.base.*;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.JasperReportUtils;
+
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *  Actions for working with Pipeline Management reports. Code originally from
@@ -217,8 +215,6 @@ public final class Reports extends CFSModule {
     Connection db = null;
     //Process parameters
     String criteriaId = context.getRequest().getParameter("criteriaId");
-    String reportId = context.getRequest().getParameter("reportId");
-    String categoryId = context.getRequest().getParameter("categoryId");
     try {
       db = getConnection(context);
       CriteriaList.delete(db, Integer.parseInt(criteriaId));
@@ -261,9 +257,9 @@ public final class Reports extends CFSModule {
       String reportPath = getWebInfPath(context, "reports");
       JasperReport jasperReport = JasperReportUtils.getReport(reportPath + report.getFilename());
       //Generate the allowable parameter list
-      ParameterList params = null;
-      params = (ParameterList) context.getRequest().getAttribute("parameterList");
-      if (params == null) {
+      ParameterList params = new ParameterList();
+      params = (ParameterList)context.getRequest().getAttribute("parameterList");
+      if (params == null){      
         params = new ParameterList();
         params.setParameters(jasperReport);
       }
@@ -307,7 +303,12 @@ public final class Reports extends CFSModule {
     }
     addModuleBean(context, "reports.run", "Run Report");
     Connection db = null;
+    boolean isValid = false;
+    boolean result = false;
     boolean toInsert = false;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    ParameterList params = new ParameterList();
+    Criteria thisCriteria = new Criteria();
     //Process parameters
     String categoryId = context.getRequest().getParameter("categoryId");
     String reportId = context.getRequest().getParameter("reportId");
@@ -324,15 +325,17 @@ public final class Reports extends CFSModule {
       String reportPath = getWebInfPath(context, "reports");
       JasperReport jasperReport = JasperReportUtils.getReport(reportPath + report.getFilename());
       //Determine the parameters that need to be saved from the jasper report
-      ParameterList params = new ParameterList();
+      params = new ParameterList();
+      params.setSystemStatus(systemStatus);
       params.setParameters(jasperReport);
       //Set the user supplied parameters from the request
       toInsert = params.setParameters(context.getRequest());
-      if (toInsert) {
+      if (toInsert){
         //Set the system generated parameters
         //TODO: Move this into ParameterList.java
         params.addParam("user_name", (getUser(context, getUserId(context))).getContact().getNameFirstLast());
         params.addParam("path_icons", context.getServletContext().getRealPath("/") + "images" + fs + "icons" + fs);
+        params.addParam("path_report_images", getPath(context, "report_images"));
         //Set some database specific parameters
         if (params.getParameter("year_part") != null) {
           Parameter thisParam = params.getParameter("year_part");
@@ -347,7 +350,7 @@ public final class Reports extends CFSModule {
           params.addParam("day_part", DatabaseUtils.getDayPart(db, thisParam.getDescription()));
         }
         //Populate a criteria record which will be used in the report
-        Criteria thisCriteria = new Criteria();
+        thisCriteria = new Criteria();
         thisCriteria.setReportId(report.getId());
         thisCriteria.setOwner(getUserId(context));
         thisCriteria.setEnteredBy(getUserId(context));
@@ -364,25 +367,45 @@ public final class Reports extends CFSModule {
           thisCriteria.setSave(true);
         }
         //Save the user's criteria for future use
-        boolean result = thisCriteria.save(db);
+        if ( thisCriteria.getSave() || thisCriteria.getOverwrite()) {
+          isValid = this.validateObject(context, db, thisCriteria);
+        }
+        if (isValid) {
+          result = thisCriteria.save(db);
+        }
+        if (result) {
+          Iterator iterator = (Iterator) params.iterator();
+          while (iterator.hasNext()) {
+            Parameter param = (Parameter) iterator.next();
+            param.setCriteriaId(thisCriteria.getId());
+            isValid = this.validateObject(context, db, param) && isValid;
+            if (isValid) {
+              param.insert(db);
+            }
+          }
+        }
         //Insert the report into the queue
-        int position = ReportQueue.insert(db, thisCriteria);
-        context.getRequest().setAttribute("queuePosition", String.valueOf(position));
-        //JasperRunManager.runReportToPdfFile(reportPath + report.getFilename() + ".jasper", reportPath + report.getFilename() + ".pdf", parameters, db);
+        if (isValid || !thisCriteria.getSave() || !thisCriteria.getOverwrite()) {
+          int position = ReportQueue.insert(db, thisCriteria);
+          context.getRequest().setAttribute("queuePosition", String.valueOf(position));
+        }
       } else {
+        HashMap errors = new HashMap(params.getErrors());
+        errors.put("actionError", systemStatus.getLabel("object.validation.pleaseEnterValidInput"));
+        processErrors(context, errors);
         context.getRequest().setAttribute("parameterList", params);
-        processErrors(context, params.getErrors());
       }
+      //JasperRunManager.runReportToPdfFile(reportPath + report.getFilename() + ".jasper", reportPath + report.getFilename() + ".pdf", parameters, db);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       freeConnection(context, db);
     }
-    if (!toInsert) {
-      return executeCommandParameterList(context);
+    if (toInsert && (isValid || !thisCriteria.getSave() || !thisCriteria.getOverwrite())) {
+      return "GenerateReportOK";
     }
-    return "GenerateReportOK";
+    return executeCommandParameterList(context);
   }
 
 
@@ -413,7 +436,7 @@ public final class Reports extends CFSModule {
     if (queue != null) {
       try {
         FileDownload download = new FileDownload();
-        download.setFullPath(this.getPath(context, "reports-queue") + this.getDatePath(queue.getEntered()) + queue.getFilename());
+        download.setFullPath(this.getPath(context, "reports-queue") + getDatePath(queue.getEntered()) + queue.getFilename());
         download.setDisplayName(queue.getReport().getFilename() + ".pdf");
         download.streamContent(context);
       } catch (Exception e) {
@@ -451,7 +474,7 @@ public final class Reports extends CFSModule {
     if (queue != null) {
       try {
         FileDownload download = new FileDownload();
-        download.setFullPath(this.getPath(context, "reports-queue") + this.getDatePath(queue.getEntered()) + queue.getFilename());
+        download.setFullPath(this.getPath(context, "reports-queue") + getDatePath(queue.getEntered()) + queue.getFilename());
         download.setDisplayName(queue.getReport().getFilename().substring(0, queue.getReport().getFilename().lastIndexOf(".xml")) + ".pdf");
         download.sendFile(context);
       } catch (Exception e) {
@@ -473,6 +496,7 @@ public final class Reports extends CFSModule {
     if (!hasPermission(context, "reports-view")) {
       return ("PermissionError");
     }
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     //Process parameters
     String id = context.getRequest().getParameter("id");
@@ -482,9 +506,9 @@ public final class Reports extends CFSModule {
       ReportQueue queue = new ReportQueue(db, Integer.parseInt(id), false);
       if (queue.getId() != -1) {
         if (queue.getProcessed() != null) {
-          queue.delete(db, this.getPath(context, "reports-queue") + this.getDatePath(queue.getEntered()) + queue.getFilename());
+          queue.delete(db, this.getPath(context, "reports-queue") + getDatePath(queue.getEntered()) + queue.getFilename());
         } else {
-          context.getRequest().setAttribute("actionError", "Report could not be deleted because it has not been processed");
+          context.getRequest().setAttribute("actionError",  systemStatus.getLabel("object.validation.actionError.reportDeletion"));
         }
       }
     } catch (Exception e) {
@@ -508,6 +532,7 @@ public final class Reports extends CFSModule {
     if (!hasPermission(context, "reports-view")) {
       return ("PermissionError");
     }
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     //Process parameters
     String id = context.getRequest().getParameter("id");
@@ -517,9 +542,9 @@ public final class Reports extends CFSModule {
       ReportQueue queue = new ReportQueue(db, Integer.parseInt(id), false);
       if (queue.getId() != -1) {
         if (queue.getProcessed() == null) {
-          queue.delete(db, this.getPath(context, "reports-queue") + this.getDatePath(queue.getEntered()) + queue.getFilename());
+          queue.delete(db, this.getPath(context, "reports-queue") + getDatePath(queue.getEntered()) + queue.getFilename());
         } else {
-          context.getRequest().setAttribute("actionError", "Report could not be canceled because processing has already started");
+          context.getRequest().setAttribute("actionError",  systemStatus.getLabel("object.validation.actionError.reportCancellation"));
         }
       }
     } catch (Exception e) {

@@ -28,23 +28,23 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="<%= openEnded ? "3" : "4"%>">
-      <strong>Survey Comments</strong>
+      <strong><dhv:label name="campaign.surveyComments">Survey Comments</dhv:label></strong>
     </th>
   </tr>
   <tr>
     <dhv:evaluate if="<%= !openEnded %>">
       <th width="20" style="text-align: left;" nowrap>
-        Answer Provided
+        <dhv:label name="campaign.answerProvided">Answer Provided</dhv:label>
       </th>
     </dhv:evaluate>
     <th width="100%" style="text-align: left;" nowrap>
-      Comment Provided
+      <dhv:label name="campaign.commentProvided">Comment Provided</dhv:label>
     </th>
     <th valign="center" style="text-align: left;" nowrap>
-      User
+      <dhv:label name="campaign.user">User</dhv:label>
     </th>
     <th valign="center" style="text-align: left;" nowrap>
-      Entered
+      <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
     </th>
   </tr>
 <%    
@@ -80,10 +80,10 @@
   <%} else {%>  
   <tr>
     <td class="containerBody" colspan="<%= openEnded ? "3" : "4" %>">
-      No comments found for this question.
+      <dhv:label name="campaign.noCommentsForQuestion.text">No comments found for this question.</dhv:label>
     </td>
   </tr>
   </table>
 <%}%>
 <br>
-<input type="button" value="Close Window" onClick="javascript:window.close();">
+<input type="button" value="<dhv:label name="button.closeWindow">Close Window</dhv:label>" onClick="javascript:window.close();">

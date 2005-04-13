@@ -15,22 +15,19 @@
  */
 package org.aspcfs.modules.tasks.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.tasks.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.webutils.FileDownload;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.login.beans.UserBean;
-import org.aspcfs.modules.contacts.base.Contact;
-import java.util.*;
-import java.sql.*;
-import com.zeroio.webutils.*;
-import com.isavvix.tools.*;
-import java.io.*;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.tasks.base.Task;
+import org.aspcfs.modules.tasks.base.TaskList;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.util.StringTokenizer;
 
 /**
  *  Description of the Class
@@ -65,9 +62,7 @@ public final class MyTasks extends CFSModule {
     if (!(hasPermission(context, "myhomepage-tasks-view"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     PagedListInfo taskListInfo = this.getPagedListInfo(context, "TaskListInfo");
-    Contact thisContact = null;
     taskListInfo.setLink("MyTasks.do?command=ListTasks");
     Connection db = null;
     TaskList taskList = new TaskList();
@@ -116,7 +111,7 @@ public final class MyTasks extends CFSModule {
       return ("PermissionError");
     }
     addModuleBean(context, "My Tasks", "New Task");
-    return this.getReturn(context, "NewTask");
+    return getReturn(context, "NewTask");
   }
 
 
@@ -144,7 +139,7 @@ public final class MyTasks extends CFSModule {
       this.freeConnection(context, db);
     }
     if (hasAuthority(context, thisTask.getOwner()) || hasAuthority(context, thisTask.getEnteredBy())) {
-      return this.getReturn(context, "TaskDetails");
+      return getReturn(context, "TaskDetails");
     }
     return ("PermissionError");
   }
@@ -170,7 +165,10 @@ public final class MyTasks extends CFSModule {
     }
     try {
       db = this.getConnection(context);
-      thisTask = new Task(db, id);
+      thisTask = (Task) context.getFormBean();
+      if (thisTask.getId() == -1) {
+        thisTask = new Task(db, id);
+      }
       thisTask.checkEnabledOwnerAccount(db);
       if (thisTask.getContactId() > -1) {
         thisTask.checkEnabledLinkAccount(db);
@@ -186,13 +184,13 @@ public final class MyTasks extends CFSModule {
       if (!hasAuthority(context, thisTask.getOwner())) {
         if (hasAuthority(context, thisTask.getEnteredBy())) {
           context.getRequest().setAttribute("Task", thisTask);
-          return this.getReturn(context, "TaskDetails");
+          return getReturn(context, "TaskDetails");
         }
         return ("PermissionError");
       }
       addModuleBean(context, "My Tasks", "Task Home");
       context.getRequest().setAttribute("Task", thisTask);
-      return this.getReturn(context, "NewTask");
+      return getReturn(context, "NewTask");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -207,42 +205,35 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     int id = -1;
     boolean inserted = false;
+    boolean isValid = false;
     if (!(hasPermission(context, "myhomepage-tasks-add"))) {
       return ("PermissionError");
     }
-
     if (context.getRequest().getParameter("id") != null) {
       id = Integer.parseInt(context.getRequest().getParameter("id"));
     }
-
     try {
       db = this.getConnection(context);
       Task newTask = (Task) context.getFormBean();
       newTask.setEnteredBy(getUserId(context));
       newTask.setModifiedBy(getUserId(context));
-      inserted = newTask.insert(db);
-      if (!inserted) {
-        processErrors(context, newTask.getErrors());
+      isValid = this.validateObject(context, db, newTask);
+      if (isValid) {
+        inserted = newTask.insert(db);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (inserted) {
-        return this.getReturn(context, "InsertTask");
-      } else {
-        return executeCommandNew(context);
-      }
+    if (inserted) {
+      return getReturn(context, "InsertTask");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return executeCommandNew(context);
     }
   }
 
@@ -254,14 +245,13 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
+    boolean isValid = false;
     if (!(hasPermission(context, "myhomepage-tasks-edit"))) {
       return ("PermissionError");
     }
     int count = -1;
     String id = context.getRequest().getParameter("id");
-
     try {
       db = this.getConnection(context);
       Task thisTask = (Task) context.getFormBean();
@@ -270,26 +260,20 @@ public final class MyTasks extends CFSModule {
       if (!hasAuthority(context, oldTask.getOwner())) {
         return ("PermissionError");
       }
-      count = thisTask.update(db);
-      if (count == -1) {
-        processErrors(context, thisTask.getErrors());
+      isValid = this.validateObject(context, db, thisTask);
+      if (isValid) {
+        count = thisTask.update(db);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (count == -1) {
-        return executeCommandModify(context);
-      } else {
-        return this.getReturn(context, "InsertTask");
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    if (count == -1 || !isValid) {
+      return executeCommandModify(context);
+    }    
+    return getReturn(context, "InsertTask");
   }
 
 
@@ -300,7 +284,6 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     Task thisTask = null;
     HtmlDialog htmlDialog = new HtmlDialog();
@@ -315,35 +298,32 @@ public final class MyTasks extends CFSModule {
     }
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       thisTask = new Task(db, id);
       if (!hasAuthority(context, thisTask.getOwner())) {
         return ("PermissionError");
       }
       DependencyList dependencies = thisTask.processDependencies(db);
-      htmlDialog.addMessage(dependencies.getHtmlString());
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
 
       if (dependencies.size() == 0) {
-        htmlDialog.setTitle("Confirm");
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='MyTasks.do?command=Delete&id=" + id + "'");
       } else {
-        htmlDialog.setTitle("Confirm");
-        htmlDialog.setHeader("Are you sure you want to delete this item:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='MyTasks.do?command=Delete&id=" + id + "'");
-        htmlDialog.addButton("No", "javascript:parent.window.close()");
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header2"));
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='MyTasks.do?command=Delete&id=" + id + "'");
+        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      context.getSession().setAttribute("Dialog", htmlDialog);
-      return ("ConfirmDeleteOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getSession().setAttribute("Dialog", htmlDialog);
+    return ("ConfirmDeleteOK");
   }
 
 
@@ -355,7 +335,6 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     Task thisTask = null;
     int id = -1;
@@ -378,18 +357,14 @@ public final class MyTasks extends CFSModule {
       }
       thisTask.delete(db);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      context.getRequest().setAttribute("Task", thisTask);
-      context.getRequest().setAttribute("refreshUrl", "MyTasks.do?command=ListTasks");
-      return ("DeleteOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getRequest().setAttribute("Task", thisTask);
+    context.getRequest().setAttribute("refreshUrl", "MyTasks.do?command=ListTasks");
+    return ("DeleteOK");
   }
 
 
@@ -400,11 +375,16 @@ public final class MyTasks extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandProcessImage(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     int count = 0;
+    boolean isValid = false;
 
     String id = (String) context.getRequest().getParameter("id");
+    String from = (String) context.getRequest().getParameter("return");
+    String imageId = (String) context.getRequest().getParameter("imageId");
+    if (imageId != null && !"".equals(imageId)) {
+      context.getRequest().setAttribute("imageId", imageId);
+    }
 
     //Start the download
     try {
@@ -424,28 +404,38 @@ public final class MyTasks extends CFSModule {
       } else {
         thisTask.setComplete(false);
       }
-      count = thisTask.update(db);
-      this.freeConnection(context, db);
-      if (count != -1) {
-        String filePath = context.getServletContext().getRealPath("/") + "images" + fs + fileName;
-        FileDownload fileDownload = new FileDownload();
-        fileDownload.setFullPath(filePath);
-        fileDownload.setDisplayName(fileName);
-        if (fileDownload.fileExists()) {
-          fileDownload.sendFile(context, "image/" + imageType);
-        } else {
-          System.err.println("Image-> Trying to send a file that does not exist");
-        }
+      //bypass the warnings
+      thisTask.setOnlyWarnings(true);
+      isValid = this.validateObject(context, db, thisTask);
+      if (isValid) {
+        count = thisTask.update(db);
+      } 
+      if (from != null && "list".equals(from)) {
+        context.getRequest().setAttribute("image", "images/"+fileName);
       } else {
-        processErrors(context, thisTask.getErrors());
+        if (count != -1) {
+          String filePath = context.getServletContext().getRealPath("/") + "images" + fs + fileName;
+          FileDownload fileDownload = new FileDownload();
+          fileDownload.setFullPath(filePath);
+          fileDownload.setDisplayName(fileName);
+          if (fileDownload.fileExists()) {
+            fileDownload.sendFile(context, "image/" + imageType);
+          } else {
+            System.err.println("Image-> Trying to send a file that does not exist");
+          }
+        }
       }
     } catch (java.net.SocketException se) {
       //User either canceled the download or lost connection
       System.out.println("MyTasks-> ProcessImage : Download canceled or connection lost");
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
       this.freeConnection(context, db);
-      System.out.println(e.toString());
+    }
+    if (from != null && "list".equals(from)) {
+      return "SetStatusOK";
     }
     return ("-none-");
   }

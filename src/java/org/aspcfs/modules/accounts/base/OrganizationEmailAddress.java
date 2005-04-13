@@ -156,7 +156,7 @@ public class OrganizationEmailAddress extends EmailAddress {
   public void insert(Connection db, int orgId, int enteredBy) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO organization_emailaddress " +
-        "(org_id, emailaddress_type, email, ");
+        "(org_id, emailaddress_type, email, primary_email, ");
     if (this.getEntered() != null) {
       sql.append("entered, ");
     }
@@ -164,7 +164,7 @@ public class OrganizationEmailAddress extends EmailAddress {
       sql.append("modified, ");
     }
     sql.append("enteredBy, modifiedBy ) ");
-    sql.append("VALUES (?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ");
     if (this.getEntered() != null) {
       sql.append("?, ");
     }
@@ -185,6 +185,7 @@ public class OrganizationEmailAddress extends EmailAddress {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
     pst.setString(++i, this.getEmail());
+    pst.setBoolean(++i, this.getPrimaryEmail());
     if (this.getEntered() != null) {
       pst.setTimestamp(++i, this.getEntered());
     }
@@ -211,7 +212,7 @@ public class OrganizationEmailAddress extends EmailAddress {
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE organization_emailaddress " +
-        "SET emailaddress_type = ?, email = ?, modifiedby = ?, " +
+        "SET emailaddress_type = ?, email = ?, primary_email = ?, modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE emailaddress_id = ? ");
     int i = 0;
@@ -221,6 +222,7 @@ public class OrganizationEmailAddress extends EmailAddress {
       pst.setNull(++i, java.sql.Types.INTEGER);
     }
     pst.setString(++i, this.getEmail());
+    pst.setBoolean(++i, this.getPrimaryEmail());
     pst.setInt(++i, modifiedBy);
     pst.setInt(++i, this.getId());
     pst.execute();

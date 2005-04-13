@@ -15,22 +15,26 @@
  */
 package org.aspcfs.modules.admin.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.database.ConnectionPool;
-import org.aspcfs.modules.admin.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Import;
-import java.util.*;
+import org.aspcfs.utils.HTTPUtils;
+
 import java.io.File;
-import java.sql.*;
-import org.jcrontab.data.CrontabEntryBean;
-import org.jcrontab.data.CrontabEntryDAO;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.URLConnection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  *  Perform system level maintenance, typically setup on a cron
@@ -106,6 +110,34 @@ public final class ProcessSystem extends CFSModule {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandUpdateUserCache(ActionContext context) {
+    if (!allow(context)) {
+      return ("PermissionError");
+    }
+    ConnectionPool sqlDriver = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+    Connection db = null;
+    Iterator i = this.getSystemIterator(context);
+    while (i.hasNext()) {
+      SystemStatus systemStatus = (SystemStatus) i.next();
+      try {
+        db = sqlDriver.getConnection(systemStatus.getConnectionElement());
+        systemStatus.updateHierarchy(db);
+      } catch (Exception e) {
+        e.printStackTrace();
+      } finally {
+        sqlDriver.free(db);
+      }
+    }
+    return "ProcessOK";
+  }
+
+
+  /**
    *  Deletes all of the files in graphs
    *
    *@param  context  Description of the Parameter
@@ -145,6 +177,7 @@ public final class ProcessSystem extends CFSModule {
         while (k.hasNext()) {
           User indUser = (User) k.next();
           indUser.setIsValid(false, true);
+          indUser.setIsValidLead(false,true);
           indUser.setRevenueIsValid(false, true);
         }
       }

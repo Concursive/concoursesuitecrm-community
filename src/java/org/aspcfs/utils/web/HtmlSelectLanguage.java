@@ -15,7 +15,7 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
+import org.aspcfs.utils.StringUtils;
 
 /**
  *  Presents an HTML language selection based on implemented Java languages
@@ -42,6 +42,7 @@ public class HtmlSelectLanguage {
     select.setSelectName(name);
     select.setDefaultValue(defaultValue);
     select.addItem("zh", "Chinese");
+    select.addItem("hr_HR", "Croat");
     select.addItem("da", "Dansk");
     select.addItem("de_DE", "Deutsch");
     //select.addItem("de_DE_EURO", "Deutsch (EURO)");
@@ -50,15 +51,17 @@ public class HtmlSelectLanguage {
     select.addItem("en_IE", "English - EU");
     select.addItem("en_GB", "English - UK");
     select.addItem("en_US", "English - US");
-    select.addItem("es", "Español");
-    select.addItem("fr_FR", "Français - FR");
-    //select.addItem("fr_FR_EURO", "Français (EURO)");
-    select.addItem("fr_CA", "Français - CA");
+    select.addItem("es", StringUtils.toHtml("Espa\u00F1ol"));
+    select.addItem("fr_FR", StringUtils.toHtml("Fran\u00E7ais - FR"));
+    //select.addItem("fr_FR_EURO", StringUtils.toHtml("Fran\u00E7ais (EURO)"));
+    select.addItem("fr_CA", StringUtils.toHtml("Fran\u00E7ais - CA"));
     select.addItem("it", "Italiano");
     select.addItem("ja", "Japanese");
     select.addItem("nl", "Nederlands");
+    select.addItem("pl_PL", "Polish");
     select.addItem("pt", "Portuguese");
     select.addItem("ru", "Russian");
+    select.addItem("sl_SI", "Slovene");
     select.addItem("sv", "Svenska");
     return select;
   }

@@ -13,7 +13,7 @@
    
    The build process needs write access to the destination web-app folder.
 -->
-<project name="Dark Horse CRM" default="usage" basedir=".">
+<project name="Centric CRM" default="usage" basedir=".">
   
   <!-- enable environment variables -->
   <property environment="env"/>
@@ -43,7 +43,7 @@
   <property name="build.pref.dir" value="${build.dir}${fs}pref"/>
   <property name="pref.dir" value="${base.dir}${fs}pref"/>
   <property name="dist.dir" value="${base.dir}${fs}dist"/>
-  
+
   <!-- Typical usage -->
   <target name="usage">
     <echo message="Further instructions will appear if settings are missing"/>
@@ -139,6 +139,8 @@
     </loadproperties>
     <fail unless="build.config.present">Initialization aborted ${lf}${lf}The build properties file was not found at ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties</fail>
     <fail unless="CONTROL">Initialization aborted ${lf}${lf}Edit the properties file at ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}build.properties, make sure to uncomment the control parameter</fail>
+    <!-- temporarily default locale to system locale -->
+    <property name="LOCALE.NAME" value="${SYSTEM.LANGUAGE}"/>
   </target>
   
   <!-- Copy the common jars -->
@@ -214,7 +216,7 @@
   
   <target name="taskdef.jasper" depends="init">
     <taskdef name="compileJasperReport" 
-        classname="dori.jasper.ant.JRAntCompileTask">
+        classname="net.sf.jasperreports.ant.JRAntCompileTask">
         <classpath>
           <fileset dir="${build.lib.dir}">
             <include name="*.jar"/>
@@ -284,7 +286,8 @@
     <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on"
            debug="true" debuglevel="lines, vars, source">
     -->
-    <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="off">
+    <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="off"
+        fork="true" memoryInitialSize="168m" memoryMaximumSize="168m">
       <classpath>
         <path refid="cfs2.classpath"/>
       </classpath>
@@ -317,6 +320,15 @@
     <jar jarfile="${build.lib.dir}/jcrontab.jar"
           basedir="${build.classes.dir}"
           includes="org/jcrontab/**/*.class"/>
+    <!-- webdav.jar -->
+    <copy todir="${build.classes.dir}/org/apache/catalina/servlets">
+      <fileset dir="${src.classes.dir}/org/apache/catalina/servlets">
+        <include name="LocalStrings.properties"/>
+      </fileset>
+    </copy>
+    <jar jarfile="${build.lib.dir}/webdav.jar"
+          basedir="${build.classes.dir}"
+          includes="org/apache/**/*.class,org/apache/**/*.properties"/>
   </target>
   
   <target name="build"
@@ -327,7 +339,7 @@
   
   <!-- Delete outdated files -->
   <target name="deploy.delete" description="Removes outdated files from web application">
-    <delete>
+    <delete verbose="true" >
       <fileset dir="${CFS_HOME}" includesfile="${base.dir}/build.cleanup"/>
     </delete>
   </target>
@@ -365,6 +377,19 @@
         <exclude name="web.xml"/>
       </fileset>
     </copy>
+    <!-- Copy the language files -->
+    <mkdir dir="${CFS_HOME}/WEB-INF/languages"/>
+    <copy todir="${CFS_HOME}/WEB-INF/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <mkdir dir="${CFS_HOME}/javascript/languages"/>
+    <copy todir="${CFS_HOME}/javascript/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.js"/>
+      </fileset>
+    </copy>
     <!-- Copy this build file -->
     <copy file="${base.dir}/build.xml" todir="${CFS_HOME}/WEB-INF/fileLibrary" verbose="true"/>
   </target>
@@ -392,7 +417,7 @@
     <compileJasperReport
         srcdir="${CFS_HOME}/WEB-INF/reports"
         destdir="${CFS_HOME}/WEB-INF/reports"
-        compiler="dori.jasper.engine.design.JRBshCompiler"/>
+        compiler="net.sf.jasperreports.engine.design.JRBshCompiler"/>
   </target>
   
   <!-- See if there is an updated file to merge -->
@@ -541,10 +566,12 @@
        <pathelement location="${CFS_HOME}/WEB-INF/lib/zeroio-iteam.jar"/>
        <pathelement location="${CFS_HOME}/WEB-INF/lib/isavvix.jar"/>
        <pathelement location="${CFS_HOME}/WEB-INF/lib/jcrontab.jar"/>
+       <pathelement location="${CFS_HOME}/WEB-INF/lib/webdav.jar"/>
      </classpath>
      <include name="**/*.java"/>
      <exclude name="**/*finclude_jsp.java"/>
      <exclude name="**/*fmenu_jsp.java"/>
+     <exclude name="**/*frelationships_*fview2_jsp.java"/>
     </javac>
   </target>
   
@@ -614,18 +641,25 @@
     </copy>
     <!-- Copy the database files (PostgreSQL) -->
     <copy file="${src.sql.dir}/postgresql/postgresql.sql" todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy file="${src.sql.dir}/postgresql/postgresql_2004-06-15.sql" todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy file="${src.sql.dir}/postgresql/postgresql_2004-08-30.sql" todir="${dist.dir}/cfs/WEB-INF/setup"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
+      <fileset dir="${src.sql.dir}/postgresql">
+        <include name="postgresql_*.sql"/>
+      </fileset>
+    </copy>
     <!-- Copy the database files (MSSQL) -->
     <copy file="${src.sql.dir}/mssql/mssql.sql" todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy file="${src.sql.dir}/mssql/mssql_2004-06-15.sql" todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy file="${src.sql.dir}/mssql/mssql_2004-08-30.sql" todir="${dist.dir}/cfs/WEB-INF/setup"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
+      <fileset dir="${src.sql.dir}/mssql">
+        <include name="mssql_*.sql"/>
+      </fileset>
+    </copy>
     <!-- Copy the database files (Common) -->
-    <copy file="${src.sql.dir}/upgrade/2004-06-15.bsh" todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy file="${src.sql.dir}/upgrade/2004-08-19.bsh" todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy file="${src.sql.dir}/upgrade/2004-08-20.bsh" todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy file="${src.sql.dir}/upgrade/2004-08-31.bsh" todir="${dist.dir}/cfs/WEB-INF/setup"/>
-    <copy file="${src.sql.dir}/init/help.xml" 
+    <copy todir="${dist.dir}/cfs/WEB-INF/setup">
+      <fileset dir="${src.sql.dir}/upgrade">
+        <include name="*.bsh"/>
+      </fileset>
+    </copy>
+    <copy file="${src.sql.dir}/init/help.xml"
           todir="${dist.dir}/cfs/WEB-INF/setup"/>
     <!-- Copy and compile the reports -->
     <mkdir dir="${dist.dir}/cfs/WEB-INF/reports"/>
@@ -637,10 +671,23 @@
     <compileJasperReport
         srcdir="${dist.dir}/cfs/WEB-INF/reports"
         destdir="${dist.dir}/cfs/WEB-INF/reports"
-        compiler="dori.jasper.engine.design.JRBshCompiler"/>
+        compiler="net.sf.jasperreports.engine.design.JRBshCompiler"/>
     <delete>
         <fileset dir= "${dist.dir}/cfs/WEB-INF/reports" includes="*.xml"/>
     </delete>
+    <!-- Copy the language files -->
+    <mkdir dir="${dist.dir}/cfs/WEB-INF/languages"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <mkdir dir="${dist.dir}/cfs/javascript/languages"/>
+    <copy todir="${dist.dir}/cfs/javascript/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.js"/>
+      </fileset>
+    </copy>
     <!-- Archive the folder -->
     <war destfile="${dist.dir}/centric.war"
          webxml="${src.web.dir}/WEB-INF/web.xml"
@@ -786,8 +833,13 @@
       <!-- sub directories: src/web/jsp -->
       <zipfileset 
           dir="${dist.dir}/files/src/web"
-          prefix="${zip.dir}/src/web" /> 
+          prefix="${zip.dir}/src/web" />
+      <!-- language files -->
+      <zipfileset 
+          dir="src/languages" 
+          prefix="${zip.dir}/src/languages" />
     </zip>
+    <!-- Libraries -->
     <zip destfile="${dist.dir}/${zip.dir}_libraries.zip">
       <zipfileset 
           dir="${dist.dir}" 
@@ -921,36 +973,26 @@
       </classpath>
       <!-- base data -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_cdb.sql"/>
-      <transaction src="${build.sql.dir}/cdb.sql"/>
       <transaction src="${build.sql.dir}/code_tables.sql"/>
       <transaction src="${build.sql.dir}/access.sql"/>
       <transaction src="${build.sql.dir}/organization.sql"/>
-      <transaction src="${build.sql.dir}/data.sql"/>
       <!-- opportunities -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_opportunity.sql"/>
-      <transaction src="${build.sql.dir}/opportunity.sql"/>
       <!-- project management -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_project.sql"/>
-      <transaction src="${build.sql.dir}/project.sql"/>
       <!-- product catalog -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_product.sql"/>
-      <transaction src="${build.sql.dir}/product.sql"/>
       <!-- service contracts and assets -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_service_contract.sql"/>
-      <transaction src="${build.sql.dir}/service_contract.sql"/>
       <!-- tickets -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_tms.sql"/>
-      <transaction src="${build.sql.dir}/tms.sql"/>
       <!-- quotes, orders -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_quote.sql"/>
-      <transaction src="${build.sql.dir}/quote.sql"/>
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_order.sql"/>
-      <transaction src="${build.sql.dir}/order.sql"/>
       <!-- custom fields -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_custom_field.sql"/>
       <!-- communications manager -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_campaign.sql"/>
-      <transaction src="${build.sql.dir}/campaign.sql"/>
       <!-- help -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_help.sql"/>
       <!-- synchronization api -->
@@ -961,16 +1003,16 @@
       <transaction src="${build.sql.dir}/autoguide.sql"/>
       <!-- revenue manager -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_revenue.sql"/>
-      <transaction src="${build.sql.dir}/revenue.sql"/>
       <!-- task management -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_task.sql"/>
-      <transaction src="${build.sql.dir}/task.sql"/>
+      <!-- document management -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_documents.sql"/>
       <!-- framework data -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_workflow.sql"/>
       <!-- additional fields -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_tms_append_fields.sql"/>
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_quote_adjustment.sql" />
-    </sql>
+      </sql>
     <delete dir="${build.sql.dir}" failonerror="false"/>
   </target>
   
@@ -980,8 +1022,9 @@
     <java classname="org.aspcfs.apps.transfer.Transfer" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
-        <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
-        <pathelement location="${CFS_HOME}/WEB-INF/lib/darkhorseventures.jar"/>
+        <fileset dir="${build.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
       </classpath>
       <sysproperty key="processConfigFile" value="${src.sql.dir}${fs}init${fs}permissions.xml"/>
       <sysproperty key="driver" value="${SITE.DRIVER}"/>
@@ -1029,8 +1072,9 @@
     <java classname="org.aspcfs.apps.help.ImportHelp" fork="yes" failonerror="yes">
       <classpath>
         <path refid="cfs2.classpath"/>
-        <pathelement location="${CFS_HOME}/WEB-INF/lib/aspcfs.jar"/>
-        <pathelement location="${CFS_HOME}/WEB-INF/lib/darkhorseventures.jar"/>
+        <fileset dir="${build.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
       </classpath>
       <arg value="${src.sql.dir}${fs}init${fs}help.xml"/>
       <arg value="${SITE.DRIVER}"/>
@@ -1039,7 +1083,37 @@
       <arg value="${SITE.PASSWORD}"/>
     </java>
   </target>
-  
+
+  <target name="install.language" unless="LOCALE.NAME">
+    <!-- Ask for the language -->
+    <input message="Enter the database data locale: "
+           addproperty="LOCALE.NAME"
+           validargs="en_US"/>
+  </target>
+
+  <target name="install.lookup" depends="init,install.prepare.dbname,install.language">
+    <echo message="Installing lookuplists: ${CFS_HOME}${fs}WEB-INF${fs}fileLibrary${fs}${DATABASE.NAME}${fs}lookuplists_${LOCALE.NAME}.xml"/>
+    <mkdir dir="${CFS_HOME}/WEB-INF/fileLibrary/${DATABASE.NAME}"/>
+    <copy todir="${CFS_HOME}/WEB-INF/fileLibrary/${DATABASE.NAME}">
+      <fileset dir="${pref.dir}/cfs/system">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <java classname="org.aspcfs.apps.lookuplists.ImportLookupLists" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${build.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+      <arg value="${CFS_HOME}/WEB-INF/fileLibrary/${DATABASE.NAME}/lookuplists_${LOCALE.NAME}.xml"/>
+      <arg value="${SITE.DRIVER}"/>
+      <arg value="${SITE.URL}${DATABASE.NAME}"/>
+      <arg value="${SITE.USER}"/>
+      <arg value="${SITE.PASSWORD}"/>
+    </java>
+  </target> 
+
   <!-- Add a site record to the sites table -->
   <target name="install.addsite" depends="init,install.prepare.dbname,install.gatekeeper.init" unless="DATABASE.SKIP_GATEKEEPER">
     <input message="Please enter the virtual host URL for this site, ex &lt;site&gt;.aspcfs.com or 127.0.0.1: " 
@@ -1084,14 +1158,6 @@
   </target>
   <!-- Delete the preferences from this system -->
   <target name="install.deleteprefs" depends="init,install.prepare.dbname,taskdef.upgradeDatabase,taskdef.jasper">
-  <!--
-    <mkdir dir="${CFS_HOME}/WEB-INF/fileLibrary/${DATABASE.NAME}"/>
-    <copy todir="${CFS_HOME}/WEB-INF/fileLibrary/${DATABASE.NAME}">
-      <fileset dir="${pref.dir}/cfs/system">
-        <include name="*.xml"/>
-      </fileset>
-    </copy>
-    -->
     <!-- Delete the workflow from the database -->
     <upgradeDatabase
         sitecode="${SITE.APPCODE}"
@@ -1108,7 +1174,7 @@
   </target>
   
   <!-- Installs a new database -->
-  <target name="installdb" depends="log.installdb,install.database,install.permissions,install.help,install.copyprefs,install.addsite"
+  <target name="installdb" depends="log.installdb,install.database,install.permissions,install.lookup,install.help,install.copyprefs,install.addsite"
     description="Create tables, insert base records and permissions into new database, copy XML files">
   </target>
   
@@ -1279,14 +1345,14 @@
   </target>
   
   
+
+
   
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
   <!-- MISC STUFF TO GO THROUGH (AND MOVE SOMEWHERE ELSE) -->
   <target name="run.databasetest" depends="init,install.prepare">
     <java classname="org.aspcfs.apps.test.Database" fork="yes" failonerror="yes">

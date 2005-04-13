@@ -46,7 +46,7 @@ public class OpportunityReport extends OpportunityList {
   protected Report rep = new Report();
   //default delimiter is comma
   protected String delimiter = ",";
-  protected String header = "Centric CRM Pipeline Management";
+  protected String header = null;
   protected String tdFormat = "";
   protected String filePath = "";
   protected String filenameToUse = "";
@@ -379,7 +379,9 @@ public class OpportunityReport extends OpportunityList {
    */
   public void buildReportBaseInfo() {
     rep.setDelimitedCharacter(delimiter);
-    rep.setHeader(header + ": " + subject);
+    if (header != null) {
+      rep.setHeader(header + ": " + subject);
+    }
   }
 
 

@@ -29,11 +29,10 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popProducts.js"></script>
 <%
   if (!"true".equals(request.getParameter("finalsubmit"))) {
-     String source = request.getParameter("source");
 %>
 <%-- Navigating the contact list --%>
 <br>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ServiceContractProductListInfo" showHiddenParams="true" enableJScript="true" />
+<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ServiceContractProductListInfo" showHiddenParams="true" enableJScript="true" form="productListView"/>
 <br>
 
 <form name="productListView" method="post" action="ProductSelector.do?command=ListProducts&contractId=<%=request.getParameter("contractId")%>">
@@ -42,13 +41,13 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="20%">
-      <strong>Code</strong>
+      <strong><dhv:label name="product.code">Code</dhv:label></strong>
     </th>
     <th width="80%">
-      <strong>Description</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></strong>
     </th>
   </tr>
   
@@ -67,7 +66,7 @@
     %>      
     <tr class="row<%= rowid+(selectedProductList.indexOf(hiddenProductId) != -1 ? "hl" : "") %>">
       <td align="center" nowrap width="8">
-        <a href="javascript:document.productListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%= i %>','productListView');">Add</a>
+        <a href="javascript:document.productListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%= i %>','productListView');"><dhv:label name="button.add">Add</dhv:label></a>
         <input type="hidden" name="hiddenId<%= i %>" value="<%= id %>" />
         <input type="hidden" name="hiddenProductId<%= i %>" value="<%= hiddenProductId %>" />
       </td>
@@ -84,7 +83,7 @@
     %>
     <tr>
       <td colspan="6">
-        No products found.
+        <dhv:label name="calendar.noProductsFound">No products found.</dhv:label>
       </td>
     </tr>
   <%}%>
@@ -98,12 +97,12 @@
  <dhv:pagedListControl object="ServiceContractProductListInfo" /> 
 
 <% if("list".equals(request.getParameter("listType"))){ %>
-  <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','productListView');">
-  <input type="button" value="Cancel" onClick="javascript:window.close()">
-  <a href="javascript:SetChecked(1,'serviceContract','productListView','<%=User.getBrowserId()%>');">Check All</a>
-  <a href="javascript:SetChecked(0,'serviceContract','productListView','<%=User.getBrowserId()%>');">Clear All</a>
+  <input type="button" value="<dhv:label name="button.done">Done</dhv:label>" onClick="javascript:setFieldSubmit('finalsubmit','true','productListView');">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
+  <a href="javascript:SetChecked(1,'serviceContract','productListView','<%=User.getBrowserId()%>');"><dhv:label name="quotes.checkAll">Check All</dhv:label></a>
+  <a href="javascript:SetChecked(0,'serviceContract','productListView','<%=User.getBrowserId()%>');"><dhv:label name="quotes.clearAll">Clear All</dhv:label></a>
 <%}else{%>
-  <input type="button" value="Cancel" onClick="javascript:window.close()">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
 <%}%>
 </form>
 

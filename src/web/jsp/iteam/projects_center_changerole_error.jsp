@@ -18,10 +18,10 @@
   - Description: 
   --%>
 <script language="javascript" type="text/javascript">
-  alert("This user role cannot be changed.\r\n" +
+  alert(parent.label("user.cannotbechanged.reason","This user role cannot be changed.\r\n" +
         "Possible reasons:\r\n" +
         "- There must be at least one (1) other user with a project lead role\r\n" +
-        "- You must be in a role that can change user roles");
+        "- You must be in a role that can change user roles"));
   parent.scrollReload('ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= request.getParameter("pid") %>');
 </script>
 

@@ -33,37 +33,30 @@
 <td>
 <a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
-  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+  <a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+  <a href="TroubleTickets.do?command=SearchTickets"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%}else{%> 
   <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>"><dhv:label name="tickets.details">Ticket Details</dhv:label></a> >
 <dhv:evaluate if="<%= (Category.getAllowMultipleRecords() && Record == null) %>">
-  List of Folder Records
+  <dhv:label name="accounts.accounts_fields.ListOfFolderRecords">List of Folder Records</dhv:label>
 </dhv:evaluate>
 <dhv:evaluate if="<%= (Category.getAllowMultipleRecords() && Record != null) %>">
-  <a href="TroubleTicketsFolders.do?command=Fields&ticketId=<%= TicketDetails.getId() %>&catId=<%= Category.getId() %>">List of Folder Records</a> >
-  Folder Record Details
+  <a href="TroubleTicketsFolders.do?command=Fields&ticketId=<%= TicketDetails.getId() %>&catId=<%= Category.getId() %>"><dhv:label name="accounts.accounts_fields.ListOfFolderRecords">List of Folder Records</dhv:label></a> >
+  <dhv:label name="accounts.accounts_fields.FolderRecordDetails">Folder Record Details</dhv:label>
 </dhv:evaluate>
 <dhv:evaluate if="<%= (!Category.getAllowMultipleRecords()) %>">
-  Folder Record Details
+  <dhv:label name="accounts.accounts_fields.FolderRecordDetails">Folder Record Details</dhv:label>
 </dhv:evaluate>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + TicketDetails.getId(); %>
-<dhv:container name="tickets" selected="folders" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      &nbsp;<br>
-      There are currently no custom folders configured for this module.<br>
-      Custom folders can be configured by an administrator.<br>
-      &nbsp;
-    </td>
-  </tr>
-</table>
+<dhv:container name="tickets" selected="folders" object="TicketDetails" param="<%= param1 %>">
+  <%@ include file="ticket_header_include.jsp" %>
+  <dhv:label name="accounts.accounts_nofields.NoCustomFoldersConfigured">There are currently no custom folders configured for this module.</dhv:label><br>
+  <dhv:label name="accounts.accounts_nofields.CustomfoldersConfiguredAdministrator">Custom folders can be configured by an administrator.</dhv:label><br>
+</dhv:container>
 </form>

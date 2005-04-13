@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,java.lang.reflect.*, org.aspcfs.modules.mycfs.beans.CalendarBean, org.aspcfs.modules.mycfs.base.*,org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="CompanyCalendar" class="org.aspcfs.utils.web.CalendarView" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -7,13 +8,20 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+function reopen() {
+  window.parent.reopen();
+}
+
 function initialize_menus(){
   new ypSlideOutMenu("menuAccount", "down", 0, 0, 170, getHeight("menuAccountTable"));
   new ypSlideOutMenu("menuCall", "down", 0, 0, 170, getHeight("menuCallTable"));
   new ypSlideOutMenu("menuOpp", "down", 0, 0, 170, getHeight("menuOppTable"));
   new ypSlideOutMenu("menuTask", "down", 0, 0, 170, getHeight("menuTaskTable"));
   new ypSlideOutMenu("menuTicket", "down", 0, 0, 170, getHeight("menuTicketTable"));
+  new ypSlideOutMenu("menuProjectTicket", "down", 0, 0, 170, getHeight("menuProjectTicketTable"));
+  new ypSlideOutMenu("menuProject", "down", 0, 0, 170, getHeight("menuProjectTable"));
 }
+
 </SCRIPT>
 <%@ include file="initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
@@ -24,6 +32,8 @@ function initialize_menus(){
 <%@ include file="mycfs/calendar_account_events_menu.jsp" %>
 <%@ include file="mycfs/calendar_opportunity_events_menu.jsp" %>
 <%@ include file="mycfs/calendar_ticket_events_menu.jsp" %>
+<%@ include file="mycfs/calendar_project_ticket_events_menu.jsp" %>
+<%@ include file="mycfs/calendar_project_assignment_events_menu.jsp" %>
 <% 
    String returnPage = request.getParameter("return");
    CalendarBean CalendarInfo = (CalendarBean) session.getAttribute(returnPage!=null?returnPage + "CalendarInfo" :"CalendarInfo");
@@ -60,15 +70,27 @@ function reloadCalendar(){
 <%-- Display header label --%>
   <tr>
     <td align="center" valign="top" width="100%" nowrap>
-      <strong><%= CalendarInfo.isAgendaView()?"Next 7 Days View": Character.toUpperCase(CalendarInfo.getCalendarView().charAt(0)) + CalendarInfo.getCalendarView().substring(1) + " View " + (CalendarInfo.getCalendarView().equalsIgnoreCase("week")?" : " + toMediumDateString(CompanyCalendar.getCalendarInfo().getStartOfWeekDate()) + " - " + toMediumDateString(CompanyCalendar.getCalendarInfo().getEndOfWeekDate()):"")%></strong>
-      <dhv:evaluate if="<%= CalendarInfo.isAgendaView() %>"><br>&nbsp;</dhv:evaluate>
+      <strong>
+        <dhv:evaluate if="<%= CalendarInfo.isAgendaView() %>">
+          <dhv:label name="calendar.next7daysView">Next 7 Days View</dhv:label><br />
+          &nbsp;
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= !CalendarInfo.isAgendaView() %>">
+          <dhv:evaluate if="<%= "week".equalsIgnoreCase(CalendarInfo.getCalendarView()) %>">
+            <dhv:label name="calendar.weekView.colon" param="<%= "startTime="+getTime(pageContext,new Timestamp(CompanyCalendar.getCalendarInfo().getStartOfWeekDate().getTime()),"&nbsp;",DateFormat.MEDIUM,false,false,true,"&nbsp;")+"|endTime="+getTime(pageContext,new Timestamp(CompanyCalendar.getCalendarInfo().getEndOfWeekDate().getTime()),"&nbsp;",DateFormat.MEDIUM,false,false,true,"&nbsp;") %>">Week View: <zeroio:tz timestamp="<%= CompanyCalendar.getCalendarInfo().getStartOfWeekDate() %>" dateOnly="true" dateFormat="<%= DateFormat.MEDIUM %>" userTimeZone="false" default="&nbsp;"/> - <zeroio:tz timestamp="<%= CompanyCalendar.getCalendarInfo().getEndOfWeekDate() %>" dateOnly="true" dateFormat="<%= DateFormat.MEDIUM %>" userTimeZone="false" default="&nbsp;"/></dhv:label>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= "day".equalsIgnoreCase(CalendarInfo.getCalendarView()) %>">
+            <dhv:label name="calendar.dayView">Day View</dhv:label>
+          </dhv:evaluate>
+        </dhv:evaluate>
+      </strong>
     </td>
   </tr>
 <%-- Display back link --%>
-<dhv:evaluate exp="<%= !CalendarInfo.isAgendaView() %>">
+<dhv:evaluate if="<%= !CalendarInfo.isAgendaView() %>">
   <tr>
     <td valign="top" align="center" width="100%" nowrap>
-      <a href="javascript:window.parent.frames['calendar'].resetCalendar();javascript:window.location.href='MyCFS.do?command=AgendaView&inline=true&&source=calendardetails<%=returnPage != null ? "&return=" + returnPage : "" %>';">Back To Next 7 Days View</a>
+      <a href="javascript:window.parent.frames['calendar'].resetCalendar();javascript:window.location.href='MyCFS.do?command=AgendaView&inline=true&&source=calendardetails<%=returnPage != null ? "&return=" + returnPage : "" %>';"><dhv:label name="calendar.backToNext7daysView">Back To Next 7 Days View</dhv:label></a>
     </td>
   </tr>
   <tr>
@@ -79,7 +101,7 @@ function reloadCalendar(){
   <tr>
     <td width="100%" valign="top" align="left">
       <table width="100%" cellspacing="0" cellpadding="0" border="0">
-<dhv:evaluate exp="<%= CalendarInfo.isAgendaView() %>">      
+<dhv:evaluate if="<%= CalendarInfo.isAgendaView() %>">
         <tr>
           <td colspan="2">
             <table border="0" width="100%">
@@ -88,12 +110,9 @@ function reloadCalendar(){
                     <strong><%
                       Calendar tmpCal = Calendar.getInstance();
                       tmpCal.setTimeZone(timeZone);
-                      int currDay = tmpCal.get(Calendar.DAY_OF_MONTH);
-                      int currMonth = tmpCal.get(Calendar.MONTH) + 1;
-                      int currYear = tmpCal.get(Calendar.YEAR);
-                      DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
                        %>
-                    <%= toFullDateString(formatter.parse(currMonth  + "/" + currDay + "/" + currYear)) %> <font color="#006699">(Today)</font></strong>
+                    <zeroio:tz timestamp="<%= tmpCal %>" dateFormat="<%= DateFormat.FULL %>" dateOnly="true" default="&nbsp;"/>
+                    <font color="#006699">(<dhv:label name="calendar.Today">Today</dhv:label>)</font></strong>
                 </td>
               </tr>
             </table>
@@ -101,29 +120,30 @@ function reloadCalendar(){
         </tr>
 </dhv:evaluate>
 <%
+   Calendar today = Calendar.getInstance();
+   today.setTimeZone(timeZone);
    Iterator days = (CompanyCalendar.getEvents(100)).iterator();
    if (days.hasNext()) {
      boolean showToday = false;
      boolean firstEvent = true;
      int count = 0;
      int menuCount = 0;
-     Calendar today = Calendar.getInstance();
-     today.setTimeZone(timeZone);
      while (days.hasNext()) {
-       CalendarEventList thisDay = (CalendarEventList)days.next();
+       CalendarEventList thisDay = (CalendarEventList) days.next();
        Calendar thisCal = Calendar.getInstance();
+       //thisCal.setTimeZone(timeZone);
        thisCal.setTime(thisDay.getDate());
        boolean isToday = 
           ((thisCal.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) &&
           (thisCal.get(Calendar.YEAR) == today.get(Calendar.YEAR)));
 %>
-    <dhv:evaluate exp="<%= (CalendarInfo.isAgendaView() && !isToday && count == 0) %>">
+    <dhv:evaluate if="<%= (CalendarInfo.isAgendaView() && !isToday && count == 0) %>">
         <tr>
           <td>
             <img src="images/select-arrow-trans.gif"  border="0" />
           </td>
           <td valign="top">
-            There are currently no items pending for you.
+            <dhv:label name="calendar.noItemsPending">There are currently no items pending for you.</dhv:label>
           </td>
         </tr>
         <tr style="visibility:none">
@@ -132,13 +152,14 @@ function reloadCalendar(){
           </td>
         </tr>
     </dhv:evaluate>
-    <dhv:evaluate exp="<%= (!isToday && CalendarInfo.isAgendaView()) || !CalendarInfo.isAgendaView() %>">
+    <dhv:evaluate if="<%= (!isToday && CalendarInfo.isAgendaView()) || !CalendarInfo.isAgendaView() %>">
         <tr>
           <td colspan="2">
             <table border="0" width="100%">
               <tr>
                 <td width="100%" class="dayName">
-                  <strong><%= toFullDateString(thisDay.getDate()) %></strong>
+                  <%-- The dates are already using the user's timezone, so do not use again --%>
+                  <strong><zeroio:tz timestamp="<%= thisCal %>" dateFormat="<%= DateFormat.FULL %>" dateOnly="true" userTimeZone="false" default="&nbsp;"/></strong>
                 </td>
               </tr>
             </table>
@@ -168,7 +189,7 @@ function reloadCalendar(){
             <img src="images/select-arrow-trans.gif"  border="0" />
           </td>
           <td valign="top">
-            There are currently no items pending for you.
+            <dhv:label name="calendar.noItemsPending">There are currently no items pending for you.</dhv:label>
           </td>
         </tr>
 <%

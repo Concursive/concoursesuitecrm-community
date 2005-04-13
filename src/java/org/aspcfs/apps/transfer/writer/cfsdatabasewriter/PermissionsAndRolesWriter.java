@@ -15,13 +15,19 @@
  */
 package org.aspcfs.apps.transfer.writer.cfsdatabasewriter;
 
-import org.aspcfs.apps.transfer.*;
-import java.util.*;
-import java.util.logging.*;
-import org.aspcfs.utils.*;
-import java.sql.*;
-import org.aspcfs.modules.admin.base.*;
-import com.darkhorseventures.database.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
+import org.aspcfs.apps.transfer.DataRecord;
+import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.admin.base.Role;
+import org.aspcfs.modules.admin.base.RolePermission;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  *  Inserts related PermissionCategory data into a database
@@ -228,6 +234,7 @@ public class PermissionsAndRolesWriter implements DataWriter {
     try {
       if (record.getName().equals("permissionCategory")) {
         PermissionCategory thisCategory = new PermissionCategory();
+        thisCategory.setConstant(record.getValue("constant"));
         thisCategory.setCategory(record.getValue("category"));
         thisCategory.setLevel(record.getValue("level"));
         thisCategory.setEnabled(record.getValue("enabled"));
@@ -240,6 +247,8 @@ public class PermissionsAndRolesWriter implements DataWriter {
         thisCategory.setScheduledEvents(record.getValue("scheduledEvents"));
         thisCategory.setObjectEvents(record.getValue("objectEvents"));
         thisCategory.setProducts(record.getValue("products"));
+        thisCategory.setWebdav(record.getValue("webdav"));
+        thisCategory.setLogos(record.getValue("logos"));
         thisCategory.insert(db);
         id = thisCategory.getId();
         return true;
@@ -373,6 +382,25 @@ public class PermissionsAndRolesWriter implements DataWriter {
         thisRolePermission.setDelete(record.getValue("delete"));
         thisRolePermission.insert(db);
         id = thisRolePermission.getId();
+        return true;
+      }
+
+      if (record.getName().equals("webdav")) {
+        try {
+          PreparedStatement pst = db.prepareStatement(
+              "INSERT INTO webdav " +
+              "(category_id, class_name, enteredby, modifiedby) " +
+              "VALUES (?, ?, ?, ?) ");
+          pst.setInt(1, record.getIntValue("categoryId"));
+          pst.setString(2, record.getValue("class"));
+          pst.setInt(3, 0);
+          pst.setInt(4, 0);
+          pst.execute();
+          pst.close();
+        } catch (SQLException e) {
+          e.printStackTrace(System.out);
+          return false;
+        }
         return true;
       }
     } catch (Exception ex) {

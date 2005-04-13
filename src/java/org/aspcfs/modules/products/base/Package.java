@@ -619,28 +619,18 @@ public class Package extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean delete(Connection db) throws SQLException {
-    boolean result = false;
+  public void delete(Connection db) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("Package ID not specified.");
     }
     int i = 0;
-    try {
-      db.setAutoCommit(false);
-      PreparedStatement pst = db.prepareStatement(
-          " DELETE FROM package " +
-          " WHERE package_id = ? "
-          );
-      pst.setInt(++i, this.getId());
-      pst.execute();
-      pst.close();
-      result = true;
-    } catch (SQLException e) {
-      db.rollback();
-    } finally {
-      db.setAutoCommit(true);
-    }
-    return result;
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM package " +
+        "WHERE package_id = ? "
+        );
+    pst.setInt(++i, this.getId());
+    pst.execute();
+    pst.close();
   }
 
 
@@ -655,9 +645,9 @@ public class Package extends GenericBean {
     boolean result = false;
     StringBuffer sql = new StringBuffer();
     try {
-      db.setAutoCommit(false);
+        db.setAutoCommit(false);
       sql.append(
-          " INSERT INTO package( " +
+          "INSERT INTO package( " +
           "   category_id, package_name, abbreviation, short_description, " +
           "   long_description, thumbnail_image_id, " +
           "   small_image_id, large_image_id, list_order, " +
@@ -705,14 +695,14 @@ public class Package extends GenericBean {
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "package_package_id_seq");
-      db.commit();
+        db.commit();
       result = true;
     } catch (SQLException e) {
-      db.rollback();
+        db.rollback();
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
-    }
+        db.setAutoCommit(true);
+      }
     return result;
   }
 
@@ -726,14 +716,14 @@ public class Package extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        " UPDATE package " +
-        " SET category_id = ?, " +
+        "UPDATE package " +
+        "SET category_id = ?, " +
         "     abbreviation = ?, " +
         "     short_description = ?, " +
         "     long_description = ?, " +
@@ -771,19 +761,5 @@ public class Package extends GenericBean {
     return resultCount;
   }
 
-
-  /**
-   *  Gets the valid attribute of the Package object
-   *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  public boolean isValid(Connection db) throws SQLException {
-    if (this.getId() == -1) {
-      return false;
-    }
-    return true;
-  }
 }
 

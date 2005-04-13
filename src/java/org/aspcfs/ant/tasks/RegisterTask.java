@@ -131,7 +131,7 @@ public class RegisterTask extends Task {
       //Encode the key
       BASE64Encoder encoder = new BASE64Encoder();
       bean.setZlib(encoder.encode(ObjectUtils.toByteArray(key)));
-      bean.setText(PrivateString.encrypt(key, "ENTERPRISE-2.7"));
+      bean.setText(PrivateString.encrypt(key, "ENTERPRISE-3.0"));
       //Transmit
       String response = null;
       if (bean.getSsl()) {

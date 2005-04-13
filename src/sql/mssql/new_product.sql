@@ -69,6 +69,16 @@ CREATE TABLE lookup_product_type (
   enabled BIT DEFAULT 1
 );
 
+-- Each product can have a manufacturer
+-- Example: Nokia, Compaq
+CREATE TABLE lookup_product_manufacturer (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(300) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
 -- Each product can have a format
 -- Example: Physical, Digital
 CREATE TABLE lookup_product_format (
@@ -129,17 +139,14 @@ CREATE TABLE product_catalog (
   long_description TEXT,
   type_id INTEGER REFERENCES lookup_product_type(code),
   special_notes VARCHAR(255),
-  -- ecommerce
   sku VARCHAR(40),
   in_stock BIT NOT NULL DEFAULT 1,
   format_id INTEGER REFERENCES lookup_product_format(code),
   shipping_id INTEGER REFERENCES lookup_product_shipping(code),
   estimated_ship_time INTEGER REFERENCES lookup_product_ship_time(code),
-  -- images
   thumbnail_image_id INTEGER REFERENCES project_files(item_id),
   small_image_id INTEGER REFERENCES project_files(item_id),
   large_image_id INTEGER REFERENCES project_files(item_id),
-  -- record status
   list_order INTEGER DEFAULT 10,
   enteredby INT NOT NULL references access(user_id),
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -147,7 +154,8 @@ CREATE TABLE product_catalog (
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   start_date DATETIME DEFAULT NULL,
   expiration_date DATETIME DEFAULT NULL,
-  enabled BIT NOT NULL DEFAULT 1
+  enabled BIT NOT NULL DEFAULT 1,
+  manufacturer_id INTEGER REFERENCES lookup_product_manufacturer(code)
 );
 
 -- Each product can have a price, which can change over time
@@ -168,7 +176,10 @@ CREATE TABLE product_catalog_pricing (
   modifiedby INT NOT NULL references access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   start_date DATETIME DEFAULT NULL,
-  expiration_date DATETIME DEFAULT NULL
+  expiration_date DATETIME DEFAULT NULL,
+  enabled BIT DEFAULT 0,
+  cost_currency INTEGER REFERENCES lookup_currency(code),
+  cost_amount FLOAT NOT NULL DEFAULT 0
 );
 
 -- A package can consist of products with discounted prices
@@ -237,7 +248,8 @@ CREATE TABLE product_option_configurator (
   short_description TEXT,
   long_description TEXT,
   class_name VARCHAR(255),
-  result_type INTEGER NOT NULL REFERENCES lookup_product_conf_result(code)
+  result_type INTEGER NOT NULL REFERENCES lookup_product_conf_result(code),
+  configurator_name VARCHAR(300) NOT NULL
 );
 
 -- An option library allows products to be further customized by 
@@ -255,7 +267,10 @@ CREATE TABLE product_option (
   -- record information
   start_date DATETIME DEFAULT NULL,
   end_date DATETIME DEFAULT NULL,
-  enabled BIT DEFAULT 1
+  enabled BIT DEFAULT 0,
+  option_name VARCHAR(300),
+  has_range BIT DEFAULT 0,
+  has_multiplier BIT DEFAULT 0
 );
 
 -- Each option will have it's configurator defined when the option is created
@@ -270,43 +285,54 @@ CREATE TABLE product_option_values (
   price_amount FLOAT NOT NULL DEFAULT 0,
   recurring_currency INTEGER REFERENCES lookup_currency(code),
   recurring_amount FLOAT NOT NULL DEFAULT 0,
-  recurring_type INTEGER REFERENCES lookup_recurring_type(code)
+  recurring_type INTEGER REFERENCES lookup_recurring_type(code),
+  enabled BIT DEFAULT 1,
+  value FLOAT DEFAULT 0,
+  multiplier FLOAT DEFAULT 1,
+  range_min INTEGER DEFAULT 1,
+  range_max INTEGER DEFAULT 1,
+  cost_currency INTEGER REFERENCES lookup_currency(code),
+  cost_amount FLOAT NOT NULL DEFAULT 0
 );
-CREATE UNIQUE INDEX idx_pr_opt_val ON product_option_values (option_id, result_id);
+CREATE UNIQUE INDEX idx_pr_opt_val ON product_option_values (value_id, option_id, result_id);
 
 -- Each product can be associated with multiple configurable options
 CREATE TABLE product_option_map (
   product_option_id INT IDENTITY PRIMARY KEY,
   product_id INTEGER NOT NULL REFERENCES product_catalog(product_id),
   option_id INTEGER NOT NULL REFERENCES product_option(option_id),
-  value_id INTEGER NOT NULL REFERENCES product_option_values(value_id)
 );
 
 -- For each option, there are structure fields specified by the configurator
 -- which determine the option's structure
 CREATE TABLE product_option_boolean (
   product_option_id INTEGER NOT NULL REFERENCES product_option(option_id),
-  value BIT NOT NULL
+  value BIT NOT NULL,
+  id INTEGER
 );
 
 CREATE TABLE product_option_float (
   product_option_id INTEGER NOT NULL REFERENCES product_option(option_id),
-  value FLOAT NOT NULL
+  value FLOAT NOT NULL,
+  id INTEGER
 );
 
 CREATE TABLE product_option_timestamp (
   product_option_id INTEGER NOT NULL REFERENCES product_option(option_id),
-  value DATETIME NOT NULL
+  value DATETIME NOT NULL,
+  id INTEGER
 );
 
 CREATE TABLE product_option_integer (
   product_option_id INTEGER NOT NULL REFERENCES product_option(option_id),
-  value INTEGER NOT NULL
+  value INTEGER NOT NULL,
+  id INTEGER
 );
 
 CREATE TABLE product_option_text (
   product_option_id INTEGER NOT NULL REFERENCES product_option(option_id),
-  value TEXT NOT NULL
+  value TEXT NOT NULL,
+  id INTEGER
 );
 
 -- Each product can be associated with multiple keywords

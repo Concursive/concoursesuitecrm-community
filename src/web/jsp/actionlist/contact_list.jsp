@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -22,6 +22,7 @@
 <jsp:useBean id="ActionContacts" class="org.aspcfs.modules.actionlist.base.ActionContactsList" scope="request"/>
 <jsp:useBean id="ActionList" class="org.aspcfs.modules.actionlist.base.ActionList" scope="request"/>
 <jsp:useBean id="ContactActionListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="viewUser" class="java.lang.String" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
@@ -57,16 +58,16 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> >
-<a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>">Action Lists</a> >
-Action Contacts
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> >
+<a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>"><dhv:label name="myitems.actionLists">Action Lists</dhv:label></a> >
+<dhv:label name="actionList.listDetails">List Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:permission name="myhomepage-action-lists-edit">
-<a href="javascript:window.location.href='MyActionContacts.do?command=Prepare&actionId=<%= request.getParameter("actionId") %>&return=details&params=' + escape('filters=all|mycontacts|accountcontacts');"  onMouseOver="window.status='Add Contacts To List';return true;"  onMouseOut="window.status='';return true;">Add Contacts to List</a>&nbsp;
-<a href="MyActionContacts.do?command=Modify&actionId=<%= request.getParameter("actionId") %>">Modify List</a>
+<a href="javascript:window.location.href='MyActionContacts.do?command=Prepare&actionId=<%= request.getParameter("actionId") %>&return=details&params=' + escape('&reset=true&filters=all|mycontacts|accountcontacts');"  onMouseOver="window.status='Add Contacts To List';return true;"  onMouseOut="window.status='';return true;"><dhv:label name="actionList.addContactsToList">Add Contacts to List</dhv:label></a>&nbsp;
+<a href="MyActionContacts.do?command=Modify&actionId=<%= request.getParameter("actionId") %>"><dhv:label name="project.modifyList">Modify List</dhv:label></a>
 <br>
 </dhv:permission>
 <br>
@@ -74,10 +75,11 @@ Action Contacts
   <tr>
     <form name="listView" method="post" action="MyActionContacts.do?command=List&actionId=<%= request.getParameter("actionId") %>">
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= ContactActionListInfo.getOptionValue("inprogress") %>>All In Progress Contacts</option>
-        <option <%= ContactActionListInfo.getOptionValue("complete") %>>All Complete Contacts</option>
-        <option <%= ContactActionListInfo.getOptionValue("all") %>>All Contacts</option>
+      <strong><%= toHtml(ActionList.getDescription()) %></strong>
+      <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= ContactActionListInfo.getOptionValue("inprogress") %>><dhv:label name="actionList.allInProgressContacts">All In Progress Contacts</dhv:label></option>
+        <option <%= ContactActionListInfo.getOptionValue("complete") %>><dhv:label name="actionList.allCompleteContacts">All Complete Contacts</dhv:label></option>
+        <option <%= ContactActionListInfo.getOptionValue("all") %>><dhv:label name="actionList.allContacts">All Contacts</dhv:label></option>
       </select>
     </td>
     <td>
@@ -87,25 +89,19 @@ Action Contacts
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-  <tr>
-    <th colspan="4">
-      <strong><%= toHtml(ActionList.getDescription()) %></strong>
-    </th>
-  </tr>
-  <tr>
   <dhv:permission name="myhomepage-action-lists-edit">
     <th style="text-align: center;">
-      <strong>Action</strong>
+      &nbsp;
     </th>
   </dhv:permission>
     <th>
-      <strong>Name</strong>
+      <strong><dhv:label name="contacts.name">Name</dhv:label></strong>
     </th>
     <th>
-      <strong>Status</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
     </th>
     <th nowrap>
-      <strong>Last Updated</strong>
+      <strong><dhv:label name="actionList.lastUpdated">Last Updated</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -131,14 +127,10 @@ Action Contacts
    </dhv:permission>
     <td nowrap valign="top">
     <dhv:permission name="myhomepage-action-lists-edit">
-      <% 
-        if (thisContact.getComplete()) {
-      %>
+      <% if (thisContact.getComplete()) { %>
         <a href="javascript:changeImages('image<%= thisContact.getId() %>','MyActionContacts.do?command=ProcessImage&id=box.gif|gif|'+<%= thisContact.getId() %>+'|0','MyActionContacts.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisContact.getId() %>+'|1');" onMouseOver="this.style.color='blue';window.status='View Details';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><img src="images/box-checked.gif" name="image<%= thisContact.getId() %>" id="1" border="0" title="Click to change" align="absmiddle"></a>
-      <% 
-        } else {
-      %>
-        <a href="javascript:changeImages('image<%= thisContact.getId() %>','MyActionContacts.do?command=ProcessImage&id=box.gif|gif|'+<%= thisContact.getId() %>+'|0','MyActionContacts.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisContact.getId() %>+'|1');"><img src="images/box.gif" name="image<%= thisContact.getId() %>" id="0" border="0" title="Click to change" align="absmiddle"></a>
+      <% } else { %>
+        <a href="javascript:changeImages('image<%= thisContact.getId() %>','MyActionContacts.do?command=ProcessImage&id=box.gif|gif|'+<%= thisContact.getId() %>+'|1','MyActionContacts.do?command=ProcessImage&id=box-checked.gif|gif|'+<%= thisContact.getId() %>+'|1');"><img src="images/box.gif" name="image<%= thisContact.getId() %>" id="0" border="0" title="Click to change" align="absmiddle"></a>
       <%
         }
       %>
@@ -165,7 +157,7 @@ Action Contacts
     </tr>
     </table>
     <% }else{ %>
-      No Items in history
+      <dhv:label name="actionList.noItemsInHistory">No items in History.</dhv:label>
     <% } %>
     </td>
     <td nowrap align="center" valign="top">
@@ -176,7 +168,7 @@ Action Contacts
 }else{%>
       <tr>
         <td class="containerBody" colspan="4" valign="center">
-          No Action Contacts found in this view.
+          <dhv:label name="actionList.noActionContactsFound">No Action Contacts found in this view.</dhv:label>
         </td>
       </tr>
 <%}%>

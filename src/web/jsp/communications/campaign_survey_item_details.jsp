@@ -25,7 +25,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do?command=ShowItems&questionId=<%= request.getParameter("questionId") %>">Item List</a> >
+<a href="CampaignManager.do?command=ShowItems&questionId=<%= request.getParameter("questionId") %>"><dhv:label name="campaign.itemList">Item List</dhv:label></a> >
 Item Details
 </td>
 </tr>
@@ -34,7 +34,7 @@ Item Details
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
 <tr class="containerHeader">
   <th colspan="2" valign="center">
-    <strong>Item:</strong> <%= toHtml(ItemDetails.getItem().getDescription()) %>
+    <dhv:label name="campaign.item.colon" param="<%= toHtml(ItemDetails.getItem().getDescription()) %>"><strong>Item:</strong> <%= toHtml(ItemDetails.getItem().getDescription()) %></dhv:label>
   </th>
 </tr>
 <tr>
@@ -42,16 +42,16 @@ Item Details
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
        <th>
-          Name
+          <dhv:label name="contacts.name">Name</dhv:label>
         </th>
        <th width="15%" nowrap>
-          Phone Number(s)
+          <dhv:label name="campaign.phoneNumbers">Phone Number(s)</dhv:label>
         </th>
       <th width="15%" nowrap>
-        Email Addresses
+        <dhv:label name="accounts.accounts_add.EmailAddresses">Email Addresses</dhv:label>
       </th>
       <th nowrap>
-        Entered
+        <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
       </th>
     </tr>
   <%    
@@ -86,7 +86,7 @@ Item Details
     <%} else {%>  
     <tr>
       <td class="containerBody" colspan="4">
-        No responses found for this item.
+        <dhv:label name="campaign.noResponsesFoundForItem">No responses found for this item.</dhv:label>
       </td>
     </tr>
     </table>
@@ -95,4 +95,4 @@ Item Details
  </tr>
 </table>
 <br>
-<input type="button" value="Close Window" onClick="javascript:window.close();">
+<input type="button" value="<dhv:label name="button.closeWindow">Close Window</dhv:label>" onClick="javascript:window.close();">

@@ -15,20 +15,26 @@
  */
 package org.aspcfs.modules.communications.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.Vector;
-import java.util.Iterator;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.communications.base.*;
-import org.aspcfs.modules.communications.beans.*;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.communications.base.SearchCriteriaList;
+import org.aspcfs.modules.communications.base.SearchCriteriaListList;
+import org.aspcfs.modules.communications.base.SearchFieldList;
+import org.aspcfs.modules.communications.base.SearchOperatorList;
+import org.aspcfs.modules.communications.beans.SearchFormBean;
 import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.contacts.base.ContactTypeList;
-import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.utils.Template;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  *  Actions for dealing with Groups in the Communications Module
@@ -150,6 +156,7 @@ public final class CampaignManagerGroup extends CFSModule {
     if (!hasPermission(context, "campaign-campaigns-groups-delete")) {
       return ("PermissionError");
     }
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Exception errorMessage = null;
     boolean recordDeleted = false;
     String passedId = null;
@@ -163,6 +170,16 @@ public final class CampaignManagerGroup extends CFSModule {
         return "PermissionError";
       }
       recordDeleted = thisSCL.delete(db);
+      if (!recordDeleted) {
+        HashMap map = new HashMap();
+        map.put("${thisSCL.inactiveCount}",""+thisSCL.getInactiveCount());
+        map.put("${thisSCL.campaign}",(thisSCL.getInactiveCount() == 1 ? "campaign is" : "campaigns are"));
+        map.put("${thisSCL.use}",(thisSCL.getInactiveCount() == 1 ? "uses" : "use"));
+     
+        Template template = new Template(systemStatus.getLabel("object.validation.actionError.canNotDeleteSCL"));
+        template.setParseElements(map);
+        thisSCL.getErrors().put("actionError", template.getParsedText());
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -207,19 +224,22 @@ public final class CampaignManagerGroup extends CFSModule {
     }
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       thisSCL = new SearchCriteriaList(db, id);
       if (!hasAuthority(context, thisSCL.getOwner())) {
         return "PermissionError";
       }
-      htmlDialog.setTitle("Centric CRM: Campaign Manager");
       DependencyList dependencies = thisSCL.processDependencies(db);
-      htmlDialog.addMessage(dependencies.getHtmlString());
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
+
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='CampaignManagerGroup.do?command=Delete&id=" + id + "'");
       } else {
-        htmlDialog.setHeader("This group cannot be deleted because at least one campaign is using it.");
-        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.groupCampaignHeader"));
+        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -247,37 +267,38 @@ public final class CampaignManagerGroup extends CFSModule {
     if (!hasPermission(context, "campaign-campaigns-groups-add")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
+    boolean isValid = false;
     SearchFormBean thisSearchForm = (SearchFormBean) context.getFormBean();
     SearchCriteriaList thisSCL = thisSearchForm.getSearchCriteriaList();
     try {
       db = this.getConnection(context);
+
+      //do nothing if a criteria isn't chosen    
+      if (!this.validateObject(context, db, thisSearchForm)){
+         return ("InsertOK");
+      }
+      
       thisSCL.setGroupName(thisSearchForm.getGroupName());
       thisSCL.setContactSource(thisSearchForm.getContactSource());
       thisSCL.setEnteredBy(getUserId(context));
       thisSCL.setModifiedBy(getUserId(context));
       thisSCL.setOwner(getUserId(context));
-      recordInserted = thisSCL.insert(db);
-      if (!recordInserted) {
-        processErrors(context, thisSCL.getErrors());
+      isValid = this.validateObject(context, db, thisSCL);
+      if (isValid) {
+        recordInserted = thisSCL.insert(db);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("InsertOK");
-      } else {
-        return (executeCommandAdd(context));
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (recordInserted) {
+      return ("InsertOK");
     }
+    return (executeCommandAdd(context));
   }
 
 
@@ -342,13 +363,19 @@ public final class CampaignManagerGroup extends CFSModule {
     if (!hasPermission(context, "campaign-campaigns-groups-edit")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
+    boolean isValid = false;
     int resultCount = 0;
     SearchFormBean thisSearchForm = (SearchFormBean) context.getRequest().getAttribute("SearchForm");
     SearchCriteriaList thisSCL = thisSearchForm.getSearchCriteriaList();
     try {
       db = this.getConnection(context);
+
+      //do nothing if a criteria isn't chosen    
+      if (!this.validateObject(context, db, thisSearchForm)){
+         return ("UpdateOK");
+      }
+
       thisSCL.setId(Integer.parseInt(context.getRequest().getParameter("id")));
       thisSCL.setGroupName(thisSearchForm.getGroupName());
       thisSCL.setContactSource(thisSearchForm.getContactSource());
@@ -357,37 +384,35 @@ public final class CampaignManagerGroup extends CFSModule {
       if (!hasAuthority(context, thisSCL.getOwner())) {
         return ("PermissionError");
       }
-      resultCount = thisSCL.update(db);
-      if (resultCount == -1) {
-        processErrors(context, thisSCL.getErrors());
-      } else {
+      isValid = this.validateObject(context, db, thisSCL);
+      if (isValid) {
+        resultCount = thisSCL.update(db);
+      }
+      if (resultCount != -1) {
         context.getRequest().setAttribute("id", String.valueOf(thisSCL.getId()));
         context.getSession().removeAttribute("CampaignGroupsPreviewInfo");
         PagedListInfo pagedListInfo = this.getPagedListInfo(context, "CampaignGroupsPreviewInfo");
         pagedListInfo.setLink("CampaignManagerGroup.do?command=Preview&id=" + thisSCL.getId());
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "ManageGroups", "Preview");
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        return executeCommandModify(context);
-      } else if (resultCount == 1) {
-        if ("list".equals(context.getRequest().getParameter("return"))) {
-          return executeCommandView(context);
-        } else {
-          return ("UpdateOK");
-        }
+    if (resultCount == 1) {
+      if ("list".equals(context.getRequest().getParameter("return"))) {
+        return executeCommandView(context);
       } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
+        return ("UpdateOK");
       }
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      if (resultCount == -1) {
+        return executeCommandModify(context);
+      }
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
   }
 
@@ -562,11 +587,16 @@ public final class CampaignManagerGroup extends CFSModule {
     typeList.setPagedListInfo(contactTypeInfo);
     typeList.buildList(db);
     LookupList ctl = typeList.getLookupList("typeId", 0);
+    ctl.setExcludeDisabledIfUnselected(true);
     ctl.setJsEvent("onChange = \"javascript:setText(document.searchForm.typeId)\"");
     context.getRequest().setAttribute("ContactTypeList", ctl);
 
-    LookupList accountTypeList = new LookupList(db, "lookup_account_types");
+    LookupList accountTypeList = new LookupList();
+    accountTypeList.setTableName("lookup_account_types");
     accountTypeList.setSelectSize(1);
+    accountTypeList.setShowDisabledFlag(true);
+    accountTypeList.setExcludeDisabledIfUnselected(true);
+    accountTypeList.buildList(db);
     context.getRequest().setAttribute("AccountTypeList", accountTypeList);
 
     searchFieldList.buildFieldList(db);

@@ -28,37 +28,37 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th colspan="2">
-      <strong>List Item</strong>
+      <strong><dhv:label name="project.listItem">List Item</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Description</td>
+    <td nowrap class="formLabel"><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></td>
     <td>
       <img border="0" src="images/box<%= Task.getComplete()?"-checked":"" %>.gif" alt="" align="absmiddle">
       <%= toHtml(Task.getDescription()) %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Priority</td>
+    <td nowrap class="formLabel"><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></td>
     <td>
       <%= Task.getPriority() %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel" valign="top">Notes</td>
+    <td nowrap class="formLabel" valign="top"><dhv:label name="accounts.accounts_add.Notes">Notes</dhv:label></td>
     <td>
       <%= toHtml(Task.getNotes()) %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td class="formLabel" valign="top">Entered</td>
+    <td class="formLabel" valign="top"><dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label></td>
     <td>
       <dhv:username id="<%= Task.getEnteredBy() %>"/>
       <zeroio:tz timestamp="<%= Task.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
   <tr class="containerBody">
-    <td class="formLabel" valign="top">Modified</td>
+    <td class="formLabel" valign="top"><dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label></td>
     <td>
       <dhv:username id="<%= Task.getModifiedBy() %>"/>
       <zeroio:tz timestamp="<%= Task.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
@@ -67,5 +67,5 @@
 </table>
 <dhv:evaluate if="<%= "true".equals(request.getParameter("popup")) %>">
 <br>
-<input type="button" value="Close" onClick="javascript:window.close()">
+<input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close()">
 </dhv:evaluate>

@@ -15,24 +15,29 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
 
 /**
  *  Description of the Class
  *
  *@author     Mathur
  *@created    January 14, 2003
- *@version    $Id$
+ *@version    $Id: SurveyResponse.java,v 1.4 2004/09/16 19:24:01 mrajkowski Exp
+ *      $
  */
 public class SurveyResponse {
+
+  public static int ADDRESS_UPDATED = 1;
+  public static int ADDRESS_VALID = 0;
+  public static int ADDRESS_NO_RESPONSE = 2;
 
   protected int id = -1;
   private int activeSurveyId = -1;
@@ -42,6 +47,7 @@ public class SurveyResponse {
   private java.sql.Timestamp entered = null;
   private SurveyAnswerList answers = new SurveyAnswerList();
   private Contact contact = null;
+  private int addressUpdated = SurveyResponse.ADDRESS_NO_RESPONSE;
 
 
   /**
@@ -53,9 +59,10 @@ public class SurveyResponse {
   /**
    *  Constructor for the SurveyResponse object
    *
-   *@param  rs  Description of the Parameter
+   *@param  rs                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
-  public SurveyResponse(ResultSet rs) throws SQLException{
+  public SurveyResponse(ResultSet rs) throws SQLException {
     id = rs.getInt("response_id");
     activeSurveyId = rs.getInt("active_survey_id");
     contactId = rs.getInt("contact_id");
@@ -153,6 +160,26 @@ public class SurveyResponse {
    */
   public void setContact(Contact contact) {
     this.contact = contact;
+  }
+
+
+  /**
+   *  Sets the addressUpdated attribute of the SurveyResponse object
+   *
+   *@param  tmp  The new addressUpdated value
+   */
+  public void setAddressUpdated(int tmp) {
+    this.addressUpdated = tmp;
+  }
+
+
+  /**
+   *  Sets the addressUpdated attribute of the SurveyResponse object
+   *
+   *@param  tmp  The new addressUpdated value
+   */
+  public void setAddressUpdated(String tmp) {
+    this.addressUpdated = Integer.parseInt(tmp);
   }
 
 
@@ -265,6 +292,16 @@ public class SurveyResponse {
 
 
   /**
+   *  Gets the addressUpdated attribute of the SurveyResponse object
+   *
+   *@return    The addressUpdated value
+   */
+  public int getAddressUpdated() {
+    return addressUpdated;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -276,12 +313,13 @@ public class SurveyResponse {
       db.setAutoCommit(false);
       String sql =
           "INSERT INTO active_survey_responses " +
-          "(active_survey_id, contact_id, unique_code, ip_address) VALUES (?, ?, ?, ?) ";
+          "(active_survey_id, contact_id, unique_code, ip_address, address_updated) VALUES (?, ?, ?, ?, ?) ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setInt(1, activeSurveyId);
       pst.setInt(2, contactId);
       pst.setString(3, uniqueCode);
       pst.setString(4, ipAddress);
+      pst.setInt(5, addressUpdated);
       pst.execute();
       pst.close();
 

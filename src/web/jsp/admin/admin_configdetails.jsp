@@ -25,8 +25,8 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> > 
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> > 
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <%= PermissionCategory.getCategory() %>
 </td>
 </tr>
@@ -35,7 +35,7 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Configuration Options</strong>
+      <strong><dhv:label name="admin.configureOptions">Configuration Options</dhv:label></strong>
     </th>
   </tr>
 <% 
@@ -49,7 +49,7 @@
   <dhv:permission name="admin-sysconfig-categories-view">
   <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
   <tr class="row<%= rowid %>">
-    <td><a href="AdminCategories.do?command=Show&moduleId=<%= PermissionCategory.getId() %>">Categories</a></td>
+    <td><a href="AdminCategories.do?command=Show&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="product.Categories">Categories</dhv:label></a></td>
   </tr>
   </dhv:permission>
 <%}%>
@@ -60,7 +60,7 @@
   <dhv:permission name="admin-sysconfig-folders-view">
   <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
   <tr class="row<%= rowid %>">
-    <td><a href="AdminFieldsFolder.do?modId=<%= PermissionCategory.getId() %>">Custom Folders &amp; Fields</a></td>
+    <td><a href="AdminFieldsFolder.do?modId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.customFoldersAndFields" param="amp=&amp;">Custom Folders &amp; Fields</dhv:label></a></td>
   </tr>
   </dhv:permission>
 <%}%>
@@ -71,7 +71,7 @@
   <dhv:permission name="admin-sysconfig-lists-view">
   <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
   <tr class="row<%= rowid %>">
-    <td><a href="Admin.do?command=EditLists&moduleId=<%= PermissionCategory.getId() %>">Lookup Lists</a></td>
+    <td><a href="Admin.do?command=EditLists&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.lookupLists">Lookup Lists</dhv:label></a></td>
   </tr>
   </dhv:permission>
 <%}%>
@@ -83,7 +83,7 @@
   <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
   <tr class="row<%= rowid %>">
     <td>
-      <a href="AdminObjectEvents.do?moduleId=<%= PermissionCategory.getId() %>">Object Events</a>
+      <a href="AdminObjectEvents.do?moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.objectEvents">Object Events</dhv:label></a>
       <%--<i>Object events are background processes that are triggered by an action</i>--%>
     </td>
   </tr>
@@ -97,8 +97,21 @@
   <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
   <tr class="row<%= rowid %>">
     <td>
-      <a href="AdminScheduledEvents.do?moduleId=<%= PermissionCategory.getId() %>">Scheduled Events</a>
+      <a href="AdminScheduledEvents.do?moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.scheduledEvents">Scheduled Events</dhv:label></a>
       <%--<i>Scheduled events are background processes that can run continously or at a specific date and time</i>--%>
+    </td>
+  </tr>
+  </dhv:permission>
+<%}%>
+<%-- Logos --%>
+<% 
+  if (PermissionCategory.getLogos()) { 
+%>
+  <dhv:permission name="admin-sysconfig-logos-view"> 
+  <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
+  <tr class="row<%= rowid %>">
+    <td>
+      <a href="AdminLogos.do?command=View&moduleId=<%= PermissionCategory.getId() %>">Logos</a>
     </td>
   </tr>
   </dhv:permission>
@@ -109,17 +122,17 @@
 %>
   <dhv:permission name="admin-sysconfig-products-view">
   <% ++count; rowid = (rowid != 1 ? 1 : 2); %>
-  <tr class="row<%= rowid %>">
-    <td>
-      <a href="ProductsCatalog.do?command=ListAllProducts&moduleId=<%= PermissionCategory.getId() %>">Labor Category Editor</a>
-    </td>
-  </tr>
+	<tr class="row<%= rowid %>">
+		<td>
+			<a href="ProductCatalogEditor.do?command=List&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.productCatalogEditor">Product Catalog Editor</dhv:label></a>
+		</td>
+	</tr>
   </dhv:permission>
 <%}%>
 <%-- Nothing to configure --%>
 <dhv:evaluate if="<%= count == 0 %>">
   <tr>
-    <td>Nothing to configure in this module.</td>
+    <td><dhv:label name="admin.nothingToConfigure.text">Nothing to configure in this module.</dhv:label></td>
   </tr>
 </dhv:evaluate>
 </table>

@@ -15,16 +15,14 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.base.EmailAddressList;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.EmailAddressList;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *  Contains a list of email addresses... currently used to build the list from
@@ -56,9 +54,16 @@ public class OrganizationEmailAddressList extends EmailAddressList {
    */
   public OrganizationEmailAddressList(HttpServletRequest request) {
     int i = 0;
+    int primaryEmail = -1;
+    if (request.getParameter("primaryEmail") != null) {
+      primaryEmail = Integer.parseInt((String) request.getParameter("primaryEmail"));
+    }
     while (request.getParameter("email" + (++i) + "type") != null) {
       OrganizationEmailAddress thisEmailAddress = new OrganizationEmailAddress();
       thisEmailAddress.buildRecord(request, i);
+      if (primaryEmail == i) {
+        thisEmailAddress.setPrimaryEmail(true);
+      }
       if (thisEmailAddress.isValid()) {
         this.addElement(thisEmailAddress);
       }

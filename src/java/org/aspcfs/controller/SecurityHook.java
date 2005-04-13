@@ -73,14 +73,12 @@ public class SecurityHook implements ControllerHook {
         action.toUpperCase().startsWith("PROCESS")) {
       return null;
     }
-
     // BEGIN DHV CODE ONLY
     //Version check
     if (applicationPrefs.isUpgradeable()) {
       return "UpgradeCheck";
     }
     // END DHV CODE ONLY
-
     //User is supposed to have a valid session, so fail security check
     if (userSession == null) {
       LoginBean failedSession = new LoginBean();
@@ -228,6 +226,8 @@ public class SecurityHook implements ControllerHook {
       //Cache the project names, updated by hooks
       HashMap projectNameCache = ProjectList.buildNameList(db);
       newSystemStatus.getObjects().put(Constants.SYSTEM_PROJECT_NAME_LIST, projectNameCache);
+      //Give the systemStatus a handle to applicationPrefs for language support
+      newSystemStatus.setApplicationPrefs(prefs);
     }
     return (SystemStatus) statusList.get(ce.getUrl());
   }

@@ -26,7 +26,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <script language="JavaScript">
   function confirmApprove() {
-    if(confirmAction('Are you sure?')){
+    if(confirmAction(label("are.you.sure", "Are you sure?"))){
       window.location.href='AccountContactsImports.do?command=Approve&importId=<%= ImportDetails.getId() %>';
     }
   }
@@ -36,30 +36,30 @@
 <tr>
   <td>
     <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> >
-    <a href="AccountContactsImports.do?command=View">View Imports</a> >
-    Import Details
+    <a href="AccountContactsImports.do?command=View"><dhv:label name="accounts.ViewImports">View Imports</dhv:label></a> >
+    <dhv:label name="accounts.ImportDetails">Import Details</dhv:label>
   </td>
 </tr>
 </table>
 <%-- Import Details --%>
 <% if(ImportDetails.canProcess()){ %>
 <dhv:permission name="accounts-accounts-contacts-imports-add">
-<input type="button" value="Process" onClick="javascript:window.location.href='AccountContactsImports.do?command=InitValidate&importId=<%= ImportDetails.getId() %>'">
+<input type="button" value="<dhv:label name="accounts.accounts_contacts_detailsimport.Process">Process</dhv:label>" onClick="javascript:window.location.href='AccountContactsImports.do?command=InitValidate&importId=<%= ImportDetails.getId() %>'">
 </dhv:permission>
 <% } %>
 <dhv:evaluate if="<%= ImportDetails.canApprove() %>">
 <dhv:permission name="accounts-accounts-contacts-imports-edit">
-<input type="button" value="Approve" onClick="javascript:confirmApprove();">
+<input type="button" value="<dhv:label name="accounts.accounts_contacts_detailsimport.Approve">Approve</dhv:label>" onClick="javascript:confirmApprove();">
 </dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate if="<%= ImportDetails.canDelete() %>">
 <dhv:permission name="accounts-accounts-contacts-imports-delete">
-<input type="button" value="Delete" onClick="javascript:popURL('AccountContactsImports.do?command=ConfirmDelete&importId=<%= ImportDetails.getId() %>','Delete_message','320','200','yes','no');">
+<input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURL('AccountContactsImports.do?command=ConfirmDelete&importId=<%= ImportDetails.getId() %>','Delete_message','320','200','yes','no');">
 </dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate if="<%= ImportDetails.hasBeenProcessed() %>">
 <dhv:permission name="accounts-accounts-contacts-imports-view">
-<input type="button" value="View Results" onClick="javascript:window.location.href='AccountContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>';">
+<input type="button" value="<dhv:label name="global.button.ViewResults">View Results</dhv:label>" onClick="javascript:window.location.href='AccountContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>';">
 </dhv:permission>
 </dhv:evaluate>
 <% boolean breakAdded = false; %>
@@ -85,12 +85,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Details</strong>
+      <strong><dhv:label name="contacts.details">Details</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    Name
+    <dhv:label name="contacts.name">Name</dhv:label>
   </td>
   <td>
     <%= toString(ImportDetails.getName()) %>
@@ -98,7 +98,7 @@
   </tr>
   <tr class="containerBody">
   <td valign="top" class="formLabel" nowrap>
-    Description
+    <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
   </td>
   <td>
     <%= toHtml(ImportDetails.getDescription()) %>
@@ -106,23 +106,23 @@
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    File
+    <dhv:label name="contacts.companydirectory_confirm_importupload.File">File</dhv:label>
   </td>
   <td>
-    <%= ImportDetails.getFile().getVersion(Import.IMPORT_FILE_VERSION).getClientFilename() %>&nbsp;&nbsp;[ <a href="javascript:window.location.href='AccountContactsImports.do?command=Download&importId=<%= ImportDetails.getId() %>&fid=<%= ImportDetails.getFile().getId() %>&ver=<%= Import.IMPORT_FILE_VERSION %>'">Download File</a> ]
+    <%= ImportDetails.getFile().getVersion(Import.IMPORT_FILE_VERSION).getClientFilename() %>&nbsp;&nbsp;[ <a href="javascript:window.location.href='AccountContactsImports.do?command=Download&importId=<%= ImportDetails.getId() %>&fid=<%= ImportDetails.getFile().getId() %>&ver=<%= Import.IMPORT_FILE_VERSION %>'"><dhv:label name="accounts.accounts_contacts_detailsimport.DownloadFile">Download File</dhv:label></a> ]
   </td>
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    File Size
+    <dhv:label name="contacts.companydirectory_confirm_importupload.FileSize">File Size</dhv:label>
   </td>
   <td>
-    <%= ImportDetails.getFile().getRelativeSize() %> k&nbsp;
+    <%= ImportDetails.getFile().getRelativeSize() %> <dhv:label name="admin.oneThousand.abbreviation">k</dhv:label>&nbsp;
   </td>
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    Status
+    <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
   </td>
   <td>
     <%= ImportDetails.getStatusString() %> &nbsp;
@@ -131,7 +131,7 @@
   <dhv:evaluate if="<%= !ImportDetails.canProcess() %>">
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    Imported Records
+    <dhv:label name="accounts.accounts_contacts_detailsimport.ImportedRecords">Imported Records</dhv:label>
   </td>
   <td>
     <%= ImportDetails.getTotalImportedRecords() %> &nbsp;
@@ -139,12 +139,12 @@
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    Failed Records
+    <dhv:label name="accounts.accounts_contacts_detailsimport.FailedRecords">Failed Records</dhv:label>
   </td>
   <td>
     <%= ImportDetails.getTotalFailedRecords() %> &nbsp;
     <dhv:evaluate if="<%= ImportDetails.getFile().hasVersion(Import.ERROR_FILE_VERSION) %>">
-      &nbsp;<%= ImportDetails.getFile().getImageTag("-23") %>[ <a href="javascript:window.location.href='AccountContactsImports.do?command=Download&importId=<%= ImportDetails.getId() %>&fid=<%= ImportDetails.getFile().getId() %>&ver=<%= Import.ERROR_FILE_VERSION %>';">  Download Error File</a> ]
+      &nbsp;<%= ImportDetails.getFile().getImageTag("-23") %>[ <a href="javascript:window.location.href='AccountContactsImports.do?command=Download&importId=<%= ImportDetails.getId() %>&fid=<%= ImportDetails.getFile().getId() %>&ver=<%= Import.ERROR_FILE_VERSION %>';">  <dhv:label name="accounts.accounts_contacts_detailsimport.DownloadErrorFile">Download Error File</dhv:label></a> ]
     </dhv:evaluate>
   </td>
   </tr>
@@ -152,7 +152,7 @@
   
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    Entered
+    <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
   </td>
   <td>
     <dhv:username id="<%= ImportDetails.getEnteredBy() %>"/>
@@ -161,7 +161,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Modified
+      <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>
     </td>
     <td>
       <dhv:username id="<%= ImportDetails.getModifiedBy() %>"/>
@@ -171,21 +171,21 @@
 </table><br>
 <% if(ImportDetails.canProcess()){ %>
 <dhv:permission name="accounts-accounts-contacts-imports-add">
-<input type="button" value="Process" onClick="javascript:window.location.href='AccountContactsImports.do?command=InitValidate&importId=<%= ImportDetails.getId() %>'">
+<input type="button" value="<dhv:label name="accounts.accounts_contacts_detailsimport.Process">Process</dhv:label>" onClick="javascript:window.location.href='AccountContactsImports.do?command=InitValidate&importId=<%= ImportDetails.getId() %>'">
 </dhv:permission>
 <% } %>
 <dhv:evaluate if="<%= ImportDetails.canApprove() %>">
 <dhv:permission name="accounts-accounts-contacts-imports-edit">
-<input type="button" value="Approve" onClick="javascript:confirmApprove();">
+<input type="button" value="<dhv:label name="accounts.accounts_contacts_detailsimport.Approve">Approve</dhv:label>" onClick="javascript:confirmApprove();">
 </dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate if="<%= ImportDetails.canDelete() %>">
 <dhv:permission name="accounts-accounts-contacts-imports-delete">
-<input type="button" value="Delete" onClick="javascript:popURL('AccountContactsImports.do?command=ConfirmDelete&importId=<%= ImportDetails.getId() %>','Delete_message','320','200','yes','no');">
+<input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURL('AccountContactsImports.do?command=ConfirmDelete&importId=<%= ImportDetails.getId() %>','Delete_message','320','200','yes','no');">
 </dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate if="<%= ImportDetails.hasBeenProcessed() %>">
 <dhv:permission name="accounts-accounts-contacts-imports-view">
-<input type="button" value="View Results" onClick="javascript:window.location.href='AccountContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>';">
+<input type="button" value="<dhv:label name="global.button.ViewResults">View Results</dhv:label>" onClick="javascript:window.location.href='AccountContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>';">
 </dhv:permission>
 </dhv:evaluate>

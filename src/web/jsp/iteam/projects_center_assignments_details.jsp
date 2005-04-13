@@ -31,40 +31,42 @@
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        <strong>Activity Details</strong>
+        <strong><dhv:label name="accounts.accounts_contacts_calls_add.ActivityDetails">Activity Details</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
-      <td valign="top" nowrap class="formLabel">Description</td>
+      <td valign="top" nowrap class="formLabel"><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></td>
       <td valign="top" nowrap><%= toHtml(Assignment.getRole()) %></td>
     </tr>
     <tr class="containerBody">
-      <td class="formLabel">Priority</td>
+      <td class="formLabel"><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></td>
       <td valign="top"><%= toHtml(PriorityList.getValueFromId(Assignment.getPriorityId())) %></td>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel">Assigned To</td>
-      <td valign="top"><dhv:username id="<%= Assignment.getUserAssignedId() %>"/></td>
-    </tr>
-    <tr class="containerBody">
-      <td nowrap class="formLabel" valign="top">Status</td>
-      <td>
-        <%= toHtml(StatusList.getValueFromId(Assignment.getStatusId())) %> (<%= toHtml(StatusPercentList.getValueFromId(Assignment.getPercentComplete())) %>)
-      </td>
-    </tr>
-    <tr class="containerBody">
-      <td nowrap class="formLabel">Keywords</td>
+      <td nowrap class="formLabel"><dhv:label name="project.keywords">Keywords</dhv:label></td>
       <td valign="top">
         <%= toHtml(Assignment.getTechnology()) %>
       </td>
     </tr>
+  </table>
+  <br />
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+    <tr>
+      <th colspan="2">
+        Assignment
+      </th>
+    </tr>
     <tr class="containerBody">
-      <td class="formLabel" valign="top" nowrap>Level of Effort</td>
+      <td nowrap class="formLabel"><dhv:label name="accounts.accounts_contacts_calls_list.AssignedTo">Assigned To</dhv:label></td>
+      <td valign="top"><dhv:username id="<%= Assignment.getUserAssignedId() %>"/></td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" valign="top" nowrap><dhv:label name="project.levelOfEffort">Level of Effort</dhv:label></td>
       <td>
         <table border="0" cellspacing="0" cellpadding="0" class="empty">
           <tr>
             <td align="right">
-              Estimated:
+              <dhv:label name="project.estimated.colon">Estimated:</dhv:label>
             </td>
             <td>
               <%= Assignment.getEstimatedLoeString() %>
@@ -72,7 +74,7 @@
           </tr>
           <tr>
             <td align="right">
-              Actual:
+              <dhv:label name="project.actual">Actual:</dhv:label>
             </td>
             <td>
               <%= Assignment.getActualLoeString() %>
@@ -82,11 +84,30 @@
       </td>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel">Due Date</td>
+      <td nowrap class="formLabel">Start Date</td>
+      <td valign="top"><zeroio:tz timestamp="<%= Assignment.getEstStartDate() %>" dateOnly="true" default="&nbsp;"/></td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel"><dhv:label name="accounts.accounts_calls_list.DueDate">Due Date</dhv:label></td>
       <td valign="top"><zeroio:tz timestamp="<%= Assignment.getDueDate() %>" dateOnly="true"/></td>
     </tr>
   </table>
+  <br />
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+    <tr>
+      <th colspan="2">
+        Progress
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel" valign="top"><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>
+      <td>
+        <%= toHtml(StatusList.getValueFromId(Assignment.getStatusId())) %> (<%= toHtml(StatusPercentList.getValueFromId(Assignment.getPercentComplete())) %>)
+        (<%= toHtml(StatusPercentList.getValueFromId(Assignment.getPercentComplete())) %>)
+      </td>
+    </tr>
+  </table>
 <dhv:evaluate if="<%= isPopup(request) %>">
-  <br>
-  <input type="button" value="Close" onClick="javascript:window.close()"/>
+  <br />
+  <input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close()"/>
 </dhv:evaluate>

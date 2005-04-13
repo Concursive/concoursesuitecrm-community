@@ -15,12 +15,16 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import java.util.Calendar;
-import java.text.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.Calendar;
 
 /**
  *  Description of the Class
@@ -47,7 +51,8 @@ public class IssueReply extends GenericBean {
   //helpers
   private int projectId = -1;
   private int categoryId = -1;
-
+  //Resources
+  private FileItemList files = null;
 
   /**
    *  Constructor for the IssueReply object
@@ -565,30 +570,15 @@ public class IssueReply extends GenericBean {
   }
 
 
-
-  /**
-   *  Gets the valid attribute of the IssueReply object
-   *
-   *@return    The valid value
-   */
-  private boolean isValid() {
-    if (issueId == -1) {
-      errors.put("actionError", "Issue ID not specified");
-    }
-    if (subject == null || subject.equals("")) {
-      errors.put("subjectError", "Required field");
-    }
-    if (body == null || body.equals("")) {
-      errors.put("bodyError", "Required field");
-    }
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
+  public FileItemList getFiles() {
+    return files;
   }
 
+  public boolean hasFiles() {
+    return (files != null && files.size() > 0);
+  }
 
+  
   /**
    *  Description of the Method
    *
@@ -597,9 +587,6 @@ public class IssueReply extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO project_issue_replies " +
@@ -685,9 +672,9 @@ public class IssueReply extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public synchronized boolean delete(Connection db) throws SQLException {
+  public synchronized boolean delete(Connection db, String filePath) throws SQLException {
     if (id == -1 || issueId == -1 || projectId == -1 || categoryId == -1) {
-      throw new SQLException("ID was not specified");
+      throw new SQLException("IssueReply ID was not specified");
     }
     boolean canDelete = false;
     try {
@@ -706,7 +693,9 @@ public class IssueReply extends GenericBean {
       rs.close();
       pst.close();
       if (canDelete) {
+        buildFiles(db);
         db.setAutoCommit(false);
+        files.delete(db, filePath);
         //Update the category count
         pst = db.prepareStatement(
             "UPDATE project_issues_categories " +
@@ -758,7 +747,7 @@ public class IssueReply extends GenericBean {
     if (this.getId() == -1 || this.issueId == -1) {
       throw new SQLException("ID was not specified");
     }
-    if (!isValid()) {
+    if (this.getId() == -1) {
       return -1;
     }
     int resultCount = 0;
@@ -781,6 +770,13 @@ public class IssueReply extends GenericBean {
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;
+  }
+  
+  public void buildFiles(Connection db) throws SQLException {
+    files = new FileItemList();
+    files.setLinkModuleId(Constants.DISCUSSION_FILES_REPLY);
+    files.setLinkItemId(this.getId());
+    files.buildList(db);
   }
 }
 

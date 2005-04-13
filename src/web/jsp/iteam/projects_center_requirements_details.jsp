@@ -18,6 +18,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="Requirement" class="com.zeroio.iteam.base.Requirement" scope="request"/>
@@ -26,34 +27,34 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th colspan="2">
-      <strong>Outline: <%= toHtml(Requirement.getShortDescription()) %></strong>
+      <strong><dhv:label name="project.outline.colon" param="<%= "outline="+toHtml(Requirement.getShortDescription()) %>">Outline: <%= toHtml(Requirement.getShortDescription()) %></dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel" valign="top">Details</td>
+    <td nowrap class="formLabel" valign="top"><dhv:label name="contacts.details">Details</dhv:label></td>
     <td>
       <%= toHtml(Requirement.getDescription()) %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Requested By</td>
+    <td nowrap class="formLabel"><dhv:label name="documents.details.requestedBy">Requested By</dhv:label></td>
     <td>
       <%= toHtml(Requirement.getSubmittedBy()) %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel" valign="top">Department or<br>Company</td>
+    <td nowrap class="formLabel" valign="top">Department or<br><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></td>
     <td valign="top">
       <%= toHtml(Requirement.getDepartmentBy()) %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel" valign="top">Expected Dates</td>
+    <td nowrap class="formLabel" valign="top"><dhv:label name="project.expectedDates">Expected Dates</dhv:label></td>
     <td>
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td align="right">
-            Start:
+            <dhv:label name="project.start.colon">Start:</dhv:label>
           </td>
           <td>
             &nbsp;
@@ -66,7 +67,7 @@
         </tr>
         <tr>
           <td align="right">
-            Finish:
+            <dhv:label name="project.finish.colon">Finish:</dhv:label>
           </td>
           <td>
             &nbsp;<zeroio:tz timestamp="<%= Requirement.getDeadline() %>" dateOnly="true" timeZone="<%= Requirement.getDeadlineTimeZone() %>" showTimeZone="true" default="--"/>
@@ -80,12 +81,12 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel" valign="top">Level of Effort</td>
+    <td nowrap class="formLabel" valign="top"><dhv:label name="project.levelOfEffort">Level of Effort</dhv:label></td>
     <td>
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td align="right">
-            Estimated:
+            <dhv:label name="project.estimated.colon">Estimated:</dhv:label>
           </td>
           <td>
             &nbsp;<%= toHtml(Requirement.getEstimatedLoeString()) %>
@@ -93,7 +94,7 @@
         </tr>
         <tr>
           <td align="right">
-            Actual:
+            <dhv:label name="project.actual">Actual:</dhv:label>
           </td>
           <td>
             &nbsp;<%= toHtml(Requirement.getActualLoeString()) %>
@@ -103,13 +104,21 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel" valign="top">Status</td>
+    <td nowrap class="formLabel" valign="top"><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>
     <td>
-      Outline <%= (Requirement.getApproved()?"":"not") %> approved
-      <br>
-      Outline <%= (Requirement.getClosed()?"Closed":"Open") %>
+      <% if(Requirement.getApproved()) { %>
+        <dhv:label name="project.outlineApproved">Outline Approved</dhv:label>
+      <% } else { %>
+        <dhv:label name="project.outlineNotApproved">Outline Not Approved</dhv:label>
+      <% } %>
+      <br />
+      <% if(Requirement.getClosed()) { %>
+        <dhv:label name="project.outlineClosed">Outline Closed</dhv:label>
+      <% } else { %>
+        <dhv:label name="project.outlineOpen">Outline Open</dhv:label>
+      <% } %>
     </td>
   </tr>    
 </table>
 <br />
-<input type="button" value="Close" onClick="javascript:window.close()"/>
+<input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close()"/>

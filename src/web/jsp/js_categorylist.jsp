@@ -4,6 +4,9 @@
 <html>
 <head>
 </head>
+<%
+  String form = request.getParameter("form");
+%>
 <body onload="page_init();">
 <script language="JavaScript">
 function newOpt(param, value) {
@@ -13,7 +16,7 @@ function newOpt(param, value) {
   return newOpt;
 }
 function page_init() {
-  var list = parent.document.forms[0].elements['level<%= categoryList.getCatLevel() + 1 %>'];
+  var list = parent.document.<%= form %>.elements['level<%= categoryList.getCatLevel() + 1 %>'];
   resetList(list);
 <%
   Iterator list = categoryList.iterator();
@@ -29,7 +32,7 @@ function page_init() {
   //       total of 3 levels
   for (int k = categoryList.getCatLevel() + 2; k < 4; k++) {
 %>
-  resetList(parent.document.forms[0].elements['level<%= k %>']);
+  resetList(parent.document.<%= form %>.elements['level<%= k %>']);
 <%}%>
 }
 function resetList(list) {

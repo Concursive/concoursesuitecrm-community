@@ -63,7 +63,7 @@
     formTest = true;
     message = "";
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     } else {
       return true;
@@ -75,18 +75,18 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> > 
-Usage
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> > 
+<dhv:label name="Usage">Usage</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-Current Usage and Billing Usage Information<br>
+<dhv:label name="admin.currentUsage.text">Current Usage and Billing Usage Information</dhv:label><br>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>
-      <strong>Current system resources:</strong>
+      <strong><dhv:label name="admin.currentSystemResources.colon">Current system resources:</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -108,16 +108,16 @@ Current Usage and Billing Usage Information<br>
   <form name="usage" action="Admin.do?command=Usage" onSubmit="return checkForm(this);" method="post">
     <tr>
       <td nowrap valign="top">
-        Date Range:
+        <dhv:label name="admin.dateRange.colon">Date Range:</dhv:label>
         <select name="rangeSelect" onChange="javascript:checkSubmit();">
-          <option value="today">Today</option>
-          <option value="custom"<%= ("custom".equals(rangeSelect)?" selected":"") %>>Custom Date Range</option>
+          <option value="today"><dhv:label name="calendar.Today">Today</dhv:label></option>
+          <option value="custom"<%= ("custom".equals(rangeSelect)?" selected":"") %>><dhv:label name="admin.customDateRange">Custom Date Range</dhv:label></option>
         </select>
       </td>
       <td nowrap align="right">
         <span name="customFields3" id="customFields3" style="display:none">
-          Start:<br>
-          End:
+          <dhv:label name="project.start.colon">Start:</dhv:label><br>
+          <dhv:label name="admin.end.colon">End:</dhv:label>
         </span>
       </td>
       <td nowrap align="left">
@@ -131,7 +131,7 @@ Current Usage and Billing Usage Information<br>
       </td>
       <td width="100%" align="left" valign="top" nowrap>
         <span name="customFields2" id="customFields2" style="display:none">
-          <input type="submit" value="Update" name="Update">
+          <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Update">
         </span>
       </td>
     </tr>
@@ -140,7 +140,7 @@ Current Usage and Billing Usage Information<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>
-      <strong>Usage for <zeroio:tz timestamp="<%= dateStart %>" dateOnly="true" /> - <zeroio:tz timestamp="<%= dateEnd %>" dateOnly="true" /></strong>
+      <strong><dhv:label name="admin.usageFor" param="<%= "startDate="+getTime(pageContext,dateStart,"&nbsp;",DateFormat.SHORT,false,false,true,"&nbsp;")+"|endDate="+getTime(pageContext,dateEnd,"&nbsp;",DateFormat.SHORT,false,false,true,"&nbsp;") %>">Usage for <zeroio:tz timestamp="<%= dateStart %>" dateOnly="true" /> - <zeroio:tz timestamp="<%= dateEnd %>" dateOnly="true" /></dhv:label></strong>
     </th>
   </tr>
 <%
@@ -158,6 +158,6 @@ Current Usage and Billing Usage Information<br>
 %>
 </table>
 <br>
-Application Version: <%= toHtml(applicationVersion) %><br>
-Database Version: (<%= toHtml(databaseVersion) %>)
+<dhv:label name="admin.applicationVersion.colon">Application Version:</dhv:label> <%= toHtml(applicationVersion) %><br>
+<dhv:label name="admin.databaseVersion.colon">Database Version:</dhv:label> (<%= toHtml(databaseVersion) %>)
 </body>

@@ -35,7 +35,6 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body>
 <form name="details" action="TroubleTickets.do?command=Update&auto-populate=true" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -45,8 +44,8 @@
 <% if (("list".equals((String)request.getParameter("return"))) ||
       ("searchResults".equals((String)request.getParameter("return")))) {%>
     <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
-      <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-      <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+      <a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+      <a href="TroubleTickets.do?command=SearchTickets"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
     <%}else{%> 
       <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
     <%}%>
@@ -63,48 +62,42 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + TicketDetails.getId(); %>
-<dhv:container name="tickets" selected="details" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-  	<td class="containerBack" width="100%">
-      <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-        <font color="red"><dhv:label name="tickets.alert.closed">This ticket has been closed:</dhv:label>
-        <zeroio:tz timestamp="<%= TicketDetails.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
-        </font><br />
-      </dhv:evaluate>
-				<% if (TicketDetails.getClosed() != null) { %>
-					<input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
-					<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
-				<%} else {%>
-					<input type="submit" value="Update" onClick="return checkForm(this.form)">
-					<% if ("list".equals(request.getParameter("return"))) {%>
-						<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
-					<%} else if ("searchResults".equals(request.getParameter("return"))){%> 
-						<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=SearchTickets'">
-					<% }else {%>
-						<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
-					<%}%>
+<dhv:container name="tickets" selected="details" object="TicketDetails" param="<%= param1 %>">
+  <%@ include file="ticket_header_include.jsp" %>
+  <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
+    <font color="red"><dhv:label name="tickets.alert.closed">This ticket has been closed:</dhv:label>
+    <zeroio:tz timestamp="<%= TicketDetails.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
+    </font><br />
+  </dhv:evaluate>
+    <% if (TicketDetails.getClosed() != null) { %>
+      <input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
+    <%} else {%>
+      <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="return checkForm(this.form)">
+      <% if ("list".equals(request.getParameter("return"))) {%>
+        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
+      <%} else if ("searchResults".equals(request.getParameter("return"))){%>
+        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=SearchTickets'">
+      <% }else {%>
+        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
       <%}%>
-      <br />
-      <dhv:formMessage />
-      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+  <%}%>
+  <br />
+  <dhv:formMessage />
+  <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
   <%@ include file="troubletickets_modify_include.jsp" %>
   <% if (TicketDetails.getClosed() != null) { %>
-    <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
+    <input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>';submit();">
   <%} else {%>
-    <input type="submit" value="Update" onClick="return checkForm(this.form)">
+    <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="return checkForm(this.form)">
   <%}%>
 	<% if ("list".equals(request.getParameter("return"))) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
+	<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
   <%} else if ("searchResults".equals(request.getParameter("return"))){%> 
-    <input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=SearchTickets'">
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=SearchTickets'">
   <%} else {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
+	<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>'">
   <%}%>
-  </td>
- </tr>
-</table>
+</dhv:container>
 </form>
-</body>

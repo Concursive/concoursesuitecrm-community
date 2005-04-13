@@ -18,26 +18,26 @@
   --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <th>
-      <strong>Action</strong>
+    <th width="8">
+      &nbsp;
     </th>
     <th width="15%" nowrap>
-      <strong>Serial Number</strong>
+      <strong><dhv:label name="accounts.accountasset_include.SerialNumber">Serial Number</dhv:label></strong>
     </th>
     <th width="15%">
-      <strong>Service Contract</strong>
+      <strong><dhv:label name="accounts.accountasset_include.ServiceContract">Service Contract</dhv:label></strong>
     </th>
     <th width="15%" nowrap>
-      <strong>Manufacturer</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Manufacturer">Manufacturer</dhv:label></strong>
     </th>
     <th width="15%" nowrap>
-      <strong>Model Version</strong>
+      <strong><dhv:label name="accounts.accountasset_include.ModelVersion">Model/Version</dhv:label></strong>
     </th>
     <th width="25%" nowrap>
-      <strong>Category</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Category">Category</dhv:label></strong>
     </th>
     <th width="15%" nowrap>
-      <strong>Status</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
     </th>
   </tr>
   <% 
@@ -88,7 +88,7 @@
     %>
     <tr class="containerBody">
       <td colspan="7">
-        No assets found.
+        <dhv:label name="accounts.accounts_asset_list_include.NoAssetsFound">No assets found.</dhv:label>
       </td>
     </tr>
     <%

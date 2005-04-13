@@ -19,7 +19,8 @@
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.utils.web.*" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.utils.web.*,
+                 org.aspcfs.modules.base.Constants" %>
 <%@ page import="org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
@@ -28,7 +29,7 @@
 <%@ include file="../initPage.jsp" %>
 <%-- Editor must go here, before the body onload --%>
 <dhv:evaluate if="<%= !clientType.showApplet() %>">
-<jsp:include page="htmlarea_include.jsp" flush="true"/>
+<jsp:include page="../htmlarea_include.jsp" flush="true"/>
 <body onload="initEditor('message');">
 </dhv:evaluate>
 <%-- Use applet instead --%>
@@ -36,6 +37,10 @@
 <body onload="document.inputForm.subject.focus();">
 </dhv:evaluate>
 <script language="JavaScript">
+<%-- Setup Image Library --%>
+    var ilConstant = <%= Constants.NEWSARTICLE_FILES %>;
+    var ilId = <%= newsArticle.getId() %>;
+<%-- Validations --%>
   function checkForm(form) {
     var formTest = true;
     var messageText = "";
@@ -44,11 +49,11 @@
 </dhv:evaluate>
     //Check required fields
     if (document.inputForm.message.value == "") {    
-      messageText += "- Message is a required field\r\n";
+      messageText += label("check.message.required","- Message is a required field\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The message could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("check.message","The message could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
       alert(messageText);
       return false;
     } else {
@@ -62,27 +67,27 @@
     <td>
       <img src="images/icons/stock_announcement-16.gif" border="0" align="absmiddle">
       <a href="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>"><zeroio:tabLabel name="News" object="Project"/></a> >
-      <a href="ProjectManagementNews.do?command=Edit&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>">Edit Article</a> >
-      Add Page
+      <a href="ProjectManagementNews.do?command=Edit&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>"><dhv:label name="project.editArticle">Edit Article</dhv:label></a> >
+      <dhv:label name="project.addPage">Add Page</dhv:label>
     </td>
   </tr>
 </table>
 <br>
-  <input type="submit" value=" Save " />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" />
   <dhv:evaluate if="<%= newsArticle.getMessage() != null %>">
     <input type="button" value="Delete this page" onClick="javascript:window.location.href='ProjectManagementNews.do?command=DeletePage&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>';">
   </dhv:evaluate>
-  <input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagementNews.do?command=Edit&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>';"><br>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ProjectManagementNews.do?command=Edit&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>';"><br>
   <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2" align="left">
-        <strong>Add Page</strong>
+        <strong><dhv:label name="project.addPage">Add Page</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
       <td class="formLabel" valign="top">
-        Subject
+        <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
       </td>
       <td>
         <%= toHtml(newsArticle.getSubject()) %>
@@ -90,7 +95,7 @@
     </tr>
     <tr class="containerBody">
       <td class="formLabel" valign="top">
-        Page 2
+        <dhv:label name="project.pageTwo">Page 2</dhv:label>
       </td>
       <td>
         <table border="0" cellpadding="0" cellspacing="0" class="empty">
@@ -156,11 +161,11 @@
     </tr>
   </table>
   <br />
-  <input type="submit" value=" Save " />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" />
   <dhv:evaluate if="<%= newsArticle.getMessage() != null %>">
     <input type="button" value="Delete this page" onClick="javascript:window.location.href='ProjectManagementNews.do?command=DeletePage&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>';">
   </dhv:evaluate>
-  <input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagementNews.do?command=Edit&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>';"><br>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ProjectManagementNews.do?command=Edit&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>';"><br>
   <input type="hidden" name="projectId" value="<%= Project.getId() %>" />
   <input type="hidden" name="id" value="<%= newsArticle.getId() %>" />
   <input type="hidden" name="modified" value="<%= newsArticle.getModified() %>" />

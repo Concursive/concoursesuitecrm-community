@@ -36,22 +36,23 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-View Groups
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<dhv:label name="campaign.viewGroups">View Groups</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:permission name="campaign-campaigns-groups-add"><a href="CampaignManagerGroup.do?command=Add">Add a Contact Group</a></dhv:permission>
 <dhv:permission name="campaign-campaigns-messages-add" none="true"><br></dhv:permission>
-<center><%= CampaignGroupListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="CampaignGroupListInfo"/></center></dhv:include>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="CampaignManagerGroup.do?command=View">
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= CampaignGroupListInfo.getOptionValue("my") %>>My Groups</option>
-        <option <%= CampaignGroupListInfo.getOptionValue("all") %>>All Groups</option>
+      <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= CampaignGroupListInfo.getOptionValue("my") %>><dhv:label name="campaign.myGroups">My Groups</dhv:label></option>
+        <option <%= CampaignGroupListInfo.getOptionValue("all") %>><dhv:label name="campaign.allGroups">All Groups</dhv:label></option>
       </select>
     </td>
     <td>
@@ -63,17 +64,17 @@ View Groups
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 	<tr>
     <th width="8">
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="100%" nowrap>
-      <a href="CampaignManagerGroup.do?command=View&column=name"><strong>Group Name</strong></a>
+      <a href="CampaignManagerGroup.do?command=View&column=name"><strong><dhv:label name="admin.groupName">Group Name</dhv:label></strong></a>
       <%= CampaignGroupListInfo.getSortIcon("name") %>
     </th>
     <th nowrap>
-      <strong>Entered By</strong>
+      <strong><dhv:label name="accounts.accounts_calls_list.EnteredBy">Entered By</dhv:label></strong>
     </th>
     <th nowrap>
-      <a href="CampaignManagerGroup.do?command=View&column=modified"><strong>Last Modified</strong></a>
+      <a href="CampaignManagerGroup.do?command=View&column=modified"><strong><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></strong></a>
       <%= CampaignGroupListInfo.getSortIcon("modified") %>
     </th>
 <%
@@ -106,7 +107,7 @@ View Groups
 <%} else {%>
 	<tr class="containerBody">
     <td colspan="4">
-      No groups found.
+      <dhv:label name="campaign.noGroupsFound">No groups found.</dhv:label>
     </td>
   </tr>
 <%}%>

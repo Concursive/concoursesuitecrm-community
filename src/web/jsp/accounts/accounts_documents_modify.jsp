@@ -30,15 +30,15 @@
     var formTest = true;
     var messageText = "";
     if (form.subject.value == "") {
-      messageText += "- Subject is required\r\n";
+      messageText += label("Subject.required", "- Subject is required\r\n");
       formTest = false;
     }
     if ((form.clientFilename.value) == "") {
-      messageText += "- Filename is required\r\n";
+      messageText += label("Filename.required", "- Filename is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The file information could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("Fileinfo.not.submitted", "The file information could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
@@ -48,67 +48,61 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
+<form method="post" name="inputForm" action="AccountsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-<a href="AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Documents</a> >
-Modify Document
+<a href="AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></a> >
+<dhv:label name="accounts.accounts_documents_modify.ModifyDocument">Modify Document</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-<dhv:container name="accounts" selected="documents" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <form method="post" name="inputForm" action="AccountsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
-  <tr>
-    <td class="containerBack">
-      <dhv:formMessage />
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-      <img border="0" src="images/file.gif" align="absmiddle"><b>Modify Document Information</b>
-    </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Subject of file
-    </td>
-    <td>
-      <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
-      <input type="text" name="subject" size="59" maxlength="255" value="<%= FileItem.getSubject() %>">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Filename
-    </td>
-    <td>
-      <input type="text" name="clientFilename" size="59" maxlength="255" value="<%= FileItem.getClientFilename() %>">
-    </td>
-  </tr>
-	<tr class="containerBody">
-    <td class="formLabel">
-      Version
-    </td>
-    <td>
-      <%= FileItem.getVersion() %>
-    </td>
-  </tr>
-</table>
-  &nbsp;<br>
-  <input type="submit" value=" Update " name="update">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View';">
+<dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:formMessage />
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <img border="0" src="images/file.gif" align="absmiddle"><b><dhv:label name="accounts.accounts_documents_modify.ModifyDocumentInformation">Modify Document Information</dhv:label></b>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_documents_modify.SubjectOfFile">Subject of file</dhv:label>
+      </td>
+      <td>
+        <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
+        <input type="text" name="subject" size="59" maxlength="255" value="<%= FileItem.getSubject() %>">
+        <%= showAttribute(request, "subjectError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_documents_modify.Filename">Filename</dhv:label>
+      </td>
+      <td>
+        <input type="text" name="clientFilename" size="59" maxlength="255" value="<%= FileItem.getClientFilename() %>">
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_documents_details.Version">Version</dhv:label>
+      </td>
+      <td>
+        <%= FileItem.getVersion() %>
+      </td>
+    </tr>
+  </table>
+  <br />
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="update" />
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View';" />
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
-</td>
-</tr>
+</dhv:container>
 </form>
-</table>
 </body>

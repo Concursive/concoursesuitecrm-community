@@ -18,10 +18,10 @@
   --%>
 <%@page import="java.io.*"%>
 <img src="images/error.gif" border="0" align="absmiddle"/>
-<font color='red'>An Error Has Occurred</font>
+<font color='red'><dhv:label name="errors.anErrorHasOccured">An Error Has Occurred</dhv:label></font>
 <hr color="#BFBFBB" noshade>
-Please report the following error to <a href="http://www.centriccrm.com" target="_blank">Centric CRM</a><p>
-You may be able to hit the back button on your browser, review your selection, and try your request again.<p>
+<dhv:label name="errors.reportErrorTo">Please report the following error to</dhv:label> <a href="http://www.centriccrm.com" target="_blank">Centric CRM</a><p>
+<dhv:label name="errors.backButtonBrowser.text">You may be able to hit the back button on your browser, review your selection, and try your request again.</dhv:label><p>
 <pre>
 <%
   Object errorObject = request.getAttribute("Error");
@@ -38,11 +38,11 @@ You may be able to hit the back button on your browser, review your selection, a
   }
   if (!errorMessage.equals("")) {
 %>
-The actual error is:<br><br><%= errorMessage %>
+<dhv:label name="errors.actualErrorIs.colon" param="<%= "errorMessage="+errorMessage %>">The actual error is:<br /><br /><%= errorMessage %><br><br><%= errorMessage %></dhv:label>
 <%
   } else {
 %>
-An error message was not provided by this action.
+<dhv:label name="errors.noErrorMessageFromAction">An error message was not provided by this action.</dhv:label>
 <%
   }
 %>

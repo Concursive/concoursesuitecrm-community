@@ -41,14 +41,15 @@ public final class ProjectManagementFileFolders extends CFSModule {
   public String executeCommandAdd(ActionContext context) {
     Exception errorMessage = null;
     //Load project
-    String projectId = (String) context.getRequest().getParameter("pid");
+    String projectId = context.getRequest().getParameter("pid");
+    String parentId = context.getRequest().getParameter("parentId");
     Connection db = null;
     try {
       FileFolder thisFolder = (FileFolder) context.getFormBean();
-      thisFolder.setParentId(context.getRequest().getParameter("parentId"));
+      thisFolder.setParentId(parentId);
       db = getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-documents-folders-add")) {
         return "PermissionError";
@@ -57,17 +58,18 @@ public final class ProjectManagementFileFolders extends CFSModule {
       context.getRequest().setAttribute("IncludeSection", ("file_folder").toLowerCase());
       //Build array of folder trails
       ProjectManagementFileFolders.buildHierarchy(db, context);
+      //Load the current folder
+      if (parentId != null && !"-1".equals(parentId) && !"0".equals(parentId)) {
+        FileFolder parentFolder = new FileFolder(db, Integer.parseInt(parentId));
+        thisFolder.setDisplay(parentFolder.getDisplay());
+      }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      return ("ProjectCenterOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("ProjectCenterOK");
   }
 
 
@@ -78,15 +80,15 @@ public final class ProjectManagementFileFolders extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
     boolean recordInserted = false;
+    boolean isValid = false;
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       //Insert or update the folder
       FileFolder thisFolder = (FileFolder) context.getFormBean();
@@ -101,37 +103,35 @@ public final class ProjectManagementFileFolders extends CFSModule {
         if (!hasProjectAccess(context, db, thisProject, "project-documents-folders-add")) {
           return "PermissionError";
         }
-        recordInserted = thisFolder.insert(db);
+        isValid = this.validateObject(context, db, thisFolder);
+        if (isValid) {
+          recordInserted = thisFolder.insert(db);
+        }
         //indexAddItem(context, thisFolder);
       } else {
         if (!hasProjectAccess(context, db, thisProject, "project-documents-folders-edit")) {
           return "PermissionError";
         }
-        resultCount = thisFolder.update(db);
+        isValid = this.validateObject(context, db, thisFolder);
+        if (isValid) {
+          resultCount = thisFolder.update(db);
+        }
         //indexAddItem(context, thisFolder);
-      }
-      if (!recordInserted && resultCount < 1) {
-        processErrors(context, thisFolder.getErrors());
       }
       //Build array of folder trails
       ProjectManagementFileFolders.buildHierarchy(db, context);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("InsertOK");
-      } else if (resultCount == 1) {
-        return ("UpdateOK");
-      } else {
-        return (executeCommandAdd(context));
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (recordInserted) {
+      return ("InsertOK");
+    } else if (resultCount == 1) {
+      return ("UpdateOK");
     }
+    return (executeCommandAdd(context));
   }
 
 
@@ -152,7 +152,7 @@ public final class ProjectManagementFileFolders extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       if (thisProject.getId() == -1) {
         throw new Exception("Invalid access to project");
       }
@@ -193,12 +193,9 @@ public final class ProjectManagementFileFolders extends CFSModule {
    */
   public String executeCommandModify(ActionContext context) {
     Exception errorMessage = null;
-    boolean recordDeleted = false;
-    String projectId = (String) context.getRequest().getParameter("pid");
     //TODO: Add some permissions to get here!
     //Modify the itemId, and the folderId will be the location to return to
     String itemId = (String) context.getRequest().getParameter("id");
-    String folderId = (String) context.getRequest().getParameter("folderId");
     Connection db = null;
     try {
       db = getConnection(context);
@@ -229,6 +226,9 @@ public final class ProjectManagementFileFolders extends CFSModule {
    */
   public final static void buildHierarchy(Connection db, ActionContext context) throws SQLException {
     String folderId = context.getRequest().getParameter("folderId");
+    if (folderId == null) {
+      folderId = (String) context.getRequest().getAttribute("folderId");
+    }
     if (folderId != null && !"-1".equals(folderId) && !"0".equals(folderId)) {
       LinkedHashMap folderLevels = new LinkedHashMap();
       FileFolder.buildHierarchy(db, folderLevels, Integer.parseInt(folderId));
@@ -251,7 +251,7 @@ public final class ProjectManagementFileFolders extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       if (thisProject.getId() == -1) {
         throw new Exception("Invalid access to project");
       }
@@ -294,7 +294,7 @@ public final class ProjectManagementFileFolders extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       if (thisProject.getId() == -1) {
         throw new Exception("Invalid access to project");
       }

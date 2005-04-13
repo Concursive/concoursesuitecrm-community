@@ -39,6 +39,7 @@ public class TaskList extends ArrayList {
   protected PagedListInfo pagedListInfo = null;
   protected int owner = -1;
   protected int complete = -1;
+  protected int sharing = Constants.UNDEFINED;
   protected int tasksAssignedByUser = -1;
   protected java.sql.Timestamp alertRangeStart = null;
   protected java.sql.Timestamp alertRangeEnd = null;
@@ -52,6 +53,35 @@ public class TaskList extends ArrayList {
    */
   public TaskList() { }
 
+
+  /**
+   *  Gets the sharing attribute of the TaskList object
+   *
+   *@return    The sharing value
+   */
+  public int getSharing() {
+    return sharing;
+  }
+
+
+  /**
+   *  Sets the sharing attribute of the TaskList object
+   *
+   *@param  tmp  The new sharing value
+   */
+  public void setSharing(int tmp) {
+    this.sharing = tmp;
+  }
+
+
+  /**
+   *  Sets the sharing attribute of the TaskList object
+   *
+   *@param  tmp  The new sharing value
+   */
+  public void setSharing(String tmp) {
+    this.sharing = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -392,6 +422,14 @@ public class TaskList extends ArrayList {
       sqlFilter.append("AND t.complete = ? ");
     }
 
+    if (sharing != Constants.UNDEFINED) {
+      if (sharing == Constants.TRUE) {
+        sqlFilter.append("AND t.sharing > 0 ");
+      } else if (sharing == Constants.FALSE) {
+        sqlFilter.append("AND t.sharing <= 0 ");
+      }
+    }
+    
     if (alertRangeStart != null) {
       sqlFilter.append("AND t.duedate >= ? ");
     }

@@ -32,14 +32,14 @@
   <tr class="subtab">
     <td>
       <img src="images/icons/stock_macro-objects-16.gif" border="0" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Setup&pid=<%= Project.getId() %>">Setup</a> >
-      Configure Permissions
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Setup&pid=<%= Project.getId() %>"><dhv:label name="documents.permissions.setup">Setup</dhv:label></a> >
+      <dhv:label name="documents.permissions.configurePermissions">Configure Permissions</dhv:label>
     </td>
   </tr>
 </table>
 <br>
-<input type="submit" value=" Update ">
-<input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Setup&pid=<%= Project.getId() %>'"><br>
+<input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>">
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Setup&pid=<%= Project.getId() %>'"><br />
 &nbsp;
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <input type="hidden" name="pid" value="<%= Project.getId() %>">
@@ -47,7 +47,7 @@
   <input type="hidden" name="modified" value="<%= Project.getModified() %>">
   <tr>
     <th colspan="4" valign="center">
-      <strong>Permissions</strong>
+      <strong><dhv:label name="documents.permissions.long_html">Permissions</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -59,13 +59,16 @@
 <%-- For each category --%>
   <tr class="row1">
     <td width="100%" nowrap><%= toHtml(thisCategory.getDescription()) %></td>
-    <td>Lowest Role</td>
+    <td><dhv:label name="project.lowestRole">Lowest Role</dhv:label></td>
   </tr>
 <%
     Iterator j = thisCategory.getPermissions().iterator();
     while (j.hasNext()) {
       ++permissionCount;
       PermissionLookup thisPermission = (PermissionLookup) j.next();
+      // Temp. fix for Weblogic
+      String permName = "perm" + permissionCount + "level";
+      String permValue = String.valueOf(Project.getAccessUserLevel(thisPermission.getPermission()));
 %>
 <%-- For each permission --%>
   <tr class="row2" onmouseover="swapClass(this,'rowHighlight')" onmouseout="swapClass(this,'row2')">
@@ -73,8 +76,8 @@
     <td align="center">
       <input type="hidden" name="perm<%= permissionCount %>" value="<%= thisPermission.getId() %>">
       <zeroio:roleSelect
-          name="<%= "perm" + permissionCount + "level" %>"
-          value="<%= Project.getAccessUserLevel(thisPermission.getPermission()) %>"/>
+          name="<%= permName %>"
+          value="<%= permValue %>"/>
     </td>
   </tr>
 <%-- End Content --%>
@@ -83,7 +86,7 @@
    }
 %>
 </table>
-<br>
-<input type="submit" value=" Update ">
-<input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Setup&pid=<%= Project.getId() %>'">
+<br />
+<input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>">
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Setup&pid=<%= Project.getId() %>'">
 </form>

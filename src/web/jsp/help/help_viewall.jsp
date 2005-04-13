@@ -23,7 +23,7 @@
 <table border="0" width="100%" cellspacing="0" cellpadding="4">
   <tr>
     <td align="center" colspan="4" width="100%">
-      <font size="3"><b>CFS Help</b></font><br>
+      <font size="3"><b><dhv:label name="help.cfsHelp">CFS Help</dhv:label></b></font><br>
       <%= toDateTimeString(new java.sql.Timestamp(new java.util.Date().getTime())) %>
     </td>
   </tr>

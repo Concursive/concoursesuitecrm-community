@@ -43,17 +43,17 @@ This distribution includes the required Centric CRM 3rd party libraries:
   commons-logging-api.jar
   commons-logging.jar
   iText.jar
-  jasperreports-0.5.3.jar
-  jcommon.jar
-  jfreechart.jar
-  jtds-0.9.jar
-  log4j.jar
+  jasperreports-0.6.4.jar
+  jcommon-0.9.6.jar
+  jfreechart-0.9.21.jar
+  jtds-1.0.1.jar
+  log4j-1.2.9.jar
   lucene-1.4.2.jar
   mail.jar
   nekohtml.jar
   poi-2.5-final-20040302.jar
   poi-scratchpad-2.5-final-20040302.jar
-  postgresql.jar
+  postgresql-8.0-310.jdbc3.jar
   tm-extractors-0.4.jar
   xercesMinimal.jar
   

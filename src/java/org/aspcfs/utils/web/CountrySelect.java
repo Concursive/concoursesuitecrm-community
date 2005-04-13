@@ -15,7 +15,7 @@
  */
 package org.aspcfs.utils.web;
 
-import java.util.*;
+
 
 /**
  *  Description of the Class
@@ -32,6 +32,16 @@ public class CountrySelect extends HtmlSelect {
   public CountrySelect() {
     this.addItem(-1, "--None--");
     this.setDefaultValue("UNITED STATES");
+    addCountries();
+  }
+  
+  public CountrySelect(String emptyItem) {
+    this.addItem(-1, emptyItem);
+    this.setDefaultValue(-1);
+    addCountries();
+  }
+
+  private void addCountries() {
     this.addItem("AFGHANISTAN", "AFGHANISTAN");
     this.addItem("ALBANIA", "ALBANIA");
     this.addItem("ALGERIA", "ALGERIA");

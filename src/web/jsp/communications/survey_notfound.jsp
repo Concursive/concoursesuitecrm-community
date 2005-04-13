@@ -18,7 +18,7 @@
   --%>
 <html>
 <head>
-  <title>Thank you for visiting our survey page</title>
+  <title><dhv:label name="campaign.surveyPage.thankYou">Thank you for visiting our survey page</dhv:label></title>
 </head>
 <body>
 &nbsp;<br>
@@ -27,7 +27,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="85%">
   <tr class="row1">
     <td>
-      <font color="#8c8c8c"><strong>Web Survey</strong></font>
+      <font color="#8c8c8c"><strong><dhv:label name="campaign.webSurvey">Web Survey</dhv:label></strong></font>
     </td>
   </tr>
 </table>
@@ -35,13 +35,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="85%">
   <tr>
     <td>
-      <strong>Survey Not Found</strong>
+      <strong><dhv:label name="campaign.surveyNotFound">Survey Not Found</dhv:label></strong>
     </td>
   </tr>
   <tr>
     <td>
-      The requested survey could not be found.<br>
-      Please contact the person that sent you this link for more information.
+      <dhv:label name="campaign.requestedSurveyNotFound.text" param="break=<br />">The requested survey could not be found.<br />Please contact the person that sent you this link for more information.</dhv:label>
     </td>
   </tr>
 </table>
@@ -49,7 +48,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="85%">
   <tr class="row1">
     <td align="center">
-      <font color="#8c8c8c"><strong>(C) 2002-2004 Dark Horse Ventures, LLC</strong></font>
+      <font color="#8c8c8c"><strong>(C) 2002-2005 Dark Horse Ventures, LLC</strong></font>
     </td>
   </tr>
 </table>

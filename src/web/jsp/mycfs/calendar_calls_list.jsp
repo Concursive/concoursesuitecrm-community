@@ -37,8 +37,8 @@
     <td class="containerBack">
       <%-- include contact menu --%>
       <% 
-        int i = 0; 
-        String param1 = "id=" + ContactDetails.getId(); 
+        int i = 0;
+        String param1 = "id=" + ContactDetails.getId();
         String selected = "calls";
       %>
       <%@ include file="../accounts/accounts_contacts_details_header_include.jsp"%>
@@ -47,25 +47,25 @@
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
           <th>
-            Status
+            <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
           </th>
           <th>
-            <strong>Type</strong>
+            <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
           </th>
           <th width="100%">
-            <strong>Subject</strong>
+            <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
           </th>
           <th>
-            Result
+            <dhv:label name="accounts.accounts_calls_list.Result">Result</dhv:label>
           </th>
           <th nowrap>
-            Date
+            <dhv:label name="quotes.date">Date</dhv:label>
           </th>
           <th nowrap>
-            <strong>Entered By</strong>
+            <dhv:label name="accounts.accounts_calls_list.EnteredBy">Entered By</dhv:label>
           </th>
           <th>
-            <strong>Entered</strong>
+            <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
           </th>
         </tr>
 <%
@@ -111,7 +111,7 @@
     <%} else {%>
         <tr class="containerBody">
           <td colspan="7">
-            No activities found.
+            <dhv:label name="accounts.accounts_calls_list.NoActivitiesFound">No activities found.</dhv:label>
           </td>
         </tr>
     <%}%>

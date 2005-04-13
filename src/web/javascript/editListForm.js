@@ -1,24 +1,31 @@
 <!--
 // need to set datatype for editing (searchField[index].type)
 function addValues(){
-    var searchList = document.modifyList.selectedList;
-    var count = 0;
-    var x = 0;
-    
-    if (document.modifyList.newValue.value != null && document.modifyList.newValue.value.length > 0) {
-      if(!isDuplicate()){
-        searchText = document.modifyList.newValue.value;
-        var newOption = searchText;
-        searchList.options[searchList.length] = new Option(newOption, ("*" + searchText));
-        document.modifyList.newValue.value = "";
-      }else{
-        alert('Entry already exists');
-      }
-    } else {
-        alert ("You must provide a value for the new option");
-    }
+  var insertMode = (label("button.addR","Add >") == document.modifyList.addButton.value);
+  
+  var searchList = document.modifyList.selectedList;
+  var searchText = document.modifyList.newValue.value;
+  var count = 0;
+  var x = 0;
+  if (searchText == null || searchText.length == 0) {
+    alert (label("provide.optionvalue","You must provide a value for the new option"));
     document.modifyList.newValue.focus();
-    return true;
+    return;
+  }
+  if (insertMode && isDuplicate()) {
+    alert(label("label.entryalreadyexists","Entry already exists"));
+    document.modifyList.newValue.focus();
+    return;
+  }
+  if (insertMode) {
+    searchList.options[searchList.length] = new Option(searchText, ("*" + searchText));
+  } else {
+    searchList.options[searchList.selectedIndex].text = searchText;
+  }
+  document.modifyList.newValue.value = "";
+  document.modifyList.addButton.value  = label("button.addR","Add >");
+  document.modifyList.newValue.focus();
+  return true;
 }
 
 function isDuplicate(){
@@ -46,9 +53,9 @@ function removeValues(){
 	}
 	
 	if (searchList.length == 0) {
-          alert("Nothing to remove");
+          alert(label("caution.nothingtoremove","Nothing to remove"));
 	} else if (searchList.options.selectedIndex == -1) {
-          alert("An item needs to be selected before it can be removed");
+          alert(label("caution.itemneedstobe.selected","An item needs to be selected before it can be removed"));
   	} else {
           searchCriteria[searchList.selectedIndex] = "skip";
           searchList.options[searchList.selectedIndex] = null;
@@ -73,6 +80,19 @@ function removeValues(){
 	}
 }
 
+function switchToRename() {
+  var searchList = document.modifyList.selectedList;
+  if (searchList.length == 0) {
+    alert(label("label.nothingtorename","Nothing to rename"));
+	} else if (searchList.options.selectedIndex == -1) {
+    alert(label("select.torename","An item needs to be selected before it can be renamed"));
+  } else {
+    document.modifyList.newValue.value = searchList.options[searchList.selectedIndex].text;
+    document.modifyList.addButton.value  = "Update >";
+    document.modifyList.newValue.focus();
+  }
+}
+
 // -------------------------------------------------------------------
 // swapOptions(select_object,option1,option2)
 //  Swap positions of two options in a select list
@@ -90,7 +110,7 @@ function swapOptions(obj,i,j) {
   o[i].selected = j_selected;
   o[j].selected = i_selected;
   }else{
-    alert("An item needs to be selected");
+    alert(label("caution.item.needed","An item needs to be selected"));
   }
 }
 	
@@ -102,7 +122,7 @@ function selectAllOptions(obj) {
   var i = 0;
   
   if (size == 0) {
-    alert ("You must have at least one item in this list.");
+    alert (label("required.oneiteminlist","You must have at least one item in this list."));
     return false;
   }
   

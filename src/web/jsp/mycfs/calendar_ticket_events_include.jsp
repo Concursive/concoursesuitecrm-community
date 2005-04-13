@@ -31,7 +31,7 @@
     <td>&nbsp;</td>
     <td colspan="3" nowrap class="eventName">
       <img border="0" src="images/box.gif" align="absmiddle" title="Tickets" />
-      Tickets
+      <dhv:label name="dependency.tickets">Tickets</dhv:label>
       (<%= ticketEventList.getOpenProductTickets().size() %>)
     </td>
   </tr>
@@ -45,13 +45,13 @@
         &nbsp
       </th>
       <th class="weekSelector" nowrap>
-        <strong>Request #</strong>
+        <strong><dhv:label name="calendar.requestNumber.symbol">Request #</dhv:label></strong>
       </th>
       <th class="weekSelector" width="100%">
-        <strong>Issue</strong>
+        <strong><dhv:label name="accounts.accounts_asset_history.Issue">Issue</dhv:label></strong>
       </th>
       <th class="weekSelector">
-        <strong>Due</strong>
+        <strong><dhv:label name="calendar.due">Due</dhv:label></strong>
       </th>
     </tr>
   <%  
@@ -70,10 +70,10 @@
        <%= thisTicket.getId() %>
      </td>
      <td nowrap valign="top">
-       <dhv:tz timestamp="<%= thisTicket.getEstimatedResolutionDate() %>" timeOnly="true"/>
+       <%= toHtml(StringUtils.trimToSizeNoDots(toString(thisTicket.getProblem()), 30)) %>
      </td>
      <td valign="top">
-       <%= StringUtils.trimToSizeNoDots(toString(thisTicket.getProblem()), 30) %>
+       <dhv:tz timestamp="<%= thisTicket.getEstimatedResolutionDate() %>" timeOnly="true"/>
      </td>
     </tr>
    <% }

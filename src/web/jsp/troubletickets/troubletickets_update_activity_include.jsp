@@ -73,40 +73,40 @@
       
     for (i=1;i<=5;i++){
       if ((!activityDates[i].value == "") && (descriptions[i].value=="")){
-        message += "- Check that all items in row "+ i +" are filled in\r\n";
+        message += label("check.allitems.part.one","- Check that all items in row ")+ i +label("check.allitems.part.two"," are filled in\r\n");
         formTest = false;
       }
 
       if ((activityDates[i].value == "") && 
           ((travelMinutes[i].value > 0) || (travelHours[i].value > 0) || (laborMinutes[i].value > 0) || (laborHours[i].value > 0) || (!descriptions[i].value==""))){
-        message += "- Check that all items in row "+ i +" are filled in\r\n";
+        message += label("check.allitems.part.one","- Check that all items in row ")+ i +label("check.allitems.part.two"," are filled in\r\n");
         formTest = false;
       }
     }
 
     if (form.followUpRequired.checked) {
       if (form.alertDate.value == ""){
-        message += "- Alert Date is mandatory if Follow-up Required is checked\r\n";
+        message += label("check.alertdate","- Alert Date is mandatory if Follow-up Required is checked\r\n");
         formTest = false;
       }
       
       if (form.followUpDescription.value == ""){
-        message += "- Follow-up Description is mandatory if Follow-up Required is checked\r\n";
+        message += label("check.followup.description","- Follow-up Description is mandatory if Follow-up Required is checked\r\n");
         formTest = false;
       }
     }
     else{
       if (!form.alertDate.value == ""){
-        message += "- Alert Date is required only if Follow-up Required is checked\r\n";
+        message += label("alertdate.onlyif.followup","- Alert Date is required only if Follow-up Required is checked\r\n");
         formTest = false;
       }
       if (!form.followUpDescription.value == ""){
-        message += "- Follow-up Description is required only if Follow-up Required is checked\r\n";
+        message += label("followupdesc.onlyif.followup","- Follow-up Description is required only if Follow-up Required is checked\r\n");
         formTest = false;
       }
     }
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     }
   }
@@ -114,12 +114,12 @@
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
       <tr class="containerBody">
         <th colspan="2">
-          <strong>General Information</strong>
+          <strong><dhv:label name="documents.details.generalInformation">General Information</dhv:label></strong>
         </th>
       </tr>
       <tr class="containerBody">
         <td valign="top" class="formLabel">
-          Service Contract Number
+          <dhv:label name="accounts.accountasset_include.ServiceContractNumber">Service Contract Number</dhv:label>
         </td>
         <td>
         <%=toHtml(ticketDetails.getServiceContractNumber())%>
@@ -130,16 +130,16 @@
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="4">
-        <strong>Per Day Description of Service</strong>
+        <strong><dhv:label name="tickets.perDayDescription">Per Day Description of Service</dhv:label></strong>
       </th>
     </tr>
    <tr bgcolor="#E8E8E8">
       <td width="15%" align="left">
-      <b>Activity Date</b>
+      <b><dhv:label name="tickets.activityDate">Activity Date</dhv:label></b>
       </td>
       <td width="17%" nowrap>
-        <b>Travel Time</b> <br />
-        <b>[Towards Contract</b>
+        <b><dhv:label name="reports.helpdesk.ticket.activity.travelTime">Travel Time</dhv:label></b> <br />
+        <b>[<dhv:label name="tickets.towardsContract">Towards Contract</dhv:label></b>
         <% if (activityDetails.getTravelTowardsServiceContract()) { %>
             <input type="checkbox" name="travelTowardsServiceContract" value="on" checked />
          <%}else{%>
@@ -148,8 +148,8 @@
          <b>]</b>
       </td>
       <td width="17%" nowrap>
-        <b>Labor Time</b><br />
-        <b>[Towards Contract</b>
+        <b><dhv:label name="reports.helpdesk.ticket.activity.laborTime">Labor Time</dhv:label></b><br />
+        <b>[<dhv:label name="tickets.towardsContract">Towards Contract</dhv:label></b>
         <% if (activityDetails.getLaborTowardsServiceContract()) { %>
             <input type="checkbox" name="laborTowardsServiceContract" value="on" checked />
          <%}else{%>
@@ -158,7 +158,7 @@
          <b>]</b>
       </td>
       <td width="51%">
-        <b>Description of Service</b>
+        <b><dhv:label name="reports.helpdesk.ticket.activity.descOfService">Description of Service</dhv:label></b>
       </td>
     </tr>    
   <%
@@ -184,8 +184,9 @@
             String activityDateTimeZone = activityDate + "TimeZone";
           %>
           <zeroio:dateSelect form="details" field="<%=activityDate%>" timestamp="<%=thisDayDescription.getActivityDate()%>" />
-          <br /><%=TimeZoneSelect.getSelect(activityDateTimeZone,thisDayDescription.getActivityDateTimeZone()).getHtml() %>
-          <%= showAttribute(request, activityDateError) %>
+          <br />
+          <%= TimeZoneSelect.getSelect(activityDateTimeZone,thisDayDescription.getActivityDateTimeZone()).getHtml() %>
+          <br /><%= showAttribute(request, activityDateError) %>
           <br />
         </td >
         <td nowrap>
@@ -195,7 +196,8 @@
           <zeroio:durationSelect baseName="labor" count="<%=icount%>" hours="<%=thisDayDescription.getLaborHours()%>" minutes="<%=thisDayDescription.getLaborMinutes()%>" />
         </td>
         <td >
-          <textarea rows="3" cols="50" name="descriptionOfService<%=icount%>"><%=toString(thisDayDescription.getDescriptionOfService())%></textarea>
+          <textarea rows="3" cols="30" name="descriptionOfService<%=icount%>"><%=toString(thisDayDescription.getDescriptionOfService())%></textarea>
+          <br /><%= showAttribute(request, "descriptionOfService"+icount+"Error") %>
         </td>
       </tr>
     <%
@@ -211,9 +213,11 @@
             String activityDate = "activityDate" + icount ;
             String activityDateError = "activityDate" + icount + "Error";
             String activityDateTimeZone = activityDate + "TimeZone";
+            String descriptionOfServiceError = "descriptionOfService"+ icount +"Error";
           %>
           <zeroio:dateSelect form="details" field="<%=activityDate%>" />
-          <br /><%=TimeZoneSelect.getSelect(activityDateTimeZone,User.getUserRecord().getTimeZone()).getHtml() %>
+          <br />
+          <%=TimeZoneSelect.getSelect(activityDateTimeZone,User.getUserRecord().getTimeZone()).getHtml() %><br />
           <%= showAttribute(request, activityDateError) %>
           <br />
         </td >
@@ -224,7 +228,8 @@
           <zeroio:durationSelect baseName="labor" count="<%=icount%>" />
         </td>
         <td >
-          <textarea rows="3" cols="50" name="descriptionOfService<%=icount%>"></textarea>
+          <textarea rows="3" cols="30" name="descriptionOfService<%=icount%>"></textarea><br />
+          <%= showAttribute(request, descriptionOfServiceError) %>
         </td>
       </tr>
       <%
@@ -247,9 +252,11 @@
         String activityDate = "activityDate" + count ;
         String activityDateError = "activityDate" + count + "Error";
         String activityDateTimeZone = activityDate + "TimeZone";
+        String descriptionOfServiceError = "descriptionOfService"+ count + "Error";
       %>
       <zeroio:dateSelect form="details" field="<%=activityDate%>" />
-      <br /><%=TimeZoneSelect.getSelect(activityDateTimeZone,User.getUserRecord().getTimeZone()).getHtml() %>
+      <br />
+      <%=TimeZoneSelect.getSelect(activityDateTimeZone,User.getUserRecord().getTimeZone()).getHtml() %><br />
       <%= showAttribute(request, activityDateError) %>
       <br />
     </td>
@@ -260,7 +267,8 @@
       <zeroio:durationSelect baseName="labor" count="<%=count%>" />
     </td>
     <td >
-      <textarea rows="3" cols="50" name="descriptionOfService<%=count%>"></textarea>
+      <textarea rows="3" cols="30" name="descriptionOfService<%=count%>"></textarea><br />
+      <%= showAttribute(request, descriptionOfServiceError) %>
     </td>
   </tr>
   <%}
@@ -270,12 +278,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Additional Information</strong>
+	    <strong><dhv:label name="tickets.additionalInformation">Additional Information</dhv:label></strong>
 	  </th>
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Follow-up Required?
+      <dhv:label name="tickets.followupRequired.question">Follow-up Required?</dhv:label>
     </td>
     <td>
     <%
@@ -288,7 +296,7 @@
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Alert Date
+      <dhv:label name="accounts.accounts_add.AlertDate">Alert Date</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="details" field="alertDate" timestamp="<%=activityDetails.getAlertDate()%>" timeZone="<%=activityDetails.getAlertDateTimeZone()%>" showTimeZone="true" />
@@ -297,15 +305,15 @@
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Follow-up Description
+      <dhv:label name="reports.helpdesk.ticket.activity.followUpDesc">Follow-up Description</dhv:label>
     </td>
     <td>
-      <textarea rows="3" cols="50" name="followUpDescription"><%=toString(activityDetails.getFollowUpDescription())%></textarea>
+      <textarea rows="3" cols="30" name="followUpDescription"><%=toString(activityDetails.getFollowUpDescription())%></textarea>
     </td>
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Phone Response Time
+      <dhv:label name="reports.helpdesk.ticket.activity.phoneResponseTime">Phone Response Time</dhv:label>
     </td>
     <td>
       <input type="text" size="10" name="phoneResponseTime" maxlength="10" value="<%=toHtmlValue(activityDetails.getPhoneResponseTime())%>"> </input>
@@ -313,7 +321,7 @@
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Engineer Response Time
+      <dhv:label name="tickets.engineerResponseTime">Engineer Response Time</dhv:label>
     </td>
     <td>
       <input type="text" size="10" name="engineerResponseTime" maxlength="10" value="<%=toHtmlValue(activityDetails.getEngineerResponseTime())%>"> </input>

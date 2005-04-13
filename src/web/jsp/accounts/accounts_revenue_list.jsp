@@ -39,64 +39,60 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-Revenue
+<dhv:label name="accounts.accounts_add.Revenue">Revenue</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-<dhv:container name="accounts" selected="revenue" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
+<dhv:container name="accounts" selected="revenue" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:permission name="accounts-accounts-revenue-add"><a href="RevenueManager.do?command=Add&orgId=<%=request.getParameter("orgId")%>"><dhv:label name="accounts.accounts_revenue_add.AddRevenue">Add Revenue</dhv:label></a></dhv:permission>
+  <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+  <center><dhv:pagedListAlphabeticalLinks object="RevenueListInfo"/></center></dhv:include>
+  <table width="100%" border="0">
+    <tr>
+      <form name="listView" method="post" action="RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">
+      <td align="left">
+        <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+          <option <%= RevenueListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_revenue_list.MyRevenue">My Revenue</dhv:label> </option>
+          <option <%= RevenueListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_revenue_list.AllRevenue">All Revenue</dhv:label></option>
+        </select>
+      </td>
+      <td>
+        <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="RevenueListInfo"/>
+      </td>
+      </form>
+    </tr>
+  </table>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <td class="containerBack">
-<dhv:permission name="accounts-accounts-revenue-add"><a href="RevenueManager.do?command=Add&orgId=<%=request.getParameter("orgId")%>">Add Revenue</a></dhv:permission>
-<center><%= RevenueListInfo.getAlphabeticalPageLinks() %></center>
-<table width="100%" border="0">
-  <tr>
-    <form name="listView" method="post" action="RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">
-    <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= RevenueListInfo.getOptionValue("my") %>>My Revenue </option>
-        <option <%= RevenueListInfo.getOptionValue("all") %>>All Revenue</option>
-      </select>
-    </td>
-    <td>
-      <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="RevenueListInfo"/>
-    </td>
-    </form>
+    <th width="8">
+      &nbsp;
+    </th>
+    <th width="100%" nowrap>
+      <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=description"><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></a></strong>
+      <%= RevenueListInfo.getSortIcon("description") %>
+    </th>
+    <th align="center" nowrap>
+      <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=r.month"><dhv:label name="accounts.accounts_revenue_add.Month">Month</dhv:label></a></strong>
+      <%= RevenueListInfo.getSortIcon("r.month") %>
+    </th>
+    <th align="center" nowrap>
+      <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=r.year,r.month"><dhv:label name="accounts.accounts_revenue_add.Year">Year</dhv:label></a></strong>
+      <%= RevenueListInfo.getSortIcon("r.year,r.month") %>
+    </th>
+    <th align="center" nowrap>
+      <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=amount"><dhv:label name="accounts.accounts_revenue_add.Amount">Amount</dhv:label></a></strong>
+      <%= RevenueListInfo.getSortIcon("amount") %>
+    </th>
+    <dhv:evaluate if="<%= "all".equals(RevenueListInfo.getListView()) %>">
+    <th align="center" nowrap>
+      <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=owner"><dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label></a></strong>
+      <%= RevenueListInfo.getSortIcon("owner") %>
+    </th>
+    </dhv:evaluate>
   </tr>
-</table>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-<tr>
-  <th width="8">
-    <strong>Action</strong>
-  </th>
-  <th width="100%" nowrap>
-    <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=description">Description</a></strong>
-    <%= RevenueListInfo.getSortIcon("description") %>
-  </th>  
-  <th align="center" nowrap>
-    <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=r.month">Month</a></strong>
-    <%= RevenueListInfo.getSortIcon("r.month") %>
-  </th>
-  <th align="center" nowrap>
-    <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=r.year,r.month">Year</a></strong>
-    <%= RevenueListInfo.getSortIcon("r.year,r.month") %>
-  </th>
-  <th align="center" nowrap>
-    <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=amount">Amount</a></strong>
-    <%= RevenueListInfo.getSortIcon("amount") %>
-  </th>
-  <dhv:evaluate if="<%= "all".equals(RevenueListInfo.getListView()) %>">
-  <th align="center" nowrap>
-    <strong><a href="RevenueManager.do?command=View&orgId=<%=request.getParameter("orgId")%>&column=owner">Owner</a></strong>
-    <%= RevenueListInfo.getSortIcon("owner") %>
-  </th>
-  </dhv:evaluate>
-</tr>
 <%
 	Iterator j = RevenueList.iterator();
 	if ( j.hasNext() ) {
@@ -135,14 +131,11 @@ Revenue
 <%} else {%>
 		<tr class="containerBody">
       <td colspan="<%= "all".equals(RevenueListInfo.getListView()) ? "7" : "6" %>">
-        No revenue found.
+        <dhv:label name="accounts.accounts_revenue_list.NoRevenueFound">No revenue found.</dhv:label>
       </td>
     </tr>
 <%}%>
 	</table>
 	<br>
   <dhv:pagedListControl object="RevenueListInfo"/>
-</td>
-</tr>
-</table>
-
+</dhv:container>

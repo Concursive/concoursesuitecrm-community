@@ -39,9 +39,71 @@ public class CustomerProductList extends ArrayList {
   private int enabled = Constants.UNDEFINED;
   private int productId = -1;
   private boolean matchProduct = true;
+  private boolean buildProductCatalog = false;
   private boolean buildFileList = false;
   private boolean buildHistoryList = false;
   private boolean svgProductsOnly = false;
+  private boolean historyExists = false;
+
+
+  /**
+   *  Sets the historyExists attribute of the CustomerProductList object
+   *
+   *@param  tmp  The new historyExists value
+   */
+  public void setHistoryExists(boolean tmp) {
+    this.historyExists = tmp;
+  }
+
+
+  /**
+   *  Sets the historyExists attribute of the CustomerProductList object
+   *
+   *@param  tmp  The new historyExists value
+   */
+  public void setHistoryExists(String tmp) {
+    this.historyExists = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the historyExists attribute of the CustomerProductList object
+   *
+   *@return    The historyExists value
+   */
+  public boolean getHistoryExists() {
+    return historyExists;
+  }
+
+
+  /**
+   *  Sets the buildProductCatalog attribute of the CustomerProductList object
+   *
+   *@param  tmp  The new buildProductCatalog value
+   */
+  public void setBuildProductCatalog(boolean tmp) {
+    this.buildProductCatalog = tmp;
+  }
+
+
+  /**
+   *  Sets the buildProductCatalog attribute of the CustomerProductList object
+   *
+   *@param  tmp  The new buildProductCatalog value
+   */
+  public void setBuildProductCatalog(String tmp) {
+    this.buildProductCatalog = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the buildProductCatalog attribute of the CustomerProductList object
+   *
+   *@return    The buildProductCatalog value
+   */
+  public boolean getBuildProductCatalog() {
+    return buildProductCatalog;
+  }
 
 
   /**
@@ -388,6 +450,9 @@ public class CustomerProductList extends ArrayList {
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
         " FROM customer_product cp " +
+        " LEFT JOIN order_product op ON (cp.order_item_id = op.item_id) " +
+        " LEFT JOIN order_entry oe ON (cp.order_id = oe.order_id) " +
+        " LEFT JOIN quote_entry qe ON (oe.quote_id = qe.quote_id) " +
         " WHERE cp.customer_product_id > -1 ");
 
     createFilter(sqlFilter);
@@ -428,8 +493,12 @@ public class CustomerProductList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " cp.* " +
+        " cp.*, op.product_id AS product_id, " +
+        " qe.product_id AS quote_product_id " +
         " FROM customer_product cp " +
+        " LEFT JOIN order_product op ON (cp.order_item_id = op.item_id) " +
+        " LEFT JOIN order_entry oe ON (cp.order_id = oe.order_id) " +
+        " LEFT JOIN quote_entry qe ON (oe.quote_id = qe.quote_id) " +
         " WHERE cp.customer_product_id > -1 "
         );
 
@@ -466,6 +535,15 @@ public class CustomerProductList extends ArrayList {
         thisProduct.buildHistoryList(db);
       }
     }
+    // builds the product catalog associated with this
+    // customer product
+    if (buildProductCatalog) {
+      Iterator i = this.iterator();
+      while (i.hasNext()) {
+        CustomerProduct thisProduct = (CustomerProduct) i.next();
+        thisProduct.buildProductCatalog(db);
+      }
+    }
   }
 
 
@@ -495,13 +573,21 @@ public class CustomerProductList extends ArrayList {
     }
     if (productId > -1) {
       if (matchProduct) {
-        sqlFilter.append("AND order_item_id IN (SELECT item_id FROM order_product WHERE product_id = ? ) ");
+        sqlFilter.append("AND ( qe.product_id = ? OR op.product_id = ? ) ");
       } else {
-        sqlFilter.append("AND order_item_id IN (SELECT item_id FROM order_product WHERE product_id <> ? ) ");
+        sqlFilter.append("AND ( qe.product_id <> ? OR op.product_id <> ? ) ");
       }
     }
     if (svgProductsOnly) {
       sqlFilter.append("AND cp.customer_product_id IN (SELECT link_item_id FROM project_files WHERE client_filename LIKE '%.svg') ");
+    }
+    if (historyExists) {
+      sqlFilter.append("AND cp.customer_product_id IN (" +
+          " SELECT customer_product_id FROM (" +
+          "   SELECT customer_product_id, count(history_id) as history" +
+          "   FROM customer_product_history" +
+          "   GROUP BY customer_product_id) tmp" +
+          " WHERE tmp.history > 1) ");
     }
   }
 
@@ -533,6 +619,7 @@ public class CustomerProductList extends ArrayList {
       pst.setBoolean(++i, false);
     }
     if (productId > -1) {
+      pst.setInt(++i, productId);
       pst.setInt(++i, productId);
     }
     return i;

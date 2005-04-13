@@ -16,13 +16,22 @@
 package com.zeroio.utils;
 
 import java.util.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.search.Hits;
+import org.apache.lucene.search.Query;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
 /**
  *  Utilities to break of a search string
  *
  *@author     matt rajkowski
  *@created    June 11, 2004
- *@version    $Id$
+ *@version    $Id: SearchUtils.java,v 1.3.26.1 2004/12/06 19:09:07 kbhoopal Exp
+ *      $
  */
 public class SearchUtils {
 
@@ -121,6 +130,58 @@ public class SearchUtils {
       }
     }
     return terms;
+  }
+
+
+  /**
+   *  Gets the sharedSearcher attribute of the SearchUtils class
+   *
+   *@param  context        Description of the Parameter
+   *@param  index          Description of the Parameter
+   *@return                The sharedSearcher value
+   *@exception  Exception  Description of the Exception
+   */
+  public static synchronized IndexSearcher getSharedSearcher(ActionContext context, Directory index) throws Exception {
+    IndexSearcher searcher = (IndexSearcher) context.getServletContext().getAttribute("indexSearcher");
+    if (searcher == null) {
+      searcher = (IndexSearcher) context.getServletContext().getAttribute("indexSearcher");
+      if (searcher == null) {
+        searcher = new IndexSearcher(index);
+        context.getServletContext().setAttribute("indexSearcher", searcher);
+      }
+    }
+    return searcher;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context         Description of the Parameter
+   *@param  queryString     Description of the Parameter
+   *@param  searcher        Description of the Parameter
+   *@param  searchBeanInfo  Description of the Parameter
+   *@exception  Exception   Description of the Exception
+   */
+  public static void buildSearchResults(ActionContext context, String queryString, IndexSearcher searcher, PagedListInfo searchBeanInfo) throws Exception {
+    long start = System.currentTimeMillis();
+    Query query = QueryParser.parse(queryString, "contents", new StandardAnalyzer());
+    Hits hits = searcher.search(query);
+    //Sort sort = new Sort("type");
+    //Hits hits = searcher.search(query, sort);
+    long end = System.currentTimeMillis();
+    context.getRequest().setAttribute("hits", hits);
+    context.getRequest().setAttribute("duration", new Long(end - start));
+    //System.out.println("Found " + hits.length() + " document(s) that matched query '" + queryString + "':");
+    // configure the paged list info
+    searchBeanInfo.setMaxRecords(hits.length());
+    String tmpItemsPerPage = context.getRequest().getParameter("items");
+    if (tmpItemsPerPage != null) {
+      searchBeanInfo.setItemsPerPage(tmpItemsPerPage);
+    }
+    if ("true".equals(context.getRequest().getParameter("auto-populate"))) {
+      searchBeanInfo.setCurrentOffset(0);
+    }
   }
 
 

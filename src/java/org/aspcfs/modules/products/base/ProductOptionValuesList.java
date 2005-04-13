@@ -32,28 +32,13 @@ import org.aspcfs.modules.base.SyncableList;
  *@version    $Id: ProductOptionValuesList.java,v 1.1.2.2 2004/03/19 20:46:00
  *      partha Exp $
  */
-public class ProductOptionValuesList extends ArrayList implements SyncableList {
-  //sync api
-  /**
-   *  Description of the Field
-   */
-  public final static String tableName = "product_option_values";
-  /**
-   *  Description of the Field
-   */
-  public final static String uniqueField = "value_id";
-  private int syncType = Constants.NO_SYNC;
-  private Timestamp lastAnchor = null;
-  private Timestamp nextAnchor = null;
+public class ProductOptionValuesList extends ArrayList {
   //filters
   private PagedListInfo pagedListInfo = null;
   private int id = -1;
-  //other supplimentary fields
   private int optionId = -1;
+  private int resultId = -1;
   private int productId = -1;
-
-  private String optionName = null;
-  private String productName = null;
 
 
   /**
@@ -88,122 +73,32 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the optionId attribute of the ProductOptionValuesList object
+   *  Sets the resultId attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new optionId value
+   *@param  tmp  The new resultId value
    */
-  public void setOptionId(int tmp) {
-    this.optionId = tmp;
+  public void setResultId(int tmp) {
+    this.resultId = tmp;
   }
 
 
   /**
-   *  Sets the optionId attribute of the ProductOptionValuesList object
+   *  Sets the resultId attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new optionId value
+   *@param  tmp  The new resultId value
    */
-  public void setOptionId(String tmp) {
-    this.optionId = Integer.parseInt(tmp);
+  public void setResultId(String tmp) {
+    this.resultId = Integer.parseInt(tmp);
   }
 
 
   /**
-   *  Gets the optionId attribute of the ProductOptionValuesList object
+   *  Gets the resultId attribute of the ProductOptionValuesList object
    *
-   *@return    The optionId value
+   *@return    The resultId value
    */
-  public int getOptionId() {
-    return optionId;
-  }
-
-
-  /**
-   *  Gets the tableName attribute of the ProductOptionValuesList object
-   *
-   *@return    The tableName value
-   */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   *  Gets the uniqueField attribute of the ProductOptionValuesList object
-   *
-   *@return    The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
-  }
-
-
-  /**
-   *  Gets the pagedListInfo attribute of the ProductOptionValuesList object
-   *
-   *@return    The pagedListInfo value
-   */
-  public PagedListInfo getPagedListInfo() {
-    return pagedListInfo;
-  }
-
-
-  /**
-   *  Gets the id attribute of the ProductOptionValuesList object
-   *
-   *@return    The id value
-   */
-  public int getId() {
-    return id;
-  }
-
-
-  /**
-   *  Gets the syncType attribute of the ProductOptionValuesList object
-   *
-   *@return    The syncType value
-   */
-  public int getSyncType() {
-    return syncType;
-  }
-
-
-  /**
-   *  Gets the lastAnchor attribute of the ProductOptionValuesList object
-   *
-   *@return    The lastAnchor value
-   */
-  public Timestamp getLastAnchor() {
-    return lastAnchor;
-  }
-
-
-  /**
-   *  Gets the nextAnchor attribute of the ProductOptionValuesList object
-   *
-   *@return    The nextAnchor value
-   */
-  public Timestamp getNextAnchor() {
-    return nextAnchor;
-  }
-
-
-  /**
-   *  Gets the optionName attribute of the ProductOptionValuesList object
-   *
-   *@return    The optionName value
-   */
-  public String getOptionName() {
-    return optionName;
-  }
-
-
-  /**
-   *  Gets the productName attribute of the ProductOptionValuesList object
-   *
-   *@return    The productName value
-   */
-  public String getProductName() {
-    return productName;
+  public int getResultId() {
+    return resultId;
   }
 
 
@@ -238,82 +133,52 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the syncType attribute of the ProductOptionValuesList object
+   *  Sets the optionId attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new syncType value
+   *@param  tmp  The new optionId value
    */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
+  public void setOptionId(int tmp) {
+    this.optionId = tmp;
   }
 
 
   /**
-   *  Sets the syncType attribute of the ProductOptionValuesList object
+   *  Sets the optionId attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new syncType value
+   *@param  tmp  The new optionId value
    */
-  public void setSyncType(String tmp) {
-    this.syncType = Integer.parseInt(tmp);
+  public void setOptionId(String tmp) {
+    this.optionId = Integer.parseInt(tmp);
   }
 
 
   /**
-   *  Sets the lastAnchor attribute of the ProductOptionValuesList object
+   *  Gets the pagedListInfo attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new lastAnchor value
+   *@return    The pagedListInfo value
    */
-  public void setLastAnchor(Timestamp tmp) {
-    this.lastAnchor = tmp;
+  public PagedListInfo getPagedListInfo() {
+    return pagedListInfo;
   }
 
 
   /**
-   *  Sets the lastAnchor attribute of the ProductOptionValuesList object
+   *  Gets the id attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new lastAnchor value
+   *@return    The id value
    */
-  public void setLastAnchor(String tmp) {
-    this.lastAnchor = DatabaseUtils.parseTimestamp(tmp);
+  public int getId() {
+    return id;
   }
 
 
   /**
-   *  Sets the nextAnchor attribute of the ProductOptionValuesList object
+   *  Gets the optionId attribute of the ProductOptionValuesList object
    *
-   *@param  tmp  The new nextAnchor value
+   *@return    The optionId value
    */
-  public void setNextAnchor(Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   *  Sets the nextAnchor attribute of the ProductOptionValuesList object
-   *
-   *@param  tmp  The new nextAnchor value
-   */
-  public void setNextAnchor(String tmp) {
-    this.nextAnchor = DatabaseUtils.parseTimestamp(tmp);
-  }
-
-
-  /**
-   *  Sets the optionName attribute of the ProductOptionValuesList object
-   *
-   *@param  tmp  The new optionName value
-   */
-  public void setOptionName(String tmp) {
-    this.optionName = tmp;
-  }
-
-
-  /**
-   *  Sets the productName attribute of the ProductOptionValuesList object
-   *
-   *@param  tmp  The new productName value
-   */
-  public void setProductName(String tmp) {
-    this.productName = tmp;
+  public int getOptionId() {
+    return optionId;
   }
 
 
@@ -341,10 +206,9 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
 
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-        " SELECT COUNT(*) AS recordcount " +
-        " FROM product_option_values AS poptvalues " +
-        " WHERE poptvalues.value_id > 0"
-        );
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM product_option_values AS poptvalues " +
+        "WHERE poptvalues.value_id > 0 ");
 
     createFilter(sqlFilter, db);
 
@@ -364,21 +228,12 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     } else {
-      sqlSelect.append(" SELECT ");
+      sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " poptvalues.*, " +
-        " popt.short_description AS option_name , " +
-        " pctlg.product_name AS product_name " +
-        " FROM product_option_values AS poptvalues " +
-        " LEFT JOIN product_option as popt " +
-        " ON ( poptvalues.option_id = popt.option_id ) " +
-        " LEFT JOIN product_option_map as poptmap " +
-        " ON ( poptvalues.value_id = poptmap.value_id ) " +
-        " LEFT JOIN product_catalog AS pctlg " +
-        " ON ( poptmap.product_id = pctlg.product_id ) " +
-        " WHERE poptvalues.value_id > 0 "
-        );
+        "poptvalues.* " +
+        "FROM product_option_values AS poptvalues " +
+        "WHERE poptvalues.value_id > 0 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -393,8 +248,8 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
         break;
       }
       ++count;
-      ProductOptionValues productOptionValues = new ProductOptionValues(rs);
-      this.add(productOptionValues);
+      ProductOptionValues value = new ProductOptionValues(rs);
+      this.add(value);
     }
     rs.close();
     pst.close();
@@ -406,14 +261,13 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@param  basePath          Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void delete(Connection db, String basePath) throws SQLException {
+  public void delete(Connection db) throws SQLException {
     Iterator optionValues = this.iterator();
     while (optionValues.hasNext()) {
-      ProductOptionValues productOptionValues = (ProductOptionValues) optionValues.next();
-      productOptionValues.delete(db, basePath);
+      ProductOptionValues value = (ProductOptionValues) optionValues.next();
+      //value.delete(db);
     }
   }
 
@@ -426,19 +280,13 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
     if (id > -1) {
-      sqlFilter.append(" AND poptvalues.value_id = ? ");
-    }
-    if (productName != null) {
-      sqlFilter.append(" AND pctlg.product_name = ? ");
-    }
-    if (productId > -1) {
-      sqlFilter.append(" AND poptmap.product_id = ? ");
+      sqlFilter.append("AND poptvalues.value_id = ? ");
     }
     if (optionId > -1) {
-      sqlFilter.append(" AND popt.option_id = ? ");
+      sqlFilter.append("AND poptvalues.option_id = ? ");
     }
-    if (optionName != null) {
-      sqlFilter.append(" AND popt.short_description = ? ");
+    if (resultId > -1) {
+      sqlFilter.append("AND poptvalues.result_id = ? ");
     }
   }
 
@@ -455,19 +303,35 @@ public class ProductOptionValuesList extends ArrayList implements SyncableList {
     if (id > -1) {
       pst.setInt(++i, id);
     }
-    if (productName != null) {
-      pst.setString(++i, productName);
-    }
-    if (productId > -1) {
-      pst.setInt(++i, productId);
-    }
     if (optionId > -1) {
       pst.setInt(++i, optionId);
     }
-    if (optionName != null) {
-      pst.setString(++i, optionName);
+    if (resultId > -1) {
+      pst.setInt(++i, resultId);
     }
     return i;
   }
+
+
+  /**
+   *  Gets the valueFromId attribute of the ProductOptionValuesList object
+   *
+   * @param  id                Description of the Parameter
+   * @return                   The valueFromId value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ProductOptionValues getValueFromId(int id) throws SQLException {
+    ProductOptionValues result = null;
+    Iterator values = (Iterator) this.iterator();
+    while (values.hasNext()) {
+      ProductOptionValues value = (ProductOptionValues) values.next();
+      if (value.getId() == id) {
+        result = value;
+        break;
+      }
+    }
+    return result;
+  }
+
 }
 

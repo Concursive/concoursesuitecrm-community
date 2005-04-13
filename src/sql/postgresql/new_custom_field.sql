@@ -26,9 +26,9 @@ CREATE TABLE custom_field_category (
   level INTEGER DEFAULT 0,
   description TEXT,
   start_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
-  end_date TIMESTAMP,
+  end_date TIMESTAMP(3),
   default_item BOOLEAN DEFAULT false,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enabled BOOLEAN DEFAULT true,
   multiple_records BOOLEAN DEFAULT false,
   read_only BOOLEAN DEFAULT false
@@ -45,8 +45,8 @@ CREATE TABLE custom_field_group (
   level INTEGER DEFAULT 0,
   description TEXT,
   start_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
-  end_date TIMESTAMP,
-  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  end_date TIMESTAMP(3),
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enabled BOOLEAN DEFAULT true
 );
 

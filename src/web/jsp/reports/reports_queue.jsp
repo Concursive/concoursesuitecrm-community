@@ -39,8 +39,8 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Reports.do">Reports</a> >
-Queue
+<a href="Reports.do"><dhv:label name="qa.reports">Reports</dhv:label></a> >
+<dhv:label name="reports.queue">Queue</dhv:label>
 </td>
 </tr>
 </table>
@@ -48,40 +48,40 @@ Queue
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td>Generated reports are deleted from the server every 24 hours.</td></tr>
+    <td><dhv:label name="reports.reportDeletion.statement">Generated reports are deleted from the server every 24 hours.</dhv:label></td></tr>
 </table>
 <%-- Completed Reports --%>
 <dhv:formMessage showSpace="false" />
-<a href="Reports.do?command=RunReport">Add a Report</a><br>
+<a href="Reports.do?command=RunReport"><dhv:label name="reports.addAReport">Add a Report</dhv:label></a><br>
 <br />
 <table width="100%" border="0" cellpadding="4" cellspacing="0">
   <tr>
     <td nowrap class="pagedListTab"><img src="images/icons/stock_form-16.gif" align="absMiddle" alt="" />
-    Generated reports ready to be retrieved</td>
-    <td width="100%" align="right">Records: <%= completedQueue.size() %></td>
+    <dhv:label name="reports.reportReady.text">Generated reports ready to be retrieved</dhv:label></td>
+    <td width="100%" align="right"><dhv:label name="reports.records.text" param="<%= "size="+completedQueue.size() %>">Records: <%= completedQueue.size() %></dhv:label></td>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="100%">
-      <strong>Subject</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></strong>
     </th>
     <th>
-      <strong>Date</strong>
+      <strong><dhv:label name="quotes.date">Date</dhv:label></strong>
     </th>
     <th>
-      <strong>Status</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
     </th>
     <th>
-      <strong>Size</strong>
+      <strong><dhv:label name="accounts.accounts_documents_details.Size">Size</dhv:label></strong>
     </th>
   </tr>
 <dhv:evaluate if="<%= completedQueue.isEmpty() %>">
   <tr class="row2">
-    <td colspan="5">No reports found</td>
+    <td colspan="5"><dhv:label name="reports.noReportsFound">No reports found</dhv:label></td>
   </tr>
 </dhv:evaluate>
 <%
@@ -96,10 +96,10 @@ Queue
     <td width="100%"><%= toHtml(thisQueue.getReport().getTitle()) %></td>
     <td nowrap><zeroio:tz timestamp="<%= thisQueue.getProcessed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></td>
     <td nowrap>
-<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_QUEUED %>">Queued</dhv:evaluate>
-<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_PROCESSING %>">Processing</dhv:evaluate>
-<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_PROCESSED %>"><font color="green">Ready to download</font></dhv:evaluate>
-<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_ERROR %>"><font color="red">Error creating report</font></dhv:evaluate>
+<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_QUEUED %>"><dhv:label name="reports.queued">Queued</dhv:label></dhv:evaluate>
+<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_PROCESSING %>"><dhv:label name="reports.processing">ProcessingA</dhv:label></dhv:evaluate>
+<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_PROCESSED %>"><font color="green"><dhv:label name="reports.readyToDownload">Ready to download</dhv:label></font></dhv:evaluate>
+<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_ERROR %>"><font color="red"><dhv:label name="reports.errorCreatingReport">Error creating report</dhv:label></font></dhv:evaluate>
     </td>
     <td nowrap align="right"><dhv:filesize bytes="<%= thisQueue.getSize() %>"/></td>
   </tr>
@@ -112,28 +112,28 @@ Queue
 <table width="100%" border="0" cellpadding="4" cellspacing="0">
   <tr>
     <td nowrap class="pagedListTab"><img src="images/icons/stock_form-autopilots-16.gif" align="absMiddle" alt="" />
-    Reports scheduled to be processed by server</td>
-    <td width="100%" align="right">Records: <%= pendingQueue.size() %></td>
+    <dhv:label name="reports.reportScheduled.text">Reports scheduled to be processed by server</dhv:label></td>
+    <td width="100%" align="right"><dhv:label name="reports.records.text" param="<%= "size="+pendingQueue.size() %>">Records: <%= pendingQueue.size() %></dhv:label></td>
   </tr>
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="100%">
-      <strong>Subject</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></strong>
     </th>
     <th>
-      <strong>Date</strong>
+      <strong><dhv:label name="quotes.date">Date</dhv:label></strong>
     </th>
     <th>
-      <strong>Status</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
     </th>
   </tr>
 <dhv:evaluate if="<%= pendingQueue.isEmpty() %>">
   <tr class="row2">
-    <td colspan="4">No reports found</td>
+    <td colspan="4"><dhv:label name="reports.noReportsFound">No reports found</dhv:label></td>
   </tr>
 </dhv:evaluate>
 <%
@@ -148,10 +148,10 @@ Queue
     <td width="100%"><%= toHtml(thisQueue.getReport().getTitle()) %></td>
     <td nowrap><zeroio:tz timestamp="<%= thisQueue.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></td>
     <td nowrap>
-<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_QUEUED %>">Queued</dhv:evaluate>
-<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_PROCESSING %>">Processing</dhv:evaluate>
-<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_PROCESSED %>">Processed</dhv:evaluate>
-<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_ERROR %>">Error creating report</dhv:evaluate>
+<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_QUEUED %>"><dhv:label name="reports.queued">Queued</dhv:label></dhv:evaluate>
+<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_PROCESSING %>"><dhv:label name="reports.processing">Processing</dhv:label></dhv:evaluate>
+<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_PROCESSED %>"><dhv:label name="reports.processed">Processed</dhv:label></dhv:evaluate>
+<dhv:evaluate if="<%= thisQueue.getStatus() == ReportQueue.STATUS_ERROR %>"><dhv:label name="reports.errorCreatingReport">Error creating report</dhv:label></dhv:evaluate>
     </td>
   </tr>
 <%

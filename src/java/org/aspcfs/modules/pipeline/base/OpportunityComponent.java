@@ -15,21 +15,21 @@
  */
 package org.aspcfs.modules.pipeline.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.database.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.utils.web.LookupElement;
-import org.aspcfs.controller.SystemStatus;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.iteam.base.FileItemList;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.CallList;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.util.*;
 
 /**
  *  An OpportunityComponent makes up 1 or more elements of an Opportunity. An
@@ -144,7 +144,6 @@ public class OpportunityComponent extends GenericBean {
     } else {
       typeList = new ArrayList();
     }
-    this.typeList = typeList;
   }
 
 
@@ -1433,17 +1432,11 @@ public class OpportunityComponent extends GenericBean {
     if (this.getHeaderId() == -1) {
       throw new SQLException("Opportunity Header ID not specified");
     }
-
-    PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
     int resultCount = -1;
-
-    sql.append(
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(
         "UPDATE opportunity_header set modified = CURRENT_TIMESTAMP, modifiedby = ? " +
         "WHERE opp_id = ? ");
-
-    int i = 0;
-    pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getHeaderId());
     resultCount = pst.executeUpdate();
@@ -1483,15 +1476,14 @@ public class OpportunityComponent extends GenericBean {
    *@since                    1.1
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     if (this.getHeaderId() == -1) {
       throw new SQLException("You must associate an opportunity component with an opportunity.");
     }
-
+    boolean doCommit = false;
     try {
-      db.setAutoCommit(false);
+      if ((doCommit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       StringBuffer sql = new StringBuffer();
       sql.append(
           "INSERT INTO opportunity_component " +
@@ -1542,12 +1534,18 @@ public class OpportunityComponent extends GenericBean {
 
       id = DatabaseUtils.getCurrVal(db, "opportunity_component_id_seq");
       this.update(db, true);
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -1674,90 +1672,6 @@ public class OpportunityComponent extends GenericBean {
 
 
   /**
-   *  Gets the Valid attribute of the Opportunity object
-   *
-   *@return                   The Valid value
-   *@exception  SQLException  Description of Exception
-   *@since
-   */
-  public boolean isValid() throws SQLException {
-    //errors.clear();
-
-    if (description == null || description.trim().equals("")) {
-      errors.put("componentDescriptionError", "Description cannot be left blank");
-    }
-
-    if (closeProb == 0 && !(errors.containsKey("closeProbError"))) {
-      errors.put("closeProbError", "Close Probability cannot be left blank");
-    } else {
-      if (closeProb > 1.0) {
-        errors.put("closeProbError", "Close Probability cannot be greater than 100%");
-      } else if (closeProb < 0) {
-        errors.put("closeProbError", "Close Probability cannot be less than 0%");
-      }
-    }
-
-    if (low > high) {
-      errors.put("lowHighError", "Low Estimate cannot be higher than the High Estimate");
-    }
-    if ((closeDate == null || getCloseDateString().trim().equals("")) && (errors.get("closeDateError") == null)) {
-      errors.put("closeDateError", "Close Date cannot be left blank");
-    }
-
-    if (guess == 0 && !(errors.containsKey("guessError"))) {
-      errors.put("guessError", "Amount needs to be entered");
-    }
-    if (terms == 0 && !(errors.containsKey("termsError"))) {
-      errors.put("termsError", "Terms needs to be entered");
-    } else {
-      if (terms < 0) {
-        errors.put("termsError", "Terms cannot be less than 0");
-      }
-    }
-    if (units == null) {
-      errors.put("termsError", "Units cannot be left blank");
-    }
-    if (type == null) {
-      errors.put("typeError", "Type cannot be left blank");
-    }
-    if (hasErrors()) {
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("Opportunity Component-> Cannot insert: object is not valid");
-      }
-      //Check warnings
-      checkWarnings();
-      onlyWarnings = false;
-      return false;
-    } else {
-      //Do not check for warnings if it was found that only warnings existed
-      // in the previous call to isValid for the same form.
-      if (!onlyWarnings) {
-        //Check for warnings if there are no errors
-        checkWarnings();
-        if (hasWarnings()) {
-          onlyWarnings = true;
-          return false;
-        }
-      }
-      return true;
-    }
-  }
-
-
-  /**
-   *  Generates warnings that need to be reviewed before the form can be
-   *  submitted.
-   */
-  protected void checkWarnings() {
-    if ((errors.get("alertDateError") == null) && (alertDate != null)) {
-      if (alertDate.before(new java.util.Date())) {
-        warnings.put("alertDateWarning", "Alert date is earlier than current date or set to current date");
-      }
-    }
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  db                Description of Parameter
@@ -1770,10 +1684,6 @@ public class OpportunityComponent extends GenericBean {
 
     if (this.getId() == -1) {
       throw new SQLException("Opportunity Component ID was not specified");
-    }
-
-    if (!isValid()) {
-      return -1;
     }
 
     try {

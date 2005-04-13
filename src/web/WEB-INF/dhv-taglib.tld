@@ -172,11 +172,22 @@
     <attribute>
       <name>name</name>
       <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
       <name>param</name>
       <required>no</required>
       <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>mainMenuItem</name>
+      <required>no</required>
+      <rtexprvalue>false</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>subMenuItem</name>
+      <required>no</required>
+      <rtexprvalue>false</rtexprvalue>
     </attribute>
   </tag>
   
@@ -207,6 +218,11 @@
       Displays the specified container menu from the config
     </display-name>
     <attribute>
+      <name>object</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
       <name>name</name>
       <required>yes</required>
       <rtexprvalue>true</rtexprvalue>
@@ -230,6 +246,28 @@
       <name>style</name>
       <required>no</required>
       <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>hideContainer</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  
+  <tag>
+    <name>pagedListAlphabeticalLinks</name>
+    <tag-class>org.aspcfs.taglib.PagedListAlphabeticalLinksHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Displays alphabetical links for the PagedListInfo specified.
+    </display-name>
+    <attribute>
+      <name>name</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>object</name>
+      <required>yes</required>
     </attribute>
   </tag>
   
@@ -275,13 +313,17 @@
     <attribute>
       <name>enableJScript</name>
       <required>no</required>
-    </attribute>    
+    </attribute>
+    <attribute>
+      <name>form</name>
+      <required>no</required>
+    </attribute>
   </tag>
   
   <tag>
     <name>pagedListStatus</name>
     <tag-class>org.aspcfs.taglib.PagedListStatusHandler</tag-class>
-    <body-content>empty</body-content>
+    <body-content>JSP</body-content>
     <display-name>
       Displays the status of the PagedListInfo specified.
     </display-name>
@@ -347,9 +389,13 @@
       <required>no</required>
     </attribute>
     <attribute>
-         <name>scrollReload</name>
+      <name>scrollReload</name>
       <required>no</required>
-       <rtexprvalue>true</rtexprvalue>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>form</name>
+      <required>no</required>
     </attribute>
   </tag>
   
@@ -514,6 +560,10 @@
       <name>version</name>
       <required>no</required>
     </attribute>
+    <attribute>
+      <name>thumbnail</name>
+      <required>no</required>
+    </attribute>
   </tag>
   <tag>
     <name>svgText</name> 
@@ -534,7 +584,7 @@
     </attribute>
   </tag>
   <tag>
-    <name>formMessage</name> 
+    <name>formMessage</name>
     <tag-class>org.aspcfs.taglib.FormMessageHandler</tag-class>
     <body-content>empty</body-content>
     <display-name>
@@ -543,6 +593,85 @@
     <attribute>
       <name>showSpace</name>
       <required>no</required>
+    </attribute>
+  </tag>
+
+  <tag>
+    <name>documentPermission</name> 
+    <tag-class>org.aspcfs.taglib.DocumentsPermissionHandler</tag-class>
+    <body-content>JSP</body-content>
+    <display-name>
+      Access the team member and document store permissions
+    </display-name>
+    <attribute>
+      <name>name</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>if</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+
+  <tag>
+    <name>documentRole</name>
+    <tag-class>org.aspcfs.taglib.DocumentsRoleHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Get the user's role from memory
+    </display-name>
+    <attribute>
+      <name>id</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  <tag>
+    <name>documentRoleSelect</name> 
+    <tag-class>org.aspcfs.taglib.DocumentsRoleSelectHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Get the role drop-down from memory
+    </display-name>
+    <attribute>
+      <name>name</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>value</name>
+      <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>onChange</name>
+      <required>no</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+  </tag>
+  <tag>
+    <name>productCategoryHierarchy</name> 
+    <tag-class>org.aspcfs.taglib.ProductCategoryHierarchyHandler</tag-class>
+    <body-content>empty</body-content>
+    <display-name>
+      Displat product category hierarchy trails
+    </display-name>
+    <attribute>
+      <name>showLastLink</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>link</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>displayJS</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>
 </taglib>

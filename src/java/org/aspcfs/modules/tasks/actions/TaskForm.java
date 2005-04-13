@@ -16,12 +16,10 @@
 package org.aspcfs.modules.tasks.actions;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.*;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
 
 /**
  *  Basic Task object.<br>
@@ -40,9 +38,7 @@ public final class TaskForm extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandPrepare(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
-
     try {
       db = this.getConnection(context);
       //build loe types
@@ -62,7 +58,7 @@ public final class TaskForm extends CFSModule {
     if (context.getRequest().getParameter("returnAction") != null) {
       returnAction = (String) context.getRequest().getParameter("returnAction");
     }
-    return this.getReturn(context, returnAction);
+    return getReturn(context, returnAction);
   }
 }
 

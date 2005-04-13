@@ -15,14 +15,12 @@
  */
 package org.aspcfs.modules.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.modules.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.servicecontracts.base.ServiceContractHours;
 import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.modules.servicecontracts.base.*;
+
+import java.sql.Connection;
 
 /**
  *  Description of the Class
@@ -40,15 +38,14 @@ public final class ServiceContractHoursAdjustor extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAdjustHours(ActionContext context) {
-
-    Exception errorMessage = null;
     Connection db = null;
     boolean adjustmentDone = false;
     ServiceContractHours sch = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try{
       db = this.getConnection(context);
       LookupList adjustmentReasonList = new LookupList(db, "lookup_hours_reason");
-      adjustmentReasonList.addItem(-1, "--None--");
+      adjustmentReasonList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("adjustmentReasonList", adjustmentReasonList);
 
       if ("true".equals((String) context.getRequest().getParameter("finalsubmit"))) {
@@ -56,24 +53,19 @@ public final class ServiceContractHoursAdjustor extends CFSModule {
         sch.setAdjustmentHours((String) context.getRequest().getParameter("adjustmentHours"));
         sch.setAdjustmentReason((String) context.getRequest().getParameter("adjustmentReason"));
         sch.setAdjustmentNotes((String) context.getRequest().getParameter("adjustmentNotes"));
-        adjustmentDone = true;
+        adjustmentDone = this.validateObject(context, db, sch);
       }
 
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (adjustmentDone) {
-        context.getRequest().setAttribute("serviceContractHours", sch);
-        context.getRequest().setAttribute("finalsubmit", "true");
-      }
-      return ("AdjustHoursOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (adjustmentDone) {
+      context.getRequest().setAttribute("serviceContractHours", sch);
+      context.getRequest().setAttribute("finalsubmit", "true");
     }
+    return ("AdjustHoursOK");
   }
 }
-

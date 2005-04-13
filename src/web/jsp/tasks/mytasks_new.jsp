@@ -21,33 +21,45 @@
 <%@ page import="java.util.*"%>
 <jsp:useBean id="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].description.focus();">
+<body onLoad="javascript:document.addTask.description.focus();">
 <form name="addTask" action="MyTasks.do?command=<%= Task.getId()!=-1?"Update":"Insert" %>&id=<%= Task.getId() %>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" method="post" onSubmit="return validateTask();">
 <%boolean popUp = false;
   if(request.getParameter("popup")!=null){
     popUp = true;
   }%>
-<dhv:evaluate exp="<%= !popUp %>">
+<dhv:evaluate if="<%= !popUp %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> > 
-<a href="MyTasks.do?command=ListTasks">Tasks</a> >
-<%= Task.getId()==-1?"Add":"Update" %> a Task
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> > 
+<a href="MyTasks.do?command=ListTasks"><dhv:label name="myitems.tasks">Tasks</dhv:label></a> >
+<% if(Task.getId()==-1) {%>
+  <dhv:label name="quickactions.addTask">Add a Task</dhv:label>
+<%} else {%>
+  <dhv:label name="tasks.updateATask">Update a Task</dhv:label>
+<%}%>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<input type="submit" value="<%= Task.getId()==-1?"Save":"Update" %>">
-<input type="button" value="Cancel" onClick="<%=popUp?"javascript:window.close();":"javascript:window.location.href='MyTasks.do?command=ListTasks';"%>"><br />
+<% if(Task.getId()==-1) {%>
+  <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>">
+<%} else {%>
+  <input type="submit" value="<dhv:label name="button.update">Update</dhv:label>">
+<%}%>
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%=popUp?"javascript:window.close();":"javascript:window.location.href='MyTasks.do?command=ListTasks';"%>"><br>
 <dhv:formMessage />
 <%@ include file="task_include.jsp" %>
 <br>
-<input type="submit" value="<%= Task.getId()==-1?"Save":"Update" %>">
+<% if(Task.getId()==-1) {%>
+  <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>">
+<%} else {%>
+  <input type="submit" value="<dhv:label name="button.update">Update</dhv:label>">
+<%}%>
 <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
-<input type="button" value="Cancel" onClick="<%=popUp?"javascript:window.close();":"javascript:window.location.href='MyTasks.do?command=ListTasks';"%>">
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%=popUp?"javascript:window.close();":"javascript:window.location.href='MyTasks.do?command=ListTasks';"%>">
 </form>
 </body>
 

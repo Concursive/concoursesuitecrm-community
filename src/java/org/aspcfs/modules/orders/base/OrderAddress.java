@@ -28,14 +28,17 @@ import org.aspcfs.modules.base.Address;
  *
  *@author     ananth
  *@created    March 18, 2004
- *@version    $Id$
+ *@version    $Id: OrderAddress.java,v 1.3.12.1 2004/11/12 19:55:25 mrajkowski
+ *      Exp $
  */
 public class OrderAddress extends Address {
 
   /**
    *  Constructor for the OrderAddress object
    */
-  public OrderAddress() { }
+  public OrderAddress() {
+    isOrder = true;
+  }
 
 
   /**
@@ -46,6 +49,7 @@ public class OrderAddress extends Address {
    *@exception  SQLException  Description of the Exception
    */
   public OrderAddress(Connection db, int id) throws SQLException {
+    isOrder = true;
     queryRecord(db, id);
   }
 
@@ -57,6 +61,7 @@ public class OrderAddress extends Address {
    *@exception  SQLException  Description of the Exception
    */
   public OrderAddress(ResultSet rs) throws SQLException {
+    isOrder = true;
     buildRecord(rs);
   }
 
@@ -77,8 +82,10 @@ public class OrderAddress extends Address {
         " SELECT addr.address_id, addr.order_id, addr.address_type, addr.addrline1, addr.addrline2, " +
         "        addr.addrline3, addr.city, addr.state, addr.country, addr.postalcode, " +
         "				 addr.entered, addr.enteredby, addr.modified, addr.modifiedby, l.description " +
-        " FROM order_address addr, lookup_orderaddress_types l " +
-        " WHERE addr.address_type = l.code AND addr.address_id = ? ");
+        " FROM order_address addr " +
+        " LEFT JOIN lookup_orderaddress_types l " +
+        " ON ( addr.address_type = l.code ) " +
+        " AND addr.address_id = ? ");
     pst.setInt(1, addressId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -138,6 +145,12 @@ public class OrderAddress extends Address {
    *@exception  SQLException  Description of the Exception
    */
   public void insert(Connection db, int orderId, int enteredBy) throws SQLException {
+    if (orderId > -1) {
+      this.setOrderId(orderId);
+    }
+    if (enteredBy > -1) {
+      this.setEnteredBy(enteredBy);
+    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         " INSERT INTO order_address(order_id, address_type, addrline1, addrline2, addrline3, " +
@@ -161,7 +174,6 @@ public class OrderAddress extends Address {
     sql.append("?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
-
     if (this.getOrderId() > -1) {
       pst.setInt(++i, this.getOrderId());
     } else {
@@ -209,19 +221,30 @@ public class OrderAddress extends Address {
     if (this.getId() == -1) {
       throw new SQLException("Address ID not specified");
     }
+    boolean commit = true;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       PreparedStatement pst = db.prepareStatement(
           " DELETE FROM order_address WHERE address_id = ?"
           );
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      e.printStackTrace();
+      if (commit) {
+        db.rollback();
+      }
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -237,7 +260,7 @@ public class OrderAddress extends Address {
    */
   public int update(Connection db, int modifiedBy) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
@@ -281,16 +304,5 @@ public class OrderAddress extends Address {
     return resultCount;
   }
 
-
-  /**
-   *  Gets the valid attribute of the OrderAddress object
-   *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  public boolean isValid(Connection db) throws SQLException {
-    return true;
-  }
 }
 

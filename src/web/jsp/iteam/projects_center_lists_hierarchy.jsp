@@ -26,7 +26,7 @@
 <table cellpadding="0" cellspacing="0" width="100%" border="0">
 <tr>
   <td>
-    Select a list to move the item to:<br>
+    <dhv:label name="project.selectListToMoveItem">Select a list to move the item to:</dhv:label><br>
     <img border="0" src="images/box<%= Task.getComplete()?"-checked":"" %>.gif" alt="" align="absmiddle">
     <%= toHtml(Task.getDescription()) %>
   </td>
@@ -36,7 +36,7 @@
 <table cellpadding="0" cellspacing="0" width="100%" border="1" rules="cols">
   <tr class="section">
     <td>
-      <strong>Lists</strong>
+      <strong><dhv:label name="project.lists">Lists</dhv:label></strong>
     </td>
   </tr>
 <%
@@ -51,7 +51,7 @@
       <img border="0" src="images/icons/stock_list_enum-16.gif" align="absmiddle">
       <a href="ProjectManagementLists.do?command=SaveMove&pid=<%= Project.getId() %>&cid=<%= thisCategory.getId() %>&id=<%= Task.getId() %>&popup=true&return=ProjectLists&param=<%= Project.getId() %>&param2=<%= Task.getCategoryId() %>"><%= toHtml(thisCategory.getDescription()) %></a>
       <dhv:evaluate if="<%= Task.getCategoryId() == thisCategory.getId() %>">
-      (current folder)
+      <dhv:label name="accounts.accounts_documents_file_move.CurrentFolder">(current folder)</dhv:label>
       </dhv:evaluate>
     </td>
   </tr>
@@ -59,5 +59,5 @@
   }
 %>
 </table>
-&nbsp;<br>
-<input type="button" value="Cancel" onClick="javascript:window.close()">
+<br />
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">

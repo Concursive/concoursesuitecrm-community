@@ -40,6 +40,8 @@
     <map class="org.aspcfs.utils.web.LookupList" id="lookupRevenueTypes" table="lookup_revenue_types"/>
     <map class="org.aspcfs.utils.web.LookupList" id="lookupRevenueDetailTypes" table="lookup_revenuedetail_types"/>
     <map class="org.aspcfs.utils.web.LookupList" id="lookupSurveyTypes" table="lookup_survey_types"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupContactSource" table="lookup_contact_source"/>
+    <map class="org.aspcfs.utils.web.LookupList" id="lookupContactRating" table="lookup_contact_rating"/>
     <map class="org.aspcfs.utils.web.CustomLookupList" id="systemPrefs" table="system_prefs">
       <property field="category"/>
       <property field="data"/>
@@ -69,6 +71,10 @@
       <property type="int" lookup="user">userId</property>
       <property type="Timestamp">entered</property>
       <property type="Timestamp">modified</property>
+      <property>leadStatus</property>
+      <property>isLead</property>
+      <property lookup="lookupContactSource">source</property>
+      <property lookup="lookupContactRating">rating</property>
     </map>
     <map class="org.aspcfs.modules.accounts.base.Organization" id="account">
       <property alias="guid">id</property>
@@ -127,6 +133,8 @@
       <property>active</property>
       <property>folders</property>
       <property>lookups</property>
+      <property>reports</property>
+      <property>webdav</property>
     </map>
     <map class="org.aspcfs.modules.admin.base.Permission" id="permission">
       <property alias="guid">id</property>

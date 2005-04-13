@@ -224,12 +224,13 @@ public class RelationshipTypeList extends ArrayList {
     HtmlSelect relationshipTypeSelect = new HtmlSelect();
     relationshipTypeSelect.setJsEvent(jsEvent);
     relationshipTypeSelect.setSelectSize(this.getSize());
-
     Iterator i = this.iterator();
     while (i.hasNext()) {
       RelationshipType thisRelationshipType = (RelationshipType) i.next();
       relationshipTypeSelect.addItem(thisRelationshipType.getTypeId(), thisRelationshipType.getReciprocalName1());
-      relationshipTypeSelect.addItem(thisRelationshipType.getTypeId() + "_reciprocal", thisRelationshipType.getReciprocalName2());
+      if (!thisRelationshipType.getReciprocalName1().equals(thisRelationshipType.getReciprocalName2())) {
+        relationshipTypeSelect.addItem(thisRelationshipType.getTypeId() + "_reciprocal", thisRelationshipType.getReciprocalName2());
+      }
     }
     return relationshipTypeSelect;
   }
@@ -301,7 +302,9 @@ public class RelationshipTypeList extends ArrayList {
     } else {
       sqlSelect.append("SELECT ");
     }
-    sqlSelect.append("lrt.* FROM lookup_relationship_types lrt " +
+    sqlSelect.append(
+        "lrt.* " +
+        "FROM lookup_relationship_types lrt " +
         "WHERE lrt.type_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);

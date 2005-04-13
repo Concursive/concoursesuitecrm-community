@@ -25,10 +25,21 @@
 <jsp:useBean id="projectView" class="java.lang.String" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/spanDisplay.js"></script>
+<%-- Trails --%>
+<table class="trails" cellspacing="0">
+<tr>
+<td>
+<a href="ProjectManagement.do"><dhv:label name="Projects" mainMenuItem="true">Projects</dhv:label></a> >
+<a href="ProjectManagement.do?command=ProjectList"><dhv:label name="project.list">List</dhv:label></a> >
+<dhv:label name="projects.projectCenter">Project Center</dhv:label>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <%
   if (Project.getId() == -1) {
 %>
-<br/><font color="red">This project does not belong to you, or does not exist!
+<font color="red"><dhv:label name="project.doesNotBelongToYou.text">This project does not belong to you, or does not exist!</dhv:label>
 <%
   } else {
     String section = (String) request.getAttribute("IncludeSection");
@@ -37,13 +48,22 @@
 <table border="0" width="100%">
   <tr>
     <td>
-      <img src="images/icons/stock_navigator-open-toolbar-16.gif" border="0" align="absmiddle">
+      <img src="images/icons/stock_navigator-open-toolbar-16.gif" border="0" align="absmiddle" />
     </td>
     <td width="100%">
       <strong><%= toHtml(Project.getTitle()) %></strong>
+      <dhv:evaluate if="<%= Project.getPortal() %>">
+        <img src="images/portal.gif" border="0" alt="" align="absmiddle" />
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= Project.getAllowGuests() %>">
+        <img src="images/public.gif" border="0" alt="" align="absmiddle" />
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= Project.getApprovalDate() == null %>">
+        <img src="images/unapproved.gif" border="0" alt="" align="absmiddle" />
+      </dhv:evaluate>
     </td>
     <td align="right" nowrap>
-      (Role: <zeroio:role id="<%= currentMember.getUserLevel() %>"/>)
+      (<dhv:label name="project.role.colon">Role:</dhv:label> <zeroio:role id="<%= currentMember.getUserLevel() %>"/>)
     </td>
   </tr>
   <tr>
@@ -61,6 +81,11 @@
         <zeroio:tabbedMenu text="<%= Project.getLabel("News") %>" key="home,news" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=News&pid=" + Project.getId() %>"/>
       </dhv:evaluate>
     </zeroio:permission>
+<%--
+    <dhv:evaluate if="<%= Project.getShowCalendar() %>">
+      <zeroio:tabbedMenu text="<%= calendarLabel %>" key="calendar" value="<%= section %>" url="<%= calendarUrl %>" />
+    </dhv:evaluate>
+--%>
     <zeroio:permission name="project-discussion-forums-view">
       <dhv:evaluate if="<%= Project.getShowDiscussion() %>">
         <zeroio:tabbedMenu text="<%= Project.getLabel("Discussion") %>" key="issues" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=" + Project.getId() %>"/>
@@ -84,6 +109,11 @@
     <zeroio:permission name="project-tickets-view">
       <dhv:evaluate if="<%= Project.getShowTickets() %>">
         <zeroio:tabbedMenu text="<%= Project.getLabel("Tickets") %>" key="tickets" value="<%= section %>" url="<%= "ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=" + Project.getId() %>"/>
+      </dhv:evaluate>
+    </zeroio:permission>
+    <zeroio:permission name="project-accounts-view">
+      <dhv:evaluate if="<%= Project.getShowAccounts() %>">
+        <zeroio:tabbedMenu text="<%= Project.getLabel("Accounts") %>" key="accounts" value="<%= section %>" url="<%= "ProjectManagementAccounts.do?command=List&pid=" + Project.getId() %>"/>
       </dhv:evaluate>
     </zeroio:permission>
     <zeroio:permission name="project-team-view">

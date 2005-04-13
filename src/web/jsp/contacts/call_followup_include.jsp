@@ -24,12 +24,18 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong><%= ((CallDetails.getAlertDate() == null) || (request.getAttribute("alertDateWarning") != null)) ? "Follow-up Activity Reminder" : "Modify Activity"%></strong>
+      <strong>
+        <% if((CallDetails.getAlertDate() == null) || (request.getAttribute("alertDateWarning") != null)) {%>
+          <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.FollowupActivityReminder">Follow-up Activity Reminder</dhv:label>
+        <%} else {%>
+          <dhv:label name="contact.call.modifyActivity">Modify Activity</dhv:label>
+        <%}%>
+      </strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Type
+      <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
     </td>
     <td>
       <%= CallTypeList.getHtmlSelect("alertCallTypeId", CallDetails.getAlertCallTypeId()) %><font color="red">*</font><%= showAttribute(request, "followupTypeError") %>
@@ -37,19 +43,19 @@
   </tr>
     <tr class="containerBody">
     <td class="formLabel">
-      Date
+      <dhv:label name="quotes.date">Date</dhv:label>
     </td>
     <td>
       <%-- TODO: If no time set, default to 8:30 AM, or user's daily start time --%>
       <zeroio:dateSelect form="addCall" field="alertDate" timestamp="<%= CallDetails.getAlertDate() %>" timeZone="<%= CallDetails.getAlertDateTimeZone() %>"/>
-      at
+     <dhv:label name="project.at">at</dhv:label>
       <zeroio:timeSelect baseName="alertDate" value="<%= CallDetails.getAlertDate() %>" timeZone="<%= CallDetails.getAlertDateTimeZone() %>" showTimeZone="true" />
       <font color="red">*</font><%= showAttribute(request, "alertDateError") %><%= showWarningAttribute(request, "alertDateWarning") %>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Description
+      <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
     </td>
     <td>
       <input type="text" size="50" maxlength="255" name="alertText" value="<%= toHtmlValue(CallDetails.getAlertText()) %>"><font color="red">*</font><%= showAttribute(request, "descriptionError") %>
@@ -57,7 +63,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="top">
-      Notes
+      <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
     </td>
     <td>
       <TEXTAREA NAME="followupNotes" ROWS="3" COLS="50"><%= toString(CallDetails.getFollowupNotes()) %></TEXTAREA>
@@ -66,7 +72,7 @@
   
   <tr class="containerBody">
     <td class="formLabel" valign="top">
-      Priority
+      <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label>
     </td>
     <td>
        <%= PriorityList.getHtmlSelect("priorityId", CallDetails.getPriorityId()) %><font color="red">*</font><%= showAttribute(request, "priorityError") %>
@@ -74,17 +80,17 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="top">
-      Reminder
+      <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Reminder">Reminder</dhv:label>
     </td>
     <td>
-      <input type="radio" name="reminder" value="0" <%= CallDetails.getReminderId() > 0 ? "" : " checked"%>>Do not send a reminder<br>
-      <input type="radio" name="reminder" value="1" <%= CallDetails.getReminderId() > 0 ? " checked" : ""%>>Send a reminder <input type="text" size="2" name="reminderId" value="<%= CallDetails.getReminderId() > -1 ? CallDetails.getReminderId() : 5 %>">
-      <%= ReminderTypeList.getHtmlSelect("reminderTypeId", CallDetails.getReminderTypeId()) %> before the due date
+      <input type="radio" name="reminder" value="0" <%= CallDetails.getReminderId() > 0 ? "" : " checked"%>><dhv:label name="contact.doNotSendReminder">Do not send a reminder</dhv:label><br>
+      <input type="radio" name="reminder" value="1" <%= CallDetails.getReminderId() > 0 ? " checked" : ""%>><dhv:label name="contact.sendReminder">Send a reminder</dhv:label> <input type="text" size="2" name="reminderId" value="<%= CallDetails.getReminderId() > -1 ? CallDetails.getReminderId() : 5 %>">
+      <%= ReminderTypeList.getHtmlSelect("reminderTypeId", CallDetails.getReminderTypeId()) %> <dhv:label name="contact.beforeDueDate">before the due date</dhv:label>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Assigned to...
+      <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.AssignedTo">Assigned to...</dhv:label>
     </td>
     <td>
       <table class="empty">
@@ -100,7 +106,7 @@
           </td>
           <td>
             <input type="hidden" name="owner" id="ownerid" value="<%= CallDetails.getOwner() == -1 ? User.getUserRecord().getId() : CallDetails.getOwner() %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&reset=true&filters=employees|accountcontacts|mycontacts|myprojects|all');">Change Owner</a>]
+            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&reset=true&filters=employees|accountcontacts|mycontacts|myprojects|all');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
           </td>
         </tr>
       </table>

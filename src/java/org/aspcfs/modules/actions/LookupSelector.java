@@ -31,7 +31,8 @@ import com.zeroio.iteam.base.*;
  *
  *@author     akhilesh mathur
  *@created    --
- *@version    $Id$
+ *@version    $Id: LookupSelector.java,v 1.7.16.2 2004/11/12 20:37:02 partha Exp
+ *      $
  */
 public final class LookupSelector extends CFSModule {
 
@@ -117,5 +118,43 @@ public final class LookupSelector extends CFSModule {
     context.getRequest().setAttribute("Table", tableName);
     return ("PopLookupOK");
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandPopupSingleSelector(ActionContext context) {
+    Connection db = null;
+    LookupList selectList = null;
+    boolean listDone = false;
+    String lookupId = (String) context.getRequest().getParameter("lookupId");
+    String moduleId = (String) context.getRequest().getParameter("moduleId");
+    String displayFieldId = null;
+    PagedListInfo lookupSelectorInfo = this.getPagedListInfo(context, "LookupSingleSelectorInfo");
+    if (context.getRequest().getParameter("displayFieldId") != null) {
+      displayFieldId = context.getRequest().getParameter("displayFieldId");
+    }
+    try {
+      db = this.getConnection(context);
+      lookupSelectorInfo.setLink("LookupSelector.do?command=PopupSingleSelector&lookupId=" + lookupId + "&moduleId=" + moduleId + "&displayFieldId=" + displayFieldId);
+      selectList = new LookupList(db, Integer.parseInt(moduleId), Integer.parseInt(lookupId));
+      selectList.setPagedListInfo(lookupSelectorInfo);
+      selectList.buildList(db);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      context.getRequest().setAttribute("BaseList", selectList);
+      this.freeConnection(context, db);
+    }
+    context.getRequest().setAttribute("DisplayFieldId", displayFieldId);
+    context.getRequest().setAttribute("lookupId", lookupId);
+    context.getRequest().setAttribute("moduleId", moduleId);
+    return ("PopLookupSingleOK");
+  }
+
 }
 

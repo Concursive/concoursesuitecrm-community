@@ -52,7 +52,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View List
+          <dhv:label name="project.viewList">View List</dhv:label>
         </td>
       </tr>
     </zeroio:permission>
@@ -63,7 +63,7 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Modify List
+          <dhv:label name="project.modifyList">Modify List</dhv:label>
         </td>
       </tr>
     </zeroio:permission>
@@ -74,7 +74,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete List
+          <dhv:label name="project.deleteList">Delete List</dhv:label>
         </td>
       </tr>
     </zeroio:permission>

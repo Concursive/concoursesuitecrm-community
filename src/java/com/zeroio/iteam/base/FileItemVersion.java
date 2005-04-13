@@ -15,12 +15,14 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import java.util.*;
-import java.text.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
 
 /**
  *  Description of the Class
@@ -671,13 +673,6 @@ public class FileItemVersion extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("FileItemVersion-> IS INVALID");
-      }
-      return false;
-    }
-
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO project_files_version ");
     sql.append("(item_id, subject, client_filename, filename, version, size, ");
@@ -697,7 +692,6 @@ public class FileItemVersion extends GenericBean {
       sql.append("?, ");
     }
     sql.append("?, ?) ");
-
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, id);
@@ -730,9 +724,6 @@ public class FileItemVersion extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public boolean update(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     String sql =
         "UPDATE project_files_version " +
         "SET subject = ?, client_filename = ? " +
@@ -777,9 +768,6 @@ public class FileItemVersion extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public boolean delete(Connection db, String baseFilePath) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
 
     //Need to delete the actual file
     String filePath = baseFilePath + FileItem.getDatePath(this.getEntered()) + this.getFilename();
@@ -800,28 +788,6 @@ public class FileItemVersion extends GenericBean {
     pst.close();
 
     return true;
-  }
-
-
-  /**
-   *  Gets the valid attribute of the FileItem object
-   *
-   *@return    The valid value
-   */
-  private boolean isValid() {
-    if (subject == null || subject.equals("")) {
-      errors.put("subjectError", "Required field");
-    }
-
-    if (filename == null || filename.equals("")) {
-      errors.put("filenameError", "Required field");
-    }
-
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
 

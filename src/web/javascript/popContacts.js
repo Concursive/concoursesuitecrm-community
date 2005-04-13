@@ -184,7 +184,7 @@ function setParentListCampaign(recipientEmails,recipientIds,listType,displayFiel
     //opener.insertOption("None Selected","",displayFieldId);
   }
   var i = 0;
-  var searchList = opener.document.forms[0].searchCriteria;
+  var searchList = opener.document.searchForm.searchCriteria;
   if (listType == "list") {
     if (searchList.length == 0 || searchList.options[0].value == "-1") {
       opener.deleteOptions(displayFieldId);

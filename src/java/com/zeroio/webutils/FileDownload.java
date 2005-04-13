@@ -15,10 +15,13 @@
  */
 package com.zeroio.webutils;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.*;
 import com.darkhorseventures.framework.actions.ActionContext;
+
+import javax.servlet.ServletOutputStream;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.StringReader;
 
 /**
  *  Description of the Class
@@ -82,7 +85,7 @@ public class FileDownload {
    *
    *@since
    */
-  public void FileDownload() { }
+  public FileDownload() { }
 
 
   /**
@@ -248,7 +251,6 @@ public class FileDownload {
   public void streamFile(ActionContext context, byte[] bytes, String contentType) throws Exception {
     context.getResponse().setContentType(contentType);
     ServletOutputStream outputStream = context.getResponse().getOutputStream();
-
     outputStream.write(bytes, 0, bytes.length);
     outputStream.flush();
     outputStream.close();

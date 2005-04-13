@@ -29,44 +29,42 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Reports.do">Reports</a> >
-<a href="Reports.do">Queue</a> >
-<a href="Reports.do?command=RunReport">Modules</a> >
+<a href="Reports.do"><dhv:label name="qa.reports">Reports</dhv:label></a> >
+<a href="Reports.do"><dhv:label name="reports.queue">Queue</dhv:label></a> >
+<a href="Reports.do?command=RunReport"><dhv:label name="admin.modules">Modules</dhv:label></a> >
 <a href="Reports.do?command=ListReports&categoryId=<%= category.getId() %>"><%= toHtml(category.getCategory()) %></a> >
-<a href="Reports.do?command=CriteriaList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=<%= request.getParameter("criteriaId") %>">Criteria List</a> >
-<a href="Reports.do?command=ParameterList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=<%= request.getParameter("criteriaId") %>">Parameters</a> >
-Report Added
+<a href="Reports.do?command=CriteriaList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=<%= request.getParameter("criteriaId") %>"><dhv:label name="reports.criteriaList">Criteria List</dhv:label></a> >
+<a href="Reports.do?command=ParameterList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=<%= request.getParameter("criteriaId") %>"><dhv:label name="admin.parameters">Parameters</dhv:label></a> >
+<dhv:label name="reports.reportAdded">Report Added</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-The following report has been added to the report queue.  The report can be
-retrieved from the <a href="Reports.do?command=ViewQueue">queue</a> once the server 
-has finished processing the report.<br>
-<br>
+<dhv:label name="reports.reportAdded.text" param="report=<a href=\"Reports.do?command=ViewQueue\">|end=</a>">The following report has been added to the report queue.  The report can be retrieved from the <a href="Reports.do?command=ViewQueue">queue</a> once the server has finished processing the report.</dhv:label><br />
+<br />
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Report Added to Queue</strong>
+      <strong><dhv:label name="reports.reportAddedToQueue">Report Added to Queue</dhv:label></strong>
     </th>
   </tr>
   <tr>
-    <td class="formLabel">Module</td>
+    <td class="formLabel"><dhv:label name="qa.module">Module</dhv:label></td>
     <td><%= toHtml(category.getCategory()) %></td>
   </tr>
   <tr>
-    <td class="formLabel">Title</td>
+    <td class="formLabel"><dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label></td>
     <td><%= toHtml(report.getTitle()) %></td>
   </tr>
   <tr>
-    <td class="formLabel">Description</td>
+    <td class="formLabel"><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></td>
     <td><%= toHtml(report.getDescription()) %></td>
   </tr>
   <tr>
-    <td class="formLabel">Queue Position</td>
+    <td class="formLabel"><dhv:label name="reports.queuePosition">Queue Position</dhv:label></td>
     <td><%= queuePosition %> of <%= queuePosition %></td>
   </tr>
 </table>
 <br>
-<input type="button" value="View Queue" onClick="javascript:window.location.href='Reports.do?command=ViewQueue'"/>
+<input type="button" value="<dhv:label name="button.viewQueue">View Queue</dhv:label>" onClick="javascript:window.location.href='Reports.do?command=ViewQueue'"/>
 </form>

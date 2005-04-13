@@ -31,47 +31,42 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-<a href="RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Revenue</a> >
+<a href="RevenueManager.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.accounts_add.Revenue">Revenue</dhv:label></a> >
 <% if (request.getParameter("return") == null) {%>
-	<a href="RevenueManager.do?command=Details&id=<%=Revenue.getId()%>">Revenue Details</a> >
+	<a href="RevenueManager.do?command=Details&id=<%=Revenue.getId()%>"><dhv:label name="accounts.accounts_revenue_details.RevenueDetails">Revenue Details</dhv:label></a> >
 <%}%>
-Modify Revenue
+<dhv:label name="accounts.accounts_revenue_modify.ModifyRevenue">Modify Revenue</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-<dhv:container name="accounts" selected="revenue" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
+<dhv:container name="accounts" selected="revenue" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
       <input type="hidden" name="id" value="<%= Revenue.getId() %>">
       <input type="hidden" name="modified" value="<%= Revenue.getModified() %>">
 <% if (request.getParameter("return") != null) {%>
       <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>
-      <input type="submit" value="Update" name="Save">
+      <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Save" />
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='RevenueManager.do?command=View&orgId=<%= Revenue.getOrgId() %>'">
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='RevenueManager.do?command=View&orgId=<%= Revenue.getOrgId() %>'" />
 	<%}%>
 <%} else {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='RevenueManager.do?command=Details&id=<%= Revenue.getId() %>'">
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='RevenueManager.do?command=Details&id=<%= Revenue.getId() %>'" />
 <%}%>
       <br />
       <dhv:formMessage />
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
         <tr>
           <th colspan="2">
-            <strong>Modify <%= toHtml(Revenue.getDescription()) %></strong>
+            <strong><dhv:label name="button.modify">Modify</dhv:label> <%= toHtml(Revenue.getDescription()) %></strong>
           </th>
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
-            Reassign To
+            <dhv:label name="accounts.accounts_revenue_modify.ReassignTo">Reassign To</dhv:label>
           </td>
           <td>
             <%= UserList.getHtmlSelect("owner", Revenue.getOwner() ) %>
@@ -79,7 +74,7 @@ Modify Revenue
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
-            Revenue Type
+            <dhv:label name="accounts.accounts_revenue_modify.RevenueType">Revenue Type</dhv:label>
           </td>
           <td>
             <%= RevenueTypeList.getHtmlSelect("type", Revenue.getType()) %>
@@ -87,7 +82,7 @@ Modify Revenue
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
-            Description
+            <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
           </td>
           <td>
             <input type="text" size="40" name="description" value="<%=toHtml(Revenue.getDescription())%>">
@@ -96,7 +91,7 @@ Modify Revenue
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
-            Month
+            <dhv:label name="accounts.accounts_revenue_add.Month">Month</dhv:label>
           </td>
           <td>
             <% MonthList.setDefaultValue(String.valueOf(Revenue.getMonth())); %>
@@ -105,7 +100,7 @@ Modify Revenue
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
-            Year
+            <dhv:label name="accounts.accounts_revenue_add.Year">Year</dhv:label>
           </td>
           <td>
             <% YearList.setDefaultValue(String.valueOf(Revenue.getYear())); %>
@@ -115,7 +110,7 @@ Modify Revenue
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
-            Amount
+            <dhv:label name="accounts.accounts_revenue_add.Amount">Amount</dhv:label>
           </td>
           <td>
             <input type="text" size="15" name="amount" value="<%= Revenue.getAmountValue() %>">
@@ -123,14 +118,12 @@ Modify Revenue
           </td>
         </tr>
       </table>
-      &nbsp;<br>
-      <input type="submit" value="Update" name="Save">
+      &nbsp;<br />
+      <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Save" />
 <% if (request.getParameter("return") != null && request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='RevenueManager.do?command=View&orgId=<%= Revenue.getOrgId() %>'">
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='RevenueManager.do?command=View&orgId=<%= Revenue.getOrgId() %>'" />
 <%} else {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='RevenueManager.do?command=Details&id=<%= Revenue.getId() %>'">
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='RevenueManager.do?command=Details&id=<%= Revenue.getId() %>'" />
 <%}%>
-    </td>
-  </tr>
-</table>
+</dhv:container>
 </form>

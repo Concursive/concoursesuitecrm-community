@@ -49,24 +49,24 @@
     
     //Check required field
     if (form.name.value == "") {
-      messageText += "- Name field is required\r\n";
+      messageText += label("name.required","- Name is a required field.\r\n");
       formTest = false;
     }
 <dhv:evaluate if="<%= assignmentFolder.getId() == -1 %>">
     //Check max indent
     if (form.indent.value > <%= maxIndent %>) {
-      messageText += "- Indent level must be between 0 and <%= maxIndent %>\r\n";
+      messageText += label("check.indentlevel.between","- Indent level must be between 0 and ")+"<%= maxIndent %>\r\n";
       formTest = false;
     }
 </dhv:evaluate>
 <%--
     if (form.description.value == "") {
-      messageText += "- Description field is required\r\n";
+      messageText += label("description.required","- Description field is required\r\n");
       formTest = false;
     }
 --%>
     if (formTest == false) {
-      messageText = "The activity folder form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("check.activity.folder.items","The activity folder form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
@@ -76,36 +76,39 @@
   }
 </script>
 <form method="POST" name="inputForm" action="ProjectManagementAssignmentsFolder.do?command=SaveFolder&pid=<%= Project.getId() %>&rid=<%= (assignmentFolder.getId() == -1 ? request.getParameter("rid"):String.valueOf(assignmentFolder.getRequirementId())) %>&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return checkForm(this);">
-  <input type="submit" value=" Save " onClick="javascript:this.form.donew.value='false'">
-<dhv:evaluate if="<%= assignmentFolder.getId() == -1 %>">
-  <input type="submit" value="Save & New" onClick="javascript:this.form.donew.value='true'">
-</dhv:evaluate>
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';<%= (request.getParameter("popup") != null?"window.close();":"this.form.action='ProjectManagement.do?command=ProjectCenter&pid=" + Project.getId()  + ("Requirements".equals(request.getParameter("return"))?"&section=Requirements":"&section=Assignments") + "';") %>;"><br />
   <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        <strong><%= assignmentFolder.getId()==-1?"Add":"Update" %> Activity Folder</strong>
+        <strong><% if(assignmentFolder.getId()==-1) {%>
+        <dhv:label name="project.addActivityFolder">Add Activity Folder</dhv:label>
+        <%} else {%>
+        <dhv:label name="project.updateActivityFolder">Update Activity Folder</dhv:label>
+        <%}%></strong>
       </th>
     </tr>
     <tr class="containerBody">
-      <td valign="top" nowrap class="formLabel">Name</td>
+      <td valign="top" nowrap class="formLabel"><dhv:label name="contacts.name">Name</dhv:label></td>
       <td valign="top" nowrap>
         <input type="text" name="name" size="57" maxlength="150" value="<%= toHtmlValue(assignmentFolder.getName()) %>"><font color=red>*</font> <%= showAttribute(request, "nameError") %>
       </td>
     </tr>
 <dhv:evaluate if="<%= assignmentFolder.getId() == -1 %>">
+<%-- Temp. fix for Weblogic --%>
+<%
+int assignmentFolderIndent = assignmentFolder.getIndent() > -1 ? assignmentFolder.getIndent() : Integer.parseInt(request.getParameter("prevIndent"));
+%>
     <tr>
       <td class="formLabel" nowrap>
-        Indent Level
+        <dhv:label name="project.indentLevel">Indent Level</dhv:label>
       </td>
       <td>
-        <zeroio:spinner name="indent" value="<%= assignmentFolder.getIndent() > -1 ? assignmentFolder.getIndent() : Integer.parseInt(request.getParameter("prevIndent")) %>" min="0" max="<%= maxIndent %>"/>
+        <zeroio:spinner name="indent" value="<%= assignmentFolderIndent %>" min="0" max="<%= maxIndent %>"/>
       </td>
     </tr>
 </dhv:evaluate>
     <tr class="containerBody">
-      <td nowrap class="formLabel" valign="top">Details</td>
+      <td nowrap class="formLabel" valign="top"><dhv:label name="contacts.details">Details</dhv:label></td>
       <td>
         <table border="0" cellpadding="0" cellspacing="0" class="empty">
           <tr>
@@ -122,11 +125,11 @@
     </tr>
   </table>
   <br>
-  <input type="submit" value=" Save " onClick="javascript:this.form.donew.value='false'">
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="javascript:this.form.donew.value='false'">
 <dhv:evaluate if="<%= assignmentFolder.getId() == -1 %>">
-  <input type="submit" value="Save & New" onClick="javascript:this.form.donew.value='true'">
+  <input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="javascript:this.form.donew.value='true'">
 </dhv:evaluate>
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';<%= (request.getParameter("popup") != null?"window.close();":"this.form.action='ProjectManagement.do?command=ProjectCenter&pid=" + Project.getId()  + ("Requirements".equals(request.getParameter("return"))?"&section=Requirements":"&section=Assignments") + "';") %>;">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';<%= (request.getParameter("popup") != null?"window.close();":"this.form.action='ProjectManagement.do?command=ProjectCenter&pid=" + Project.getId()  + ("Requirements".equals(request.getParameter("return"))?"&section=Requirements":"&section=Assignments") + "';") %>;">
   <input type="hidden" name="id" value="<%= assignmentFolder.getId() %>">
   <input type="hidden" name="parentId" value="<%= (assignmentFolder.getId() == -1 ? request.getParameter("parentId"):String.valueOf(assignmentFolder.getParentId())) %>">
   <input type="hidden" name="projectId" value="<%= Project.getId() %>">

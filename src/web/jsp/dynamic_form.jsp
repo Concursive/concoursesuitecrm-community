@@ -6,7 +6,15 @@
 <%
   int pg = 0;
   if (request.getParameter("pg") != null) {
-  	pg = Integer.parseInt(request.getParameter("pg"));
+    if (request.getAttribute("pg") != null) {
+      try {
+        int test = Integer.parseInt((String)request.getAttribute("pg"));
+        pg = test;
+      } catch (NumberFormatException numEx){
+      }
+    } else {
+  	  pg = Integer.parseInt(request.getParameter("pg"));
+    }
   }
   String returnType = request.getParameter("return");
   if (returnType == null) {
@@ -45,10 +53,11 @@
 %>
         <%-- 1st set of buttons --%>
         <%= thisTab.getButtonString() %>
-        <br>&nbsp;
+        <br />
+        <%= showError(request, "actionError") %>
         <%-- Draw the form --%>
         <dhv:group object="CustomFormInfo" page="<%= pg %>" />
-        <br>
+        <br />
         <%-- 2nd set of buttons --%>
         <%= thisTab.getButtonString() %>
 <%

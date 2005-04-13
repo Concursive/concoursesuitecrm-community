@@ -24,7 +24,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-Item List
+<dhv:label name="campaign.itemList">Item List</dhv:label>
 </td>
 </tr>
 </table>
@@ -32,13 +32,13 @@ Item List
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="3">
-      <strong>Survey Item Results</strong>
+      <strong><dhv:label name="campaign.surveyItemResults">Survey Item Results</dhv:label></strong>
     </th>
   </tr>
   <tr>
-    <th width="24" align="right" nowrap>&nbsp;&nbsp;Item</th>
-    <th>Text</th>
-    <th width="30" nowrap>Total Response.</th>
+    <th width="24" align="right" nowrap>&nbsp;&nbsp;<dhv:label name="accounts.accounts_documents_details.Item">Item</dhv:label></th>
+    <th><dhv:label name="campaign.text">Text</dhv:label></th>
+    <th width="30" nowrap><dhv:label name="campaign.totalResponse">Total Response</dhv:label></th>
   </tr>
   <%
 	Iterator z = ItemList.iterator();
@@ -62,11 +62,11 @@ Item List
  %>
     <tr>
       <td align="center" nowrap>
-        No Items Found
+        <dhv:label name="myitems.noItems">No Items Found</dhv:label>
       </td>
     </tr>
   <%}
 %>
 </table>
 <br>
-<input type="button" value="Close Window" onClick="javascript:window.close();">
+<input type="button" value="<dhv:label name="button.closeWindow">Close Window</dhv:label>" onClick="javascript:window.close();">

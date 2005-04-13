@@ -15,7 +15,7 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -35,46 +35,47 @@
   <tr class="subtab">
     <td>
       <img src="images/icons/stock_macro-organizer-16.gif" border="0" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>">Tickets</a> >
-      Details
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>"><dhv:label name="dependency.tickets">Tickets</dhv:label></a> >
+      <dhv:label name="tickets.details">Ticket Details</dhv:label>
     </td>
   </tr>
 </table>
 <br>
 <% if (ticket.getClosed() != null) { %>
 <zeroio:permission name="project-tickets-edit">
-  <input type="button" value="Re-open" onClick="javascript:confirmForward('ProjectManagementTickets.do?command=Reopen&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>&return=<%= request.getParameter("return") %>');">
+  <input type="button" value="<dhv:label name="button.reopen">Re-open</dhv:label>" onClick="javascript:confirmForward('ProjectManagementTickets.do?command=Reopen&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>&return=<%= request.getParameter("return") %>');">
 </zeroio:permission>
 <%} else {%>
 <zeroio:permission name="project-tickets-edit">
-  <input type="button" value="Edit" onClick="javascript:window.location.href='ProjectManagementTickets.do?command=Modify&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>'">
+  <input type="button" value="<dhv:label name="button.edit">Edit</dhv:label>" onClick="javascript:window.location.href='ProjectManagementTickets.do?command=Modify&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>&return=<%= request.getParameter("return") %>'">
 </zeroio:permission>
 <zeroio:permission name="project-tickets-delete">
-  <input type="button" value="Delete" onClick="javascript:confirmDelete('ProjectManagementTickets.do?command=Delete&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>');">
+  <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:confirmDelete('ProjectManagementTickets.do?command=Delete&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>');">
 </zeroio:permission>
 <%}%>
 <zeroio:permission name="project-tickets-edit,project-tickets-delete" if="any">
 <br />
 <br />
 </zeroio:permission>
-<dhv:evaluate if="<%= ticket.getClosed() != null %>">
-  (<font color="red">This ticket was closed on <%= toHtml(ticket.getClosedString()) %></font>)
-</dhv:evaluate>
-<dhv:evaluate if="<%= ticket.getClosed() == null %>">
-  (<font color="green">Open</font>)
+<dhv:pagedListStatus object="projectTicketsInfo">
+  <strong>Ticket # <%= ticket.getProjectTicketCount() %></strong>
+  <dhv:evaluate if="<%= ticket.isClosed() %>">
+    (<font color="red"><dhv:label name="project.ticketClosedOn" param="<%= "time="+toHtml(ticket.getClosedString()) %>">This ticket was closed on <%= toHtml(ticket.getClosedString()) %></dhv:label></font>)
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= !ticket.isClosed() %>">
+    (<font color="green"><dhv:label name="quotes.open">Open</dhv:label></font>)
+  </dhv:evaluate>
+</dhv:pagedListStatus>
 <br />
-</dhv:evaluate>
-<dhv:pagedListStatus title="<%= "<strong>Ticket # " + ticket.getProjectTicketCount() + "</strong>" %>" object="projectTicketsInfo"/>
-&nbsp;<br>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th colspan="2">
-      <strong>Classification</strong>
+      <dhv:label name="accounts.accounts_add.Classification">Classification</dhv:label>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="top">
-      Issue
+      <dhv:label name="accounts.accounts_asset_history.Issue">Issue</dhv:label>
     </td>
     <td valign="top">
 <%
@@ -83,7 +84,7 @@
     FileItem thisFile = (FileItem)files.next();
     if (".wav".equalsIgnoreCase(thisFile.getExtension())) {
 %>
-  <a href="TroubleTicketsDocuments.do?command=Download&stream=true&tId=<%= ticket.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom">Play Audio Message</a><br>
+  <a href="TroubleTicketsDocuments.do?command=Download&stream=true&tId=<%= ticket.getId() %>&fid=<%= thisFile.getId() %>"><img src="images/file-audio.gif" border="0" align="absbottom"><dhv:label name="tickets.playAudioMessage">Play Audio Message</dhv:label></a><br>
 <%
     }
   }
@@ -103,7 +104,7 @@
 --%>
   <tr class="containerBody">
 		<td class="formLabel">
-      Severity
+      <dhv:label name="project.severity">Severity</dhv:label>
     </td>
 		<td>
       <%= toHtml(ticket.getSeverityName()) %>
@@ -114,12 +115,12 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
 		<th colspan="2">
-      <strong>Assignment</strong>
+      <strong><dhv:label name="project.assignment">Assignment</dhv:label></strong>
 		</th>
   </tr>
   <tr class="containerBody">
 		<td class="formLabel">
-      Priority
+      <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label>
     </td>
 		<td>
       <%= toHtml(ticket.getPriorityName()) %>
@@ -137,31 +138,41 @@
 --%>
   <tr class="containerBody">
 		<td class="formLabel">
-      Assigned To
+      <dhv:label name="accounts.accounts_contacts_calls_list.AssignedTo">Assigned To</dhv:label>
 		</td>
 		<td>
       <dhv:username id="<%= ticket.getAssignedTo() %>"/>
       <dhv:evaluate if="<%= !(ticket.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
 		</td>
   </tr>
+  <dhv:evaluate if="<%= ticket.getEstimatedResolutionDate() != null %>">
+    <tr class="containerBody">
+      <td class="formLabel">
+        Estimated Resolution Date
+      </td>
+      <td>
+        <zeroio:tz timestamp="<%= ticket.getEstimatedResolutionDate() %>" default="&nbsp;"/>
+      </td>
+    </tr>
+  </dhv:evaluate>
 </table>
 <br>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
 		<th colspan="2">
-      <strong>Resolution</strong>
+      <strong><dhv:label name="accounts.accounts_asset_history.Resolution">Resolution</dhv:label></strong>
 		</th>
   </tr>
   <tr class="containerBody">
 		<td class="formLabel" valign="top">
-      Solution
+      <dhv:label name="project.ticketSolution">Solution</dhv:label>
 		</td>
 		<td>
       <%= toHtml(ticket.getSolution()) %>
 		</td>
   </tr>
 </table>
-&nbsp;
+<br />
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
 		<th colspan="2">
@@ -170,7 +181,7 @@
   </tr>
   <tr class="containerBody">
 		<td class="formLabel">
-      Entered
+      <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
     </td>
 		<td>
       <dhv:username id="<%= ticket.getEnteredBy() %>"/>
@@ -180,7 +191,7 @@
   </tr>
   <tr class="containerBody">
 		<td nowrap class="formLabel">
-      Last Modified
+      <dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label>
     </td>
 		<td>
       <dhv:username id="<%= ticket.getModifiedBy() %>"/>
@@ -188,18 +199,18 @@
       <zeroio:tz timestamp="<%= ticket.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
 		</td>
   </tr>
-<%--
-  <tr class="containerBody">
-		<td nowrap class="formLabel">
-      Source
-		</td>
-		<td>
-      <%= toHtml(ticket.getSourceName()) %>
-		</td>
-  </tr>
---%>
+  <dhv:evaluate if="<%= ticket.isClosed() %>">
+    <tr class="containerBody">
+      <td class="formLabel">
+        Closed Date
+      </td>
+      <td>
+        <zeroio:tz timestamp="<%= ticket.getClosed() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
+      </td>
+    </tr>
+  </dhv:evaluate>
 </table>
-<br>
+<br />
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
 		<th colspan="2">
@@ -231,7 +242,7 @@
 	%>
     <tr class="containerBody">
       <td>
-        <font color="#9E9E9E" colspan="2">No Log Entries.</font>
+        <font color="#9E9E9E" colspan="2"><dhv:label name="project.tickets.noLogEntries">No Log Entries.</dhv:label></font>
 			</td>
     </tr>
   <%}%>
@@ -239,14 +250,14 @@
 &nbsp;<br>
 <% if (ticket.getClosed() != null) { %>
 <zeroio:permission name="project-tickets-edit">
-  <input type="button" value="Re-open" onClick="javascript:confirmForward('ProjectManagementTickets.do?command=Reopen&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>&return=<%= request.getParameter("return") %>');">
+  <input type="button" value="<dhv:label name="button.reopen">Re-open</dhv:label>" onClick="javascript:confirmForward('ProjectManagementTickets.do?command=Reopen&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>&return=<%= request.getParameter("return") %>');">
 </zeroio:permission>
 <%} else {%>
 <zeroio:permission name="project-tickets-edit">
-  <input type="button" value="Edit" onClick="javascript:window.location.href='ProjectManagementTickets.do?command=Modify&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>'">
+  <input type="button" value="<dhv:label name="button.edit">Edit</dhv:label>" onClick="javascript:window.location.href='ProjectManagementTickets.do?command=Modify&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>&return=<%= request.getParameter("return") %>'">
 </zeroio:permission>
 <zeroio:permission name="project-tickets-delete">
-  <input type="button" value="Delete" onClick="javascript:confirmDelete('ProjectManagementTickets.do?command=Delete&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>');">
+  <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:confirmDelete('ProjectManagementTickets.do?command=Delete&pid=<%= Project.getId() %>&id=<%= ticket.getId() %>');">
 </zeroio:permission>
 <%}%>
 </form>

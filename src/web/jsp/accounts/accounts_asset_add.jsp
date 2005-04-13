@@ -40,40 +40,34 @@
     <%}%>
   }
 </script>
-<body onLoad="javascript:document.forms[0].vendor.focus();setDefaultDateListedField()" >
+<body onLoad="javascript:document.addAccountAsset.vendor.focus();setDefaultDateListedField()" >
 <form name="addAccountAsset" action="AccountsAssets.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td width="100%">
   <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-  <a href="Accounts.do?command=Search">Search Results</a> >
+  <a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
   <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-  <a href="AccountsAssets.do?command=List&orgId=<%= OrgDetails.getOrgId() %>">Assets</a> >
-  Add Asset
+  <a href="AccountsAssets.do?command=List&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.Assets">Assets</dhv:label></a> >
+  <dhv:label name="accounts.accounts_asset_add.AddAsset">Add Asset</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-  <%@ include file="accounts_details_header_include.jsp" %>
-  <dhv:container name="accounts" selected="assets" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-  <table cellpadding="4" cellspacing="0" border="0" width="100%">
-    <tr>
-      <td class="containerBack">
-      <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
-      <input type="button" value="Cancel" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
-      <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
-      <br />
-<dhv:formMessage />
-<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-<%@ include file="accountasset_include.jsp" %>
-<input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />
-<br />
-  <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
-  <input type="button" value="Cancel" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+<dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+  <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
+  <br />
+  <dhv:formMessage />
+  <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+  <%@ include file="accountasset_include.jsp" %>
+  <input type="hidden" name="currentDate" value="<%=  request.getAttribute("currentDate") %>" />
+  <br />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
   <input type="hidden" name="dosubmit" value="true" />
-  </td>
-  </tr>
-</table>
+</dhv:container>
 </form>
 </body>

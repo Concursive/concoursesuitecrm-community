@@ -27,7 +27,7 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
@@ -44,20 +44,20 @@ function checkForm(form) {
   formTest = true;
   message = "";
   alertMessage = "";
-  if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
-    message += "- Please specify an alert date\r\n";
+  if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
+    message += label("specify.alert.date", "- Please specify an alert date\r\n");
     formTest = false;
   }
-  if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
-    message += "- Please specify an alert description\r\n";
+  if ((!checkNullString(form.alertDate.value)) && (checkNullString(form.alertText.value))) { 
+    message += label("specify.alert.description", "- Please specify an alert description\r\n");
     formTest = false;
   }
   if (!checkNumber(form.commission.value)) { 
-      message += "- Commission entered is invalid\r\n";
+      message += label("commission.entered.invalid", "- Commission entered is invalid\r\n");
       formTest = false;
     }
   if (formTest == false) {
-    alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+    alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
     return false;
   } else {
     if(alertMessage != ""){
@@ -83,92 +83,75 @@ function checkForm(form) {
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> >
+<a href="Leads.do"><dhv:label name="pipeline.pipeline">Pipeline</dhv:label></a> >
 <% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
-	<a href="Leads.do?command=Dashboard">Dashboard</a> >
+	<a href="Leads.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
 <% }else{ %>
-	<a href="Leads.do?command=Search">Search Results</a> >
+	<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <% } %>
 <% if ("list".equals(request.getParameter("return"))) {%>
-  <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> > 
+  <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> > 
 <%} else if (request.getParameter("return") != null) {%>
-  <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> > 
-  <a href="LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %><%= addLinkParams(request, "viewSource") %>">Component Details</a> >
+  <a href="Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> > 
+  <a href="LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.ComponentDetails">Component Details</dhv:label></a> >
 <%}%>
-Modify Component
+<dhv:label name="accounts.accounts_contacts_oppcomponent_modify.ModifyComponent">Modify Component</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
 <dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<%-- Begin container --%>
-<dhv:evaluate if="<%= !popUp %>">
-<%@ include file="leads_details_header_include.jsp" %>
-<% String param1 = "id=" + opportunityHeader.getId(); 
-   String param2 = addLinkParams(request, "viewSource");
-%>      
-<dhv:container name="opportunities" selected="details" param="<%= param1 %>" appendToUrl="<%= param2 %>"  style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-</dhv:evaluate>
-<%-- Begin the container contents --%>
-<input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-<% 
-  if (request.getParameter("return") != null) {
-	  if (request.getParameter("return").equals("list")) {
-%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
-<%
-    } else if (request.getParameter("return").equals("details")) {
-%>
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>';this.form.dosubmit.value='false';">
-<%
+<dhv:container name="opportunities" selected="details" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <%
+    if (request.getParameter("return") != null) {
+      if (request.getParameter("return").equals("list")) {
+  %>
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
+  <%
+      } else if (request.getParameter("return").equals("details")) {
+  %>
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>';this.form.dosubmit.value='false';">
+  <%
+      }
+    } else {
+  %>
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>';this.form.dosubmit.value='false';">
+  <%
     }
-  } else {
-%>
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>';this.form.dosubmit.value='false';">
-<%
-  }
-%>
-<dhv:evaluate exp="<%= popUp %>">
-  <input type="button" value="Cancel" onclick="javascript:window.close();">
-</dhv:evaluate>
-<br />
-<dhv:formMessage />
-<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-<%--  include basic opportunity form --%>
-<%@ include file="opportunity_include.jsp" %>
-&nbsp;
-<br>
-<input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-<% if (request.getParameter("return") != null) {%>
-	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
-	<%} else if(request.getParameter("return").equals("details")) {%>
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>';this.form.dosubmit.value='false';">
- <%}
- } else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>';this.form.dosubmit.value='false';">
-<%}%>
-<dhv:evaluate exp="<%= popUp %>">
-  <input type="button" value="Cancel" onclick="javascript:window.close();">
-</dhv:evaluate>
-<%-- End container contents --%>
-<dhv:evaluate if="<%= !popUp %>">
-    </td>
-  </tr>
-</table>
-</dhv:evaluate>
-<%-- End container --%>
-<%= addHiddenParams(request, "viewSource|return") %>
-<input type="hidden" name="id" value="<%= ComponentDetails.getId() %>">
-<input type="hidden" name="headerId" value="<%= ComponentDetails.getHeaderId() %>">
-<input type="hidden" name="modified" value="<%= ComponentDetails.getModified() %>">
-<input type="hidden" name="dosubmit" value="true">
+  %>
+  <dhv:evaluate if="<%= popUp %>">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();">
+  </dhv:evaluate>
+  <br />
+  <dhv:formMessage />
+  <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+  <%--  include basic opportunity form --%>
+  <%@ include file="opportunity_include.jsp" %>
+  &nbsp;
+  <br>
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% if (request.getParameter("return") != null) {%>
+    <% if (request.getParameter("return").equals("list")) {%>
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
+    <%} else if(request.getParameter("return").equals("details")) {%>
+    <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= ComponentDetails.getHeaderId() %>';this.form.dosubmit.value='false';">
+   <%}
+   } else {%>
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='LeadsComponents.do?command=DetailsComponent&id=<%= ComponentDetails.getId() %>';this.form.dosubmit.value='false';">
+  <%}%>
+  <dhv:evaluate if="<%= popUp %>">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();">
+  </dhv:evaluate>
+  <%= addHiddenParams(request, "viewSource|return") %>
+  <input type="hidden" name="id" value="<%= ComponentDetails.getId() %>">
+  <input type="hidden" name="headerId" value="<%= ComponentDetails.getHeaderId() %>">
+  <input type="hidden" name="modified" value="<%= ComponentDetails.getModified() %>">
+  <input type="hidden" name="dosubmit" value="true">
+</dhv:container>
 </form>
 

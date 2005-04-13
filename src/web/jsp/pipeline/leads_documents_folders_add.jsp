@@ -33,11 +33,11 @@
     var formTest = true;
     var messageText = "";
     if (form.subject.value == "") {
-      messageText += "- Name is required\r\n";
+      messageText += label("Name.required", "- Name is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The form could not be submitted.          \r\nPlease verify the following:\r\n\r\n" + messageText;
+      messageText = label("Form.not.submitted", "The form could not be submitted.          \r\nPlease verify the following:\r\n\r\n") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
@@ -45,37 +45,38 @@
     return true;
   }
 </script>
+<form method="POST" name="inputForm" action="LeadsDocumentsFolders.do?command=Save&auto-populate=true<%= addLinkParams(request, "viewSource") %>" onSubmit="return checkForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0" cellpadding="4">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> >
+<a href="Leads.do"><dhv:label name="pipeline.pipeline">Pipeline</dhv:label></a> >
 <% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
-<a href="Leads.do?command=Dashboard">Dashboard</a> >
+<a href="Leads.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
 <% }else{ %>
-<a href="Leads.do?command=Search">Search Results</a> >
+<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <% } %>
-<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> >
-<a href="LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Documents</a> > 
-Add Document Folder
+<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> >
+<a href="LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></a> > 
+<% if(fileFolder.getId() > -1) {%>
+  <dhv:label name="accounts.accounts_documents_list_menu.RenameFolder">Rename Folder</dhv:label>
+<%} else {%>
+  <dhv:label name="pipeline.addDocumentFolder">Add Document Folder</dhv:label>
+<%}%>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<%@ include file="leads_details_header_include.jsp" %>
-<% String param1 = "id=" + opportunityHeader.getId(); 
+<% String param1 = "id=" + opportunityHeader.getId();
    String param2 = addLinkParams(request, "viewSource");
 %>      
-<dhv:container name="opportunities" selected="documents" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
+<dhv:container name="opportunities" selected="documents" object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
-<tr><td class="containerBack">
-<form method="POST" name="inputForm" action="LeadsDocumentsFolders.do?command=Save&auto-populate=true<%= addLinkParams(request, "viewSource") %>" onSubmit="return checkForm(this);">
-<table border="0" cellpadding="4" cellspacing="0" width="100%">
-  <tr>
+  <tr class="subtab">
     <td>
 <%
 String documentFolderList = "LeadsDocuments.do?command=View&headerId="+ opportunityHeader.getId();
@@ -86,17 +87,23 @@ String documentModule = "Pipeline";
   </tr>
 </table>
 <br>
-  <input type="submit" value=" Save " name="save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View<%= addLinkParams(request, "viewSource") %>';"><br />
+  <input type="submit" value=" <dhv:label name="global.button.save">Save</dhv:label> " name="save">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View<%= addLinkParams(request, "viewSource") %>';"><br />
   <dhv:formMessage /><br />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        <strong><%= (fileFolder.getId() > -1 ? "Rename" : "New" ) %> Folder</strong>
+        <strong>
+          <% if(fileFolder.getId() > -1) {%>
+            <dhv:label name="accounts.accounts_documents_list_menu.RenameFolder">Rename Folder</dhv:label>
+          <%} else {%>
+            <dhv:label name="documents.documents.newFolder">New Folder</dhv:label>
+          <%}%>
+        </strong>
       </th>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel">Name</td>
+      <td nowrap class="formLabel"><dhv:label name="contacts.name">Name</dhv:label></td>
       <td>
         <input type="text" name="subject" size="59" maxlength="255" value="<%= toHtmlValue(fileFolder.getSubject()) %>">
         <input type="hidden" name="display" value="-1"/>
@@ -111,10 +118,8 @@ String documentModule = "Pipeline";
   <input type="hidden" name="parentId" value="<%= fileFolder.getParentId() %>">
   <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
   <input type="hidden" name="dosubmit" value="true">
-  <input type="submit" value=" Save " name="save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View<%= addLinkParams(request, "viewSource") %>';"><br>
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="save">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View<%= addLinkParams(request, "viewSource") %>';"><br />
+</dhv:container>
 </form>
-</td>
-</tr>
-</table>
 </body>

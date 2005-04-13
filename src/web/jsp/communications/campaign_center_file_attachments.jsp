@@ -29,16 +29,16 @@
     var formTest = true;
     var messageText = "";
     if (form.id<%= Campaign.getId() %>.value.length < 5) {
-      messageText += "- File is required\r\n";
+      messageText += label("file.required", "- File is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("File.not.submitted", "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
       alert(messageText);
       return false;
     } else {
-      if (form.upload.value != 'Please Wait...') {
-        form.upload.value='Please Wait...';
+      if (form.upload.value != label("button.pleasewait","Please Wait...")) {
+        form.upload.value=label("button.pleasewait","Please Wait...");
         return true;
       } else {
         return false;
@@ -50,11 +50,11 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManager.do?command=View">Campaign List</a> >
-<a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
-<a href="CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>">Attachments</a> >
-File Attachments
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManager.do?command=View"><dhv:label name="campaign.campaignList">Campaign List</dhv:label></a> >
+<a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>"><dhv:label name="campaign.campaignDetails">Campaign Details</dhv:label></a> >
+<a href="CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>"><dhv:label name="Attachments">Attachments</dhv:label></a> >
+<dhv:label name="campaign.fileAttachments">File Attachments</dhv:label>
 </td>
 </tr>
 </table>
@@ -62,25 +62,25 @@ File Attachments
 <table cellpadding="4" cellspacing="0" width="100%" style="border: 1px solid #000;">
   <tr class="containerHeader">
     <td style="border-bottom: 1px solid #000;">
-      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
+      <dhv:label name="campaign.campaign.colon" param="<%= "name="+toHtml(Campaign.getName()) %>"><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
     </td>
   </tr>
   <tr>
     <td width="100%" class="containerBack">
-      <input type="button" value="Back to Attachment Overview" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'"><br>
+      <input type="button" value="<dhv:label name="button.backToAttachmentOverview">Back to Attachment Overview</dhv:label>" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'"><br>
       &nbsp;<br>
       <%-- List of Documents --%>
       <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
         <tr>
           <th colspan="4">
-            <strong>Attached files...</strong>
+            <strong><dhv:label name="campaign.attachedFiles">Attached files...</dhv:label></strong>
           </th>
         </tr>
         <tr>
-          <th width="10" style="text-align: center;">Action</th>
-          <th>File Name</th>
-          <th style="text-align: center;">Size</th>
-          <th style="text-align: center;">Date</th>
+          <th width="8">&nbsp;</th>
+          <th><dhv:label name="documents.documents.fileName">File Name</dhv:label></th>
+          <th style="text-align: center;"><dhv:label name="accounts.accounts_documents_details.Size">Size</dhv:label></th>
+          <th style="text-align: center;"><dhv:label name="quotes.date">Date</dhv:label></th>
         </tr>
       <%
         Iterator j = fileItemList.iterator();
@@ -92,14 +92,14 @@ File Attachments
       %>      
           <tr class="row<%= rowid %>">
             <td width="10" valign="middle" style="text-align: center;" nowrap>
-              <a href="CampaignManager.do?command=DownloadFile&id=<%= Campaign.getId() %>&fid=<%= thisFile.getId() %>">Download</a>
-              <dhv:permission name="campaign-campaigns-edit"><a href="javascript:confirmDelete('CampaignManager.do?command=RemoveFile&fid=<%= thisFile.getId() %>&id=<%= Campaign.getId()%>');"><br>Remove</a></dhv:permission>
+              <a href="CampaignManager.do?command=DownloadFile&id=<%= Campaign.getId() %>&fid=<%= thisFile.getId() %>"><dhv:label name="accounts.accounts_documents_details.Download">Download</dhv:label></a>
+              <dhv:permission name="campaign-campaigns-edit"><a href="javascript:confirmDelete('CampaignManager.do?command=RemoveFile&fid=<%= thisFile.getId() %>&id=<%= Campaign.getId()%>');"><br><dhv:label name="button.remove">Remove</dhv:label></a></dhv:permission>
             </td>
             <td valign="middle" width="100%">
               <%= thisFile.getImageTag() %><%= toHtml(thisFile.getClientFilename()) %>
             </td>
             <td style="text-align: center;" valign="middle" nowrap>
-              <%= thisFile.getRelativeSize() %> k&nbsp;
+              <%= thisFile.getRelativeSize() %> <dhv:label name="admin.oneThousand.abbreviation">k</dhv:label>&nbsp;
             </td>
             <td nowrap>
               <zeroio:tz timestamp="<%= thisFile.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/><br />
@@ -110,7 +110,7 @@ File Attachments
       <%} else {%>
           <tr class="containerBody">
             <td colspan="4">
-              No files attached.
+              <dhv:label name="campaign.noFilesAttached">No files attached.</dhv:label>
             </td>
           </tr>
       <%}%>
@@ -121,7 +121,7 @@ File Attachments
       <table cellpadding="4" cellspacing="0" width="100%" class="details">
         <tr>
           <th>
-            <strong>Attach a file</strong>
+            <strong><dhv:label name="product.attachFile">Attach a file</dhv:label></strong>
           </th>
         </tr>
         <tr class="containerBody">
@@ -130,10 +130,10 @@ File Attachments
             <td width="100%">
               <center>
                 <input type="file" name="id<%= Campaign.getId() %>" size="30"><br>
-                * Large files may take a while to upload.<br>
-                * Remember: This file will eventually be e-mailed, so limit file size to under 2 Megabytes<br>
-                Wait for file completion message when upload is complete.<br>
-                <input type="submit" value=" Upload File " name="upload">
+                * <dhv:label name="accounts.accounts_documents_upload.LargeFilesUpload">Large files may take a while to upload.</dhv:label><br>
+                <dhv:label name="campaign.fileUpload.note">* Remember: This file will eventually be e-mailed, so limit file size to under 2 Megabytes</dhv:label><br />
+                <dhv:label name="accounts.accounts_documents_upload.WaitForUpload">Wait for file completion message when upload is complete.</dhv:label><br>
+                <input type="submit" value="<dhv:label name="documents.documents.uploadFile">Upload File</dhv:label>" name="upload">
               </center>
             </td>
           </form>
@@ -141,7 +141,7 @@ File Attachments
       </table>
       </dhv:permission>
       &nbsp;<br>
-      <input type="button" value="Back to Attachment Overview" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'">
+      <input type="button" value="<dhv:label name="button.backToAttachmentOverview">Back to Attachment Overview</dhv:label>" onClick="javascript:window.location.href='CampaignManager.do?command=ViewAttachmentsOverview&id=<%= Campaign.getId() %>'">
     </td>
   </tr>
 </table>

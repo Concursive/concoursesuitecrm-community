@@ -1,0 +1,28 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+*/
+import org.aspcfs.modules.admin.base.*;
+
+print("Inserting new lookup table...");
+
+int categoryId = PermissionCategory.lookupId(db, "Accounts");
+if (categoryId != -1) {
+  if (1==1){
+    pst = db.prepareStatement(
+      "INSERT INTO lookup_lists_lookup " +
+      "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+      "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+    pst.setInt(1, categoryId);
+    pst.setInt(2, PermissionCategory.PERMISSION_CAT_ACCOUNTS);
+    pst.setInt(3, PermissionCategory.LOOKUP_ACCOUNTS_INDUSTRY);
+    pst.setInt(4, 70);
+    pst.setString(5, "lookup_industry");
+    pst.setString(6, "lookupList");
+    pst.setString(7, "Industry Types");
+    pst.executeUpdate();
+    pst.close();
+  }
+
+}
+

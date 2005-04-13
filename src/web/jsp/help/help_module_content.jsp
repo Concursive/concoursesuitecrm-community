@@ -36,11 +36,15 @@
       </tr>
 </dhv:evaluate>
       <tr>
-       <td><h3>Brief Description</h3></td>
+       <td><h3><dhv:label name="help.briefDescription">Brief Description</dhv:label></h3></td>
       </tr>
        <tr>
          <td>
-         <%=  !"".equals(toString(helpModule.getBriefDescription())) ?  toHtml(helpModule.getBriefDescription()) : "No Description available" %>
+          <% if(!"".equals(toString(helpModule.getBriefDescription()))) {%>
+            <%= toHtml(helpModule.getBriefDescription()) %>
+          <%} else {%>
+            <dhv:label name="help.noDescriptionAvailable">No Description available</dhv:label>
+          <%}%>
         </td>
        </tr>
      </table><br>
@@ -50,11 +54,15 @@
     <td>
      <table cellpadding="4" cellspacing="0" width="100%" class="empty">
      <tr>
-       <td><h3>Module Detail Description</h3></td>
+       <td><h3><dhv:label name="help.moduleDetailDescription">Module Detail Description</dhv:label></h3></td>
       </tr>
        <tr>
          <td>
-         <%= !"".equals(toString(helpModule.getDetailDescription())) ?  toHtml(helpModule.getDetailDescription()) : "No Description available" %>
+          <% if(!"".equals(toString(helpModule.getDetailDescription()))) {%>
+            <%= toHtml(helpModule.getDetailDescription()) %>
+          <%} else {%>
+            <dhv:label name="help.noDescriptionAvailable">No Description available</dhv:label>
+          <%}%>
         </td>
        </tr>
      </table>

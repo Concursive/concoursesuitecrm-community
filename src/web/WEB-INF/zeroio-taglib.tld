@@ -314,6 +314,10 @@
       <name>showTimeZone</name>
       <required>no</required>
     </attribute>
+    <attribute>
+      <name>userTimeZone</name>
+      <required>no</required>
+    </attribute>
   </tag>
   
   <tag>
@@ -341,6 +345,15 @@
     <attribute>
       <name>locale</name>
       <required>yes</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
+      <name>fractionDigits</name>
+      <required>no</required>
+    </attribute>
+    <attribute>
+      <name>truncate</name>
+      <required>no</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
   </tag>

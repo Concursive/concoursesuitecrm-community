@@ -24,20 +24,20 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].subject.focus();">
+<body onLoad="javascript:document.addCall.subject.focus();">
 <% if(ContactDetails.getOrgId() == -1){ %>
 <form name="addCall" action="ExternalContactsCalls.do?command=Save&auto-populate=true&actionSource=MyActionContacts" onSubmit="return doCheck(this);" method="post">
 <% }else{ %>
 <form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true&actionSource=MyActionContacts" onSubmit="return doCheck(this);" method="post">
 <% } %>
-<dhv:formMessage />
-<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-<%@ include file="../contacts/call_include.jsp" %>
-<br>
-<input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-<input type="button" value="Cancel" onClick="javascript:window.close();">
-<input type="hidden" name="dosubmit" value="true">
-<input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
-<input type="hidden" name="parentId" value="<%= PreviousCallDetails.getId() %>">
+  <dhv:formMessage showSpace="false" />
+  <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+  <%@ include file="../contacts/call_include.jsp" %>
+  <br />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();" />
+  <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
+  <input type="hidden" name="parentId" value="<%= PreviousCallDetails.getId() %>">
 </form>
 </body>

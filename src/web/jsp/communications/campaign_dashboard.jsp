@@ -35,21 +35,22 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-Dashboard
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<center><%= CampaignDashboardListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="CampaignDashboardListInfo"/></center></dhv:include>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="CampaignManager.do?command=Dashboard">
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= CampaignDashboardListInfo.getOptionValue("my") %>>My Running Campaigns</option>
-        <option <%= CampaignDashboardListInfo.getOptionValue("all") %>>All Running Campaigns</option>
-        <option <%= CampaignDashboardListInfo.getOptionValue("instant") %>>All Instant Campaigns</option>
+      <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= CampaignDashboardListInfo.getOptionValue("my") %>><dhv:label name="campaign.myRunningCampaigns">My Running Campaigns</dhv:label></option>
+        <option <%= CampaignDashboardListInfo.getOptionValue("all") %>><dhv:label name="campaign.allRunningCampaigns">All Running Campaigns</dhv:label></option>
+        <option <%= CampaignDashboardListInfo.getOptionValue("instant") %>><dhv:label name="campaign.allInstantCampaigns">All Instant Campaigns</dhv:label></option>
       </select>
     </td>
     <td>
@@ -61,25 +62,25 @@ Dashboard
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 	<tr>
     <th width="8" align="left" nowrap>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th align="left" nowrap>
-      <a href="CampaignManager.do?command=Dashboard&column=c.name"><strong>Name</strong></a>
+      <a href="CampaignManager.do?command=Dashboard&column=c.name"><strong><dhv:label name="contacts.name">Name</dhv:label></strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("c.name") %>
     </th>
     <th align="left" nowrap>
-      <a href="CampaignManager.do?command=Dashboard&column=active_date"><strong>Start Date</strong></a>
-      <%= CampaignDashboardListInfo.getSortIcon("active_date") %>
+      <a href="CampaignManager.do?command=Dashboard&column=c.active_date"><strong><dhv:label name="documents.details.startDate">Start Date</dhv:label></strong></a>
+      <%= CampaignDashboardListInfo.getSortIcon("c.active_date") %>
     </th>
     <th align="left" nowrap>
-      <strong># Recipients</strong>
+      <strong><dhv:label name="campaign.numberOfRecipients.symbol"># Recipients</dhv:label></strong>
     </th>
     <th align="left" nowrap>
-      <a href="CampaignManager.do?command=Dashboard&column=status"><strong>Status</strong></a>
+      <a href="CampaignManager.do?command=Dashboard&column=status"><strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("status") %>
     </th>
     <th align="left" nowrap>
-      <a href="CampaignManager.do?command=Dashboard&column=active"><strong>Active?</strong></a>
+      <a href="CampaignManager.do?command=Dashboard&column=active"><strong><dhv:label name="campaign.active.question">Active?</dhv:label></strong></a>
       <%= CampaignDashboardListInfo.getSortIcon("active") %>
     </th>
 	<%
@@ -108,7 +109,9 @@ Dashboard
     </td>
     <td valign="center" width="100%" class="row<%= rowid %>">
       <a href="CampaignManager.do?command=Details&id=<%=campaign.getId()%>&reset=true"><%=toHtml(campaign.getName())%></a>
-      <%= ("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id"))?" <font color=\"red\">(Added)</font>":"") %>
+      <% if("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id"))) {%>
+        <font color="red"><dhv:label name="campaign.added.brackets">(Added)</dhv:label></font>
+      <%}%>
     </td>
     <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <% if(!User.getTimeZone().equals(campaign.getActiveDateTimeZone())){%>
@@ -131,7 +134,7 @@ Dashboard
 <%} else {%>
   <tr class="containerBody">
     <td colspan="6">
-      No running campaigns found.
+      <dhv:label name="campaign.noRunningCampaignsFound">No running campaigns found.</dhv:label>
     </td>
   </tr>
 <%}%>

@@ -3,13 +3,13 @@
  * @arg1 = URL to forward to if confirmation returns true
  */
 function confirmDelete(url) {
-  if (confirm('Are you sure?')) {
+  if (confirm(label("are.you.sure", "Are you sure?"))) {
     window.location = url;
   }
 }
 
 function confirmForward(url) {
-  if (confirm('Are you sure?')) {
+  if (confirm(label("are.you.sure", "Are you sure?"))) {
     window.location = url;
   }
 }
@@ -23,7 +23,7 @@ function confirmAction(msg) {
 }
 
 function confirmSubmit(theForm) {
-  if (confirm('Are you sure?')) {
+  if (confirm(label("are.you.sure", "Are you sure?"))) {
     theForm.submit();
   } else {
     return false;

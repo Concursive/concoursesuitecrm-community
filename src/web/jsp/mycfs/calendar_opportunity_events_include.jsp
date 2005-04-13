@@ -33,7 +33,7 @@
     <td>&nbsp;</td>
     <td colspan="4" nowrap class="eventName">
       <img border="0" src="images/alertopp.gif" align="absmiddle" title="Opportunities" />
-      Opportunities</a>
+      <dhv:label name="dependency.opportunities">Opportunities</dhv:label>
       (<%= oppEventList.getAlertOpps().size() %>)
     </td>
   </tr>
@@ -47,16 +47,16 @@
         &nbsp;
       </th>
       <th class="weekSelector" width="100%">
-        <strong>Alert</strong>
+        <strong><dhv:label name="calendar.alert">Alert</dhv:label></strong>
       </th>
       <th class="weekSelector">
-        <strong>Component</strong>
+        <strong><dhv:label name="accounts.accounts_contacts_opps_details.Component">Component</dhv:label></strong>
+      </th>
+      <th class="weekSelector" width="100%" nowrap>
+        <strong><dhv:label name="accounts.accounts_contacts_opps_details.GuessAmount">Guess Amount</dhv:label></strong>
       </th>
       <th class="weekSelector" nowrap>
-        <strong>Guess Amount</strong>
-      </th>
-      <th class="weekSelector" nowrap>
-        <strong>Close Date</strong>
+        <strong><dhv:label name="accounts.accounts_contacts_opps_details.CloseDate">Close Date</dhv:label></strong>
       </th>
     </tr>
   <%  

@@ -1,9 +1,10 @@
 <application>
   <!-- Submenu used in the Accounts module -->
   <container name="accounts">
-    <separator value=" | "/>
-    <long_css on="containerOn" off="containerOff"/>
-    <short_css on="containerOn" off="containerOff"/>
+    <properties>
+      <icon>images/icons/stock_account-16.gif</icon>
+      <label>${name}</label>
+    </properties>
     <submenu name="details">
       <long_html value="Details"/>
       <permission value=""/>
@@ -17,7 +18,7 @@
     <submenu name="folders">
       <long_html value="Folders"/>
       <permission value="accounts-accounts-folders-view"/>
-      <link value="Accounts.do?command=Fields&amp;orgId=${orgId}"/>
+      <link value="Accounts.do?command=FolderList&amp;orgId=${orgId}"/>
     </submenu>
     <submenu name="contacts">
       <long_html value="Contacts"/>
@@ -54,8 +55,13 @@
       <permission value="accounts-accounts-revenue-view"/>
       <link value="RevenueManager.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
+    <submenu name="projects">
+      <long_html value="Projects"/>
+      <permission value="accounts-projects-view"/>
+      <link value="AccountsProjects.do?command=List&amp;orgId=${orgId}"/>
+    </submenu>
     <submenu name="servicecontracts">
-      <long_html value="Contracts"/>
+      <long_html value="Service Contracts"/>
       <permission value="accounts-service-contracts-view"/>
       <link value="AccountsServiceContracts.do?command=List&amp;orgId=${orgId}"/>
     </submenu>
@@ -74,20 +80,19 @@
       <permission value="accounts-accounts-documents-view"/>
       <link value="AccountsDocuments.do?command=View&amp;orgId=${orgId}"/>
     </submenu>
-<!--
   <submenu name="relationships">
     <long_html value="Relationships"/>
     <permission value="accounts-accounts-relationships-view"/>
     <link value="AccountRelationships.do?command=View&amp;orgId=${orgId}"/>
   </submenu>
--->
   </container>
   
   <!-- Submenu used in the Contacts module -->
   <container name="contacts">
-    <separator value=" | "/>
-    <long_css on="containerOn" off="containerOff"/>
-    <short_css on="containerOn" off="containerOff"/>
+    <properties>
+      <icon>images/icons/stock_bcard-16.gif</icon>
+      <label>${nameFull} ${orgName}</label>
+    </properties>
     <submenu name="details">
       <long_html value="Details"/>
       <permission value=""/>
@@ -96,7 +101,7 @@
     <submenu name="folders">
       <long_html value="Folders"/>
       <permission value="contacts-external_contacts-folders-view"/>
-      <link value="ExternalContacts.do?command=Fields&amp;contactId=${id}"/>
+      <link value="ExternalContacts.do?command=FolderList&amp;contactId=${id}"/>
     </submenu>
     <submenu name="calls">
       <long_html value="Activities"/>
@@ -113,30 +118,44 @@
       <permission value="contacts-external_contacts-opportunities-view"/>
       <link value="ExternalContactsOpps.do?command=ViewOpps&amp;contactId=${id}"/>
     </submenu>
+    <!--
     <submenu name="relationships">
       <long_html value="Relationships"/>
       <permission value="demo-view"/>
       <link value="ExternalContactsPrototype.do?module=ExternalContacts&amp;include=contacts/companydirectory_relationships_view.jsp&amp;contactId=${id}"/>
     </submenu>
+    -->
   </container>
   
   <!-- Submenu used in the Employees module -->
   <container name="employees">
-    <separator value=" | "/>
-    <long_css on="containerOn" off="containerOff"/>
-    <short_css on="containerOn" off="containerOff"/>
+    <properties>
+      <icon>images/icons/stock_bcard-16.gif</icon>
+      <label>${nameFull}</label>
+    </properties>
     <submenu name="details">
       <long_html value="Details"/>
       <permission value=""/>
       <link value="CompanyDirectory.do?command=EmployeeDetails&amp;empid=${id}"/>
     </submenu>
+    <submenu name="folders">
+      <long_html value="Folders"/>
+      <permission value="contacts-internal_contacts-folders-view"/> 
+      <link value="CompanyDirectory.do?command=FolderList&amp;empid=${id}"/>
+    </submenu>
+     <submenu name="projects">
+      <long_html value="Projects"/>
+      <permission value="contacts-internal_contacts-projects-view"/>
+      <link value="CompanyDirectoryProjects.do?command=List&amp;empid=${id}"/>
+    </submenu>
   </container>
   
   <!-- Submenu used in the Account Contacts module -->
   <container name="accountscontacts">
-    <separator value=" | "/>
-    <long_css on="containerOn" off="containerOff"/>
-    <short_css on="containerOn" off="containerOff"/>
+    <properties>
+      <icon>images/icons/stock_bcard-16.gif</icon>
+      <label>${nameFull}</label>
+    </properties>
     <submenu name="details">
       <long_html value="Details"/>
       <permission value="accounts-accounts-contacts-view"/>
@@ -162,12 +181,12 @@
       <permission value="portal-user-view"/>
       <link value="ContactsPortal.do?command=View&amp;contactId=${id}"/>
     </submenu>
-   </container>
+  </container>
 
-   <container name="accountsassets">
-    <separator value=" | "/>
-    <long_css on="containerOn" off="containerOff"/>
-    <short_css on="containerOn" off="containerOff"/>
+  <container name="accountsassets">
+    <properties>
+      <label>${serialNumber}</label>
+    </properties>
     <submenu name="details">
       <long_html value="Details"/>
       <permission value="accounts-assets-view"/>
@@ -182,9 +201,10 @@
   
   <!-- Submenu used in the Opportunities (Pipeline) module -->
   <container name="opportunities">
-    <separator value=" | "/>
-    <long_css on="containerOn" off="containerOff"/>
-    <short_css on="containerOn" off="containerOff"/>
+    <properties>
+      <icon>images/icons/stock_form-currency-field-16.gif</icon>
+      <label>${description}</label>
+    </properties>
     <submenu name="details">
       <long_html value="Components"/>
       <permission value=""/>
@@ -200,6 +220,11 @@
       <permission value="pipeline-opportunities-documents-view"/>
       <link value="LeadsDocuments.do?command=View&amp;headerId=${id}"/>
     </submenu>
+    <submenu name="quotes">
+      <long_html value="Quotes"/>
+      <permission value="pipeline-opportunities-view"/>
+      <link value="LeadsQuotes.do?command=QuoteList&amp;headerId=${id}"/>
+    </submenu>
 <!--
     <submenu name="relationships">
       <long_html value="Relationships"/>
@@ -209,11 +234,33 @@
 -->
   </container>
   
+	<container name="opportunitiesQuotes">
+    <properties>
+      <icon>images/icons/stock_data-edit-table-16.gif</icon>
+      <label># ${paddedGroupId} (${versionNumber}.0) / ${shortDescription}</label>
+    </properties>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value="pipeline-opportunities-view"/>
+      <link value="LeadsQuotes.do?command=Details&amp;quoteId=${quoteId}&amp;version=${version}"/>
+    </submenu>
+      <submenu name="notes">
+      <long_html value="Notes"/>
+      <permission value="pipeline-opportunities-view"/>
+      <link value="LeadsQuotes.do?command=SaveNotes&amp;quoteId=${quoteId}&amp;version=${version}"/>
+    </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value="pipeline-opportunities-view"/>
+      <link value="LeadsQuotes.do?command=ViewHistory&amp;quoteId=${quoteId}&amp;version=${version}"/>
+    </submenu>
+  </container>
+	
   <!-- Submenu used in the Communications module -->
   <container name="communications">
-    <separator value=" | "/>
-    <long_css on="containerOn" off="containerOff"/>
-    <short_css on="containerOn" off="containerOff"/>
+    <properties>
+      <label>${name}</label>
+    </properties>
     <submenu name="details">
       <long_html value="Details"/>
       <permission value="campaign-dashboard-view"/>
@@ -258,9 +305,10 @@
   
   <!-- Submenu used in the TroubleTickets module -->
   <container name="tickets">
-    <separator value=" | "/>
-    <long_css on="containerOn" off="containerOff"/>
-    <short_css on="containerOn" off="containerOff"/>
+    <properties>
+      <icon>images/icons/stock_macro-organizer-16.gif</icon>
+      <label># ${paddedId}</label>
+    </properties>
     <submenu name="details">
       <long_html value="Details"/>
       <permission value="tickets-tickets-view"/>
@@ -289,7 +337,7 @@
     <submenu name="folders">
       <long_html value="Folders"/>
       <permission value=""/>
-      <link value="TroubleTicketsFolders.do?command=Fields&amp;ticketId=${id}"/>
+      <link value="TroubleTicketsFolders.do?command=FolderList&amp;ticketId=${id}"/>
     </submenu>
     <submenu name="documents">
       <long_html value="Documents"/>
@@ -300,9 +348,10 @@
   
   <!-- Submenu used in the TroubleTickets module -->
   <container name="accountstickets">
-    <separator value=" | "/>
-    <long_css on="containerOn" off="containerOff"/>
-    <short_css on="containerOn" off="containerOff"/>
+    <properties>
+      <icon>images/icons/stock_macro-organizer-16.gif</icon>
+      <label># ${paddedId}</label>
+    </properties>
     <submenu name="details">
       <long_html value="Details"/>
       <permission value=""/>
@@ -331,7 +380,7 @@
     <submenu name="folders">
       <long_html value="Folders"/>
       <permission value="accounts-accounts-tickets-folders-view"/>
-      <link value="AccountTicketFolders.do?command=Fields&amp;ticketId=${id}"/>
+      <link value="AccountTicketFolders.do?command=FolderList&amp;ticketId=${id}"/>
     </submenu>
     <submenu name="documents">
       <long_html value="Documents"/>
@@ -342,9 +391,6 @@
   
   <!-- Submenu used in the Auto Guide section of the Accounts module -->
   <container name="AutoGuideAccountInventory">
-    <separator value=" | "/>
-    <long_css on="containerOn" off="containerOff"/>
-    <short_css on="containerOn" off="containerOff"/>
     <submenu name="details">
       <long_html value="Vehicle Details"/>
       <permission value=""/>
@@ -370,9 +416,9 @@
   
   <!-- Submenu used in the Users module -->
   <container name="users">
-    <separator value=" | "/>
-    <long_css on="containerOn" off="containerOff"/>
-    <short_css on="containerOn" off="containerOff"/>
+    <properties>
+      <label>${contact.nameFull}</label>
+    </properties>
     <submenu name="details">
       <long_html value="Details"/>
       <permission value="admin-users-view"/>
@@ -391,9 +437,7 @@
   </container>
 
   <container name="categories">
-    <separator value=" | "/>
-    <long_css on="containerOn" off="containerOff"/>
-    <short_css on="containerOn" off="containerOff"/>
+
     <submenu name="active categories">
       <long_html value="Active Categories"/>
       <permission value="admin-view"/>
@@ -407,9 +451,7 @@
   </container>
   <!-- Submenu in Pipeline Management Reports -->
   <container name="pipelineReports">
-    <separator value=" | "/>
-    <long_css on="containerOn" off="containerOff"/>
-    <short_css on="containerOn" off="containerOff"/>
+
     <submenu name="queue">
       <long_html value="Report Queue"/>
       <permission value="pipeline-reports-view"/>
@@ -426,29 +468,160 @@
       <link value="LeadsReports.do?command=ExportList"/>
     </submenu>
   </container>
-  <container name="quotes">
+	<container name="quotes">
+    <properties>
+      <icon>images/icons/stock_data-edit-table-16.gif</icon>
+      <label># ${paddedGroupId} (${versionNumber}.0) / ${shortDescription}</label>
+    </properties>
     <submenu name="details">
       <long_html value="Details"/>
-      <permission value=""/>
-      <link value="Quotes.do?command=Details&amp;quoteId=${quoteId}"/>
+      <permission value="quotes-view"/>
+      <link value="Quotes.do?command=Details&amp;quoteId=${quoteId}&amp;version=${version}"/>
     </submenu>
-	<submenu name="notes">
+    <submenu name="notes">
       <long_html value="Notes"/>
-      <permission value=""/>
-      <link value="Quotes.do?command=SaveNotes&amp;quoteId=${quoteId}"/>
+      <permission value="quotes-view"/>
+      <link value="Quotes.do?command=SaveNotes&amp;quoteId=${quoteId}&amp;version=${version}"/>
+    </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value="quotes-view"/>
+      <link value="Quotes.do?command=ViewHistory&amp;quoteId=${quoteId}&amp;version=${version}"/>
     </submenu>
   </container>
-  <container name="accountsQuotes">
-    <separator value=" | "/>
+	<container name="accountsQuotes">
+    <properties>
+      <icon>images/icons/stock_data-edit-table-16.gif</icon>
+      <label># ${paddedGroupId} (${versionNumber}.0) / ${shortDescription}</label>
+    </properties>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value="accounts-quotes-view"/>
+      <link value="AccountQuotes.do?command=Details&amp;quoteId=${quoteId}&amp;version=${version}"/>
+    </submenu>
+      <submenu name="notes">
+      <long_html value="Notes"/>
+      <permission value="accounts-quotes-view"/>
+      <link value="AccountQuotes.do?command=SaveNotes&amp;quoteId=${quoteId}&amp;version=${version}"/>
+    </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value="accounts-quotes-view"/>
+      <link value="AccountQuotes.do?command=ViewHistory&amp;quoteId=${quoteId}&amp;version=${version}"/>
+    </submenu>
+  </container>
+	
+  <container name="productcategories">
+    <properties>
+      <label>${name}</label>
+    </properties>
     <submenu name="details">
       <long_html value="Details"/>
       <permission value=""/>
-      <link value="AccountQuotes.do?command=Details&amp;quoteId=${quoteId}"/>
+      <link value="ProductCategories.do?command=Details&amp;categoryId=${categoryId}&amp;moduleId=${moduleId}"/>
     </submenu>
-	<submenu name="notes">
-      <long_html value="Notes"/>
+    <submenu name="products">
+      <long_html value="Products"/>
       <permission value=""/>
-      <link value="AccountQuotes.do?command=SaveNotes&amp;quoteId=${quoteId}"/>
+      <link value="ProductCategoryProducts.do?command=List&amp;categoryId=${categoryId}&amp;moduleId=${moduleId}"/>
+    </submenu>
+    <submenu name="categorylinks">
+      <long_html value="Category Links"/>
+      <permission value=""/>
+      <link value="ProductCategories.do?command=MappingList&amp;categoryId=${categoryId}&amp;moduleId=${moduleId}"/>
+    </submenu>
+    <submenu name="subcategories">
+      <long_html value="Sub-Categories"/>
+      <permission value=""/>
+      <link value="ProductCategories.do?command=SubCategoryList&amp;categoryId=${categoryId}&amp;moduleId=${moduleId}"/>
+    </submenu>
+    <submenu name="images">
+      <long_html value="Images"/>
+      <permission value=""/>
+      <link value="ProductCategories.do?command=ImageList&amp;categoryId=${categoryId}&amp;moduleId=${moduleId}"/>
+    </submenu>
+  </container>
+	
+  <container name="productcatalogs">
+    <properties>
+      <label>${name}</label>
+    </properties>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="ProductCatalogs.do?command=Details&amp;productId=${productId}&amp;moduleId=${moduleId}&amp;categoryId=${categoryId}"/>
+    </submenu>
+    <submenu name="price">
+      <long_html value="Price"/>
+      <permission value=""/>
+      <link value="ProductCatalogPricings.do?command=PricingList&amp;productId=${productId}&amp;moduleId=${moduleId}&amp;categoryId=${categoryId}"/>
+    </submenu>
+    <submenu name="options">
+      <long_html value="Options"/>
+      <permission value=""/>
+      <link value="ProductCatalogOptions.do?command=List&amp;productId=${productId}&amp;moduleId=${moduleId}&amp;categoryId=${categoryId}"/>
+    </submenu>
+    <!--
+    <submenu name="categories">
+      <long_html value="Categories"/>
+      <permission value=""/>
+      <link value="ProductCatalogs.do?command=CategoryList&amp;productId=${productId}&amp;moduleId=${moduleId}"/>
+    </submenu>
+    <submenu name="images">
+      <long_html value="Images"/>
+      <permission value=""/>
+      <link value="ProductCatalogs.do?command=ImageList&amp;productId=${productId}&amp;moduleId=${moduleId}"/>
+    </submenu>
+    -->
+  </container>
+	
+  <container name="productoptions">
+    <properties>
+      <label>${name}</label>
+    </properties>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="ProductOptions.do?command=Details&amp;optionId=${optionId}&amp;moduleId=${moduleId}"/>
+    </submenu>
+    <submenu name="values">
+      <long_html value="Values"/>
+      <permission value=""/>
+      <link value="ProductOptionPricings.do?command=List&amp;optionId=${optionId}&amp;moduleId=${moduleId}"/>
+    </submenu>
+  </container>
+  
+  <!-- Submenu used in the Product Catalog Options module -->
+  <container name="productcatalogoptions">
+    <properties>
+      <label>${name}</label>
+    </properties>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="ProductCatalogOptions.do?command=Details&amp;catalogId=${catalogId}&amp;moduleId=${moduleId}&amp;optionId=${optionId}"/>
+    </submenu>
+    <submenu name="values">
+      <long_html value="Values"/>
+      <permission value=""/>
+      <link value="ProductCatalogOptionPricings.do?command=PricingList&amp;catalogId=${catalogId}&amp;moduleId=${moduleId}&amp;optionId=${optionId}"/>
+    </submenu>
+  </container>
+
+  <!-- Submenu used in the customer products module -->
+  <container name="customerproducts">
+    <properties>
+      <label>${name}</label>
+    </properties>
+    <submenu name="details">
+      <long_html value="Details"/>
+      <permission value=""/>
+      <link value="ProductHistory.do?command=Details&amp;adId=${adId}"/>
+    </submenu>
+    <submenu name="history">
+      <long_html value="History"/>
+      <permission value=""/>
+      <link value="ProductHistory.do?command=History&amp;adId=${adId}"/>
     </submenu>
   </container>
 </application>

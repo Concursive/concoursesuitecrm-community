@@ -424,7 +424,6 @@ public class TicketCategoryDraft extends GenericBean {
     recordCount = pst.executeUpdate();
     pst.close();
     if (recordCount == 0) {
-      errors.put("actionError", "Category could not be deleted because it no longer exists.");
       return false;
     } else {
       return true;

@@ -117,6 +117,26 @@ public class EmailAddressList extends Vector {
 
 
   /**
+   *  Returns the email address that is marked as primary or 
+   * returns the only (or last) email address in the list.
+   *
+   *@return    The primaryEmailAddress value
+   */
+  public String getPrimaryEmailAddress() {
+    Iterator i = this.iterator();
+    EmailAddress thisAddress = null;
+    while (i.hasNext()) {
+      thisAddress = (EmailAddress) i.next();
+      if (thisAddress.getPrimaryEmail()) {
+        break;
+      }
+    }
+    
+    return ((thisAddress == null)?"":thisAddress.getEmail());
+  }
+
+
+  /**
    *  Gets the EmailAddressType attribute of the EmailAddressList object
    *
    *@param  thisItem  Description of Parameter

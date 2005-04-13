@@ -53,7 +53,7 @@
           <img src="images/icons/stock_save-pdf-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View as PDF
+          <dhv:label name="reports.viewAsPDF">View as PDF</dhv:label>
         </td>
       </tr>
       <tr id="menuEdit" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="download()">
@@ -61,7 +61,7 @@
           <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Download PDF
+          <dhv:label name="reports.downloadAsPDF">Download PDF</dhv:label>
         </td>
       </tr>
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteReport()">
@@ -69,7 +69,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete
+          <dhv:label name="global.button.delete">Delete</dhv:label>
         </td>
       </tr>
     </table>
@@ -83,7 +83,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete
+          <dhv:label name="global.button.delete">Delete</dhv:label>
         </td>
       </tr>
     </table>
@@ -97,7 +97,7 @@
           <img src="images/icons/stock_stop-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Cancel Report
+          <dhv:label name="reports.cancelReport">Cancel Report</dhv:label>
         </td>
       </tr>
     </table>

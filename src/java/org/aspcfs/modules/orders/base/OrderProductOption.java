@@ -23,6 +23,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.quotes.base.*;
 
 /**
  *  This represents a Product Option of a particular product associated with a
@@ -46,8 +47,12 @@ public class OrderProductOption extends GenericBean {
   private double extendedPrice = 0;
   private double totalPrice = 0;
   private int statusId = -1;
-  // product details
-  private int productId = -1;
+
+  private boolean booleanValue = false;
+  private double floatValue = 0.0;
+  private Timestamp timestampValue = null;
+  private int integerValue = -1;
+  private String textValue = null;
 
 
   /**
@@ -290,23 +295,134 @@ public class OrderProductOption extends GenericBean {
   }
 
 
+
   /**
-   *  Sets the productId attribute of the OrderProductOption object
+   *  Sets the booleanValue attribute of the OrderProductOption object
    *
-   *@param  tmp  The new productId value
+   *@param  tmp  The new booleanValue value
    */
-  public void setProductId(int tmp) {
-    this.productId = tmp;
+  public void setBooleanValue(boolean tmp) {
+    this.booleanValue = tmp;
   }
 
 
   /**
-   *  Sets the productId attribute of the OrderProductOption object
+   *  Sets the booleanValue attribute of the OrderProductOption object
    *
-   *@param  tmp  The new productId value
+   *@param  tmp  The new booleanValue value
    */
-  public void setProductId(String tmp) {
-    this.productId = Integer.parseInt(tmp);
+  public void setBooleanValue(String tmp) {
+    this.booleanValue = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the floatValue attribute of the OrderProductOption object
+   *
+   *@param  tmp  The new floatValue value
+   */
+  public void setFloatValue(double tmp) {
+    this.floatValue = tmp;
+  }
+
+
+  /**
+   *  Sets the timestampValue attribute of the OrderProductOption object
+   *
+   *@param  tmp  The new timestampValue value
+   */
+  public void setTimestampValue(Timestamp tmp) {
+    this.timestampValue = tmp;
+  }
+
+
+  /**
+   *  Sets the timestampValue attribute of the OrderProductOption object
+   *
+   *@param  tmp  The new timestampValue value
+   */
+  public void setTimestampValue(String tmp) {
+    this.timestampValue = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the integerValue attribute of the OrderProductOption object
+   *
+   *@param  tmp  The new integerValue value
+   */
+  public void setIntegerValue(int tmp) {
+    this.integerValue = tmp;
+  }
+
+
+  /**
+   *  Sets the integerValue attribute of the OrderProductOption object
+   *
+   *@param  tmp  The new integerValue value
+   */
+  public void setIntegerValue(String tmp) {
+    this.integerValue = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the textValue attribute of the OrderProductOption object
+   *
+   *@param  tmp  The new textValue value
+   */
+  public void setTextValue(String tmp) {
+    this.textValue = tmp;
+  }
+
+
+  /**
+   *  Gets the booleanValue attribute of the OrderProductOption object
+   *
+   *@return    The booleanValue value
+   */
+  public boolean getBooleanValue() {
+    return booleanValue;
+  }
+
+
+  /**
+   *  Gets the floatValue attribute of the OrderProductOption object
+   *
+   *@return    The floatValue value
+   */
+  public double getFloatValue() {
+    return floatValue;
+  }
+
+
+  /**
+   *  Gets the timestampValue attribute of the OrderProductOption object
+   *
+   *@return    The timestampValue value
+   */
+  public Timestamp getTimestampValue() {
+    return timestampValue;
+  }
+
+
+  /**
+   *  Gets the integerValue attribute of the OrderProductOption object
+   *
+   *@return    The integerValue value
+   */
+  public int getIntegerValue() {
+    return integerValue;
+  }
+
+
+  /**
+   *  Gets the textValue attribute of the OrderProductOption object
+   *
+   *@return    The textValue value
+   */
+  public String getTextValue() {
+    return textValue;
   }
 
 
@@ -430,15 +546,6 @@ public class OrderProductOption extends GenericBean {
   }
 
 
-  /**
-   *  Gets the productId attribute of the OrderProductOption object
-   *
-   *@return    The productId value
-   */
-  public int getProductId() {
-    return productId;
-  }
-
 
   /**
    *  Constructor for the OrderProductOption object
@@ -471,6 +578,15 @@ public class OrderProductOption extends GenericBean {
 
   /**
    *  Description of the Method
+   */
+  public void determineTotal() {
+    // determine the total
+    totalPrice = priceAmount * quantity;
+  }
+
+
+  /**
+   *  Description of the Method
    *
    *@param  db                Description of the Parameter
    *@param  id                Description of the Parameter
@@ -482,12 +598,22 @@ public class OrderProductOption extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT opt.order_product_option_id, opt.item_id, opt.product_option_id, " +
-        "        opt.quantity, opt.price_currency, opt.price_amount, opt.recurring_currency, " +
-        "   	   opt.recurring_amount, opt.recurring_type, opt.extended_price, opt.total_price, opt.status_id, " +
-        "        prod.product_id " +
-        " FROM order_product_options opt, order_product prod " +
-        " WHERE opt.item_id = prod.item_id AND opt.order_product_option_id = ? "
+        " SELECT opt.*, " +
+        " bool.value AS boolean_value,  " +
+        " float.value AS float_value, intr.value AS integer_value, " +
+        " tst.value AS timestamp_value, txt.value AS text_value " +
+        " FROM order_product_options opt " +
+        " LEFT JOIN order_product_option_boolean bool " +
+        " ON ( opt.order_product_option_id = bool.order_product_option_id ) " +
+        " LEFT JOIN order_product_option_float float " +
+        " ON ( opt.order_product_option_id = float.order_product_option_id ) " +
+        " LEFT JOIN order_product_option_timestamp tst " +
+        " ON ( opt.order_product_option_id = tst.order_product_option_id ) " +
+        " LEFT JOIN order_product_option_integer intr " +
+        " ON ( opt.order_product_option_id = intr.order_product_option_id ) " +
+        " LEFT JOIN order_product_option_text txt " +
+        " ON ( opt.order_product_option_id = txt.order_product_option_id ) " +
+        " WHERE opt.order_product_option_id = ? "
         );
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -522,7 +648,13 @@ public class OrderProductOption extends GenericBean {
     extendedPrice = DatabaseUtils.getDouble(rs, "extended_price");
     totalPrice = DatabaseUtils.getDouble(rs, "total_price");
     statusId = DatabaseUtils.getInt(rs, "status_id");
-    productId = DatabaseUtils.getInt(rs, "product_id");
+
+    // order_product_option_ values tables
+    booleanValue = rs.getBoolean("boolean_value");
+    floatValue = DatabaseUtils.getDouble(rs, "float_value");
+    integerValue = DatabaseUtils.getInt(rs, "integer_value");
+    textValue = rs.getString("text_value");
+    timestampValue = rs.getTimestamp("timestamp_value");
   }
 
 
@@ -538,6 +670,11 @@ public class OrderProductOption extends GenericBean {
     if (!isValid(db)) {
       return result;
     }
+    //TODO: remove this by making quantity INTEGER NOT NULL DEFAULT 1
+    if (quantity == 0) {
+      quantity = 1;
+    }
+    determineTotal();
     StringBuffer sql = new StringBuffer();
     sql.append(
         " INSERT INTO order_product_options(item_id, product_option_id, " +
@@ -563,6 +700,68 @@ public class OrderProductOption extends GenericBean {
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "order_product_options_order_product_option_id_seq");
+    
+    if( this.getBooleanValue() != false ){
+      sql = new StringBuffer("");
+      sql.append(
+        " INSERT INTO order_product_option_boolean ( order_product_option_id, value ) "+
+        " VALUES ( ? , ? ) "
+      );
+      pst = db.prepareStatement(sql.toString());
+      pst.setInt(1, id);
+      pst.setBoolean(2, this.getBooleanValue());
+      pst.execute();
+      pst.close();
+    }
+    if(((int) this.getFloatValue()) > 0){
+      sql = new StringBuffer("");
+      sql.append(
+        " INSERT INTO order_product_option_float ( order_product_option_id, value )"+
+        " VALUES ( ? , ? ) "
+      );
+      pst = db.prepareStatement(sql.toString());
+      pst.setInt(1, id);
+      pst.setDouble(2, this.getFloatValue());
+      pst.execute();
+      pst.close();
+    }
+    
+    if( this.getTimestampValue() != null ){
+      sql = new StringBuffer("");
+      sql.append(
+        " INSERT INTO order_product_option_timestamp ( order_product_option_id, value )"+
+        " VALUES ( ? , ? ) "
+      );
+      pst = db.prepareStatement(sql.toString());
+      pst.setInt(1, id);
+      pst.setTimestamp(2, this.getTimestampValue());
+      pst.execute();
+      pst.close();
+    }
+    if( this.getIntegerValue() > -1) {
+      sql = new StringBuffer("");
+      sql.append(
+        " INSERT INTO order_product_option_integer ( order_product_option_id, value )"+
+        " VALUES ( ? , ? ) "
+      );
+      pst = db.prepareStatement(sql.toString());
+      pst.setInt(1, id);
+      DatabaseUtils.setInt(pst, 2, this.getIntegerValue());
+      pst.execute();
+      pst.close();
+    }
+    if( this.getTextValue() != null ){
+      sql = new StringBuffer("");
+      sql.append(
+        " INSERT INTO order_product_option_text ( order_product_option_id, value )"+
+        " VALUES ( ? , ? ) "
+      );
+      pst = db.prepareStatement(sql.toString());
+      pst.setInt(1, id);
+      pst.setString(2, this.getTextValue());
+      pst.execute();
+      pst.close();
+    }
     result = true;
     return result;
   }
@@ -576,19 +775,58 @@ public class OrderProductOption extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean delete(Connection db) throws SQLException {
+    PreparedStatement pst = null;
     if (this.getId() == -1) {
       throw new SQLException("Order Product Option ID not specified");
     }
+    boolean commit = true;
     try {
-      PreparedStatement pst = db.prepareStatement(
-          " DELETE FROM order_product_options WHERE order_product_option_id = ?");
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      pst = db.prepareStatement(" DELETE FROM order_product_option_boolean WHERE order_product_option_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
+
+      pst = db.prepareStatement(" DELETE FROM order_product_option_float WHERE order_product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+
+      pst = db.prepareStatement(" DELETE FROM order_product_option_timestamp WHERE order_product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+
+      pst = db.prepareStatement(" DELETE FROM order_product_option_integer WHERE order_product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+
+      pst = db.prepareStatement(" DELETE FROM order_product_option_text WHERE order_product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+
+      pst = db.prepareStatement(" DELETE FROM order_product_options WHERE order_product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      e.printStackTrace(System.out);
+      if (commit) {
+        db.rollback();
+      }
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -603,7 +841,7 @@ public class OrderProductOption extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
@@ -635,6 +873,67 @@ public class OrderProductOption extends GenericBean {
 
     resultCount = pst.executeUpdate();
     pst.close();
+
+    sql = new StringBuffer("");
+    sql.append(
+      " UPDATE order_product_option_boolean "+
+      " SET value = ? " +
+      " WHERE order_product_option_id = ? "
+    );
+    pst = db.prepareStatement(sql.toString());
+    pst.setBoolean(1, this.getBooleanValue());
+    DatabaseUtils.setInt(pst, 2, this.getId());
+    int result1Count = pst.executeUpdate();
+    pst.close();
+    
+    sql = new StringBuffer("");
+    sql.append(
+      " UPDATE order_product_option_float "+
+      " SET value = ? " +
+      " WHERE order_product_option_id = ? "
+    );
+    pst = db.prepareStatement(sql.toString());
+    pst.setDouble(1, this.getFloatValue());
+    DatabaseUtils.setInt(pst, 2, this.getId());
+    result1Count = pst.executeUpdate();
+    pst.close();
+    
+    sql = new StringBuffer("");
+    sql.append(
+      " UPDATE order_product_option_timestamp "+
+      " SET value = ? " +
+      " WHERE order_product_option_id = ? "
+    );
+    pst = db.prepareStatement(sql.toString());
+    pst.setTimestamp(1, this.getTimestampValue());
+    DatabaseUtils.setInt(pst, 2, this.getId());
+    result1Count = pst.executeUpdate();
+    pst.close();
+    
+    sql = new StringBuffer("");
+    sql.append(
+      " UPDATE order_product_option_integer "+
+      " SET value = ? " +
+      " WHERE order_product_option_id = ? "
+    );
+    pst = db.prepareStatement(sql.toString());
+    DatabaseUtils.setInt(pst, 1, this.getIntegerValue());
+    DatabaseUtils.setInt(pst, 2, this.getId());
+    result1Count = pst.executeUpdate();
+    pst.close();
+    
+    sql = new StringBuffer("");
+    sql.append(
+      " UPDATE order_product_option_text "+
+      " SET value = ? " +
+      " WHERE order_product_option_id = ? "
+    );
+    pst = db.prepareStatement(sql.toString());
+    pst.setString(1, this.getTextValue());
+    DatabaseUtils.setInt(pst, 2, this.getId());
+    result1Count = pst.executeUpdate();
+    pst.close();
+    
     return resultCount;
   }
 
@@ -669,6 +968,38 @@ public class OrderProductOption extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   protected boolean isValid(Connection db) throws SQLException {
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean createOptionFromQuoteProductOption(Connection db, int id) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+
+    QuoteProductOption quoteProductOption = new QuoteProductOption(db, id);
+
+    this.setProductOptionId(quoteProductOption.getProductOptionId());
+    this.setQuantity(quoteProductOption.getQuantity());
+    this.setPriceCurrency(quoteProductOption.getPriceCurrency());
+    this.setPriceAmount(quoteProductOption.getPriceAmount());
+    this.setRecurringCurrency(quoteProductOption.getRecurringCurrency());
+    this.setRecurringAmount(quoteProductOption.getRecurringAmount());
+    this.setRecurringType(quoteProductOption.getRecurringType());
+    this.setExtendedPrice(quoteProductOption.getExtendedPrice());
+    this.setIntegerValue(quoteProductOption.getIntegerValue());
+    this.setTotalPrice(quoteProductOption.getTotalPrice());
+    /*
+     *  TODO: set the status
+     */
+    this.insert(db);
     return true;
   }
 }

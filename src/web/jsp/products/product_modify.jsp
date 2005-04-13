@@ -27,11 +27,11 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
-<a href="ProductsCatalog.do?command=ListAllProducts&moduleId=<%= PermissionCategory.getId() %>">Labor Category Editor</a> >
-Modify Item
+<a href="ProductsCatalog.do?command=ListAllProducts&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="product.laborCategoryEditor">Labor Category Editor</dhv:label></a> >
+<dhv:label name="product.modifyItem">Modify Item</dhv:label>
 </td>
 </tr>
 </table>
@@ -39,20 +39,20 @@ Modify Item
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td>
-      <input	type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />
+      <input	type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';" />
       <%if ("list".equals(request.getParameter("return"))) { %>
-        <input type="button" value="Cancel" onClick="window.location.href='ProductsCatalog.do?command=ListAllProducts&moduleId=<%= PermissionCategory.getId() %>';" />
+        <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='ProductsCatalog.do?command=ListAllProducts&moduleId=<%= PermissionCategory.getId() %>';" />
       <%}else{ %>
-        <input type="button" value="Cancel" onClick="window.location.href='ProductsCatalog.do?command=ViewProductDetails&productId=<%=productDetails.getId()%>&moduleId=<%= PermissionCategory.getId() %>';" />
+        <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='ProductsCatalog.do?command=ViewProductDetails&productId=<%=productDetails.getId()%>&moduleId=<%= PermissionCategory.getId() %>';" />
       <%}%>
       <br /> <br />
       <%@ include file="product_include.jsp" %>
       <br />
-      <input	type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />
+      <input	type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';" />
       <%if ("list".equals(request.getParameter("return"))) { %>
-        <input type="button" value="Cancel" onClick="window.location.href='ProductsCatalog.do?command=ListAllProducts&moduleId=<%= PermissionCategory.getId() %>';" />
+        <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='ProductsCatalog.do?command=ListAllProducts&moduleId=<%= PermissionCategory.getId() %>';" />
       <%}else{ %>
-        <input type="button" value="Cancel" onClick="window.location.href='ProductsCatalog.do?command=ViewProductDetails&productId=<%=productDetails.getId()%>&moduleId=<%= PermissionCategory.getId() %>';" />
+        <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='ProductsCatalog.do?command=ViewProductDetails&productId=<%=productDetails.getId()%>&moduleId=<%= PermissionCategory.getId() %>';" />
       <%}%>
       <input type="hidden" name="dosubmit" value="true" />
     </td>

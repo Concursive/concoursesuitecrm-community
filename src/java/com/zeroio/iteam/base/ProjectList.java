@@ -15,20 +15,18 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.TimeZone;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.text.*;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.*;
 
 /**
  *  Description of the Class
@@ -55,21 +53,30 @@ public class ProjectList extends ArrayList {
   private boolean invitationPendingOnly = false;
   private boolean invitationAcceptedOnly = false;
   private int daysLastAccessed = -1;
+  private boolean includeGuestProjects = false;
+  private int categoryId = -1;
   // filters that go into sub-objects
   private boolean openAssignmentsOnly = false;
   private int withAssignmentDaysComplete = -1;
   private boolean buildAssignments = false;
   private int assignmentsForUser = -1;
+  private boolean buildIssueCategories = false;
   private boolean buildIssues = false;
   private int lastIssues = -1;
   private boolean buildNews = false;
+  private boolean buildPermissions = false;
   private int lastNews = -1;
   private int currentNews = Constants.UNDEFINED;
-  private boolean portalOnly = false;
+  private int portalState = Constants.UNDEFINED;
+  private boolean portalDefaultOnly = false;
+  private String portalKey = null;
   private boolean publicOnly = false;
+  private boolean approvedOnly = false;
   // calendar filters
   protected java.sql.Timestamp alertRangeStart = null;
   protected java.sql.Timestamp alertRangeEnd = null;
+  private boolean buildOverallProgress = false;
+  private int projectsForOrgId = -1;
 
 
   /**
@@ -239,6 +246,48 @@ public class ProjectList extends ArrayList {
 
 
   /**
+   *  Gets the includeGuestProjects attribute of the ProjectList object
+   *
+   *@return    The includeGuestProjects value
+   */
+  public boolean getIncludeGuestProjects() {
+    return includeGuestProjects;
+  }
+
+
+  /**
+   *  Sets the includeGuestProjects attribute of the ProjectList object
+   *
+   *@param  tmp  The new includeGuestProjects value
+   */
+  public void setIncludeGuestProjects(boolean tmp) {
+    this.includeGuestProjects = tmp;
+  }
+
+
+  /**
+   *  Sets the includeGuestProjects attribute of the ProjectList object
+   *
+   *@param  tmp  The new includeGuestProjects value
+   */
+  public void setIncludeGuestProjects(String tmp) {
+    this.includeGuestProjects = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  public int getCategoryId() {
+    return categoryId;
+  }
+
+  public void setCategoryId(int categoryId) {
+    this.categoryId = categoryId;
+  }
+
+  public void setCategoryId(String tmp) {
+    categoryId = Integer.parseInt(tmp);
+  }
+
+  /**
    *  Sets the openAssignmentsOnly attribute of the ProjectList object
    *
    *@param  tmp  The new openAssignmentsOnly value
@@ -379,22 +428,82 @@ public class ProjectList extends ArrayList {
 
 
   /**
-   *  Sets the portalOnly attribute of the ProjectList object
+   *  Gets the portalState attribute of the ProjectList object
    *
-   *@param  tmp  The new portalOnly value
+   *@return    The portalState value
    */
-  public void setPortalOnly(boolean tmp) {
-    this.portalOnly = tmp;
+  public int getPortalState() {
+    return portalState;
   }
 
 
   /**
-   *  Sets the portalOnly attribute of the ProjectList object
+   *  Sets the portalState attribute of the ProjectList object
    *
-   *@param  tmp  The new portalOnly value
+   *@param  tmp  The new portalState value
    */
-  public void setPortalOnly(String tmp) {
-    this.portalOnly = DatabaseUtils.parseBoolean(tmp);
+  public void setPortalState(int tmp) {
+    this.portalState = tmp;
+  }
+
+
+  /**
+   *  Sets the portalState attribute of the ProjectList object
+   *
+   *@param  tmp  The new portalState value
+   */
+  public void setPortalState(String tmp) {
+    this.portalState = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the portalDefaultOnly attribute of the ProjectList object
+   *
+   *@return    The portalDefaultOnly value
+   */
+  public boolean getPortalDefaultOnly() {
+    return portalDefaultOnly;
+  }
+
+
+  /**
+   *  Sets the portalDefaultOnly attribute of the ProjectList object
+   *
+   *@param  tmp  The new portalDefaultOnly value
+   */
+  public void setPortalDefaultOnly(boolean tmp) {
+    this.portalDefaultOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the portalDefaultOnly attribute of the ProjectList object
+   *
+   *@param  tmp  The new portalDefaultOnly value
+   */
+  public void setPortalDefaultOnly(String tmp) {
+    this.portalDefaultOnly = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the portalKey attribute of the ProjectList object
+   *
+   *@return    The portalKey value
+   */
+  public String getPortalKey() {
+    return portalKey;
+  }
+
+
+  /**
+   *  Sets the portalKey attribute of the ProjectList object
+   *
+   *@param  tmp  The new portalKey value
+   */
+  public void setPortalKey(String tmp) {
+    this.portalKey = tmp;
   }
 
 
@@ -419,6 +528,39 @@ public class ProjectList extends ArrayList {
 
 
   /**
+   *  Gets the approvedOnly attribute of the ProjectList object
+   *
+   *@return    The approvedOnly value
+   */
+  public boolean getApprovedOnly() {
+    return approvedOnly;
+  }
+
+
+  /**
+   *  Sets the approvedOnly attribute of the ProjectList object
+   *
+   *@param  tmp  The new approvedOnly value
+   */
+  public void setApprovedOnly(boolean tmp) {
+    this.approvedOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the approvedOnly attribute of the ProjectList object
+   *
+   *@param  tmp  The new approvedOnly value
+   */
+  public void setApprovedOnly(String tmp) {
+    this.approvedOnly = DatabaseUtils.parseBoolean(tmp);
+  }
+
+  public void setBuildIssueCategories(boolean buildIssueCategories) {
+    this.buildIssueCategories = buildIssueCategories;
+  }
+
+  /**
    *  Sets the alertRangeStart attribute of the ProjectList object
    *
    *@param  alertRangeStart  The new alertRangeStart value
@@ -437,6 +579,9 @@ public class ProjectList extends ArrayList {
     this.alertRangeEnd = alertRangeEnd;
   }
 
+  public void setBuildPermissions(boolean buildPermissions) {
+    this.buildPermissions = buildPermissions;
+  }
 
   /**
    *  Gets the htmlSelect attribute of the ProjectList object
@@ -547,7 +692,6 @@ public class ProjectList extends ArrayList {
         "* " +
         "FROM projects p " +
         "WHERE project_id > -1 ");
-
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -582,10 +726,21 @@ public class ProjectList extends ArrayList {
         thisProject.setLastIssues(lastIssues);
         thisProject.buildIssueList(db);
       }
+      if (buildIssueCategories) {
+        thisProject.buildIssueCategoryList(db);
+      }
       if (buildNews) {
         thisProject.setLastNews(lastNews);
         thisProject.setCurrentNews(currentNews);
         thisProject.buildNewsList(db);
+      }
+      if (buildOverallProgress) {
+        //thisProject.getRequirements().setOpenOnly(true);
+        thisProject.buildRequirementList(db);
+        thisProject.getRequirements().buildPlanActivityCounts(db);
+      }
+      if (buildPermissions) {
+        thisProject.buildPermissionList(db);
       }
     }
   }
@@ -623,10 +778,12 @@ public class ProjectList extends ArrayList {
       sqlFilter.append("AND (closedate IS NOT NULL AND closedate NOT LIKE '') ");
     }
     if (projectsForUser > -1) {
-      sqlFilter.append("AND (p.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
+      sqlFilter.append("AND (p.project_id IN (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
           (invitationAcceptedOnly ? "AND status IS NULL " : "") +
           (invitationPendingOnly ? "AND status = ? " : "") +
-          (daysLastAccessed > -1 ? "AND last_accessed > ? " : "") + ")) ");
+          (daysLastAccessed > -1 ? "AND last_accessed > ? " : "") + ") " +
+          (includeGuestProjects ? "OR (allow_guests = ? AND approvaldate IS NOT NULL) " : "") +
+          ") ");
     }
     if (userRange != null) {
       sqlFilter.append("AND (p.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id IN (" + userRange + ")) " +
@@ -638,11 +795,26 @@ public class ProjectList extends ArrayList {
     if (enteredByUserRange != null) {
       sqlFilter.append("AND (p.enteredby IN (" + enteredByUserRange + ")) ");
     }
-    if (portalOnly) {
+    if (portalState != Constants.UNDEFINED) {
       sqlFilter.append("AND portal = ? ");
+    }
+    if (portalDefaultOnly) {
+      sqlFilter.append("AND portal_default = ? ");
+    }
+    if (portalKey != null) {
+      sqlFilter.append("AND portal_key = ? ");
     }
     if (publicOnly) {
       sqlFilter.append("AND allow_guests = ? ");
+    }
+    if (approvedOnly) {
+      sqlFilter.append("AND approvaldate IS NOT NULL ");
+    }
+    if (categoryId > -1) {
+      sqlFilter.append("AND p.category_id = ? ");
+    }
+    if (projectsForOrgId > -1) {
+      sqlFilter.append("AND p.project_id IN (SELECT project_id FROM project_accounts WHERE org_id = ?) ");
     }
   }
 
@@ -683,15 +855,30 @@ public class ProjectList extends ArrayList {
         cal.add(Calendar.DATE, -daysLastAccessed);
         pst.setTimestamp(++i, new java.sql.Timestamp(cal.getTimeInMillis()));
       }
+      if (includeGuestProjects) {
+        pst.setBoolean(++i, true);
+      }
     }
     if (enteredByUser > -1) {
       pst.setInt(++i, enteredByUser);
     }
-    if (portalOnly) {
+    if (portalState != Constants.UNDEFINED) {
+      pst.setBoolean(++i, (portalState == Constants.TRUE));
+    }
+    if (portalDefaultOnly) {
       pst.setBoolean(++i, true);
+    }
+    if (portalKey != null) {
+      pst.setString(++i, portalKey);
     }
     if (publicOnly) {
       pst.setBoolean(++i, true);
+    }
+    if (categoryId > -1) {
+      pst.setInt(++i, categoryId);
+    }
+    if (projectsForOrgId > -1) {
+      pst.setInt(++i, projectsForOrgId);
     }
     return i;
   }
@@ -821,6 +1008,39 @@ public class ProjectList extends ArrayList {
     rs.close();
     pst.close();
     return count;
+  }
+  
+  
+  /**
+   *  Checks to see if any of the projects in the list are user only projects
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean hasUserProjects() {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Project thisProject = (Project) i.next();
+      if (!thisProject.getAllowGuests()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public void buildTeam(Connection db) throws SQLException {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Project thisProject = (Project) i.next();
+      thisProject.buildTeamMemberList(db);
+    }
+  }
+
+  public void setBuildOverallProgress(boolean buildOverallProgress) {
+    this.buildOverallProgress = buildOverallProgress;
+  }
+
+  public void setProjectsForOrgId(int projectsForOrgId) {
+    this.projectsForOrgId = projectsForOrgId;
   }
 }
 

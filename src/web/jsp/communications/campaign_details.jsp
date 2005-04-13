@@ -28,28 +28,23 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
-Campaign Details
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManager.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
+<dhv:label name="campaign.campaignDetails">Campaign Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-<% String param1="id=" + Campaign.getId(); %>
-<dhv:container name="communications" selected="details" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" width="100%">
-  <tr>
-    <td class="containerBack">
+<dhv:container name="communications" selected="details" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
       <table cellpadding="4" cellspacing="0" width="100%" class="details">
         <tr>
           <th colspan="2">
-            <strong>Campaign Details </strong>
+            <strong><dhv:label name="campaign.campaignDetails">Campaign Details</dhv:label> </strong>
           </th>
         </tr>
         <tr class="containerBody">
           <td class="formLabel" valign="top">
-            Description
+            <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
           </td>
           <td>
             <%= toHtml(Campaign.getDescription()) %>
@@ -57,7 +52,7 @@ Campaign Details
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
-            Groups
+            <dhv:label name="Groups">Groups</dhv:label>
           </td>
           <td>
             <font color="green"><%= Campaign.getGroupCount() %> selected</font>
@@ -65,7 +60,7 @@ Campaign Details
         </tr>
         <tr class="containerBody">
           <td valign="top" class="formLabel">
-            Message
+            <dhv:label name="project.message">Message</dhv:label>
           </td>
           <td>
             <font color="green"><%= toHtml(Campaign.getMessageName()) %></font>
@@ -73,11 +68,10 @@ Campaign Details
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
-            Schedule
+            <dhv:label name="admin.schedule">Schedule</dhv:label>
           </td>
           <td>
-            <font color="green">Scheduled to run on 
-            <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= Campaign.getActiveDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+            <font color="green"><dhv:label name="campaign.scheduledToRunOn" param="<%= "time="+getTime(pageContext,Campaign.getActiveDate(),Campaign.getActiveDateTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;")%>">Scheduled to run on <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= Campaign.getActiveDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
             <% if(!User.getTimeZone().equals(Campaign.getActiveDateTimeZone())){%>
             <br />
             <zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
@@ -87,15 +81,19 @@ Campaign Details
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
-            Delivery
+            <dhv:label name="quotes.delivery">Delivery</dhv:label>
           </td>
           <td>
-            <%= (Campaign.hasDetails()?"<font color='green'>" + toHtml(Campaign.getDeliveryName())  + "</font>":"<font color='red'>Not Specified</font>") %>
+            <% if(Campaign.hasDetails()) {%>
+              <font color='green'><%= toHtml(Campaign.getDeliveryName()) %></font>
+            <%} else {%>
+              <font color='red'><dhv:label name="account.notSpecified.label">Not Specified</dhv:label></font>
+            <%}%>
           </td>
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
-            Entered
+            <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
           </td>
           <td>
             <dhv:username id="<%= Campaign.getEnteredBy() %>" />
@@ -104,7 +102,7 @@ Campaign Details
         </tr>
         <tr class="containerBody">
           <td class="formLabel">
-            Modified
+            <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>
           </td>
           <td>
             <dhv:username id="<%= Campaign.getModifiedBy() %>" />
@@ -112,6 +110,4 @@ Campaign Details
           </td>
         </tr>
       </table>
-    </td>
-  </tr>
-</table>
+</dhv:container>

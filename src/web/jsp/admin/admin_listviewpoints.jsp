@@ -36,85 +36,83 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Users.do?command=ListUsers">View Users</a> >
-<a href="Users.do?command=UserDetails&id=<%= request.getParameter("userId") %>">User Details</a> >
-Viewpoints
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Users.do?command=ListUsers"><dhv:label name="admin.viewUsers">View Users</dhv:label></a> >
+<a href="Users.do?command=UserDetails&id=<%= request.getParameter("userId") %>"><dhv:label name="admin.userDetails">User Details</dhv:label></a> >
+<dhv:label name="users.viewpoints.long_html">Viewpoints</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
-<% String param1 = "id=" + UserRecord.getId(); %>
-<dhv:container name="users" selected="viewpoints" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<dhv:permission name="admin-roles-add"><a href="Viewpoints.do?command=InsertViewpointForm&userId=<%= UserRecord.getId() %>">Add New Viewpoint</a></dhv:permission>
-<center><%= ViewpointListInfo.getAlphabeticalPageLinks() %></center>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ViewpointListInfo"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-  <tr>
-    <th valign="center" width="8" nowrap>
-      <strong>Action</strong>
-    </th>
-    <th nowrap>
-      <b><a href="Viewpoints.do?command=ListViewpoints&userId=<%= UserRecord.getId()%>&column=c.namelast">Viewpoint</a></b>
-      <%= ViewpointListInfo.getSortIcon("c.namelast") %>
-    </th>
-    <th width="120">
-      <b><a href="Viewpoints.do?command=ListViewpoints&userId=<%= UserRecord.getId()%>&column=vp.entered">Entered</a></b>
-      <%= ViewpointListInfo.getSortIcon("vp.entered") %>
-    </th>
-    <th width="30" nowrap>
-      <b><a href="Viewpoints.do?command=ListViewpoints&userId=<%= UserRecord.getId()%>&column=vp.enabled">Enabled</a></b>
-      <%= ViewpointListInfo.getSortIcon("vp.enabled") %>
-    </th>
-  </tr>
-<%
-  Iterator i = ViewpointList.iterator();
-  if (i.hasNext()) {
-    int rowid = 0;
-    int count = 0;
-    while (i.hasNext()) {
-      count++;
-      if (rowid != 1) {
-        rowid = 1;
-      } else {
-        rowid = 2;
+<dhv:container name="users" selected="viewpoints" object="UserRecord" param="<%= "id=" + UserRecord.getId() %>">
+  <dhv:permission name="admin-roles-add"><a href="Viewpoints.do?command=InsertViewpointForm&userId=<%= UserRecord.getId() %>"><dhv:label name="admin.addNewViewpoint">Add New Viewpoint</dhv:label></a></dhv:permission>
+  <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+  <center><dhv:pagedListAlphabeticalLinks object="ViewpointListInfo"/></center></dhv:include>
+  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ViewpointListInfo"/>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <th width="8" nowrap>
+        &nbsp;
+      </th>
+      <th nowrap>
+        <b><a href="Viewpoints.do?command=ListViewpoints&userId=<%= UserRecord.getId()%>&column=c.namelast"><dhv:label name="admin.viewpoint">Viewpoint</dhv:label></a></b>
+        <%= ViewpointListInfo.getSortIcon("c.namelast") %>
+      </th>
+      <th width="120">
+        <b><a href="Viewpoints.do?command=ListViewpoints&userId=<%= UserRecord.getId()%>&column=vp.entered"><dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label></a></b>
+        <%= ViewpointListInfo.getSortIcon("vp.entered") %>
+      </th>
+      <th width="30" nowrap>
+        <b><a href="Viewpoints.do?command=ListViewpoints&userId=<%= UserRecord.getId()%>&column=vp.enabled"><dhv:label name="product.enabled">Enabled</dhv:label></a></b>
+        <%= ViewpointListInfo.getSortIcon("vp.enabled") %>
+      </th>
+    </tr>
+  <%
+    Iterator i = ViewpointList.iterator();
+    if (i.hasNext()) {
+      int rowid = 0;
+      int count = 0;
+      while (i.hasNext()) {
+        count++;
+        if (rowid != 1) {
+          rowid = 1;
+        } else {
+          rowid = 2;
+        }
+        Viewpoint thisViewpoint = (Viewpoint)i.next();
+  %>
+        <tr class="row<%= rowid %>">
+          <td width="8" nowrap>
+            <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+            <a href="javascript:displayMenu('select<%= count %>','menuViewpoint', '<%= UserRecord.getId() %>','<%= thisViewpoint.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuViewpoint');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+          </td>
+          <td width="100%">
+            <a href="Viewpoints.do?command=ViewpointDetails&id=<%= thisViewpoint.getId() %>&userId=<%= UserRecord.getId()%>"><%= thisViewpoint.getVpUser().getContact().getNameLastFirst() %></a>
+          </td>
+          <td nowrap>
+            <zeroio:tz timestamp="<%= thisViewpoint.getEntered() %>" />
+          </td>
+          <td nowrap>
+            <% if(thisViewpoint.getEnabled()) {%>
+              <font color="green"><dhv:label name="account.yes">Yes</dhv:label></font>
+            <%} else {%>
+              <font color="red"><dhv:label name="account.no">No</dhv:label></font>
+            <%}%>
+          </td>
+        </tr>
+  <%
       }
-      Viewpoint thisViewpoint = (Viewpoint)i.next();
-%>      
-      <tr>
-        <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-          <a href="javascript:displayMenu('select<%= count %>','menuViewpoint', '<%= UserRecord.getId() %>','<%= thisViewpoint.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuViewpoint');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
-        </td>
-        <td class="row<%= rowid %>" width="150">
-          <a href="Viewpoints.do?command=ViewpointDetails&id=<%= thisViewpoint.getId() %>&userId=<%= UserRecord.getId()%>"><%= thisViewpoint.getVpUser().getContact().getNameLastFirst() %></a>
-        </td>
-        <td class="row<%= rowid %>">
-          <zeroio:tz timestamp="<%= thisViewpoint.getEntered() %>" />
-        </td>
-         <td class="row<%= rowid %>">
-          <%= thisViewpoint.getEnabled() ? "<font color=\"green\">Yes</font>":"<font color=\"red\">No</font>" %>
-        </td>
-      </tr>
-<%      
+    } else {
+  %>
+    <tr>
+      <td class="containerBody" colspan="4">
+        <dhv:label name="admin.noViewpointsFound">No Viewpoints found.</dhv:label>
+      </td>
+    </tr>
+  <%
     }
-  } else {
-%>  
-  <tr>
-    <td class="containerBody" colspan="4">
-      No Viewpoints found.
-    </td>
-  </tr>
-<%  
-  }
-%>
-</table>
-<br>
-<dhv:pagedListControl object="ViewpointListInfo" tdClass="empty"/>
-</td></tr>
-</table>
-
+  %>
+  </table>
+  <br>
+  <dhv:pagedListControl object="ViewpointListInfo" tdClass="empty"/>
+</dhv:container>

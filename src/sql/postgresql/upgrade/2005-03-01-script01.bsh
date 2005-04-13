@@ -1,0 +1,84 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  Product option configurators
+*/
+import java.sql.*;
+import org.aspcfs.modules.products.base.ProductOptionConfigurator;
+
+int configuratorId = -1;
+String desc = null;
+
+//String configurator
+desc = "String Configurator";
+PreparedStatement pst = db.prepareStatement(
+  "SELECT configurator_id " +
+  "FROM product_option_configurator " +
+  "WHERE short_description = ?");
+pst.setString(1, desc);
+ResultSet rs = pst.executeQuery();
+if (rs.next()) {
+  configuratorId = rs.getInt("configurator_id");
+}
+if (configuratorId != -1) {
+  ProductOptionConfigurator configurator = new ProductOptionConfigurator(db, configuratorId);
+  configurator.setConfiguratorName("Text");
+  configurator.setShortDescription("A text field for free-form additional information");
+  configurator.setLongDescription("A text field for free-form additional information");
+  configurator.setClassName("org.aspcfs.modules.products.configurator.StringConfigurator");
+  configurator.setResultType(1);
+  configurator.update(db);
+}
+
+//Checkbox configurator
+desc = "Checkbox Configurator";
+pst.setString(1, desc);
+rs = pst.executeQuery();
+if (rs.next()) {
+  configuratorId = rs.getInt("configurator_id");
+}
+if (configuratorId != -1) {
+  ProductOptionConfigurator configurator = new ProductOptionConfigurator(db, configuratorId);
+  configurator.setConfiguratorName("Check Box");
+  configurator.setShortDescription("A check box for yes/no information");
+  configurator.setLongDescription("A check box for yes/no information");
+  configurator.setClassName("org.aspcfs.modules.products.configurator.CheckboxConfigurator");
+  configurator.setResultType(1);
+  configurator.update(db);
+}
+
+//LookupList configurator
+desc = "LookupList Configurator";
+pst.setString(1, desc);
+rs = pst.executeQuery();
+if (rs.next()) {
+  configuratorId = rs.getInt("configurator_id");
+}
+if (configuratorId != -1) {
+  ProductOptionConfigurator configurator = new ProductOptionConfigurator(db, configuratorId);
+  configurator.setConfiguratorName("Lookup List");
+  configurator.setShortDescription("A list of available choices that can be selected");
+  configurator.setLongDescription("A list of available choices that can be selected");
+  configurator.setClassName("org.aspcfs.modules.products.configurator.LookupListConfigurator");
+  configurator.setResultType(1);
+  configurator.update(db);
+}
+
+//Number configurator
+desc = "Numerical Configurator";
+pst.setString(1, desc);
+rs = pst.executeQuery();
+if (rs.next()) {
+  configuratorId = rs.getInt("configurator_id");
+}
+if (configuratorId != -1) {
+  ProductOptionConfigurator configurator = new ProductOptionConfigurator(db, configuratorId);
+  configurator.setConfiguratorName("Number");
+  configurator.setShortDescription("An input field allowing numbers only");
+  configurator.setLongDescription("An input field allowing numbers only");
+  configurator.setClassName("org.aspcfs.modules.products.configurator.NumericalConfigurator");
+  configurator.setResultType(1);
+  configurator.update(db);
+}
+

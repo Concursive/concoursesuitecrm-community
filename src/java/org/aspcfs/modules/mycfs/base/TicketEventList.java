@@ -29,6 +29,7 @@ import org.aspcfs.modules.troubletickets.base.TicketList;
 public class TicketEventList {
   TicketList openProductTickets = new TicketList();
   TicketList openTickets = new TicketList();
+  TicketList openProjectTickets = new TicketList();
   int size = 0;
 
 
@@ -84,12 +85,32 @@ public class TicketEventList {
 
 
   /**
+   *  Gets the openProjectTickets attribute of the TicketEventList object
+   *
+   *@return    The openProjectTickets value
+   */
+  public TicketList getOpenProjectTickets() {
+    return openProjectTickets;
+  }
+
+
+  /**
    *  Sets the openTickets attribute of the TicketEventList object
    *
    *@param  tmp  The new openTickets value
    */
   public void setOpenTickets(TicketList tmp) {
     this.openTickets = tmp;
+  }
+
+
+  /**
+   *  Sets the openProjectTickets attribute of the TicketEventList object
+   *
+   *@param  tmp  The new openProjectTickets value
+   */
+  public void setOpenProjectTickets(TicketList tmp) {
+    this.openProjectTickets = tmp;
   }
 
 

@@ -1,0 +1,122 @@
+#!/bin/sh
+//bin/true; exec java -classpath .:lib/bsh.jar:build/lib/aspcfs.jar:lib/postgresql.jar:build/lib/darkhorseventures.jar:lib/mail.jar:lib/activation.jar:build/lib/zeroio-iteam.jar bsh.Interpreter "$0" "$@"
+
+/* Display admin users
+ *
+ *@author     matt rajkowski
+ *@created    January 12, 2005
+ *@version    $Id$
+ */
+
+import com.darkhorseventures.database.ConnectionPool;
+import com.darkhorseventures.database.ConnectionElement;
+import java.sql.*;
+import java.util.*;
+import org.aspcfs.utils.SMTPMessage;
+import java.io.*;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.system.base.SiteList;
+import org.aspcfs.modules.system.base.Site;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.admin.base.User;
+
+
+String url = "jdbc:postgresql://127.0.0.1:5432/cfs2gk";
+String user = "postgres";
+String password = "";
+String driver = "org.postgresql.Driver";
+
+String CRLF = System.getProperty("line.separator");
+int days = 3;
+
+ArrayList contactArrayList = new ArrayList();
+
+printContact(ArrayList contactArrayList, Contact thisContact) {
+  if (!"".equals(thisContact.getEmailAddress("Business"))) {
+    contactArrayList.add(thisContact.getNameFirstLast() + " <" + thisContact.getEmailAddress("Business") + ">");
+  } else {
+    print("INVALID ADDRESS FOR: " + thisContact.getNameFirstLast());
+  }
+}
+
+emailUser(String email) {
+  print("EmailAddress: " + email);
+  // Send an email
+  SMTPMessage mail = new SMTPMessage();
+  mail.setHost("127.0.0.1");
+  mail.setType("text/plain");
+  mail.addTo(email);
+  mail.setFrom("Dark Horse CRM Demo <demo@darkhorsecrm.com>");
+  mail.addReplyTo("demo@darkhorsecrm.com");
+  mail.setSubject("Dark Horse CRM Demo Server Upgraded");
+  mail.setBody(
+      "This message is to inform you that we have upgraded our Centric CRM demo server " +
+      "with a new version.  Any demo accounts that you may have been using have been " +
+      "removed." + CRLF +
+      CRLF +
+      "If you would like to extend your evaluation, feel free to setup another " +
+      "demo account so that you can experience the new features. " + CRLF +
+      CRLF +
+      "If you have any questions about Centric CRM, please visit our web site." + CRLF +
+      "http://www.centriccrm.com");
+  int mailSent = mail.send();
+  if (mailSent == 2) {
+    print(" * Mail error: " + mail.getErrorMsg());
+  }
+}
+
+// Create a Connection Pool
+ConnectionPool sqlDriver = new ConnectionPool();
+sqlDriver.setDebug(false);
+sqlDriver.setTestConnections(false);
+sqlDriver.setAllowShrinking(true);
+sqlDriver.setMaxConnections(2);
+sqlDriver.setMaxIdleTime(60000);
+sqlDriver.setMaxDeadTime(300000);
+
+// Build a list of active sites from gatekeeper table
+ConnectionElement ce = new ConnectionElement(url, user, password);
+ce.setDriver(driver);
+Connection db = sqlDriver.getConnection(ce);
+SiteList siteList = new SiteList();
+siteList.setEnabled(Constants.TRUE);
+siteList.setSiteCode("cfs");
+siteList.buildList(db);
+sqlDriver.free(db);
+
+// Iterate the sites and print out the administrators
+int count = 0;
+Iterator sites = siteList.iterator();
+while (sites.hasNext()) {
+  Site thisSite = (Site) sites.next();
+  ce = new ConnectionElement(thisSite.getDatabaseUrl(), user, password);
+  ce.setDriver(driver);
+  db = sqlDriver.getConnection(ce);
+  // Load the administrators
+  UserList userList = new UserList();
+  userList.setRoleId(1);
+  userList.setEnabled(Constants.TRUE);
+  //userList.setExpired(Constants.FALSE);
+  userList.buildList(db);
+  Iterator users = userList.iterator();
+  while (users.hasNext()) {
+    ++count;
+    User thisUser = (User) users.next();
+    // Get the contact info
+    Contact thisContact = new Contact(db, thisUser.getContactId());
+    printContact(contactArrayList, thisContact);
+  }
+  sqlDriver.free(db);
+}
+
+print("");
+print("Administrators: " + contactArrayList.size());
+Iterator emails = contactArrayList.iterator();
+while (emails.hasNext()) {
+  String thisEmail = (String) emails.next();
+  print(thisEmail);
+}
+
+exit();
+

@@ -24,8 +24,8 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-Configure Modules
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<dhv:label name="trails.configureModules">Configure Modules</dhv:label>
 </td>
 </tr>
 </table>
@@ -33,14 +33,12 @@ Configure Modules
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td>Setup the system to meet the specific needs of your organization, 
-    including configuration of lookup lists and custom fields.  Choose
-    a module to proceed.</td></tr>
+    <td><dhv:label name="admin.setupTheSystem.text">Setup the system to meet the specific needs of your organization, including configuration of lookup lists and custom fields.  Choose a module to proceed.</dhv:label></td></tr>
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Modules</strong>
+      <strong><dhv:label name="admin.modules">Modules</dhv:label></strong>
     </th>
   </tr>
 <%

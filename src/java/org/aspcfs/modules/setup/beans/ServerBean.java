@@ -288,29 +288,6 @@ public class ServerBean extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the ServerBean object
-   *
-   *@return    The valid value
-   */
-  public boolean isValid() {
-    errors.clear();
-    if (url == null || "".equals(url.trim())) {
-      errors.put("urlError", "URL is a required field");
-    }
-    if (email == null || "".equals(email.trim())) {
-      errors.put("emailError", "Email server is a required field");
-    }
-    if (emailAddress == null || "".equals(emailAddress.trim())) {
-      errors.put("emailAddressError", "Email address is a required field");
-    }
-    if (timeZone == null || "".equals(timeZone.trim()) || "-1".equals(timeZone)) {
-      errors.put("timeZoneError", "Time Zone is a required field");
-    }
-    return (!hasErrors());
-  }
-
-
-  /**
    *  Sets the serverInfo attribute of the ServerBean object
    *
    *@param  tmp  The new serverInfo value

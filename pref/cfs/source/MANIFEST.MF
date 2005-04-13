@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Created-By: Dark Horse Ventures LLC
-Comment: Centric CRM Web Application Open Source Edition Mon Sep 29 10:55:00 EST 2004
+Comment: Centric CRM Web Application Open Source Edition Thu Feb 10 13:00:00 EST 2005
 Implementation-Title: Centric CRM
-Implementation-Version: 2.9
+Implementation-Version: 3.0
 Implementation-Vendor: Dark Horse Ventures LLC
 Implementation-URL: http://www.centriccrm.com
 

@@ -1120,47 +1120,6 @@ public class ServiceContract extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the ServiceContract object
-   *
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  protected boolean isValid() throws SQLException {
-    boolean initialStartDateExists = true;
-    boolean currentStartDateExists = true;
-    boolean currentEndDateExists = true;
-    if (initialStartDate == null) {
-      errors.put("initialStartDateError", "Initial contract date is required");
-      initialStartDateExists = false;
-    }
-    if (currentStartDate == null) {
-      currentStartDateExists = false;
-    }
-    if (currentEndDate == null) {
-      currentEndDateExists = false;
-    }
-
-    if (currentEndDateExists) {
-      if ((currentStartDateExists) &&
-          (currentEndDate.before(currentStartDate))) {
-        errors.put("currentEndDateError", "Current End Date should be greater than Current Contract Date");
-      }
-      if ((initialStartDateExists) &&
-          (!currentStartDateExists) &&
-          (currentEndDate.before(initialStartDate))) {
-        errors.put("currentEndDateError", "Current End Date should be greater than Initial Contract Date");
-      }
-    }
-
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -1170,9 +1129,6 @@ public class ServiceContract extends GenericBean {
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
     //May Need additional checks if a ticket is assigned based on this contract
-    if (!isValid() || hasErrors()) {
-      return resultCount;
-    }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -1319,13 +1275,13 @@ public class ServiceContract extends GenericBean {
     try {
 
       Dependency assetDependency = new Dependency();
-      assetDependency.setName("Assets");
+      assetDependency.setName("assets");
       assetDependency.setCount(AssetList.retrieveRecordCount(db, Constants.SERVICE_CONTRACTS, this.getId()));
       assetDependency.setCanDelete(true);
       dependencyList.add(assetDependency);
 
       Dependency ticDependency = new Dependency();
-      ticDependency.setName("Tickets");
+      ticDependency.setName("tickets");
       ticDependency.setCount(TicketList.retrieveRecordCount(db, Constants.SERVICE_CONTRACTS, this.getId()));
       ticDependency.setCanDelete(true);
       dependencyList.add(ticDependency);
@@ -1419,9 +1375,6 @@ public class ServiceContract extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
 
-    if (!isValid() || hasErrors()) {
-      return false;
-    }
     PreparedStatement pst = null;
     pst = db.prepareStatement(
         "INSERT INTO service_contract " +

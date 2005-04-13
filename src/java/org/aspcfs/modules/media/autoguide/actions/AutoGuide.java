@@ -15,23 +15,30 @@
  */
 package org.aspcfs.modules.media.autoguide.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.isavvix.tools.FileInfo;
+import com.isavvix.tools.HttpMultiPartParser;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.iteam.base.FileItemVersion;
+import com.zeroio.webutils.FileDownload;
 import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.media.autoguide.base.*;
 import org.aspcfs.utils.ImageUtils;
 import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import com.isavvix.tools.*;
-import java.io.*;
 
 /**
  *  Auto Guide Module
@@ -582,10 +589,8 @@ public final class AutoGuide extends CFSModule {
     if (!(hasPermission(context, "accounts-autoguide-inventory-edit"))) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
-
+    boolean isValid = false;
     boolean recordInserted = false;
     try {
       String filePath = this.getPath(context, "autoguide");
@@ -618,14 +623,15 @@ public final class AutoGuide extends CFSModule {
       thisItem.setFilename(newFileInfo.getRealFilename());
       thisItem.setVersion(1.0);
       thisItem.setSize(newFileInfo.getSize());
-      recordInserted = thisItem.insert(db);
+      isValid = this.validateObject(context, db, thisItem);
+      if (isValid) {
+        recordInserted = thisItem.insert(db);
+      }
 
-      if (!recordInserted) {
-        processErrors(context, thisItem.getErrors());
-      } else {
+      if (recordInserted) {
         //Create a thumbnail
         File thumbnail = new File(newFileInfo.getLocalFile().getPath() + "TH");
-        ImageUtils.saveThumbnail(newFileInfo.getLocalFile(), thumbnail, 133d, -1d);
+        ImageUtils.saveThumbnail(newFileInfo.getLocalFile(), thumbnail, 133d, 133d);
 
         //Store thumbnail in database
         thisItem.setSubject("thumbnail");
@@ -635,19 +641,14 @@ public final class AutoGuide extends CFSModule {
         recordInserted = thisItem.insertVersion(db);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("PopupCloseOK");
-      } else {
-        return ("SystemError");
-      }
+    if (recordInserted) {
+      return ("PopupCloseOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
   }

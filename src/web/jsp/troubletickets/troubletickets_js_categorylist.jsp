@@ -21,15 +21,13 @@
 <jsp:useBean id="SubList1" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="SubList2" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
 <jsp:useBean id="SubList3" class="org.aspcfs.modules.troubletickets.base.TicketCategoryList" scope="request"/>
-<html>
-<head>
-</head>
 <body onload="page_init();">
 <script language="JavaScript">
 <%
   String catCode = request.getParameter("catCode");
   String subCat1 = request.getParameter("subCat1");
-  String subCat2 = request.getParameter("subCat2"); 
+  String subCat2 = request.getParameter("subCat2");
+  String form = request.getParameter("form");
 %>
 function newOpt(param, value) {
   var newOpt = parent.document.createElement("OPTION");
@@ -38,8 +36,8 @@ function newOpt(param, value) {
   return newOpt;
 }
 function page_init() {
-<dhv:evaluate exp="<%= ((SubList1.size() > 0) || (catCode != null)) %>">
-  var list = parent.document.forms[0].elements['subCat1'];
+<dhv:evaluate if="<%= ((SubList1.size() > 0) || (catCode != null)) %>">
+  var list = parent.document.forms['<%= form %>'].elements['subCat1'];
   list.options.length = 0;
   list.options[list.length] = newOpt("Undetermined", "0");
 <%
@@ -54,15 +52,15 @@ function page_init() {
  }
 %>
 <dhv:include name="ticket.subCat2" none="true">
-  resetList(parent.document.forms[0].elements['subCat2']);
+  resetList(parent.document.forms['<%= form %>'].elements['subCat2']);
 </dhv:include>
 <dhv:include name="ticket.subCat3" none="true">
-  resetList(parent.document.forms[0].elements['subCat3']);
+  resetList(parent.document.forms['<%= form %>'].elements['subCat3']);
 </dhv:include>
 </dhv:evaluate>
   
-<dhv:evaluate exp="<%= ((SubList2.size() > 0) || (subCat1 != null)) %>">
-  var list2 = parent.document.forms[0].elements['subCat2'];
+<dhv:evaluate if="<%= ((SubList2.size() > 0) || (subCat1 != null)) %>">
+  var list2 = parent.document.forms['<%= form %>'].elements['subCat2'];
   list2.options.length = 0;
   list2.options[list2.length] = newOpt("Undetermined", "0");
 <%
@@ -78,12 +76,12 @@ function page_init() {
  }
 %>
 <dhv:include name="ticket.subCat3" none="true">
-  resetList(parent.document.forms[0].elements['subCat3']);
+  resetList(parent.document.forms['<%= form %>'].elements['subCat3']);
 </dhv:include>
 </dhv:evaluate>
   
-<dhv:evaluate exp="<%= ((SubList3.size() > 0) || (subCat2 != null)) %>">
-  var list3 = parent.document.forms[0].elements['subCat3'];
+<dhv:evaluate if="<%= ((SubList3.size() > 0) || (subCat2 != null)) %>">
+  var list3 = parent.document.forms['<%= form %>'].elements['subCat3'];
   list3.options.length = 0;
   list3.options[list3.length] = newOpt("Undetermined", "0");
 <%
@@ -106,5 +104,3 @@ function resetList(list) {
 }
 </script>
 </body>
-</html>
-

@@ -49,7 +49,7 @@
   }
 </script>
 
-<table cellpadding="4" cellspacing="0" border="0" width="100%" style="border: 1px solid #000">
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td>
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -57,7 +57,7 @@
   <dhv:permission name="products-view" none="true">
   <tr>
     <td width="100%" valign="top" colspan="2" height="20" style="text-align: center !important">
-      <strong><div id="userName">Scheduled Actions for <%= CalendarInfo.getSelectedUserId()!=-1?toHtml(CalendarInfo.getSelectedUserName()) : toHtml(User.getUserRecord().getContact().getNameLastFirst())%></div></strong>
+      <strong><div id="userName"><dhv:label name="accounts.accounts_dashboard.ScheduledActionsFor">Scheduled Actions for</dhv:label> <%= CalendarInfo.getSelectedUserId()!=-1?toHtml(CalendarInfo.getSelectedUserName()) : toHtml(User.getUserRecord().getContact().getNameLastFirst())%></div></strong>
     </td>
   </tr>
   </dhv:permission>
@@ -102,7 +102,7 @@
               <tr>
                 <td valign="center" nowrap>
                  <select id="alerts" size="1" name="alertsView" onChange="javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=calendardetails&inline=true&alertsView='+document.getElementById('alerts').value);">
-                  <option value="all" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("all") ? " selected":"" %>>Pending Items</option>
+                  <option value="all" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("all") ? " selected":"" %>><dhv:label name="calendar.pendingItems">Pending Items</dhv:label></option>
                    <%
                     Iterator alertTypes = CalendarInfo.getAlertTypes().iterator();
                     while(alertTypes.hasNext()){
@@ -147,7 +147,7 @@
         <form name="miner_select" type="get" action="MyCFS.do">
           <tr>
             <th width="60%" valign="center">
-              <strong>Personalized Industry News &amp; Events</strong>
+              <strong><dhv:label name="calendar.personalizedNewsAndEvents" param="amp=&amp;">Personalized Industry News &amp; Events</dhv:label></strong>
             </th>
             <td width="40%" style="text-align: right;" valign="center">
     	<% if (request.getParameter("industry") == null || request.getParameter("industry").equals("")) { %>
@@ -179,7 +179,7 @@
   </tr>
 		<%}
 	} else {%>
-  <tr class="containerBody"><td>No news found.</td></tr>
+  <tr class="containerBody"><td><dhv:label name="calendar.noNewsFound">No news found.</dhv:label></td></tr>
 	<%}%>
 </table>
 </dhv:permission>

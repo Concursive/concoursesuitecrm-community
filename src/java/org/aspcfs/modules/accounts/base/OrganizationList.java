@@ -15,24 +15,31 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.util.*;
-import java.sql.*;
-import java.text.DateFormat;
-import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.SyncableList;
 import org.aspcfs.modules.base.Import;
+import org.aspcfs.modules.base.SyncableList;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.TimeZone;
+import java.util.Vector;
 
 /**
  *  Contains a list of organizations... currently used to build the list from
  *  the database with any of the parameters to limit the results.
  *
- *@author     mrajkowski
- *@created    August 30, 2001
- *@version    $Id: OrganizationList.java,v 1.2 2001/08/31 17:33:32 mrajkowski
+ * @author     mrajkowski
+ * @created    August 30, 2001
+ * @version    $Id: OrganizationList.java,v 1.2 2001/08/31 17:33:32 mrajkowski
  *      Exp $
  */
 public class OrganizationList extends Vector implements SyncableList {
@@ -59,6 +66,7 @@ public class OrganizationList extends Vector implements SyncableList {
   protected boolean hasAlertDate = false;
   protected boolean hasExpireDate = false;
   protected String accountNumber = null;
+  protected int projectId = -1;
 
   protected int revenueType = 0;
   protected int revenueYear = -1;
@@ -68,7 +76,7 @@ public class OrganizationList extends Vector implements SyncableList {
   protected java.sql.Timestamp alertRangeEnd = null;
 
   protected int typeId = 0;
-  
+
   //import filters
   private int importId = -1;
   private int statusId = -1;
@@ -79,7 +87,7 @@ public class OrganizationList extends Vector implements SyncableList {
    *  Constructor for the OrganizationList object, creates an empty list. After
    *  setting parameters, call the build method.
    *
-   *@since    1.1
+   * @since    1.1
    */
   public OrganizationList() { }
 
@@ -87,7 +95,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the lastAnchor attribute of the OrganizationList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -97,7 +105,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the lastAnchor attribute of the OrganizationList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(String tmp) {
     this.lastAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -107,7 +115,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the nextAnchor attribute of the OrganizationList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -117,7 +125,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the nextAnchor attribute of the OrganizationList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(String tmp) {
     this.nextAnchor = java.sql.Timestamp.valueOf(tmp);
@@ -127,7 +135,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the syncType attribute of the OrganizationList object
    *
-   *@param  tmp  The new syncType value
+   * @param  tmp  The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -137,7 +145,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the typeId attribute of the OrganizationList object
    *
-   *@return    The typeId value
+   * @return    The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -147,7 +155,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the typeId attribute of the OrganizationList object
    *
-   *@param  typeId  The new typeId value
+   * @param  typeId  The new typeId value
    */
   public void setTypeId(int typeId) {
     this.typeId = typeId;
@@ -157,7 +165,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the typeId attribute of the OrganizationList object
    *
-   *@param  typeId  The new typeId value
+   * @param  typeId  The new typeId value
    */
   public void setTypeId(String typeId) {
     this.typeId = Integer.parseInt(typeId);
@@ -167,7 +175,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the syncType attribute of the OrganizationList object
    *
-   *@param  tmp  The new syncType value
+   * @param  tmp  The new syncType value
    */
   public void setSyncType(String tmp) {
     this.syncType = Integer.parseInt(tmp);
@@ -179,8 +187,8 @@ public class OrganizationList extends Vector implements SyncableList {
    *
    *  The query results will be constrained to the PagedListInfo parameters.
    *
-   *@param  tmp  The new PagedListInfo value
-   *@since       1.1
+   * @param  tmp  The new PagedListInfo value
+   * @since       1.1
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -191,8 +199,8 @@ public class OrganizationList extends Vector implements SyncableList {
    *  Sets the MinerOnly attribute of the OrganizationList object to limit the
    *  results to miner only, or non-miner only.
    *
-   *@param  tmp  The new MinerOnly value
-   *@since       1.1
+   * @param  tmp  The new MinerOnly value
+   * @since       1.1
    */
   public void setMinerOnly(boolean tmp) {
     this.minerOnly = new Boolean(tmp);
@@ -202,7 +210,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the revenueType attribute of the OrganizationList object
    *
-   *@param  tmp  The new revenueType value
+   * @param  tmp  The new revenueType value
    */
   public void setRevenueType(int tmp) {
     this.revenueType = tmp;
@@ -212,7 +220,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the revenueYear attribute of the OrganizationList object
    *
-   *@param  tmp  The new revenueYear value
+   * @param  tmp  The new revenueYear value
    */
   public void setRevenueYear(int tmp) {
     this.revenueYear = tmp;
@@ -222,7 +230,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the alertRangeStart attribute of the OrganizationList object
    *
-   *@param  alertRangeStart  The new alertRangeStart value
+   * @param  alertRangeStart  The new alertRangeStart value
    */
   public void setAlertRangeStart(java.sql.Timestamp alertRangeStart) {
     this.alertRangeStart = alertRangeStart;
@@ -233,7 +241,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the alertRangeEnd attribute of the OrganizationList object
    *
-   *@param  alertRangeEnd  The new alertRangeEnd value
+   * @param  alertRangeEnd  The new alertRangeEnd value
    */
   public void setAlertRangeEnd(java.sql.Timestamp alertRangeEnd) {
     this.alertRangeEnd = alertRangeEnd;
@@ -243,7 +251,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the importId attribute of the OrganizationList object
    *
-   *@param  tmp  The new importId value
+   * @param  tmp  The new importId value
    */
   public void setImportId(int tmp) {
     this.importId = tmp;
@@ -251,9 +259,10 @@ public class OrganizationList extends Vector implements SyncableList {
 
 
   /**
-   *  Sets the excludeUnapprovedAccounts attribute of the OrganizationList object
+   *  Sets the excludeUnapprovedAccounts attribute of the OrganizationList
+   *  object
    *
-   *@param  tmp  The new excludeUnapprovedAccounts value
+   * @param  tmp  The new excludeUnapprovedAccounts value
    */
   public void setExcludeUnapprovedAccounts(boolean tmp) {
     this.excludeUnapprovedAccounts = tmp;
@@ -261,9 +270,10 @@ public class OrganizationList extends Vector implements SyncableList {
 
 
   /**
-   *  Sets the excludeUnapprovedAccounts attribute of the OrganizationList object
+   *  Sets the excludeUnapprovedAccounts attribute of the OrganizationList
+   *  object
    *
-   *@param  tmp  The new excludeUnapprovedAccounts value
+   * @param  tmp  The new excludeUnapprovedAccounts value
    */
   public void setExcludeUnapprovedAccounts(String tmp) {
     this.excludeUnapprovedAccounts = DatabaseUtils.parseBoolean(tmp);
@@ -271,9 +281,10 @@ public class OrganizationList extends Vector implements SyncableList {
 
 
   /**
-   *  Gets the excludeUnapprovedAccounts attribute of the OrganizationList object
+   *  Gets the excludeUnapprovedAccounts attribute of the OrganizationList
+   *  object
    *
-   *@return    The excludeUnapprovedAccounts value
+   * @return    The excludeUnapprovedAccounts value
    */
   public boolean getExcludeUnapprovedAccounts() {
     return excludeUnapprovedAccounts;
@@ -283,7 +294,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the importId attribute of the OrganizationList object
    *
-   *@param  tmp  The new importId value
+   * @param  tmp  The new importId value
    */
   public void setImportId(String tmp) {
     this.importId = Integer.parseInt(tmp);
@@ -293,7 +304,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the statusId attribute of the OrganizationList object
    *
-   *@param  tmp  The new statusId value
+   * @param  tmp  The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -303,7 +314,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the statusId attribute of the OrganizationList object
    *
-   *@param  tmp  The new statusId value
+   * @param  tmp  The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -313,7 +324,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the importId attribute of the OrganizationList object
    *
-   *@return    The importId value
+   * @return    The importId value
    */
   public int getImportId() {
     return importId;
@@ -323,17 +334,17 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the statusId attribute of the OrganizationList object
    *
-   *@return    The statusId value
+   * @return    The statusId value
    */
   public int getStatusId() {
     return statusId;
   }
-  
-  
+
+
   /**
    *  Gets the revenueType attribute of the OrganizationList object
    *
-   *@return    The revenueType value
+   * @return    The revenueType value
    */
   public int getRevenueType() {
     return revenueType;
@@ -343,7 +354,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the revenueYear attribute of the OrganizationList object
    *
-   *@return    The revenueYear value
+   * @return    The revenueYear value
    */
   public int getRevenueYear() {
     return revenueYear;
@@ -353,7 +364,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the includeEnabled attribute of the OrganizationList object
    *
-   *@return    The includeEnabled value
+   * @return    The includeEnabled value
    */
   public int getIncludeEnabled() {
     return includeEnabled;
@@ -363,7 +374,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the includeEnabled attribute of the OrganizationList object
    *
-   *@param  includeEnabled  The new includeEnabled value
+   * @param  includeEnabled  The new includeEnabled value
    */
   public void setIncludeEnabled(int includeEnabled) {
     this.includeEnabled = includeEnabled;
@@ -373,7 +384,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the ShowMyCompany attribute of the OrganizationList object
    *
-   *@param  showMyCompany  The new ShowMyCompany value
+   * @param  showMyCompany  The new ShowMyCompany value
    */
   public void setShowMyCompany(boolean showMyCompany) {
     this.showMyCompany = showMyCompany;
@@ -383,7 +394,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the hasAlertDate attribute of the OrganizationList object
    *
-   *@param  hasAlertDate  The new hasAlertDate value
+   * @param  hasAlertDate  The new hasAlertDate value
    */
   public void setHasAlertDate(boolean hasAlertDate) {
     this.hasAlertDate = hasAlertDate;
@@ -393,7 +404,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the HtmlJsEvent attribute of the OrganizationList object
    *
-   *@param  HtmlJsEvent  The new HtmlJsEvent value
+   * @param  HtmlJsEvent  The new HtmlJsEvent value
    */
   public void setHtmlJsEvent(String HtmlJsEvent) {
     this.HtmlJsEvent = HtmlJsEvent;
@@ -403,7 +414,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the accountNumber attribute of the OrganizationList object
    *
-   *@return    The accountNumber value
+   * @return    The accountNumber value
    */
   public String getAccountNumber() {
     return accountNumber;
@@ -413,7 +424,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the accountNumber attribute of the OrganizationList object
    *
-   *@param  accountNumber  The new accountNumber value
+   * @param  accountNumber  The new accountNumber value
    */
   public void setAccountNumber(String accountNumber) {
     this.accountNumber = accountNumber;
@@ -421,11 +432,41 @@ public class OrganizationList extends Vector implements SyncableList {
 
 
   /**
+   *  Gets the projectId attribute of the OrganizationList object
+   *
+   * @return    The projectId value
+   */
+  public int getProjectId() {
+    return projectId;
+  }
+
+
+  /**
+   *  Sets the projectId attribute of the OrganizationList object
+   *
+   * @param  projectId  The new projectId value
+   */
+  public void setProjectId(int projectId) {
+    this.projectId = projectId;
+  }
+
+
+  /**
+   *  Sets the projectId attribute of the OrganizationList object
+   *
+   * @param  projectId  The new projectId value
+   */
+  public void setProjectId(String projectId) {
+    this.projectId = Integer.parseInt(projectId);
+  }
+
+
+  /**
    *  Sets the EnteredBy attribute of the OrganizationList object to limit
    *  results to those records entered by that user.
    *
-   *@param  tmp  The new EnteredBy value
-   *@since       1.1
+   * @param  tmp  The new EnteredBy value
+   * @since       1.1
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -435,7 +476,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the buildRevenueYTD attribute of the OrganizationList object
    *
-   *@return    The buildRevenueYTD value
+   * @return    The buildRevenueYTD value
    */
   public boolean getBuildRevenueYTD() {
     return buildRevenueYTD;
@@ -445,7 +486,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the buildRevenueYTD attribute of the OrganizationList object
    *
-   *@param  buildRevenueYTD  The new buildRevenueYTD value
+   * @param  buildRevenueYTD  The new buildRevenueYTD value
    */
   public void setBuildRevenueYTD(boolean buildRevenueYTD) {
     this.buildRevenueYTD = buildRevenueYTD;
@@ -455,7 +496,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the ownerIdRange attribute of the OrganizationList object
    *
-   *@param  tmp  The new ownerIdRange value
+   * @param  tmp  The new ownerIdRange value
    */
   public void setOwnerIdRange(String tmp) {
     this.ownerIdRange = tmp;
@@ -467,8 +508,8 @@ public class OrganizationList extends Vector implements SyncableList {
    *  those records matching the name. Use a % in the name for wildcard
    *  matching.
    *
-   *@param  tmp  The new Name value
-   *@since       1.1
+   * @param  tmp  The new Name value
+   * @since       1.1
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -478,7 +519,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the revenueOwnerId attribute of the OrganizationList object
    *
-   *@return    The revenueOwnerId value
+   * @return    The revenueOwnerId value
    */
   public int getRevenueOwnerId() {
     return revenueOwnerId;
@@ -489,7 +530,7 @@ public class OrganizationList extends Vector implements SyncableList {
    *  Building Alert Counts Sets the revenueOwnerId attribute of the
    *  OrganizationList object
    *
-   *@param  revenueOwnerId  The new revenueOwnerId value
+   * @param  revenueOwnerId  The new revenueOwnerId value
    */
   public void setRevenueOwnerId(int revenueOwnerId) {
     this.revenueOwnerId = revenueOwnerId;
@@ -499,7 +540,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the hasExpireDate attribute of the OrganizationList object
    *
-   *@param  hasExpireDate  The new hasExpireDate value
+   * @param  hasExpireDate  The new hasExpireDate value
    */
   public void setHasExpireDate(boolean hasExpireDate) {
     this.hasExpireDate = hasExpireDate;
@@ -509,7 +550,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the OwnerId attribute of the OrganizationList object
    *
-   *@param  ownerId  The new OwnerId value
+   * @param  ownerId  The new OwnerId value
    */
   public void setOwnerId(int ownerId) {
     this.ownerId = ownerId;
@@ -519,7 +560,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the orgId attribute of the OrganizationList object
    *
-   *@param  tmp  The new orgId value
+   * @param  tmp  The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -529,7 +570,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Sets the orgId attribute of the OrganizationList object
    *
-   *@param  tmp  The new orgId value
+   * @param  tmp  The new orgId value
    */
   public void setOrgId(String tmp) {
     this.orgId = Integer.parseInt(tmp);
@@ -539,7 +580,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the tableName attribute of the OrganizationList object
    *
-   *@return    The tableName value
+   * @return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -549,7 +590,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the uniqueField attribute of the OrganizationList object
    *
-   *@return    The uniqueField value
+   * @return    The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -559,7 +600,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the hasAlertDate attribute of the OrganizationList object
    *
-   *@return    The hasAlertDate value
+   * @return    The hasAlertDate value
    */
   public boolean getHasAlertDate() {
     return hasAlertDate;
@@ -569,7 +610,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the ownerIdRange attribute of the OrganizationList object
    *
-   *@return    The ownerIdRange value
+   * @return    The ownerIdRange value
    */
   public String getOwnerIdRange() {
     return ownerIdRange;
@@ -579,7 +620,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the hasExpireDate attribute of the OrganizationList object
    *
-   *@return    The hasExpireDate value
+   * @return    The hasExpireDate value
    */
   public boolean getHasExpireDate() {
     return hasExpireDate;
@@ -589,7 +630,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the ShowMyCompany attribute of the OrganizationList object
    *
-   *@return    The ShowMyCompany value
+   * @return    The ShowMyCompany value
    */
   public boolean getShowMyCompany() {
     return showMyCompany;
@@ -599,7 +640,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the HtmlJsEvent attribute of the OrganizationList object
    *
-   *@return    The HtmlJsEvent value
+   * @return    The HtmlJsEvent value
    */
   public String getHtmlJsEvent() {
     return HtmlJsEvent;
@@ -609,7 +650,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the OwnerId attribute of the OrganizationList object
    *
-   *@return    The OwnerId value
+   * @return    The OwnerId value
    */
   public int getOwnerId() {
     return ownerId;
@@ -619,7 +660,7 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the orgId attribute of the OrganizationList object
    *
-   *@return    The orgId value
+   * @return    The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -629,9 +670,9 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the HtmlSelect attribute of the ContactList object
    *
-   *@param  selectName  Description of Parameter
-   *@return             The HtmlSelect value
-   *@since              1.8
+   * @param  selectName  Description of Parameter
+   * @return             The HtmlSelect value
+   * @since              1.8
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -641,10 +682,10 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the HtmlSelect attribute of the ContactList object
    *
-   *@param  selectName  Description of Parameter
-   *@param  defaultKey  Description of Parameter
-   *@return             The HtmlSelect value
-   *@since              1.8
+   * @param  selectName  Description of Parameter
+   * @param  defaultKey  Description of Parameter
+   * @return             The HtmlSelect value
+   * @since              1.8
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect orgListSelect = new HtmlSelect();
@@ -668,8 +709,8 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the HtmlSelectDefaultNone attribute of the OrganizationList object
    *
-   *@param  selectName  Description of Parameter
-   *@return             The HtmlSelectDefaultNone value
+   * @param  selectName  Description of Parameter
+   * @return             The HtmlSelectDefaultNone value
    */
   public String getHtmlSelectDefaultNone(String selectName) {
     return getHtmlSelectDefaultNone(selectName, -1);
@@ -679,9 +720,9 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the htmlSelectDefaultNone attribute of the OrganizationList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelectDefaultNone value
+   * @param  selectName  Description of the Parameter
+   * @param  defaultKey  Description of the Parameter
+   * @return             The htmlSelectDefaultNone value
    */
   public String getHtmlSelectDefaultNone(String selectName, int defaultKey) {
     HtmlSelect orgListSelect = new HtmlSelect();
@@ -706,8 +747,8 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void select(Connection db) throws SQLException {
     buildList(db);
@@ -717,11 +758,11 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  timeZone          Description of the Parameter
-   *@param  events            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  timeZone          Description of the Parameter
+   * @param  events            Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public HashMap queryRecordCount(Connection db, TimeZone timeZone, HashMap events) throws SQLException {
 
@@ -763,8 +804,8 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void buildShortList(Connection db) throws SQLException {
 
@@ -780,7 +821,7 @@ public class OrganizationList extends Vector implements SyncableList {
         "SELECT o.org_id, o.name, " +
         (hasAlertDate ? "o.alertdate, " : "") +
         (hasExpireDate ? "o.contract_end, " : "") +
-        "o.alert, o.enteredby " +
+        "o.alert, o.enteredby, o.owner " +
         "FROM organization o " +
         "WHERE o.org_id >= 0 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString());
@@ -798,6 +839,7 @@ public class OrganizationList extends Vector implements SyncableList {
       }
       thisOrg.setAlertText(rs.getString("alert"));
       thisOrg.setEnteredBy(rs.getInt("enteredby"));
+      thisOrg.setOwner(rs.getInt("owner"));
       this.add(thisOrg);
     }
     rs.close();
@@ -810,9 +852,9 @@ public class OrganizationList extends Vector implements SyncableList {
    *  organizations. The organizations are appended, so build can be run any
    *  number of times to generate a larger list for a report.
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param  db                Description of Parameter
+   * @exception  SQLException  Description of Exception
+   * @since                    1.1
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -843,9 +885,9 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Gets the object attribute of the OrganizationList object
    *
-   *@param  rs                Description of the Parameter
-   *@return                   The object value
-   *@exception  SQLException  Description of the Exception
+   * @param  rs                Description of the Parameter
+   * @return                   The object value
+   * @exception  SQLException  Description of the Exception
    */
   public Organization getObject(ResultSet rs) throws SQLException {
     Organization thisOrganization = new Organization(rs);
@@ -857,10 +899,10 @@ public class OrganizationList extends Vector implements SyncableList {
    *  This method is required for synchronization, it allows for the resultset
    *  to be streamed with lower overhead
    *
-   *@param  db                Description of the Parameter
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  pst               Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public ResultSet queryList(Connection db, PreparedStatement pst) throws SQLException {
     ResultSet rs = null;
@@ -948,8 +990,8 @@ public class OrganizationList extends Vector implements SyncableList {
    *  Builds a base SQL where statement for filtering records to be used by
    *  sqlSelect and sqlCount
    *
-   *@param  sqlFilter  Description of Parameter
-   *@since             1.2
+   * @param  sqlFilter  Description of Parameter
+   * @since             1.2
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -1049,9 +1091,12 @@ public class OrganizationList extends Vector implements SyncableList {
     if (typeId > 0) {
       sqlFilter.append("AND o.org_id IN (select atl.org_id from account_type_levels atl where atl.type_id = ?) ");
     }
-    
-    if (orgId > 0){
+
+    if (orgId > 0) {
       sqlFilter.append("AND o.org_id = ? ");
+    }
+    if (projectId > 0) {
+      sqlFilter.append("AND o.org_id IN (SELECT org_id FROM project_accounts WHERE project_id = ?) ");
     }
   }
 
@@ -1059,9 +1104,9 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Convenience method to get a list of phone numbers for each contact
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.5
+   * @param  db                Description of Parameter
+   * @exception  SQLException  Description of Exception
+   * @since                    1.5
    */
   protected void buildResources(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -1081,10 +1126,10 @@ public class OrganizationList extends Vector implements SyncableList {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  newOwner          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  newOwner          Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner) throws SQLException {
     int total = 0;
@@ -1100,13 +1145,36 @@ public class OrganizationList extends Vector implements SyncableList {
 
 
   /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @param  newOwner          Description of the Parameter
+   * @param  userId            Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public int reassignElements(Connection db, int newOwner, int userId) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Organization thisOrg = (Organization) i.next();
+      thisOrg.setModifiedBy(userId);
+      if (thisOrg.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+
+  /**
    *  Sets the parameters for the preparedStatement - these items must
    *  correspond with the createFilter statement
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.2
+   * @param  pst               Description of Parameter
+   * @return                   Description of the Returned Value
+   * @exception  SQLException  Description of Exception
+   * @since                    1.2
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -1180,15 +1248,17 @@ public class OrganizationList extends Vector implements SyncableList {
     if (excludeUnapprovedAccounts) {
       pst.setInt(++i, Import.PROCESSED_APPROVED);
     }
-    
+
     if (typeId > 0) {
       pst.setInt(++i, typeId);
     }
 
-    if (orgId > 0){
+    if (orgId > 0) {
       pst.setInt(++i, orgId);
     }
-
+    if (projectId > 0) {
+      pst.setInt(++i, projectId);
+    }
     return i;
   }
 

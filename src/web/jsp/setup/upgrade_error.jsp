@@ -27,7 +27,7 @@
   <tr>
     <td>
       <img src="images/error.gif" border="0" align="absmiddle"/>
-      An error occurred during the upgrade!
+      <dhv:label name="setup.errorOccuredDuringUpgrade">An error occurred during the upgrade!</dhv:label>
     </td>
   </tr>
 </table>
@@ -35,14 +35,12 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Centric CRM Upgrade Failed!
+      <dhv:label name="setup.upgradeFailed">Centric CRM Upgrade Failed!</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      Your database could be in an inconsistent state. You might want to seek assistance
-      with what could have gone wrong. This page might contain some useful information
-      during that analysis.
+      <dhv:label name="setup.databaseInconsistentState.text">Your database could be in an inconsistent state. You might want to seek assistance with what could have gone wrong. This page might contain some useful information during that analysis.</dhv:label>
     </td>
   </tr>
 </table>
@@ -50,14 +48,12 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Suggestions
+      <dhv:label name="setup.suggestions">Suggestions</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      If you are in a hurry to get the system working, you could restore the database 
-      to your last backup and then
-      put the previous version of Centric CRM back online.
+      <dhv:label name="setup.restoreDatabaseToBackup.text">If you are in a hurry to get the system working, you could restore the database to your last backup and then put the previous version of Centric CRM back online.</dhv:label>
     </td>
   </tr>
 </table>
@@ -65,13 +61,13 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Error log
+      <dhv:label name="setup.errorLog">Error log</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      While trying to upgrade from '<%= installedVersion %>' to '<%= newVersion %>' an error occurred.<br />
-      The following error message was provided:<br />
+    <% String temp = "installedVersion="+installedVersion+"|newVersion="+newVersion; %>
+      <dhv:label name="setup.errorDetails.fromVersionToVersion.text" param="<%= temp %>">While trying to upgrade from '<%= installedVersion %>' to '<%= newVersion %>' an error occurred.<br />The following error message was provided:</dhv:label><br />
       &nbsp;
     </td>
   </tr>
@@ -85,13 +81,13 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Upgrade Log
+      <dhv:label name="setup.upgradeLog">Upgrade Log</dhv:label>
     </th>
   </tr>
 <dhv:evaluate if="<%= installLog.size() == 0 %>">
   <tr>
     <td>
-      No scripts completed successfully
+      <dhv:label name="setup.noScriptsCompletedSuccessfully">No scripts completed successfully</dhv:label>
     </td>
   </tr>
 </dhv:evaluate>

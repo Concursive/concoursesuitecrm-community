@@ -25,9 +25,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="AdminConfig.do?command=ListGlobalParams">Configure System</a> >
-Modify Setting
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="AdminConfig.do?command=ListGlobalParams"><dhv:label name="admin.configureSystem">Configure System</dhv:label></a> >
+<dhv:label name="admin.modifySetting">Modify Setting</dhv:label>
 </td>
 </tr>
 </table>
@@ -35,21 +35,19 @@ Modify Setting
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td><b>What should the 
-default time zone be set to for new users?</b><br />
-Every user can configure the time zone in which they are currently in.
-This allows users to see and enter dates and times according to their configured time zone.<br />
+    <td><b><dhv:label name="admin.defaultTimezone.question">What should the default time zone be set to for new users?</dhv:label></b><br />
+<dhv:label name="admin.timezone.text">Every user can configure the time zone in which they are currently in. This allows users to see and enter dates and times according to their configured time zone.</dhv:label><br />
 </td></tr></table>
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
-        <strong>Modify Default Time Zone</strong>
+        <strong><dhv:label name="admin.modifyDefaultTimezone">Modify Default Time Zone</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
       <td class="formLabel">
-        Time Zone
+        <dhv:label name="accounts.accounts_contacts_communication_preference_add.TimeZone">Time Zone</dhv:label>
       </td>
       <td>
          <%= HtmlSelectTimeZone.getSelect("timeZone", getPref(getServletContext(), "SYSTEM.TIMEZONE")).getHtml() %><font color="red">*</font>
@@ -57,8 +55,8 @@ This allows users to see and enter dates and times according to their configured
       </td>
     </tr>
   </table>
-  <br>
-  <input type="submit" value="Update">
-  <input type="button" value="Cancel" onClick="javascript:window.location.href='AdminConfig.do?command=ListGlobalParams';">
+  <br />
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AdminConfig.do?command=ListGlobalParams';">
 </dhv:permission>
 </form>

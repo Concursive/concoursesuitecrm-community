@@ -18,6 +18,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
   var thisFolderId = -1;
   var thisFileId = -1;
@@ -88,7 +89,7 @@
           <img src="images/icons/stock_zoom-folder-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View Folder
+          <dhv:label name="accounts.accounts_documents_list_menu.ViewFolder">View Folder</dhv:label>
         </td>
       </tr>
     </zeroio:permission>
@@ -99,7 +100,7 @@
           <img src="images/icons/stock_rename-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Rename Folder
+          <dhv:label name="accounts.accounts_documents_list_menu.RenameFolder">Rename Folder</dhv:label>
         </td>
       </tr>
     </zeroio:permission>
@@ -110,7 +111,7 @@
           <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          Move Folder
+          <dhv:label name="accounts.accounts_documents_list_menu.MoveFolder">Move Folder</dhv:label>
         </td>
       </tr>
     </zeroio:permission>
@@ -121,7 +122,7 @@
           <img src="images/icons/stock_left-with-subpoints-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          Delete Folder and Move contents to current folder
+          <dhv:label name="accounts.accounts_documents_list_menu.DeleteFolderMoveContents">Delete Folder and Move contents to current folder</dhv:label>
         </td>
       </tr>
     </zeroio:permission>
@@ -138,7 +139,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View File History
+          <dhv:label name="accounts.accounts_documents_list_menu.ViewFileHistory">View File History</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -149,7 +150,7 @@
           <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Download File
+          <dhv:label name="accounts.accounts_contacts_detailsimport.DownloadFile">Download File</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -160,7 +161,7 @@
           <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View File Contents
+          <dhv:label name="accounts.accounts_documents_list_menu.ViewFileContents">View File Contents</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -171,7 +172,7 @@
           <img src="images/icons/stock_rename-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          Rename File
+          <dhv:label name="accounts.accounts_documents_list_menu.RenameFile">Rename File</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -182,7 +183,7 @@
           <img src="images/icons/stock_insert-file-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          Add Version
+          <dhv:label name="accounts.accounts_documents_list_menu.AddVersion">Add Version</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -193,7 +194,7 @@
           <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          Move File
+          <dhv:label name="accounts.accounts_documents_list_menu.MoveFile">Move File</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -204,7 +205,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          Delete File
+          <dhv:label name="documents.documents.deleteFile">Delete File</dhv:label>
         </td>
       </tr>
       </zeroio:permission>

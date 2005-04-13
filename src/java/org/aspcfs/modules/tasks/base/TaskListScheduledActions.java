@@ -17,15 +17,19 @@ package org.aspcfs.modules.tasks.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.ScheduledActions;
-import org.aspcfs.modules.mycfs.base.*;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.base.ScheduledActions;
+import org.aspcfs.modules.mycfs.base.CalendarEventList;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.CalendarView;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.DateFormat;
-import java.util.*;
-import java.sql.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TimeZone;
 
 /**
  *  Description of the Class
@@ -129,10 +133,12 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
   public void buildAlerts(CalendarView companyCalendar, Connection db) throws SQLException {
 
     try {
-      //get the userId
-      /*
-       *  int userId = module.getUserId(context);
-	   */
+      //get the id of the user that has logged in
+      int loginId = -1;
+      if (module != null && context != null) {
+        loginId = module.getUserId(context);
+      }
+	    
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TaskListScheduledActions-> Building Task Alerts for user " + userId);
       }
@@ -142,10 +148,12 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
 
       // Add Tasks to calendar details
       this.setOwner(userId);
+      if (loginId != userId) {
+        this.setSharing(Constants.FALSE);
+      }
       this.setComplete(Constants.FALSE);
       this.buildShortList(db);
       Iterator taskList = this.iterator();
-      int taskCount = 0;
       while (taskList.hasNext()) {
         Task thisTask = (Task) taskList.next();
         thisTask.buildResources(db);
@@ -171,14 +179,18 @@ public class TaskListScheduledActions extends TaskList implements ScheduledActio
       if (System.getProperty("DEBUG") != null) {
         System.out.println("TaskListScheduledActions-> Building Alert Count ");
       }
-      /*  get the user
-       *  int userId = module.getUserId(context);
-       */
+      int loginId = -1;
+      if (module != null && context != null) {
+        loginId = module.getUserId(context);
+      }
       //get TimeZone
       TimeZone timeZone = companyCalendar.getCalendarInfo().getTimeZone();
 
       // Add Task count to calendar
       this.setOwner(userId);
+      if (loginId != userId) {
+        this.setSharing(Constants.FALSE);
+      }
       this.setComplete(Constants.FALSE);
       HashMap dayEvents = this.queryRecordCount(db, timeZone);
       Set s = dayEvents.keySet();

@@ -476,31 +476,6 @@ public class Criteria extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the Criteria object
-   *
-   *@return    The valid value
-   */
-  public boolean isValid() {
-    if (reportId == -1) {
-      errors.put("reportIdError", "Report Id is required");
-    }
-    if (owner == -1) {
-      errors.put("ownerError", "Owner Id is required");
-    }
-    if (subject == null || "".equals(subject)) {
-      errors.put("subjectError", "Subject is required");
-    }
-    if (enteredBy == -1) {
-      errors.put("enteredByError", "EnteredBy is required");
-    }
-    if (modifiedBy == -1) {
-      errors.put("modifiedByError", "ModifiedBy is required");
-    }
-    return !hasErrors();
-  }
-
-
-  /**
    *  Saves the criteria to the database, either updating previously saved
    *  criteria or inserting new criteria depending on the overwrite and save
    *  properties of this object.
@@ -510,9 +485,6 @@ public class Criteria extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean save(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     if (overwrite) {
       update(db);
     } else if (save) {
@@ -530,9 +502,6 @@ public class Criteria extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     try {
       db.setAutoCommit(false);
       StringBuffer sql = new StringBuffer();
@@ -594,9 +563,6 @@ public class Criteria extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean update(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     try {
       db.setAutoCommit(false);
       StringBuffer sql = new StringBuffer();

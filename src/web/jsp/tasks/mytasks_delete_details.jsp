@@ -21,7 +21,8 @@
 <jsp:useBean id="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <br>
-<strong><center>The task "<%=Task.getDescription()%>" has been deleted.</center></strong>
+<% String temp = "taskDescription="+Task.getDescription(); %>
+<strong><center><dhv:label name="tasks.taskHasBeenDeleted.text" param="<%= temp %>">The task "<%=Task.getDescription()%>" has been deleted.</dhv:label></center></strong>
 <br>
-<input type="button" value="OK" onClick="javascript:opener.window.location.href='MyTasks.do?command=ListTasks';javascript:window.close()">
+<input type="button" value="<dhv:label name="button.ok">OK</dhv:label>" onClick="javascript:opener.window.location.href='MyTasks.do?command=ListTasks';javascript:window.close()">
 

@@ -15,15 +15,15 @@
  */
 package com.zeroio.iteam.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
-import java.sql.*;
-import java.text.*;
-import java.util.Calendar;
-import java.util.TimeZone;
-import org.aspcfs.modules.actions.*;
-import org.aspcfs.utils.DateUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 
 /**
@@ -42,6 +42,15 @@ public class NewsArticle extends GenericBean {
   public final static int DRAFT = -1;
   public final static int UNAPPROVED = 1;
   public final static int PUBLISHED = 2;
+  //portal
+  public final static int HOMEPAGE = 10;
+  public final static int ARTICLE = 20;
+  //templates
+  public final static int TEMPLATE_ARTICLE = 1;
+  public final static int TEMPLATE_ARTICLE_LINKEDLIST = 2;
+  public final static int TEMPLATE_ARTICLE_LIST_PROJECTS = 3;
+  public final static int TEMPLATE_LIST_BY_CATEGORIES = 4;
+  public final static int TEMPLATE_LIST_PROJECTS = 5;
 
   //article properties
   private int id = -1;
@@ -66,8 +75,11 @@ public class NewsArticle extends GenericBean {
   private int status = -1;
   private String startDateTimeZone = null;
   private String endDateTimeZone = null;
+  private int taskCategoryId = -1;
+  private int classificationId = ARTICLE;
+  private int templateId = -1;
 
-
+  
   /**
    *  Constructor for the NewsArticle object
    */
@@ -130,6 +142,7 @@ public class NewsArticle extends GenericBean {
     if (id == -1) {
       throw new SQLException("News record not found.");
     }
+    buildResources(db);
   }
 
 
@@ -494,6 +507,96 @@ public class NewsArticle extends GenericBean {
 
 
   /**
+   *  Gets the taskCategoryId attribute of the NewsArticle object
+   *
+   *@return    The taskCategory value
+   */
+  public int getTaskCategoryId() {
+    return taskCategoryId;
+  }
+
+
+  /**
+   *  Sets the taskCategoryId attribute of the NewsArticle object
+   *
+   *@param  tmp  The new taskCategoryId value
+   */
+  public void setTaskCategoryId(int tmp) {
+    this.taskCategoryId = tmp;
+  }
+
+
+  /**
+   *  Sets the taskCategoryId attribute of the NewsArticle object
+   *
+   *@param  tmp  The new taskCategoryId value
+   */
+  public void setTaskCategoryId(String tmp) {
+    this.taskCategoryId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the classificationId attribute of the NewsArticle object
+   *
+   *@return    The classificationId value
+   */
+  public int getClassificationId() {
+    return classificationId;
+  }
+  
+  
+  /**
+   *  Sets the classificationId attribute of the NewsArticle object
+   *
+   *@param  tmp  The new classificationId value
+   */
+  public void setClassificationId(int tmp) {
+    this.classificationId = tmp;
+  }
+
+
+  /**
+   *  Sets the classificationId attribute of the NewsArticle object
+   *
+   *@param  tmp  The new classificationId value
+   */
+  public void setClassificationId(String tmp) {
+    this.classificationId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the templateId attribute of the NewsArticle object
+   *
+   *@return    The templateId value
+   */
+  public int getTemplateId() {
+    return templateId;
+  }
+
+
+  /**
+   *  Sets the templateId attribute of the NewsArticle object
+   *
+   *@param  tmp  The new templateId value
+   */
+  public void setTemplateId(int tmp) {
+    this.templateId = tmp;
+  }
+
+
+  /**
+   *  Sets the templateId attribute of the NewsArticle object
+   *
+   *@param  tmp  The new templateId value
+   */
+  public void setTemplateId(String tmp) {
+    this.templateId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the startDateTimeZone attribute of the NewsArticle object
    *
    *@param  tmp  The new startDateTimeZone value
@@ -590,6 +693,16 @@ public class NewsArticle extends GenericBean {
    */
   public String getMessage() {
     return message;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean hasMessage() {
+    return (message != null && !"".equals(message));
   }
 
 
@@ -822,6 +935,16 @@ public class NewsArticle extends GenericBean {
 
 
   /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean hasTaskCategoryId() {
+    return taskCategoryId > -1;
+  }
+
+
+  /**
    *  Populates this news article from a database result set
    *
    *@param  rs                Description of the Parameter
@@ -830,7 +953,7 @@ public class NewsArticle extends GenericBean {
   protected void buildRecord(ResultSet rs) throws SQLException {
     id = rs.getInt("news_id");
     projectId = rs.getInt("project_id");
-    categoryId = rs.getInt("category_id");
+    categoryId = DatabaseUtils.getInt(rs, "category_id");
     subject = rs.getString("subject");
     intro = rs.getString("intro");
     message = rs.getString("message");
@@ -850,57 +973,32 @@ public class NewsArticle extends GenericBean {
     status = DatabaseUtils.getInt(rs, "status");
     startDateTimeZone = rs.getString("start_date_timezone");
     endDateTimeZone = rs.getString("end_date_timezone");
+    classificationId = DatabaseUtils.getInt(rs, "classification_id");
+    templateId = DatabaseUtils.getInt(rs, "template_id");
   }
 
 
   /**
-   *  Gets the valid attribute of the NewsArticle object
+   *  Description of the Method
    *
-   *@return    The valid value
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
    */
-  public boolean isValid() {
-    if (projectId == -1) {
-      errors.put("actionError", "Project ID not specified");
+  public void buildResources(Connection db) throws SQLException {
+    if (id == -1) {
+      throw new SQLException("ID not specified");
     }
-    if (subject == null || subject.equals("")) {
-      errors.put("subjectError", "Required field");
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT category_id " +
+        "FROM taskcategorylink_news " +
+        "WHERE news_id = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      taskCategoryId = rs.getInt("category_id");
     }
-    if (intro == null || intro.equals("") || intro.equals(" \r\n<br />\r\n ")) {
-      errors.put("introError", "Required field");
-    }
-    if (hasErrors()) {
-      //Check warnings
-      checkWarnings();
-      onlyWarnings = false;
-      return false;
-    } else {
-      //Do not check for warnings if it was found that only warnings existed
-      // in the previous call to isValid for the same form.
-      if (!onlyWarnings) {
-        //Check for warnings if there are no errors
-        checkWarnings();
-        if (hasWarnings()) {
-          onlyWarnings = true;
-          return false;
-        }
-      }
-      return true;
-    }
-  }
-
-
-  /**
-   *  Generates warnings that need to be reviewed before the form can be
-   *  submitted.
-   */
-  protected void checkWarnings() {
-    if ((errors.get("endDateError") == null) &&
-        (endDate != null) &&
-        (startDate != null)) {
-      if (endDate.before(startDate)) {
-        warnings.put("endDateWarning", "Archive date is earlier than start date");
-      }
-    }
+    rs.close();
+    pst.close();
   }
 
 
@@ -912,9 +1010,6 @@ public class NewsArticle extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO project_news " +
@@ -928,7 +1023,7 @@ public class NewsArticle extends GenericBean {
     sql.append(
         "enteredBy, modifiedBy, " +
         "start_date, start_date_timezone, end_date, end_date_timezone, allow_replies, " +
-        "allow_rating, rating_count, avg_rating, priority_id, read_count) ");
+        "allow_rating, rating_count, avg_rating, priority_id, read_count, classification_id, template_id) ");
     sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
@@ -936,7 +1031,7 @@ public class NewsArticle extends GenericBean {
     if (modified != null) {
       sql.append("?, ");
     }
-    sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+    sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     //Insert the topic
     PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -965,9 +1060,15 @@ public class NewsArticle extends GenericBean {
     pst.setDouble(++i, avgRating);
     DatabaseUtils.setInt(pst, ++i, priorityId);
     pst.setInt(++i, readCount);
+    DatabaseUtils.setInt(pst, ++i, classificationId);
+    DatabaseUtils.setInt(pst, ++i, templateId);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "project_news_news_id_seq");
+    // If there is a task category being associated, insert that too
+    if (taskCategoryId > -1) {
+      insertTaskCategoryLink(db);
+    }
     return true;
   }
 
@@ -983,9 +1084,6 @@ public class NewsArticle extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("ID was not specified");
     }
-    if (!isValid()) {
-      return -1;
-    }
     int resultCount = 0;
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
@@ -994,7 +1092,8 @@ public class NewsArticle extends GenericBean {
         "modifiedBy = ?, modified = CURRENT_TIMESTAMP, " +
         "start_date = ?, start_date_timezone = ?, end_date = ?, " +
         "end_date_timezone = ?, allow_replies = ?, allow_rating = ?, " +
-        "priority_id = ?, enabled = ?, status = ? " +
+        "priority_id = ?, enabled = ?, status = ?, category_id = ?, " +
+        "classification_id = ?, template_id = ? " +
         "WHERE news_id = ? " +
         "AND modified = ? ");
     pst.setString(++i, subject);
@@ -1009,11 +1108,102 @@ public class NewsArticle extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, priorityId);
     pst.setBoolean(++i, enabled);
     DatabaseUtils.setInt(pst, ++i, status);
+    DatabaseUtils.setInt(pst, ++i, categoryId);
+    DatabaseUtils.setInt(pst, ++i, classificationId);
+    DatabaseUtils.setInt(pst, ++i, templateId);
     pst.setInt(++i, id);
     pst.setTimestamp(++i, modified);
     resultCount = pst.executeUpdate();
     pst.close();
+    if (resultCount == 1) {
+      // See if there is a link already
+      boolean hasTaskCategoryLink = false;
+      boolean sameTaskCategoryLink = false;
+      pst = db.prepareStatement(
+          "SELECT category_id " +
+          "FROM taskcategorylink_news " +
+          "WHERE news_id = ? ");
+      pst.setInt(1, id);
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        hasTaskCategoryLink = true;
+        if (rs.getInt("category_id") == taskCategoryId) {
+          sameTaskCategoryLink = true;
+        }
+      }
+      rs.close();
+      pst.close();
+      //
+      if (hasTaskCategoryLink && taskCategoryId > -1 && !sameTaskCategoryLink) {
+        // Delete the previous link(s)
+        deleteTaskCategoryLink(db);
+        // Insert the new link
+        insertTaskCategoryLink(db);
+      }
+      //
+      if (hasTaskCategoryLink && taskCategoryId == -1) {
+        // Delete the previous link(s)
+        deleteTaskCategoryLink(db);
+      }
+      //
+      if (!hasTaskCategoryLink && taskCategoryId > -1) {
+        // Insert the new link
+        insertTaskCategoryLink(db);
+      }
+    }
     return resultCount;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void insertTaskCategoryLink(Connection db) throws SQLException {
+    PreparedStatement pst = null;
+    // First, make sure the category belongs to this project
+    boolean belongsToProject = false;
+    pst = db.prepareStatement(
+        "SELECT category_id " +
+        "FROM taskcategory_project " +
+        "WHERE category_id = ? " +
+        "AND project_id = ? ");
+    pst.setInt(1, taskCategoryId);
+    pst.setInt(2, projectId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      belongsToProject = true;
+    }
+    rs.close();
+    pst.close();
+    if (belongsToProject) {
+      // Then insert the link
+      pst = db.prepareStatement(
+          "INSERT INTO taskcategorylink_news " +
+          "(category_id, news_id) VALUES (?, ?) ");
+      pst.setInt(1, taskCategoryId);
+      pst.setInt(2, id);
+      pst.execute();
+      pst.close();
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void deleteTaskCategoryLink(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE from taskcategorylink_news " +
+        "WHERE news_id = ? ");
+    pst.setInt(1, this.getId());
+    pst.execute();
+    pst.close();
   }
 
 
@@ -1078,17 +1268,35 @@ public class NewsArticle extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean delete(Connection db) throws SQLException {
+  public boolean delete(Connection db, String basePath) throws SQLException {
     if (id == -1 || projectId == -1) {
       throw new SQLException("ID was not specified");
     }
-    int i = 0;
-    PreparedStatement pst = db.prepareStatement(
-        "DELETE FROM project_news " +
-        "WHERE news_id = ? ");
-    pst.setInt(1, id);
-    pst.execute();
-    pst.close();
+    PreparedStatement pst = null;
+    try {
+      db.setAutoCommit(false);
+      // Delete task category link
+      deleteTaskCategoryLink(db);
+      // Delete attached files
+      FileItemList files = new FileItemList();
+      files.setLinkModuleId(Constants.NEWSARTICLE_FILES);
+      files.setLinkItemId(id);
+      files.buildList(db);
+      files.delete(db, basePath);
+      // Delete the news
+      pst = db.prepareStatement(
+          "DELETE FROM project_news " +
+          "WHERE news_id = ? ");
+      pst.setInt(1, id);
+      pst.execute();
+      pst.close();
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
     return true;
   }
 

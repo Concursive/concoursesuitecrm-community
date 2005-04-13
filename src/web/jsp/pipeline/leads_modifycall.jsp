@@ -32,6 +32,7 @@
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="TimeZoneSelect" class="org.aspcfs.utils.web.HtmlSelectTimeZone" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkInt.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
@@ -49,60 +50,55 @@
     formTest = true;
     message = "";
 <% if("pending".equals(request.getParameter("view"))){ %>
-    if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
-      message += "- Please specify an alert date\r\n";
+    if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
+      message += label("specify.alert.date", "- Please specify an alert date\r\n");
       formTest = false;
     }
-    if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
-      message += "- Please specify an alert description\r\n";
-      formTest = false;
-    }
-    
-    if (form.alertText.value == "") { 
-      message += "- Please specify an alert description\r\n";
+    if (checkNullString(form.alertText.value)) { 
+      message += label("specify.alert.description", "- Please specify an alert description\r\n");
       formTest = false;
     }
     if (form.alertCallTypeId.value == "0") { 
-      message += "- Please specify an alert type\r\n";
+      message += label("specify.alert.type","- Please specify an alert type\r\n");
       formTest = false;
     }
 <% }else{ %>
     if (!checkInt(form.length.value)){
-        message += "- Check that Length is a whole number\r\n";
+        message += label("check.length.wholenumber","- Check that Length is a whole number\r\n");
         formTest = false;
     }
     
-    if (form.subject.value == "") { 
-      message += "- Blank records cannot be saved\r\n";
+    if (checkNullString(form.subject.value)) { 
+      message += label("specify.blank.records","- Blank records cannot be saved\r\n");
       formTest = false;
     }
     
     if (form.callTypeId.value == "0") { 
-      message += "- Please specify a type\r\n";
+      message += label("specify.type","- Please specify a type\r\n");
       formTest = false;
     }
     
     if(form.hasFollowup != null && form.hasFollowup.checked){
-    if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
-      message += "- Please specify an alert date\r\n";
+    if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
+      message += label("specify.alert.date", "- Please specify an alert date\r\n");
       formTest = false;
     }
-    if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
-      message += "- Please specify an alert description\r\n";
+    if ((!checkNullString(form.alertDate.value)) && (checkNullString(form.alertText.value))) { 
+      message += label("specify.alert.description", "- Please specify an alert description\r\n");
       formTest = false;
     }
-    if (form.alertText.value == "") { 
-      message += "- Please specify an alert description\r\n";
+    if (checkNullString(form.alertText.value)) { 
+      message += label("specify.alert.description", "- Please specify an alert description\r\n");
       formTest = false;
     }
     if (form.alertCallTypeId.value == "0") { 
-      message += "- Please specify an alert type\r\n";
+      message += label("specify.alert.type","- Please specify an alert type\r\n");
       formTest = false;
     }
      } 
 <% } %>
   if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     } else {
       checkFollowup(form);
@@ -130,15 +126,12 @@
   
   <% if(!"pending".equals(request.getParameter("view")) && CallDetails.getAlertDate() == null){ %>
   function toggleSpan(cb, tag) {
-    var form = document.forms[0];
+    var form = document.addCall;
     if (cb.checked) {
       if (form.alertText.value == "") {
         form.alertText.value = form.subject.value;
       }
       showSpan(tag);
-      if (window.scrollTo) {
-        window.scrollTo(0, 1000);
-      }
       form.alertText.focus();
     } else {
       hideSpan(tag);
@@ -152,7 +145,7 @@
   }
   
   function addFollowup(hours, typeId){
-    var form = document.forms[0];
+    var form = document.addCall;
     var selectedIndex = 0;
     var callTypes = form.alertCallTypeId;
     
@@ -169,9 +162,9 @@
 <% } %>
 </script>
 <% if("pending".equals(request.getParameter("view"))){ %>
-<body onLoad="javascript:document.forms[0].alertText.focus();">
+<body onLoad="javascript:document.addCall.alertText.focus();">
 <%}else{%>
-<body onLoad="javascript:document.forms[0].subject.focus();">
+<body onLoad="javascript:document.addCall.subject.focus();">
 <%}%>
 <%
   boolean popUp = false;
@@ -179,112 +172,100 @@
     popUp = true;
   }
 %>
-<dhv:evaluate exp="<%= !popUp %>">
+<form name="addCall" action="LeadsCalls.do?command=Save&headerId=<%= opportunityHeader.getId() %><%= (request.getParameter("popup") != null?"&popup=true":"") %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
+<dhv:evaluate if="<%= !popUp %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> >
+<a href="Leads.do"><dhv:label name="pipeline.pipeline">Pipeline</dhv:label></a> >
 <% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
-	<a href="Leads.do?command=Dashboard">Dashboard</a> >
+	<a href="Leads.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
 <% }else{ %>
-	<a href="Leads.do?command=Search">Search Results</a> >
+	<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <% } %>
-<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> >
-<a href="LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Activities</a> >
+<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> >
+<a href="LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_calls_list.Activities">Activities</dhv:label></a> >
 <% if (request.getParameter("return") == null) { %>
-	<a href="LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Activity Details</a> >
+	<a href="LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_calls_add.ActivityDetails">Activity Details</dhv:label></a> >
 <%}%>
-Modify Activity
+<dhv:label name="contact.call.modifyActivity">Modify Activity</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<%@ include file="leads_details_header_include.jsp" %>
-<dhv:evaluate exp="<%= !popUp %>">
-  <% String param1 = "id=" + opportunityHeader.getId(); 
-   String param2 = addLinkParams(request, "viewSource");
-%>
-<dhv:container name="opportunities" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
-</dhv:evaluate>
-<form name="addCall" action="LeadsCalls.do?command=Save&headerId=<%= opportunityHeader.getId() %><%= (request.getParameter("popup") != null?"&popup=true":"") %>&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-<dhv:evaluate exp="<%= !popUp %>">
-  <% if (request.getParameter("return") != null) {%>
-    <% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
+<dhv:container name="opportunities" selected="calls" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <dhv:evaluate if="<%= !popUp %>">
+    <% if (request.getParameter("return") != null) {%>
+      <% if (request.getParameter("return").equals("list")) {%>
+        <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
+      <%}%>
+    <%} else {%>
+        <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
     <%}%>
-  <%} else {%>
-      <input type="submit" value="Cancel" onClick="javascript:form.action='LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
-  <%}%>
-</dhv:evaluate>
-<dhv:evaluate exp="<%= popUp %>">
-      <input type="button" value="Cancel" onClick="javascript:window.close();">
-</dhv:evaluate>
-      <br />
-      <dhv:formMessage />
-      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-      <% if("pending".equals(request.getParameter("view"))){ %>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= popUp %>">
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
+  </dhv:evaluate>
+    <br />
+    <dhv:formMessage />
+    <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+    <% if("pending".equals(request.getParameter("view"))){ %>
+      <%-- include pending activity form --%>
+      <%@ include file="../contacts/call_followup_include.jsp" %>
+      &nbsp;
+      <%-- include completed activity details --%>
+      <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
+    <% }else{ %>
+      <% if(CallDetails.getStatusId() != Call.CANCELED){ %>
+      <%-- include completed activity form --%>
+      <%@ include file="leads_call_completed_include.jsp" %>
+      <% }else{ %>
+      <%-- include completed activity details --%>
+      <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
+      <% } %>
+      &nbsp;
+      <% if((CallDetails.getAlertDate() != null) && (request.getAttribute("alertDateWarning") == null) && request.getParameter("hasFollowup") == null){ %>
+        <%-- include followup activity details --%>
+        <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
+      <% }else{ %>
+        <span name="nextActionSpan" id="nextActionSpan" <%= CallDetails.getHasFollowup() ? "" : "style=\"display:none\"" %>>
+        <br>
         <%-- include pending activity form --%>
         <%@ include file="../contacts/call_followup_include.jsp" %>
-        &nbsp;
-        <%-- include completed activity details --%>
-        <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
-      <% }else{ %>
-        <% if(CallDetails.getStatusId() != Call.CANCELED){ %>
-        <%-- include completed activity form --%>
-        <%@ include file="leads_call_completed_include.jsp" %>
-        <% }else{ %>
-        <%-- include completed activity details --%>
-        <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
-        <% } %>
-        &nbsp;
-        <% if((CallDetails.getAlertDate() != null) && (request.getAttribute("alertDateWarning") == null) && request.getParameter("hasFollowup") == null){ %>
-          <%-- include followup activity details --%>
-          <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
-        <% }else{ %>
-          <span name="nextActionSpan" id="nextActionSpan" <%= CallDetails.getHasFollowup() ? "" : "style=\"display:none\"" %>>
-          <br>
-          <%-- include pending activity form --%>
-          <%@ include file="../contacts/call_followup_include.jsp" %>
-          </span>
-      <% 
-          }
+        </span>
+    <%
         }
-      %>
+      }
+    %>
       &nbsp;
       <br>
-      <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-<dhv:evaluate exp="<%= !popUp %>">
-  <% if (request.getParameter("return") != null) {%>
-    <% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
-    <%}%>
-  <%} else {%>
-      <input type="submit" value="Cancel" onClick="javascript:form.action='LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
-  <%}%>
-</dhv:evaluate>
-<dhv:evaluate exp="<%= popUp %>">
-      <input type="button" value="Cancel" onClick="javascript:window.close();">
-</dhv:evaluate>
-    </td>
-  </tr>
-</table>
-<input type="hidden" name="dosubmit" value="true">
-<input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
-<input type="hidden" name="id" value="<%= CallDetails.getId() %>">
-<input type="hidden" name="previousId" value="<%= PreviousCallDetails.getId() %>">
-<input type="hidden" name="statusId" value="<%= CallDetails.getStatusId() %>">
-<input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>" >
-<%= addHiddenParams(request, "viewSource|view|return|actionId") %>
+      <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
+      <dhv:evaluate if="<%= !popUp %>">
+        <% if (request.getParameter("return") != null) {%>
+          <% if (request.getParameter("return").equals("list")) {%>
+            <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='LeadsCalls.do?command=View&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
+          <%}%>
+        <%} else {%>
+            <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='LeadsCalls.do?command=Details&id=<%= CallDetails.getId() %>&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
+        <%}%>
+      </dhv:evaluate>
+      <dhv:evaluate if="<%= popUp %>">
+          <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
+      </dhv:evaluate>
+  <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
+  <input type="hidden" name="id" value="<%= CallDetails.getId() %>">
+  <input type="hidden" name="previousId" value="<%= PreviousCallDetails.getId() %>">
+  <input type="hidden" name="statusId" value="<%= CallDetails.getStatusId() %>">
+  <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>" >
+  <%= addHiddenParams(request, "viewSource|view|return|actionId") %>
 <% if("pending".equals(request.getParameter("view"))){ %>
     <%-- include completed activity values --%>
     <input type="hidden" name="callTypeId" value="<%= CallDetails.getCallTypeId() %>">
@@ -305,5 +286,6 @@ Modify Activity
     <input type="hidden" name="followupNotes" value="<%= toString(CallDetails.getFollowupNotes()) %>">
     <input type="hidden" name="priorityId" value="<%= CallDetails.getPriorityId() %>">
   <% } %>
+</dhv:container>
 </form>
 </body>

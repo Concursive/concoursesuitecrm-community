@@ -15,21 +15,22 @@
  */
 package org.aspcfs.modules.admin.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
 import com.darkhorseventures.framework.actions.ActionContext;
-import com.darkhorseventures.database.ConnectionElement;
-import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.base.*;
 import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import java.text.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.CategoryEditor;
+import org.aspcfs.modules.admin.base.CategoryEditorList;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.CategoryList;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.troubletickets.base.TicketCategoryDraft;
+import org.aspcfs.modules.troubletickets.base.TicketCategoryDraftList;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.HtmlSelect;
+
+import java.sql.Connection;
+import java.util.HashMap;
 
 /**
  *  Actions for managing the Category Editors.
@@ -124,7 +125,7 @@ public final class AdminCategories extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "View");
+    return getReturn(context, "View");
   }
 
 
@@ -161,7 +162,7 @@ public final class AdminCategories extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "Modify");
+    return getReturn(context, "Modify");
   }
 
 
@@ -176,7 +177,6 @@ public final class AdminCategories extends CFSModule {
       return ("PermissionError");
     }
     String categoryId = context.getRequest().getParameter("categoryId");
-    String level = context.getRequest().getParameter("level");
     Connection db = null;
     try {
       int constantId = Integer.parseInt(context.getRequest().getParameter("constantId"));
@@ -207,7 +207,7 @@ public final class AdminCategories extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "CategoryJSList");
+    return getReturn(context, "CategoryJSList");
   }
 
 
@@ -233,6 +233,7 @@ public final class AdminCategories extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, constantId);
       // save the item
+      thisEditor.setSystemStatus(this.getSystemStatus(context));
       thisEditor.updateCategory(db, categories, Integer.parseInt(parentCatId));
       TicketCategoryDraftList catList = null;
       if (!"-1".equals(parentCatId)) {
@@ -248,7 +249,7 @@ public final class AdminCategories extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "Save");
+    return getReturn(context, "Save");
   }
 
 
@@ -277,22 +278,23 @@ public final class AdminCategories extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, constantId);
       DependencyList dependencies = thisEditor.processDependencies(categories);
-      htmlDialog.addMessage(dependencies.getHtmlString());
+      //htmlDialog.addMessage("Please review carefully...\n" + dependencies.getHtmlString());
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       if (dependencies.size() == 0) {
-        htmlDialog.setTitle("Confirm");
+        htmlDialog.setTitle(systemStatus.getLabel("admin.confirm.title"));
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setHeader("Are you sure ?");
+        htmlDialog.setHeader(systemStatus.getLabel("admin.confirm.header"));
         htmlDialog.setDeleteUrl("javascript:window.location.href='AdminCategories.do?command=Save&categories=' + escape('" + categories + "') + '&parentCode=" + parentCatId + "&level=" + level + "'");
       } else {
         if (dependencies.canDelete()) {
-          htmlDialog.setTitle("Centric CRM: Confirm Delete");
-          htmlDialog.setHeader("The following categories have dependencies within Centric CRM:");
-          htmlDialog.addButton("Delete All", "javascript:window.location.href='AdminCategories.do?command=Save&categories=' + escape('" + categories + "') + '&parentCode=" + parentCatId + "&level=" + level + "'");
-          htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+          htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
+          htmlDialog.setHeader(systemStatus.getLabel("admin.confirm.categories.header"));
+          htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AdminCategories.do?command=Save&categories=' + escape('" + categories + "') + '&parentCode=" + parentCatId + "&level=" + level + "'");
+          htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
         } else {
-          htmlDialog.setTitle("Centric CRM: Alert");
-          htmlDialog.setHeader("The list cannot be updated since the following categories have dependencies within Centric CRM:");
-          htmlDialog.addButton("OK", "javascript:parent.window.close()");
+          htmlDialog.setTitle(systemStatus.getLabel("admin.confirm.alert"));
+          htmlDialog.setHeader(systemStatus.getLabel("admin.confirm.alert.message"));
+          htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
         }
       }
     } catch (Exception e) {
@@ -323,7 +325,7 @@ public final class AdminCategories extends CFSModule {
       db = getConnection(context);
       //get the category editor from system status
       SystemStatus systemStatus = this.getSystemStatus(context);
-      CategoryEditor thisEditor = systemStatus.getCategoryEditor(db, constantId);
+      systemStatus.getCategoryEditor(db, constantId);
       //thisEditor.saveDraft(db);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -331,7 +333,7 @@ public final class AdminCategories extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "SaveDraft");
+    return getReturn(context, "SaveDraft");
   }
 
 
@@ -361,7 +363,7 @@ public final class AdminCategories extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getSession().removeAttribute("selectedCategories");
-    return this.getReturn(context, "Reset");
+    return getReturn(context, "Reset");
   }
 
 
@@ -390,7 +392,7 @@ public final class AdminCategories extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "Activate");
+    return getReturn(context, "Activate");
   }
 
 
@@ -436,7 +438,7 @@ public final class AdminCategories extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "ViewActive");
+    return getReturn(context, "ViewActive");
   }
 
 
@@ -472,7 +474,7 @@ public final class AdminCategories extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "ActiveCategoryJSList");
+    return getReturn(context, "ActiveCategoryJSList");
   }
 }
 

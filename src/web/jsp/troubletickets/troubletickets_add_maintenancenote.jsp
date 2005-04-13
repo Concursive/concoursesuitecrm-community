@@ -19,6 +19,7 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.utils.web.*, org.aspcfs.modules.troubletickets.base.*,org.aspcfs.modules.tasks.base.*, org.aspcfs.modules.base.EmailAddress" %>
 <jsp:useBean id="ticketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
+<jsp:useBean id="maintenanceDetails" class="org.aspcfs.modules.troubletickets.base.TicketMaintenanceNote" scope="request"/>
 <jsp:useBean id="onsiteModelList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -29,42 +30,36 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></SCRIPT>
 <SCRIPT language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<form name="details" action="TroubleTicketMaintenanceNotes.do?command=Save&auto-populate=true&id=<%=ticketDetails.getId()%>"  method="post" onSubmit="return doCheck(this);" >
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="TroubleTickets.do?"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
-  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+  <a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+  <a href="TroubleTickets.do?command=SearchTickets"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%}else{%> 
   <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
 <a href="TroubleTickets.do?command=Details&id=<%= ticketDetails.getId() %>"><dhv:label name="tickets.details">Ticket Details</dhv:label></a> >
-<a href="TroubleTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>">Maintenance Notes</a> >
-Add Maintenance Note
+<a href="TroubleTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>"><dhv:label name="tickets.maintenancenotes.long_html">Maintenance Notes</dhv:label></a> >
+<dhv:label name="ticket.addMaintenanceNote"><dhv:label name="ticket.addMaintenanceNote">Add Maintenance Note</dhv:label></dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + ticketDetails.getId(); %>
-<dhv:container name="tickets" selected="maintenancenotes" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-  <form name="details" action="TroubleTicketMaintenanceNotes.do?command=Save&auto-populate=true&id=<%=ticketDetails.getId()%>" onSubmit="return doCheck(this);" method="post">
-      <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
-      <input type="button" value="Cancel" onClick="window.location.href='TroubleTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />
-      <br /> <br />
-      <%@ include file="troubletickets_add_maintenancenote_include.jsp" %>
-      <br />
-      <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
-      <input type="button" value="Cancel" onClick="window.location.href='TroubleTicketMaintenanceNotes.do?command=List&id=<%= ticketDetails.getId() %>';this.form.dosubmit.value='false';" />
-      <input type="hidden" name="dosubmit" value="true" />
-     </td>
-    </tr> 
+<dhv:container name="tickets" selected="maintenancenotes" object="ticketDetails" param="<%= param1 %>">
+  <%@ include file="ticket_header_include.jsp" %>
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='TroubleTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />
+  <br /> <br />
+  <%= showError(request, "actionError") %>
+  <%@ include file="troubletickets_add_maintenancenote_include.jsp" %>
+  <br />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='TroubleTicketMaintenanceNotes.do?command=List&id=<%= ticketDetails.getId() %>';this.form.dosubmit.value='false';" />
+  <input type="hidden" name="dosubmit" value="true" />
+</dhv:container>
 </form>
- </td>
- </tr>
-</table>

@@ -15,21 +15,22 @@
  */
 package org.aspcfs.modules.actionlist.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  List of Action Lists
  *
  * @author     akhi_m
  * @created    April 18, 2003
+ * @version    $Id$
  */
 public class ActionLists extends ArrayList {
 
@@ -298,6 +299,51 @@ public class ActionLists extends ArrayList {
     }
     return i;
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @param  newOwner          Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public int reassignElements(Connection db, int newOwner) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ActionList thisActionList = (ActionList) i.next();
+      if (thisActionList.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @param  newOwner          Description of the Parameter
+   * @param  userId            Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public int reassignElements(Connection db, int newOwner, int userId) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ActionList thisActionList = (ActionList) i.next();
+      thisActionList.setModifiedBy(userId);
+      if (thisActionList.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }
+
 }
 
 

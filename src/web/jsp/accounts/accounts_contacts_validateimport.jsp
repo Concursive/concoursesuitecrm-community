@@ -115,32 +115,32 @@
   <td>
     <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> >
     <% if("list".equals(request.getParameter("return"))){ %>
-    <a href="AccountContactsImports.do?command=View">View Imports</a> >
+    <a href="AccountContactsImports.do?command=View"><dhv:label name="accounts.ViewImports">View Imports</dhv:label></a> >
     <% }else{ %>
-    <a href="AccountContactsImports.do?command=View">View Imports</a> >
-    <a href="AccountContactsImports.do?command=Details&importId=<%= ImportDetails.getId() %>">Import Details</a> >
+    <a href="AccountContactsImports.do?command=View"><dhv:label name="accounts.ViewImports">View Imports</dhv:label></a> >
+    <a href="AccountContactsImports.do?command=Details&importId=<%= ImportDetails.getId() %>"><dhv:label name="accounts.ImportDetails">Import Details</dhv:label></a> >
     <% } %>
-    Process Import
+    <dhv:label name="accounts.accounts_contacts_validateimport.ProcessImport">Process Import</dhv:label>
   </td>
 </tr>
 </table>
 
 <%-- End Trails --%>
 <form method="post" name="inputForm" action="AccountContactsImports.do?command=Validate">
-<input type="submit" value="Process">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsImports.do?command=View';this.form.dosubmit.value='false';">
+<input type="submit" value="<dhv:label name="accounts.accounts_contacts_detailsimport.Process">Process</dhv:label>">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountContactsImports.do?command=View';this.form.dosubmit.value='false';">
 <br />
-<dhv:formMessage />
+<%= showError(request, "actionError") %> 
 <%-- General Import Properties --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Import Properties</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_validateimport.ImportProperties">Import Properties</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    Name
+    <dhv:label name="contacts.name">Name</dhv:label>
   </td>
   <td class="containerBody">
     <%= toString(ImportDetails.getName()) %>
@@ -148,7 +148,7 @@
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    File
+    <dhv:label name="contacts.companydirectory_confirm_importupload.File">File</dhv:label>
   </td>
   <td class="containerBody">
     <%= FileItem.getClientFilename() %>
@@ -156,15 +156,15 @@
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    File Size
+    <dhv:label name="contacts.companydirectory_confirm_importupload.FileSize">File Size</dhv:label>
   </td>
   <td class="containerBody">
-    <%= FileItem.getRelativeSize() %> k&nbsp;
+    <%= FileItem.getRelativeSize() %> <dhv:label name="admin.oneThousand.abbreviation">k</dhv:label>&nbsp;
   </td>
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    Entered
+    <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
   </td>
   <td class="containerBody">
     <dhv:username id="<%= ImportDetails.getEnteredBy() %>"/>
@@ -173,7 +173,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Modified
+      <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>
     </td>
     <td>
       <dhv:username id="<%= ImportDetails.getModifiedBy() %>"/>
@@ -182,7 +182,7 @@
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    Owner
+    <dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label>
   </td>
   <td class="containerBody">
     <table class="empty">
@@ -198,7 +198,7 @@
             </td>
           <td>
             <input type="hidden" name="owner" id="ownerid" value="<%= ImportDetails.getOwner() == -1 ? User.getUserId() : ImportDetails.getOwner() %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&reset=true');">Change Owner</a>]
+            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'usersOnly=true&reset=true');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
          </td>
         </tr>
     </table>
@@ -206,7 +206,7 @@
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    Access Type
+    <dhv:label name="accounts.accounts_contacts_validateimport.AccessType">Access Type</dhv:label>
   </td>
   <td class="containerBody">
     <%= AccessTypeList.getHtmlSelect("accessType", ImportDetails.getAccessTypeId()) %>
@@ -217,7 +217,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>First 5 lines of the import file</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_validateimport.First5linesImportfile">First 5 lines of the import file</dhv:label></strong>
     </th>
   </tr>
   <% 
@@ -229,7 +229,7 @@
   %>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    Line <%= lineCount++ %> 
+    <dhv:label name="accounts.accounts_contacts_validateimport.Line">Line</dhv:label> <%= lineCount++ %> 
   </td>
   <td class="containerBody">
     <input type="text" value="<%= toHtml(line) %>" READONLY size="70">
@@ -241,7 +241,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>
-      <strong>General Errors/Warnings</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_validateimport.GeneralErrorsWarnings">General Errors/Warnings</dhv:label></strong>
     </th>
   </tr>
   <%
@@ -260,7 +260,7 @@
   %>
   <tr>
     <td class="containerBody" align="left">
-       No errors/warnings found.
+      <dhv:label name="accounts.accounts_contacts_validateimport.NoErrorsWarningsFound">No errors/warnings found.</dhv:label>
     </td>
   </tr>
  <% } %>
@@ -269,18 +269,18 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="3">
-      <strong>Field Mappings</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_validateimport.FieldMappings">Field Mappings</dhv:label></strong>
     </th>
   </tr>
   <tr>
     <th>
-      <strong>Field</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_validateimport.Field">Field</dhv:label></strong>
     </th>
     <th>
-      <strong>Maps to...</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_validateimport.MapsTo">Maps to...</dhv:label></strong>
     </th>
     <th>
-      <strong>Errors/Warnings</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_validateimport.ErrorsWarnings">Errors/Warnings</dhv:label></strong>
     </th>
   </tr>
   <%
@@ -377,15 +377,17 @@
   </td>
   <td class="containerBody">
     <% if(fieldErrors != null && fieldErrors.containsKey(field)){ %> 
-    <img src="images/error.gif" border="0" align="absmiddle"/>&nbsp;<%= (String) fieldErrors.get(field) %>
+    <img src="images/error.gif" border="0" align="absmiddle" />
+    <%= (String) fieldErrors.get(field) %>
     <% }else{ %>
     &nbsp;
     <% } %>
   </td>
   </tr>
   <% } %>
-</table><br>
+</table><br />
+<input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="importId" value="<%= ImportDetails.getId() %>">
-<input type="submit" value="Process">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountContactsImports.do?command=View';this.form.dosubmit.value='false';">
+<input type="submit" value="<dhv:label name="accounts.accounts_contacts_detailsimport.Process">Process</dhv:label>" />
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountContactsImports.do?command=View';this.form.dosubmit.value='false';" />
 </form>

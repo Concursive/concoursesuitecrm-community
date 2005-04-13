@@ -31,13 +31,12 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Centric CRM Configuration (Step 2 of 4)<br>
-      Server Settings
+      <dhv:label name="setup.centricCRM.step2of4">Centric CRM Configuration (Step 2 of 4)<br />Server Settings</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      Centric CRM interacts with various servers and services that must be defined.<br>
+      <dhv:label name="setup.serversServicesMustBeDefined.text">Centric CRM interacts with various servers and services that must be defined.</dhv:label><br>
       &nbsp;<br>
     </td>
   </tr>
@@ -47,17 +46,12 @@
   </tr>
   <tr>
     <td>
-      Each user in Centric CRM can configure the time zone in which they are currently in.<br>
-      What should the default time zone be set to for new users?<br>
-      <ul>
-      <li>Users will still be able to change their time zone, but for new users this setting 
-      will be used as the default</li>
-      <li>Dates and times will be displayed according to the user's configured time zone</li>
-      </ul>
+      <dhv:label name="setup.defaultTimezone.question">Each user in Centric CRM can configure the time zone in which they are currently in.<br /> What should the default time zone be set to for new users?</dhv:label><br>
+      <dhv:label name="setup.defaultTimezone.text"><ul><li>Users will still be able to change their time zone, but for new users this setting will be used as the default</li><li>Dates and times will be displayed according to the user's configured time zone</li></ul></dhv:label>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            Time Zone:
+            <dhv:label name="accounts.accounts_contacts_communication_preference_add.TimeZone.colon">Time Zone:</dhv:label>
           </td>
           <td>
             <% HtmlSelect select = HtmlSelectTimeZone.getSelect("timeZone", server.getTimeZoneDefault());   
@@ -70,20 +64,19 @@
   </tr>
   <%-- Locale --%>
   <tr class="sectionTitle">
-    <th>Default Location/Locale</th>
+    <th><dhv:label name="setup.defaultLanguageLocale">Default Language/Locale</dhv:label></th>
   </tr>
   <tr>
     <td>
-      All locale formatting in Centric CRM is currently defaulted to a single locale.
-      Which locale should Centric CRM use?
+      <dhv:label name="setup.defaultLocale.question">All locale formatting in Centric CRM is currently defaulted to a single locale. Which language and locale should Centric CRM use?</dhv:label>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            Locale:
+            <dhv:label name="admin.languageLocale.colon">Language/Locale:</dhv:label>
           </td>
           <td>
             <% HtmlSelect selectLanguage = HtmlSelectLanguage.getSelect("language", server.getLanguageDefault());
-            selectLanguage.addItem(-1, "None Selected", 0); %><%= selectLanguage.getHtml() %><font color="red">*</font>
+            selectLanguage.addItem(-1, "None Selected", 0); %><%= selectLanguage.getHtml("language", server.getLanguageDefault()) %><font color="red">*</font>
           </td>
         </tr>
       </table>
@@ -92,15 +85,15 @@
   </tr>
   <%-- Country --%>
   <tr class="sectionTitle">
-    <th>Default Country</th>
+    <th><dhv:label name="setup.defaultCountry">Default Country</dhv:label></th>
   </tr>
   <tr>
     <td>
-      Which country should Centric CRM use as the default for mailing addresses?
+      <dhv:label name="setup.defaultCountry.question">Which country should Centric CRM use as the default for mailing addresses?</dhv:label>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            Country:
+            <dhv:label name="setup.country.colon">Country:</dhv:label>
           </td>
           <td>
             <%= CountrySelect.getHtml("country", server.getCountryDefault()) %>
@@ -112,16 +105,15 @@
   </tr>
   <%-- Currency --%>
   <tr class="sectionTitle">
-    <th>Default Currency</th>
+    <th><dhv:label name="setup.defaultCurrency">Default Currency</dhv:label></th>
   </tr>
   <tr>
     <td>
-      All money in Centric CRM is currently defaulted to a single currency.
-      Which currency should Centric CRM use?
+      <dhv:label name="setup.defaultCurrency.question">All money in Centric CRM is currently defaulted to a single currency. Which currency should Centric CRM use?</dhv:label>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            Currency:
+            <dhv:label name="admin.currency.colon">Currency:</dhv:label>
           </td>
           <td>
             <% HtmlSelect selectCurrency = HtmlSelectCurrency.getSelect("currency", server.getCurrencyDefault());
@@ -134,25 +126,23 @@
   </tr>
   <%-- Email Server --%>
   <tr class="sectionTitle">
-    <th>Email Server</th>
+    <th><dhv:label name="admin.emailServer">Email Server</dhv:label></th>
   </tr>
   <tr>
     <td>
-      Centric CRM sends various notifications to users by email.  Centric CRM can also be used
-      to send email to contacts that have been entered into Centric CRM.<br>
-      Which email server should Centric CRM use?<br>
+      <dhv:label name="setup.emailServer.question">Centric CRM sends various notifications to users by email.  Centric CRM can also be used to send email to contacts that have been entered into Centric CRM.<br />Which email server should Centric CRM use?</dhv:label><br>
       <ul>
-      <li>The specified server must allow this server to relay email</li>
+      <li><dhv:label name="setup.specifiedServerRelayEmail.text">The specified server must allow this server to relay email</dhv:label></li>
       </ul>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            Email Server:
+            <dhv:label name="admin.emailServer.colon">Email Server:</dhv:label>
           </td>
           <td>
             <input type="text" size="30" name="email" value="<%= toHtmlValue(server.getEmail()) %>"/><font color="red">*</font>
             <%= showAttribute(request, "emailError") %><br>
-            (ex: mail.yourcompany.com or 127.0.0.1)
+            <dhv:label name="admin.emailServer.example">(ex: mail.yourcompany.com or 127.0.0.1)</dhv:label>
           </td>
         </tr>
       </table>
@@ -161,21 +151,21 @@
   </tr>
   <%-- Email Address --%>
   <tr class="sectionTitle">
-    <th>Default Email Address</th>
+    <th><dhv:label name="setup.defaultEmailAddress">Default Email Address</dhv:label></th>
   </tr>
   <tr>
     <td>
-      For system emails, what email address should be in the FROM field of the email?<br>
+      <dhv:label name="setup.forSystemEmails.question">For system emails, what email address should be in the FROM field of the email?</dhv:label><br>
       <br>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            Email Address:
+            <dhv:label name="documents.team.emailAddress.colon">Email Address:</dhv:label>
           </td>
           <td>
             <input type="text" size="40" name="emailAddress" value="<%= toHtmlValue(server.getEmailAddress()) %>"/><font color="red">*</font>
             <%= showAttribute(request, "emailAddressError") %><br>
-            (ex: crm_system@yourcompany.com)
+            <dhv:label name="admin.emailAddress.example">(ex: centric_crm@yourcompany.com)</dhv:label>
           </td>
         </tr>
       </table>
@@ -184,30 +174,24 @@
   </tr>
   <%-- URL --%>
   <tr class="sectionTitle">
-    <th>Server URL</th>
+    <th><dhv:label name="admin.serverURL">Server URL</dhv:label></th>
   </tr>
   <tr>
     <td>
-      For system emails, what URL should be included to allow the user to return back to the site?<br>
-      <ul>
-      <li>The URL must exist in your DNS so that users can connect</li>
-      <li>Optionally, you can specify the IP address</li>
-      <li>Include the full URL path to get to the Centric CRM web application, 
-      excluding HTTP:// or HTTPS://</li>
-      <li>Clicking the Test button will attempt to bring up a Centric CRM confirmation
-      page located on this server</li>
-      </ul>
+      <dhv:label name="setup.systemEmailURL.question">For system emails, what URL should be included to allow the user to return back to the site?</dhv:label><br>
+      <dhv:label name="setup.systemEmailURL.text"><ul><li>The URL must exist in your DNS so that users can connect</li><li>Optionally, you can specify the IP address</li><li>Include the full URL path to get to the Centric CRM web application, excluding HTTP:// or HTTPS://</li><li>Clicking the Test button will attempt to bring up a Centric CRM confirmation page located on this server</li></ul></dhv:label>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            Centric CRM URL:
+            <dhv:label name="admin.centricCrmUrl">Centric CRM URL</dhv:label>:
           </td>
           <td>
-            <input type="text" size="40" name="url" value="<%= toHtmlValue(server.getUrl()) %>"/><font color="red">*</font>
-            <input type="button" value="Test" onClick="javascript:popURL('<%= request.getScheme() %>://' + document.forms[0].url.value + '/setup/testpage_ok.jsp','CRM_UrlTest','500','325','yes','yes');"/>
+            http:// <input type="text" size="40" name="url" value="<%= toHtmlValue(server.getUrl()) %>"/><font color="red">*</font>
+            <input type="button" value="Test" onClick="javascript:popURL('<%= request.getScheme() %>://' + document.configure.url.value + '/setup/testpage_ok.jsp','CRM_UrlTest','500','325','yes','yes');"/>
             <%= showAttribute(request, "urlError") %>
-            <br>
-            (ex: crm.yourcompany.com<%= request.getContextPath() %>)
+            <br />
+            <% String temp = "contextPath="+request.getContextPath(); %>
+            <dhv:label name="setup.relativeURL.example" param="<%= temp %>">(ex: crm.yourcompany.com<%= request.getContextPath() %>)</dhv:label>
           </td>
         </tr>
       </table>
@@ -216,34 +200,30 @@
   </tr>
   <%-- Fax Server --%>
   <tr class="sectionTitle">
-    <th>Faxes</th>
+    <th><dhv:label name="setup.faxes">Faxes</dhv:label></th>
   </tr>
   <tr>
     <td>
-      <font color="red">* </font><b>The HylaFax server application requires Linux or Unix and has further software and hardware requirements.</b><br>
-      Users may have the capability to send faxes using Centric CRM.<br>
-      The faxing component requires a properly configured
-      <a href="http://www.hylafax.org" target="_new">HylaFax</a> server including fax hardware.<br>
-      Which fax server should Centric CRM use?<br>
-      <ul>
-      <li>The specified server must allow this server to send faxes</li>
-      <li>Leave blank if faxing will not be used</li>
-      </ul>
+      <font color="red">* </font><b><dhv:label name="setup.hylafaxServerRequirements.text">The HylaFax server application requires Linux or Unix and has further software and hardware requirements.</dhv:label></b><br>
+      <dhv:label name="setup.userCapabilitySendFaxes.text">Users may have the capability to send faxes using Centric CRM.</dhv:label><br>
+      <dhv:label name="setup.configureServer.faxingComponent.text" param="hylafax=<a href=\"http://www.hylafax.org\" target=\"_new\">|end=</a>">The faxing component requires a properly configured <a href="http://www.hylafax.org" target="_new">HylaFax</a> server including fax hardware.</dhv:label>
+      <dhv:label name="setup.faxServer.question">Which fax server should Centric CRM use?</dhv:label><br>
+      <dhv:label name="setup.faxServer.text"><ul><li>The specified server must allow this server to send faxes</li><li>Leave blank if faxing will not be used</li></ul></dhv:label>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            Fax Server:
+            <dhv:label name="admin.faxServer.colon">Fax Server:</dhv:label>
           </td>
           <td>
             <input type="text" size="30" name="fax" value="<%= toHtmlValue(server.getFax()) %>"/>
-            (optional)
+            <dhv:label name="reports.optional.brackets">(optional)</dhv:label>
             <%= showAttribute(request, "faxError") %><br>
-            (ex: fax.yourcompany.com)
+            <dhv:label name="setup.faxServer.example">(ex: fax.yourcompany.com)</dhv:label>
           </td>
         </tr>
       </table>
       &nbsp;<br>
-      <input type="submit" value="Continue >"/>
+      <input type="submit" value="<dhv:label name="button.continueR">Continue ></dhv:label>"/>
     </td>
   </tr>
 </table>

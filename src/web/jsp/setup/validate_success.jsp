@@ -16,57 +16,57 @@
   - Version: $Id$
   - Description:
   --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ include file="../initPage.jsp" %>
 <form name="configure" action="SetupDirectory.do?command=ConfigureDirectoryCheck" method="post">
 <table border="0" width="100%">
   <tr class="sectionTitle">
-    <th>Status</th>
+    <th><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></th>
   </tr>
   <tr>
     <td>
-      License accepted!<br>
+      <dhv:label name="setup.licenseAccepted">License accepted!</dhv:label><br>
       <br>
-      Now it's time to configure some of the system settings before you
-      can begin using Centric CRM.<br>
+      <dhv:label name="setup.timeToConfigureSystemSettings.text">Now it's time to configure some of the system settings before you can begin using Centric CRM.</dhv:label><br>
       <br>
-      Configuration includes the following steps:<br>
+      <dhv:label name="setup.configurationIncludes.colon">Configuration includes the following steps:</dhv:label><br>
       <br>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            Step 1:
+            <dhv:label name="setup.stepOne.colon">Step 1:</dhv:label>
           </td>
           <td>
-            Setup the file library
+            <dhv:label name="setup.setupFileLibrary">Setup the file library</dhv:label>
           </td>
         </tr>
         <tr>
           <td class="formLabel">
-            Step 2:
+            <dhv:label name="setup.step2.colon">Step 2:</dhv:label>
           </td>
           <td>
-            Setup external servers (mail, fax)
+            <dhv:label name="setup.setupExternalServers">Setup external servers (mail, fax)</dhv:label>
           </td>
         </tr>
         <tr>
           <td class="formLabel">
-            Step 3:
+            <dhv:label name="setup.step3.colon">Step 3:</dhv:label>
           </td>
           <td>
-            Setup the database
+            <dhv:label name="setup.setupDatabase">Setup the database</dhv:label>
           </td>
         </tr>
         <tr>
           <td class="formLabel">
-            Step 4:
+            <dhv:label name="setup.step4.colon">Step 4:</dhv:label>
           </td>
           <td>
-            Setup the Centric CRM administrative user account
+            <dhv:label name="setup.setupCentricCRMAdminUserAccount">Setup the Centric CRM administrative user account</dhv:label>
           </td>
         </tr>
       </table>
       <br>
-      <input type="submit" value="Continue >"/>
+      <input type="submit" value="<dhv:label name="button.continueR">Continue ></dhv:label>"/>
     </td>
   </tr>
 </table>

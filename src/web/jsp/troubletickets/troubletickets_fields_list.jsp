@@ -42,52 +42,60 @@
 <td>
 <a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
-  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+  <a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+  <a href="TroubleTickets.do?command=SearchTickets"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%}else{%> 
   <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>"><dhv:label name="tickets.details">Ticket Details</dhv:label></a> >
-List of Folder Records
+<a href="TroubleTicketsFolders.do?command=FolderList&ticketId=<%= TicketDetails.getId() %>"><dhv:label name="accounts.Folders">Folders</dhv:label></a> >
+<dhv:label name="accounts.accounts_fields.ListOfFolderRecords">List of Folder Records</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + TicketDetails.getId(); %>
-<dhv:container name="tickets" selected="folders" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<%
-  CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
+<dhv:container name="tickets" selected="folders" object="TicketDetails" param="<%= param1 %>">
+  <%@ include file="ticket_header_include.jsp" %>
+  <table cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr>
+      <td>
+        <dhv:label name="accounts.accounts_documents_folders_add.Folder.colon">Folder:</dhv:label>
+        <strong><%= toHtml(Category.getName()) %></strong>
+      </td>
+      <% if (CategoryList.size() > 0) { %>
+        <td align="right" nowrap>
+        <img src="images/icons/16_edit_comment.gif" align="absMiddle" border="0">
+        <dhv:label name="accounts.accounts_fields_list.FolderHaveMultipleRecords">This folder can have multiple records</dhv:label>
+      </td>
+    <% } %>
+    </tr>
+  </table>
+<% 
   if (CategoryList.size() > 0) {
 %>
-    Folder: <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><%= (Category.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif' alt='Folder is read-only'>":"") %><br>
-    &nbsp;<br>
-    This folder can have multiple records...<br>
-    &nbsp;<br>
-    <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>"><dhv:permission name="accounts-accounts-folders-add"><a href="TroubleTicketsFolders.do?command=AddFolderRecord&ticketId=<%= TicketDetails.getId() %>&catId=<%= (String)request.getAttribute("catId") %>">Add a record to this folder</a><br>&nbsp;<br></dhv:permission></dhv:evaluate>
+      &nbsp;<br>
+    <dhv:evaluate if="<%= (!Category.getReadOnly()) %>"><dhv:permission name="accounts-accounts-folders-add"><a href="TroubleTicketsFolders.do?command=AddFolderRecord&ticketId=<%= TicketDetails.getId() %>&catId=<%= (String)request.getAttribute("catId") %>"><dhv:label name="accounts.accounts_fields_list.AddRecordToFolder">Add a record to this folder</dhv:label></a><br>&nbsp;<br></dhv:permission></dhv:evaluate>
     <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
       <tr>
-        <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
+        <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
         <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
           <th valign="center">
-            <strong>Action</strong>
+            &nbsp;
           </th>
         </dhv:permission>
         </dhv:evaluate>
         <th>
-          <strong>Record</strong>
+          <strong><dhv:label name="accounts.accounts_fields_list.Record">Record</dhv:label></strong>
         </th>
         <th>
-          <strong>Entered</strong>
+          <strong><dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label></strong>
         </th>
         <th>
-          <strong>Modified By</strong>
+          <strong><dhv:label name="accounts.accounts_fields_list.ModifiedBy">Modified By</dhv:label></strong>
         </th>
         <th>
-          <strong>Last Modified</strong>
+          <strong><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></strong>
         </th>
       </tr>
 <%
@@ -102,7 +110,7 @@ List of Folder Records
 %>    
       <tr class="containerBody">
         <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
+          <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
           <%-- Use the unique id for opening the menu, and toggling the graphics --%>
           <%-- To display the menu, pass the actionId, accountId and the contactId--%>
            <a href="javascript:displayMenu('select<%= i %>','menuFolders', '<%= TicketDetails.getId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');"
@@ -128,19 +136,18 @@ List of Folder Records
 %>
       <tr class="containerBody">
         <td colspan="5">
-          <font color="#9E9E9E">No records have been entered.</font>
+          <font color="#9E9E9E"><dhv:label name="accounts.accounts_fields_list.NoRecordsEntered">No records have been entered.</dhv:label></font>
         </td>
       </tr>
 <%  }  %>
 <%} else {%>
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
-    <tr class="containerBody">
+    <tr class="row2">
       <td>
-        No custom folders available.
+        <dhv:label name="accounts.accounts_fields_list.NoCustomFoldersAvailable">No custom folders available.</dhv:label>
       </td>
     </tr>
 <%}%>
   </table>
-</td></tr>
-</table>
+</dhv:container>
 </form>

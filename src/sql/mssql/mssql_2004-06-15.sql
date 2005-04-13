@@ -3993,6 +3993,11 @@ ALTER TABLE [help_tips] ADD
 	)
 GO
 
+EXEC sp_rename '[project_team].[userLevel]','tmp_userlevel','COLUMN'
+GO
+EXEC sp_rename '[project_team].[tmp_userlevel]','userlevel','COLUMN'
+GO
+
 -- cleanup
 DELETE FROM action_item_log WHERE item_id IN (SELECT item_id FROM action_item WHERE link_item_id NOT IN (SELECT contact_id FROM contact));
 DELETE FROM action_item WHERE link_item_id NOT IN (SELECT contact_id FROM contact);

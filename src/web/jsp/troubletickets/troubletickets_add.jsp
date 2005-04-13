@@ -30,8 +30,8 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
+<input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>" name="Save" onClick="return checkForm(this.form)">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
 <br>
 <dhv:formMessage />
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
@@ -41,6 +41,6 @@
 <%-- include basic troubleticket add form --%>
 <%@ include file="troubletickets_include.jsp" %>
 <br>
-<input type="submit" value="Insert" name="Save" onClick="return checkForm(this.form)">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
+<input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>" name="Save" onClick="return checkForm(this.form)">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Home'">
 </form>

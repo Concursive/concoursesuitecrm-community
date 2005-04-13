@@ -36,7 +36,7 @@
   public String getIndents(int level){
     String indents = "";
     for (int noOfIndents = 0 ; noOfIndents < level ; noOfIndents++){
-         indents = indents + " &nbsp";
+         indents = indents + " &nbsp;";
     }
     return indents;
   }
@@ -52,7 +52,7 @@
         %>
           <tr>
             <td nowrap>
-              <%=toHtml(getIndents(thisTOCItem.getContentLevel()))%>
+              <%=getIndents(thisTOCItem.getContentLevel())%>
               <%
                 Iterator il0 = thisTOCItem.getHTOCLinks().iterator();
                 if (il0.hasNext()){
@@ -70,7 +70,7 @@
          %>
             <tr>
               <td nowrap>
-                <%=toHtml(getIndents(thisTOCItem1.getContentLevel()))%> 
+                <%=getIndents(thisTOCItem1.getContentLevel())%> 
                 <%
                   Iterator il1 = thisTOCItem1.getHTOCLinks().iterator();
                   if (il1.hasNext()){
@@ -88,7 +88,7 @@
              %>
               <tr>
                 <td nowrap>
-                <%=toHtml(getIndents(thisTOCItem2.getContentLevel()))%> 
+                <%=getIndents(thisTOCItem2.getContentLevel())%> 
                 <%
                   Iterator il2 = thisTOCItem2.getHTOCLinks().iterator();
                   if (il2.hasNext()){
@@ -106,7 +106,7 @@
                %>
                <tr>
                  <td nowrap>
-                 <%=toHtml(getIndents(thisTOCItem3.getContentLevel()))%> 
+                 <%=getIndents(thisTOCItem3.getContentLevel())%> 
                  <%
                   Iterator il3 = thisTOCItem3.getHTOCLinks().iterator();
                   if (il3.hasNext()){
@@ -124,7 +124,7 @@
                 %>
                 <tr>
                   <td nowrap>
-                  <%=toHtml(getIndents(thisTOCItem4.getContentLevel()))%> 
+                  <%=getIndents(thisTOCItem4.getContentLevel())%> 
                   <%
                     Iterator il4 = thisTOCItem4.getHTOCLinks().iterator();
                     if (il4.hasNext()){

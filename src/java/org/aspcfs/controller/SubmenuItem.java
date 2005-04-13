@@ -15,6 +15,8 @@
  */
 package org.aspcfs.controller;
 
+import org.aspcfs.utils.StringUtils;
+
 /**
  *  Description of the Class
  *
@@ -29,7 +31,7 @@ public class SubmenuItem {
   String shortHtml = "";
   String alternateName = "";
   String link = "";
-  String htmlClass = "r";
+  String htmlClass = "submenuItemUnselected";
   String permission = "";
 
   String graphicWidth = "";
@@ -312,25 +314,29 @@ public class SubmenuItem {
   /**
    *  Gets the AlternateHtml attribute of the SubmenuItem object
    *
-   *@return    The AlternateHtml value
-   *@since     1.0
+   *@param  systemStatus  Description of the Parameter
+   *@return               The AlternateHtml value
+   *@since                1.0
    */
-  public String getAlternateHtml() {
+  public String getAlternateHtml(SystemStatus systemStatus) {
+    String value = systemStatus.getSubMenuProperty(shortHtml);
+    if (value == null) {
+      value = shortHtml;
+    }
     if (link == null || link.equals("")) {
-      return shortHtml;
+      return StringUtils.toHtml(value);
     } else {
-      if (!shortHtml.startsWith("&nbsp;")) {
+      if (!value.startsWith("&nbsp;")) {
         return ("<a " + (htmlClass.equals("") ? "" : "class='" + htmlClass + "' ") +
-            "href='" + link + "'>" + shortHtml + "</a>");
+            "href='" + link + "'>" + StringUtils.toHtml(value) + "</a>");
       } else {
         int count = 0;
-        String out = new String(shortHtml);
-        while (out.startsWith("&nbsp;")) {
+        while (value.startsWith("&nbsp;")) {
           ++count;
-          out = out.substring(6);
+          value = value.substring(6);
         }
         return (addSpace(count) + "<a " + (htmlClass.equals("") ? "" : "class='" + htmlClass + "' ") +
-            "href='" + link + "'>" + out + "</a>");
+            "href='" + link + "'>" + StringUtils.toHtml(value) + "</a>");
       }
     }
   }

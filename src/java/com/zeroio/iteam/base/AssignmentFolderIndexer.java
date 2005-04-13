@@ -19,9 +19,12 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.*;
 import java.io.IOException;
 import com.zeroio.utils.ContentUtils;
+import com.darkhorseventures.framework.actions.ActionContext;
 
 /**
  *  Class for working with the Lucene search engine
@@ -42,7 +45,7 @@ public class AssignmentFolderIndexer implements Indexer {
    *@exception  SQLException  Description of the Exception
    *@exception  IOException   Description of the Exception
    */
-  public static void add(IndexWriter writer, Connection db) throws SQLException, IOException {
+  public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT f.folder_id, r.project_id, f.name, f.description, f.requirement_id, f.modified " +
@@ -62,6 +65,7 @@ public class AssignmentFolderIndexer implements Indexer {
       thisAssignmentFolder.setModified(rs.getTimestamp("modified"));
       // add to index
       AssignmentFolderIndexer.add(writer, thisAssignmentFolder, false);
+      DatabaseUtils.renewConnection(context, db);
     }
     rs.close();
     pst.close();
@@ -82,7 +86,7 @@ public class AssignmentFolderIndexer implements Indexer {
   public static void add(IndexWriter writer, AssignmentFolder assignmentFolder, boolean modified) throws IOException {
     // add the document
     Document document = new Document();
-    document.add(Field.Keyword("type", "activityFolder"));
+    document.add(Field.Keyword("type", "activityfolder"));
     document.add(Field.Keyword("assignmentFolderId", String.valueOf(assignmentFolder.getId())));
     document.add(Field.Keyword("requirementId", String.valueOf(assignmentFolder.getRequirementId())));
     document.add(Field.Keyword("projectId", String.valueOf(assignmentFolder.getProjectId())));

@@ -53,7 +53,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View Data
+          <dhv:label name="accounts.accounts_reports_menu.ViewData">View Data</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -63,7 +63,7 @@
           <img src="images/icons/stock_data-save-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Download as .CSV File
+          <dhv:label name="accounts.accounts_reports_menu.DownloadCSVFile">Download as .CSV File</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -73,7 +73,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete
+          <dhv:label name="global.button.delete">Delete</dhv:label>
         </td>
       </tr>
       </dhv:permission>

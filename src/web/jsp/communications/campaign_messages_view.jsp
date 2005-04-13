@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -36,23 +36,24 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-Message List
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<dhv:label name="campaign.messageList">Message List</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:permission name="campaign-campaigns-messages-add"><a href="CampaignManagerMessage.do?command=Add">Add a Message</a></dhv:permission>
-<center><%= CampaignMessageListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:permission name="campaign-campaigns-messages-add"><a href="CampaignManagerMessage.do?command=Add"><dhv:label name="campaign.addMessage">Add Message</dhv:label></a></dhv:permission>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="CampaignMessageListInfo"/></center></dhv:include>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="CampaignManagerMessage.do?command=View">
     <td>
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= CampaignMessageListInfo.getOptionValue("my") %>>My Messages</option>
-        <option <%= CampaignMessageListInfo.getOptionValue("all") %>>All Messages</option>
-        <option <%= CampaignMessageListInfo.getOptionValue("hierarchy") %>>Controlled Hierarchy Messages</option>
-        <option <%= CampaignMessageListInfo.getOptionValue("personal") %>>Personal Messages</option>
+      <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= CampaignMessageListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_messages_view.MyMessages">My Messages</dhv:label></option>
+        <option <%= CampaignMessageListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_messages_view.AllMessages">All Messages</dhv:label></option>
+        <option <%= CampaignMessageListInfo.getOptionValue("hierarchy") %>><dhv:label name="actionList.controlledHierarchyMessages">Controlled Hierarchy Messages</dhv:label></option>
+        <option <%= CampaignMessageListInfo.getOptionValue("personal") %>><dhv:label name="actionList.personalMessages">Personal Messages</dhv:label></option>
       </select>
     </td>
     <td>
@@ -64,23 +65,23 @@ Message List
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="40%" nowrap>
-      <a href="CampaignManagerMessage.do?command=View&column=name"><strong>Name</strong></a>
+      <a href="CampaignManagerMessage.do?command=View&column=name"><strong><dhv:label name="contacts.name">Name</dhv:label></strong></a>
       <%= CampaignMessageListInfo.getSortIcon("name") %>
     </th>
-    <th><strong>Subject</strong></th>
+    <th><strong><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></strong></th>
     <th width="60%" nowrap>
-      <a href="CampaignManagerMessage.do?command=View&column=description"><strong>Description</strong></a>
+      <a href="CampaignManagerMessage.do?command=View&column=description"><strong><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></strong></a>
       <%= CampaignMessageListInfo.getSortIcon("description") %>
     </th>
     <th style="text-align: center;" nowrap>
-      <a href="CampaignManagerMessage.do?command=View&column=ct_eb.namelast,ct_eb.namefirst"><strong>Entered By</strong></a>
+      <a href="CampaignManagerMessage.do?command=View&column=ct_eb.namelast,ct_eb.namefirst"><strong><dhv:label name="accounts.accounts_calls_list.EnteredBy">Entered By</dhv:label></strong></a>
       <%= CampaignMessageListInfo.getSortIcon("ct_eb.namelast,ct_eb.namefirst") %>
     </th>
     <th style="text-align: center;" nowrap>
-      <a href="CampaignManagerMessage.do?command=View&column=m.modified"><strong>Last Modified</strong></a>
+      <a href="CampaignManagerMessage.do?command=View&column=m.modified"><strong><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></strong></a>
       <%= CampaignMessageListInfo.getSortIcon("m.modified") %>
     </th>
   </tr>
@@ -102,7 +103,12 @@ Message List
     </td>
 		<td width="20%" valign="center" class="row<%= rowid %>">
       <a href="CampaignManagerMessage.do?command=Details&id=<%=thisMessage.getId()%>">
-      <%= toHtml(thisMessage.getName() != null && !"".equals(thisMessage.getName()) ? thisMessage.getName() : "\"No name available\"") %></a>
+        <% if(thisMessage.getName() != null && !"".equals(thisMessage.getName())) {%>
+          <%= toHtml(thisMessage.getName()) %>
+        <%} else {%>
+          <dhv:label name="account.noNameAvailable.quotes">"No name available"</dhv:label>
+        <%}%>
+      </a>
 		</td>
     <td width="30%" valign="center" class="row<%= rowid %>"><%= toHtml( thisMessage.getMessageSubject() ) %></td>
 		<td width="50%" valign="center" class="row<%= rowid %>">
@@ -119,8 +125,8 @@ Message List
     }
   } else {%>
   <tr class="containerBody">
-    <td colspan="5">
-      No messages found.
+    <td colspan="6">
+      <dhv:label name="accounts.accounts_contacts_messages_view.NoMessagesFound">No messages found.</dhv:label>
     </td>
   </tr>
 <%}%>

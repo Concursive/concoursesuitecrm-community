@@ -34,11 +34,15 @@
       </tr>
 </dhv:evaluate>
       <tr>
-        <td><h3>General Information</h3></td>
+        <td><h3><dhv:label name="documents.details.generalInformation">General Information</dhv:label></h3></td>
       </tr>
       <tr>
-         <td>
-         <%=  !"".equals(toString(Help.getDescription())) ?  toHtml(Help.getDescription()) : "No Introduction available"%>
+        <td>
+          <% if(!"".equals(toString(Help.getDescription()))) {%>
+            <%= toHtml(Help.getDescription()) %>
+          <%} else {%>
+            <dhv:label name="help.noIntroductionAvailable">No Introduction available</dhv:label>
+          <%}%>
         </td>
       </tr>
      </table><br>
@@ -53,7 +57,7 @@
         Iterator i = Help.getFeatures().iterator();
         if(i.hasNext()){
       %>
-       <td><h3>General Features supported on this page</h3></td>
+       <td><h3><dhv:label name="help.generalFeaturesSupported.text">General Features supported on this page</dhv:label></h3></td>
       </tr>
 <%
           while(i.hasNext()){
@@ -80,7 +84,7 @@
           Iterator br = Help.getBusinessRules().iterator();
           if(br.hasNext()){
 %>
-        <td><h3>Business Rules supported on this page</h3></td>
+        <td><h3><dhv:label name="help.businessRulesSupported.text">Business Rules supported on this page</dhv:label></h3></td>
       </tr>
 <%
             while(br.hasNext()){
@@ -107,7 +111,7 @@
           Iterator tips = Help.getTips().iterator();
           if(tips.hasNext()){
 %>
-      <td><h3>Tips on this page</h3></td>
+      <td><h3><dhv:label name="help.tipsOnThisPage">Tips on this page</dhv:label></h3></td>
      </tr>
         <%
             while(tips.hasNext()){

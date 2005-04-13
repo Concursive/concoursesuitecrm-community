@@ -15,21 +15,24 @@
  */
 package org.aspcfs.modules.setup.actions;
 
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.XMLUtils;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import org.aspcfs.modules.setup.beans.Zlib;
-import org.aspcfs.modules.setup.base.*;
-import java.sql.Connection;
 import org.aspcfs.modules.login.base.AuthenticationItem;
+import org.aspcfs.modules.service.base.Record;
+import org.aspcfs.modules.service.base.RecordList;
+import org.aspcfs.modules.service.base.TransactionStatus;
+import org.aspcfs.modules.service.base.TransactionStatusList;
+import org.aspcfs.modules.setup.base.Registration;
+import org.aspcfs.modules.setup.base.RegistrationList;
+import org.aspcfs.modules.setup.beans.Zlib;
 import org.aspcfs.utils.StringUtils;
-import org.aspcfs.modules.service.base.*;
+import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.sql.Connection;
 
 /**
  *  Description of the Class
@@ -131,6 +134,7 @@ public class SetupServer extends CFSModule {
             thisStatus.setRecordList(recordList);
           } else {
             //Send the license back as email
+            license.setSystemStatus(this.getSystemStatus(context));
             license.sendEmailRegistration();
           }
         }

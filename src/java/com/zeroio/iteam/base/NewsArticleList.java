@@ -40,6 +40,7 @@ public class NewsArticleList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
   private int lastNews = -1;
   private int forUser = -1;
+  private int classificationId = -1;
   //calendar
   protected java.sql.Timestamp alertRangeStart = null;
   protected java.sql.Timestamp alertRangeEnd = null;
@@ -208,6 +209,36 @@ public class NewsArticleList extends ArrayList {
    */
   public void setForUser(String tmp) {
     this.forUser = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the classificationId attribute of the NewsArticleList object
+   *
+   *@return    The classificationId value
+   */
+  public int getClassificationId() {
+    return classificationId;
+  }
+
+
+  /**
+   *  Sets the classificationId attribute of the NewsArticleList object
+   *
+   *@param  tmp  The new classificationId value
+   */
+  public void setClassificationId(int tmp) {
+    this.classificationId = tmp;
+  }
+
+
+  /**
+   *  Sets the classificationId attribute of the NewsArticleList object
+   *
+   *@param  tmp  The new classificationId value
+   */
+  public void setClassificationId(String tmp) {
+    this.classificationId = Integer.parseInt(tmp);
   }
 
 
@@ -412,6 +443,7 @@ public class NewsArticleList extends ArrayList {
     sqlSelect.append(
         "n.* " +
         "FROM project_news n " +
+        "LEFT JOIN project_news_category c ON (n.category_id = c.category_id) " +
         "WHERE n.news_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -432,6 +464,12 @@ public class NewsArticleList extends ArrayList {
     }
     rs.close();
     pst.close();
+    // News articles need to build extra data from other tables...
+    Iterator i = iterator();
+    while (i.hasNext()) {
+      NewsArticle thisArticle = (NewsArticle) i.next();
+      thisArticle.buildResources(db);
+    }
   }
 
 
@@ -473,7 +511,10 @@ public class NewsArticleList extends ArrayList {
     }
     if (forUser > -1) {
       sqlFilter.append("AND (n.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
-          "AND status IS NULL )) ");
+          "AND status IS NULL) OR n.project_id IN (SELECT project_id FROM projects WHERE allow_guests = ? AND approvaldate IS NOT NULL)) ");
+    }
+    if (classificationId > -1) {
+      sqlFilter.append("AND n.classification_id = ? ");
     }
     if (overviewAll) {
       sqlFilter.append(
@@ -523,6 +564,10 @@ public class NewsArticleList extends ArrayList {
     }
     if (forUser > -1) {
       pst.setInt(++i, forUser);
+      pst.setBoolean(++i, true);
+    }
+    if (classificationId > -1) {
+      pst.setInt(++i, classificationId);
     }
     if (overviewAll) {
       pst.setInt(++i, NewsArticle.PUBLISHED);

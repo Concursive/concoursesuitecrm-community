@@ -31,7 +31,7 @@ import org.aspcfs.modules.base.Import;
  *
  *@author     Mathur
  *@created    April 26, 2004
- *@version    $id:exp$
+ *@version    $Id$
  */
 public class ImportManager {
   private Vector available = new Vector();

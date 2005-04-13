@@ -15,20 +15,22 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.modules.servicecontracts.base.*;
-import org.aspcfs.modules.assets.base.*;
-import java.sql.*;
-import java.io.*;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.products.base.ProductCatalog;
+import org.aspcfs.modules.servicecontracts.base.*;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
  *  A service contract action handler provides action methods to List, view, add and modify service
@@ -64,26 +66,21 @@ public class AccountsServiceContracts extends CFSModule {
       return ("PermissionError");
     }
     ServiceContractList serviceContractList = new ServiceContractList();
-
     String orgId = context.getRequest().getParameter("orgId");
-
     //Prepare pagedListInfo
     PagedListInfo serviceContractListInfo = this.getPagedListInfo(context, "ServiceContractListInfo");
     serviceContractListInfo.setLink("AccountsServiceContracts.do?command=List&orgId=" + orgId);
     Connection db = null;
     try {
       db = this.getConnection(context);
-      
       //find record permissions for portal users
       if (!isRecordAccessPermitted(context,Integer.parseInt(orgId))){
         return ("PermissionError");
       }
-
       setOrganization(context, db);
       //Build the service contract list
       serviceContractList.setPagedListInfo(serviceContractListInfo);
       serviceContractList.setOrgId(Integer.parseInt(orgId));
-
       serviceContractList.buildList(db);
       context.getRequest().setAttribute("serviceContractList", serviceContractList);
       buildFormElements(context, db);
@@ -173,6 +170,7 @@ public class AccountsServiceContracts extends CFSModule {
     }
     Connection db = null;
     boolean inserted = false;
+    boolean isValid = false;
     try {
       db = this.getConnection(context);
       setOrganization(context, db);
@@ -181,7 +179,10 @@ public class AccountsServiceContracts extends CFSModule {
       thisContract.setProductList(context.getRequest().getParameterValues("selectedList"));
       thisContract.setEnteredBy(getUserId(context));
       thisContract.setModifiedBy(getUserId(context));
-      inserted = thisContract.insert(db);
+      isValid = this.validateObject(context, db, thisContract);
+      if (isValid) {
+        inserted = thisContract.insert(db);
+      }
       if (inserted) {
         // inserting into hours history if service_contract update is successful
         String tmpHours = (String) context.getRequest().getParameter("totalHoursRemaining");
@@ -198,8 +199,6 @@ public class AccountsServiceContracts extends CFSModule {
             scHours.insert(db);
           }
         }
-      } else {
-        processErrors(context, thisContract.getErrors());
       }
     } catch (Exception errorMessage) {
       //An error occurred, go to generic error message page
@@ -211,9 +210,8 @@ public class AccountsServiceContracts extends CFSModule {
     }
     if (inserted) {
       return (executeCommandList(context));
-    } else {
-      return (executeCommandAdd(context));
     }
+    return (executeCommandAdd(context));
   }
 
 
@@ -229,6 +227,7 @@ public class AccountsServiceContracts extends CFSModule {
     }
     Connection db = null;
     int resultCount = -1;
+    boolean isValid = false;
     try {
       //Get a connection from the connection pool for this user
       db = this.getConnection(context);
@@ -248,9 +247,9 @@ public class AccountsServiceContracts extends CFSModule {
 
       thisContract.setTotalHoursRemaining(newHoursRemaining);
       thisContract.setModifiedBy(getUserId(context));
-      resultCount = thisContract.update(db);
-      if (resultCount == -1) {
-        processErrors(context, thisContract.getErrors());
+      isValid = this.validateObject(context, db, thisContract);
+      if (isValid) {
+        resultCount = thisContract.update(db);
       }
       if (resultCount == 1) {
         // inserting into hours history if service_contract update is successful
@@ -273,15 +272,16 @@ public class AccountsServiceContracts extends CFSModule {
       //Always free the database connection
       this.freeConnection(context, db);
     }
-    if (resultCount == -1) {
-      return (executeCommandModify(context));
-    } else if (resultCount == 1) {
+    if (resultCount == 1) {
       if ("list".equals(context.getRequest().getParameter("return"))) {
         return executeCommandList(context);
       } else {
         return executeCommandView(context);
       }
     } else {
+      if (resultCount == -1 || !isValid ) {
+        return (executeCommandModify(context));
+      }
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return ("UserError");
     }
@@ -308,14 +308,16 @@ public class AccountsServiceContracts extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       ServiceContract thisContract = new ServiceContract(db, id);
       //Find depedencies for the service contract
-      htmlDialog.setTitle("Centric CRM: Account Management - Service Contract");
       DependencyList dependencies = thisContract.processDependencies(db);
-      htmlDialog.addMessage(dependencies.getHtmlString());
-      htmlDialog.setHeader("The service contract you are requesting to delete has the following dependencies within Centric CRM:");
-      htmlDialog.addButton("Delete All", "javascript:window.location.href='AccountsServiceContracts.do?command=Delete&action=delete&orgId=" + orgId + "&id=" + id + "'");
-      htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+      htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
+      htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountsServiceContracts.do?command=Delete&action=delete&orgId=" + orgId + "&id=" + id + "'");
+      htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
       errorMessage = e;
       //An error occurred, go to generic error message page
@@ -345,6 +347,7 @@ public class AccountsServiceContracts extends CFSModule {
       return ("PermissionError");
     }
     Exception errorMessage = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     boolean recordDeleted = false;
     Connection db = null;
     ServiceContract thisContract = null;
@@ -369,15 +372,15 @@ public class AccountsServiceContracts extends CFSModule {
     if (errorMessage == null) {
       if (recordDeleted) {
         context.getRequest().setAttribute("refreshUrl", "AccountsServiceContracts.do?command=List&orgId=" + context.getRequest().getParameter("orgId"));
-        return this.getReturn(context, "Delete");
+        return getReturn(context, "Delete");
       }
 
       processErrors(context, thisContract.getErrors());
       context.getRequest().setAttribute("refreshUrl", "AccountsServiceContracts.do?command=View&orgId=" + context.getRequest().getParameter("orgId") + "&id=" + context.getRequest().getParameter("id"));
-      return this.getReturn(context, "Delete");
+      return getReturn(context, "Delete");
     }
 
-    context.getRequest().setAttribute("actionError", "Service Contract could not be deleted because of referential integrity .");
+    context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.contractDeletion"));
     context.getRequest().setAttribute("refreshUrl", "AccountsServiceContracts.do?command=View&orgId=" + context.getRequest().getParameter("orgId"));
     return ("DeleteError");
   }

@@ -23,18 +23,13 @@
 %>
 <table width="100%" border="0">
   <tr>
-    <td width="33%" valign="top" nowrap>
-      <strong><dhv:label name="accounts.tickets.symbol.number">Ticket #</dhv:label></strong> <%= thisTicket.getPaddedId() %>
-    </td>
-    <td width="33%" align="center" valign="top" nowrap>
+    <td width="66%" align="left" valign="top" nowrap>
       <table border="0">
         <tr>
-          <td align="right" nowrap>
-            <strong>Status:</strong>
-          </td>
           <td nowrap>
+            <strong><dhv:label name="quotes.quotes.header.status">Status:</dhv:label></strong>
       <% if (thisTicket.getClosed() == null){ %>
-            Open
+            <dhv:label name="quotes.open">Open</dhv:label>
       <%}else{%>
             <font color="red">Closed on
             <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
@@ -45,10 +40,11 @@
         <dhv:evaluate if="<%= thisTicket.getContractId() > -1 %>">
         <tr>
           <td align="right" nowrap>
-            <strong>Hours Remaining:</strong>
+            <strong><dhv:label name="account.ticket.hoursRemaining.colon">Hours Remaining:</dhv:label></strong>
           </td>
           <td nowrap>
             <%= thisTicket.getTotalHoursRemaining() %>
+            <input type="hidden" name="totalHoursRemaining" value="<%= thisTicket.getTotalHoursRemaining() %>" />
           </td>
         </tr>
         </dhv:evaluate>

@@ -29,19 +29,19 @@
     formTest = true;
     message = "";
     if (form.sku.value == "") { 
-      message += "- Code is required\r\n";
+      message += label("check.product.code","- Code is required\r\n");
       formTest = false;
     }
     if (form.name.value == "") { 
-      message += "- Description is required\r\n";
+      message += label("description.required","- Description is required\r\n");
       formTest = false;
     }
     if (form.categoryId.value < 1){ 
-      message += "- Category is required\r\n";
+      message += label("check.product.category","- Category is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     }
   }
@@ -49,20 +49,20 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Details</strong>
+      <strong><dhv:label name="contacts.details">Details</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Code
+      <dhv:label name="product.code">Code</dhv:label>
     </td>
     <td>
-      <input type="text" size="10" name="sku" maxlength="10" value="<%=toHtmlValue(productDetails.getSku())%>" /><font color="red">*</font>
+      <input type="text" size="15" name="sku" maxlength="40" value="<%=toHtmlValue(productDetails.getSku())%>" /><font color="red">*</font>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Description
+      <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
     </td>
     <td>
       <input type="text" size="50" name="name" maxlength="50" value="<%=toHtmlValue(productDetails.getName())%>" /><font color="red">*</font>
@@ -70,7 +70,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Category
+      <dhv:label name="accounts.accountasset_include.Category">Category</dhv:label>
     </td>
     <td>
       <%= categoryList.getHtmlSelect("categoryId", productDetails.getCategoryId())%><font color="red">*</font>

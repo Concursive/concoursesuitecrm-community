@@ -28,24 +28,23 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Reports.do">Reports</a> >
-<a href="Reports.do">Queue</a> >
-<a href="Reports.do?command=RunReport">Modules</a> >
+<a href="Reports.do"><dhv:label name="qa.reports">Reports</dhv:label></a> >
+<a href="Reports.do"><dhv:label name="reports.queue">Queue</dhv:label></a> >
+<a href="Reports.do?command=RunReport"><dhv:label name="admin.modules">Modules</dhv:label></a> >
 <%= toHtml(category.getCategory()) %>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-Choose a report from the following list, the next step will be to set criteria
-for the report:<br>
+<dhv:label name="reports.chooseReportFromList.text">Choose a report from the following list, the next step will be to set criteria for the report:</dhv:label><br>
 <br>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th nowrap>
-      <strong>Title</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label></strong>
     </th>
     <th width="100%">
-      <strong>Description</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -65,7 +64,7 @@ for the report:<br>
 %>
 <dhv:evaluate if="<%= reports.size() == 0 || row == 0 %>">
   <tr>
-    <td colspan="2">No reports found</td>
+    <td colspan="2"><dhv:label name="reports.noReportsFound">No reports found</dhv:label></td>
   </tr>
 </dhv:evaluate>
 </table>

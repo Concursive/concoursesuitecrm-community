@@ -29,152 +29,161 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
-<a href="CampaignManager.do?command=ViewResponse&id=<%= Campaign.getId() %>">Response</a> >
-Response Details
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManager.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
+<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>"><dhv:label name="campaign.campaignDetails">Campaign Details</dhv:label></a> >
+<a href="CampaignManager.do?command=ViewResponse&id=<%= Campaign.getId() %>"><dhv:label name="campaign.response">Response</dhv:label></a> >
+<dhv:label name="campaign.responseDetails">Response Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-<% String param1 = "id=" + Campaign.getId(); %>
-<dhv:container name="communications" selected="response" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <table cellpadding="4" cellspacing="0" border="0" width="100%">
+<dhv:container name="communications" selected="response" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+  <table cellpadding="4" cellspacing="0" border="0" width="100%">
+    <tr>
+      <td>
+        <dhv:label name="campaign.responseFrom.colon" param="<%= "contact.name="+contact.getNameLastFirst() %>"><b>Response from:</b> <%= contact.getNameLastFirst() %></dhv:label><br />
+        &nbsp;<br>
+<%
+    Iterator z = ResponseDetails.iterator();
+    if ( z.hasNext() ) {
+      int rowid = 0;
+      int count = 0;
+      while (z.hasNext()) {
+        count++;
+        rowid = (rowid != 1?1:2);
+        ActiveSurveyQuestion thisItem = (ActiveSurveyQuestion)z.next();
+        int type = thisItem.getType();
+        SurveyAnswerList answers = thisItem.getAnswerList();
+%>
+      <table cellpadding="4" cellspacing="0" width="100%" class="details">
+        <%-- Show the question --%>
         <tr>
-          <td>
-            <b>Response from:</b> <%= contact.getNameLastFirst() %><br>
-            &nbsp;<br>
-<%
-        Iterator z = ResponseDetails.iterator();
-        if ( z.hasNext() ) {
-          int rowid = 0;
-          int count = 0;
-          while (z.hasNext()) {
-            count++;		
-            rowid = (rowid != 1?1:2);
-            ActiveSurveyQuestion thisItem = (ActiveSurveyQuestion)z.next();
-            int type = thisItem.getType();
-            SurveyAnswerList answers = thisItem.getAnswerList();
-%>
-          <table cellpadding="4" cellspacing="0" width="100%" class="details">
-            <%-- Show the question --%>
-            <tr>
-              <th colspan="8" nowrap><%=count%>. <%= toHtml(thisItem.getDescription()) %></th>
-            </tr>
-            <tr>
-              <td class="containerBody">
-               <table cellpadding="4" cellspacing="0" width="100%">
-               <%-- Show the answer: Quantitative w/Comments --%>
-               <dhv:evaluate if="<%= (type == SurveyQuestion.QUANT_COMMENTS) %>">
+          <th colspan="8" nowrap><%=count%>. <%= toHtml(thisItem.getDescription()) %></th>
+        </tr>
+        <tr>
+          <td class="containerBody">
+           <table cellpadding="4" cellspacing="0" width="100%">
+           <%-- Show the answer: Quantitative w/Comments --%>
+           <dhv:evaluate if="<%= (type == SurveyQuestion.QUANT_COMMENTS) %>">
+             <tr>
+               <td style="text-align: center; border: none; border-right: 1px solid #000; border-bottom: 1px solid #000;" width="4">
+                 <dhv:label name="campaign.answer">Answer</dhv:label>
+               </td>
+               <td style="text-align: left; border: none; border-bottom: 1px solid #000;">
+                 <dhv:label name="campaign.comments">Comments</dhv:label>
+               </td>
+             </tr>
+           </dhv:evaluate>
+           <%-- Show the answer: Item List --%>
+           <dhv:evaluate if="<%= (type == SurveyQuestion.ITEMLIST) %>">
+             <tr>
+               <td width="100%" style="text-align: center; border: none; border-right: 1px solid #000; border-bottom: 1px solid #000;">
+                 <dhv:label name="accounts.accounts_documents_details.Item">Item</dhv:label>
+               </td>
+               <td style="text-align: left; border: none; border-bottom: 1px solid #000;">
+                 <dhv:label name="product.selection">Selection</dhv:label>
+               </td>
+             </tr>
+             <%
+               HashMap itemListResponse = thisItem.getItemListResponse(answers);
+               Iterator i = itemListResponse.keySet().iterator();
+               if(i.hasNext()){
+               while(i.hasNext()){
+                 ActiveSurveyQuestionItem item = (ActiveSurveyQuestionItem) i.next();
+               %>
                  <tr>
-                   <td style="text-align: center; border: none; border-right: 1px solid #000; border-bottom: 1px solid #000;" width="4">
-                     Answer
+                   <td width="80%" style="text-align: center; border: none; border-right: 1px solid #000; border-bottom: 1px solid #000;">
+                     <%= toHtml(item.getDescription()) %>
                    </td>
                    <td style="text-align: left; border: none; border-bottom: 1px solid #000;">
-                     Comments
+                     <%= itemListResponse.get((Object) item) %>
                    </td>
                  </tr>
-               </dhv:evaluate>
-               <%-- Show the answer: Item List --%>
-               <dhv:evaluate if="<%= (type == SurveyQuestion.ITEMLIST) %>">
-                 <tr>
-                   <td width="100%" style="text-align: center; border: none; border-right: 1px solid #000; border-bottom: 1px solid #000;">
-                     Item
-                   </td>
-                   <td style="text-align: left; border: none; border-bottom: 1px solid #000;">
-                     Selection
-                   </td>
-                 </tr>
-                 <% 
-                   HashMap itemListResponse = thisItem.getItemListResponse(answers);
-                   Iterator i = itemListResponse.keySet().iterator();
-                   if(i.hasNext()){
-                   while(i.hasNext()){
-                     ActiveSurveyQuestionItem item = (ActiveSurveyQuestionItem) i.next();
-                   %>
-                     <tr>
-                       <td width="80%" style="text-align: center; border: none; border-right: 1px solid #000; border-bottom: 1px solid #000;">
-                         <%= toHtml(item.getDescription()) %>
-                       </td>
-                       <td style="text-align: left; border: none; border-bottom: 1px solid #000;">
-                         <%= itemListResponse.get((Object) item) %>
-                       </td>
-                     </tr>
-                   <%}
-                   }else{
-                 %>
-                   <tr>
-                     <td width="100%" colspan="2">No Items Selected.</td>
-                   </tr>
-                 <%}%>
-               </dhv:evaluate>
-               <%-- Other than an item list, show the answer --%>
-               <dhv:evaluate if="<%= (type != SurveyQuestion.ITEMLIST) %>">
+               <%}
+               }else{
+             %>
+               <tr>
+                 <td width="100%" colspan="2"><dhv:label name="campaign.noItemsSelected">No Items Selected.</dhv:label></td>
+               </tr>
+             <%}%>
+           </dhv:evaluate>
+           <%-- Other than an item list, show the answer --%>
+           <dhv:evaluate if="<%= (type != SurveyQuestion.ITEMLIST) %>">
 <%
-                    Iterator answerList = answers.iterator();
-                    if (answerList.hasNext()) {
-                      while (answerList.hasNext()) {
-                        SurveyAnswer thisAnswer = (SurveyAnswer) answerList.next();
+                Iterator answerList = answers.iterator();
+                if (answerList.hasNext()) {
+                  while (answerList.hasNext()) {
+                    SurveyAnswer thisAnswer = (SurveyAnswer) answerList.next();
 %>
-                       <%-- Open Ended --%>
-                       <dhv:evaluate exp="<%= (type == SurveyQuestion.OPEN_ENDED) %>">
-                         <tr>
-                           <td width="100%" colspan="2" style="text-align: left; border: none;">
-                             <li><%= (thisAnswer.getComments() != null && !"".equals(thisAnswer.getComments())) ? toHtml(thisAnswer.getComments()) : "No comments provided" %></li>
-                           </td>
-                         </tr>
-                       </dhv:evaluate>
-                       <%-- Quant. without comments --%>
-                       <dhv:evaluate exp="<%= (type == SurveyQuestion.QUANT_NOCOMMENTS) %>">
-                         <tr>
-                           <td width="100%" colspan="2" style="text-align: center; border: none;">
-                             <li><%= thisAnswer.getQuantAns() != -1 ? thisAnswer.getQuantAns() + "" : "No answer provided" %></li>
-                           </td>
-                         </tr>
-                       </dhv:evaluate>
-                       <%-- Quant. with comments --%>
-                       <dhv:evaluate exp="<%= (type == SurveyQuestion.QUANT_COMMENTS) %>">
-                         <tr>
-                           <td width="4" style="text-align: center; border: none; border-right: 1px solid #000">
-                             <%= thisAnswer.getQuantAns() != -1 ? thisAnswer.getQuantAns() + "" : "-" %>
-                           </td>
-                           <td style="text-align: left; border: none;">
-                             <%= (thisAnswer.getComments() != null && !"".equals(thisAnswer.getComments())) ? toHtml(thisAnswer.getComments()) : "No comments provided" %>
-                           </td>
-                         </tr>
-                       </dhv:evaluate>
-                  <% }
-                    } else {
-                  %>
+                   <%-- Open Ended --%>
+                   <dhv:evaluate if="<%= (type == SurveyQuestion.OPEN_ENDED) %>">
                      <tr>
-                       <td width="100%" colspan="2">
-                         No Answers Found.
+                       <td width="100%" colspan="2" style="text-align: left; border: none;">
+                         <li>
+                          <% if(thisAnswer.getComments() != null && !"".equals(thisAnswer.getComments())) {%>
+                            <%= toHtml(thisAnswer.getComments()) %>
+                          <%} else {%>
+                            <dhv:label name="campaign.noCommentsProvided">No comments provided</dhv:label>
+                          <%}%>
+                         </li>
                        </td>
                      </tr>
-                  <%}
-                   %>
-                </dhv:evaluate>
-                </table>
-              </td>
-            </tr>
-          </table>
-          <br>
-      <%
-          }
-        }else {
-      %>
-            <center>No Questions Found.</center>
-      <%
-        }
-      %>
+                   </dhv:evaluate>
+                   <%-- Quant. without comments --%>
+                   <dhv:evaluate if="<%= (type == SurveyQuestion.QUANT_NOCOMMENTS) %>">
+                     <tr>
+                       <td width="100%" colspan="2" style="text-align: center; border: none;">
+                         <li>
+                          <% if(thisAnswer.getQuantAns() != -1) {%>
+                            <%= thisAnswer.getQuantAns() %>
+                          <%} else {%>
+                            <dhv:label name="campaign.noAnswerProvided">No answer provided</dhv:label>
+                          <%}%>
+                         </li>
+                       </td>
+                     </tr>
+                   </dhv:evaluate>
+                   <%-- Quant. with comments --%>
+                   <dhv:evaluate if="<%= (type == SurveyQuestion.QUANT_COMMENTS) %>">
+                     <tr>
+                       <td width="4" style="text-align: center; border: none; border-right: 1px solid #000">
+                         <%= thisAnswer.getQuantAns() != -1 ? thisAnswer.getQuantAns() + "" : "-" %>
+                       </td>
+                       <td style="text-align: left; border: none;">
+                        <% if(thisAnswer.getComments() != null && !"".equals(thisAnswer.getComments())) {%>
+                          <%= toHtml(thisAnswer.getComments()) %>
+                        <%} else {%>
+                          <dhv:label name="campaign.noCommentsProvided">No comments provided</dhv:label>
+                        <%}%>
+                       </td>
+                     </tr>
+                   </dhv:evaluate>
+              <% }
+                } else {
+              %>
+                 <tr>
+                   <td width="100%" colspan="2">
+                     <dhv:label name="campaign.noAnswersFound">No Answers Found.</dhv:label>
+                   </td>
+                 </tr>
+              <%}
+               %>
+            </dhv:evaluate>
+            </table>
           </td>
         </tr>
       </table>
-    </td>
-   </tr>
-</table>
+      <br>
+  <%
+      }
+    }else {
+  %>
+        <center><dhv:label name="campaign.noQuestionsFound">No Questions Found.</dhv:label></center>
+  <%
+    }
+  %>
+      </td>
+    </tr>
+  </table>
+</dhv:container>

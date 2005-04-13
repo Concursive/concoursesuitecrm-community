@@ -751,11 +751,12 @@ public class OpportunityHeaderList extends ArrayList {
         "LEFT JOIN opportunity_component oc ON (o.opp_id = oc.opp_id) " +
         "WHERE opp_id > 0 ");
     if (moduleId == Constants.ACCOUNTS) {
-      sql.append("AND o.acctlink = ? ");
+      sql.append("AND (o.acctlink = ? OR o.contactlink IN (SELECT contact_id FROM contact c WHERE c.org_id = ? )) ");
     }
     PreparedStatement pst = db.prepareStatement(sql.toString());
     if (moduleId == Constants.ACCOUNTS) {
       pst.setInt(1, itemId);
+      pst.setInt(2, itemId);
     }
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -792,6 +793,23 @@ public class OpportunityHeaderList extends ArrayList {
     rs.close();
     pst.close();
     return isOwner;
+  }
+
+  /**
+   *  Move the opportunities from the contact to the account
+   *
+   *@param  db                Description of the Parameter
+   *@param  orgId             Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void moveOpportunitiesToAccount(Connection db, int orgId) throws SQLException {
+    Iterator iterator = (Iterator) this.iterator();
+    while (iterator.hasNext()) {
+      OpportunityHeader opp = (OpportunityHeader) iterator.next();
+      opp.setContactLink(-1);
+      opp.setAccountLink(orgId);
+      opp.update(db);
+    }
   }
 }
 

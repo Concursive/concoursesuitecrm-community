@@ -35,8 +35,8 @@
 <tr>
 <td>
 <a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
-<a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-Search Results
+<a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+<dhv:label name="accounts.SearchResults">Search Results</dhv:label>
 </td>
 </tr>
 </table>
@@ -46,16 +46,16 @@ Search Results
   <tr>
     <dhv:permission name="tickets-tickets-edit,tickets-tickets-delete">
 		<th valign="center" align="left">
-      <strong>Action</strong>
+      &nbsp;
     </th>
     </dhv:permission>
     <th valign="center" align="left">
-      <strong>Number</strong>
+      <strong><dhv:label name="quotes.number">Number</dhv:label></strong>
     </th>
-    <th><b>Priority</b></th>
-    <th><b>Age</b></th>
-    <th><b>Company</b></th>
-    <th nowrap><b>Resource Assigned</b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></b></th>
+    <th><b><dhv:label name="ticket.age">Age</dhv:label></b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></b></th>
+    <th nowrap><b><dhv:label name="project.resourceAssigned">Resource Assigned</dhv:label></b></th>
   </tr>
 <%
 	Iterator j = TicList.iterator();
@@ -82,10 +82,10 @@ Search Results
 			<%= thisTic.getAgeOf() %>
 		</td>
 		<td width="90%" valign="top" class="row<%= rowid %>">
-			<%= toHtml(thisTic.getCompanyName()) %><dhv:evaluate exp="<%= !(thisTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
+			<%= toHtml(thisTic.getCompanyName()) %><dhv:evaluate if="<%= !(thisTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 		<td width="150" nowrap valign="top" class="row<%= rowid %>">
-      <dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/>
+      <dhv:username id="<%= thisTic.getAssignedTo() %>" default="ticket.unassigned.text"/>
 		</td>
 	</tr>
   <tr>
@@ -105,9 +105,9 @@ Search Results
 %>
       <%= toHtml(thisTic.getProblemHeader()) %>
       <% if (thisTic.getClosed() == null) { %>
-        [<font color="green">open</font>]
+        [<font color="green"><dhv:label name="project.open.lowercase">open</dhv:label></font>]
       <%} else {%>
-        [<font color="red">closed</font>]
+        [<font color="red"><dhv:label name="project.closed.lowercase">closed</dhv:label></font>]
       <%}%>
     </td>
   </tr>

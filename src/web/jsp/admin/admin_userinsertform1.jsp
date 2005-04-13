@@ -36,24 +36,24 @@ function checkForm(form) {
     formTest = true;
     message = "";
     if ((form.contactId.value == "-1")) { 
-      message += "- Check that a Contact is selected\r\n";
+      message += label("check.ticket.contact.entered","- Check that a Contact is selected\r\n");
       formTest = false;
     }
     if ((form.username.value == "")) { 
-      message += "- Check that a Username is entered\r\n";
+      message += label("check.username","- Check that a Username is entered\r\n");
       formTest = false;
     }
     if ((form.password1.value == "") || (form.password2.value == "") || (form.password1.value != form.password2.value)) { 
-      message += "- Check that both Passwords are entered correctly\r\n";
+      message += label("check.bothpasswords.match","- Check that both Passwords are entered correctly\r\n");
       formTest = false;
     }
     
     if (form.roleId.value == "-1") { 
-      message += "- Check that a Role is selected\r\n";
+      message += label("check.role.selected","- Check that a Role is selected\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     } else {
       return true;
@@ -65,8 +65,8 @@ function checkForm(form) {
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-Add User
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<dhv:label name="admin.addUser">Add User</dhv:label>
 </td>
 </tr>
 </table>
@@ -76,7 +76,7 @@ Add User
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td>The installed license limits this system to <%= APP_SIZE %> active users.</td></tr>
+    <td><dhv:label name="admin.licenseLimit.text" param="<%= "appsize="+APP_SIZE %>">The installed license limits this system to <%= APP_SIZE %> active users.</dhv:label></td></tr>
 </table>
 </dhv:evaluate>
 <%-- END DHV CODE ONLY --%>
@@ -84,24 +84,30 @@ Add User
 <dhv:formMessage showSpace="false" />
   <tr>
     <th colspan="2">
-      <strong>Add a user account</strong>
+      <strong><dhv:label name="admin.addUserAccount">Add a user account</dhv:label></strong>
     </th>
   </tr>
   <tr>
     <td class="formLabel">
-      Contact
+      <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
     </td>
     <td>
       <table border="0" cellspacing="0" cellpadding="4" class="empty">
         <tr>
           <td valign="top" nowrap>
-            <div id="changecontact"><%= UserRecord.getContactId() == -1 ? "None Selected" : UserRecord.getContact().getNameLastFirst() %></div>
+            <div id="changecontact">
+              <% if(UserRecord.getContactId() != -1) {%>
+                <%= toHtml(UserRecord.getContact().getNameLastFirst()) %>
+              <%} else {%>
+                <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+              <%}%>
+            </div>
           </td>
           <td valign="top" width="100%" nowrap>
             <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-            [<a href="javascript:popContactsListSingle('contactLink','changecontact','nonUsersOnly=true&reset=true&filters=accountcontacts|employees');">Select Contact</a>]
+            [<a href="javascript:popContactsListSingle('contactLink','changecontact','nonUsersOnly=true&reset=true&filters=accountcontacts|employees');"><dhv:label name="admin.selectContact">Select Contact</dhv:label></a>]
             <input type="hidden" name="contactId" id="contactLink" value="<%= UserRecord.getContactId() %>">
-            [<a href="javascript:popURL('ExternalContacts.do?command=Prepare&popup=true&source=adduser', 'New_Contact','600','550','yes','yes');">Create new contact</a>]
+            [<a href="javascript:popURL('ExternalContacts.do?command=Prepare&popup=true&source=adduser', 'New_Contact','600','550','yes','yes');"><dhv:label name="admin.createContact">Create new contact</dhv:label></a>]
           </td>
         </tr>
       </table>
@@ -109,7 +115,7 @@ Add User
   </tr>
 	<tr>
     <td class="formLabel">
-      Unique Username
+      <dhv:label name="admin.uniqueUsername">Unique Username</dhv:label>
     </td>
     <td>
       <input type="text" name="username" value="<%= toHtmlValue(UserRecord.getUsername()) %>"><font color=red>*</font>
@@ -118,7 +124,7 @@ Add User
   </tr>
 	<tr>
     <td class="formLabel">
-      Password
+      <dhv:label name="admin.password">Password</dhv:label>
     </td>
     <td>
      <input type="password" name="password1"><font color=red>*</font>
@@ -127,7 +133,7 @@ Add User
   </tr>
 	<tr>
     <td class="formLabel">
-      Password (again)
+      <dhv:label name="admin.passwordAgain">Password (again)</dhv:label>
     </td>
     <td>
      <input type="password" name="password2"><font color=red>*</font>
@@ -136,7 +142,7 @@ Add User
   </tr>
 	<tr>
     <td class="formLabel">
-      Role
+      <dhv:label name="project.role">Role</dhv:label>
     </td>
     <td>
       <%= RoleList.getHtmlSelect("roleId", UserRecord.getRoleId()) %><font color="red">*</font>
@@ -145,7 +151,7 @@ Add User
   </tr>
 	<tr>
     <td class="formLabel">
-      Reports To
+      <dhv:label name="admin.reportsTo">Reports To</dhv:label>
     </td>
     <td>
       <%= UserList.getHtmlSelect("managerId", UserRecord.getManagerId()) %>
@@ -155,7 +161,7 @@ Add User
 <dhv:permission name="demo-view">
 	<tr>
     <td class="formLabel">
-      Alias User
+      <dhv:label name="admin.aliasUser">Alias User</dhv:label>
     </td>
     <td>
       <%= UserList.getHtmlSelect("alias", UserRecord.getAlias()) %>
@@ -164,7 +170,7 @@ Add User
 </dhv:permission>
 	<tr>
     <td class="formLabel">
-      Expire Date
+      <dhv:label name="admin.expireDate">Expire Date</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="addUser" field="expires" timestamp="<%= UserRecord.getExpires() %>" />
@@ -173,8 +179,8 @@ Add User
   </tr>
 </table>
 <br>
-<input type="submit" value="Add User">
-<input type="button" value="Cancel" onClick="javascript:this.form.action='Users.do?command=ListUsers';this.form.submit()">
+<input type="submit" value="<dhv:label name="admin.addUser">Add User</dhv:label>">
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Users.do?command=ListUsers';this.form.submit()">
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </form>
 

@@ -21,12 +21,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Previous Activity Details</strong>  
+      <strong><dhv:label name="contact.call.previousActivityDetails">Previous Activity Details</dhv:label></strong>  
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Date
+      <dhv:label name="quotes.date">Date</dhv:label>
     </td>
     <td>
       <zeroio:tz timestamp="<%= PreviousCallDetails.getEntered() %>"/>
@@ -34,7 +34,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Type
+      <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
     </td>
     <td>
       <%= toHtml(PreviousCallDetails.getCallType()) %>
@@ -42,7 +42,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Subject
+      <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
     </td>
     <td>
       <%= toHtml(PreviousCallDetails.getSubject()) %>
@@ -50,7 +50,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="top">
-      Notes
+      <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
     </td>
     <td>
       <%= toHtml(StringUtils.trimToSize(PreviousCallDetails.getNotes(), 40)) %>
@@ -58,7 +58,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Result
+      <dhv:label name="accounts.accounts_calls_list.Result">Result</dhv:label>
     </td>
     <td>
       <%= callResultList.getLookupList(-1).getSelectedValue(PreviousCallDetails.getResultId()) %>
@@ -69,12 +69,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Pending Activity Reminder</strong>  
+      <strong><dhv:label name="contact.pendingActivityReminder">Pending Activity Reminder</dhv:label></strong>  
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Type
+      <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
     </td>
     <td>
       <%= toHtml(PreviousCallDetails.getAlertCallType()) %>
@@ -82,7 +82,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Subject
+      <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
     </td>
     <td>
       <%= toHtml(PreviousCallDetails.getAlertText()) %>
@@ -90,7 +90,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="top">
-      Notes
+      <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
     </td>
     <td>
       <%= toHtml(StringUtils.trimToSize(PreviousCallDetails.getFollowupNotes(), 40)) %>
@@ -103,31 +103,35 @@
     <th colspan="2">
       <strong>
       <% if(PreviousCallDetails.getId() > 0 && !"cancel".equals(request.getParameter("action"))){ %>
-          Complete Activity
+          <dhv:label name="accounts.accounts_calls_list_menu.CompleteActivity">Complete Activity</dhv:label>
       <% }else if(PreviousCallDetails.getId() > 0 && "cancel".equals(request.getParameter("action"))){ %>
-          Cancel Activity
+          <dhv:label name="accounts.accounts_calls_list_menu.CancelActivity">Cancel Activity</dhv:label>
       <% }else{ %>
-          <%= CallDetails.getId() > 0 ? "Modify  Activity" : "Add an Activity" %>
+        <% if(CallDetails.getId() > 0) {%>
+          <dhv:label name="contact.call.modifyActivity">Modify Activity</dhv:label>
+        <%} else {%>
+          <dhv:label name="accounts.accounts_contacts_calls_list.AddAnActivity">Add an Activity</dhv:label>
+        <%}%>
       <% } %>
       </strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Type
+      <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
     </td>
     <td>
       <%= CallTypeList.getHtmlSelect("callTypeId", (PreviousCallDetails.getId() > 0 ? -1 : CallDetails.getCallTypeId())) %><font color="red">*</font><%= showAttribute(request, "typeError") %>
       <dhv:include name="call-type" none="true">
-      Length:
-      <input type="text" size="5" name="length" value="<%= (PreviousCallDetails.getId() > 0 ? "" : toHtmlValue(CallDetails.getLengthString())) %>"> minutes  <%= showAttribute(request, "lengthError") %>
+      <dhv:label name="contact.length.colon">Length:</dhv:label>
+      <input type="text" size="5" name="length" value="<%= (PreviousCallDetails.getId() > 0 ? "" : toHtmlValue(CallDetails.getLengthString())) %>"> <dhv:label name="admin.minutes">minutes</dhv:label>  <%= showAttribute(request, "lengthError") %>
       </dhv:include>
     </td>
   </tr>
   <% if (opportunityHeader.getContactLink() == -1) { %>
         <tr class="containerBody">
           <td nowrap class="formLabel">
-            Contact
+            <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
           </td>
           <td valign="center">
 	<% if (opportunityHeader.getAccountLink() == -1 || ContactList.size() == 0) {
@@ -144,7 +148,7 @@
   <%}%>
   <tr class="containerBody">
     <td class="formLabel">
-      Subject
+      <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
     </td>
     <td>
       <input type="text" size="50" maxlength="255" name="subject" value="<%= (PreviousCallDetails.getId() > 0 ? "" : toHtmlValue(CallDetails.getSubject())) %>"><font color="red">*</font><%= showAttribute(request, "subjectError") %>
@@ -152,7 +156,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="top">
-      Notes
+      <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
     </td>
     <td>
       <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= (PreviousCallDetails.getId() > 0 ? "" :toString(CallDetails.getNotes())) %></TEXTAREA>
@@ -160,7 +164,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Result
+      <dhv:label name="accounts.accounts_calls_list.Result">Result</dhv:label>
     </td>
     <td>
       <%
@@ -176,7 +180,7 @@
         resultSelect.addAttribute("id", "resultId");
       %>
       <%= resultSelect.getHtml("resultId") %><font color="red">*</font><%= showAttribute(request, "resultError") %>
-      <input type="checkbox" name="hasFollowup" onClick="toggleSpan(this, 'nextActionSpan')" <%= CallDetails.getHasFollowup() ? " checked" : "" %>/>
+      <input type="checkbox" name="hasFollowup" value="on" onClick="toggleSpan(this, 'nextActionSpan')" <%= CallDetails.getHasFollowup() ? " checked" : "" %> />
       Schedule follow-up activity?
       <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <% }else{ %>

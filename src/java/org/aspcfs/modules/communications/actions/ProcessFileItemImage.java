@@ -15,18 +15,15 @@
  */
 package org.aspcfs.modules.communications.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemVersion;
+import com.zeroio.webutils.FileDownload;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.utils.web.*;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import com.isavvix.tools.*;
-import java.io.*;
 import org.aspcfs.modules.login.base.AuthenticationItem;
+
+import java.sql.Connection;
+import java.util.ArrayList;
 
 /**
  *  A stand alone servlet that sends files. Currently it will stream an image
@@ -61,14 +58,14 @@ public final class ProcessFileItemImage extends CFSModule {
     String id = (String) context.getRequest().getParameter("id");
     String path = (String) context.getRequest().getParameter("path");
     String version = (String) context.getRequest().getParameter("version");
-
+		String thumbnail = (String) context.getRequest().getParameter("thumbnail");
     FileItem thisItem = null;
     // Lookup the file, start the download
     Connection db = null;
     try {
       // See if the id is in the user's session
       ArrayList allowedImages = (ArrayList) context.getSession().getAttribute(PROCESS_FILE_ITEM_NAME);
-      if (allowedImages == null || !allowedImages.contains(id + (version != null ? "-" + version : ""))) {
+      if (allowedImages == null || !allowedImages.contains(id + (version != null ? "-" + version : "") + (thumbnail != null ? "TH" : ""))) {
         return ("-none-");
       }
       // Get a database connection using the virtual host context info
@@ -85,7 +82,10 @@ public final class ProcessFileItemImage extends CFSModule {
       } else {
         filePath = this.getPath(context, path) + getDatePath(fileItem.getModified()) + fileItem.getFilename();
       }
-      // Finished with connection
+      if (thumbnail != null) {
+				filePath += "TH";
+			}
+			// Finished with connection
       this.freeConnection(context, db);
       db = null;
 

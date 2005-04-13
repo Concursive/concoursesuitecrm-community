@@ -15,15 +15,20 @@
  */
 package org.aspcfs.modules.tasks.base;
 
-import com.zeroio.iteam.base.*;
-import org.apache.lucene.index.IndexWriter;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.Indexer;
+import com.zeroio.utils.ContentUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
-import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.io.IOException;
-import org.aspcfs.modules.tasks.base.Task;
-import com.zeroio.utils.ContentUtils;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *  Class for working with the Lucene search engine
@@ -43,7 +48,7 @@ public class TaskIndexer implements Indexer {
    *@exception  SQLException  Description of the Exception
    *@exception  IOException   Description of the Exception
    */
-  public static void add(IndexWriter writer, Connection db) throws SQLException, IOException {
+  public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT t.task_id, t.category_id, project_id, description, notes, modified " +
@@ -62,6 +67,7 @@ public class TaskIndexer implements Indexer {
       task.setModified(rs.getTimestamp("modified"));
       // add the document
       TaskIndexer.add(writer, task, false);
+      DatabaseUtils.renewConnection(context, db);
     }
     rs.close();
     pst.close();

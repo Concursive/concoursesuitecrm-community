@@ -49,6 +49,7 @@ public class HtmlSelectCurrency {
     //select.addItem("BEF", "Belgian Franc (BEF)");
     select.addItem("CAD", "Canadian Dollars (CAD)");
     //select.addItem("XPF", "Cfp Francs (XPF)");
+    select.addItem("HRK", "Croatian Kuna (HRK)");
     //select.addItem("CYP", "Cyprus Pounds (CYP)");
     //select.addItem("DKK", "Danish Kroner (DKK)");
     select.addItem("EUR", "European Currency (EUR)");
@@ -83,6 +84,7 @@ public class HtmlSelectCurrency {
     select.addItem("GBP", "UK Pounds Sterling (GBP)");
     select.addItem("USD", "United States Dollar (USD)");
     //select.addItem("WST", "Western Samoa Tala (WST)");
+    select.addItem("SIT", "Slovenian Tolar (SIT)");
     if (!select.hasKey(defaultValue)) {
       select.addItem(defaultValue);
     }

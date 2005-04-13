@@ -34,6 +34,8 @@
 <SCRIPT language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
 </script>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -41,127 +43,120 @@
 <td>
 <a href="TroubleTickets.do?"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
-  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+  <a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+  <a href="TroubleTickets.do?command=SearchTickets"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%}else{%> 
   <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
 <a href="TroubleTickets.do?command=Details&id=<%= ticketDetails.getId() %>"><dhv:label name="tickets.details">Ticket Details</dhv:label></a> >
-Maintenance Notes
+<dhv:label name="tickets.maintenancenotes.long_html">Maintenance Notes</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + ticketDetails.getId(); %>
-<dhv:container name="tickets" selected="maintenancenotes" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<script language="JavaScript" type="text/javascript">
-  <%-- Preload image rollovers for drop-down menu --%>
-  loadImages('select');
-</script>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" >
-  <tr>
-    <td width="20%" nowrap>
-      <b>Serial No.:</b>
-      <%= toHtml(ticketDetails.getAssetSerialNumber()) %>
-    </td>
-    <td width="20%" nowrap>
-      <b>Vendor:</b>
-      <%= toHtml(ticketDetails.getAssetVendor()) %>
-    </td>
-    <td width="20%" nowrap>
-      <b>Model:</b>
-      <%= toHtml(ticketDetails.getAssetModelVersion()) %>
-    </td>
-    <td width="20%" nowrap>
-      <b>Location:</b>
-      <%= (ticketDetails.getAssetLocation().trim().equals(""))? "Not Specified" : toHtml(ticketDetails.getAssetLocation()) %> 
-    </td>
-  </tr>
-  <tr valign="top" class="underlineSection">
-    <td width="20%" nowrap>
-      <b>Service Contract No.:</b>
-      <%= toHtml(ticketDetails.getServiceContractNumber()) %>
-    </td>
-    <td width="20%" nowrap>
-      <b>Onsite Service Model:</b>
-      <%= toHtml((ticketDetails.getAssetOnsiteResponseModel() == -1) ? onsiteModelList.getSelectedValue(ticketDetails.getContractOnsiteResponseModel()) : onsiteModelList.getSelectedValue(ticketDetails.getAssetOnsiteResponseModel()))%>
-    </td>
-    <td width="20%" nowrap>
-      <b>Start Date:</b>
-      <zeroio:tz timestamp="<%= ticketDetails.getContractStartDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
-    </td>
-    <td nowrap>
-      <b>End Date:</b>
-      <zeroio:tz timestamp="<%= ticketDetails.getContractEndDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
-    </td>
-  </tr>
-</table>
-<table cellspacing="0" border="0" width="100%">
-  <tr>
-    <td>
-      <dhv:permission name="tickets-maintenance-report-add">
-        <a href="TroubleTicketMaintenanceNotes.do?command=Add&id=<%=ticketDetails.getId()%>">Add maintenance note</a>
-      </dhv:permission>
-    </td>
-  </tr>
-</table>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SunListInfo"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-  <tr>
-    <th>
-      <strong>Action</strong>
-    </th>
-    <th width="15%" nowrap>
-      <strong>Entered Date</strong>
-    </th>
-    <th width="85%" nowrap>
-      <strong>Description</strong>
-    </th>
-  </tr>
-  <% 
-    Iterator itr = maintenanceList.iterator();
-    if (itr.hasNext()){
-      int rowid = 0;
-      int i = 0;
-      while (itr.hasNext()){
-        i++;
-        rowid = (rowid != 1 ? 1 : 2);
-        TicketMaintenanceNote thisSun = (TicketMaintenanceNote)itr.next();
-    %>    
-  <tr valign="top" class="row<%=rowid%>">
-    <td width="8" valign="center" nowrap >
-        <% int status = -1;%>
-        <% status = thisSun.getEnabled() ? 1 : 0; %>
-      	<%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= i %>','menuTicketForm', '<%=ticketDetails.getId() %>', '<%= thisSun.getId() %>');"
-         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuTicketForm');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+<dhv:container name="tickets" selected="maintenancenotes" object="ticketDetails" param="<%= param1 %>">
+  <%@ include file="ticket_header_include.jsp" %>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" >
+    <tr>
+      <td width="20%" nowrap>
+        <b><dhv:label name="ticket.serialNumber.colon">Serial No:</dhv:label></b>
+        <%= toHtml(ticketDetails.getAssetSerialNumber()) %>
       </td>
-		<td width="15%" nowrap>
-      <a href="TroubleTicketMaintenanceNotes.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%= thisSun.getId()%>">
-      <zeroio:tz timestamp="<%=thisSun.getEntered()%>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></a>
-		</td>
-		<td width="15%" >
-      <%= toHtml(thisSun.getDescriptionOfService()) %>
-		</td>
-   </tr>
-    <%  
-      }
-    }else{
-    %>
-    <tr class="containerBody">
-      <td colspan="3">
-        No maintenance notes found.
+      <td width="20%" nowrap>
+        <b><dhv:label name="ticket.vendor.colon">Vendor:</dhv:label></b>
+        <%= toHtml(ticketDetails.getAssetVendor()) %>
+      </td>
+      <td width="20%" nowrap>
+        <b><dhv:label name="ticket.modelNumber.colon">Model:</dhv:label></b>
+        <%= toHtml(ticketDetails.getAssetModelVersion()) %>
+      </td>
+      <td width="20%" nowrap>
+        <b><dhv:label name="reports.helpdesk.ticket.location.colon">Location:</dhv:label></b>
+        <% if(ticketDetails.getAssetLocation().trim().equals("")) {%>
+          <dhv:label name="account.notSpecified.label">Not Specified</dhv:label>
+        <%} else {%>
+          <%= toHtml(ticketDetails.getAssetLocation()) %>
+        <%}%>
       </td>
     </tr>
+    <tr valign="top" class="underlineSection">
+      <td width="20%" nowrap>
+        <b><dhv:label name="ticket.serviceContractNumber.colon">Service Contract No.:</dhv:label></b>
+        <%= toHtml(ticketDetails.getServiceContractNumber()) %>
+      </td>
+      <td width="20%" nowrap>
+        <b><dhv:label name="ticket.onsiteServiceModel.colon">Onsite Service Model:</dhv:label></b>
+        <%= toHtml((ticketDetails.getAssetOnsiteResponseModel() == -1) ? onsiteModelList.getSelectedValue(ticketDetails.getContractOnsiteResponseModel()) : onsiteModelList.getSelectedValue(ticketDetails.getAssetOnsiteResponseModel()))%>
+      </td>
+      <td width="20%" nowrap>
+        <b><dhv:label name="project.startDate.colon">Start Date:</dhv:label></b>
+        <zeroio:tz timestamp="<%= ticketDetails.getContractStartDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
+      </td>
+      <td nowrap>
+        <b><dhv:label name="product.endDate">End Date</dhv:label>:</b>
+        <zeroio:tz timestamp="<%= ticketDetails.getContractEndDate() %>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
+      </td>
+    </tr>
+  </table>
+  <table cellspacing="0" border="0" width="100%">
+    <tr>
+      <td>
+        <dhv:permission name="tickets-maintenance-report-add">
+          <a href="TroubleTicketMaintenanceNotes.do?command=Add&id=<%=ticketDetails.getId()%>"><dhv:label name="ticket.addMaintenanceNote">Add Maintenance Note</dhv:label></a>
+        </dhv:permission>
+      </td>
+    </tr>
+  </table>
+  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SunListInfo"/>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <th>
+        &nbsp;
+      </th>
+      <th width="15%" nowrap>
+        <strong><dhv:label name="ticket.enteredDate">Entered Date</dhv:label></strong>
+      </th>
+      <th width="85%" nowrap>
+        <strong><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></strong>
+      </th>
+    </tr>
     <%
-    }
-    %></table>
-<br>
-<dhv:pagedListControl object="SunListInfo"/>
- </td>
-</tr>
-</table>
+      Iterator itr = maintenanceList.iterator();
+      if (itr.hasNext()){
+        int rowid = 0;
+        int i = 0;
+        while (itr.hasNext()){
+          i++;
+          rowid = (rowid != 1 ? 1 : 2);
+          TicketMaintenanceNote thisSun = (TicketMaintenanceNote)itr.next();
+      %>
+    <tr valign="top" class="row<%=rowid%>">
+      <td width="8" valign="center" nowrap >
+          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+           <a href="javascript:displayMenu('select<%= i %>','menuTicketForm', '<%=ticketDetails.getId() %>', '<%= thisSun.getId() %>');"
+           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuTicketForm');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+        </td>
+      <td width="15%" nowrap>
+        <a href="TroubleTicketMaintenanceNotes.do?command=View&id=<%=ticketDetails.getId()%>&formId=<%= thisSun.getId()%>">
+        <zeroio:tz timestamp="<%=thisSun.getEntered()%>" dateOnly="true" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></a>
+      </td>
+      <td width="15%" >
+        <%= toHtml(thisSun.getDescriptionOfService()) %>
+      </td>
+     </tr>
+      <%
+        }
+      }else{
+      %>
+      <tr class="containerBody">
+        <td colspan="3">
+          <dhv:label name="ticket.noMaintenanceNotesFound">No maintenance notes found.</dhv:label>
+        </td>
+      </tr>
+      <%
+      }
+      %></table>
+  <br>
+  <dhv:pagedListControl object="SunListInfo"/>
+</dhv:container>

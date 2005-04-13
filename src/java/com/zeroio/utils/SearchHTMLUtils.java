@@ -44,20 +44,23 @@ public class SearchHTMLUtils {
     HashMap highlights = new HashMap();
     int low = -1;
     int high = -1;
-    // Given search terms ( fall campaign, "fall campaign" )
-    // Given a string with document contents
-
-    // This is a Test string.
-    // this is a test string.
-    // test
-
     // Convert to lowercase, find index of word in content
     String body = content.toLowerCase();
-
     Iterator i = terms.iterator();
     while (i.hasNext()) {
       String term = (String) i.next();
-      System.out.println("SearchHTMLUtils-> Term: " + term);
+      // Handle words with wildcard at end (should highlight to end of word)
+      if (term.endsWith("*")) {
+        term = term.substring(0, term.length() - 1);
+      }
+      // TODO: Implement rel*sed
+      /* if (term.indexOf("*") > 0) {
+        terms.add(term.substring(term.indexOf("*") + 1));
+        term = term.substring(0, term.indexOf("*"));
+      } */
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("SearchHTMLUtils-> Term: " + term);
+      }
       // Find each index/range of occurrence
       int begin = 0;
       int pos = -1;
@@ -94,6 +97,7 @@ public class SearchHTMLUtils {
     int phraseCount = 0;
     boolean isOpen = false;
     boolean isFirst = true;
+    int outputCount = 0;
     for (int count = low; count <= high; count++) {
       Integer thisPosition = new Integer(count);
       // Step through the content, looking for highlighted items
@@ -123,7 +127,7 @@ public class SearchHTMLUtils {
       }
       // Begin highlighting
       if (startHighlight == count && !isOpen) {
-        sb.append("/&lt;b/&gt;");
+        sb.append("//lt;b//gt;");
         isOpen = true;
       }
       // Append the character if in total range
@@ -135,11 +139,19 @@ public class SearchHTMLUtils {
           ++phraseCount;
           sb.append(" ... ");
         }
+        // Split up really long text
+        ++outputCount;
         sb.append(content.charAt(count));
+        if (outputCount > 100) {
+          sb.append(" ");
+        }
+        if (content.charAt(count) == ' ') {
+          outputCount = 0;
+        }
       }
       // End highlighting
       if (endHighlight == count && isOpen) {
-        sb.append("/&lt;/b/&gt;");
+        sb.append("//lt;/b//gt;");
         isOpen = false;
         isFirst = false;
       }

@@ -15,11 +15,12 @@
  */
 package org.aspcfs.modules.base;
 
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DateUtils;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Locale;
 
 /**
@@ -474,13 +475,11 @@ public class Address {
    *@since     1.5
    */
   public String getCityState() {
-    if (getCity() == null || getState() == null) {
-      return ("");
-    } else if (!getCity().equals("") && !getState().equals("") && !"-1".equals(getState())) {
-      return (getCity() + ", " + getState());
-    } else if (getCity().equals("") && !getState().equals("") && !"-1".equals(getState())) {
-      return (getState());
-    } else if (!getCity().equals("") && getState().equals("") && !"-1".equals(getState())) {
+    if (getCity() != null && getState() != null && !getCity().equals("") && !getState().equals("") && !"-1".equals(getState())) {
+        return (getCity() + ", " + getState());
+    } else if ((getCity() == null || "".equals(getCity())) && getState() != null && !"".equals(getState()) && !"-1".equals(getState())) {
+        return (getState());
+    } else if ((getState() == null || "".equals(getState()) || "-1".equals(getState())) && getCity() != null && !"".equals(getCity())) {
       return (getCity());
     } else {
       return ("");
@@ -764,9 +763,7 @@ public class Address {
     if (this.getModifiedBy() == -1) {
       this.setModifiedBy(0);
     }
-    if (isContact) {
-      this.setPrimaryAddress(rs.getBoolean("primary_address"));
-    }
+    this.setPrimaryAddress(rs.getBoolean("primary_address"));
     this.setTypeName(rs.getString("description"));
   }
 
@@ -783,13 +780,35 @@ public class Address {
     if (request.getParameter("address" + parseItem + "id") != null) {
       this.setId(request.getParameter("address" + parseItem + "id"));
     }
-    this.setStreetAddressLine1(request.getParameter("address" + parseItem + "line1"));
-    this.setStreetAddressLine2(request.getParameter("address" + parseItem + "line2"));
-    this.setStreetAddressLine3(request.getParameter("address" + parseItem + "line3"));
-    this.setCity(request.getParameter("address" + parseItem + "city"));
-    this.setState(request.getParameter("address" + parseItem + "state"));
-    this.setOtherState(request.getParameter("address" + parseItem + "otherState"));
-    this.setZip(request.getParameter("address" + parseItem + "zip"));
+    String buffer = null;
+    buffer = request.getParameter("address" + parseItem + "line1");
+    if ( buffer != null && !"".equals(buffer.trim())) {
+      this.setStreetAddressLine1(buffer);
+    }
+    buffer = request.getParameter("address" + parseItem + "line2");
+    if ( buffer != null && !"".equals(buffer.trim())) {
+      this.setStreetAddressLine2(buffer);
+    }
+    buffer = request.getParameter("address" + parseItem + "line3");
+    if ( buffer != null && !"".equals(buffer.trim())) {
+      this.setStreetAddressLine3(buffer);
+    }
+    buffer = request.getParameter("address" + parseItem + "city");
+    if ( buffer != null && !"".equals(buffer.trim())) {
+      this.setCity(buffer);
+    }
+    buffer = request.getParameter("address" + parseItem + "state");
+    if ( buffer != null && !"".equals(buffer.trim())) {
+      this.setState(buffer);
+    }
+    buffer = request.getParameter("address" + parseItem + "otherState");
+    if ( buffer != null && !"".equals(buffer.trim())) {
+      this.setOtherState(buffer);
+    }
+    buffer = request.getParameter("address" + parseItem + "zip");
+    if ( buffer != null && !"".equals(buffer.trim())) {
+      this.setZip(buffer);
+    }
     this.setCountry(request.getParameter("address" + parseItem + "country"));
     if (request.getParameter("address" + parseItem + "delete") != null) {
       String action = request.getParameter("address" + parseItem + "delete").toLowerCase();

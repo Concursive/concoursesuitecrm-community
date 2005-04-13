@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.sql.*;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.base.Constants;
@@ -28,233 +29,16 @@ import java.util.Calendar;
 /**
  *  List class for a Option Configurator
  *
- *@author     partha
- *@created    March 19, 2004
- *@version    $Id: ProductOptionConfiguratorList.java,v 1.1.2.2 2004/03/19
- *      20:46:01 partha Exp $
+ *@author     ananth
+ *@created    September 2, 2004
+ *@version    $Id$
  */
-public class ProductOptionConfiguratorList extends ArrayList implements SyncableList {
-  //sync api
-  /**
-   *  Description of the Field
-   */
-  public final static String tableName = "product_option_configurator";
-  /**
-   *  Description of the Field
-   */
-  public final static String uniqueField = "configurator_id";
-  private int syncType = Constants.NO_SYNC;
-  private Timestamp lastAnchor = null;
-  private Timestamp nextAnchor = null;
-
-  //filters
+public class ProductOptionConfiguratorList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
   private int id = -1;
   //other supplimentary fields
   private String optionName = null;
   private String productName = null;
-
-
-  /**
-   *  Gets the tableName attribute of the ProductOptionConfiguratorList object
-   *
-   *@return    The tableName value
-   */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   *  Gets the uniqueField attribute of the ProductOptionConfiguratorList object
-   *
-   *@return    The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
-  }
-
-
-  /**
-   *  Gets the pagedListInfo attribute of the ProductOptionConfiguratorList
-   *  object
-   *
-   *@return    The pagedListInfo value
-   */
-  public PagedListInfo getPagedListInfo() {
-    return pagedListInfo;
-  }
-
-
-  /**
-   *  Gets the id attribute of the ProductOptionConfiguratorList object
-   *
-   *@return    The id value
-   */
-  public int getId() {
-    return id;
-  }
-
-
-  /**
-   *  Gets the syncType attribute of the ProductOptionConfiguratorList object
-   *
-   *@return    The syncType value
-   */
-  public int getSyncType() {
-    return syncType;
-  }
-
-
-  /**
-   *  Gets the lastAnchor attribute of the ProductOptionConfiguratorList object
-   *
-   *@return    The lastAnchor value
-   */
-  public Timestamp getLastAnchor() {
-    return lastAnchor;
-  }
-
-
-  /**
-   *  Gets the nextAnchor attribute of the ProductOptionConfiguratorList object
-   *
-   *@return    The nextAnchor value
-   */
-  public Timestamp getNextAnchor() {
-    return nextAnchor;
-  }
-
-
-  /**
-   *  Gets the optionName attribute of the ProductOptionConfiguratorList object
-   *
-   *@return    The optionName value
-   */
-  public String getOptionName() {
-    return optionName;
-  }
-
-
-  /**
-   *  Gets the productName attribute of the ProductOptionConfiguratorList object
-   *
-   *@return    The productName value
-   */
-  public String getProductName() {
-    return productName;
-  }
-
-
-  /**
-   *  Sets the pagedListInfo attribute of the ProductOptionConfiguratorList
-   *  object
-   *
-   *@param  tmp  The new pagedListInfo value
-   */
-  public void setPagedListInfo(PagedListInfo tmp) {
-    this.pagedListInfo = tmp;
-  }
-
-
-  /**
-   *  Sets the id attribute of the ProductOptionConfiguratorList object
-   *
-   *@param  tmp  The new id value
-   */
-  public void setId(int tmp) {
-    this.id = tmp;
-  }
-
-
-  /**
-   *  Sets the id attribute of the ProductOptionConfiguratorList object
-   *
-   *@param  tmp  The new id value
-   */
-  public void setId(String tmp) {
-    this.id = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the syncType attribute of the ProductOptionConfiguratorList object
-   *
-   *@param  tmp  The new syncType value
-   */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
-
-  /**
-   *  Sets the syncType attribute of the ProductOptionConfiguratorList object
-   *
-   *@param  tmp  The new syncType value
-   */
-  public void setSyncType(String tmp) {
-    this.syncType = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the lastAnchor attribute of the ProductOptionConfiguratorList object
-   *
-   *@param  tmp  The new lastAnchor value
-   */
-  public void setLastAnchor(Timestamp tmp) {
-    this.lastAnchor = tmp;
-  }
-
-
-  /**
-   *  Sets the lastAnchor attribute of the ProductOptionConfiguratorList object
-   *
-   *@param  tmp  The new lastAnchor value
-   */
-  public void setLastAnchor(String tmp) {
-    this.lastAnchor = DatabaseUtils.parseTimestamp(tmp);
-  }
-
-
-  /**
-   *  Sets the nextAnchor attribute of the ProductOptionConfiguratorList object
-   *
-   *@param  tmp  The new nextAnchor value
-   */
-  public void setNextAnchor(Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   *  Sets the nextAnchor attribute of the ProductOptionConfiguratorList object
-   *
-   *@param  tmp  The new nextAnchor value
-   */
-  public void setNextAnchor(String tmp) {
-    this.nextAnchor = DatabaseUtils.parseTimestamp(tmp);
-  }
-
-
-  /**
-   *  Sets the optionName attribute of the ProductOptionConfiguratorList object
-   *
-   *@param  tmp  The new optionName value
-   */
-  public void setOptionName(String tmp) {
-    this.optionName = tmp;
-  }
-
-
-  /**
-   *  Sets the productName attribute of the ProductOptionConfiguratorList object
-   *
-   *@param  tmp  The new productName value
-   */
-  public void setProductName(String tmp) {
-    this.productName = tmp;
-  }
 
 
   /**
@@ -266,8 +50,8 @@ public class ProductOptionConfiguratorList extends ArrayList implements Syncable
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -281,9 +65,9 @@ public class ProductOptionConfiguratorList extends ArrayList implements Syncable
 
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-        " SELECT COUNT(poptconfig.*) AS recordcount " +
-        " FROM product_option_configurator AS poptconfig " +
-        " WHERE poptconfig.configurator_id > 0"
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM product_option_configurator AS poptconfig " +
+        "WHERE poptconfig.configurator_id > 0"
         );
 
     createFilter(sqlFilter, db);
@@ -304,20 +88,13 @@ public class ProductOptionConfiguratorList extends ArrayList implements Syncable
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     } else {
-      sqlSelect.append(" SELECT ");
+      sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " poptconf.*, " +
-        " popt.short_description AS option_name, " +
-        " pctlg.product_name AS product_name, " +
-        " FROM product_option_configurator AS poptconf" +
-        " LEFT JOIN product_option AS popt " +
-        " ON ( poptconf.configurator_id = popt.configurator_id ) " +
-        " LEFT JOIN product_option_map AS poptmap " +
-        " ON ( popt.option_id = poptmap.option_id ) " +
-        " LEFT JOIN product_catalog AS pctlg " +
-        " ON ( poptmap.product_id = pctlg.product_id ) " +
-        " WHERE poptconf.configurator_id > 0 ");
+        "conf.* " +
+        "FROM product_option_configurator AS conf " +
+        "WHERE conf.configurator_id > -1 "
+        );
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -368,12 +145,6 @@ public class ProductOptionConfiguratorList extends ArrayList implements Syncable
     if (id > -1) {
       sqlFilter.append(" AND poptconfig.configurator_id = ? ");
     }
-    if (productName != null) {
-      sqlFilter.append(" AND pctlg.product_name = ? ");
-    }
-    if (optionName != null) {
-      sqlFilter.append(" AND popt.short_description = ? ");
-    }
   }
 
 
@@ -389,13 +160,62 @@ public class ProductOptionConfiguratorList extends ArrayList implements Syncable
     if (id > -1) {
       pst.setInt(++i, id);
     }
-    if (productName != null) {
-      pst.setString(++i, productName);
-    }
-    if (optionName != null) {
-      pst.setString(++i, optionName);
-    }
     return i;
+  }
+
+
+  /**
+   *  Gets the htmlSelect attribute of the ProductOptionConfiguratorList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@param  defaultKey  Description of the Parameter
+   *@return             The htmlSelect value
+   */
+  public String getHtmlSelect(String selectName, int defaultKey) {
+    HtmlSelect select = new HtmlSelect();
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ProductOptionConfigurator config = (ProductOptionConfigurator) i.next();
+      select.addItem(config.getId(), config.getConfiguratorName());
+    }
+    return select.getHtml(selectName, defaultKey);
+  }
+
+
+  /**
+   *  Gets the htmlSelect attribute of the ProductOptionConfiguratorList object
+   *
+   *@return    The htmlSelect value
+   */
+  public HtmlSelect getHtmlSelect() {
+    HtmlSelect select = new HtmlSelect();
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ProductOptionConfigurator config = (ProductOptionConfigurator) i.next();
+      select.addItem(config.getId(), config.getConfiguratorName());
+    }
+    return select;
+  }
+
+
+  /**
+   *  Gets the configuratorFromId attribute of the ProductOptionConfiguratorList object
+   *
+   * @param  id                Description of the Parameter
+   * @return                   The configuratorFromId value
+   * @exception  SQLException  Description of the Exception
+   */
+  public ProductOptionConfigurator getConfiguratorFromId(int id) throws SQLException {
+    ProductOptionConfigurator result = null;
+    Iterator iterator = (Iterator) this.iterator();
+    while (iterator.hasNext()) {
+      ProductOptionConfigurator configurator = (ProductOptionConfigurator) iterator.next();
+      if (configurator.getId() == id) {
+        result = configurator;
+        break;
+      }
+    }
+    return result;
   }
 }
 

@@ -16,6 +16,7 @@
   - Version: $Id$
   - Description: 
   --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Recipient" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="Message" class="org.aspcfs.modules.communications.base.Message" scope="request"/>
 <jsp:useBean id="refreshUrl" class="java.lang.String" scope="request"/>
@@ -24,15 +25,15 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>
-      Your message has been queued and will be sent to the following contacts:
+      <dhv:label name="actionList.messageSentToContacts.text">Your message has been queued and will be sent to the following contacts:</dhv:label>
     </th>
   </tr>
   <tr class="row2">
     <td>
-      <%= Recipient.getNameLastFirst() %> (<%= Recipient.getEmailAddress("Business") %>)
+      <%= Recipient.getNameLastFirst() %> (<%= Recipient.getPrimaryEmailAddress() %>)
     </td>
   </tr>
 </table>
 <p>
-<input type="button" value="Close" onClick="javascript:window.close()">
+<input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close()">
 </body>

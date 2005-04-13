@@ -40,23 +40,24 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Reports.do">Reports</a> >
-<a href="Reports.do">Queue</a> >
-<a href="Reports.do?command=RunReport">Modules</a> >
+<a href="Reports.do"><dhv:label name="qa.reports">Reports</dhv:label></a> >
+<a href="Reports.do"><dhv:label name="reports.queue">Queue</dhv:label></a> >
+<a href="Reports.do?command=RunReport"><dhv:label name="admin.modules">Modules</dhv:label></a> >
 <a href="Reports.do?command=ListReports&categoryId=<%= category.getId() %>"><%= toHtml(category.getCategory()) %></a> >
-<a href="Reports.do?command=CriteriaList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=<%= request.getParameter("criteriaId") %>">Criteria List</a> >
-Parameters
+<a href="Reports.do?command=CriteriaList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=<%= request.getParameter("criteriaId") %>"><dhv:label name="reports.criteriaList">Criteria List</dhv:label></a> >
+<dhv:label name="admin.parameters">Parameters</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <strong><%= toHtml(report.getTitle()) %>:</strong>
 <%= toHtml(report.getDescription()) %>
-<p>The following parameters must be specified for this report:</p>
+<p><dhv:label name="reports.parametersMustBeSpecified.text">The following parameters must be specified for this report:</dhv:label></p>
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Parameters</strong>
+      <strong><dhv:label name="admin.parameters">Parameters</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -71,7 +72,7 @@ Parameters
     <td class="formLabel"><%= toHtml(parameter.getDisplayName()) %></td>
     <td>
       <%= parameter.getHtml(request) %> <font color="red">*</font>
-      <%=showAttribute(request,parameter.getName() + "Error") %>
+      <%= showAttribute(request,parameter.getName() + "Error") %>
     </td>
   </tr>
 </dhv:evaluate>
@@ -80,7 +81,7 @@ Parameters
 %>
 <dhv:evaluate if="<%= count == 0 %>">
   <tr>
-    <td colspan="2">No parameters required.</td>
+    <td colspan="2"><dhv:label name="reports.noParametersRequired">No parameters required.</dhv:label></td>
   </tr>
 </dhv:evaluate>
 </table>
@@ -89,26 +90,26 @@ Parameters
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Name the criteria for future reference</strong>
+      <strong><dhv:label name="reports.nameCriteria.text">Name the criteria for future reference</dhv:label></strong>
     </th>
   </tr>
   <tr>
-    <td class="formLabel">Subject</td>
+    <td class="formLabel"><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></td>
     <td><input type="text" name="criteria_subject" size="35" value="<%= toHtmlValue(criteria.getSubject()) %>"/>
-    (optional)</td>
+    <dhv:label name="reports.optional.brackets">(optional)</dhv:label></td>
   </tr>
 </table>
 <%-- No previously saved criteria --%>
 <dhv:evaluate if="<%= request.getParameter("criteriaId").equals("-1") %>">
-<input type="checkbox" name="save" value="true"> Save this criteria for generating future reports<br />
+<input type="checkbox" name="save" value="true"> <dhv:label name="reports.saveCriteria.text">Save this criteria for generating future reports</dhv:label><br />
 </dhv:evaluate>
 <%-- Using previously saved criteria --%>
 <dhv:evaluate if="<%= !request.getParameter("criteriaId").equals("-1") %>">
-<input type="radio" name="saveType" value="none" checked> Do not save criteria for generating future reports<br />
-<input type="radio" name="saveType" value="overwrite"> Overwrite previously saved criteria<br />
-<input type="radio" name="saveType" value="save"> Save a new copy of this criteria<br />
+<input type="radio" name="saveType" value="none" checked> <dhv:label name="reports.doNotSaveCriteria">Do not save criteria for generating future reports</dhv:label><br />
+<input type="radio" name="saveType" value="overwrite"> <dhv:label name="reports.overwritePreviousCriteria.text">Overwrite previously saved criteria</dhv:label><br />
+<input type="radio" name="saveType" value="save"> <dhv:label name="reports.saveNewCopyCriteria.text">Save a new copy of this criteria</dhv:label><br />
 </dhv:evaluate>
 </dhv:evaluate>
 <br />
-<input type="submit" value="Generate Report"/>
+<input type="submit" value="<dhv:label name="reports.generateReport">Generate Report</dhv:label>"/>
 </form>

@@ -40,47 +40,41 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-Service Contracts
+<dhv:label name="accounts.accounts_sc_add.ServiceContracts">Service Contracts</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<dhv:container name="accounts" selected="servicecontracts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<%-- Begin the container contents --%>
-<dhv:permission name="accounts-service-contracts-add">
-  <a href="AccountsServiceContracts.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>">Add a Service Contract</a>
-</dhv:permission>
-<dhv:permission name="accounts-service-contracts-add" none="true"></dhv:permission>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ServiceContractListInfo"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-  <tr>
-    <th>
-      <strong>Action</strong>
-    </th>
-    <th width="20%" nowrap>
-      <strong>Contract Number</strong>
-    </th>
-    <th width="20%" >
-      <strong>Category</strong>
-    </th>
-    <th width="20%" nowrap>
-      <strong>Type</strong>
-    </th>
-    <th width="20%">
-      <strong>Current Contract Date</strong>
-    </th>
-    <th width="20%" nowrap>
-      <strong>End Date</strong>
-    </th>
-  </tr>
-  
-  <% 
+<dhv:container name="accounts" selected="servicecontracts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:permission name="accounts-service-contracts-add">
+    <a href="AccountsServiceContracts.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="account.sc.addServiceContract">Add Service Contract</dhv:label></a>
+  </dhv:permission>
+  <dhv:permission name="accounts-service-contracts-add" none="true"></dhv:permission>
+  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ServiceContractListInfo"/>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <th>
+        &nbsp;
+      </th>
+      <th width="20%" nowrap>
+        <strong><dhv:label name="account.sc.contractNumber">Contract Number</dhv:label></strong>
+      </th>
+      <th width="20%" >
+        <strong><dhv:label name="accounts.accountasset_include.Category">Category</dhv:label></strong>
+      </th>
+      <th width="20%" nowrap>
+        <strong><dhv:label name="accounts.accounts_add.Type">Type</dhv:label></strong>
+      </th>
+      <th width="20%">
+        <strong><dhv:label name="account.sc.currentContractDate">Current Contract Date</dhv:label></strong>
+      </th>
+      <th width="20%" nowrap>
+        <strong><dhv:label name="product.endDate">End Date</dhv:label></strong>
+      </th>
+    </tr>
+  <%
     Iterator itr = serviceContractList.iterator();
     if (itr.hasNext()){
       int rowid = 0;
@@ -132,7 +126,7 @@ Service Contracts
     %>
     <tr class="containerBody">
       <td colspan="6">
-        No service contracts found.
+        <dhv:label name="account.sc.noServiceContractsFound">No service contracts found.</dhv:label>
       </td>
     </tr>
     <%
@@ -141,6 +135,4 @@ Service Contracts
 </table>
   <br>
   <dhv:pagedListControl object="ServiceContractListInfo"/>
-</td>
-</tr>
-</table>
+</dhv:container>

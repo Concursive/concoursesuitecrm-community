@@ -797,8 +797,11 @@ public class TicketLog extends GenericBean {
       throw new SQLException("Log Entry must be associated to a Ticket " + this.getId());
     }
     StringBuffer sql = new StringBuffer();
+    boolean doCommit = false;
     try {
-      db.setAutoCommit(false);
+      if ((doCommit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       sql.append(
           "INSERT INTO ticketlog (pri_code, level_code, department_code, cat_code, scode, ticketid, comment, closed, ");
       if (entered != null) {
@@ -842,12 +845,18 @@ public class TicketLog extends GenericBean {
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "ticketlog_id_seq");
       this.update(db, true);
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -960,22 +969,6 @@ public class TicketLog extends GenericBean {
     this.setAssignedToName(source.getAssignedToName());
     this.setEnteredByName(source.getEnteredByName());
     this.setDepartmentName(source.getDepartmentName());
-  }
-
-
-  /**
-   *  Gets the Valid attribute of the TicketLog object
-   *
-   *@return    The Valid value
-   *@since
-   */
-  protected boolean isValid() {
-    errors.clear();
-    if (ticketId == -1 || (entryText == null || entryText.trim().equals("")) || enteredBy == -1 || modifiedBy == -1) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
 

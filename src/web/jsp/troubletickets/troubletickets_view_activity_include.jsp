@@ -20,12 +20,12 @@
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>General Information</strong>
+	    <strong><dhv:label name="documents.details.generalInformation">General Information</dhv:label></strong>
 	  </th>
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Service Contract Number
+      <dhv:label name="accounts.accountasset_include.ServiceContractNumber">Service Contract Number</dhv:label>
     </td>
     <td>
     <%=toHtml(ticketDetails.getServiceContractNumber())%>
@@ -39,27 +39,39 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="4">
-	    <strong>Per Day Description of Service</strong>
+	    <strong><dhv:label name="tickets.perDayDescription">Per Day Description of Service</dhv:label></strong>
 	  </th>
   </tr>
   <tr bgcolor="#E8E8E8">
     <td nowrap>
-      <b>Activity Date</b>
+      <b><dhv:label name="tickets.activityDate">Activity Date</dhv:label></b>
     </td>
     <td nowrap>
-      <b>Travel Time</b><br />
-      <b>[Towards Contract:</b>
-      <b><%= ((activityDetails.getTravelTowardsServiceContract()) ? "Yes" : "No") %></b>
+      <b><dhv:label name="reports.helpdesk.ticket.activity.travelTime">Travel Time</dhv:label></b><br />
+      <b>[<dhv:label name="tickets.towardsContract">Towards Contract</dhv:label>:</b>
+      <b>
+        <% if(activityDetails.getTravelTowardsServiceContract()) {%>
+          <dhv:label name="account.yes">Yes</dhv:label>
+        <%} else {%>
+          <dhv:label name="account.no">No</dhv:label>
+        <%}%>
+      </b>
       <b>]</b>
     </td>
     <td nowrap>
-      <b>Labor Time</b><br />
-      <b>[Towards Contract:</b>
-      <b><%= ((activityDetails.getLaborTowardsServiceContract()) ? "Yes" : "No") %></b>
+      <b><dhv:label name="reports.helpdesk.ticket.activity.laborTime">Labor Time</dhv:label></b><br />
+      <b>[<dhv:label name="tickets.towardsContract">Towards Contract</dhv:label>:</b>
+      <b>
+        <% if(activityDetails.getLaborTowardsServiceContract()) {%>
+          <dhv:label name="account.yes">Yes</dhv:label>
+        <%} else {%>
+          <dhv:label name="account.no">No</dhv:label>
+        <%}%>
+      </b>
       <b>]</b>
     </td>
     <td width="100%">
-      <b>Description of Service</b>
+      <b><dhv:label name="reports.helpdesk.ticket.activity.descOfService">Description of Service</dhv:label></b>
     </td>
   </tr>
   <%
@@ -77,10 +89,10 @@
             <zeroio:tz timestamp="<%= thisDayDescription.getActivityDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
             <% } %>
           <td align="right" nowrap>
-            <%= thisDayDescription.getTravelHours() %> hrs &nbsp <%= thisDayDescription.getTravelMinutes() %> min 
+            <dhv:label name="tickets.timeMeasureInHrsMin.text" param="<%= "hours="+thisDayDescription.getTravelHours()+"|minutes="+thisDayDescription.getTravelMinutes() %>"><%= thisDayDescription.getTravelHours() %> hrs &nbsp <%= thisDayDescription.getTravelMinutes() %> min</dhv:label> 
           </td>
           <td align="right" nowrap>
-            <%= thisDayDescription.getLaborHours() %> hrs &nbsp <%= thisDayDescription.getLaborMinutes() %> min 
+            <dhv:label name="tickets.timeMeasureInHrsMin.text" param="<%= "hours="+thisDayDescription.getLaborHours()+"|minutes="+thisDayDescription.getLaborMinutes() %>"><%= thisDayDescription.getLaborHours() %> hrs &nbsp <%= thisDayDescription.getLaborMinutes() %> min</dhv:label> 
           </td>
           <td>
             <%=toHtml(thisDayDescription.getDescriptionOfService())%>
@@ -89,16 +101,16 @@
       <%}%>
       <tr class="containerBody">
           <td align="center" bgcolor="#E8E8E8">
-            <strong>Total</strong>
+            <strong><dhv:label name="accounts.accounts_contacts_listimports.Total">Total</dhv:label></strong>
           </td>
           <td align="right" bgcolor="#E8E8E8">
           <strong>
-            <%= activityDetails.getTotalTravelHours() %>hrs &nbsp <%= activityDetails.getTotalTravelMinutes() %>min
+            <dhv:label name="tickets.timeMeasureInHrsMin.text" param="<%= "hours="+activityDetails.getTotalTravelHours()+"|minutes="+activityDetails.getTotalTravelMinutes() %>"><%= activityDetails.getTotalTravelHours() %> hrs &nbsp <%= activityDetails.getTotalTravelMinutes() %> min</dhv:label>
            </strong>
         </td>
         <td align="right" bgcolor="#E8E8E8">
           <strong>
-           <%= activityDetails.getTotalLaborHours() %>hrs &nbsp <%= activityDetails.getTotalLaborMinutes() %>min
+            <dhv:label name="tickets.timeMeasureInHrsMin.text" param="<%= "hours="+activityDetails.getTotalLaborHours()+"|minutes="+activityDetails.getTotalLaborMinutes() %>"><%= activityDetails.getTotalLaborHours() %> hrs &nbsp <%= activityDetails.getTotalLaborMinutes() %> min</dhv:label>
           </strong>
         </td>
         <td bgcolor="#E8E8E8">&nbsp;</td>
@@ -106,7 +118,7 @@
       <%}else{ %>
      <tr class="containerBody"> 
           <td colspan="4">
-            No activities recorded.
+            <dhv:label name="tickets.noActivitiesRecorded">No activities recorded.</dhv:label>
           </td>
      </tr>
      <%}%>
@@ -115,25 +127,25 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Additional Information</strong>
+	    <strong><dhv:label name="tickets.additionalInformation">Additional Information</dhv:label></strong>
 	  </th>
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Follow-up Required?
+      <dhv:label name="tickets.followupRequired.question">Follow-up Required?</dhv:label>
     </td>
     <td>
     <%if (activityDetails.getFollowUpRequired()){%>
-      Yes
+      <dhv:label name="account.yes">Yes</dhv:label>
     <%}else{%>
-      No
+      <dhv:label name="account.no">No</dhv:label>
     <%}%>
     </td>
   </tr>
   <dhv:evaluate if="<%= activityDetails.getAlertDate() != null %>">
     <tr class="containerBody">
       <td valign="top" class="formLabel">
-        Alert Date
+        <dhv:label name="accounts.accounts_add.AlertDate">Alert Date</dhv:label>
       </td>
       <td>
         <zeroio:tz timestamp="<%= activityDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= activityDetails.getAlertDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
@@ -147,7 +159,7 @@
   <dhv:evaluate if="<%= hasText(activityDetails.getFollowUpDescription()) %>">
     <tr class="containerBody">
       <td valign="top" class="formLabel">
-        Follow-up Description
+        <dhv:label name="reports.helpdesk.ticket.activity.followUpDesc">Follow-up Description</dhv:label>
       </td>
       <td>
         <%= toHtml(activityDetails.getFollowUpDescription()) %>
@@ -156,7 +168,7 @@
   </dhv:evaluate>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Phone Response Time
+      <dhv:label name="reports.helpdesk.ticket.activity.phoneResponseTime">Phone Response Time</dhv:label>
     </td>
     <td>
       <%=toHtml(activityDetails.getPhoneResponseTime())%>
@@ -164,7 +176,7 @@
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Engineer Response Time
+      <dhv:label name="tickets.engineerResponseTime">Engineer Response Time</dhv:label>
     </td>
     <td>
       <%=toHtml(activityDetails.getEngineerResponseTime())%>

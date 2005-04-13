@@ -74,7 +74,6 @@ public class HtmlSelect extends ArrayList {
    *  stateSelect.build(); <br>
    *  context.getRequest().setAttribute("StateSelect", stateSelect); <br>
    *
-   *
    *@since    1.0
    */
 
@@ -91,6 +90,22 @@ public class HtmlSelect extends ArrayList {
     while (i.hasNext()) {
       String thisItem = (String) i.next();
       this.addItem(thisItem);
+    }
+  }
+
+
+  /**
+   *Constructor for the HtmlSelect object
+   *
+   *@param  itemsToAdd  Description of the Parameter
+   */
+  public HtmlSelect(Map itemsToAdd) {
+    Iterator keys = itemsToAdd.keySet().iterator();
+    Iterator values = itemsToAdd.values().iterator();
+    while (keys.hasNext() && values.hasNext()) {
+      Integer key = (Integer) keys.next();
+      String value = (String) values.next();
+      this.addItem(key.intValue(), value);
     }
   }
 

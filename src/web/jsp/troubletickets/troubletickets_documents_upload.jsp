@@ -25,45 +25,38 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="document.inputForm.subject.focus();">
+<form method="post" name="inputForm" action="TroubleTicketsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
-  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+  <a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+  <a href="TroubleTickets.do?command=SearchTickets"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%}else{%> 
   <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>"><dhv:label name="tickets.details">Ticket Details</dhv:label></a> >
-<a href="TroubleTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>">Documents</a> >
-Add Document
+<a href="TroubleTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>"><dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></a> >
+<dhv:label name="account.ticket.addDocument">Add Document</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + TicketDetails.getId(); %>
-<dhv:container name="tickets" selected="documents" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-		<td class="containerBack">
-    <form method="post" name="inputForm" action="TroubleTicketsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
-    <%-- include add document form --%>
-      <%@ include file="documents_add_include.jsp" %>
-      <p align="center">
-        * Large files may take a while to upload.<br>
-        Wait for file completion message when upload is complete.
-      </p>
-      <input type="submit" value=" Upload " name="upload">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';">
-      <input type="hidden" name="dosubmit" value="true">
-      <input type="hidden" name="id" value="<%= TicketDetails.getId() %>">
-      <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>">
-      </form>
-    </td>
-  </tr>
- </form>
-</table>
-   
+<dhv:container name="tickets" selected="documents" object="TicketDetails" param="<%= param1 %>">
+  <%@ include file="ticket_header_include.jsp" %>
+  <%@ include file="documents_add_include.jsp" %>
+  <p align="center">
+    * <dhv:label name="accounts.accounts_documents_upload.LargeFilesUpload">Large files may take a while to upload.</dhv:label><br>
+    <dhv:label name="accounts.accounts_documents_upload.WaitForUpload">Wait for file completion message when upload is complete.</dhv:label>
+  </p>
+  <input type="submit" value=" <dhv:label name="global.button.Upload">Upload</dhv:label> " name="upload">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';">
+  <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="id" value="<%= TicketDetails.getId() %>">
+  <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>">
+</dhv:container>
+</form>
+

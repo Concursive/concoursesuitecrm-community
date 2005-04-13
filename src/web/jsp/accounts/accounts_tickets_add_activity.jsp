@@ -40,40 +40,31 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=ticketDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="Accounts.do?command=ViewTickets&orgId=<%=ticketDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
 <a href="AccountTickets.do?command=TicketDetails&id=<%=ticketDetails.getId()%>"><dhv:label name="accounts.tickets.details">Ticket Details</dhv:label></a> >
-<a href="AccountTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>">Activity Log</a> >
-Add Activity Log
+<a href="AccountTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>"><dhv:label name="tickets.activitylog.long_html">Activity Log</dhv:label></a> >
+<dhv:label name="project.addActivityLog">Add Activity Log</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<dhv:container name="accounts" selected="tickets" param="<%= "orgId=" + ticketDetails.getOrgId() %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <%@ include file="accounts_ticket_header_include.jsp" %>
-      <% String param2 = "id=" + ticketDetails.getId(); %>
-      [ <dhv:container name="accountstickets" selected="activitylog" param="<%= param2 %>"/> ]
-      <br />
-      <br />
-      <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
-      <input type="button" value="Cancel" onClick="window.location.href='AccountTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />
-      <br />
-      <dhv:formMessage />
-      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-      <%@ include file="../troubletickets/troubletickets_update_activity_include.jsp" %>
-      <br />
-      <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
-      <input type="button" value="Cancel" onClick="window.location.href='AccountTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />
-      <input type="hidden" name="dosubmit" value="true" />
-     </td>
-    </tr> 
-   </td>
- </tr>
-</table>
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:container name="accountstickets" selected="activitylog" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>">
+    <%@ include file="accounts_ticket_header_include.jsp" %>
+    <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />
+    <br />
+    <dhv:formMessage showSpace="false" />
+    <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+    <%@ include file="../troubletickets/troubletickets_update_activity_include.jsp" %>
+    <br />
+    <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>';this.form.dosubmit.value='false';" />
+    <input type="hidden" name="dosubmit" value="true" />
+    <input type="hidden" name="onlyWarnings" value="<%=(activityDetails.getOnlyWarnings()?"on":"off")%>" />
+  </dhv:container>
+</dhv:container>
 </form>
 

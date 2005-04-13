@@ -15,16 +15,15 @@
  */
 package org.aspcfs.modules.pipeline.beans;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.pipeline.base.*;
-import org.aspcfs.modules.base.Constants;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.controller.ObjectValidator;
+import org.aspcfs.modules.pipeline.base.OpportunityComponent;
+import org.aspcfs.modules.pipeline.base.OpportunityHeader;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *  Description of the Class
@@ -140,8 +139,17 @@ public class OpportunityBean extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    header.insert(db);
-    component.insert(db);
+    try {
+      db.setAutoCommit(false);
+      header.insert(db);
+      component.insert(db);
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
     return true;
   }
 
@@ -154,11 +162,11 @@ public class OpportunityBean extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean insert(Connection db, ActionContext context) throws SQLException {
+  public boolean insert(Connection db, ActionContext context) throws Exception {
     boolean headerInserted = false;
     boolean componentInserted = false;
-    boolean isComponentValid = component.isValid();
-    boolean isHeaderValid = header.isValid();
+    boolean isComponentValid = ObjectValidator.validate(null, db, component);
+    boolean isHeaderValid = ObjectValidator.validate(null, db, header);
     if (!isComponentValid || !isHeaderValid) {
       return false;
     }

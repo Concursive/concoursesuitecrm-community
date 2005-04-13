@@ -31,7 +31,11 @@ import org.aspcfs.utils.DatabaseUtils;
 public class OrderPaymentList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
   private int orderId = -1;
+  private int orderItemId = -1;
+  private int statusId = -1;
+  private int historyId = -1;
   private int paymentMethodId = -1;
+  private String status = null;
 
 
   /**
@@ -81,6 +85,116 @@ public class OrderPaymentList extends ArrayList {
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
+  }
+
+
+  /**
+   *  Sets the orderItemId attribute of the OrderPaymentList object
+   *
+   * @param  tmp  The new orderItemId value
+   */
+  public void setOrderItemId(int tmp) {
+    this.orderItemId = tmp;
+  }
+
+
+  /**
+   *  Sets the orderItemId attribute of the OrderPaymentList object
+   *
+   * @param  tmp  The new orderItemId value
+   */
+  public void setOrderItemId(String tmp) {
+    this.orderItemId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the OrderPaymentList object
+   *
+   * @param  tmp  The new statusId value
+   */
+  public void setStatusId(int tmp) {
+    this.statusId = tmp;
+  }
+
+
+  /**
+   *  Sets the statusId attribute of the OrderPaymentList object
+   *
+   * @param  tmp  The new statusId value
+   */
+  public void setStatusId(String tmp) {
+    this.statusId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the historyId attribute of the OrderPaymentList object
+   *
+   * @param  tmp  The new historyId value
+   */
+  public void setHistoryId(int tmp) {
+    this.historyId = tmp;
+  }
+
+
+  /**
+   *  Sets the historyId attribute of the OrderPaymentList object
+   *
+   * @param  tmp  The new historyId value
+   */
+  public void setHistoryId(String tmp) {
+    this.historyId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the status attribute of the OrderPaymentList object
+   *
+   * @param  tmp  The new status value
+   */
+  public void setStatus(String tmp) {
+    this.status = tmp;
+  }
+
+
+  /**
+   *  Gets the status attribute of the OrderPaymentList object
+   *
+   * @return    The status value
+   */
+  public String getStatus() {
+    return status;
+  }
+
+
+  /**
+   *  Gets the orderItemId attribute of the OrderPaymentList object
+   *
+   * @return    The orderItemId value
+   */
+  public int getOrderItemId() {
+    return orderItemId;
+  }
+
+
+  /**
+   *  Gets the statusId attribute of the OrderPaymentList object
+   *
+   * @return    The statusId value
+   */
+  public int getStatusId() {
+    return statusId;
+  }
+
+
+  /**
+   *  Gets the historyId attribute of the OrderPaymentList object
+   *
+   * @return    The historyId value
+   */
+  public int getHistoryId() {
+    return historyId;
   }
 
 
@@ -140,6 +254,8 @@ public class OrderPaymentList extends ArrayList {
     sqlCount.append(
         " SELECT COUNT(*) AS recordcount " +
         " FROM order_payment op " +
+        " LEFT JOIN lookup_payment_status ps " +
+        " ON ( op.status_id = ps.code ) " +
         " WHERE op.payment_id > -1 ");
 
     createFilter(sqlFilter);
@@ -185,10 +301,10 @@ public class OrderPaymentList extends ArrayList {
       sqlSelect.append("SELECT");
     }
     sqlSelect.append(
-        "       op.payment_id, op.order_id, op.payment_method_id, op.payment_amount, " +
-        "       op.authorization_ref_number, op.authorization_code, op.authorization_date, " +
-        "       op.entered, op.enteredby, op.modified, op.modifiedby " +
+        " op.*, ps.description AS status_description " +
         " FROM order_payment op " +
+        " LEFT JOIN lookup_payment_status ps " +
+        " ON ( op.status_id = ps.code ) " +
         " WHERE op.payment_id > -1 "
         );
 
@@ -226,6 +342,18 @@ public class OrderPaymentList extends ArrayList {
     if (orderId > -1) {
       sqlFilter.append("AND op.order_id = ? ");
     }
+    if (orderItemId > -1) {
+      sqlFilter.append(" AND op.order_item_id = ? ");
+    }
+    if (historyId > -1) {
+      sqlFilter.append(" AND op.history_id = ? ");
+    }
+    if (statusId > -1) {
+      sqlFilter.append(" AND op.status_id = ? ");
+    }
+    if (status != null) {
+      sqlFilter.append(" AND ps.description = ? ");
+    }
     if (paymentMethodId > -1) {
       sqlFilter.append("AND op.payment_method_id = ? ");
     }
@@ -244,10 +372,37 @@ public class OrderPaymentList extends ArrayList {
     if (orderId > -1) {
       pst.setInt(++i, orderId);
     }
+    if (orderItemId > -1) {
+      pst.setInt(++i, this.getOrderItemId());
+    }
+    if (historyId > -1) {
+      pst.setInt(++i, this.getHistoryId());
+    }
+    if (statusId > -1) {
+      pst.setInt(++i, this.getStatusId());
+    }
+    if (status != null) {
+      pst.setString(++i, this.getStatus());
+    }
     if (paymentMethodId > -1) {
       pst.setInt(++i, paymentMethodId);
     }
     return i;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+    Iterator iterator = this.iterator();
+    while (iterator.hasNext()) {
+      OrderPayment orderPayment = (OrderPayment) iterator.next();
+      orderPayment.delete(db);
+    }
   }
 }
 

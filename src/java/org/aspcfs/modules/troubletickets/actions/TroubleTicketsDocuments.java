@@ -15,21 +15,20 @@
  */
 package org.aspcfs.modules.troubletickets.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.base.Constants;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.isavvix.tools.FileInfo;
+import com.isavvix.tools.HttpMultiPartParser;
+import com.zeroio.iteam.actions.ProjectManagementFileFolders;
 import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import com.isavvix.tools.*;
-import java.io.*;
-import com.zeroio.iteam.actions.*;
+import com.zeroio.webutils.FileDownload;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  *  Description of the Class
@@ -153,10 +152,10 @@ public final class TroubleTicketsDocuments extends CFSModule {
       return ("PermissionError");
     }
 
-    Exception errorMessage = null;
     Connection db = null;
 
     boolean recordInserted = false;
+    boolean isValid = false;
     try {
       String filePath = this.getPath(context, "tickets");
 
@@ -173,6 +172,9 @@ public final class TroubleTicketsDocuments extends CFSModule {
       String folderId = (String) parts.get("folderId");
       if (folderId != null) {
         context.getRequest().setAttribute("folderId", folderId);
+      }
+      if (subject != null) {
+        context.getRequest().setAttribute("subject", subject);
       }
       int ticketId = addTicket(context, db, id);
 
@@ -193,34 +195,31 @@ public final class TroubleTicketsDocuments extends CFSModule {
         thisItem.setVersion(1.0);
         thisItem.setSize(newFileInfo.getSize());
 
-        recordInserted = thisItem.insert(db);
-        if (!recordInserted) {
-          processErrors(context, thisItem.getErrors());
+        isValid = this.validateObject(context, db, thisItem);
+        if (isValid) {
+          recordInserted = thisItem.insert(db);
         }
       } else {
         recordInserted = false;
         HashMap errors = new HashMap();
-        errors.put("actionError", "The file could not be sent by your computer, make sure the file exists");
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+        if (subject != null && "".equals(subject.trim())) {
+          errors.put("subjectError", systemStatus.getLabel("object.validation.required"));
+        }
         processErrors(context, errors);
-        context.getRequest().setAttribute("subject", subject);
-        context.getRequest().setAttribute("folderId", folderId);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       freeConnection(context, db);
     }
 
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("UploadOK");
-      } else {
-        return (executeCommandAdd(context));
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (recordInserted) {
+      return ("UploadOK");
     }
+    return (executeCommandAdd(context));
   }
 
 
@@ -240,6 +239,9 @@ public final class TroubleTicketsDocuments extends CFSModule {
       itemId = (String) context.getRequest().getAttribute("fid");
     }
     String folderId = context.getRequest().getParameter("folderId");
+    if (folderId == null) {
+      folderId = (String) context.getRequest().getAttribute("folderId");
+    }
     if (folderId != null) {
       context.getRequest().setAttribute("folderId", folderId);
     }
@@ -274,9 +276,9 @@ public final class TroubleTicketsDocuments extends CFSModule {
     if (!(hasPermission(context, "tickets-tickets-edit"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
+    boolean isValid = false;
     try {
       String filePath = this.getPath(context, "tickets");
       //Process the form data
@@ -294,6 +296,9 @@ public final class TroubleTicketsDocuments extends CFSModule {
       if (folderId != null) {
         context.getRequest().setAttribute("folderId", folderId);
       }
+      if (subject != null) {
+        context.getRequest().setAttribute("subject", subject);
+      }
       db = getConnection(context);
       int ticketId = addTicket(context, db, id);
       if ((Object) parts.get("id" + (String) parts.get("id")) instanceof FileInfo) {
@@ -310,33 +315,31 @@ public final class TroubleTicketsDocuments extends CFSModule {
         thisItem.setFilename(newFileInfo.getRealFilename());
         thisItem.setVersion(Double.parseDouble(versionId));
         thisItem.setSize(newFileInfo.getSize());
-        recordInserted = thisItem.insertVersion(db);
-        if (!recordInserted) {
-          processErrors(context, thisItem.getErrors());
+        isValid = this.validateObject(context, db, thisItem);
+        if (isValid) {
+          recordInserted = thisItem.insertVersion(db);
         }
       } else {
         recordInserted = false;
         HashMap errors = new HashMap();
-        errors.put("actionError", "The file could not be sent by your computer, make sure the file exists");
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+        if (subject != null && "".equals(subject.trim())) {
+          errors.put("subjectError", systemStatus.getLabel("object.validation.required"));
+        }
         processErrors(context, errors);
-        context.getRequest().setAttribute("subject", subject);
       }
       context.getRequest().setAttribute("fid", itemId);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("UploadOK");
-      } else {
-        return (executeCommandAddVersion(context));
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (recordInserted) {
+      return ("UploadOK");
     }
+    return (executeCommandAddVersion(context));
   }
 
 
@@ -399,6 +402,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
     String version = (String) context.getRequest().getParameter("ver");
     FileItem thisItem = null;
     String stream = (String) context.getRequest().getParameter("stream");
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     int ticketId = -1;
     try {
@@ -434,7 +438,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
         } else {
           db = null;
           System.err.println("TroubleTicketsDocuments-> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandView(context));
         }
       } else {
@@ -456,7 +460,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
         } else {
           db = null;
           System.err.println("TroubleTicketsDocuments-> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandView(context));
         }
       }
@@ -534,6 +538,7 @@ public final class TroubleTicketsDocuments extends CFSModule {
     }
     Exception errorMessage = null;
     boolean recordInserted = false;
+    boolean isValid = false;
     String folderId = context.getRequest().getParameter("folderId");
     if (folderId != null) {
       context.getRequest().setAttribute("folderId", folderId);
@@ -549,23 +554,22 @@ public final class TroubleTicketsDocuments extends CFSModule {
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), ticketId, Constants.DOCUMENTS_TICKETS);
       thisItem.setClientFilename(filename);
       thisItem.setSubject(subject);
-      recordInserted = thisItem.update(db);
+      isValid = this.validateObject(context, db, thisItem);
+      if (isValid) {
+        recordInserted = thisItem.update(db);
+      }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "ViewTickets", "");
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("UpdateOK");
-      } else {
-        context.getRequest().setAttribute("fid", itemId);
-        return (executeCommandModify(context));
-      }
+    if (recordInserted && isValid) {
+      return ("UpdateOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("fid", itemId);
+      return (executeCommandModify(context));
     }
   }
 

@@ -15,13 +15,12 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.Iterator;
 
 /**
  *  Represents a copied survey that can have questions and answers and belongs
@@ -167,13 +166,15 @@ public class ActiveSurvey extends SurveyBase {
    *@return                   The id value
    *@exception  SQLException  Description of the Exception
    */
-  public static int getId(Connection db, int activeCampaignId) throws SQLException {
+  public static int getId(Connection db, int activeCampaignId, int surveyType) throws SQLException {
     int surveyId = -1;
     PreparedStatement pst = db.prepareStatement(
         "SELECT active_survey_id " +
         "FROM active_survey " +
-        "WHERE campaign_id = ? ");
+        "WHERE campaign_id = ? " +
+        "AND type = ? ");
     pst.setInt(1, activeCampaignId);
+    pst.setInt(2, surveyType);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       surveyId = rs.getInt("active_survey_id");
@@ -378,7 +379,7 @@ public class ActiveSurvey extends SurveyBase {
    *@param  items  The new questions value
    */
   public void setQuestions(ActiveSurveyQuestionList items) {
-    this.questions = questions;
+    questions = items;
   }
 
 

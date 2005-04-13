@@ -119,7 +119,7 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Complete Activity
+          <dhv:label name="accounts.accounts_calls_list_menu.CompleteActivity">Complete Activity</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -130,7 +130,7 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Modify Activity
+<dhv:label name="contact.call.modifyActivity">Modify  Activity</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -141,7 +141,7 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Modify Activity
+<dhv:label name="contact.call.modifyActivity">Modify  Activity</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -152,7 +152,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Cancel Activity
+          <dhv:label name="accounts.accounts_calls_list_menu.CancelActivity">Cancel Activity</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -163,7 +163,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View Contact Details
+          <dhv:label name="calendar.viewContactDetails">View Contact Details</dhv:label>
         </td>
       </tr>
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
@@ -172,7 +172,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View Contact History
+          <dhv:label name="calendar.viewContactHistory">View Contact History</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -183,7 +183,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Go To Contact
+          <dhv:label name="calendar.goToContact">Go To Contact</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -194,7 +194,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Go To Account
+          <dhv:label name="calendar.goToAccount">Go To Account</dhv:label>
         </td>
       </tr>
       </dhv:permission>

@@ -1,0 +1,31 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  Set logos attribute to true for the quotes module
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+
+String module = "Quotes";
+boolean hasLogos = true;
+//Determine the category id
+int moduleId = -1;
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT category_id " +
+  "FROM permission_category " +
+  "WHERE category = '" + module + "'");
+if (rs.next()) {
+  moduleId = rs.getInt("category_id");
+}
+rs.close();
+st.close();
+
+if (moduleId != -1) {
+  PermissionCategory.updateLogosAttribute(db, moduleId, hasLogos);
+	print("Logos attribute for Quotes set to true");
+}
+
+

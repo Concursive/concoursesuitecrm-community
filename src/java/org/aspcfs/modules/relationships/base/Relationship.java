@@ -499,9 +499,6 @@ public class Relationship extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid(db)) {
-      return false;
-    }
     try {
       db.setAutoCommit(false);
       StringBuffer sql = new StringBuffer();
@@ -571,7 +568,7 @@ public class Relationship extends GenericBean {
     if (id == -1) {
       throw new SQLException("Relationship ID not specified");
     }
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     try {
@@ -623,7 +620,6 @@ public class Relationship extends GenericBean {
     recordCount = pst.executeUpdate();
     pst.close();
     if (recordCount == 0) {
-      errors.put("actionError", "Relationship could not be deleted because it no longer exists.");
       return false;
     }
     return true;
@@ -691,26 +687,6 @@ public class Relationship extends GenericBean {
     //lookup
     reciprocalName1 = rs.getString("reciprocal_name_1");
     reciprocalName2 = rs.getString("reciprocal_name_2");
-  }
-
-
-  /**
-   *  Gets the valid attribute of the Task object
-   *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  protected boolean isValid(Connection db) throws SQLException {
-
-    if (this.getObjectIdMapsFrom() == -1 || this.getObjectIdMapsTo() == -1) {
-      errors.put("objectIdError", "Both objects are required for a relationship");
-    }
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
 }

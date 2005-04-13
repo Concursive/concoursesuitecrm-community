@@ -17,7 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*" %>
+<%@ page import="java.io.*,java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*,org.aspcfs.modules.base.*" %>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
 <jsp:useBean id="SearchContactsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -30,24 +30,28 @@
 <script language="JavaScript" type="text/javascript">
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
+  function reopen() {
+    scrollReload('ExternalContacts.do?command=SearchContacts');
+  }
 </script>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do">Contacts</a> > 
-Search Results
+<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<dhv:label name="accounts.SearchResults">Search Results</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:permission name="contacts-external_contacts-add">
-  <a href="ExternalContacts.do?command=Prepare">Add a Contact</a>
+  <a href="ExternalContacts.do?command=Prepare"><dhv:label name="accounts.accounts_contacts_list.AddAContact">Add a Contact</dhv:label></a>
 </dhv:permission>
 <dhv:permission name="contacts-external_contacts-add" none="true">
   <br>
 </dhv:permission>
-<center><%= SearchContactsInfo.getAlphabeticalPageLinks() %></center>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="SearchContactsInfo"/></center></dhv:include>
 <table width="100%" border="0">
   <tr>
     <td>
@@ -57,26 +61,21 @@ Search Results
 </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <th valign="center">
-      <strong>Action</strong>
-    </th>
+    <th width="8">&nbsp;</th>
     <th nowrap>
-      <strong><a href="ExternalContacts.do?command=SearchContacts&column=c.namelast">Name</a></strong>
+      <strong><a href="ExternalContacts.do?command=SearchContacts&column=c.namelast"><dhv:label name="contacts.name">Name</dhv:label></a></strong>
       <%= SearchContactsInfo.getSortIcon("c.namelast") %>
     </th>
     <th nowrap>
-      <strong><a href="ExternalContacts.do?command=SearchContacts&column=c.company">Company</a></strong>
-      <%= SearchContactsInfo.getSortIcon("c.company") %>
+      <strong><a href="ExternalContacts.do?command=SearchContacts&column=c.org_name"><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></a></strong>
+      <%= SearchContactsInfo.getSortIcon("c.org_name") %>
     </th>
     <th>
-      <strong>Phone: Business</strong>
-    </th>
-    <th>
-      <strong>Phone: Mobile</strong>
+      <strong><dhv:label name="accounts.phones">Phone(s)</dhv:label></strong>
     </th>
     <dhv:evaluate if="<%= !"my".equals(SearchContactsInfo.getListView()) && !"".equals(SearchContactsInfo.getListView()) %>">
       <th>
-        <strong>Owner</strong>
+        <strong><dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label></strong>
       </th>
     </dhv:evaluate>
   </tr>
@@ -97,6 +96,7 @@ Search Results
           int hasEditPermission = 0;
           int hasDeletePermission = 0;
           int hasClonePermission = 0;
+          int hasAddressRequestPermission = 0;
           if(thisContact.getOrgId() < 0){ %>
           <dhv:permission name="contacts-external_contacts-edit">
             <% hasEditPermission = 1; %>
@@ -106,6 +106,9 @@ Search Results
           </dhv:permission>
           <dhv:permission name="contacts-external_contacts-add">
             <% hasClonePermission = 1; %>
+          </dhv:permission>
+          <dhv:permission name="contacts-external-contact-updater-view">
+            <% hasAddressRequestPermission = 1; %>
           </dhv:permission>
         <% }else{ %>
           <dhv:permission name="contacts-external_contacts-edit,accounts-accounts-contacts-edit"  all="true">
@@ -117,15 +120,19 @@ Search Results
           <dhv:permission name="contacts-external_contacts-add,accounts-accounts-contacts-add" all="true">
             <% hasClonePermission = 1; %>
           </dhv:permission>
+          <dhv:permission name="contacts-external-contact-updater-view,accounts-accounts-contact-updater-view" all="true">
+            <% hasAddressRequestPermission = 1; %>
+          </dhv:permission>
         <% } %>
         
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= count %>','menuContact','<%= thisContact.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>', '<%= hasClonePermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuContact');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+         <a href="javascript:displayMenu('select<%= count %>','menuContact','<%= thisContact.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>', '<%= hasClonePermission %>', '<%= hasAddressRequestPermission %>' ,'<%= thisContact.getOrgId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuContact');">
+         <img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
         </td>
         <td class="row<%= rowid %>" <%= "".equals(toString(thisContact.getNameFull())) ? "width=\"10\"" : ""  %> nowrap>
           <% if(!"".equals(toString(thisContact.getNameFull()))){ %>
           <a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameFull()) %></a>
-          <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
+          <%= thisContact.getEmailAddressTag("", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
           <dhv:permission name="accounts-view,accounts-accounts-view"><%= ((thisContact.getOrgId() > 0 )?"<a href=\"Accounts.do?command=Details&orgId=" + thisContact.getOrgId() + "\">[Account]</a>":"")%></dhv:permission>
           <% }else{ %>
             &nbsp;
@@ -136,15 +143,18 @@ Search Results
             <%= toHtml(thisContact.getOrgName()) %>
           <%}else{%>
             <a href="ExternalContacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getOrgName()) %></a>
-            <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
+            <%= thisContact.getEmailAddressTag("", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
           <%}%>
         </td>
         <td class="row<%= rowid %>" nowrap>
-          <%= toHtml(thisContact.getPhoneNumber("Business")) %>
-        </td>
-        <td class="row<%= rowid %>" nowrap>
-          <%= toHtml(thisContact.getPhoneNumber("Mobile")) %>
-        </td>
+          <%
+            Iterator phoneItr = thisContact.getPhoneNumberList().iterator();
+            while (phoneItr.hasNext()) {
+              PhoneNumber phoneNumber = (PhoneNumber)phoneItr.next(); %>
+              <%= phoneNumber.getPhoneNumber()%>(<%=phoneNumber.getTypeName()%>)
+              <%=(phoneItr.hasNext()?"<br />":"")%>
+           <%}%>&nbsp;
+          </td>
         <dhv:evaluate if="<%= !"my".equals(SearchContactsInfo.getListView()) && !"".equals(SearchContactsInfo.getListView()) %>">
           <td class="row<%= rowid %>" nowrap>
             <dhv:username id="<%= thisContact.getOwner() %>"/>
@@ -156,8 +166,8 @@ Search Results
   } else {%>  
   <tr>
     <td class="containerBody" colspan="5">
-      No contacts found with the specified search parameters.<br />
-      <a href="ExternalContacts.do?command=SearchContactsForm">Modify Search</a>.
+      <dhv:label name="contact.noContactsFound.text">No contacts found with the specified search parameters.</dhv:label><br />
+      <a href="ExternalContacts.do?command=SearchContactsForm"><dhv:label name="accounts.accounts_list.ModifySearch">Modify Search</dhv:label></a>.
     </td>
   </tr>
 <%}%>

@@ -15,25 +15,20 @@
  */
 package org.aspcfs.modules.troubletickets.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import java.lang.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import java.sql.Timestamp;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.accounts.base.Organization;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.login.beans.UserBean;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import java.text.*;
-import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.modules.troubletickets.base.TicketMaintenanceNote;
+import org.aspcfs.modules.troubletickets.base.TicketMaintenanceNoteList;
+import org.aspcfs.modules.troubletickets.base.TicketReplacementPart;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *  Action class to view, add, edit, delete and list maintenance notes
@@ -172,6 +167,7 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
       return ("PermissionError");
     }
     Connection db = null;
+    boolean isValid = false;
     try {
       String ticketId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
@@ -185,14 +181,28 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
       String descriptionOfService = context.getRequest().getParameter("descriptionOfService");
       thisMaintenance.setDescriptionOfService(descriptionOfService);
       thisMaintenance.setRequestItems(context.getRequest());
-      thisMaintenance.insert(db);
+      isValid = this.validateObject(context, db, thisMaintenance);
+      int i=1;
+      for (Iterator iterator = (Iterator) thisMaintenance.getTicketReplacementPartList().iterator();iterator.hasNext();i++) {
+        TicketReplacementPart replacementPart = (TicketReplacementPart) iterator.next();
+        HashMap map = new HashMap();
+        isValid = this.validateObject(context, db , replacementPart, map ) && isValid;
+      }
+      if (isValid) {
+        thisMaintenance.insert(db);
+      } else {
+        context.getRequest().setAttribute("maintenanceDetails", thisMaintenance);
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    return executeCommandList(context);
+    if (isValid) {
+      return executeCommandList(context);
+    }
+    return executeCommandAdd(context);
   }
 
 
@@ -207,6 +217,7 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
       return ("PermissionError");
     }
     Connection db = null;
+    boolean isValid = false;
     int resultCount = -1;
     try {
       String ticketId = context.getRequest().getParameter("id");
@@ -224,9 +235,15 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
       thisMaintenance.setRequestItems(context.getRequest());
       String modified = context.getRequest().getParameter("modified");
       thisMaintenance.setModified(modified);
-      resultCount = thisMaintenance.update(db);
-      if (resultCount == -1) {
-        processErrors(context, thisMaintenance.getErrors());
+      isValid = this.validateObject(context, db, thisMaintenance);
+      int i=1;
+      for (Iterator iterator = (Iterator) thisMaintenance.getTicketReplacementPartList().iterator();iterator.hasNext();i++) {
+        TicketReplacementPart replacementPart = (TicketReplacementPart) iterator.next();
+        HashMap map = new HashMap();
+        isValid = this.validateObject(context, db , replacementPart, map ) && isValid;
+      }
+      if (isValid) {
+        resultCount = thisMaintenance.update(db);
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -234,15 +251,16 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (resultCount == -1) {
-      return (executeCommandModify(context));
-    } else if (resultCount == 1) {
+    if (resultCount == 1) {
       if ("list".equals(context.getRequest().getParameter("return"))) {
         return executeCommandList(context);
       } else {
         return executeCommandView(context);
       }
     } else {
+      if (resultCount == -1) {
+        return (executeCommandModify(context));
+      }
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return ("UserError");
     }
@@ -303,15 +321,16 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
       String formId = context.getRequest().getParameter("formId");
       // Load the ticket
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       Ticket thisTicket = new Ticket();
       thisTicket.queryRecord(db, Integer.parseInt(ticketId));
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       // Prepare the HTML Dialog
-      htmlDialog.setTitle("Centric CRM: Confirm Delete");
-      htmlDialog.addMessage("\nAre you sure you want to delete this form?");
-      htmlDialog.setHeader("The form you are requesting to delete may have dependencies within Centric CRM:");
-      htmlDialog.addButton("Delete", "javascript:window.location.href='TroubleTicketMaintenanceNotes.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
-      htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
+      htmlDialog.addMessage("\n"+systemStatus.getLabel("confirmdelete.message.question"));
+      htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
+      htmlDialog.addButton(systemStatus.getLabel("button.delete"), "javascript:window.location.href='TroubleTicketMaintenanceNotes.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
+      htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -336,6 +355,7 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
     boolean recordDeleted = false;
     Ticket thisTicket = null;
     Connection db = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     // Process the parameters
     String ticketId = context.getRequest().getParameter("id");
     int formId = Integer.parseInt((String) context.getRequest().getParameter("formId"));
@@ -347,7 +367,7 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
       thisMaintenance.setId(formId);
       recordDeleted = thisMaintenance.delete(db);
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError", "The note could not be deleted because of referential integrity .");
+      context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.noteDeletion"));
       context.getRequest().setAttribute("refreshUrl", "TroubleTicketMaintenanceNotes.do?command=View&id=" + ticketId);
       return ("DeleteError");
     } finally {
@@ -356,12 +376,12 @@ public final class TroubleTicketMaintenanceNotes extends CFSModule {
     // The record was deleted
     if (recordDeleted) {
       context.getRequest().setAttribute("refreshUrl", "TroubleTicketMaintenanceNotes.do?command=List&id=" + ticketId);
-      return this.getReturn(context, "Delete");
+      return getReturn(context, "Delete");
     }
     // An error occurred, so notify the user
     processErrors(context, thisTicket.getErrors());
     context.getRequest().setAttribute("refreshUrl", "TroubleTicketMaintenanceNotes.do?command=View&id=" + ticketId + "&formId=" + formId);
-    return this.getReturn(context, "Delete");
+    return getReturn(context, "Delete");
   }
 }
 

@@ -15,13 +15,16 @@
  */
 package org.aspcfs.modules.tasks.base;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import javax.servlet.http.HttpServletRequest;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  Queries the task category list depending on the supplied parameters
@@ -32,13 +35,8 @@ import org.aspcfs.utils.DatabaseUtils;
  *      Exp $
  */
 public class TaskCategoryList extends ArrayList {
-  /**
-   *  Description of the Field
-   */
+  
   protected PagedListInfo pagedListInfo = null;
-  /**
-   *  Description of the Field
-   */
   protected int projectId = -1;
 
 
@@ -212,6 +210,63 @@ public class TaskCategoryList extends ArrayList {
       TaskCategory thisCategory = (TaskCategory) categories.next();
       thisCategory.delete(db);
     }
+  }
+  
+  
+  /**
+   *  Gets the htmlSelect attribute of the TaskCategoryList object
+   *
+   *@param  selectName  Description of the Parameter
+   *@param  selectedId  Description of the Parameter
+   *@return             The htmlSelect value
+   */
+  public String getHtmlSelect(String selectName, int selectedId) {
+    HtmlSelect thisSelect = new HtmlSelect();
+    thisSelect.addItem(-1, "-- None --");
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      TaskCategory thisCategory = (TaskCategory) i.next();
+      thisSelect.addItem(
+          thisCategory.getId(),
+          thisCategory.getDescription());
+    }
+    return thisSelect.getHtml(selectName, selectedId);
+  }
+
+
+  /**
+   *  Gets the valueFromId attribute of the TaskCategoryList object
+   *
+   *@param  id  Description of the Parameter
+   *@return     The valueFromId value
+   */
+  public String getValueFromId(int id) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      TaskCategory thisCategory = (TaskCategory) i.next();
+      if (thisCategory.getId() == id) {
+        return thisCategory.getDescription();
+      }
+    }
+    return null;
+  }
+
+
+  /**
+   *  Gets the htmlSelect attribute of the TaskCategoryList object
+   *
+   *@return    The htmlSelect value
+   */
+  public HtmlSelect getHtmlSelect() {
+    HtmlSelect thisSelect = new HtmlSelect();
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      TaskCategory thisCategory = (TaskCategory) i.next();
+      thisSelect.addItem(
+          thisCategory.getId(),
+          thisCategory.getDescription());
+    }
+    return thisSelect;
   }
 }
 

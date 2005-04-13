@@ -15,20 +15,20 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.sql.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.accounts.base.OrganizationReport;
-import org.aspcfs.modules.accounts.base.Organization;
-import com.zeroio.webutils.*;
-import java.io.*;
-import java.text.*;
-import org.aspcfs.modules.admin.base.User;
 import com.zeroio.iteam.base.FileItem;
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.accounts.base.OrganizationReport;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.base.*;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  *  Description of the Class
@@ -42,7 +42,7 @@ public class ContactReport extends ContactList {
   protected Report rep = new Report();
   //default delimiter is comma
   protected String delimiter = ",";
-  protected String header = "CFS Contacts and Resources";
+  protected String header = null;
   protected String tdFormat = "";
   protected String filePath = "";
   protected String filenameToUse = "";
@@ -367,9 +367,7 @@ public class ContactReport extends ContactList {
     if (criteriaString != null) {
       params = criteriaString;
     }
-
     criteria = new ArrayList(Arrays.asList(params));
-    this.criteria = criteria;
   }
 
 

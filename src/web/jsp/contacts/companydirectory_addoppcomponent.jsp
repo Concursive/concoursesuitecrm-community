@@ -26,8 +26,8 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].description.focus();">
-<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
+<body onLoad="javascript:document.opportunityForm.description.focus();">
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
@@ -45,28 +45,23 @@
     message = "";
     alertMessage = "";
     if (form.low.value != "" && form.low.value != "" && (parseInt(form.low.value) > parseInt(form.high.value))) { 
-      message += "- Low Estimate cannot be higher than High Estimate\r\n";
+      message += label("low.estimate", "- Low Estimate cannot be higher than High Estimate\r\n");
       formTest = false;
     }
-    if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
-      message += "- Please specify an alert date\r\n";
+    if ((!checkNullString(form.alertText.value)) && (checkNullString(form.alertDate.value))) { 
+      message += label("specify.alert.date", "- Please specify an alert date\r\n");
       formTest = false;
     }
-    if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
-      message += "- Please specify an alert description\r\n";
+    if ((!checkNullString(form.alertDate.value)) && (checkNullString(form.alertText.value))) { 
+      message += label("specify.alert.description", "- Please specify an alert description\r\n");
       formTest = false;
     }
     if (!checkNumber(form.commission.value)) { 
-      message += "- Commission entered is invalid\r\n";
+      message += label("commission.entered.invalid", "- Commission entered is invalid\r\n");
       formTest = false;
     }
-    
-    if ((!form.alertDate.value == "") && (!checkAlertDate(form.alertDate.value))) { 
-      alertMessage += "Alert Date before today's date\r\n";
-    }
-      
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     } else {
       if(alertMessage != ""){
@@ -81,56 +76,43 @@
  }
 </script>
 <form name="opportunityForm" action="ExternalContactsOppComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<dhv:evaluate exp="<%= !isPopup(request) %>">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do">Contacts</a> > 
-<a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
-<a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>">Contact Details</a> >
-<a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>">Opportunities</a> >
-<a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>">Opportunity Details</a> >
-Add Component
+<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+<a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
+<a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.Opportunities">Opportunities</dhv:label></a> >
+<a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> >
+<dhv:label name="accounts.accounts_opportunities_addoppcomponent.AddComponent">Add Component</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<%@ include file="contact_details_header_include.jsp" %>
-<% String param1 = "id=" + ContactDetails.getId(); %>      
-<dhv:container name="contacts" selected="opportunities" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <%-- Begin container content --%>
-      <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
-      <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
-      <% FileItem thisFile = new FileItem(); %>
-      <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
-        <%= thisFile.getImageTag() %>
-      </dhv:evaluate>
-      <br>
-      <br>
-      <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
-<br />
-<dhv:formMessage />
-<%--  include basic opportunity form --%>
-<%@ include file="../pipeline/opportunity_include.jsp" %>
-&nbsp;
-<br>
-<input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&id=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
-<input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
-<input type="hidden" name="dosubmit" value="true">
-<input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
-<input type="hidden" name="actionSource" value="ExternalContactsOppComponents">
-<%-- End container contents --%>
-    </td>
-  </tr>
-</table>
-<%-- End container --%>
-
+<dhv:container name="contacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
+  <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
+  <% FileItem thisFile = new FileItem(); %>
+  <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
+    <%= thisFile.getImageTag() %>
+  </dhv:evaluate>
+  <br>
+  <br>
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+  <br />
+  <dhv:formMessage />
+  <%@ include file="../pipeline/opportunity_include.jsp" %>
+  <br />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='ExternalContactsOpps.do?command=DetailsOpp&id=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %>';this.form.dosubmit.value='false';">
+  <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
+  <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
+  <input type="hidden" name="actionSource" value="ExternalContactsOppComponents">
+</dhv:container>
 </form>
 </body>

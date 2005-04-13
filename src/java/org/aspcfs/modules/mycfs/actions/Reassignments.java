@@ -15,24 +15,26 @@
  */
 package org.aspcfs.modules.mycfs.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.mycfs.base.*;
-import org.aspcfs.modules.actions.CFSModule;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.AssignmentList;
 import org.aspcfs.modules.accounts.base.OrganizationList;
-import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.modules.pipeline.base.*;
-import org.aspcfs.modules.admin.base.UserList;
-import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.login.beans.UserBean;
-import org.aspcfs.modules.troubletickets.base.TicketList;
 import org.aspcfs.modules.accounts.base.RevenueList;
+import org.aspcfs.modules.actionlist.base.ActionLists;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.CallList;
 import org.aspcfs.modules.contacts.base.ContactList;
-import java.sql.*;
-import java.util.*;
-import com.zeroio.iteam.base.*;
+import org.aspcfs.modules.documents.base.DocumentStoreTeamMember;
+import org.aspcfs.modules.documents.base.DocumentStoreTeamMemberList;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.pipeline.base.OpportunityComponentList;
+import org.aspcfs.modules.pipeline.base.OpportunityList;
+import org.aspcfs.modules.troubletickets.base.TicketList;
+import org.aspcfs.controller.SystemStatus;
+
+import java.sql.Connection;
 
 /**
  *  Handles reassigning user data
@@ -55,7 +57,7 @@ public final class Reassignments extends CFSModule {
       return ("PermissionError");
     }
     Connection db = null;
-
+    SystemStatus thisSystem = this.getSystemStatus(context);
     User thisRec = ((UserBean) context.getSession().getAttribute("User")).getUserRecord();
     int userId = -1;
     User sourceUser = null;
@@ -68,13 +70,16 @@ public final class Reassignments extends CFSModule {
     AssignmentList sourceAssignments = null;
     OpportunityList sourceOpportunities = null;
     OpportunityList sourceOpenOpportunities = null;
+    DocumentStoreTeamMemberList sourceDocumentStoreTeamMemberList = null;
+    CallList sourcePendingActivities = null;
+    ActionLists sourceActionLists = null;
     //Get the multiple-level heirarchy
     UserList shortChildList = thisRec.getShortChildList();
     UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
     userList.setMyId(getUserId(context));
     userList.setMyValue(thisRec.getContact().getNameLastFirst());
     userList.setIncludeMe(true);
-    userList.setEmptyHtmlSelectRecord("None Selected");
+    userList.setEmptyHtmlSelectRecord(thisSystem.getLabel("accounts.accounts_add.NoneSelected"));
     //Check to see if a user is selected AND if they are in the hierarchy
     if (context.getRequest().getParameter("userId") != null) {
       userId = Integer.parseInt(context.getRequest().getParameter("userId"));
@@ -98,6 +103,8 @@ public final class Reassignments extends CFSModule {
 
         sourceContacts = new ContactList();
         sourceContacts.setOwner(userId);
+        sourceContacts.setLeadsOnly(Constants.FALSE);
+        sourceContacts.setEmployeesOnly(Constants.FALSE);
         sourceContacts.setBuildDetails(false);
         sourceContacts.setBuildTypes(false);
         sourceContacts.buildList(db);
@@ -135,6 +142,25 @@ public final class Reassignments extends CFSModule {
         sourceOpenOpportunities.setQueryOpenOnly(true);
         sourceOpenOpportunities.buildList(db);
         context.getRequest().setAttribute("SourceOpenOpportunities", sourceOpenOpportunities);
+
+        sourceDocumentStoreTeamMemberList = new DocumentStoreTeamMemberList();
+        sourceDocumentStoreTeamMemberList.setForDocumentStoreUser(userId);
+        sourceDocumentStoreTeamMemberList.setMemberType(DocumentStoreTeamMemberList.USER);
+        sourceDocumentStoreTeamMemberList.setUserLevel(DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER);
+        sourceDocumentStoreTeamMemberList.buildList(db);
+        context.getRequest().setAttribute("SourceDocumentStores", sourceDocumentStoreTeamMemberList);
+        
+        sourcePendingActivities = new CallList();
+        sourcePendingActivities.setOwner(userId);
+        sourcePendingActivities.setOnlyPending(true);
+        sourcePendingActivities.buildList(db);
+        context.getRequest().setAttribute("SourcePendingActivities", sourcePendingActivities);
+        
+        sourceActionLists = new ActionLists();
+        sourceActionLists.setOwner(userId);
+        sourceActionLists.setInProgressOnly(true);
+        sourceActionLists.buildList(db);
+        context.getRequest().setAttribute("SourceInProgressActionLists", sourceActionLists);
       } catch (Exception e) {
         context.getRequest().setAttribute("Error", e);
         return ("SystemError");
@@ -232,6 +258,24 @@ public final class Reassignments extends CFSModule {
     if (context.getRequest().getParameter("ownerToActivities") != null) {
       targetIdAssignments = Integer.parseInt(context.getRequest().getParameter("ownerToActivities"));
     }
+    //Document Store Assignments
+    DocumentStoreTeamMemberList sourceDocumentStoreTeamMemberList = null;
+    int targetIdDocumentStores = -1;
+    if (context.getRequest().getParameter("ownerToOpenDocumentStores") != null) {
+      targetIdDocumentStores = Integer.parseInt(context.getRequest().getParameter("ownerToOpenDocumentStores"));
+    }
+    // Pending Activities
+    CallList sourcePendingActivities = null;
+    int targetIdActivities = -1;
+    if (context.getRequest().getParameter("ownerToPendingActivities") != null) {
+      targetIdActivities = Integer.parseInt(context.getRequest().getParameter("ownerToPendingActivities"));
+    }
+    // In Progress Action Lists
+    ActionLists sourceActionLists = null;
+    int targetIdActionLists = -1;
+    if (context.getRequest().getParameter("ownerToActionLists") != null) {
+      targetIdActionLists = Integer.parseInt(context.getRequest().getParameter("ownerToActionLists"));
+    }
     try {
       db = getConnection(context);
       //Reassign accounts
@@ -239,16 +283,18 @@ public final class Reassignments extends CFSModule {
         sourceAccounts = new OrganizationList();
         sourceAccounts.setOwnerId(userId);
         sourceAccounts.buildList(db);
-        sourceAccounts.reassignElements(db, targetIdAccounts);
+        sourceAccounts.reassignElements(db, targetIdAccounts, this.getUserId(context));
       }
       //Reassign contacts
       if (targetIdContacts > -1) {
         sourceContacts = new ContactList();
         sourceContacts.setOwner(userId);
+        sourceContacts.setLeadsOnly(Constants.FALSE);
+        sourceContacts.setEmployeesOnly(Constants.FALSE);
         sourceContacts.setBuildDetails(false);
         sourceContacts.setBuildTypes(false);
         sourceContacts.buildList(db);
-        sourceContacts.reassignElements(db, targetIdContacts);
+        sourceContacts.reassignElements(db, targetIdContacts, this.getUserId(context));
       }
       //Reassign opportunities
       if (targetIdOpenOpps > -1) {
@@ -256,7 +302,8 @@ public final class Reassignments extends CFSModule {
         sourceOpenOpps.setOwner(userId);
         sourceOpenOpps.setQueryOpenOnly(true);
         sourceOpenOpps.buildList(db);
-        sourceOpenOpps.reassignElements(db, targetIdOpenOpps);
+        sourceOpenOpps.reassignElements(db, targetIdOpenOpps, this.getUserId(context));
+        invalidateUserInMemory(userId, context);
         invalidateUserInMemory(targetIdOpenOpps, context);
       }
       //Reassign opportunities
@@ -264,7 +311,8 @@ public final class Reassignments extends CFSModule {
         sourceOpps = new OpportunityComponentList();
         sourceOpps.setOwner(userId);
         sourceOpps.buildList(db);
-        sourceOpps.reassignElements(db, targetIdOpps);
+        sourceOpps.reassignElements(db, targetIdOpps, this.getUserId(context));
+        invalidateUserInMemory(userId, context);
         invalidateUserInMemory(targetIdOpps, context);
       }
       //Reassign revenue
@@ -272,7 +320,8 @@ public final class Reassignments extends CFSModule {
         sourceRevenue = new RevenueList();
         sourceRevenue.setOwner(userId);
         sourceRevenue.buildList(db);
-        sourceRevenue.reassignElements(db, targetIdRevenue);
+        sourceRevenue.reassignElements(db, targetIdRevenue, this.getUserId(context));
+        invalidateUserInMemory(userId, context);
         invalidateUserInMemory(targetIdRevenue, context);
       }
       //Reassign open tickets
@@ -281,14 +330,14 @@ public final class Reassignments extends CFSModule {
         sourceOpenTickets.setAssignedTo(userId);
         sourceOpenTickets.setOnlyOpen(true);
         sourceOpenTickets.buildList(db);
-        sourceOpenTickets.reassignElements(db, targetIdOpenTickets);
+        sourceOpenTickets.reassignElements(db, targetIdOpenTickets, this.getUserId(context));
       }
       //Reassign users
       if (targetIdUsers > -1) {
         sourceUsers = new UserList();
         sourceUsers.setManagerId(userId);
         sourceUsers.buildList(db);
-        sourceUsers.reassignElements(db, targetIdUsers);
+        sourceUsers.reassignElements(db, targetIdUsers, this.getUserId(context));
         thisRec.setBuildHierarchy(true);
         thisRec.buildResources(db);
       }
@@ -298,7 +347,27 @@ public final class Reassignments extends CFSModule {
         sourceAssignments.setAssignmentsForUser(userId);
         sourceAssignments.setIncompleteOnly(true);
         sourceAssignments.buildList(db);
-        sourceAssignments.reassignElements(db, targetIdAssignments);
+        sourceAssignments.reassignElements(db, targetIdAssignments, this.getUserId(context));
+      }
+      //Reassign document stores
+      if (targetIdDocumentStores > -1){
+        DocumentStoreTeamMemberList.reassignElements(db,userId,targetIdDocumentStores, this.getUserId(context));
+      }
+      // Pending Activities
+      if (targetIdActivities > -1) {
+        sourcePendingActivities = new CallList();
+        sourcePendingActivities.setOwner(userId);
+        sourcePendingActivities.setOnlyPending(true);
+        sourcePendingActivities.buildList(db);
+        int numberOfReassignedActivities = sourcePendingActivities.reassignElements(db, context, targetIdActivities, this.getUserId(context));
+      }
+      // In Progress Action Lists
+      if (targetIdActionLists > -1) {
+        sourceActionLists = new ActionLists();
+        sourceActionLists.setOwner(userId);
+        sourceActionLists.setInProgressOnly(true);
+        sourceActionLists.buildList(db);
+        int numberOfReassignedActionLists = sourceActionLists.reassignElements(db, targetIdActionLists, this.getUserId(context));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

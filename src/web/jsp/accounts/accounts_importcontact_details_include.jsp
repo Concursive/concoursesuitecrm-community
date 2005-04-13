@@ -49,13 +49,13 @@
     <%-- The type of contact showing --%>
     <td align="right" valign="top" nowrap>
       <dhv:evaluate if="<%= ContactDetails.getOrgId() > 0 %>">
-        <i>Account Contact</i>
+        <i><dhv:label name="accounts.accounts_importcontact_details_include.AccountContact">Account Contact</dhv:label></i>
       </dhv:evaluate>
       <dhv:evaluate if="<%= ContactDetails.getOrgId() == 0 %>">
-        <i>Employee</i>
+        <i><dhv:label name="accounts.accounts_importcontact_details_include.Employee">Employee</dhv:label></i>
       </dhv:evaluate>
       <dhv:evaluate if="<%= ContactDetails.getOrgId() == -1 %>">
-        <i>General Contact</i>
+        <i><dhv:label name="accounts.accounts_importcontact_details_include.GeneralContact">General Contact</dhv:label></i>
       </dhv:evaluate>
       <%-- Contact category types, skip employees --%>
       <dhv:evaluate if="<%= ContactDetails.getOrgId() != 0 && hasText(ContactDetails.getTypesNameString()) %>">

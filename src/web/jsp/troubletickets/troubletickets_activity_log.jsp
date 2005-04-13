@@ -34,39 +34,34 @@
 <SCRIPT language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" type="text/javascript">
+  <%-- Preload image rollovers for drop-down menu --%>
+  loadImages('select');
 </script>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="TroubleTickets.do?"><dhv:label name="tickets.helpdesk"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></dhv:label></a> > 
+<a href="TroubleTickets.do?"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
     <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
-      <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-      <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+      <a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+      <a href="TroubleTickets.do?command=SearchTickets"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
     <%}else{%> 
       <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
     <%}%>
 <a href="TroubleTickets.do?command=Details&id=<%= ticketDetails.getId() %>"><dhv:label name="tickets.details">Ticket Details</dhv:label></a> >
-Activity Log
+<dhv:label name="tickets.activitylog.long_html">Activity Log</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + ticketDetails.getId(); %>
-<dhv:container name="tickets" selected="activitylog" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<script language="JavaScript" type="text/javascript">
-  <%-- Preload image rollovers for drop-down menu --%>
-  loadImages('select');
-</script>
+<dhv:container name="tickets" selected="activitylog" object="ticketDetails" param="<%= param1 %>">
+<%@ include file="ticket_header_include.jsp" %>
 <table cellspacing="0" border="0" width="100%">
   <tr>
     <td>
       <dhv:permission name="tickets-activity-log-add">
-        <a href="TroubleTicketActivityLog.do?command=Add&id=<%=ticketDetails.getId()%>">Add activities</a>
+        <a href="TroubleTicketActivityLog.do?command=Add&id=<%=ticketDetails.getId()%>"><dhv:label name="account.addActivities">Add activities</dhv:label></a>
       </dhv:permission>
       <dhv:permission name="tickets-activity-log-add" none="true"></dhv:permission>
     </td>
@@ -76,25 +71,25 @@ Activity Log
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="12%">
-      <strong>First Activity Date</strong>
+      <strong><dhv:label name="account.firstActivityDate">First Activity Date</dhv:label></strong>
     </th>
     <th width="12%">
-      <strong>Last Activity Date</strong>
+      <strong><dhv:label name="account.lastActivityDate">Last Activity Date</dhv:label></strong>
     </th>
     <th width="12%">
-      <strong>Follow Up?</strong>
+      <strong><dhv:label name="account.folowUp.question">Follow Up?</dhv:label></strong>
     </th>
     <th width="10%" nowrap>
-      <strong>Alert Date</strong>
+      <strong><dhv:label name="accounts.accounts_add.AlertDate">Alert Date</dhv:label></strong>
     </th>
     <th width="36%" nowrap>
-      <strong>Follow Up Description</strong>
+      <strong><dhv:label name="account.followUpDescription">Follow Up Description</dhv:label></strong>
     </th>
     <th width="10%" nowrap>
-      <strong>Modified</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label></strong>
     </th>
   </tr>
   <% 
@@ -124,7 +119,7 @@ Activity Log
 		</td>
 		<td width="12%" >
     <%if (thisMaintenance.getFollowUpRequired()) { %>
-    Yes
+    <dhv:label name="account.yes">Yes</dhv:label>
     <%}else{%>
     No
     <%}%>
@@ -138,7 +133,7 @@ Activity Log
 		</td>
 		<td width="48%" >
     <%if (thisMaintenance.getFollowUpRequired() == false) { %>
-    N/A
+      <dhv:label name="account.na">N/A</dhv:label>
     <%}else{%>
     <%= toHtml(thisMaintenance.getFollowUpDescription())%>
     <%}%>
@@ -153,14 +148,12 @@ Activity Log
     %>
     <tr>
       <td colspan="7" class="containerBody">
-        No activities found.
+        <dhv:label name="accounts.accounts_calls_list.NoActivitiesFound">No activities found.</dhv:label>
       </td>
     </tr>
     <%
     }
     %></table>
-<br>
-<dhv:pagedListControl object="TMListInfo"/>
- </td>
-</tr>
-</table>
+  <br>
+  <dhv:pagedListControl object="TMListInfo"/>
+</dhv:container>

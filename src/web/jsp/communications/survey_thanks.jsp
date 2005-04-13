@@ -20,7 +20,7 @@
 <%@ include file="../initPage.jsp" %>
 <html>
 <head>
-  <title>Thank you for visiting our survey page</title>
+  <title><dhv:label name="campaign.surveyPage.thankYou">Thank you for visiting our survey page</dhv:label></title>
 </head>
 <body>
 &nbsp;<br>
@@ -29,7 +29,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="85%">
   <tr class="row1">
     <td>
-      <font color="#8c8c8c"><strong>Web Survey</strong></font>
+      <font color="#8c8c8c"><strong><dhv:label name="campaign.webSurvey">Web Survey</dhv:label></strong></font>
     </td>
   </tr>
 </table>
@@ -37,7 +37,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="85%">
   <tr>
     <td>
-      <strong>Survey Submitted</strong>
+      <strong><dhv:label name="campaign.surveySubmitted">Survey Submitted</dhv:label></strong>
     </td>
   </tr>
   <tr>
@@ -50,7 +50,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="85%">
   <tr class="row1">
     <td align="center">
-      <font color="#8c8c8c"><strong>(C) 2002-2004 Dark Horse Ventures, LLC</strong></font>
+      <font color="#8c8c8c"><strong>(C) 2000-2005 Dark Horse Ventures, LLC</strong></font>
     </td>
   </tr>
 </table>

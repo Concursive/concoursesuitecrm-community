@@ -12,16 +12,18 @@
 <%-- This jsp shows a calendar to the user and sends the selected date back
      to the calling form.
      NOTE: THIS JSP DOES NOT REQUIRE A USER TO BE LOGGED IN --%>
-<%@ page import="java.util.TimeZone,org.aspcfs.modules.mycfs.base.CalendarEvent"%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="java.util.TimeZone" %>
+<%@ page import="org.aspcfs.modules.mycfs.base.CalendarEvent" %>
+<%@ page import="org.aspcfs.utils.web.CalendarView" %>
 <%@ page import="java.util.Calendar" %>
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.Locale" %>
-<jsp:useBean id="calendarView" class="org.aspcfs.utils.web.CalendarView" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <html>
 <head>
-<title>Calendar</title>
+<title><dhv:label name="calendar.calendar">Calendar</dhv:label></title>
 <jsp:include page="templates/cssInclude.jsp" flush="true"/>
 <% 
    String formName = request.getParameter("form"); 
@@ -72,10 +74,16 @@
       if (request.getParameter("next.x") != null) { ++monthTmp; }
       if (request.getParameter("prev.x") != null) { monthTmp += -1; }
       month = String.valueOf(monthTmp);
+      day = "1";
     } catch(NumberFormatException e) {
     }
   }
   
+  // Create the calendar with the selected locale
+  Locale locale = new Locale(language, country);
+  CalendarView calendarView = new CalendarView(locale);
+  calendarView.setSystemStatus(User.getSystemStatus(getServletConfig()));
+
   //Check to see if this should be a popup window
   String action = request.getParameter("action");
   if ((action != null) && (action.equals("popup"))) {
@@ -87,10 +95,6 @@
     calendarView.setMonthArrows(true);
     calendarView.setBorderSize(1);
   }
-  
-  // Define the locale every time
-  Locale locale = new Locale(language, country);
-  calendarView.setLocale(locale);
   
   // Break apart String into fields, using locale (from input field)
   if (dateString != null) {
@@ -109,7 +113,7 @@
   calendarView.setYear(year);
   calendarView.setMonth(month);
   calendarView.setDay(day);
-  
+
   //set the timezone if the user is logged in
   org.aspcfs.modules.login.beans.UserBean thisUser = (org.aspcfs.modules.login.beans.UserBean) request.getSession().getAttribute("User");
   if (thisUser != null) {

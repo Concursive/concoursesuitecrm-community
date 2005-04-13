@@ -22,7 +22,7 @@
 <%@ include file="../initPage.jsp" %>
 <html>
 <head>
-  <title>Thank you for visiting our survey page</title>
+  <title><dhv:label name="campaign.surveyPage.thankYou">Thank you for visiting our survey page</dhv:label></title>
 <script language="JavaScript">
 function checkForm(form) {
   formTest = true;
@@ -30,7 +30,7 @@ function checkForm(form) {
   for (i=0;i<form.length;i++){
     var tempobj=form.elements[i];
     if ( (tempobj.name).search("qans") != -1 ) {
-      if (!validateRadio(document.forms[0].elements[tempobj.name])) {
+      if (!validateRadio(document.survey.elements[tempobj.name])) {
         formTest = false;
       }
       i = i+7;
@@ -39,7 +39,7 @@ function checkForm(form) {
       break;
   }
   if (formTest == false) {
-    alert("Please Provide an answer for each survey item.\r\n\r\n");
+    alert(label("caution.provideanswer.survey","Please Provide an answer for each survey item.\r\n\r\n"));
     return false;
   } else {
     return true;
@@ -66,12 +66,12 @@ function validateRadio (field) {
     surveyBlank = true;
   }
 %> 
-<dhv:evaluate exp="<%=!surveyBlank%>">
+<dhv:evaluate if="<%=!surveyBlank%>">
 <center>
 <table cellpadding="4" cellspacing="0" border="0" width="<%= (request.getParameter("inline") != null?"100%":"85%") %>">
   <tr class="row1">
     <td>
-      <font color="#8c8c8c"><strong>Web Survey</strong></font>
+      <font color="#8c8c8c"><strong><dhv:label name="campaign.webSurvey">Web Survey</dhv:label></strong></font>
     </td>
   </tr>
 </table>
@@ -104,7 +104,7 @@ function validateRadio (field) {
           <%=count%>. &nbsp;<%=thisQuestion.getDescription()%>
         </td>
       </tr>
-      <dhv:evaluate exp="<%=(type == SurveyQuestion.QUANT_NOCOMMENTS) || (type == SurveyQuestion.QUANT_COMMENTS)%>">
+      <dhv:evaluate if="<%=(type == SurveyQuestion.QUANT_NOCOMMENTS) || (type == SurveyQuestion.QUANT_COMMENTS)%>">
       <tr class="containerBack">
       <% for(int i =0 ; i < 7;){%>
         <td valign="center" style="text-align: center;"><%=++i%></td>
@@ -121,14 +121,14 @@ function validateRadio (field) {
      <dhv:evaluate if="<%=(type == SurveyQuestion.QUANT_COMMENTS) || (type == SurveyQuestion.OPEN_ENDED)%>">
        <tr class="containerBody">
           <td width="15%" valign="center" style="text-align: right;">
-            Comments
+            <dhv:label name="campaign.comments">Comments</dhv:label>
           </td>
           <td colspan="6" valign="center">
             <textarea name="quest<%=count%>comments" rows="2" cols="80"></textarea>
           </td>
        </tr>
      </dhv:evaluate>
-     <dhv:evaluate exp="<%=(type == SurveyQuestion.ITEMLIST)%>">
+     <dhv:evaluate if="<%=(type == SurveyQuestion.ITEMLIST)%>">
      <input type="hidden" name="quest<%=count%>itemCount" value="<%= thisQuestion.getItemList()!=null?thisQuestion.getItemList().size():0%>">
       <%
         Iterator k = thisQuestion.getItemList().iterator();
@@ -150,7 +150,7 @@ function validateRadio (field) {
        }else{%>
         <tr>
            <td style="text-align: center;">
-            No items found.
+            <dhv:label name="campaign.noItemsFound">No items found.</dhv:label>
            </td>
         </tr>
         <%}%>
@@ -163,13 +163,13 @@ function validateRadio (field) {
     } else {%>
       <tr bgcolor="white">
         <td colspan="6">
-          No Questions found in this Survey
+          <dhv:label name="campaign.neQuestionsFound">No Questions found in this Survey</dhv:label>
         </td>
       </tr>
       <%}%>
     </table><br>
     <input type="hidden" name="id" value="<%= request.getParameter("id") %>">
-    <input type="submit" value="Submit Survey"><br>
+    <input type="submit" value="<dhv:label name="campaign.submitSurvey">Submit Survey</dhv:label>"><br>
     </form>
   </center>
 </dhv:evaluate>

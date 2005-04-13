@@ -33,7 +33,7 @@
   if (param2 == null) {
     param2 = request.getParameter("param2");
   }
-  if (returnPage != null) {
+  if (returnPage != null && !"null".equals(returnPage)) {
     if ("ProjectEnterpriseView".equals(returnPage)) {
       location = "ProjectManagement.do?command=EnterpriseView";
       scrollReload = true;
@@ -52,12 +52,18 @@
     } else if ("ProjectFiles".equals(returnPage)) {
       location = "ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=" + param + "&folderId=" + param2;
       scrollReload = true;
+    } else {
+      location = returnPage;
     }
   }
   
   if (location == null) {
 %>
 <body onload="window.opener.document.location.href='ProjectManagement.do'; window.close();">
+<%
+  } else if ("Calendar".equalsIgnoreCase(returnPage)) {
+%>
+<body onload="window.opener.parent.reloadFrames(); window.close();">
 <% 
   } else if (scrollReload) {
 %>

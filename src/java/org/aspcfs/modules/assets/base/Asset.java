@@ -1116,22 +1116,6 @@ public class Asset extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the Asset object
-   *
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  protected boolean isValid() throws SQLException {
-
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -1163,10 +1147,6 @@ public class Asset extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid() || hasErrors()) {
-      return false;
-    }
-
     PreparedStatement pst = null;
     pst = db.prepareStatement(
         "INSERT INTO asset " +
@@ -1254,10 +1234,6 @@ public class Asset extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
-    if (!isValid() || hasErrors()) {
-      return resultCount;
-    }
-
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -1291,7 +1267,6 @@ public class Asset extends GenericBean {
         "telephone_service_model = ? , " +
         "onsite_service_model = ? , " +
         "email_service_model = ? ");
-
     if (!override) {
       sql.append(" , modified = " + DatabaseUtils.getCurrentTimestamp(db) + " , modifiedby = ? ");
     }
@@ -1354,9 +1329,8 @@ public class Asset extends GenericBean {
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
     try {
-
       Dependency ticDependency = new Dependency();
-      ticDependency.setName("Tickets");
+      ticDependency.setName("tickets");
       ticDependency.setCount(TicketList.retrieveRecordCount(db, Constants.ASSETS, this.getId()));
       ticDependency.setCanDelete(false);
       dependencyList.add(ticDependency);

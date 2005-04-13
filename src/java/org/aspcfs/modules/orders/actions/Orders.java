@@ -38,6 +38,8 @@ import java.lang.*;
 import java.text.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.actionlist.base.*;
+import org.aspcfs.controller.*;
+import org.aspcfs.modules.orders.beans.*;
 
 /**
  *  Description of the Class
@@ -66,7 +68,6 @@ public final class Orders extends CFSModule {
    *@return          Description of the Return Value
    */
 
-
   /**
    *  Description of the Method
    *
@@ -74,12 +75,9 @@ public final class Orders extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandSearchForm(ActionContext context) {
-    /*
-     *  TODO: uncomment this code when the permission is created
-     *  if (!(hasPermission(context, "orders-orders-view"))) {
-     *  return ("PermissionError");
-     *  }
-     */
+    if (!(hasPermission(context, "orders-view"))) {
+      return ("PermissionError");
+    }
     //Bypass search form for portal users
     if (isPortalUser(context)) {
       return (executeCommandSearch(context));
@@ -89,11 +87,18 @@ public final class Orders extends CFSModule {
     try {
       db = getConnection(context);
       //Order type lookup
-      LookupList typeSelect = new LookupList(db, "lookup_order_type");
-      typeSelect.addItem(0, "All Types");
-      context.getRequest().setAttribute("TypeSelect", typeSelect);
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      statusSelect.addItem(-1, "All Open Orders");
+      context.getRequest().setAttribute("statusSelect", statusSelect);
+      //Category lookup
+      LookupList list = new LookupList(db, "lookup_product_category_type");
+      ProductCategoryList categoryList = new ProductCategoryList();
+      categoryList.buildList(db);
+      HtmlSelect select = categoryList.getHtmlSelect(list.getIdFromValue("Publication"));
+      context.getRequest().setAttribute("categorySelect", select);
       //reset the offset and current letter of the paged list in order to make sure we search ALL orders
-      PagedListInfo orderListInfo = this.getPagedListInfo(context, "SearchOrderListInfo");
+      PagedListInfo orderListInfo = this.getPagedListInfo(context, "searchOrderListInfo");
       orderListInfo.setCurrentLetter("");
       orderListInfo.setCurrentOffset(0);
     } catch (Exception e) {
@@ -114,24 +119,18 @@ public final class Orders extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandSearch(ActionContext context) {
-    /*
-     *  if (!hasPermission(context, "orders-orders-view")) {
-     *  return ("PermissionError");
-     *  }
-     */
+    if (!(hasPermission(context, "orders-view"))) {
+      return ("PermissionError");
+    }
     String source = (String) context.getRequest().getParameter("source");
     OrderList orderList = new OrderList();
     addModuleBean(context, "View Orders", "Search Results");
 
     //Prepare pagedListInfo
-    PagedListInfo searchListInfo = this.getPagedListInfo(context, "SearchOrderListInfo");
+    PagedListInfo searchListInfo = this.getPagedListInfo(context, "searchOrderListInfo");
     searchListInfo.setLink("Orders.do?command=Search");
-    //Need to reset any sub PagedListInfos since this is a new acccount
-    this.resetPagedListInfo(context);
     Connection db = null;
     try {
-      db = this.getConnection(context);
-
       //For portal usr set source as 'searchForm' explicitly since
       //the search form is bypassed.
       //temporary solution for page redirection for portal user.
@@ -139,33 +138,34 @@ public final class Orders extends CFSModule {
         source = "searchForm";
       }
       //return if no criteria is selected
-      if ((searchListInfo.getListView() == null || "".equals(searchListInfo.getListView())) && !"searchForm".equals(source)) {
-        return "ListOK";
-      }
+      /*
+       *  if ((searchListInfo.getListView() == null || "".equals(searchListInfo.getListView())) && !"searchForm".equals(source)) {
+       *  return "ListOK";
+       *  }
+       */
+      db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_order_type");
+      context.getRequest().setAttribute("typeSelect", typeSelect);
+
+      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      context.getRequest().setAttribute("statusSelect", statusSelect);
+      statusSelect.addItem(-1, "All Open Orders");
 
       //Build the order list
       orderList.setPagedListInfo(searchListInfo);
-      //orderList.setTypeId(searchListInfo.getFilterKey("listFilter1"));
-      searchListInfo.setSearchCriteria(orderList, UserUtils.getUserLocale(context.getRequest()));
-      /*
-       *  if ("my".equals(searchListInfo.getListView())) {
-       *  orderList.setOwnerId(this.getUserId(context));
-       *  }
-       */
-      /*
-       *  if ("disabled".equals(searchListInfo.getListView())) {
-       *  orderList.setIncludeEnabled(0);
-       *  }
-       *  if ("all".equals(searchListInfo.getListView())) {
-       *  orderList.setIncludeEnabled(-1);
-       *  }
-       */
+      orderList.setStatusId(searchListInfo.getFilterKey("listFilter1"));
+      if (orderList.getStatusId() == -1) {
+        orderList.setClosedOnly(Constants.FALSE);
+      }
+      orderList.setCategoryId(searchListInfo.getFilterKey("listFilter2"));
+      searchListInfo.setSearchCriteria(orderList, context);
       if (isPortalUser(context)) {
         orderList.setOrgId(getPortalUserPermittedOrgId(context));
       }
       orderList.buildList(db);
-      System.out.println("order list length : " + orderList.size());
-      context.getRequest().setAttribute("OrderList", orderList);
+      context.getRequest().setAttribute("orderList", orderList);
+
       return ("ListOK");
     } catch (Exception e) {
       //Go through the SystemError process
@@ -184,44 +184,65 @@ public final class Orders extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
-    /*
-     *  if (!(hasPermission(context, "orders-orders-view"))) {
-     *  return ("PermissionError");
-     *  }
-     */
-    Exception errorMessage = null;
+    if (!(hasPermission(context, "orders-view"))) {
+      return ("PermissionError");
+    }
     Connection db = null;
     Order newOrder = null;
-
+    ProductOptionList optionList = null;
+    ProductOptionValuesList optionValuesList = null;
+    int tempid = -1;
     try {
-      String tempOrderId = context.getRequest().getParameter("id");
-
-      //TODO: code for RecordAccessPermission
-      int tempid = Integer.parseInt(tempOrderId);
-      db = this.getConnection(context);
-      newOrder = new Order(db, tempid);
-      // populate the order's products
-      newOrder.buildProducts(db);
+      tempid = Integer.parseInt(context.getRequest().getParameter("id"));
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("actionError",
+          "Invalid criteria, please review and make necessary changes before submitting");
+      return "SearchCriteriaError";
+    }
+    try {
+      //TODO: code for RecordAccessPermission
+      db = this.getConnection(context);
+      newOrder = new Order();
+      newOrder.setBuildProducts(true);
+      newOrder.queryRecord(db, tempid);
+      optionList = new ProductOptionList();
+      optionList.buildList(db);
+      context.getRequest().setAttribute("productOptionList", optionList);
+
+      optionValuesList = new ProductOptionValuesList();
+      optionValuesList.buildList(db);
+      context.getRequest().setAttribute("productOptionValuesList", optionValuesList);
+
+      OrderPaymentList paymentList = new OrderPaymentList();
+      paymentList.setOrderId(newOrder.getId());
+      paymentList.buildList(db);
+      context.getRequest().setAttribute("paymentList", paymentList);
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_order_type");
+      context.getRequest().setAttribute("typeSelect", typeSelect);
+      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      context.getRequest().setAttribute("statusSelect", statusSelect);
+      LookupList paymentSelect = systemStatus.getLookupList(db, "lookup_payment_status");
+      context.getRequest().setAttribute("paymentSelect", paymentSelect);
+
+    } catch (Exception e) {
+      context.getRequest().setAttribute("actionError",
+          "The specified order could not be found");
+      return "SearchCriteriaError";
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      String action = context.getRequest().getParameter("action");
-      if (action != null && action.equals("modify")) {
-        //If user is going to the modify form
-        addModuleBean(context, "Orders", "Modify Order Details");
-        return ("DetailsOK");
-      } else {
-        //If user is going to the detail screen
-        addModuleBean(context, "View Orders", "View Order Details");
-        context.getRequest().setAttribute("OrderDetails", newOrder);
-        return ("DetailsOK");
-      }
+    String action = context.getRequest().getParameter("action");
+    if (action != null && action.equals("modify")) {
+      //If user is going to the modify form
+      addModuleBean(context, "Orders", "Modify Order Details");
+      return ("DetailsOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      //If user is going to the detail screen
+      addModuleBean(context, "View Orders", "View Order Details");
+      context.getRequest().setAttribute("OrderDetails", newOrder);
+      return ("DetailsOK");
     }
   }
 
@@ -230,13 +251,110 @@ public final class Orders extends CFSModule {
    *  Description of the Method
    *
    *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
-  private void resetPagedListInfo(ActionContext context) {
-    this.deletePagedListInfo(context, "ContactListInfo");
-    this.deletePagedListInfo(context, "AccountFolderInfo");
-    this.deletePagedListInfo(context, "AccountTicketInfo");
-    this.deletePagedListInfo(context, "AccountDocumentInfo");
-    this.deletePagedListInfo(context, "QuoteListInfo");
+  public String executeCommandModifyStatus(ActionContext context) {
+    if (!(hasPermission(context, "orders-view"))) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    Connection db = null;
+    Order newOrder = null;
+    ProductOptionList optionList = null;
+    ProductOptionValuesList optionValuesList = null;
+    try {
+      String tempOrderId = context.getRequest().getParameter("id");
+
+      //TODO: code for RecordAccessPermission
+      int tempid = Integer.parseInt(tempOrderId);
+      db = this.getConnection(context);
+      newOrder = new Order();
+      newOrder.setBuildProducts(true);
+      newOrder.queryRecord(db, tempid);
+      optionList = new ProductOptionList();
+      optionList.buildList(db);
+      context.getRequest().setAttribute("productOptionList", optionList);
+
+      optionValuesList = new ProductOptionValuesList();
+      optionValuesList.buildList(db);
+      context.getRequest().setAttribute("productOptionValuesList", optionValuesList);
+
+      OrderPaymentList paymentList = new OrderPaymentList();
+      paymentList.setOrderId(newOrder.getId());
+      paymentList.buildList(db);
+      context.getRequest().setAttribute("paymentList", paymentList);
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_order_type");
+      context.getRequest().setAttribute("typeSelect", typeSelect);
+
+      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      statusSelect.addItem(-1, "-- None --");
+      context.getRequest().setAttribute("statusSelect", statusSelect);
+
+      StatusBean statusBean = new StatusBean();
+      statusBean.setStatusId(newOrder.getStatusId());
+      statusBean.setAuthorizationCode(newOrder.getNotes());
+      context.getRequest().setAttribute("statusBean", statusBean);
+
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    context.getRequest().setAttribute("OrderDetails", newOrder);
+    return ("ModifyStatusOK");
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandSaveStatus(ActionContext context) {
+    if (!(hasPermission(context, "orders-view"))) {
+      return ("PermissionError");
+    }
+    Exception errorMessage = null;
+    Connection db = null;
+    Order newOrder = null;
+    ProductOptionList optionList = null;
+    ProductOptionValuesList optionValuesList = null;
+    try {
+      String tempOrderId = context.getRequest().getParameter("id");
+
+      //TODO: code for RecordAccessPermission
+      int tempid = Integer.parseInt(tempOrderId);
+      db = this.getConnection(context);
+      newOrder = new Order();
+      newOrder.setBuildProducts(true);
+      newOrder.queryRecord(db, tempid);
+      optionList = new ProductOptionList();
+      optionList.buildList(db);
+      context.getRequest().setAttribute("productOptionList", optionList);
+
+      Calendar now = Calendar.getInstance();
+      Timestamp rightNow = new Timestamp(now.getTimeInMillis());
+      StatusBean statusBean = (StatusBean) context.getFormBean();
+      if (statusBean.getStatusId() != -1 && statusBean.getStatusId() != 0) {
+        newOrder.setStatusId(statusBean.getStatusId());
+      }
+      newOrder.setNotes(statusBean.getAuthorizationCode());
+      newOrder.setModified(rightNow);
+      newOrder.update(db);
+
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    context.getRequest().setAttribute("OrderDetails", newOrder);
+    return ("SaveStatusOK");
+  }
+
 }
 

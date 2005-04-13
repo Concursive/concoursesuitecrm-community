@@ -22,20 +22,20 @@
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <form name="modForm" action="CampaignManager.do?command=Update&id=<%= Campaign.getId() %>&auto-populate=true" method="post">
-<a href="CampaignManager.do?command=View">Back to Campaign List</a><br>&nbsp;
+<a href="CampaignManager.do?command=View"><dhv:label name="campaign.backToCampaignList">Back to Campaign List</dhv:label></a><br>&nbsp;
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr class="containerHeader">
     <td>
-      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
+      <dhv:label name="campaign.campaign.colon" param="<%= "name="+toHtml(Campaign.getName()) %>"><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
     </td>
   </tr>
   <tr>
     <td class="containerBack">
-Add Recipient | Rebuild Recipients from Groups<br>
+<dhv:label name="campaign.addRecipient.text">Add Recipient | Rebuild Recipients from Groups</dhv:label><br />
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Recipients</strong>
+      <strong><dhv:label name="Recipients">Recipients</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -59,7 +59,7 @@ Add Recipient | Rebuild Recipients from Groups<br>
 %>  
   <tr class="containerBody">
     <td colspan="2">
-      No recipients selected.
+      <dhv:label name="campaign.noRecipientsSelected">No recipients selected.</dhv:label>
     </td>
   </tr>
 <%  
@@ -67,7 +67,7 @@ Add Recipient | Rebuild Recipients from Groups<br>
 %>
 </table>
 <br>
-<input type="submit" value="Remove Selected Recipients" name="Remove">
+<input type="submit" value="<dhv:label name="campaign.removeSelectedRecipients">Remove Selected Recipients</dhv:label>" name="Remove">
   </td>
   </tr>
 </table>

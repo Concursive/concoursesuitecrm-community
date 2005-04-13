@@ -87,7 +87,7 @@ public class EmailDigestUtil {
             thisUser.setBuildContact(true);
             thisUser.setBuildContactDetails(true);
             thisUser.buildResources(db);
-            addMessage(mailList, thisUser.getContact().getEmailAddress("Business"), message, prefix);
+            addMessage(mailList, thisUser.getContact().getPrimaryEmailAddress(), message, prefix);
           }
         }
       } else {
@@ -102,7 +102,7 @@ public class EmailDigestUtil {
           thisUser.setBuildContact(true);
           thisUser.setBuildContactDetails(true);
           thisUser.buildResources(db);
-          addMessage(mailList, thisUser.getContact().getEmailAddress("Business"), message, prefix);
+          addMessage(mailList, thisUser.getContact().getPrimaryEmailAddress(), message, prefix);
         }
       }
     }
@@ -135,7 +135,7 @@ public class EmailDigestUtil {
           }
           if (id > -1) {
             Contact thisContact = new Contact(db, id);
-            addMessage(mailList, thisContact.getEmailAddress("Business"), message, prefix);
+            addMessage(mailList, thisContact.getPrimaryEmailAddress(), message, prefix);
           }
         }
       } else {
@@ -147,7 +147,7 @@ public class EmailDigestUtil {
         }
         if (id > -1) {
           Contact thisContact = new Contact(db, id);
-          addMessage(mailList, thisContact.getEmailAddress("Business"), message, prefix);
+          addMessage(mailList, thisContact.getPrimaryEmailAddress(), message, prefix);
         }
       }
     }

@@ -41,7 +41,3 @@ CREATE TABLE events_log (
   message TEXT
 );
 
--- GRANT ALL ON sites TO gatekeeper;
--- GRANT ALL ON events TO gatekeeper;
--- GRANT ALL ON events_log TO gatekeeper;
-

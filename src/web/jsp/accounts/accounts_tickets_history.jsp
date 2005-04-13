@@ -28,66 +28,55 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=TicketDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="Accounts.do?command=ViewTickets&orgId=<%=TicketDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
 <a href="AccountTickets.do?command=TicketDetails&id=<%=TicketDetails.getId()%>"><dhv:label name="accounts.tickets.details">Ticket Details</dhv:label></a> >
-History
+<dhv:label name="accountsassets.history.long_html">History</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<% String param1 = "orgId=" + TicketDetails.getOrgId(); %>      
-<dhv:container name="accounts" selected="tickets" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-  	<td class="containerBack">
-        <%@ include file="accounts_ticket_header_include.jsp" %>
-        <% String param2 = "id=" + TicketDetails.getId(); %>
-        [ <dhv:container name="accountstickets" selected="history" param="<%= param2 %>"/> ]
-        <br><br>
-        <%-- display history --%>
-        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-          <tr>
-            <th colspan="4">
-              <strong><dhv:label name="accounts.tickets.historyLog">Ticket Log History</dhv:label></strong>
-            </th>     
-          </tr>
-        <%  
-            Iterator hist = TicketDetails.getHistory().iterator();
-            if (hist.hasNext()) {
-              while (hist.hasNext()) {
-                TicketLog thisEntry = (TicketLog)hist.next();
-        %>    
-        <% if (thisEntry.getSystemMessage() == true) {%>
-          <tr class="row1">
-        <% } else { %>
-          <tr class="containerBody">
-        <%}%>
-            <td nowrap valign="top" class="formLabel">
-              <%= toHtml(thisEntry.getEnteredByName()) %>
-            </td>
-            <td nowrap valign="top">
-              <zeroio:tz timestamp="<%= thisEntry.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
-            </td>
-            <td valign="top" width="100%">
-              <%= toHtml(thisEntry.getEntryText()) %>
-            </td>
-          </tr>
-        <%    
-            }
-          } else {
-        %>
-          <tr class="containerBody">
-            <td>
-              <font color="#9E9E9E" colspan="3">No Log Entries.</font>
-            </td>
-          </tr>
-        <%}%>
-       <%-- ticket container end --%>
-      </table>
-    </td>
-  </tr>
-  <%-- account container end --%>
-</table>
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:container name="accountstickets" selected="history" object="TicketDetails" param="<%= "id=" + TicketDetails.getId() %>">
+    <%@ include file="accounts_ticket_header_include.jsp" %>
+    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+      <tr>
+        <th colspan="4">
+          <strong><dhv:label name="accounts.tickets.historyLog">Ticket Log History</dhv:label></strong>
+        </th>
+      </tr>
+    <%
+        Iterator hist = TicketDetails.getHistory().iterator();
+        if (hist.hasNext()) {
+          while (hist.hasNext()) {
+            TicketLog thisEntry = (TicketLog)hist.next();
+    %>
+    <% if (thisEntry.getSystemMessage() == true) {%>
+      <tr class="row1">
+    <% } else { %>
+      <tr class="containerBody">
+    <%}%>
+        <td nowrap valign="top" class="formLabel">
+          <%= toHtml(thisEntry.getEnteredByName()) %>
+        </td>
+        <td nowrap valign="top">
+          <zeroio:tz timestamp="<%= thisEntry.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
+        </td>
+        <td valign="top" width="100%">
+          <%= toHtml(thisEntry.getEntryText()) %>
+        </td>
+      </tr>
+    <%
+        }
+      } else {
+    %>
+      <tr class="containerBody">
+        <td>
+          <font color="#9E9E9E" colspan="3"><dhv:label name="project.tickets.noLogEntries">No Log Entries.</dhv:label></font>
+        </td>
+      </tr>
+    <%}%>
+    </table>
+  </dhv:container>
+</dhv:container>

@@ -15,22 +15,24 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Calendar;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
 
 /**
  *  Description of the Class
  *
- *@author     matt rajkowski
- *@created    January 3, 2003
- *@version    $Id: AssignmentList.java,v 1.4.50.1 2004/03/19 21:00:50 rvasista
+ * @author     matt rajkowski
+ * @created    January 3, 2003
+ * @version    $Id: AssignmentList.java,v 1.4.50.1 2004/03/19 21:00:50 rvasista
  *      Exp $
  */
 public class AssignmentList extends ArrayList {
@@ -66,7 +68,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the pagedListInfo attribute of the AssignmentList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param  tmp  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -76,7 +78,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the pagedListInfo attribute of the AssignmentList object
    *
-   *@return    The pagedListInfo value
+   * @return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -86,7 +88,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the emptyHtmlSelectRecord attribute of the AssignmentList object
    *
-   *@param  tmp  The new emptyHtmlSelectRecord value
+   * @param  tmp  The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String tmp) {
     this.emptyHtmlSelectRecord = tmp;
@@ -96,7 +98,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the project attribute of the AssignmentList object
    *
-   *@param  tmp  The new project value
+   * @param  tmp  The new project value
    */
   public void setProject(Project tmp) {
     this.project = tmp;
@@ -106,7 +108,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the projectId attribute of the AssignmentList object
    *
-   *@param  tmp  The new projectId value
+   * @param  tmp  The new projectId value
    */
   public void setProjectId(int tmp) {
     this.projectId = tmp;
@@ -116,7 +118,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the assignmentsForUser attribute of the AssignmentList object
    *
-   *@param  tmp  The new assignmentsForUser value
+   * @param  tmp  The new assignmentsForUser value
    */
   public void setAssignmentsForUser(int tmp) {
     this.assignmentsForUser = tmp;
@@ -126,7 +128,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the forProjectUser attribute of the AssignmentList object
    *
-   *@param  tmp  The new forProjectUser value
+   * @param  tmp  The new forProjectUser value
    */
   public void setForProjectUser(int tmp) {
     this.forProjectUser = tmp;
@@ -136,7 +138,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the forProjectUser attribute of the AssignmentList object
    *
-   *@param  tmp  The new forProjectUser value
+   * @param  tmp  The new forProjectUser value
    */
   public void setForProjectUser(String tmp) {
     this.forProjectUser = Integer.parseInt(tmp);
@@ -146,7 +148,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the incompleteOnly attribute of the AssignmentList object
    *
-   *@param  tmp  The new incompleteOnly value
+   * @param  tmp  The new incompleteOnly value
    */
   public void setIncompleteOnly(boolean tmp) {
     this.incompleteOnly = tmp;
@@ -156,7 +158,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the closedOnly attribute of the AssignmentList object
    *
-   *@param  tmp  The new closedOnly value
+   * @param  tmp  The new closedOnly value
    */
   public void setClosedOnly(boolean tmp) {
     this.closedOnly = tmp;
@@ -166,7 +168,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the withDaysComplete attribute of the AssignmentList object
    *
-   *@param  tmp  The new withDaysComplete value
+   * @param  tmp  The new withDaysComplete value
    */
   public void setWithDaysComplete(int tmp) {
     this.withDaysComplete = tmp;
@@ -176,7 +178,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the requirementId attribute of the AssignmentList object
    *
-   *@param  tmp  The new requirementId value
+   * @param  tmp  The new requirementId value
    */
   public void setRequirementId(int tmp) {
     this.requirementId = tmp;
@@ -186,7 +188,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the onlyIfRequirementOpen attribute of the AssignmentList object
    *
-   *@return    The onlyIfRequirementOpen value
+   * @return    The onlyIfRequirementOpen value
    */
   public boolean getOnlyIfRequirementOpen() {
     return onlyIfRequirementOpen;
@@ -196,7 +198,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the onlyIfRequirementOpen attribute of the AssignmentList object
    *
-   *@param  tmp  The new onlyIfRequirementOpen value
+   * @param  tmp  The new onlyIfRequirementOpen value
    */
   public void setOnlyIfRequirementOpen(boolean tmp) {
     this.onlyIfRequirementOpen = tmp;
@@ -206,7 +208,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the onlyIfRequirementOpen attribute of the AssignmentList object
    *
-   *@param  tmp  The new onlyIfRequirementOpen value
+   * @param  tmp  The new onlyIfRequirementOpen value
    */
   public void setOnlyIfRequirementOpen(String tmp) {
     this.onlyIfRequirementOpen = DatabaseUtils.parseBoolean(tmp);
@@ -216,7 +218,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the folderId attribute of the AssignmentList object
    *
-   *@param  tmp  The new folderId value
+   * @param  tmp  The new folderId value
    */
   public void setFolderId(int tmp) {
     this.folderId = tmp;
@@ -226,7 +228,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the enteredBy attribute of the AssignmentList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -236,7 +238,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the modifiedBy attribute of the AssignmentList object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param  tmp  The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -246,7 +248,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the offsetDate attribute of the AssignmentList object
    *
-   *@param  tmp  The new offsetDate value
+   * @param  tmp  The new offsetDate value
    */
   public void setOffsetDate(java.sql.Date tmp) {
     this.offsetDate = tmp;
@@ -256,7 +258,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the alertRangeStart attribute of the AssignmentList object
    *
-   *@param  tmp  The new alertRangeStart value
+   * @param  tmp  The new alertRangeStart value
    */
   public void setAlertRangeStart(java.sql.Timestamp tmp) {
     this.alertRangeStart = tmp;
@@ -266,7 +268,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Sets the alertRangeEnd attribute of the AssignmentList object
    *
-   *@param  tmp  The new alertRangeEnd value
+   * @param  tmp  The new alertRangeEnd value
    */
   public void setAlertRangeEnd(java.sql.Timestamp tmp) {
     this.alertRangeEnd = tmp;
@@ -276,8 +278,8 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the htmlSelect attribute of the AssignmentList object
    *
-   *@param  selectName  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param  selectName  Description of the Parameter
+   * @return             The htmlSelect value
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -287,9 +289,9 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the htmlSelect attribute of the AssignmentList object
    *
-   *@param  selectName  Description of the Parameter
-   *@param  defaultKey  Description of the Parameter
-   *@return             The htmlSelect value
+   * @param  selectName  Description of the Parameter
+   * @param  defaultKey  Description of the Parameter
+   * @return             The htmlSelect value
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect listSelect = new HtmlSelect();
@@ -310,7 +312,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the project attribute of the AssignmentList object
    *
-   *@return    The project value
+   * @return    The project value
    */
   public Project getProject() {
     return project;
@@ -320,7 +322,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the closedOnly attribute of the AssignmentList object
    *
-   *@return    The closedOnly value
+   * @return    The closedOnly value
    */
   public boolean getClosedOnly() {
     return closedOnly;
@@ -330,7 +332,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the incompleteOnly attribute of the AssignmentList object
    *
-   *@return    The incompleteOnly value
+   * @return    The incompleteOnly value
    */
   public boolean getIncompleteOnly() {
     return incompleteOnly;
@@ -340,7 +342,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the requirementId attribute of the AssignmentList object
    *
-   *@return    The requirementId value
+   * @return    The requirementId value
    */
   public int getRequirementId() {
     return requirementId;
@@ -350,7 +352,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the folderId attribute of the AssignmentList object
    *
-   *@return    The folderId value
+   * @return    The folderId value
    */
   public int getFolderId() {
     return folderId;
@@ -360,14 +362,14 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the notStartedCount attribute of the AssignmentList object
    *
-   *@return    The notStartedCount value
+   * @return    The notStartedCount value
    */
   public int getNotStartedCount() {
     int count = 0;
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Assignment thisItem = (Assignment) i.next();
-      if (thisItem.getStatusType() == thisItem.NOTSTARTED) {
+      if (thisItem.getStatusType() == Assignment.NOTSTARTED) {
         ++count;
       }
     }
@@ -378,14 +380,14 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the onHoldCount attribute of the AssignmentList object
    *
-   *@return    The onHoldCount value
+   * @return    The onHoldCount value
    */
   public int getOnHoldCount() {
     int count = 0;
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Assignment thisItem = (Assignment) i.next();
-      if (thisItem.getStatusType() == thisItem.ONHOLD) {
+      if (thisItem.getStatusType() == Assignment.ONHOLD) {
         ++count;
       }
     }
@@ -396,14 +398,14 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the inProgressCount attribute of the AssignmentList object
    *
-   *@return    The inProgressCount value
+   * @return    The inProgressCount value
    */
   public int getInProgressCount() {
     int count = 0;
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Assignment thisItem = (Assignment) i.next();
-      if (thisItem.getStatusType() == thisItem.INPROGRESS) {
+      if (thisItem.getStatusType() == Assignment.INPROGRESS) {
         ++count;
       }
     }
@@ -414,14 +416,14 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the completeCount attribute of the AssignmentList object
    *
-   *@return    The completeCount value
+   * @return    The completeCount value
    */
   public int getCompleteCount() {
     int count = 0;
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Assignment thisItem = (Assignment) i.next();
-      if (thisItem.getStatusType() == thisItem.COMPLETE) {
+      if (thisItem.getStatusType() == Assignment.COMPLETE) {
         ++count;
       }
     }
@@ -432,14 +434,14 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the closedCount attribute of the AssignmentList object
    *
-   *@return    The closedCount value
+   * @return    The closedCount value
    */
   public int getClosedCount() {
     int count = 0;
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Assignment thisItem = (Assignment) i.next();
-      if (thisItem.getStatusType() == thisItem.CLOSED) {
+      if (thisItem.getStatusType() == Assignment.CLOSED) {
         ++count;
       }
     }
@@ -450,7 +452,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the alertRangeStart attribute of the AssignmentList object
    *
-   *@return    The alertRangeStart value
+   * @return    The alertRangeStart value
    */
   public java.sql.Timestamp getAlertRangeStart() {
     return alertRangeStart;
@@ -460,7 +462,7 @@ public class AssignmentList extends ArrayList {
   /**
    *  Gets the alertRangeEnd attribute of the AssignmentList object
    *
-   *@return    The alertRangeEnd value
+   * @return    The alertRangeEnd value
    */
   public java.sql.Timestamp getAlertRangeEnd() {
     return alertRangeEnd;
@@ -470,8 +472,8 @@ public class AssignmentList extends ArrayList {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -560,13 +562,19 @@ public class AssignmentList extends ArrayList {
     }
     rs.close();
     pst.close();
+    // Build resources
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Assignment thisAssignment = (Assignment) i.next();
+      AssignmentNoteList.queryNoteCount(db, thisAssignment);
+    }
   }
 
 
   /**
    *  Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param  sqlFilter  Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -620,9 +628,9 @@ public class AssignmentList extends ArrayList {
   /**
    *  Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  pst               Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -666,9 +674,9 @@ public class AssignmentList extends ArrayList {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
     java.sql.Timestamp lowestDueDate = null;
@@ -741,8 +749,8 @@ public class AssignmentList extends ArrayList {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator assignments = this.iterator();
@@ -756,9 +764,9 @@ public class AssignmentList extends ArrayList {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  requirementId     Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  requirementId     Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public static void delete(Connection db, int requirementId) throws SQLException {
     //Assignment status
@@ -782,10 +790,10 @@ public class AssignmentList extends ArrayList {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  newOwner          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  newOwner          Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner) throws SQLException {
     int total = 0;
@@ -801,10 +809,33 @@ public class AssignmentList extends ArrayList {
 
 
   /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @param  newOwner          Description of the Parameter
+   * @param  userId            Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public int reassignElements(Connection db, int newOwner, int userId) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Assignment thisAssignment = (Assignment) i.next();
+      thisAssignment.setModifiedBy(userId);
+      if (thisAssignment.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+
+  /**
    *  Gets the assignment attribute of the AssignmentList object
    *
-   *@param  id  Description of the Parameter
-   *@return     The assignment value
+   * @param  id  Description of the Parameter
+   * @return     The assignment value
    */
   public Assignment getAssignment(int id) {
     Iterator i = this.iterator();
@@ -815,6 +846,23 @@ public class AssignmentList extends ArrayList {
       }
     }
     return null;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @return    Description of the Return Value
+   */
+  public boolean hasOverdueActivities() {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Assignment thisAssignment = (Assignment) i.next();
+      if (thisAssignment.isOverdue()) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 

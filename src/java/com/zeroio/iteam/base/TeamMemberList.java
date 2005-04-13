@@ -15,14 +15,17 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.*;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
  *  Represents a list of members of a project
@@ -39,11 +42,15 @@ public class TeamMemberList extends ArrayList {
   private Project project = null;
   private int projectId = -1;
   private int userLevel = -1;
+  private int roleLevel = -1;
   private String insertMembers = null;
   private String deleteMembers = null;
   private int enteredBy = -1;
   private int modifiedBy = -1;
   private int forProjectUser = -1;
+  private int userId = -1;
+  private boolean employeesOnly = false;
+  private boolean accountContactsOnly = false;
 
 
   /**
@@ -99,6 +106,16 @@ public class TeamMemberList extends ArrayList {
    */
   public void setUserLevel(String tmp) {
     this.userLevel = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the roleLevel attribute of the TeamMemberList object
+   *
+   *@param  tmp  The new roleLevel value
+   */
+  public void setRoleLevel(int tmp) {
+    this.roleLevel = tmp;
   }
 
 
@@ -163,6 +180,46 @@ public class TeamMemberList extends ArrayList {
 
 
   /**
+   *  Sets the employeesOnly attribute of the TeamMemberList object
+   *
+   *@param  tmp  The new employeesOnly value
+   */
+  public void setEmployeesOnly(boolean tmp) {
+    this.employeesOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the employeesOnly attribute of the TeamMemberList object
+   *
+   *@param  tmp  The new employeesOnly value
+   */
+  public void setEmployeesOnly(String tmp) {
+    this.employeesOnly = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the accountContactsOnly attribute of the TeamMemberList object
+   *
+   *@param  tmp  The new accountContactsOnly value
+   */
+  public void setAccountContactsOnly(boolean tmp) {
+    this.accountContactsOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the accountContactsOnly attribute of the TeamMemberList object
+   *
+   *@param  tmp  The new accountContactsOnly value
+   */
+  public void setAccountContactsOnly(String tmp) {
+    this.accountContactsOnly = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Gets the project attribute of the TeamMemberList object
    *
    *@return    The project value
@@ -171,6 +228,13 @@ public class TeamMemberList extends ArrayList {
     return project;
   }
 
+  public int getUserId() {
+    return userId;
+  }
+
+  public void setUserId(int userId) {
+    this.userId = userId;
+  }
 
   /**
    *  Description of the Method
@@ -207,8 +271,10 @@ public class TeamMemberList extends ArrayList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM project_team t " +
-        "WHERE t.project_id > -1 ");
+        "FROM project_team t, contact u, lookup_project_role r " +
+        "WHERE t.project_id > -1 " +
+        "AND t.user_id = u.user_id " +
+        "AND t.userlevel = r.code ");
     createFilter(sqlFilter);
     if (pagedListInfo == null) {
       pagedListInfo = new PagedListInfo();
@@ -289,6 +355,18 @@ public class TeamMemberList extends ArrayList {
       sqlFilter.append("AND project_id IN (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
           "AND status IS NULL) ");
     }
+    if (roleLevel > -1) {
+      sqlFilter.append("AND t.userlevel IN (SELECT code FROM lookup_project_role WHERE level = ?) ");
+    }
+    if (userId > -1) {
+      sqlFilter.append("AND t.user_id = ? ");
+    }
+    if (employeesOnly) {
+      sqlFilter.append("AND u.org_id = 0 ");
+    }
+    if (accountContactsOnly) {
+      sqlFilter.append("AND u.org_id > 0 ");
+    }
   }
 
 
@@ -307,6 +385,12 @@ public class TeamMemberList extends ArrayList {
     if (forProjectUser > -1) {
       pst.setInt(++i, forProjectUser);
     }
+    if (roleLevel > -1) {
+      pst.setInt(++i, roleLevel);
+    }
+    if (userId > -1) {
+      pst.setInt(++i, userId);
+    }
     return i;
   }
 
@@ -318,7 +402,7 @@ public class TeamMemberList extends ArrayList {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean update(Connection db) throws SQLException {
+  public boolean update(Connection db, int masterUserId, int groupId, ArrayList addedUsers) throws SQLException {
     try {
       db.setAutoCommit(false);
       //Add new members
@@ -330,8 +414,12 @@ public class TeamMemberList extends ArrayList {
         while (items.hasMoreTokens()) {
           int itemId = -1;
           String itemIdValue = items.nextToken();
+          boolean byEmail = false;
           if (itemIdValue.indexOf("@") > 0) {
-            itemId = org.aspcfs.modules.admin.base.User.getIdByEmailAddress(db, itemIdValue);
+            itemId = User.getIdByEmailAddress(db, itemIdValue);
+            if (itemId > -1) {
+              byEmail = true;
+            }
           } else {
             itemId = Integer.parseInt(itemIdValue);
           }
@@ -362,6 +450,9 @@ public class TeamMemberList extends ArrayList {
               pst.setInt(++i, TeamMember.STATUS_PENDING);
               pst.execute();
               pst.close();
+              // Existing user will be sent an email
+              User user = new User(db, itemId);
+              addedUsers.add(user);
             }
           }
         }
@@ -395,44 +486,6 @@ public class TeamMemberList extends ArrayList {
       throw new SQLException(e.getMessage());
     }
     return true;
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  str  Description of the Parameter
-   *@param  o    Description of the Parameter
-   *@param  n    Description of the Parameter
-   *@return      Description of the Return Value
-   */
-  private String replace(String str, String o, String n) {
-    boolean all = true;
-    if (str != null && o != null && o.length() > 0 && n != null) {
-      StringBuffer result = null;
-      int oldpos = 0;
-      do {
-        int pos = str.indexOf(o, oldpos);
-        if (pos < 0) {
-          break;
-        }
-        if (result == null) {
-          result = new StringBuffer();
-        }
-        result.append(str.substring(oldpos, pos));
-        result.append(n);
-        pos += o.length();
-        oldpos = pos;
-      } while (all);
-      if (oldpos == 0) {
-        return str;
-      } else {
-        result.append(str.substring(oldpos));
-        return new String(result);
-      }
-    } else {
-      return str;
-    }
   }
 
 
@@ -526,6 +579,17 @@ public class TeamMemberList extends ArrayList {
     rs.close();
     pst.close();
     return exists;
+  }
+  
+  public TeamMember getTeamMember(int id) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      TeamMember thisMember = (TeamMember) i.next();
+      if (thisMember.getUserId() == id) {
+        return thisMember;
+      }
+    }
+    return null;
   }
 }
 

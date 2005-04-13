@@ -1,0 +1,55 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  September 16, 2004
+  - Adds the permission "netapps_expiration_contracts" to the "Network Applications" category
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+
+//Get the Admin category id for which this permission will be added
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT category_id " +
+  "FROM permission_category " +
+  "WHERE category = 'Documents'");
+if (rs.next()) {
+  categoryId = rs.getInt("category_id");
+}
+print("Documents Category Id: " + categoryId);
+
+//Check to see if the permission already exists before inserting
+rs = st.executeQuery(
+  "SELECT count(permission_id) AS recordcount " +
+  "FROM permission " +
+  "WHERE permission = 'documents'");
+rs.next();
+hasPermission = (rs.getInt("recordcount") > 0);
+print("Permission Status: documents " + hasPermission);
+
+//Doesn't exist so insert the new permission
+if (!hasPermission) {
+  //Create the next level id
+  rs = st.executeQuery(
+    "SELECT max(level) AS maxlevel " +
+    "FROM permission " +
+    "WHERE category_id = " + categoryId);
+  rs.next();
+  level = (rs.getInt("maxlevel") + 10);
+  print("New level to insert: " + level);
+  //Insert the new permission
+  permission = new Permission();
+  permission.setCategoryId(categoryId);
+  permission.setName("documents");
+  permission.setDescription("Access to Documents module");
+  permission.setView(true);
+  permission.setAdd(false);
+  permission.setEdit(false);
+  permission.setDelete(false);
+  permission.setPermissionLevel(level);
+  permission.setEnabled(true);
+  permission.setActive(true);
+  permission.insert(db);
+  print("New permission added");
+}

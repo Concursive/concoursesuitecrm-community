@@ -27,16 +27,16 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> > 
-<a href="MyCFS.do?command=MyProfile">Settings</a> >
-Location
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> > 
+<a href="MyCFS.do?command=MyProfile"><dhv:label name="Settings">Settings</dhv:label></a> >
+<dhv:label name="accounts.accountasset_include.Location">Location</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:permission name="myhomepage-profile-settings-edit,myhomepage-profile-view">
-<input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
+<input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Save">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
 </dhv:permission>
 <br>
 &nbsp;
@@ -44,7 +44,7 @@ Location
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Location Settings</strong>
+      <strong><dhv:label name="calendar.locationSettings">Location Settings</dhv:label></strong>
     </th>
   </tr>
 <%--
@@ -59,7 +59,7 @@ Location
 --%>
   <tr>
     <td nowrap class="formLabel">
-      Time Zone
+      <dhv:label name="accounts.accounts_contacts_communication_preference_add.TimeZone">Time Zone</dhv:label>
     </td>
     <td>
       <%= TimeZone.getSelect("timeZone", User.getTimeZone()).getHtml() %>
@@ -68,7 +68,7 @@ Location
 </table>
 <dhv:permission name="myhomepage-profile-settings-edit,myhomepage-profile-view">
 <br>
-<input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
+<input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Save">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='MyCFS.do?command=MyProfile'">
 </form>
 </dhv:permission>

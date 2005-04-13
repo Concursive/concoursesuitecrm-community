@@ -365,32 +365,6 @@ public class Recipient extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the Recipient object
-   *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  protected boolean isValid(Connection db) throws SQLException {
-    errors.clear();
-
-    if (campaignId == -1) {
-      errors.put("campaignError", "Campaign is required");
-    }
-
-    if (contactId == -1) {
-      errors.put("contactError", "Contact is required");
-    }
-
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-
-  /**
    *  Gets the duplicate attribute of the Recipient object
    *
    *@param  db                Description of the Parameter
@@ -446,15 +420,9 @@ public class Recipient extends GenericBean {
    *@since
    */
   public boolean insert(Connection db) throws SQLException {
-
-    if (!isValid(db)) {
-      return false;
-    }
-
     if (isDuplicate(db)) {
       return false;
     }
-
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO scheduled_recipient " +
@@ -466,7 +434,6 @@ public class Recipient extends GenericBean {
     pst.setInt(++i, contactId);
     pst.execute();
     pst.close();
-
     id = DatabaseUtils.getCurrVal(db, "scheduled_recipient_id_seq");
     return true;
   }

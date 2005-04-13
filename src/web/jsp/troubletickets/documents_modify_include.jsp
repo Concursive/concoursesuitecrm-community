@@ -24,15 +24,15 @@
     var formTest = true;
     var messageText = "";
     if (form.subject.value == "") {
-      messageText += "- Subject is required\r\n";
+      messageText += label("Subject.required", "- Subject is required\r\n");
       formTest = false;
     }
     if ((form.clientFilename.value) == "") {
-      messageText += "- Filename is required\r\n";
+      messageText += label("Filename.required", "- Filename is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The file information could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("Fileinfo.not.submitted", "The file information could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
@@ -44,21 +44,22 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <img border="0" src="images/file.gif" align="absmiddle"><b>Modify Document Information</b>
+      <img border="0" src="images/file.gif" align="absmiddle"><b><dhv:label name="accounts.accounts_documents_modify.ModifyDocumentInformation">Modify Document Information</dhv:label></b>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Subject of file
+      <dhv:label name="accounts.accounts_documents_modify.SubjectOfFile">Subject of file</dhv:label>
     </td>
     <td>
       <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
       <input type="text" name="subject" size="59" maxlength="255" value="<%= FileItem.getSubject() %>">
+      <%= showAttribute(request, "subjectError") %>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Filename
+      <dhv:label name="accounts.accounts_documents_modify.Filename">Filename</dhv:label>
     </td>
     <td>
       <input type="text" name="clientFilename" size="59" maxlength="255" value="<%= FileItem.getClientFilename() %>">
@@ -66,7 +67,7 @@
   </tr>
 	<tr class="containerBody">
     <td class="formLabel">
-      Version
+      <dhv:label name="accounts.accounts_documents_details.Version">Version</dhv:label>
     </td>
     <td>
       <%= FileItem.getVersion() %>

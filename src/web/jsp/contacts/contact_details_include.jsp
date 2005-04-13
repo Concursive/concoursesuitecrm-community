@@ -20,171 +20,252 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
-<%@ include file="contact_details_header_include.jsp" %>
-<% String param1 = "id=" + ContactDetails.getId(); 
-   String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-<dhv:container name="contacts" selected="details" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<dhv:evaluate exp="<%= (ContactDetails.getEnabled()) %>">
-<dhv:sharing primaryBean="ContactDetails" action="edit" all="true"><input type="button" name="cmd" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:sharing>
-<dhv:evaluate exp="<%= !isPopup(request) %>">
-<dhv:permission name="contacts-external_contacts-add"><input type="button" value="Clone" onClick="javascript:this.form.action='ExternalContacts.do?command=Clone&id=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
-</dhv:evaluate>
-<dhv:sharing primaryBean="ContactDetails" action="delete" all="true"><input type="button" name="cmd" value="Delete" onClick="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true','ExternalContacts.do?command=SearchContacts', 'Delete_contact','320','200','yes','no');"></dhv:sharing>
-<dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete"><br>&nbsp;</dhv:permission>
-</dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-	    <strong>Email Addresses</strong>
-	  </th>
-  </tr>
-<%
-  Iterator iemail = ContactDetails.getEmailAddressList().iterator();
-  if (iemail.hasNext()) {
-    while (iemail.hasNext()) {
-      ContactEmailAddress thisEmailAddress = (ContactEmailAddress)iemail.next();
-%>
+<script type="text/javascript">
+<% String param2 = addLinkParams(request, "popup|popupType|actionId");%>
+function reopen() {
+  scrollReload('ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %><%= param2 %>');
+}
+function reopenOnDelete() {
+  try {
+    if ('<%= isPopup(request) %>' != 'true') {
+      scrollReload('ExternalContacts.do?command=SearchContacts');
+    } else {
+      var contactId = -1;
+      try {
+        contactId = opener.reopenContact('<%= ContactDetails.getId() %>');
+      } catch (oException) {
+      }
+      if (contactId != '<%= ContactDetails.getId() %>') {
+        opener.reopen();
+      }
+    }
+  } catch (oException) {
+  }
+  if ('<%= isPopup(request) %>' == 'true') {
+    window.close();
+  }
+}
+
+function reopenContact(id) {
+  if (id == '<%= ContactDetails.getId() %>') {
+    scrollReload('ExternalContacts.do?command=SearchContacts');
+    return -1;
+  } else {
+    return '<%= ContactDetails.getId() %>';
+  }
+}
+</script>
+<dhv:container name="contacts" selected="details" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= param2 %>">
+  <dhv:evaluate if="<%= (ContactDetails.getEnabled()) %>">
+    <dhv:sharing primaryBean="ContactDetails" action="edit" all="true"><input type="button" name="cmd" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:sharing>
+    <dhv:evaluate if="<%= !isPopup(request) %>">
+      <dhv:permission name="contacts-external_contacts-add"><input type="button" value="<dhv:label name="global.button.Clone">Clone</dhv:label>" onClick="javascript:this.form.action='ExternalContacts.do?command=Clone&id=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
+    </dhv:evaluate>
+    <dhv:sharing primaryBean="ContactDetails" action="delete" all="true"><input type="button" name="cmd" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true<%= isPopup(request) ? "&sourcePopup=true":"" %>','ExternalContacts.do?command=SearchContacts', 'Delete_contact','320','200','yes','no');"></dhv:sharing>
+    <dhv:evaluate if="<%= ContactDetails.getOrgId() > 0 %>">
+      <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete"><input type="button" value="<dhv:label name="global.button.move">Move</dhv:label>" onClick="javascript:popURLReturn('ExternalContacts.do?command=MoveToAccount&orgId=<%=ContactDetails.getOrgId()%>&id=<%=ContactDetails.getId()%>&popup=true','ExternalContacts.do?command=View', 'Move_contact','400','320','yes','yes');"/></dhv:permission>
+    </dhv:evaluate>
+    <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete"><br>&nbsp;</dhv:permission>
+  </dhv:evaluate>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><dhv:label name="accounts.accounts_add.EmailAddresses">Email Addresses</dhv:label></strong>
+      </th>
+    </tr>
+  <%
+    Iterator iemail = ContactDetails.getEmailAddressList().iterator();
+    if (iemail.hasNext()) {
+      while (iemail.hasNext()) {
+        ContactEmailAddress thisEmailAddress = (ContactEmailAddress)iemail.next();
+  %>
+      <tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <%= toHtml(thisEmailAddress.getTypeName()) %>
+        </td>
+        <td>
+          <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>&nbsp;
+          <dhv:evaluate if="<%=thisEmailAddress.getPrimaryEmail()%>">
+            <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+          </dhv:evaluate>
+        </td>
+      </tr>
+  <%
+      }
+    } else {
+  %>
+      <tr class="containerBody">
+        <td>
+          <font color="#9E9E9E"><dhv:label name="contacts.NoEmailAdresses">No email addresses entered.</dhv:label></font>
+        </td>
+      </tr>
+  <%}%>
+  </table>
+  &nbsp;
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><dhv:label name="accounts.accounts_add.TextMessageAddresses">Text Message Addresses</dhv:label></strong>
+      </th>
+    </tr>
+  <%
+    Iterator itmAddress = ContactDetails.getTextMessageAddressList().iterator();
+    if (itmAddress.hasNext()) {
+      while (itmAddress.hasNext()) {
+        ContactTextMessageAddress thisTextMessageAddress = (ContactTextMessageAddress)itmAddress.next();
+  %>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <%= toHtml(thisTextMessageAddress.getTypeName()) %>
+      </td>
+      <td>
+        <dhv:evaluate if="<%= hasText(thisTextMessageAddress.getTextMessageAddress()) %>">
+        <a href="mailto:<%= toHtml(thisTextMessageAddress.getTextMessageAddress()) %>"><%= toHtml(thisTextMessageAddress.getTextMessageAddress()) %></a>&nbsp;
+          <dhv:evaluate if="<%=thisTextMessageAddress.getPrimaryTextMessageAddress()%>">
+            <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+          </dhv:evaluate>
+        </dhv:evaluate>
+        &nbsp;
+      </td>
+    </tr>
+  <%
+      }
+    } else {
+  %>
+    <tr class="containerBody">
+      <td>
+        <font color="#9E9E9E"><dhv:label name="contacts.NoTextMessageAdresses">No text message addresses entered.</dhv:label></font>
+      </td>
+    </tr>
+  <%}%>
+  </table>
+  &nbsp;
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><dhv:label name="accounts.accounts_add.PhoneNumbers">Phone Numbers</dhv:label></strong>
+      </th>
+    </tr>
+  <%
+    Iterator inumber = ContactDetails.getPhoneNumberList().iterator();
+    if (inumber.hasNext()) {
+      while (inumber.hasNext()) {
+        ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)inumber.next();
+  %>
+      <tr class="containerBody">
+        <td class="formLabel" nowrap>
+          <%= toHtml(thisPhoneNumber.getTypeName()) %>
+        </td>
+        <td>
+          <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>&nbsp;
+          <dhv:evaluate if="<%=thisPhoneNumber.getPrimaryNumber()%>">
+            <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+          </dhv:evaluate>
+        </td>
+      </tr>
+  <%
+      }
+    } else {
+  %>
+    <tr class="containerBody">
+      <td>
+        <font color="#9E9E9E"><dhv:label name="contacts.NoPhoneNumbers">No phone numbers entered.</dhv:label></font>
+      </td>
+    </tr>
+  <%}%>
+  </table>
+  &nbsp;
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><dhv:label name="accounts.accounts_add.Addresses">Addresses</dhv:label></strong>
+      </th>
+    </tr>
+  <%
+    Iterator iaddress = ContactDetails.getAddressList().iterator();
+    if (iaddress.hasNext()) {
+      while (iaddress.hasNext()) {
+        ContactAddress thisAddress = (ContactAddress)iaddress.next();
+  %>
+      <tr class="containerBody">
+        <td class="formLabel" valign="top" nowrap>
+          <%= toHtml(thisAddress.getTypeName()) %>
+        </td>
+        <td>
+          <%= toHtml(thisAddress.toString()) %>&nbsp;
+          <dhv:evaluate if="<%=thisAddress.getPrimaryAddress()%>">
+            <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+          </dhv:evaluate>
+        </td>
+      </tr>
+  <%
+      }
+    } else {
+  %>
+    <tr class="containerBody">
+      <td>
+        <font color="#9E9E9E"><dhv:label name="contacts.NoAddresses">No addresses entered.</dhv:label></font>
+      </td>
+    </tr>
+  <%}%>
+  </table>
+  &nbsp;
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><dhv:label name="accounts.accounts_add.AdditionalDetails">Additional Details</dhv:label></strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap><dhv:label name="accounts.accounts_add.Notes">Notes</dhv:label></td>
+      <td><%= toHtml(ContactDetails.getNotes()) %></td>
+    </tr>
+  </table>
+  &nbsp;
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><dhv:label name="accounts.accounts_contacts_calls_details.RecordInformation">Record Information</dhv:label></strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label>
+      </td>
+      <td>
+        <dhv:username id="<%= ContactDetails.getOwner() %>"/>
+        <dhv:evaluate if="<%=!(ContactDetails.getHasEnabledOwnerAccount())%>"><font color="red"><dhv:label name="accounts.accounts_importcontact_details.NoLongerAccess">(No longer has access)</dhv:label></font></dhv:evaluate>
+      </td>
+    </tr>
     <tr class="containerBody">
       <td class="formLabel" nowrap>
-        <%= toHtml(thisEmailAddress.getTypeName()) %>
+        <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
       </td>
       <td>
-        <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>&nbsp;<%= (thisEmailAddress.getPrimaryEmail()) ? "(Primary)" : "" %>
+        <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
+        <zeroio:tz timestamp="<%= ContactDetails.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
       </td>
     </tr>
-<%
-    }
-  } else {
-%>
-    <tr class="containerBody">
-      <td>
-        <font color="#9E9E9E">No email addresses entered.</font>
-      </td>
-    </tr>
-<%}%>
-</table>
-&nbsp;
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-	    <strong>Phone Numbers</strong>
-	  </th>
-  </tr>
-<%  
-  Iterator inumber = ContactDetails.getPhoneNumberList().iterator();
-  if (inumber.hasNext()) {
-    while (inumber.hasNext()) {
-      ContactPhoneNumber thisPhoneNumber = (ContactPhoneNumber)inumber.next();
-%>
     <tr class="containerBody">
       <td class="formLabel" nowrap>
-        <%= toHtml(thisPhoneNumber.getTypeName()) %>
+        <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>
       </td>
       <td>
-        <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>&nbsp;<%= (thisPhoneNumber.getPrimaryNumber()) ? "(Primary)" : "" %>
+        <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
+        <zeroio:tz timestamp="<%= ContactDetails.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
       </td>
     </tr>
-<%
-    }
-  } else {
-%>
-  <tr class="containerBody">
-    <td>
-      <font color="#9E9E9E">No phone numbers entered.</font>
-    </td>
-  </tr>
-<%}%>
-</table>
-&nbsp;
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-	    <strong>Addresses</strong>
-	  </th>
-  </tr>
-<%
-  Iterator iaddress = ContactDetails.getAddressList().iterator();
-  if (iaddress.hasNext()) {
-    while (iaddress.hasNext()) {
-      ContactAddress thisAddress = (ContactAddress)iaddress.next();
-%>    
-    <tr class="containerBody">
-      <td class="formLabel" valign="top" nowrap>
-        <%= toHtml(thisAddress.getTypeName()) %>
-      </td>
-      <td>
-        <%= toHtml(thisAddress.toString()) %>&nbsp;<%= (thisAddress.getPrimaryAddress()) ? "(Primary)" : "" %>
-      </td>
-    </tr>
-<%
-    }
-  } else {
-%>
-  <tr class="containerBody">
-    <td>
-      <font color="#9E9E9E">No addresses entered.</font>
-    </td>
-  </tr>
-<%}%>
-</table>
-&nbsp;
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-	    <strong>Additional Details</strong>
-	  </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>Notes</td>
-    <td><%= toHtml(ContactDetails.getNotes()) %></td>
-  </tr>
-</table>
-&nbsp;
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-      <strong>Record Information</strong>
-    </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Owner
-    </td>
-    <td>
-      <dhv:username id="<%= ContactDetails.getOwner() %>"/>
-      <dhv:evaluate exp="<%=!(ContactDetails.getHasEnabledOwnerAccount())%>"><font color="red">(No longer has access)</font></dhv:evaluate>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Entered
-    </td>
-    <td>
-      <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
-      <zeroio:tz timestamp="<%= ContactDetails.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Modified
-    </td>
-    <td>
-      <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
-      <zeroio:tz timestamp="<%= ContactDetails.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
-    </td>
-  </tr>
-</table>
-<dhv:evaluate exp="<%= (ContactDetails.getEnabled()) %>">
-<dhv:permission name="contacts-external_contacts-delete,contacts-external_contacts-edit"><br></dhv:permission>
-<dhv:sharing primaryBean="ContactDetails" action="edit" all="true"><input type="button" name="cmd" value="Modify"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:sharing>
-<dhv:evaluate exp="<%= !isPopup(request) %>">
-<dhv:permission name="contacts-external_contacts-add"><input type="button" value="Clone" onClick="javascript:this.form.action='ExternalContacts.do?command=Clone&id=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
-</dhv:evaluate>
-<dhv:sharing primaryBean="ContactDetails" action="delete" all="true"><input type="button" name="cmd" value="Delete" onClick="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true','ExternalContacts.do?command=SearchContacts', 'Delete_contact','320','200','yes','no');"></dhv:sharing>
-</dhv:evaluate>
-</td></tr>
-</table>
+  </table>
+  <dhv:evaluate if="<%= (ContactDetails.getEnabled()) %>">
+    <dhv:permission name="contacts-external_contacts-delete,contacts-external_contacts-edit"><br></dhv:permission>
+    <dhv:sharing primaryBean="ContactDetails" action="edit" all="true"><input type="button" name="cmd" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="document.details.command.value='Modify';document.details.submit()"></dhv:sharing>
+    <dhv:evaluate if="<%= !isPopup(request) %>">
+      <dhv:permission name="contacts-external_contacts-add"><input type="button" value="<dhv:label name="global.button.Clone">Clone</dhv:label>" onClick="javascript:this.form.action='ExternalContacts.do?command=Clone&id=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
+    </dhv:evaluate>
+    <dhv:sharing primaryBean="ContactDetails" action="delete" all="true"><input type="button" name="cmd" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true<%= isPopup(request) ? "&sourcePopup=true":"" %>','ExternalContacts.do?command=SearchContacts', 'Delete_contact','320','200','yes','no');"></dhv:sharing>
+    <dhv:evaluate if="<%= ContactDetails.getOrgId() > 0 %>">
+      <dhv:permission name="contacts-external_contacts-edit,contacts-external_contacts-delete"><input type="button" value="<dhv:label name="global.button.move">Move</dhv:label>" onClick="javascript:popURLReturn('ExternalContacts.do?command=MoveToAccount&orgId=<%=ContactDetails.getOrgId()%>&id=<%=ContactDetails.getId()%>&popup=true','ExternalContacts.do?command=View', 'Move_contact','400','320','yes','yes');"/></dhv:permission>
+    </dhv:evaluate>
+  </dhv:evaluate>
+</dhv:container>
 <%= addHiddenParams(request, "popup|popupType|actionId") %>

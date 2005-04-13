@@ -31,31 +31,19 @@
 <td>
 <a href="TroubleTickets.do?"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
-  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+  <a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+  <a href="TroubleTickets.do?command=SearchTickets"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%}else{%> 
   <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
 <a href="TroubleTickets.do?command=Details&id=<%= ticketDetails.getId() %>"><dhv:label name="tickets.details">Ticket Details</dhv:label></a> >
-Maintenance Notes
+<dhv:label name="tickets.maintenancenotes.long_html">Maintenance Notes</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + ticketDetails.getId(); %>
-<dhv:container name="tickets" selected="maintenancenotes" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-  <table cellpadding="4" cellspacing="0" border="0" width="100%" >
-  <br />
-  <tr>
-    <th align="left">
-      An asset was not provided in the ticket.<br />When all required information is entered, this page shows the asset maintenance notes.
-    </th>
-  </tr>
-  </table>
- </td>
- </tr>
-</table>
+<dhv:container name="tickets" selected="maintenancenotes" object="ticketDetails" param="<%= param1 %>">
+  <%@ include file="ticket_header_include.jsp" %>
+  <dhv:label name="ticket.noAssetProvided.text" param="break=<br />">An asset was not provided in the ticket.<br />When all required information is entered, this page shows the asset maintenance notes.</dhv:label>
+</dhv:container>

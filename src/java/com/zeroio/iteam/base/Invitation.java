@@ -134,24 +134,5 @@ public class Invitation {
     return sentMail;
   }
 
-
-  /**
-   *  Gets the valid attribute of the Invitation object
-   *
-   *@return    The valid value
-   */
-  public boolean isValid() {
-    if (email == null || "".equals(email.trim())) {
-      return false;
-    }
-    if (firstName == null || "".equals(firstName.trim())) {
-      return false;
-    }
-    if (lastName == null || "".equals(lastName.trim())) {
-      return false;
-    }
-    return true;
-  }
-
 }
 

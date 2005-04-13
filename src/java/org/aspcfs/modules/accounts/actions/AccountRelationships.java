@@ -15,20 +15,18 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.ActionContext;
-import java.sql.*;
-import java.util.Vector;
-import java.text.DateFormat;
-import java.io.*;
 import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.relationships.base.*;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.relationships.base.Relationship;
+import org.aspcfs.modules.relationships.base.RelationshipList;
+import org.aspcfs.modules.relationships.base.RelationshipTypeList;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  *  Actions for Account Relationships
@@ -63,14 +61,13 @@ public final class AccountRelationships extends CFSModule {
       thisList.setBuildDualMappings(true);
       thisList.buildList(db);
       context.getRequest().setAttribute("relationshipList", thisList);
-      
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "View");
+    return getReturn(context, "View");
   }
 
 
@@ -102,7 +99,7 @@ public final class AccountRelationships extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "Add");
+    return getReturn(context, "Add");
   }
 
 
@@ -129,7 +126,7 @@ public final class AccountRelationships extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "Modify");
+    return getReturn(context, "Modify");
   }
 
 
@@ -141,11 +138,12 @@ public final class AccountRelationships extends CFSModule {
    */
   public String executeCommandSave(ActionContext context) {
     String permission = "accounts-accounts-relationships-add";
-
+    HashMap errors = new HashMap();
     boolean recordInserted = false;
     int resultCount = -1;
     String relTypeId = context.getRequest().getParameter("relTypeId");
     int typeId = -1;
+    boolean isValid = false;
     Relationship thisRelationship = (Relationship) context.getFormBean();
     thisRelationship.setModifiedBy(getUserId(context));
     if (thisRelationship.getId() > 0) {
@@ -166,7 +164,6 @@ public final class AccountRelationships extends CFSModule {
         //user chose reciprocal relation, so switch the direction to maintain order
         thisRelationship.setObjectIdMapsFrom(thisRelationship.getObjectIdMapsTo());
         thisRelationship.setObjectIdMapsTo(thisOrg.getOrgId());
-        thisRelationship.setCategoryIdMapsTo(thisOrg.getOrgId());
         typeId = Integer.parseInt(relTypeId.substring(0, relTypeId.indexOf("_")));
       }else{
         typeId = Integer.parseInt(relTypeId);
@@ -175,11 +172,53 @@ public final class AccountRelationships extends CFSModule {
       thisRelationship.setTypeId(typeId);
       thisRelationship.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
       thisRelationship.setCategoryIdMapsTo(Constants.ACCOUNT_OBJECT);
-      if (thisRelationship.getId() > 0) {
+
+      //build relationshipList to check for duplicates
+      RelationshipList thisList = new RelationshipList();
+      thisList.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
+      thisList.setObjectIdMapsFrom(thisRelationship.getObjectIdMapsFrom());
+      thisList.setTypeId(typeId);
+      thisList.buildList(db);
+      isValid = this.validateObject(context, db, thisRelationship);
+      if (isValid) {
+        if (thisRelationship.getId() > 0) {
         //TODO:implement modify
-      } else {
-        thisRelationship.setEnteredBy(this.getUserId(context));
-        recordInserted = thisRelationship.insert(db);
+          if (thisList.checkDuplicateRelationship(db, thisRelationship.getObjectIdMapsTo(), typeId, Constants.ACCOUNT_OBJECT) == 1) {
+            resultCount = thisRelationship.update(db);
+          } else {
+            SystemStatus systemStatus = this.getSystemStatus(context);
+            errors.put("actionError", systemStatus.getLabel("object.validation.actionError.relationshipDuplicate"));
+          }
+        } else {
+          thisRelationship.setEnteredBy(this.getUserId(context));
+          if (thisList.checkDuplicateRelationship(db, thisRelationship.getObjectIdMapsTo(), typeId, Constants.ACCOUNT_OBJECT) == 0) {
+            recordInserted = thisRelationship.insert(db);
+          } else {
+            SystemStatus systemStatus = this.getSystemStatus(context);
+            errors.put("actionError", systemStatus.getLabel("object.validation.actionError.relationshipDuplicate"));
+          }
+        }
+      }
+      if (!(recordInserted || resultCount == 1)) {
+        if(relTypeId.endsWith("_reciprocal")){
+          if (thisRelationship.getObjectIdMapsFrom() != -1) {
+            Organization secondOrganization = new Organization(db, thisRelationship.getObjectIdMapsFrom());
+            context.getRequest().setAttribute("secondOrganization", secondOrganization);
+          }
+        } else {
+          if (thisRelationship.getObjectIdMapsTo() != -1) {
+            Organization secondOrganization = new Organization(db, thisRelationship.getObjectIdMapsTo());
+            context.getRequest().setAttribute("secondOrganization", secondOrganization);
+          }
+        }
+        RelationshipTypeList typeList = new RelationshipTypeList();
+        typeList.setCategoryIdMapsFrom(Constants.ACCOUNT_OBJECT);
+        typeList.buildList(db);
+        context.getRequest().setAttribute("TypeList", typeList);
+        context.getRequest().setAttribute("relationship", thisRelationship);
+        if (errors.size() > 0) {
+          processErrors(context, errors);
+        }
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -187,13 +226,13 @@ public final class AccountRelationships extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (recordInserted || resultCount == 1) {
-      return this.getReturn(context, "Save");
+    if (isValid && (recordInserted || resultCount == 1)) {
+      return getReturn(context, "Save");
     }
     if (thisRelationship.getId() > 0) {
-      return this.getReturn(context, "Modify");
+      return getReturn(context, "Modify");
     }
-    return this.getReturn(context, "Add");
+    return getReturn(context, "Add");
   }
 
 
@@ -207,7 +246,7 @@ public final class AccountRelationships extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-relationships-delete")) {
       return ("PermissionError");
     }
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     String relId = context.getRequest().getParameter("id");
     boolean recordDeleted = false;
     Connection db = null;
@@ -219,13 +258,16 @@ public final class AccountRelationships extends CFSModule {
       
       Relationship thisRelation = new Relationship(db, Integer.parseInt(relId));
       recordDeleted = thisRelation.delete(db);
+      if (!recordDeleted) {
+        thisRelation.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.relationshipDeletion"));
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "Delete");
+    return getReturn(context, "Delete");
   }
   
   

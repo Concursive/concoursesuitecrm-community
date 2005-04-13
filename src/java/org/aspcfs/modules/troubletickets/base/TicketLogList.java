@@ -15,14 +15,21 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.controller.ObjectValidator;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.troubletickets.base.*;
-import javax.servlet.http.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.Template;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *  A generated list of changes to a ticket based on the saved history
@@ -45,6 +52,7 @@ public class TicketLogList extends ArrayList {
   private boolean doSystemMessages = true;
   private int productId = -1;
   private int customerProductId = -1;
+  private SystemStatus systemStatus = null;
 
 
   /**
@@ -56,16 +64,16 @@ public class TicketLogList extends ArrayList {
   /**
    *  Constructor for the TicketLogList object
    *
-   *@param  request  Description of Parameter
-   *@param  userId   Description of Parameter
+   *@param  request        Description of Parameter
+   *@param  userId         Description of Parameter
+   *@exception  Exception  Description of the Exception
    */
-  public TicketLogList(HttpServletRequest request, int userId) {
-    int i = 0;
+  public TicketLogList(HttpServletRequest request, int userId) throws Exception {
     if (request.getParameter("newticketlogentry") != null) {
       TicketLog thisEntry = new TicketLog();
       thisEntry.setEnteredBy(userId);
       thisEntry.buildRecord(request);
-      if (thisEntry.isValid()) {
+      if (ObjectValidator.validate(null, null, thisEntry)) {
         this.add(thisEntry);
       }
     }
@@ -133,6 +141,26 @@ public class TicketLogList extends ArrayList {
 
 
   /**
+   *  Sets the systemStatus attribute of the TicketLogList object
+   *
+   *@param  tmp  The new systemStatus value
+   */
+  public void setSystemStatus(SystemStatus tmp) {
+    this.systemStatus = tmp;
+  }
+
+
+  /**
+   *  Gets the systemStatus attribute of the TicketLogList object
+   *
+   *@return    The systemStatus value
+   */
+  public SystemStatus getSystemStatus() {
+    return systemStatus;
+  }
+
+
+  /**
    *  Gets the customerProductId attribute of the TicketLogList object
    *
    *@return    The customerProductId value
@@ -173,6 +201,21 @@ public class TicketLogList extends ArrayList {
 
 
   /**
+   *  Gets the label attribute of the TicketLogList object
+   *
+   *@param  systemStatus  Description of the Parameter
+   *@param  map           Description of the Parameter
+   *@param  input         Description of the Parameter
+   *@return               The label value
+   */
+  public String getLabel(SystemStatus systemStatus, HashMap map, String input) {
+    Template template = new Template(input);
+    template.setParseElements(map);
+    return template.getParsedText();
+  }
+
+
+  /**
    *  Sets the systemMessages attribute of the TicketLogList object
    *
    *@param  current  The new systemMessages value
@@ -186,41 +229,97 @@ public class TicketLogList extends ArrayList {
       if (1 == 1) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
-        tempLog.setEntryText("[ Ticket Opened ]");
+        if (systemStatus != null) {
+          tempLog.setEntryText("[ " + systemStatus.getLabel("ticketloglist.ticketOpened") + " ]");
+        } else {
+          tempLog.setEntryText("[ Ticket Opened ]");
+        }
         this.add(tempLog);
       }
       if (1 == 1) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
         if (tempLog.getAssignedToName() != null) {
-          tempLog.setEntryText("[ Assigned to " + current.getAssignedToName() + " ]");
+          if (systemStatus != null) {
+            String logEntry = systemStatus.getLabel("ticketloglist.assignedTo");
+            if (logEntry != null) {
+              HashMap map = new HashMap();
+              map.put("${ticketLogList.assignedToName}", current.getAssignedToName());
+              tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+            } else {
+              tempLog.setEntryText("[ Assigned to " + current.getAssignedToName() + " ]");
+            }
+          } else {
+            tempLog.setEntryText("[ Assigned to " + current.getAssignedToName() + " ]");
+          }
         } else {
-          tempLog.setEntryText("[ Ticket is unassigned ]");
+          if (systemStatus != null) {
+            tempLog.setEntryText("[ " + systemStatus.getLabel("ticketloglist.ticketUnassigned") + " ]");
+          } else {
+            tempLog.setEntryText("[ Ticket is unassigned ]");
+          }
         }
         this.add(tempLog);
       }
       if (current.getDepartmentCode() > 0) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
-        tempLog.setEntryText("[ Department assigned to " + current.getDepartmentName() + " ]");
+        if (systemStatus != null) {
+          String logEntry = systemStatus.getLabel("ticketloglist.assignedDepartment");
+          if (logEntry != null) {
+            HashMap map = new HashMap();
+            map.put("${ticketLogList.departmentName}", current.getDepartmentName());
+            tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+          } else {
+            tempLog.setEntryText("[ Department assigned to " + current.getDepartmentName() + " ]");
+          }
+        } else {
+          tempLog.setEntryText("[ Department assigned to " + current.getDepartmentName() + " ]");
+        }
         this.add(tempLog);
       }
       if (current.getPriorityCode() > 0) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
-        tempLog.setEntryText("[ Priority set to " + current.getPriorityName() + " ]");
+        if (systemStatus != null) {
+          String logEntry = systemStatus.getLabel("ticketloglist.priorityName");
+          if (logEntry != null) {
+            HashMap map = new HashMap();
+            map.put("${ticketLogList.priorityName}", current.getPriorityName());
+            tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+          } else {
+            tempLog.setEntryText("[ Priority set to " + current.getPriorityName() + " ]");
+          }
+        } else {
+          tempLog.setEntryText("[ Priority set to " + current.getPriorityName() + " ]");
+        }
         this.add(tempLog);
       }
       if (current.getSeverityCode() > 0) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
-        tempLog.setEntryText("[ Severity set to " + current.getSeverityName() + " ]");
+        if (systemStatus != null) {
+          String logEntry = systemStatus.getLabel("ticketloglist.severityName");
+          if (logEntry != null) {
+            HashMap map = new HashMap();
+            map.put("${ticketLogList.severityName}", current.getSeverityName());
+            tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+          } else {
+            tempLog.setEntryText("[ Severity set to " + current.getSeverityName() + " ]");
+          }
+        } else {
+          tempLog.setEntryText("[ Severity set to " + current.getSeverityName() + " ]");
+        }
         this.add(tempLog);
       }
       if (current.getClosed()) {
         tempLog = new TicketLog();
         tempLog.createSysMsg(current);
-        tempLog.setEntryText("[ Ticket was immediately closed ]");
+        if (systemStatus != null) {
+          tempLog.setEntryText("[ " + systemStatus.getLabel("ticketloglist.ticketImmediatelyClosed") + " ]");
+        } else {
+          tempLog.setEntryText("[ Ticket was immediately closed ]");
+        }
         this.add(tempLog);
       }
       return true;
@@ -228,42 +327,102 @@ public class TicketLogList extends ArrayList {
       //Comparative log entry
       if (current.getAssignedTo() != prev.getAssignedTo()) {
         tempLog = new TicketLog();
-        tempLog.createSysMsg(prev);
+        tempLog.createSysMsg(current);
         if (tempLog.getAssignedToName() != null) {
-          tempLog.setEntryText("[ Reassigned from " + isAssigned(prev.getAssignedToName()) + " to " + isAssigned(current.getAssignedToName()) + " ]");
+          if (systemStatus != null) {
+            String logEntry = systemStatus.getLabel("ticketloglist.reassignedFrom");
+            if (logEntry != null) {
+              HashMap map = new HashMap();
+              map.put("${ticketLogList.previousAssignedToName}", isAssigned(prev.getAssignedToName()));
+              map.put("${ticketLogList.currentAssignedToName}", isAssigned(current.getAssignedToName()));
+              tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+            } else {
+              tempLog.setEntryText("[ Reassigned from " + isAssigned(prev.getAssignedToName()) + " to " + isAssigned(current.getAssignedToName()) + " ]");
+            }
+          } else {
+            tempLog.setEntryText("[ Reassigned from " + isAssigned(prev.getAssignedToName()) + " to " + isAssigned(current.getAssignedToName()) + " ]");
+          }
         } else {
-          tempLog.setEntryText("[ Ticket is unassigned ]");
+          if (systemStatus != null) {
+            tempLog.setEntryText("[ " + systemStatus.getLabel("ticketloglist.ticketUnassigned") + " ]");
+          } else {
+            tempLog.setEntryText("[ Ticket is unassigned ]");
+          }
         }
         this.add(tempLog);
       }
       if (current.getDepartmentCode() != prev.getDepartmentCode()) {
         tempLog = new TicketLog();
-        tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Department changed from " + isAssigned(prev.getDepartmentName()) + " to " + isAssigned(current.getDepartmentName()) + " ]");
+        tempLog.createSysMsg(current);
+        if (systemStatus != null) {
+          String logEntry = systemStatus.getLabel("ticketloglist.departmentChanged");
+          if (logEntry != null) {
+            HashMap map = new HashMap();
+            map.put("${ticketLogList.previousDepartmentName}", isAssigned(prev.getDepartmentName()));
+            map.put("${ticketLogList.currentDepartmentName}", isAssigned(current.getDepartmentName()));
+            tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+          } else {
+            tempLog.setEntryText("[ Department changed from " + isAssigned(prev.getDepartmentName()) + " to " + isAssigned(current.getDepartmentName()) + " ]");
+          }
+        } else {
+          tempLog.setEntryText("[ Department changed from " + isAssigned(prev.getDepartmentName()) + " to " + isAssigned(current.getDepartmentName()) + " ]");
+        }
         this.add(tempLog);
       }
       if (current.getPriorityCode() != prev.getPriorityCode()) {
         tempLog = new TicketLog();
-        tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Priority changed from " + isAssigned(prev.getPriorityName()) + " to " + isAssigned(current.getPriorityName()) + " ]");
+        tempLog.createSysMsg(current);
+        if (systemStatus != null) {
+          String logEntry = systemStatus.getLabel("ticketloglist.priorityChanged");
+          if (logEntry != null) {
+            HashMap map = new HashMap();
+            map.put("${ticketLogList.previousPriorityName}", isAssigned(prev.getPriorityName()));
+            map.put("${ticketLogList.currentPriorityName}", isAssigned(current.getPriorityName()));
+            tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+          } else {
+            tempLog.setEntryText("[ Priority changed from " + isAssigned(prev.getPriorityName()) + " to " + isAssigned(current.getPriorityName()) + " ]");
+          }
+        } else {
+          tempLog.setEntryText("[ Priority changed from " + isAssigned(prev.getPriorityName()) + " to " + isAssigned(current.getPriorityName()) + " ]");
+        }
         this.add(tempLog);
       }
       if (current.getSeverityCode() != prev.getSeverityCode()) {
         tempLog = new TicketLog();
-        tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Severity changed from " + isAssigned(prev.getSeverityName()) + " to " + isAssigned(current.getSeverityName()) + " ]");
+        tempLog.createSysMsg(current);
+        if (systemStatus != null) {
+          String logEntry = systemStatus.getLabel("ticketloglist.severityChanged");
+          if (logEntry != null) {
+            HashMap map = new HashMap();
+            map.put("${ticketLogList.previousSeverityName}", isAssigned(prev.getSeverityName()));
+            map.put("${ticketLogList.currentSeverityName}", isAssigned(current.getSeverityName()));
+            tempLog.setEntryText("[ " + this.getLabel(systemStatus, map, logEntry) + " ]");
+          } else {
+            tempLog.setEntryText("[ Severity changed from " + isAssigned(prev.getSeverityName()) + " to " + isAssigned(current.getSeverityName()) + " ]");
+          }
+        } else {
+          tempLog.setEntryText("[ Severity changed from " + isAssigned(prev.getSeverityName()) + " to " + isAssigned(current.getSeverityName()) + " ]");
+        }
         this.add(tempLog);
       }
       if (!current.getClosed() && prev.getClosed()) {
         tempLog = new TicketLog();
-        tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Ticket Reopened ]");
+        tempLog.createSysMsg(current);
+        if (systemStatus != null) {
+          tempLog.setEntryText("[ " + systemStatus.getLabel("ticketloglist.ticketReopened") + " ]");
+        } else {
+          tempLog.setEntryText("[ Ticket Reopened ]");
+        }
         this.add(tempLog);
       }
       if (current.getClosed() && !prev.getClosed()) {
         tempLog = new TicketLog();
-        tempLog.createSysMsg(prev);
-        tempLog.setEntryText("[ Ticket Closed ]");
+        tempLog.createSysMsg(current);
+        if (systemStatus != null) {
+          tempLog.setEntryText("[ " + systemStatus.getLabel("ticketloglist.ticketClosed") + " ]");
+        } else {
+          tempLog.setEntryText("[ Ticket Closed ]");
+        }
         this.add(tempLog);
       }
       return true;
@@ -513,7 +672,7 @@ public class TicketLogList extends ArrayList {
   /**
    *  Gets the comments attribute of the TicketLogList object
    *
-   *@return    The comments value
+   *@return                   The comments value
    */
   public String getComments() {
     StringBuffer comments = new StringBuffer("");

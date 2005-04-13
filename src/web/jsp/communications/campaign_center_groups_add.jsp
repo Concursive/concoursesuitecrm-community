@@ -30,22 +30,22 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> > 
-<a href="CampaignManager.do?command=View">Campaign List</a> >
-<a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
-Choose Groups
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> > 
+<a href="CampaignManager.do?command=View"><dhv:label name="campaign.campaignList">Campaign List</dhv:label></a> >
+<a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>"><dhv:label name="campaign.campaignDetails">Campaign Details</dhv:label></a> >
+<dhv:label name="campaign.chooseGroups">Choose Groups</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<input type="submit" value="Update Campaign Groups" onClick="this.form.action='CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>'">
-<input type="submit" value="Cancel" onClick="this.form.action='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'">
-<br>
-&nbsp;<br>
+<input type="submit" value="<dhv:label name="campaign.updateCampaignGroups">Update Campaign Groups</dhv:label>" onClick="this.form.action='CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>'">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="this.form.action='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'">
+<br />
+<br />
 <table cellpadding="4" cellspacing="0" width="100%" style="border: 1px solid #000;">
   <tr class="containerHeader">
     <td style="border-bottom: 1px solid #000;">
-      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
+      <dhv:label name="campaign.campaign.colon" param="<%= "name="+toHtml(Campaign.getName()) %>"><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
     </td>
   </tr>
   <tr>
@@ -53,9 +53,9 @@ Choose Groups
 <table width="100%" border="0" class="empty">
   <tr>
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].action='CampaignManager.do?command=AddGroups&id=<%= Campaign.getId() %>';document.forms[0].submit();">
-        <option <%= CampaignCenterGroupInfo.getOptionValue("my") %>>My Groups</option>
-        <option <%= CampaignCenterGroupInfo.getOptionValue("all") %>>All Groups</option>
+      <select size="1" name="listView" onChange="javascript:document.modForm.action='CampaignManager.do?command=AddGroups&id=<%= Campaign.getId() %>';document.modForm.submit();">
+        <option <%= CampaignCenterGroupInfo.getOptionValue("my") %>><dhv:label name="campaign.myGroups">My Groups</dhv:label></option>
+        <option <%= CampaignCenterGroupInfo.getOptionValue("all") %>><dhv:label name="campaign.allGroups">All Groups</dhv:label></option>
       </select>
       <dhv:formMessage />
     </td>
@@ -64,7 +64,7 @@ Choose Groups
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="3">
-      <strong>Select groups for this campaign</strong>
+      <strong><dhv:label name="campaign.selectGroups.text">Select groups for this campaign</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -84,7 +84,7 @@ Choose Groups
       <%= toHtml(thisList.getGroupName()) %>
     </td>
     <td valign="center" nowrap class="row<%= rowid %>">
-      <a href="javascript:popURL('CampaignManager.do?command=PreviewGroups&id=<%= Campaign.getId() %>&scl=<%= thisList.getId() %>&reset=true&popup=true','CRM_Recipients',600,450,'yes','yes')">Preview Recipients</a>
+      <a href="javascript:popURL('CampaignManager.do?command=PreviewGroups&id=<%= Campaign.getId() %>&scl=<%= thisList.getId() %>&reset=true&popup=true','CRM_Recipients',600,450,'yes','yes')"><dhv:label name="campaign.previewRecipents">Preview Recipients</dhv:label></a>
     </td>
   </tr>
 <%
@@ -102,7 +102,7 @@ Choose Groups
 %>  
   <tr class="containerBody">
     <td colspan="3">
-      No groups to select from, use "Build Groups" to add groups.
+      <dhv:label name="campaign.noGroupsToSelect.text">No groups to select from, use "Build Groups" to add groups.</dhv:label>
     </td>
   </tr>
 <%  
@@ -110,10 +110,10 @@ Choose Groups
 %>
 </table>
 <br>
-<dhv:pagedListControl object="CampaignCenterGroupInfo" showForm="false" resetList="false" enableJScript="true"/>
+<dhv:pagedListControl object="CampaignCenterGroupInfo" showForm="false" resetList="false" enableJScript="true" form="modForm"/>
 <br>
-<input type="submit" value="Update Campaign Groups" onClick="this.form.action='CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>'">
-<input type="submit" value="Cancel" onClick="this.form.action='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'">
+<input type="submit" value="<dhv:label name="campaign.updateCampaignGroups">Update Campaign Groups</dhv:label>" onClick="this.form.action='CampaignManager.do?command=InsertGroups&id=<%= Campaign.getId() %>'">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="this.form.action='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'">
   </td>
   </tr>
 </table>

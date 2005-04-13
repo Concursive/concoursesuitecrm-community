@@ -22,12 +22,12 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      Centric CRM Upgrade
+      <dhv:label name="setup.centricCRMUpgrade">Centric CRM Upgrade</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      Remember to make backups of your data before upgrading.<br />
+      <dhv:label name="setup.rememberToMakeBackupsBeforeUpgrading.text">Remember to make backups of your data before upgrading.</dhv:label><br />
       &nbsp;
     </td>
   </tr>

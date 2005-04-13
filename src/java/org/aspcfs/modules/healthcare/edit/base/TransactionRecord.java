@@ -631,9 +631,6 @@ public class TransactionRecord extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db, ActionContext context) throws SQLException {
-    if (!isValid(db, context)) {
-      return false;
-    }
     return this.insert(db);
   }
 
@@ -694,47 +691,6 @@ public class TransactionRecord extends GenericBean {
     }
     rs.close();
     pst.close();
-  }
-
-
-  /**
-   *  Checks if this record's values are valid
-   *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   The Valid value
-   *@exception  SQLException  Description of Exception
-   */
-  protected boolean isValid(Connection db, ActionContext context) throws SQLException {
-    if (taxId == null || taxId.trim().equals("")) {
-      errors.put("taxIdError", "Tax ID cannot be left blank");
-    }
-    if (licenseNumber == null || licenseNumber.trim().equals("")) {
-      errors.put("licenseNumberError", "License Number cannot be left blank");
-    }
-    if (nameLast == null || nameLast.trim().equals("")) {
-      errors.put("nameLastError", "Last Name cannot be left blank");
-    }
-    if (payerId == null || payerId.trim().equals("")) {
-      errors.put("payerIdError", "Payer ID cannot be left blank");
-    }
-    if (type == null || type.trim().equals("")) {
-      errors.put("typeError", "Type cannot be left blank");
-    }
-    if (transactionId == null || transactionId.trim().equals("")) {
-      errors.put("transactionIdError", "Transaction ID cannot be left blank");
-    }
-    if (transactionDate == null || transactionDate.trim().equals("")) {
-      errors.put("transactionDateError", "Transaction Date cannot be left blank");
-    }
-    if (transactionTime == null || transactionTime.trim().equals("")) {
-      errors.put("transactionTimeError", "Transaction Time cannot be left blank");
-    }
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
 

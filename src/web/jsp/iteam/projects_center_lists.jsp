@@ -45,7 +45,7 @@
   <tr class="subtab">
     <td>
       <img border="0" src="images/icons/stock_list_enum2-16.gif" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=<%= Project.getId() %>">Lists</a> >
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=<%= Project.getId() %>"><dhv:label name="project.lists">Lists</dhv:label></a> >
       <%= toHtml(category.getDescription()) %>
     </td>
   </tr>
@@ -74,12 +74,12 @@
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-    <th width="8"><strong>Action</strong></th>
-    <th align="center"><strong>#</strong></th>
-    <th align="center"><strong>Priority</strong></th>
-    <th width="100%"><strong>Item</strong></th>
-    <th align="center" nowrap><strong>Modified By</strong></th>
-    <th align="center"><strong>Modified</strong></th>
+    <th width="8" nowrap>&nbsp;</th>
+    <th align="center" nowrap><strong>#</strong></th>
+    <th align="center" nowrap><strong><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></strong></th>
+    <th width="100%" nowrap><strong><dhv:label name="accounts.accounts_documents_details.Item">Item</dhv:label></strong></th>
+    <th align="center" nowrap><strong><dhv:label name="accounts.accounts_fields_list.ModifiedBy">Modified By</dhv:label></strong></th>
+    <th align="center" nowrap><strong><dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label></strong></th>
   </tr>
 <%
   if (outlineList.size() == 0) {
@@ -117,11 +117,19 @@
       <%= thisTask.getPriority() %>
     </td>
     <td width="100%" valign="top" align="left"<%= thisTask.getComplete()?" class=\"ghost\"":"" %>>
-      <zeroio:permission name="project-lists-modify"><a href="javascript:changeImages('task<%= count %>', 'ProjectManagementLists.do?command=MarkItem&pid=<%= Project.getId() %>&id=<%= thisTask.getId() %>&check=off', 'ProjectManagementLists.do?command=MarkItem&pid=<%= Project.getId() %>&id=<%= thisTask.getId() %>&check=on')"></zeroio:permission><img name="task<%= count %>" border="0" src="images/box<%= thisTask.getComplete()?"-checked":"" %>.gif" alt="" align="absmiddle" id="<%= thisTask.getComplete()?"1":"0" %>"><zeroio:permission name="project-lists-modify"></a></zeroio:permission>
-      <%= toHtml(thisTask.getDescription()) %>
-      <dhv:evaluate if="<%= hasText(thisTask.getNotes()) %>">
-      <a href="javascript:popURL('ProjectManagementLists.do?command=Details&pid=<%= Project.getId() %>&cid=<%= category.getId() %>&id=<%= thisTask.getId() %>&popup=true','List_Details','650','375','yes','yes');"><img src="images/icons/stock_insert-note-16.gif" border="0" align="absmiddle"/></a>
-      </dhv:evaluate>
+      <table border="0" cellspacing="0" cellpadding="0" width="100%" class="empty">
+        <tr>
+          <td valign="top" nowrap>
+            <zeroio:permission name="project-lists-modify"><a href="javascript:changeImages('task<%= count %>', 'ProjectManagementLists.do?command=MarkItem&pid=<%= Project.getId() %>&id=<%= thisTask.getId() %>&check=off', 'ProjectManagementLists.do?command=MarkItem&pid=<%= Project.getId() %>&id=<%= thisTask.getId() %>&check=on')"></zeroio:permission><img name="task<%= count %>" border="0" src="images/box<%= thisTask.getComplete()?"-checked":"" %>.gif" alt="" align="absmiddle" id="<%= thisTask.getComplete()?"1":"0" %>"><zeroio:permission name="project-lists-modify"></a></zeroio:permission>&nbsp;
+          </td>
+          <td valign="top" width="100%">
+            <%= toHtml(thisTask.getDescription()) %>
+            <dhv:evaluate if="<%= hasText(thisTask.getNotes()) %>">
+            <a href="javascript:popURL('ProjectManagementLists.do?command=Details&pid=<%= Project.getId() %>&cid=<%= category.getId() %>&id=<%= thisTask.getId() %>&popup=true','List_Details','650','375','yes','yes');"><img src="images/icons/stock_insert-note-16.gif" border="0" align="absmiddle"/></a>
+            </dhv:evaluate>
+          </td>
+        </tr>
+      </table>
     </td>
     <td align="center" valign="top" nowrap>
       <dhv:username id="<%= thisTask.getModifiedBy() %>"/>

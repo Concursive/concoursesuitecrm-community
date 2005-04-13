@@ -15,20 +15,18 @@
  */
 package org.aspcfs.modules.service.actions;
 
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.isavvix.tools.FileInfo;
+import com.isavvix.tools.HttpMultiPartParser;
+import com.zeroio.iteam.base.FileItem;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.login.base.AuthenticationItem;
 import org.aspcfs.modules.base.Constants;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import com.isavvix.tools.*;
-import java.io.*;
+import org.aspcfs.modules.login.base.AuthenticationItem;
+
+import java.io.File;
+import java.sql.Connection;
+import java.util.HashMap;
 
 /**
  *  Allows a client to upload a file using HTTP/S for any of the modules...
@@ -52,7 +50,7 @@ public final class ProcessDocument extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     HashMap errors = new HashMap();
-
+    boolean isValid = false;
     boolean recordInserted = false;
     try {
       //Store all uploads into a temporary folder for processing
@@ -62,7 +60,6 @@ public final class ProcessDocument extends CFSModule {
       multiPart.setUsePathParam(false);
       multiPart.setUseUniqueName(true);
       multiPart.setUseDateForFolder(false);
-      //TODO: multiPart.setExtensionId(...some unique id must go here...);
       HashMap parts = multiPart.parseData(context.getRequest(), filePath);
       //Check client authentication
       AuthenticationItem auth = new AuthenticationItem();
@@ -70,15 +67,16 @@ public final class ProcessDocument extends CFSModule {
       auth.setCode((String) parts.get("code"));
       auth.setSystemId((String) parts.get("systemId"));
       db = auth.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       if (db == null) {
-        errors.put("authError", "No authorization");
+        errors.put("authError", systemStatus.getLabel("object.validation.noAuthorization"));
       } else {
         //For the user's filelibrary path
         context.getSession().setAttribute("ConnectionElement", auth.getConnectionElement(context));
       }
       String type = (String) parts.get("type");
       if (type == null) {
-        errors.put("typeError", "Object type not specified");
+        errors.put("typeError", systemStatus.getLabel("object.validation.objectTypeRequired"));
       }
       String id = null;
       String newFilePath = null;
@@ -89,16 +87,22 @@ public final class ProcessDocument extends CFSModule {
         linkModuleId = Constants.DOCUMENTS_TICKETS;
       }
       if (id == null) {
-        errors.put("idError", "Object id was not specified for uploaded file");
+        errors.put("idError", systemStatus.getLabel("object.validation.objectIdNotSpecified"));
       }
       String enteredBy = (String) parts.get("enteredBy");
       if (enteredBy == null) {
-        errors.put("enteredByError", "UserId was not specified");
+        errors.put("enteredByError", systemStatus.getLabel("object.validation.required"));
       }
 
       String subject = (String) parts.get("subject");
       String folderId = (String) parts.get("folderId");
 
+      if (folderId != null) {
+        context.getRequest().setAttribute("folderId", folderId);
+      }
+      if (subject != null) {
+        context.getRequest().setAttribute("subject", subject);
+      }
       if ((Object) parts.get("file1") instanceof FileInfo) {
 
         //Update the database with the resulting file
@@ -109,7 +113,7 @@ public final class ProcessDocument extends CFSModule {
           uploadedFile.delete();
         } else {
           //Move the file from tmp to the generated 'type' path
-          String finalFilePath = newFilePath + this.getDatePath(newFileInfo.getRealFilename());
+          String finalFilePath = newFilePath + getDatePath(newFileInfo.getRealFilename());
           File renamedPath = new File(finalFilePath);
           renamedPath.mkdirs();
           if (System.getProperty("DEBUG") != null) {
@@ -130,34 +134,28 @@ public final class ProcessDocument extends CFSModule {
           thisItem.setFilename(newFileInfo.getRealFilename());
           thisItem.setVersion(1.0);
           thisItem.setSize(newFileInfo.getSize());
-          recordInserted = thisItem.insert(db);
-          if (!recordInserted) {
-            processErrors(context, thisItem.getErrors());
+          isValid = this.validateObject(context, db, thisItem);
+          if (isValid) {
+            recordInserted = thisItem.insert(db);
           }
         }
       } else {
         recordInserted = false;
-        errors.put("actionError", "File not found in posting");
+        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
     } finally {
       freeConnection(context, db);
       context.getSession().removeAttribute("ConnectionElement");
     }
-
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("UploadOK");
-      } else {
-        processErrors(context, errors);
-        return ("UserError");
-      }
+    if (recordInserted) {
+      return ("UploadOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      processErrors(context, errors);
+      return ("UserError");
     }
   }
-
 }
 

@@ -57,20 +57,21 @@ public class Requirement extends GenericBean {
   private boolean closed = false;
   private int closedBy = -1;
   private java.sql.Timestamp closeDate = null;
-
   private int enteredBy = -1;
   private java.sql.Timestamp entered = null;
-
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
   private String startDateTimeZone = null;
   private String deadlineTimeZone = null;
-  //Helpers
+  // Helpers
   private AssignmentList assignments = new AssignmentList();
   private boolean treeOpen = false;
   private AssignmentFolder plan = new AssignmentFolder();
+  // Activity counts
   private int planActivityCount = -1;
   private int planClosedCount = -1;
+  private int planUpcomingCount = -1;
+  private int planOverdueCount = -1;
 
 
   /**
@@ -1322,6 +1323,21 @@ public class Requirement extends GenericBean {
     return planClosedCount;
   }
 
+  public int getPlanOverdueCount() {
+    return planOverdueCount;
+  }
+
+  public void setPlanOverdueCount(int planOverdueCount) {
+    this.planOverdueCount = planOverdueCount;
+  }
+
+  public int getPlanUpcomingCount() {
+    return planUpcomingCount;
+  }
+
+  public void setPlanUpcomingCount(int planUpcomingCount) {
+    this.planUpcomingCount = planUpcomingCount;
+  }
 
   /**
    *  Gets the RelativeDueDateString attribute of the Assignment object
@@ -1359,50 +1375,11 @@ public class Requirement extends GenericBean {
   /**
    *  Description of the Method
    *
-   *@return    Description of the Return Value
-   */
-  private boolean hasAssignments() {
-    return this.getAssignments().size() > 0;
-  }
-
-
-  /**
-   *  Gets the valid attribute of the Requirement object
-   *
-   *@return    The valid value
-   */
-  private boolean isValid() {
-    if (projectId == -1) {
-      errors.put("actionError", "Project invalid");
-    }
-
-    if (shortDescription.equals("")) {
-      errors.put("shortDescriptionError", "Required field");
-    }
-
-    if (description.equals("")) {
-      errors.put("descriptionError", "Required field");
-    }
-
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-
-  /**
-   *  Description of the Method
-   *
    *@param  db                Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
 
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -1498,9 +1475,7 @@ public class Requirement extends GenericBean {
     pst.setInt(++i, enteredBy);
     pst.execute();
     pst.close();
-
     id = DatabaseUtils.getCurrVal(db, "project_requi_requirement_i_seq");
-
     return true;
   }
 
@@ -1547,7 +1522,6 @@ public class Requirement extends GenericBean {
       }
     }
     if (recordCount == 0) {
-      errors.put("actionError", "Requirement could not be deleted because it no longer exists.");
       return false;
     } else {
       return true;
@@ -1578,9 +1552,6 @@ public class Requirement extends GenericBean {
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1 || this.projectId == -1) {
       throw new SQLException("ID was not specified");
-    }
-    if (!isValid()) {
-      return -1;
     }
     int resultCount = 0;
     Requirement previousState = new Requirement(db, this.getId());
@@ -1693,45 +1664,6 @@ public class Requirement extends GenericBean {
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void buildPlanActivityCount(Connection db) throws SQLException {
-    if (id == -1) {
-      planActivityCount = -1;
-      planClosedCount = -1;
-    }
-    //Total count
-    PreparedStatement pst = db.prepareStatement(
-        "SELECT COUNT(*) AS plan_count " +
-        "FROM project_assignments " +
-        "WHERE requirement_id = ? ");
-    pst.setInt(1, id);
-    ResultSet rs = pst.executeQuery();
-    if (rs.next()) {
-      planActivityCount = rs.getInt("plan_count");
-    }
-    rs.close();
-    pst.close();
-    //Complete-Closed count
-    pst = db.prepareStatement(
-        "SELECT COUNT(*) AS plan_count " +
-        "FROM project_assignments " +
-        "WHERE requirement_id = ? " +
-        "AND complete_date IS NOT NULL ");
-    pst.setInt(1, id);
-    rs = pst.executeQuery();
-    if (rs.next()) {
-      planClosedCount = rs.getInt("plan_count");
-    }
-    rs.close();
-    pst.close();
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
   public void buildFolderHierarchy(Connection db) throws SQLException {
     plan.getFolders().setRequirementId(this.getId());
     plan.getFolders().setParentId(0);
@@ -1792,67 +1724,6 @@ public class Requirement extends GenericBean {
 
 
   /**
-   *  Gets the planActivityCount attribute of the Requirement object
-   *
-   *@return    The planActivityCount value
-   */
-  public int getGeneratedPlanActivityCount() {
-    if (plan != null) {
-      return plan.getAssignments().size() + addActivityCount(plan.getFolders());
-    } else {
-      return 0;
-    }
-  }
-
-
-  /**
-   *  Adds a feature to the ActivityCount attribute of the Requirement object
-   *
-   *@param  folders  The feature to be added to the ActivityCount attribute
-   *@return          Description of the Return Value
-   */
-  private int addActivityCount(AssignmentFolderList folders) {
-    int count = 0;
-    Iterator i = folders.iterator();
-    while (i.hasNext()) {
-      AssignmentFolder thisFolder = (AssignmentFolder) i.next();
-      count += thisFolder.getAssignments().size() + addActivityCount(thisFolder.getFolders());
-    }
-    return count;
-  }
-
-
-  /**
-   *  Gets the percentComplete attribute of the Requirement object
-   *
-   *@return    The percentComplete value
-   */
-  public int getPercentComplete() {
-    if (planActivityCount == 0) {
-      return 100;
-    } else if (planActivityCount > -1 && planClosedCount > -1) {
-      double value = (double) Math.round(((double) planClosedCount / (double) planActivityCount) * 100.0);
-      return (int) value;
-    }
-    return 0;
-  }
-
-
-  /**
-   *  Gets the percentIncomplete attribute of the Requirement object
-   *
-   *@return    The percentIncomplete value
-   */
-  public int getPercentIncomplete() {
-    if (planActivityCount > -1 && planClosedCount > -1) {
-      double value = (double) (100.0 - (double) Math.round(((double) planClosedCount / (double) planActivityCount) * 100.0));
-      return (int) value;
-    }
-    return 0;
-  }
-
-
-  /**
    *  The following fields depend on a timezone preference
    *
    *@return    The timeZoneParams value
@@ -1862,6 +1733,96 @@ public class Requirement extends GenericBean {
     thisList.add("startDate");
     thisList.add("deadline");
     return thisList;
+  }
+  
+  public int getPercentClosed() {
+    if (planActivityCount == 0 || planClosedCount == planActivityCount) {
+      return 100;
+    }
+    return (int) Math.round(((double) planClosedCount / (double) planActivityCount) * 100.0);
+  }
+
+  public int getPercentUpcoming() {
+    if (planActivityCount == 0 || planUpcomingCount == 0) {
+      return 0;
+    }
+    return (int) Math.round(((double) planUpcomingCount / (double) planActivityCount) * 100.0);
+  }
+
+  public int getPercentOverdue() {
+    if (planActivityCount == 0 || planOverdueCount == 0) {
+      return 0;
+    }
+    return (int) Math.round(((double) planOverdueCount / (double) planActivityCount) * 100.0);
+  }
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildPlanActivityCounts(Connection db) throws SQLException {
+    planActivityCount = 0;
+    planClosedCount = 0;
+    planUpcomingCount = 0;
+    planOverdueCount = 0;
+    // Total count
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT COUNT(*) AS plan_count " +
+        "FROM project_assignments " +
+        "WHERE requirement_id = ? ");
+    pst.setInt(1, id);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      planActivityCount = rs.getInt("plan_count");
+    }
+    rs.close();
+    pst.close();
+    // Complete-Closed count
+    pst = db.prepareStatement(
+        "SELECT COUNT(*) AS plan_count " +
+        "FROM project_assignments " +
+        "WHERE requirement_id = ? " +
+        "AND complete_date IS NOT NULL ");
+    pst.setInt(1, id);
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      planClosedCount = rs.getInt("plan_count");
+    }
+    rs.close();
+    pst.close();
+    // Overdue count
+    pst = db.prepareStatement(
+        "SELECT COUNT(*) AS reccount " +
+        "FROM project_assignments " +
+        "WHERE requirement_id = ? " +
+        "AND complete_date IS NULL " +
+        "AND due_date IS NOT NULL AND due_date < CURRENT_TIMESTAMP "
+    );
+    pst.setInt(1, id);
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      planOverdueCount = rs.getInt("reccount");
+    }
+    rs.close();
+    pst.close();
+    // Upcoming count
+    pst = db.prepareStatement(
+        "SELECT count(*) AS reccount " +
+        "FROM project_assignments " +
+        "WHERE requirement_id = ? " +
+        "AND complete_date IS NULL " +
+        "AND ((due_date IS NOT NULL AND due_date >= CURRENT_TIMESTAMP) " +
+        "     OR (due_date IS NULL)) "
+    );
+    pst.setInt(1, id);
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      planUpcomingCount = rs.getInt("reccount");
+    }
+    rs.close();
+    pst.close();
   }
 }
 

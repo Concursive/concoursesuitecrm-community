@@ -98,6 +98,7 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
     Connection db = null;
     int resultCount = 0;
     boolean recordInserted = false;
+    boolean isValid = false;
     try {
       db = this.getConnection(context);
       int ticketId = addTicket(context, db);
@@ -110,33 +111,30 @@ public final class AccountTicketsDocumentsFolders extends CFSModule {
       thisFolder.setModifiedBy(getUserId(context));
       thisFolder.setLinkModuleId(Constants.DOCUMENTS_TICKETS);
       thisFolder.setLinkItemId(ticketId);
+      isValid = this.validateObject(context, db, thisFolder);
       if (newFolder) {
-        recordInserted = thisFolder.insert(db);
+        if (isValid) {
+          recordInserted = thisFolder.insert(db);
+        }
       } else {
-        resultCount = thisFolder.update(db);
-      }
-      if (!recordInserted && resultCount < 1) {
-        processErrors(context, thisFolder.getErrors());
+        if (isValid) {
+          resultCount = thisFolder.update(db);
+        }
       }
       //Build array of folder trails
       ProjectManagementFileFolders.buildHierarchy(db, context);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("InsertOK");
-      } else if (resultCount == 1) {
-        return ("UpdateOK");
-      } else {
-        return (executeCommandAdd(context));
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (recordInserted) {
+      return ("InsertOK");
+    } else if (resultCount == 1) {
+      return ("UpdateOK");
     }
+    return (executeCommandAdd(context));
   }
 
 

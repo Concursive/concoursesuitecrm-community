@@ -20,7 +20,7 @@ INSERT INTO lookup_project_status (group_id, level, description, type, graphic) 
 INSERT INTO lookup_project_status (group_id, level, description, type, graphic) VALUES
   (1, 3, 'Complete', 3, 'box-checked.gif');
 INSERT INTO lookup_project_status (group_id, level, description, type, graphic) VALUES
-  (1, 4, 'Closed', 4, 'box-checked.gif');
+  (1, 4, 'Closed', 4, 'box-closed.gif');
   
 INSERT INTO lookup_project_loe (group_id, level, description, default_item, base_value) VALUES (1, 1, 'Minute(s)', @FALSE@, 60);
 INSERT INTO lookup_project_loe (group_id, level, description, default_item, base_value) VALUES (1, 1, 'Hour(s)', @TRUE@, 3600);
@@ -103,7 +103,12 @@ INSERT INTO lookup_project_permission (group_id, category_id, level, default_rol
 INSERT INTO lookup_project_permission (group_id, category_id, level, default_role, permission, description) VALUES (1, 8, 70, 2, 'project-documents-files-rename', 'Rename files');
 INSERT INTO lookup_project_permission (group_id, category_id, level, default_role, permission, description) VALUES (1, 8, 80, 1, 'project-documents-files-delete', 'Delete files');
 
-INSERT INTO lookup_project_permission_category (group_id, level, description) VALUES (1, 90, 'Setup');
-INSERT INTO lookup_project_permission (group_id, category_id, level, default_role, permission, description) VALUES (1, 9, 10, 1, 'project-setup-customize', 'Customize project features');
-INSERT INTO lookup_project_permission (group_id, category_id, level, default_role, permission, description) VALUES (1, 9, 20, 1, 'project-setup-permissions', 'Configure project permissions');
+INSERT INTO lookup_project_permission_category (group_id, level, description) VALUES (1, 90, 'Accounts');
+INSERT INTO lookup_project_permission (group_id, category_id, level, default_role, permission, description) VALUES (1, 9, 10, 1, 'project-accounts-view', 'View account links');
+INSERT INTO lookup_project_permission (group_id, category_id, level, default_role, permission, description) VALUES (1, 9, 20, 1, 'project-accounts-manage', 'Manage account links');
+
+
+INSERT INTO lookup_project_permission_category (group_id, level, description) VALUES (1, 100, 'Setup');
+INSERT INTO lookup_project_permission (group_id, category_id, level, default_role, permission, description) VALUES (1, 10, 10, 1, 'project-setup-customize', 'Customize project features');
+INSERT INTO lookup_project_permission (group_id, category_id, level, default_role, permission, description) VALUES (1, 10, 20, 1, 'project-setup-permissions', 'Configure project permissions');
 

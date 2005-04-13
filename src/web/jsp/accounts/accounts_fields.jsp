@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -32,113 +32,119 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
+<a href="Accounts.do?command=FolderList&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.Folders">Folders</dhv:label></a> >
 <dhv:evaluate if="<%= (Category.getAllowMultipleRecords() && Record == null) %>">
-List of Folder Records
+<dhv:label name="accounts.accounts_fields.ListOfFolderRecords">List of Folder Records</dhv:label>
 </dhv:evaluate>
 <dhv:evaluate if="<%= (Category.getAllowMultipleRecords() && Record != null) %>">
-<a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>">List of Folder Records</a> >
-Folder Record Details
+<a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>"><dhv:label name="accounts.accounts_fields.ListOfFolderRecords">List of Folder Records</dhv:label></a> >
+<dhv:label name="accounts.accounts_fields.FolderRecordDetails">Folder Record Details</dhv:label>
 </dhv:evaluate>
 <dhv:evaluate if="<%= (!Category.getAllowMultipleRecords()) %>">
-Folder Record Details
+<dhv:label name="accounts.accounts_fields.FolderRecordDetails">Folder Record Details</dhv:label>
 </dhv:evaluate>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-<dhv:container name="accounts" selected="folders" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<% if (!Category.getAllowMultipleRecords()) {
-     CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
-%>
-  Folder: <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><%= (Category.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif' alt='Folder is read-only'>":"") %><br>
-  &nbsp;<br>
-  This folder can have only one record...<br>
-  &nbsp;<br>
-<% } %>
-<dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
-<dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
-<dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="Delete Folder Record" onClick="javascript:this.form.action='Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
-<dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
-<br>&nbsp;<br>
-</dhv:permission>
-</dhv:evaluate>
-<%
-  Iterator groups = Category.iterator();
-  while (groups.hasNext()) {
-    CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
-%>    
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-	    <strong><%= thisGroup.getName() %></strong>
-	  </th>
-  </tr>
-<%  
-  Iterator fields = thisGroup.iterator();
-  if (fields.hasNext()) {
-    while (fields.hasNext()) {
-      CustomField thisField = (CustomField)fields.next();
-%>    
-    <tr class="containerBody">
-      <%-- Do not use toHtml() here, it's done by CustomField --%>
-      <td valign="top" nowrap class="formLabel">
-        <%= thisField.getNameHtml() %>
+<dhv:container name="accounts" selected="folders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <table cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr>
+      <td>
+        <dhv:label name="accounts.accounts_documents_folders_add.Folder.colon">Folder:</dhv:label>
+        <strong><%= toHtml(Category.getName()) %></strong>
       </td>
-      <td valign="top">
-        <%= thisField.getValueHtml() %>
+      <% if (!Category.getAllowMultipleRecords()) { %>
+        <td align="right" nowrap>
+          <img src="images/icons/16_edit_comment.gif" align="absMiddle" border="0" />
+          <dhv:label name="accounts.accounts_fields.FolderOneRecord">This folder can have only one record</dhv:label>
+        </td>
+      <% } else { %>
+        <td align="right" nowrap>
+          <img src="images/icons/16_edit_comment.gif" align="absMiddle" border="0" />
+          <dhv:label name="accounts.accounts_fields.FolderHaveMultipleRecords">This folder can have multiple records</dhv:label>
+        </td>
+      <% } %>
+    </tr>
+  </table>
+  <br>
+  <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
+    <dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
+    <dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
+    <dhv:permission name="accounts-accounts-folders-edit,accounts-accounts-folders-delete">
+      <br /><br /><dhv:formMessage showSpace="false" />
+    </dhv:permission>
+  </dhv:evaluate>
+  <%
+    Iterator groups = Category.iterator();
+    while (groups.hasNext()) {
+      CustomFieldGroup thisGroup = (CustomFieldGroup)groups.next();
+  %>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><%= thisGroup.getName() %></strong>
+      </th>
+    </tr>
+  <%
+    Iterator fields = thisGroup.iterator();
+    if (fields.hasNext()) {
+      while (fields.hasNext()) {
+        CustomField thisField = (CustomField)fields.next();
+  %>
+      <tr class="containerBody">
+        <%-- Do not use toHtml() here, it's done by CustomField --%>
+        <td valign="top" nowrap class="formLabel">
+          <%= thisField.getNameHtml() %>
+        </td>
+        <td valign="top">
+          <%= thisField.getValueHtml() %>
+        </td>
+      </tr>
+  <%
+      }
+    } else {
+  %>
+      <tr class="containerBody">
+        <td colspan="2">
+          <font color="#9E9E9E"><dhv:label name="accounts.accounts_fields.NoFieldsAvailable">No fields available.</dhv:label></font>
+        </td>
+      </tr>
+  <%}%>
+  </table>
+  &nbsp;
+  <%}%>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><dhv:label name="accounts.accounts_contacts_calls_details.RecordInformation">Record Information</dhv:label></strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
+      </td>
+      <td>
+        <dhv:username id="<%= Record.getEnteredBy() %>" />
+        <zeroio:tz timestamp="<%= Record.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
       </td>
     </tr>
-<%
-    }
-  } else {
-%>
     <tr class="containerBody">
-      <td colspan="2">
-        <font color="#9E9E9E">No fields available.</font>
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>
+      </td>
+      <td>
+        <dhv:username id="<%= Record.getModifiedBy() %>" />
+        <zeroio:tz timestamp="<%= Record.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
       </td>
     </tr>
-<%}%>
-</table>
-&nbsp;
-<%}%>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-      <strong>Record Information</strong>
-    </th>     
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Entered
-    </td>
-    <td>
-      <dhv:username id="<%= Record.getEnteredBy() %>" />
-      <zeroio:tz timestamp="<%= Record.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Modified
-    </td>
-    <td>
-      <dhv:username id="<%= Record.getModifiedBy() %>" />
-      <zeroio:tz timestamp="<%= Record.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
-    </td>
-  </tr>
-</table>
-&nbsp;
-<br>
-<dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
-<dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
-<dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="Delete Folder Record" onClick="javascript:this.form.action='Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
-</dhv:evaluate>
-</td></tr>
-</table>
+  </table>
+  <br>
+  <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
+    <dhv:permission name="accounts-accounts-folders-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=ModifyFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';submit();"></dhv:permission>
+    <dhv:permission name="accounts-accounts-folders-delete"><input type="button" value="<dhv:label name="global.button.DeleteFolderRecord">Delete Folder Record</dhv:label>" onClick="javascript:this.form.action='Accounts.do?command=DeleteFields&orgId=<%= OrgDetails.getOrgId()%>&catId=<%= (String)request.getAttribute("catId") %>&recId=<%= Category.getRecordId() %>';confirmSubmit(this.form);"></dhv:permission>
+  </dhv:evaluate>
+</dhv:container>
 </form>

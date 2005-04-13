@@ -36,23 +36,23 @@
 <% 
   if (ContactListInfo.getListView().equals("employees")) {
     DepartmentList.setSelectSize(1); 
-    DepartmentList.setJsEvent("onchange=\"javascript:document.forms[0].submit();\"");
+    DepartmentList.setJsEvent("onchange=\"javascript:document.contactListView.submit();\"");
 %>
         <%= DepartmentList.getHtmlSelect("listFilter1",ContactListInfo.getFilterKey("listFilter1")) %>
 <%
   } else if (ContactListInfo.getListView().equals("myprojects")) {
     ProjectListSelect.setSelectSize(1);  
-    ProjectListSelect.setJsEvent("onchange=\"javascript:document.forms[0].submit();\"");
+    ProjectListSelect.setJsEvent("onchange=\"javascript:document.contactListView.submit();\"");
 %>
     <%= ProjectListSelect.getHtml("listFilter1",ContactListInfo.getFilterKey("listFilter1")) %>
 <%} else{ %>
       <select size="1" name="temp">
-        <option value="0">--None--</option>
+        <option value="0"><dhv:label name="calendar.none.4dashes">--None--</dhv:label></option>
       </select>
 <%}%>
     </td>
     <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactListInfo" showHiddenParams="true" enableJScript="true"/>
+      <dhv:pagedListStatus title="<%= showError(request, "actionError") + showAttribute(request, "oneContactRequired") %>" object="ContactListInfo" showHiddenParams="true" enableJScript="true" form="contactListView"/>
     </td>
   </tr>
 </table>
@@ -62,13 +62,13 @@
       &nbsp;
     </th>
     <th>
-      Name
+      <dhv:label name="contacts.name">Name</dhv:label>
     </th>
     <th>
-      Email
+      <dhv:label name="accounts.accounts_add.Email">Email</dhv:label>
     </th>
     <th>
-      Contact Type
+      <dhv:label name="accounts.accounts_contacts_add.ContactType">Contact Type</dhv:label>
     </th>
   </tr>
 <%
@@ -91,7 +91,7 @@
   if ("list".equals(request.getParameter("listType"))) { %>  
       <input type="checkbox" name="checkcontact<%= count %>" value=<%= thisContactId %><%= ((selectedContacts.get(new Integer(thisContactId))!= null)?" checked":"") %> onClick="highlight(this,'<%=User.getBrowserId()%>');">
 <%} else {%>
-      <a href="javascript:document.contactListView.finalsubmit.value = 'true';setFieldSubmit('rowcount','<%= count %>','contactListView');">Select</a>
+      <a href="javascript:document.contactListView.finalsubmit.value = 'true';setFieldSubmit('rowcount','<%= count %>','contactListView');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>
 <%}%>
       <input type="hidden" name="hiddencontactid<%= count %>" value="<%= thisContactId %>">
       <input type="hidden" name="hiddenname<%= count %>" value="<%= toHtml(thisContact.getValidName()) %>">
@@ -115,7 +115,7 @@
 <%  
         } else {
 %>
-    <td>None</td>
+    <td><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.None">None</dhv:label></td>
 <%      
         }
       } else { 
@@ -152,7 +152,7 @@
 %>
   <tr>
     <td class="containerBody" colspan="4">
-      No contacts matched query.
+      <dhv:label name="campaign.noContactsMatchedQuery">No contacts matched query.</dhv:label>
     </td>
   </tr>
 <%}%>
@@ -162,6 +162,7 @@
   <input type="hidden" name="hiddenFieldId" value="<%= toHtmlValue(request.getParameter("hiddenFieldId")) %>">
   <input type="hidden" name="listType" value="<%= toHtmlValue(request.getParameter("listType")) %>">
   <input type="hidden" name="usersOnly" value="<%= toHtmlValue(request.getParameter("usersOnly")) %>">
+  <input type="hidden" name="hierarchy" value="<%= toHtmlValue(request.getParameter("hierarchy")) %>">
   <input type="hidden" name="nonUsersOnly" value="<%= toHtmlValue(request.getParameter("nonUsersOnly")) %>">
   <input type="hidden" name="campaign" value="<%= toHtmlValue(request.getParameter("campaign")) %>">
   <input type="hidden" name="filters" value="<%= toHtmlValue(request.getParameter("filters")) %>">

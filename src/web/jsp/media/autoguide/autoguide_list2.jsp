@@ -26,25 +26,25 @@
 <%@ include file="../../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <link rel="stylesheet" href="css/photolist.css" type="text/css">
-<center><%= AutoGuideDirectoryInfo.getAlphabeticalPageLinks() %><br>
-<dhv:formMessage /></center>
-
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="AutoGuideDirectoryInfo"/></center></dhv:include><br />
+<dhv:formMessage />
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="AutoGuide.do?command=List">
     <td align="left" nowrap>
-      Layout: <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= AutoGuideDirectoryInfo.getOptionValue("list") %>>List View</option>
+      Layout: <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= AutoGuideDirectoryInfo.getOptionValue("list") %>><dhv:label name="project.listView">List View</dhv:label></option>
         <option <%= AutoGuideDirectoryInfo.getOptionValue("slides") %>>Ad View</option>
       </select>
       &nbsp;
-      <% listFilterSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+      <% listFilterSelect.setJsEvent("onChange=\"javascript:document.listView.submit();\""); %>
 			View: <%= listFilterSelect.getHtml("listFilter1", AutoGuideDirectoryInfo.getFilterKey("listFilter1")) %>
       &nbsp;
-      <% statusFilterSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+      <% statusFilterSelect.setJsEvent("onChange=\"javascript:document.listView.submit();\""); %>
 			Status: <%= statusFilterSelect.getHtml("listFilter2", AutoGuideDirectoryInfo.getFilterKey("listFilter2")) %>
       &nbsp;
-      <% MakeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+      <% MakeSelect.setJsEvent("onChange=\"javascript:document.listView.submit();\""); %>
 			Make: <%= MakeSelect.getHtml("listFilter3", AutoGuideDirectoryInfo.getFilterKey("listFilter3")) %>
     </td>
     </form>
@@ -64,7 +64,7 @@
         ++rowcount;
       }
 %>
-<dhv:evaluate exp="<%= (count+2)%3 == 0 %>">  
+<dhv:evaluate if="<%= (count+2)%3 == 0 %>">
   <tr>
 </dhv:evaluate>
     <td class="PhotoList<%= (rowcount == 1?"":"AdditionalRow") %>">
@@ -75,21 +75,21 @@
         <%= thisItem.getVehicle().getYear() %>
         <%= toHtml(thisItem.getVehicle().getMake().getName()) %>
         <%= toHtml(thisItem.getVehicle().getModel().getName()) %>
-<dhv:evaluate exp="<%= hasText(thisItem.getStyle()) %>">
+<dhv:evaluate if="<%= hasText(thisItem.getStyle()) %>">
         <%= toHtml(thisItem.getStyle()) %>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= (thisItem.getSellingPrice() > 0) %>">
+<dhv:evaluate if="<%= (thisItem.getSellingPrice() > 0) %>">
         <br><%= thisItem.getSellingPriceString() %>
 </dhv:evaluate>          
       </span>
     </td>
-<dhv:evaluate exp="<%= count%3 == 0 %>">  
+<dhv:evaluate if="<%= count%3 == 0 %>">
   </tr>
 </dhv:evaluate>
 <%
     }
 %>    
-<dhv:evaluate exp="<%= count%3 != 0 %>">  
+<dhv:evaluate if="<%= count%3 != 0 %>">
   </tr>
 </dhv:evaluate>
 <%  

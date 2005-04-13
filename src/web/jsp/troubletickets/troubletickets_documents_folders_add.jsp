@@ -32,11 +32,11 @@
     var formTest = true;
     var messageText = "";
     if (form.subject.value == "") {
-      messageText += "- Name is required\r\n";
+      messageText += label("Name.required", "- Name is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The form could not be submitted.          \r\nPlease verify the following:\r\n\r\n" + messageText;
+      messageText = label("Form.not.submitted", "The form could not be submitted.          \r\nPlease verify the following:\r\n\r\n") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
@@ -44,54 +44,62 @@
     return true;
   }
 </script>
+<form method="POST" name="inputForm" action="TroubleTicketsDocumentsFolders.do?command=Save&auto-populate=true" onSubmit="return checkForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
-  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+  <a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+  <a href="TroubleTickets.do?command=SearchTickets"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%}else{%> 
   <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>"><dhv:label name="tickets.details">Ticket Details</dhv:label></a> >
-<a href="TroubleTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>">Documents</a> >
-Modify Folder Name
+<a href="TroubleTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>"><dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></a> >
+<% if(fileFolder.getId() > -1) {%>
+  <dhv:label name="account.ticket.modifyFolderName">Modify Folder Name</dhv:label>
+<%} else {%>
+  <dhv:label name="documents.documents.newFolder">New Folder</dhv:label>
+<%}%>
+
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + TicketDetails.getId(); %>
-<dhv:container name="tickets" selected="documents" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-		<td class="containerBack">
-<form method="POST" name="inputForm" action="TroubleTicketsDocumentsFolders.do?command=Save&auto-populate=true" onSubmit="return checkForm(this);">
-<table border="0" cellpadding="4" cellspacing="0" width="100%">
-  <tr class="subtab">
-    <td>
-<%
-String documentFolderList = "TroubleTicketsDocuments.do?command=View&tId="+TicketDetails.getId()+"&column=subject";
-String documentModule = "HelpDesk";
-%>
-      <zeroio:folderHierarchy module="<%= documentModule %>" link="<%= documentFolderList %>"/>
-    </td>
-  </tr>
-</table>
-<br>
-  <input type="submit" value=" Save " name="save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View';"><br />
-  <dhv:formMessage /><br />
+<dhv:container name="tickets" selected="documents" object="TicketDetails" param="<%= param1 %>">
+  <%@ include file="ticket_header_include.jsp" %>
+  <table border="0" cellpadding="4" cellspacing="0" width="100%">
+    <tr class="subtab">
+      <td>
+  <%
+  String documentFolderList = "TroubleTicketsDocuments.do?command=View&tId="+TicketDetails.getId()+"&column=subject";
+  String documentModule = "HelpDesk";
+  %>
+        <zeroio:folderHierarchy module="<%= documentModule %>" link="<%= documentFolderList %>"/>
+      </td>
+    </tr>
+  </table>
+  <br>
+  <input type="submit" value=" <dhv:label name="global.button.save">Save</dhv:label> " name="save">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View';"><br>
+  <%= showError(request, "actionError") %><br>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        <strong><%= (fileFolder.getId() > -1 ? "Rename" : "New" ) %> Folder</strong>
+        <strong>
+          <% if(fileFolder.getId() > -1) {%>
+            <dhv:label name="accounts.accounts_documents_list_menu.RenameFolder">Rename Folder</dhv:label>
+          <%} else {%>
+            <dhv:label name="documents.documents.newFolder">New Folder</dhv:label>
+          <%}%>
+        </strong>
       </th>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel">Name</td>
+      <td nowrap class="formLabel"><dhv:label name="contacts.name">Name</dhv:label></td>
       <td>
         <input type="text" name="subject" size="59" maxlength="255" value="<%= toHtmlValue(fileFolder.getSubject()) %>">
         <input type="hidden" name="display" value="-1"/>
@@ -106,10 +114,8 @@ String documentModule = "HelpDesk";
   <input type="hidden" name="parentId" value="<%= fileFolder.getParentId() %>">
   <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
   <input type="hidden" name="dosubmit" value="true">
-  <input type="submit" value=" Save " name="save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View';"><br>
+  <input type="submit" value=" <dhv:label name="global.button.save">Save</dhv:label> " name="save">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View';"><br>
+</dhv:container>
 </form>
-</td>
-</tr>
-</table>
 </body>

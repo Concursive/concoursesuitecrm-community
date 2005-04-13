@@ -110,7 +110,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View Details
+        <dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -121,7 +121,7 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Complete Activity
+          <dhv:label name="accounts.accounts_calls_list_menu.CompleteActivity">Complete Activity</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -132,7 +132,7 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Modify Activity
+          <dhv:label name="accounts.accounts_calls_list_menu.ModifyActivity">Modify Activity</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -143,7 +143,7 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Modify Activity
+          <dhv:label name="accounts.accounts_calls_list_menu.ModifyActivity">Modify Activity</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -154,7 +154,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Cancel Activity
+          <dhv:label name="accounts.accounts_calls_list_menu.CancelActivity">Cancel Activity</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -165,7 +165,7 @@
           <img src="images/icons/stock_forward_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Forward
+        <dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>
         </td>
       </tr>
       </dhv:permission>

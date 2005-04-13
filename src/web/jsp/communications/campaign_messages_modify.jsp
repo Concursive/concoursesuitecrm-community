@@ -50,10 +50,10 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManagerMessage.do?command=View">Message List</a> >
-<a href="CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>">Message Details</a> >
-Modify Message
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManagerMessage.do?command=View"><dhv:label name="campaign.messageList">Message List</dhv:label></a> >
+<a href="CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>"><dhv:label name="accounts.MessageDetails">Message Details</dhv:label></a> >
+<dhv:label name="campaign.modifyMessage">Modify Message</dhv:label>
 </td>
 </tr>
 </table>
@@ -62,25 +62,25 @@ Modify Message
 <dhv:evaluate if="<%= request.getParameter("return") != null %>">
   <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 </dhv:evaluate>
-<input type="submit" value="Update Message" name="Save">
+<input type="submit" value="<dhv:label name="campaign.updateMessage">Update Message</dhv:label>" name="Save">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
+	<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>'">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>'">
 <%}%>
 <br />
 <dhv:formMessage />
 <%@ include file="message_include.jsp" %>
 <br>
-<input type="submit" value="Update Message" name="Save">
+<input type="submit" value="<dhv:label name="campaign.updateMessage">Update Message</dhv:label>" name="Save">
 <% if (request.getParameter("return") != null) {%>
 	<% if (request.getParameter("return").equals("list")) {%>
-	<input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
+	<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
 	<%}%>
 <%} else {%>
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>'">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=Details&id=<%= Message.getId() %>'">
 <%}%>
 </form>
 </body>

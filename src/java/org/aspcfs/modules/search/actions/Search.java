@@ -15,19 +15,17 @@
  */
 package org.aspcfs.modules.search.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.actions.CFSModule;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.accounts.base.OrganizationList;
-import org.aspcfs.modules.troubletickets.base.TicketList;
-import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.pipeline.base.OpportunityList;
-import java.sql.*;
+import org.aspcfs.modules.troubletickets.base.TicketList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
 
 /**
  *  The Search module.
@@ -64,6 +62,7 @@ public final class Search extends CFSModule {
         contactList.setSearchText(searchCriteria);
         contactList.setPagedListInfo(contactSearchInfo);
         contactList.addIgnoreTypeId(Contact.EMPLOYEE_TYPE);
+        contactList.addIgnoreTypeId(Contact.LEAD_TYPE);
         contactList.setAllContacts(true, this.getUserId(context), this.getUserRange(context));
         contactList.setBuildDetails(true);
         contactList.setBuildTypes(false);
@@ -79,7 +78,7 @@ public final class Search extends CFSModule {
         ContactList employeeList = new ContactList();
         employeeList.setSearchText(searchCriteria);
         employeeList.setPagedListInfo(employeeSearchInfo);
-        employeeList.setEmployeesOnly(true);
+        employeeList.setEmployeesOnly(Constants.TRUE);
         employeeList.setPersonalId(ContactList.IGNORE_PERSONAL);
         employeeList.setBuildDetails(true);
         employeeList.setBuildTypes(false);

@@ -15,9 +15,13 @@
  */
 package org.aspcfs.modules.mycfs.base;
 
-import java.util.*;
-import java.text.*;
-import org.aspcfs.modules.tasks.base.Task;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.StringUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.StringTokenizer;
 
 /**
  *  Description of the Class
@@ -336,29 +340,32 @@ public class CalendarEvent implements Comparable {
    *  Gets the icon attribute of the CalendarEvent class
    *
    *@param  thisCategory  Description of the Parameter
+   *@param  systemStatus  Description of the Parameter
    *@return               The icon value
    */
-  public static String getIcon(String thisCategory) {
+  public static String getIcon(String thisCategory, SystemStatus systemStatus) {
     if (thisCategory.equals("event")) {
-      return "<img border=0 src=\"images/event-timed.gif\" align=texttop width=12 height=12 title=\"Event\">";
+      return "<img border=\"0\" src=\"images/event-timed.gif\" align=\"texttop\" width=\"12\" height=\"12\" title=\"" + getLabel("calendar.Event", systemStatus, "Event") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("holiday")) {
-      return "<img border=0 src=\"images/event-holiday.gif\" align=texttop width=12 height=12 title=\"US Bank Holiday\">";
+      return "<img border=\"0\" src=\"images/event-star12.gif\" align=\"texttop\" width=\"12\" height=\"12\" title=\"" + getLabel("calendar.Holiday", systemStatus, "Holiday") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("System Alerts")) {
-      return "<img border=0 src=\"images/box-hold.gif\" align=texttop width=16 height=15 title=\"User Account Expires\">";
+      return "<img border=\"0\" src=\"images/box-hold.gif\" align=\"texttop\" width=\"16\" height=\"15\" title=\"" + getLabel("calendar.UserAccountExpires", systemStatus, "User Account Expires") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("Opportunity") || thisCategory.equalsIgnoreCase("Opportunities")) {
-      return "<img border=0 src=\"images/alertopp.gif\" align=texttop title=\"Opportunities\">";
-    } else if (thisCategory.equalsIgnoreCase("Calls") || thisCategory.equalsIgnoreCase("Contact Calls") || thisCategory.equalsIgnoreCase("Opportunity Calls")) {
-      return "<img border=0 src=\"images/alertcall.gif\" align=texttop title=\"Calls\">";
-    } else if (thisCategory.equalsIgnoreCase("Pending Calls")) {
-      return "<img border=0 src=\"images/box-hold.gif\" align=texttop title=\"Pending Calls\">";
+      return "<img border=\"0\" src=\"images/alertopp.gif\" align=\"texttop\" title=\"" + getLabel("calendar.Opportunities", systemStatus, "Opportunities") + "\" />";
+    } else if (thisCategory.equalsIgnoreCase("Activities") || thisCategory.equalsIgnoreCase("Contact Activities") || thisCategory.equalsIgnoreCase("Opportunity Activities")) {
+      return "<img border=\"0\" src=\"images/alertcall.gif\" align=\"texttop\" title=\"" + getLabel("calendar.Activities", systemStatus, "Activities") + "\" />";
+    } else if (thisCategory.equalsIgnoreCase("Pending Activities")) {
+      return "<img border=\"0\" src=\"images/box-hold.gif\" align=\"texttop\" title=\"" + getLabel("calendar.PendingActivities", systemStatus, "Pending Activities") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("Assignments")) {
-      return "<img border=0 src=\"images/alertassignment.gif\" align=texttop title=\"Assignments\">";
+      return "<img border=\"0\" src=\"images/alertassignment.gif\" align=\"texttop\" title=\"" + getLabel("calendar.Assignments", systemStatus, "Assignments") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("Account Alerts") || thisCategory.equalsIgnoreCase("Account Contract Alerts")) {
-      return "<img border=0 src=\"images/accounts.gif\" width=\"14\" height=\"14\" align=texttop title=\"Accounts\">";
+      return "<img border=\"0\" src=\"images/accounts.gif\" width=\"14\" height=\"14\" align=\"texttop\" title=\"" + getLabel("calendar.Accounts", systemStatus, "Accounts") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("Tasks")) {
-      return "<img src=\"images/box.gif\" border=0 align=texttop width=\"14\" height=\"14\" title=\"Tasks\">";
+      return "<img src=\"images/box.gif\" border=\"0\" align=\"texttop\" width=\"14\" height=\"14\" title=\"" + getLabel("calendar.Tasks", systemStatus, "Tasks") + "\" />";
     } else if (thisCategory.equalsIgnoreCase("Ticket Requests")) {
-      return "<img src=\"images/tree0.gif\" border=0 align=texttop title=\"Tickets\">";
+      return "<img src=\"images/tree0.gif\" border=\"0\" align=\"texttop\" title=\"" + getLabel("calendar.Tickets", systemStatus, "Tickets") + "\" />";
+    } else if (thisCategory.equalsIgnoreCase("Project Tickets")) {
+      return "<img src=\"images/tree1.gif\" border=\"0\" align=\"texttop\" title=\"" + getLabel("calendar.projectTickets", systemStatus, "Project Tickets") + "\" />";
     }
     return "";
   }
@@ -396,13 +403,32 @@ public class CalendarEvent implements Comparable {
 
 
   /**
+   *  Gets the label attribute of the CalendarEvent object
+   *
+   *@param  label         Description of the Parameter
+   *@param  systemStatus  Description of the Parameter
+   *@param  defaultValue  Description of the Parameter
+   *@return               The label value
+   */
+  public static String getLabel(String label, SystemStatus systemStatus, String defaultValue) {
+    if (systemStatus != null) {
+      String value = systemStatus.getLabel(label);
+      if (value != null) {
+        return StringUtils.toHtml(value);
+      }
+    }
+    return StringUtils.toHtml(defaultValue);
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@return    Description of the Returned Value
    *@since
    */
   public String toString() {
-    return "" + month + "/" + day + "/" + year + ": " + category;
+    return month + "/" + day + "/" + year + ": " + category;
   }
 
 

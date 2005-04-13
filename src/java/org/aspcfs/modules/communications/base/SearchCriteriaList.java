@@ -15,15 +15,20 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.communications.base.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.contacts.base.Contact;
-import java.text.*;
+import org.aspcfs.utils.web.HtmlSelect;
+
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.StringTokenizer;
 
 /**
  *  SearchCriteriaList contains the definitions for querying a ContactList. For
@@ -40,6 +45,7 @@ import java.text.*;
 public class SearchCriteriaList extends HashMap {
 
   protected HashMap errors = new HashMap();
+  protected HashMap warnings = new HashMap();
   private int id = -1;
   private String groupName = "";
   private int contactSource = -1;
@@ -57,6 +63,7 @@ public class SearchCriteriaList extends HashMap {
   public final static int SOURCE_ALL_ACCOUNTS = 3;
   public final static int SOURCE_EMPLOYEES = 4;
   public final static int CONTACT_SOURCE_ELEMENTS = 4;
+  private int inactiveCount = -1;
 
 
   /**
@@ -350,6 +357,56 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
+   *  Sets the warnings attribute of the SearchCriteriaList object
+   *
+   *@param  tmp  The new warnings value
+   */
+  public void setWarnings(HashMap tmp) {
+    this.warnings = tmp;
+  }
+
+
+  /**
+   *  Sets the inactiveCount attribute of the SearchCriteriaList object
+   *
+   *@param  tmp  The new inactiveCount value
+   */
+  public void setInactiveCount(int tmp) {
+    this.inactiveCount = tmp;
+  }
+
+
+  /**
+   *  Sets the inactiveCount attribute of the SearchCriteriaList object
+   *
+   *@param  tmp  The new inactiveCount value
+   */
+  public void setInactiveCount(String tmp) {
+    this.inactiveCount = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the inactiveCount attribute of the SearchCriteriaList object
+   *
+   *@return    The inactiveCount value
+   */
+  public int getInactiveCount() {
+    return inactiveCount;
+  }
+
+
+  /**
+   *  Gets the warnings attribute of the SearchCriteriaList object
+   *
+   *@return    The warnings value
+   */
+  public HashMap getWarnings() {
+    return warnings;
+  }
+
+
+  /**
    *  Gets the OnlyContactIds attribute of the SearchCriteriaList object
    *
    *@return    The OnlyContactIds value
@@ -589,20 +646,20 @@ public class SearchCriteriaList extends HashMap {
         //String keyString = thisElt.getFieldIdAsString() + "*" + thisElt.getOperatorIdAsString() + "*" + thisElt.getText();
 
         switch (thisElt.getSourceId()) {
-            case SearchCriteriaList.SOURCE_MY_CONTACTS:
-              fromString = " [My Contacts]";
-              break;
-            case SearchCriteriaList.SOURCE_ALL_CONTACTS:
-              fromString = " [All Contacts]";
-              break;
-            case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
-              fromString = " [Account Contacts]";
-              break;
-            case SearchCriteriaList.SOURCE_EMPLOYEES:
-              fromString = " [Employees]";
-              break;
-            default:
-              break;
+          case SearchCriteriaList.SOURCE_MY_CONTACTS:
+            fromString = " [My Contacts]";
+            break;
+          case SearchCriteriaList.SOURCE_ALL_CONTACTS:
+            fromString = " [All Contacts]";
+            break;
+          case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
+            fromString = " [Account Contacts]";
+            break;
+          case SearchCriteriaList.SOURCE_EMPLOYEES:
+            fromString = " [Employees]";
+            break;
+          default:
+            break;
         }
 
         if (thisGroup.getGroupField().getDescription().equals("Contact Type") && thisElt.getContactTypeName() != null) {
@@ -735,12 +792,12 @@ public class SearchCriteriaList extends HashMap {
    *@since
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     StringBuffer sql = new StringBuffer();
+    boolean doCommit = false;
     try {
-      db.setAutoCommit(false);
+      if ((doCommit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       sql.append(
           "INSERT INTO saved_criterialist ( owner, name, contact_source, ");
       if (entered != null) {
@@ -775,12 +832,18 @@ public class SearchCriteriaList extends HashMap {
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "saved_criterialist_id_seq");
       insertGroups(db);
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -796,9 +859,6 @@ public class SearchCriteriaList extends HashMap {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
-    if (!isValid()) {
-      return -1;
-    }
     try {
       db.setAutoCommit(false);
       resultCount = this.update(db, false);
@@ -826,9 +886,6 @@ public class SearchCriteriaList extends HashMap {
    */
   public int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
-    if (!isValid()) {
-      return -1;
-    }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -864,6 +921,16 @@ public class SearchCriteriaList extends HashMap {
 
 
   /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean hasWarnings() {
+    return (warnings.size() > 0);
+  }
+
+
+  /**
    *  Finds out what objects depend on this SCL (if any)
    *
    *@param  db                Description of Parameter
@@ -884,7 +951,7 @@ public class SearchCriteriaList extends HashMap {
       int groupcount = rs.getInt("group_count");
       if (groupcount != 0) {
         Dependency thisDependency = new Dependency();
-        thisDependency.setName("Campaigns");
+        thisDependency.setName("campaigns");
         thisDependency.setCount(groupcount);
         thisDependency.setCanDelete(true);
         dependencyList.add(thisDependency);
@@ -915,7 +982,7 @@ public class SearchCriteriaList extends HashMap {
       commit = db.getAutoCommit();
       //Check to see if the group is being used by any unfinished campaigns
       //If so, the group can't be deleted
-      int inactiveCount = 0;
+      inactiveCount = 0;
       st = db.createStatement();
       rs = st.executeQuery(
           "SELECT COUNT(*) AS group_count " +
@@ -927,12 +994,6 @@ public class SearchCriteriaList extends HashMap {
       rs.close();
       if (inactiveCount > 0) {
         st.close();
-        errors.put("actionError", "Group could not be deleted because " +
-            inactiveCount + " " +
-            (inactiveCount == 1 ? "campaign is" : "campaigns are") +
-            " being built that " +
-            (inactiveCount == 1 ? "uses" : "use") +
-            " this group.");
         return false;
       }
       //TODO: A group's criteria should be copied when a Campaign is executed for later review
@@ -977,25 +1038,6 @@ public class SearchCriteriaList extends HashMap {
       }
     }
     return true;
-  }
-
-
-  /**
-   *  Checks whether or not this list is valid. A group name is required before
-   *  an SCL can be inserted into the database
-   *
-   *@return    The Valid value
-   *@since
-   */
-  protected boolean isValid() {
-    if (groupName == null || groupName.equals("")) {
-      errors.put("groupNameError", "Required field");
-    }
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
 

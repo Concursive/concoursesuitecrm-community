@@ -15,20 +15,24 @@
  */
 package org.aspcfs.modules.contacts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.ActionContext;
-import java.sql.*;
-import java.text.DateFormat;
-import java.util.Vector;
-import java.io.*;
 import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.mycfs.base.CFSNote;
-import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.HashMap;
 
 /**
  *  Description of the Class
@@ -185,7 +189,7 @@ public final class ExternalContactsCalls extends CFSModule {
     }
     context.getRequest().setAttribute("CallList", callList);
     context.getRequest().setAttribute("CompletedCallList", completedCallList);
-    return this.getReturn(context, "View");
+    return getReturn(context, "View");
   }
 
 
@@ -198,6 +202,7 @@ public final class ExternalContactsCalls extends CFSModule {
   public String executeCommandSave(ActionContext context) {
     String permission = "contacts-external_contacts-calls-add";
     boolean recordInserted = false;
+    boolean isValid = false;
     int resultCount = -1;
     Contact thisContact = null;
     Call parentCall = null;
@@ -237,7 +242,10 @@ public final class ExternalContactsCalls extends CFSModule {
             thisCall.setStatusId(Call.COMPLETE_FOLLOWUP_PENDING);
           }
         }
-        resultCount = thisCall.update(db, context);
+        isValid = this.validateObject(context, db, thisCall);
+        if (isValid) {
+          resultCount = thisCall.update(db, context);
+        }
       } else {
         //set the status
         if (thisCall.getId() == -1) {
@@ -252,7 +260,10 @@ public final class ExternalContactsCalls extends CFSModule {
           }
         }
         thisCall.setEnteredBy(getUserId(context));
-        recordInserted = thisCall.insert(db, context);
+        isValid = this.validateObject(context, db, thisCall);
+        if (isValid) {
+          recordInserted = thisCall.insert(db, context);
+        }
       }
 
       thisContact = new Contact(db, contactId);
@@ -262,11 +273,18 @@ public final class ExternalContactsCalls extends CFSModule {
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
       if (!recordInserted && resultCount == -1) {
-        processErrors(context, thisCall.getErrors());
-        processWarnings(context, thisCall.getWarnings());
         thisCall.setStatusId(tmpStatusId);
         if (thisCall.getId() > 0) {
+          Call tempCall = new Call(db, thisCall.getId());
+          thisCall.setCallType(tempCall.getCallType());
           addModifyFormElements(db, context, thisCall);
+          if (resultCount == 0) {
+            HashMap errors = new HashMap();
+            SystemStatus systemStatus = this.getSystemStatus(context);
+            errors.put("actionError", systemStatus.getLabel("object.validation.recordUpdatedByAnotherUser"));
+            processErrors(context, errors);
+            context.getRequest().setAttribute("CallDetails", tempCall);
+          }
         }
       } else {
         if (parentCall != null) {
@@ -285,9 +303,9 @@ public final class ExternalContactsCalls extends CFSModule {
     boolean inlinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
     if (recordInserted) {
       if (context.getRequest().getParameter("actionSource") != null) {
-        return this.getReturn(context, "InsertCall");
+        return getReturn(context, "InsertCall");
       }
-      return this.getReturn(context, "Insert");
+      return getReturn(context, "Insert");
     } else if (resultCount == 1) {
       if ("list".equals(context.getRequest().getParameter("return"))) {
         return (executeCommandView(context));
@@ -297,8 +315,15 @@ public final class ExternalContactsCalls extends CFSModule {
       }
       return ("UpdateOK");
     }
+    if (parentId != null && Integer.parseInt(parentId) > -1) {
+      if (action != null && "cancel".equals(action)) {
+        return executeCommandCancel(context);
+      } else {
+        return executeCommandComplete(context);
+      }
+    }
     if (thisCall.getId() > 0) {
-      return this.getReturn(context, "Modify");
+      return getReturn(context, "Modify");
     }
     return (executeCommandAdd(context));
   }
@@ -352,7 +377,7 @@ public final class ExternalContactsCalls extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("CallDetails", thisCall);
-    return this.getReturn(context, "Details");
+    return getReturn(context, "Details");
   }
 
 
@@ -370,6 +395,7 @@ public final class ExternalContactsCalls extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       Contact thisContact = new Contact(db, contactId);
       if (!hasPermission(context, "contacts-external_contacts-calls-delete") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-calls-delete")))) {
         return ("PermissionError");
@@ -379,15 +405,16 @@ public final class ExternalContactsCalls extends CFSModule {
       }
       thisCall = new Call(db, Integer.parseInt(id));
       DependencyList dependencies = thisCall.processDependencies(db);
-      htmlDialog.setTitle("CFS: Confirm Delete");
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       } else {
-        htmlDialog.addMessage(dependencies.getHtmlString());
-        htmlDialog.setHeader("This object has the following dependencies within Centric CRM:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
-        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+        dependencies.setSystemStatus(systemStatus);
+        htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -411,7 +438,7 @@ public final class ExternalContactsCalls extends CFSModule {
     boolean recordDeleted = false;
     String contactId = context.getRequest().getParameter("contactId");
     Call thisCall = null;
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -425,6 +452,11 @@ public final class ExternalContactsCalls extends CFSModule {
       thisCall = new Call(db, context.getRequest().getParameter("id"));
 
       recordDeleted = thisCall.delete(db);
+      if (!recordDeleted) {
+        thisCall.getErrors().put("actionError", systemStatus.getLabel("obejct.validation.actionError.callDeletion"));
+        processErrors(context, thisCall.getErrors());
+      }
+
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -436,7 +468,7 @@ public final class ExternalContactsCalls extends CFSModule {
     if (recordDeleted) {
       context.getRequest().setAttribute("contactId", contactId);
       context.getRequest().setAttribute("refreshUrl", "ExternalContactsCalls.do?command=View&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
-      return this.getReturn(context, "Delete");
+      return getReturn(context, "Delete");
     } else {
       processErrors(context, thisCall.getErrors());
       return (executeCommandView(context));
@@ -471,7 +503,7 @@ public final class ExternalContactsCalls extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       //Type Lookup
       LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
-      callTypeList.addItem(0, "--None--");
+      callTypeList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CallTypeList", callTypeList);
 
       //Result Lookup
@@ -485,7 +517,7 @@ public final class ExternalContactsCalls extends CFSModule {
 
       //Reminder Type Lookup
       LookupList reminderList = systemStatus.getLookupList(db, "lookup_call_reminder");
-      reminderList.addItem(0, "--None--");
+      reminderList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("ReminderTypeList", reminderList);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -495,9 +527,9 @@ public final class ExternalContactsCalls extends CFSModule {
     }
     //if a different module reuses this action then do a explicit return
     if (context.getRequest().getParameter("actionSource") != null) {
-      return this.getReturn(context, "AddCall");
+      return getReturn(context, "AddCall");
     }
-    return this.getReturn(context, "Add");
+    return getReturn(context, "Add");
   }
 
 
@@ -521,7 +553,6 @@ public final class ExternalContactsCalls extends CFSModule {
     try {
       db = this.getConnection(context);
       thisCall = new Call(db, callId);
-
       thisContact = new Contact(db, contactId);
       if (!hasPermission(context, "contacts-external_contacts-calls-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-calls-edit")))) {
         return ("PermissionError");
@@ -539,7 +570,7 @@ public final class ExternalContactsCalls extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("CallDetails", thisCall);
-    return this.getReturn(context, "Modify");
+    return getReturn(context, "Modify");
   }
 
 
@@ -558,7 +589,12 @@ public final class ExternalContactsCalls extends CFSModule {
     addModuleBean(context, "External Contacts", "Complete Activity");
     //Process parameters
     String contactId = context.getRequest().getParameter("contactId");
-    int callId = Integer.parseInt(context.getRequest().getParameter("id"));
+    int callId = -1;
+    if (context.getRequest().getParameter("parentId") != null && !"".equals((String) context.getRequest().getParameter("parentId"))) {
+      callId = Integer.parseInt(context.getRequest().getParameter("parentId"));
+    } else {
+      callId = Integer.parseInt(context.getRequest().getParameter("id"));
+    }
     Connection db = null;
     Call thisCall = null;
     try {
@@ -573,7 +609,7 @@ public final class ExternalContactsCalls extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       //Type Lookup
       LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
-      callTypeList.addItem(0, "--None--");
+      callTypeList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CallTypeList", callTypeList);
 
       //Result Lookup
@@ -594,7 +630,7 @@ public final class ExternalContactsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "Add");
+    return getReturn(context, "Add");
   }
 
 
@@ -614,26 +650,46 @@ public final class ExternalContactsCalls extends CFSModule {
     CFSNote newNote = null;
     Contact thisContact = null;
     addModuleBean(context, "External Contacts", "Forward Message");
+    int noteType = Integer.parseInt(context.getRequest().getParameter("forwardType"));
+    context.getRequest().setAttribute("forwardType", ""+Constants.TASKS);
 
     Connection db = null;
     try {
       db = this.getConnection(context);
-
+      SystemStatus systemStatus = this.getSystemStatus(context);
       thisContact = new Contact(db, contactId);
+      if (!hasPermission(context, "contacts-external_contacts-calls-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-calls-edit")))) {
+        return ("PermissionError");
+      }
       if (!hasAuthority(db, context, thisContact)) {
         return ("PermissionError");
       }
       newNote = new CFSNote();
       Call thisCall = new Call(db, msgId);
+      String contactName = "Contact Name: ";
+      String type = "Type: ";
+      String length = "Length: ";
+      String subject = "Subject: ";
+      String notes = "Notes: ";
+      String entered = "Entered: ";
+      String modified = "Modified: ";
+      
+      contactName = systemStatus.getLabel("mail.label.contactName");
+      type = systemStatus.getLabel("mail.label.type");
+      length = systemStatus.getLabel("mail.label.length");
+      subject = systemStatus.getLabel("mail.label.subject.colon");
+      notes = systemStatus.getLabel("mail.label.notes");
+      entered = systemStatus.getLabel("mail.label.entered");
+      modified = systemStatus.getLabel("mail.label.modified");
+ 
       newNote.setBody(
-          "Contact Name: " + StringUtils.toString(thisCall.getContactName()) + "\n" +
-          "Type: " + StringUtils.toString(thisCall.getCallType()) + "\n" +
-          "Length: " + StringUtils.toString(thisCall.getLengthText()) + "\n" +
-          "Subject: " + StringUtils.toString(thisCall.getSubject()) + "\n" +
-          "Notes: " + StringUtils.toString(thisCall.getNotes()) + "\n" +
-          "Entered: " + getUser(context, thisCall.getEnteredBy()).getContact().getNameFirstLast() + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getEntered()) + "\n" +
-          "Modified: " + getUser(context, thisCall.getModifiedBy()).getContact().getNameFirstLast() + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getModified()));
-
+          contactName + StringUtils.toString(thisCall.getContactName()) + "\n" +
+          type + StringUtils.toString(thisCall.getCallType()) + "\n" +
+          length + StringUtils.toString(thisCall.getLengthText()) + "\n" +
+          subject + StringUtils.toString(thisCall.getSubject()) + "\n" +
+          notes + StringUtils.toString(thisCall.getNotes()) + "\n" +
+          entered + getUser(context, thisCall.getEnteredBy()).getContact().getNameFirstLast() + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getEntered()) + "\n" +
+          modified + getUser(context, thisCall.getModifiedBy()).getContact().getNameFirstLast() + " - " + DateUtils.getServerToUserDateTimeString(this.getUserTimeZone(context), DateFormat.SHORT, DateFormat.LONG, thisCall.getModified()));
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -642,7 +698,7 @@ public final class ExternalContactsCalls extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("Note", newNote);
-    return this.getReturn(context, "ForwardCall");
+    return getReturn(context, "ForwardCall");
   }
 
 
@@ -659,7 +715,12 @@ public final class ExternalContactsCalls extends CFSModule {
     addModuleBean(context, "External Contacts", "Cancel Activity");
     //Process parameters
     String contactId = context.getRequest().getParameter("contactId");
-    int callId = Integer.parseInt(context.getRequest().getParameter("id"));
+    int callId = -1;
+    if (context.getRequest().getParameter("parentId") != null && !"".equals((String) context.getRequest().getParameter("parentId"))) {
+      callId = Integer.parseInt(context.getRequest().getParameter("parentId"));
+    } else {
+      callId = Integer.parseInt(context.getRequest().getParameter("id"));
+    }
     Connection db = null;
     Call thisCall = null;
     try {
@@ -681,7 +742,7 @@ public final class ExternalContactsCalls extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       //Type Lookup
       LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
-      callTypeList.addItem(0, "--None--");
+      callTypeList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("CallTypeList", callTypeList);
       //Result Lookup
       CallResultList resultList = new CallResultList();
@@ -696,7 +757,7 @@ public final class ExternalContactsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "Add");
+    return getReturn(context, "Add");
   }
 
 
@@ -718,7 +779,6 @@ public final class ExternalContactsCalls extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-
       thisContact = new Contact(db, contactId);
       if (!hasPermission(context, "contacts-external_contacts-calls-edit") || (thisContact.getOrgId() > 0 && !(hasPermission(context, "accounts-accounts-contacts-calls-edit")))) {
         return ("PermissionError");
@@ -738,7 +798,7 @@ public final class ExternalContactsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "SendCall");
+    return getReturn(context, "SendCall");
   }
 
 
@@ -761,7 +821,7 @@ public final class ExternalContactsCalls extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "SuggestCall");
+    return getReturn(context, "SuggestCall");
   }
 
 
@@ -781,7 +841,7 @@ public final class ExternalContactsCalls extends CFSModule {
     SystemStatus systemStatus = this.getSystemStatus(context);
     //Type Lookup
     LookupList callTypeList = systemStatus.getLookupList(db, "lookup_call_types");
-    callTypeList.addItem(0, "--None--");
+    callTypeList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
     context.getRequest().setAttribute("CallTypeList", callTypeList);
     if ("pending".equals(context.getRequest().getParameter("view")) || (thisCall.getStatusId() == Call.COMPLETE && (thisCall.getAlertDate() == null || context.getRequest().getAttribute("alertDateWarning") != null))) {
       //Reminder Type Lookup

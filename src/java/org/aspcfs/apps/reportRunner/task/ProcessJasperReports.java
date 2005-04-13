@@ -15,15 +15,23 @@
  */
 package org.aspcfs.apps.reportRunner.task;
 
-import java.sql.*;
-import java.util.*;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import org.aspcfs.modules.reports.base.QueueCriteriaList;
+import org.aspcfs.modules.reports.base.Report;
+import org.aspcfs.modules.reports.base.ReportQueue;
+import org.aspcfs.modules.reports.base.ReportQueueList;
 import org.aspcfs.modules.system.base.Site;
-import org.aspcfs.modules.reports.base.*;
-import org.aspcfs.utils.JasperReportUtils;
-import dori.jasper.engine.*;
-import dori.jasper.engine.util.*;
-import java.io.File;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.JasperReportUtils;
+import org.aspcfs.utils.Dictionary;
+
+import java.io.File;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  *  Class to compile and generate to PDF a JasperReport
@@ -36,6 +44,7 @@ import org.aspcfs.utils.DateUtils;
 public class ProcessJasperReports {
 
   public final static String fs = System.getProperty("file.separator");
+  public final static String CENTRIC_DICTIONARY = "CENTRIC_DICTIONARY";
 
 
   /**
@@ -44,9 +53,10 @@ public class ProcessJasperReports {
    *@param  db             Description of the Parameter
    *@param  thisSite       Description of the Parameter
    *@param  config         Description of the Parameter
+   *@param  dictionary     Description of the Parameter
    *@exception  Exception  Description of the Exception
    */
-  public ProcessJasperReports(Connection db, Site thisSite, HashMap config) throws Exception {
+  public ProcessJasperReports(Connection db, Site thisSite, HashMap config, Dictionary dictionary) throws Exception {
     //Load the report queue for this site, unprocessed only
     ReportQueueList queue = new ReportQueueList();
     queue.setSortAscending(true);
@@ -56,7 +66,7 @@ public class ProcessJasperReports {
     Iterator list = queue.iterator();
     while (list.hasNext()) {
       ReportQueue thisQueue = (ReportQueue) list.next();
-      if (queue.lockReport(thisQueue, db)) {
+      if (ReportQueueList.lockReport(thisQueue, db)) {
         try {
           String reportDir = "";
           if (((String) config.get("FILELIBRARY")).indexOf("WEB-INF") > 0) {
@@ -65,6 +75,12 @@ public class ProcessJasperReports {
           if (config.containsKey("WEB-INF")) {
             reportDir = (String) config.get("WEB-INF") + "reports" + fs;
           }
+
+          Map localizationPrefs = new LinkedHashMap();
+          if (dictionary != null) {
+            localizationPrefs = dictionary.getLocalizationPrefs();
+          }
+
           //Load from the repository, save to the user's site
           String destDir =
               (String) config.get("FILELIBRARY") +
@@ -78,7 +94,8 @@ public class ProcessJasperReports {
               thisQueue,
               db,
               reportDir,
-              destDir + filename);
+              destDir + filename,
+              localizationPrefs);
           thisQueue.setFilename(filename);
           thisQueue.setSize(size);
           thisQueue.setStatus(ReportQueue.STATUS_PROCESSED);
@@ -94,17 +111,17 @@ public class ProcessJasperReports {
 
 
   /**
-   *  For the specified report queue, gets the report and performs the
-   *  JasperReport to PDF
+   *  Description of the Method
    *
-   *@param  thisQueue      Description of the Parameter
-   *@param  db             Description of the Parameter
-   *@param  path           Description of the Parameter
-   *@param  destFilename   Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   *@param  thisQueue          Description of the Parameter
+   *@param  db                 Description of the Parameter
+   *@param  path               Description of the Parameter
+   *@param  destFilename       Description of the Parameter
+   *@param  localizationPrefs  Description of the Parameter
+   *@return                    Description of the Return Value
+   *@exception  Exception      Description of the Exception
    */
-  private static long processReport(ReportQueue thisQueue, Connection db, String path, String destFilename) throws Exception {
+  private static long processReport(ReportQueue thisQueue, Connection db, String path, String destFilename, Map localizationPrefs) throws Exception {
     Report thisReport = new Report(db, thisQueue.getReportId());
     //Determine the path and load JasperReport
     JasperReport jasperReport = JasperReportUtils.getReport(path + thisReport.getFilename());
@@ -112,12 +129,14 @@ public class ProcessJasperReports {
     QueueCriteriaList criteria = new QueueCriteriaList();
     criteria.setQueueId(thisQueue.getId());
     criteria.buildList(db);
+    Map parameters = criteria.getParameters(jasperReport, path);
+    parameters.put(CENTRIC_DICTIONARY, localizationPrefs);
     //Export the pdf to fileLibrary for this site
     JasperRunManager.runReportToPdfFile(
         path +
         thisReport.getFilename().substring(0, thisReport.getFilename().lastIndexOf(".xml")) + ".jasper",
         destFilename,
-        criteria.getParameters(jasperReport, path), db);
+        parameters, db);
     //Determine the size
     File reportFile = new File(destFilename);
     if (reportFile.exists()) {
@@ -126,6 +145,5 @@ public class ProcessJasperReports {
       return -1;
     }
   }
-
 }
 

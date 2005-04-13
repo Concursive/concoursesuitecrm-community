@@ -17,4 +17,4 @@
   - Version: $Id$
   - Description: 
   --%>
-Indexing Complete
+<dhv:label name="project.indexingComplete">Indexing Complete</dhv:label>

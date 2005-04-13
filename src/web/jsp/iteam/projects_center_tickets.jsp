@@ -38,13 +38,13 @@
   <tr class="subtab">
     <td>
       <img src="images/icons/stock_macro-organizer-16.gif" border="0" align="absmiddle">
-      Tickets
+      <dhv:label name="dependency.tickets">Tickets</dhv:label>
     </td>
   </tr>
 </table>
 <br>
 <zeroio:permission name="project-tickets-add">
-<a href="ProjectManagementTickets.do?command=Add&pid=<%= Project.getId() %>">New Ticket</a><br>
+<a href="ProjectManagementTickets.do?command=Add&pid=<%= Project.getId() %>"><dhv:label name="project.newTicket">New Ticket</dhv:label></a><br>
 <br>
 </zeroio:permission>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -53,9 +53,9 @@
     <td align="left">
       <img alt="" src="images/icons/stock_filter-data-by-criteria-16.gif" align="absmiddle">
       <select name="listView" onChange="javascript:document.forms['ticketView'].submit();">
-        <option <%= projectTicketsInfo.getOptionValue("open") %>>Open Tickets</option>
-        <option <%= projectTicketsInfo.getOptionValue("closed") %>>Closed Tickets</option>
-        <option <%= projectTicketsInfo.getOptionValue("all") %>>All Tickets</option>
+        <option <%= projectTicketsInfo.getOptionValue("open") %>><dhv:label name="project.openTickets">Open Tickets</dhv:label></option>
+        <option <%= projectTicketsInfo.getOptionValue("closed") %>><dhv:label name="project.closedTickets">Closed Tickets</dhv:label></option>
+        <option <%= projectTicketsInfo.getOptionValue("all") %>><dhv:label name="project.allTickets">All Tickets</dhv:label></option>
       </select>
     </td>
     <td>
@@ -66,37 +66,36 @@
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-    <th>
-      <strong>Action</strong>
+    <th width="8">&nbsp;</th>
+    <th align="center">
+      <dhv:label name="project.id">Id</dhv:label>
     </th>
     <th align="center">
-      <strong>Id</strong>
-    </th>
-    <th align="center">
-      <strong>Status</strong>
+      <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
     </th>
     <th width="100%" nowrap>
-      <strong>Issue</strong>
+      <dhv:label name="accounts.accounts_asset_history.Issue">Issue</dhv:label>
+      <%= projectTicketsInfo.getSortIcon("problem") %>
     </th>
     <th align="center" nowrap>
-      <strong><a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>&column=pri_code">Priority</a></strong>
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>&column=pri_code"><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></a>
       <%= projectTicketsInfo.getSortIcon("pri_code") %>
     </th>
     <th nowrap>
-      <strong>Assigned To</strong>
+      <dhv:label name="accounts.accounts_contacts_calls_list.AssignedTo">Assigned To</dhv:label>
     </th>
     <th align="center" nowrap>
-      <strong><a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>&column=t.entered">Age</a></strong>
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>&column=t.entered">Age</a>
       <%= projectTicketsInfo.getSortIcon("t.entered") %>
     </th>
     <th align="center" nowrap>
-      <strong><a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>&column=t.modified">Last Modified</a></strong>
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=<%= Project.getId() %>&column=t.modified"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></a>
       <%= projectTicketsInfo.getSortIcon("t.modified") %>
     </th>
   </tr>
 <dhv:evaluate if="<%= ticketList.size() == 0 %>">
   <tr class="row2">
-    <td colspan="8">No tickets to display.</td>
+    <td colspan="8"><dhv:label name="project.noTicketsToDisplay">No tickets to display.</dhv:label></td>
   </tr>
 </dhv:evaluate>
 <%
@@ -112,23 +111,23 @@
 %>    
   <tr class="row<%= rowid %>">
     <td width="8" valign="top" nowrap>
-      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisTicket.getId() %>);"
+      <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>','menuItem',<%= thisTicket.getId() %>,<%= offset %>);"
          onMouseOver="over(0, <%= count %>)"
          onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img 
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td align="center" nowrap valign="top">
-      <%= thisTicket.getProjectTicketCount() %>
+      <a href="ProjectManagementTickets.do?command=Details&pid=<%= Project.getId() %>&id=<%= thisTicket.getId() %>"><%= thisTicket.getProjectTicketCount() %></a>
     </td>
     <td align="center" nowrap valign="top">
 <% if (thisTicket.getClosed() == null) { %>
-      <font color="green">open</font>
+      <font color="green"><dhv:label name="project.open.lowercase">open</dhv:label></font>
 <%} else {%>
-      <font color="red">closed</font>
+      <font color="red"><dhv:label name="project.closed.lowercase">closed</dhv:label></font>
 <%}%>
     </td>
     <td valign="top">
-      <a href="ProjectManagementTickets.do?command=Details&pid=<%= Project.getId() %>&id=<%= thisTicket.getId() %>"><%= toHtml(thisTicket.getProblemHeader()) %></a>
+      <%= toHtml(thisTicket.getProblemHeader()) %>
 	<% if (thisTicket.getCategoryName() != null) { %>
       [<%= toHtml(thisTicket.getCategoryName()) %>]
 	<%}%>

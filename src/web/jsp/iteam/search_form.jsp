@@ -20,9 +20,10 @@
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
-<%@ page import="com.zeroio.iteam.beans.SearchBean" %>
+<%@ page import="com.zeroio.iteam.beans.IteamSearchBean" %>
+<%@ page import="com.darkhorseventures.framework.beans.SearchBean" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
-<jsp:useBean id="searchBean" class="com.zeroio.iteam.beans.SearchBean" scope="session" />
+<jsp:useBean id="searchBean" class="com.zeroio.iteam.beans.IteamSearchBean" scope="session" />
 <jsp:useBean id="searchBeanInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%!
@@ -33,38 +34,48 @@
     return "";
   }
 %>
-<br />
+<body onLoad="document.search.query.focus()">
 <form name="search" action="ProjectManagementSearch.do?auto-populate=true" method="post">
+<%-- Trails --%>
+<table class="trails" cellspacing="0">
+<tr>
+<td>
+<a href="ProjectManagement.do"><dhv:label name="Projects" mainMenuItem="true">Projects</dhv:label></a> >
+<dhv:label name="Search" subMenuItem="true">Search</dhv:label>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <b>Search</b>
+      <b><dhv:label name="button.search">Search</dhv:label></b>
     </th>
   </tr>
   <tr>
     <td class="formLabel">
-      Scope
+      <dhv:label name="documents.search.scope">Scope</dhv:label>
     </td>
     <td>
       <select name="scope" onChange="this.form.query.focus()">
       <dhv:evaluate if="<%= request.getAttribute("Project") != null && ((Project) request.getAttribute("Project")).getId() > -1 %>">
-          <option value="this" <%= selected(searchBean, SearchBean.THIS, SearchBean.UNDEFINED) %>>This Project</option>
-          <option value="thisNews" <%= selected(searchBean, SearchBean.THIS, SearchBean.NEWS) %>>&nbsp; News</option>
-          <option value="thisDiscussion" <%= selected(searchBean, SearchBean.THIS, SearchBean.DISCUSSION) %>>&nbsp; Discussion</option>
-          <option value="thisDocuments" <%= selected(searchBean, SearchBean.THIS, SearchBean.DOCUMENTS) %>>&nbsp; Documents</option>
-          <option value="thisLists" <%= selected(searchBean, SearchBean.THIS, SearchBean.LISTS) %>>&nbsp; Lists</option>
-          <option value="thisPlan" <%= selected(searchBean, SearchBean.THIS, SearchBean.PLAN) %>>&nbsp; Plan</option>
-          <option value="thisTickets" <%= selected(searchBean, SearchBean.THIS, SearchBean.TICKETS) %>>&nbsp; Tickets</option>
-          <option value="thisDetails" <%= selected(searchBean, SearchBean.THIS, SearchBean.DETAILS) %>>&nbsp; Details</option>
+          <option value="this" <%= selected(searchBean, SearchBean.THIS, SearchBean.UNDEFINED) %>><dhv:label name="project.thisProject">This Project</dhv:label></option>
+          <option value="thisNews" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.NEWS) %>>&nbsp; <dhv:label name="project.news">News</dhv:label></option>
+          <option value="thisDiscussion" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.DISCUSSION) %>>&nbsp; <dhv:label name="project.discussion">Discussion</dhv:label></option>
+          <option value="thisDocuments" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.DOCUMENTS) %>>&nbsp; <dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></option>
+          <option value="thisLists" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.LISTS) %>>&nbsp; <dhv:label name="project.lists">Lists</dhv:label></option>
+          <option value="this<dhv:label name="project.plan">Plan</dhv:label>" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.PLAN) %>>&nbsp; <dhv:label name="project.plan">Plan</dhv:label></option>
+          <option value="thisTickets" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.TICKETS) %>>&nbsp; <dhv:label name="dependency.tickets">Tickets</dhv:label></option>
+          <option value="thisDetails" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.DETAILS) %>>&nbsp; <dhv:label name="accounts.details.long_html">Details</dhv:label></option>
       </dhv:evaluate>
-          <option value="all" <%= selected(searchBean, SearchBean.ALL, SearchBean.UNDEFINED) %>>All Project Data</option>
-          <option value="allNews" <%= selected(searchBean, SearchBean.ALL, SearchBean.NEWS) %>>&nbsp; News</option>
-          <option value="allDiscussion" <%= selected(searchBean, SearchBean.ALL, SearchBean.DISCUSSION) %>>&nbsp; Discussion</option>
-          <option value="allDocuments" <%= selected(searchBean, SearchBean.ALL, SearchBean.DOCUMENTS) %>>&nbsp; Documents</option>
-          <option value="allLists" <%= selected(searchBean, SearchBean.ALL, SearchBean.LISTS) %>>&nbsp; Lists</option>
-          <option value="allPlan" <%= selected(searchBean, SearchBean.ALL, SearchBean.PLAN) %>>&nbsp; Plan</option>
-          <option value="allTickets" <%= selected(searchBean, SearchBean.ALL, SearchBean.TICKETS) %>>&nbsp; Tickets</option>
-          <option value="allDetails" <%= selected(searchBean, SearchBean.ALL, SearchBean.DETAILS) %>>&nbsp; Details</option>
+          <option value="all" <%= selected(searchBean, SearchBean.ALL, SearchBean.UNDEFINED) %>><dhv:label name="project.allProjectData">All Project Data</dhv:label></option>
+          <option value="allNews" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.NEWS) %>>&nbsp; <dhv:label name="project.news">News</dhv:label></option>
+          <option value="allDiscussion" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.DISCUSSION) %>>&nbsp; <dhv:label name="project.discussion">Discussion</dhv:label></option>
+          <option value="allDocuments" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.DOCUMENTS) %>>&nbsp; <dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></option>
+          <option value="allLists" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.LISTS) %>>&nbsp; <dhv:label name="project.lists">Lists</dhv:label></option>
+          <option value="all<dhv:label name="project.plan">Plan</dhv:label>" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.PLAN) %>>&nbsp; <dhv:label name="project.plan">Plan</dhv:label></option>
+          <option value="allTickets" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.TICKETS) %>>&nbsp; <dhv:label name="dependency.tickets">Tickets</dhv:label></option>
+          <option value="allDetails" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.DETAILS) %>>&nbsp; <dhv:label name="accounts.details.long_html">Details</dhv:label></option>
       </select>
       <dhv:evaluate if="<%= request.getAttribute("Project") != null && ((Project) request.getAttribute("Project")).getId() > -1 %>">
           <input type="hidden" name="projectId" value="<%= ((Project) request.getAttribute("Project")).getId() %>" />
@@ -76,13 +87,14 @@
   </tr>
   <tr>
     <td class="formLabel">
-      For
+      <dhv:label name="documents.search.for">For</dhv:label>
     </td>
     <td>
-      <input type="text" size="15" name="query" value="<%= toHtmlValue(searchBean.getQuery()) %>" />
+      <input type="text" size="30" name="query" value="<%= toHtmlValue(searchBean.getQuery()) %>" />
     </td>
   </tr>
 </table>
 <br />
-<input type="submit" name="Search" value="Search" />
+<input type="submit" name="Search" value="<dhv:label name="button.search">Search</dhv:label>" />
 </form>
+</body>

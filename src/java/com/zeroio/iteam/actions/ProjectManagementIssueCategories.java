@@ -15,15 +15,12 @@
  */
 package com.zeroio.iteam.actions;
 
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.IssueCategory;
+import com.zeroio.iteam.base.Project;
 import org.aspcfs.modules.actions.CFSModule;
-import com.darkhorseventures.framework.actions.*;
-import com.zeroio.iteam.base.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.utils.web.HtmlSelect;
+
+import java.sql.Connection;
 
 /**
  *  Description of the Class
@@ -48,7 +45,7 @@ public final class ProjectManagementIssueCategories extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project (for access)
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-discussion-forums-add")) {
         return "PermissionError";
@@ -84,7 +81,7 @@ public final class ProjectManagementIssueCategories extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project (for access)
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-discussion-forums-edit")) {
         return "PermissionError";
@@ -115,16 +112,16 @@ public final class ProjectManagementIssueCategories extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
+    boolean isValid = false;
     int resultCount = -1;
     //Parameters
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", "issues_add");
@@ -135,37 +132,36 @@ public final class ProjectManagementIssueCategories extends CFSModule {
         if (!hasProjectAccess(context, db, thisProject, "project-discussion-forums-edit")) {
           return "PermissionError";
         }
-        resultCount = thisCategory.update(db);
-        indexAddItem(context, thisCategory);
+        isValid = this.validateObject(context, db, thisCategory);
+        if (isValid) {
+          resultCount = thisCategory.update(db);
+          indexAddItem(context, thisCategory);
+        }
       } else {
         if (!hasProjectAccess(context, db, thisProject, "project-discussion-forums-add")) {
           return "PermissionError";
         }
         thisCategory.setProjectId(thisProject.getId());
         thisCategory.setEnteredBy(getUserId(context));
-        recordInserted = thisCategory.insert(db);
-        indexAddItem(context, thisCategory);
+        isValid = this.validateObject(context, db, thisCategory);
+        if (isValid) {
+          recordInserted = thisCategory.insert(db);
+          indexAddItem(context, thisCategory);
+        }
       }
-      if (!recordInserted && resultCount <= 0) {
-        processErrors(context, thisCategory.getErrors());
-      } else {
+      if (recordInserted || resultCount > 0) {
         context.getRequest().setAttribute("pid", projectId);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (recordInserted || resultCount == 1) {
-        return ("SaveOK");
-      } else {
-        return (executeCommandAdd(context));
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (recordInserted || resultCount == 1) {
+      return ("SaveOK");
     }
+    return (executeCommandAdd(context));
   }
 
 
@@ -184,14 +180,15 @@ public final class ProjectManagementIssueCategories extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-discussion-forums-delete")) {
         return "PermissionError";
       }
       //Load the issue category
       IssueCategory issueCategory = new IssueCategory(db, Integer.parseInt(categoryId), thisProject.getId());
-      issueCategory.delete(db);
+      String filePath = this.getPath(context, "projects");
+      issueCategory.delete(db, filePath);
       indexDeleteItem(context, issueCategory);
     } catch (Exception e) {
       errorMessage = e;

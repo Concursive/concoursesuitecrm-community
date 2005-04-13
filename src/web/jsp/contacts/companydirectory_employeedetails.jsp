@@ -24,8 +24,9 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <form name="details" action="CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>" method="post">
-<dhv:evaluate exp="<%= !isPopup(request) %>">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
@@ -38,21 +39,34 @@
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<%@ include file="contact_details_header_include.jsp" %>
-<% String param1 = "id=" + ContactDetails.getId(); %>
-<dhv:container name="employees" selected="details" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<dhv:evaluate exp="<%= !isPopup(request) %>">
-<dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
-<dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='CompanyDirectory.do?command=DeleteEmployee&empid=<%=ContactDetails.getId() %>';confirmSubmit(document.details);"></dhv:permission>
-<dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br>&nbsp;</dhv:permission>
+<dhv:container name="employees" selected="details" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+<dhv:evaluate if="<%= !isPopup(request) %>">
+  <dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
+  <dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('CompanyDirectory.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');"></dhv:permission>
+  <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br><br></dhv:permission>
+</dhv:evaluate>
+<dhv:evaluate if="<%= hasText(ContactDetails.getDepartmentName()) || hasText(ContactDetails.getTitle())%>">
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><dhv:label name="accounts.accounts_details.PrimaryInformation">Primary Information</dhv:label></strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel"><dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label></td>
+      <td><%= toHtml(ContactDetails.getTitle()) %></td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel"><dhv:label name="reports.employees.employees.department">Department</dhv:label></td>
+      <td><%= toHtml(ContactDetails.getDepartmentName()) %></td>
+    </tr>
+  </table>
+  <br />
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Email Addresses</strong>
+	    <strong><dhv:label name="accounts.accounts_add.EmailAddresses">Email Addresses</dhv:label></strong>
 	  </th>
   </tr>
 <%  
@@ -64,7 +78,12 @@
   <tr class="containerBody">
     <td nowrap class="formLabel"><%= toHtml(thisEmailAddress.getTypeName()) %></td>
     <td>
-      <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>&nbsp;<%= (thisEmailAddress.getPrimaryEmail()) ? "(Primary)" : "" %>
+      <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>&nbsp;
+<% if(!thisEmailAddress.getPrimaryEmail()) {%>
+  &nbsp;
+<%} else {%>
+  <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+<%}%>
     </td>
   </tr>
 <%    
@@ -72,7 +91,7 @@
   } else {
 %>
   <tr class="containerBody">
-    <td colspan="2"><font color="#9E9E9E">No email addresses entered.</font></td>
+    <td colspan="2"><font color="#9E9E9E"><dhv:label name="contacts.NoEmailAdresses">No email addresses entered.</dhv:label></font></td>
   </tr>
 <%}%>
 </table>
@@ -80,7 +99,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Phone Numbers</strong>
+	    <strong><dhv:label name="accounts.accounts_add.PhoneNumbers">Phone Numbers</dhv:label></strong>
 	  </th>
   </tr>
 <%  
@@ -92,7 +111,12 @@
   <tr class="containerBody">
     <td class="formLabel" nowrap><%= toHtml(thisPhoneNumber.getTypeName()) %></td>
     <td>
-      <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>&nbsp;<%= (thisPhoneNumber.getPrimaryNumber()) ? "(Primary)" : "" %>
+      <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>&nbsp;
+<% if(!thisPhoneNumber.getPrimaryNumber()) {%>
+  &nbsp;
+<%} else {%>
+  <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+<%}%>
     </td>
   </tr>
 <%
@@ -100,7 +124,7 @@
   } else {
 %>
   <tr class="containerBody">
-    <td colspan="2"><font color="#9E9E9E">No phone numbers entered.</font></td>
+    <td colspan="2"><font color="#9E9E9E"><dhv:label name="contacts.NoPhoneNumbers">No phone numbers entered.</dhv:label></font></td>
   </tr>
 <%}%>
 </table>
@@ -108,7 +132,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Addresses</strong>
+	    <strong><dhv:label name="accounts.accounts_add.Addresses">Addresses</dhv:label></strong>
 	  </th>
   </tr>
 <%  
@@ -120,7 +144,12 @@
     <tr class="containerBody">
       <td class="formLabel" valign="top" nowrap><%= toHtml(thisAddress.getTypeName()) %></td>
       <td>
-        <%= toHtml(thisAddress.toString()) %>&nbsp;<%= (thisAddress.getPrimaryAddress()) ? "(Primary)" : "" %>
+        <%= toHtml(thisAddress.toString()) %>&nbsp;
+<% if(!thisAddress.getPrimaryAddress()) {%>
+  &nbsp;
+<%} else {%>
+  <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+<%}%>
       </td>
     </tr>
 <%    
@@ -128,19 +157,19 @@
   } else {
 %>
   <tr class="containerBody">
-    <td colspan="2"><font color="#9E9E9E">No addresses entered.</font></td>
+    <td colspan="2"><font color="#9E9E9E"><dhv:label name="contacts.NoAddresses">No addresses entered.</dhv:label></font></td>
   </tr>
 <%}%>
 </table>
-&nbsp;
+<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Additional Details</strong>
+	    <strong><dhv:label name="accounts.accounts_add.AdditionalDetails">Additional Details</dhv:label></strong>
 	  </th>
   </tr>
   <tr class="containerBody">
-    <td class="formLabel" nowrap>Notes</td>
+    <td class="formLabel" nowrap><dhv:label name="accounts.accounts_add.Notes">Notes</dhv:label></td>
     <td><%= toHtml(ContactDetails.getNotes()) %>&nbsp;</td>
   </tr>
 </table>
@@ -148,21 +177,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Record Information</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_calls_details.RecordInformation">Record Information</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Owner
-    </td>
-    <td>
-      <dhv:username id="<%= ContactDetails.getOwner() %>"/>
-      <dhv:evaluate exp="<%=!(ContactDetails.getHasEnabledOwnerAccount())%>"><font color="red">(No longer has access)</font></dhv:evaluate>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Entered
+      <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
     </td>
     <td>
       <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
@@ -171,7 +191,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Modified
+      <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>
     </td>
     <td>
       <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
@@ -179,13 +199,12 @@
     </td>
   </tr>
 </table>
-<dhv:evaluate exp="<%= !isPopup(request) %>">
-<dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br></dhv:permission>
-<dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="Modify" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
-<dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="Delete" onClick="javascript:this.form.action='CompanyDirectory.do?command=DeleteEmployee&empid=<%=ContactDetails.getId() %>';confirmSubmit(document.details);"></dhv:permission>
+<dhv:evaluate if="<%= !isPopup(request) %>">
+  <dhv:permission name="contacts-internal_contacts-edit,contacts-internal_contacts-delete"><br></dhv:permission>
+  <dhv:permission name="contacts-internal_contacts-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='CompanyDirectory.do?command=ModifyEmployee&empid=<%= ContactDetails.getId() %>';submit();"></dhv:permission>
+  <dhv:permission name="contacts-internal_contacts-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('CompanyDirectory.do?command=ConfirmDelete&id=<%= ContactDetails.getId() %>&popup=true','CompanyDirectory.do?command=ListEmployees', 'Delete_Employee','330','200','yes','no');"></dhv:permission>
 </dhv:evaluate>
-</td></tr>
-</table>
+</dhv:container>
 </form>
 
 

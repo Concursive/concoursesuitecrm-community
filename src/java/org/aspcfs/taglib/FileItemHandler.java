@@ -15,20 +15,22 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.util.ArrayList;
 import org.aspcfs.modules.communications.actions.ProcessFileItemImage;
+import org.aspcfs.utils.DatabaseUtils;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.ArrayList;
 
 /**
- *  This Class permits the user to have access to a specific fileItem for
- *  download by adding the id to a session array and then the image will
- *  evaluate the id later and stream the image.
+ * This Class permits the user to have access to a specific fileItem for
+ * download by adding the id to a session array and then the image will
+ * evaluate the id later and stream the image.
  *
- *@author     matt rajkowski
- *@created    April 1, 2004
- *@version    $Id: FileItemHandler.java,v 1.2 2004/05/04 15:46:14 mrajkowski Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: FileItemHandler.java,v 1.2 2004/05/04 15:46:14 mrajkowski Exp
+ *          $
+ * @created April 1, 2004
  */
 public class FileItemHandler extends TagSupport {
 
@@ -36,12 +38,27 @@ public class FileItemHandler extends TagSupport {
   private String path = null;
   private String version = null;
   private String name = null;
+  private boolean thumbnail = false;
 
 
   /**
-   *  Sets the name attribute of the FileItemHandler object
+   * Sets the thumbnail attribute of the FileItemHandler object
    *
-   *@param  tmp  The new name value
+   * @param tmp The new thumbnail value
+   */
+  public void setThumbnail(String tmp) {
+    this.thumbnail = DatabaseUtils.parseBoolean(tmp);
+  }
+
+  public void setThumbnail(boolean tmp) {
+    thumbnail = tmp;
+  }
+
+
+  /**
+   * Sets the name attribute of the FileItemHandler object
+   *
+   * @param tmp The new name value
    */
   public void setName(String tmp) {
     this.name = tmp;
@@ -49,20 +66,19 @@ public class FileItemHandler extends TagSupport {
 
 
   /**
-   *  Sets the version attribute of the FileItemHandler object
+   * Sets the version attribute of the FileItemHandler object
    *
-   *@param  tmp  The new version value
+   * @param tmp The new version value
    */
   public void setVersion(String tmp) {
     this.version = tmp;
   }
 
 
-
   /**
-   *  Sets the id attribute of the FileItemHandler object
+   * Sets the id attribute of the FileItemHandler object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(String tmp) {
     this.id = tmp;
@@ -70,9 +86,9 @@ public class FileItemHandler extends TagSupport {
 
 
   /**
-   *  Sets the id attribute of the FileItemHandler object
+   * Sets the id attribute of the FileItemHandler object
    *
-   *@param  tmp  The new id value
+   * @param tmp The new id value
    */
   public void setId(int tmp) {
     this.id = String.valueOf(tmp);
@@ -80,9 +96,9 @@ public class FileItemHandler extends TagSupport {
 
 
   /**
-   *  Sets the path attribute of the FileItemHandler object
+   * Sets the path attribute of the FileItemHandler object
    *
-   *@param  tmp  The new path value
+   * @param tmp The new path value
    */
   public void setPath(String tmp) {
     this.path = tmp;
@@ -90,25 +106,30 @@ public class FileItemHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return                   Description of the Return Value
-   *@exception  JspException  Description of the Exception
+   * @return Description of the Return Value
+   * @throws JspException Description of the Exception
    */
   public int doStartTag() throws JspException {
     try {
-      ArrayList allowedImages = (ArrayList) pageContext.getSession().getAttribute(ProcessFileItemImage.PROCESS_FILE_ITEM_NAME);
+      ArrayList allowedImages = (ArrayList) pageContext.getSession().getAttribute(
+          ProcessFileItemImage.PROCESS_FILE_ITEM_NAME);
       if (allowedImages == null) {
         synchronized (pageContext.getSession()) {
-          allowedImages = (ArrayList) pageContext.getSession().getAttribute(ProcessFileItemImage.PROCESS_FILE_ITEM_NAME);
+          allowedImages = (ArrayList) pageContext.getSession().getAttribute(
+              ProcessFileItemImage.PROCESS_FILE_ITEM_NAME);
           if (allowedImages == null) {
             allowedImages = new ArrayList();
-            pageContext.getSession().setAttribute(ProcessFileItemImage.PROCESS_FILE_ITEM_NAME, allowedImages);
+            pageContext.getSession().setAttribute(
+                ProcessFileItemImage.PROCESS_FILE_ITEM_NAME, allowedImages);
           }
         }
       }
-      allowedImages.add(id + (version != null ? "-" + version : ""));
-      this.pageContext.getOut().write("<img src=\"ProcessFileItemImage.do?id=" + id + "&path=" + path + (version != null ? "&version=" + version : "") + "\" " + (name != null ? "name=\"" + name + "\"" : "") + " border=\"0\"/>");
+      allowedImages.add(
+          id + (version != null ? "-" + version : "") + (thumbnail ? "TH" : ""));
+      this.pageContext.getOut().write(
+          "<img src=\"ProcessFileItemImage.do?id=" + id + "&path=" + path + (version != null ? "&version=" + version : "") + (thumbnail ? "&thumbnail=true" : "") + "\" " + (name != null ? "name=\"" + name + "\"" : "") + " border=\"0\"/>");
     } catch (Exception e) {
       System.err.println("EXCEPTION: FileItemHandler-> " + e.getMessage());
     }
@@ -117,9 +138,9 @@ public class FileItemHandler extends TagSupport {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@return    Description of the Return Value
+   * @return Description of the Return Value
    */
   public int doEndTag() {
     return EVAL_PAGE;

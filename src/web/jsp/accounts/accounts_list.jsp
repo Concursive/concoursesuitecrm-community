@@ -17,7 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*" %>
+<%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*, org.aspcfs.modules.base.PhoneNumber" %>
 <jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
 <jsp:useBean id="SearchOrgListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="TypeSelect" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -38,7 +38,7 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-Search Results
+<dhv:label name="accounts.SearchResults">Search Results</dhv:label>
 </td>
 </tr>
 </table>
@@ -52,13 +52,14 @@ Search Results
 </table>
 </dhv:evaluate>
 <dhv:permission name="accounts-accounts-add"><a href="Accounts.do?command=Add"><dhv:label name="accounts.add">Add an Account</dhv:label></a></dhv:permission>
-<center><%= SearchOrgListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="SearchOrgListInfo"/></center></dhv:include>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchOrgListInfo"/>
 <% int columnCount = 0; %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th width="8" <% ++columnCount; %>>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th nowrap <% ++columnCount; %>>
       <strong><a href="Accounts.do?command=Search&column=o.name"><dhv:label name="organization.name">Account Name</dhv:label></a></strong>
@@ -66,17 +67,12 @@ Search Results
     </th>
     <dhv:include name="organization.phoneNumbers" none="true">
     <th nowrap <% ++columnCount; %>>
-        <strong>Phone</strong>
-		</th>
-    </dhv:include>
-    <dhv:include name="organization.phoneNumbers" none="true">
-    <th nowrap <% ++columnCount; %>>
-        <strong>Fax</strong>
+        <strong><dhv:label name="account.phoneFax">Phone/Fax</dhv:label></strong>
 		</th>
     </dhv:include>
     <dhv:include name="organization.emailAddresses" none="true">
     <th nowrap <% ++columnCount; %>>
-        <strong>Email</strong>
+        <strong><dhv:label name="accounts.accounts_add.Email">Email</dhv:label></strong>
 		</th>
     </dhv:include>
   </tr>
@@ -103,31 +99,36 @@ Search Results
 		</td>
     <dhv:include name="organization.phoneNumbers" none="true">
 		<td valign="center" class="row<%= rowid %>" nowrap>
-		<dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() == null)%>">
-        <%= toHtml(thisOrg.getPhoneNumber("Main")) %>
-		</dhv:evaluate>    
-		<dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() != null)%>">
-        <%= toHtml(thisOrg.getPrimaryContact().getPhoneNumber("Business")) %>
+		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() == null)%>">
+      <%Iterator itr = thisOrg.getPhoneNumberList().iterator();%>
+      <%if (!itr.hasNext()) {%>&nbsp;<%}%>
+      <%while (itr.hasNext()) {
+        PhoneNumber phoneNumber = (PhoneNumber)itr.next(); %>
+        <%= phoneNumber.getPhoneNumber()%> (<%=phoneNumber.getTypeName()%>)<br />
+      <%}%>
 		</dhv:evaluate>
-		</td>
-    </dhv:include>
-    <dhv:include name="organization.phoneNumbers" none="true">
-		<td valign="center" class="row<%= rowid %>" nowrap>
-        <%= toHtml(thisOrg.getPhoneNumber("Fax")) %>
+		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() != null)%>">
+      <%Iterator itr = thisOrg.getPrimaryContact().getPhoneNumberList().iterator();%>
+      <%if (!itr.hasNext()) {%>&nbsp;<%}%>
+      <%while (itr.hasNext()) {
+        PhoneNumber phoneNumber = (PhoneNumber)itr.next(); %>
+        <%= phoneNumber.getPhoneNumber()%> (<%=phoneNumber.getTypeName()%>)<br />
+      <%}%>
+		</dhv:evaluate>
 		</td>
     </dhv:include>
     <dhv:include name="organization.emailAddresses" none="true">
 		<td valign="center" class="row<%= rowid %>" nowrap>
-		<dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() == null)%>">
-      <% if ( (thisOrg.getEmailAddress("Primary")).length() > 0 ) { %>
-        <a href="mailto:<%= toHtml(thisOrg.getEmailAddress("Primary")) %>"><%= toHtml(thisOrg.getEmailAddress("Primary")) %></a>
+		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() == null)%>">
+      <% if ( (!"".equals(thisOrg.getPrimaryEmailAddress()))) { %>
+        <a href="mailto:<%= toHtml(thisOrg.getPrimaryEmailAddress()) %>"><%= toHtml(thisOrg.getPrimaryEmailAddress()) %></a>
       <%} else {%>
         &nbsp;
       <%}%>
 		</dhv:evaluate>    
-		<dhv:evaluate exp="<%=(thisOrg.getPrimaryContact() != null)%>">
-      <% if ( (thisOrg.getPrimaryContact().getEmailAddress("Business")).length() > 0 ) { %>
-        <a href="mailto:<%= toHtml(thisOrg.getPrimaryContact().getEmailAddress("Business")) %>"><%= toHtml(thisOrg.getPrimaryContact().getEmailAddress("Business")) %></a>
+		<dhv:evaluate if="<%=(thisOrg.getPrimaryContact() != null)%>">
+      <% if ( (!"".equals(thisOrg.getPrimaryContact().getPrimaryEmailAddress()))) { %>
+        <a href="mailto:<%= toHtml(thisOrg.getPrimaryContact().getPrimaryEmailAddress()) %>"><%= toHtml(thisOrg.getPrimaryContact().getPrimaryEmailAddress()) %></a>
       <%} else {%>
         &nbsp;
       <%}%>    
@@ -140,7 +141,7 @@ Search Results
   <tr class="containerBody">
     <td colspan="<%= columnCount %>">
       <dhv:label name="accounts.search.notFound">No accounts found with the specified search parameters.</dhv:label><br />
-      <a href="Accounts.do?command=SearchForm">Modify Search</a>.
+      <a href="Accounts.do?command=SearchForm"><dhv:label name="accounts.accounts_list.ModifySearch">Modify Search</dhv:label></a>.
     </td>
   </tr>
 <%}%>

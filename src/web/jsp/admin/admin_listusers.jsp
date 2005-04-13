@@ -37,8 +37,8 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-View Users
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<dhv:label name="admin.viewUsers">View Users</dhv:label>
 </td>
 </tr>
 </table>
@@ -48,21 +48,22 @@ View Users
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td>The installed license limits this system to <%= APP_SIZE %> active users.</td></tr>
+    <td><dhv:label name="admin.installedLicenseLimits.text" param="<%= "appsize="+APP_SIZE %>">The installed license limits this system to <%= APP_SIZE %> active users.</dhv:label></td></tr>
 </table>
 </dhv:evaluate>
 <%-- END DHV CODE ONLY --%>
-<dhv:permission name="admin-users-add"><a href="Users.do?command=InsertUserForm">Add New User</a></dhv:permission>
-<center><%= UserListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:permission name="admin-users-add"><a href="Users.do?command=InsertUserForm"><dhv:label name="admin.addNewUser">Add New User</dhv:label></a></dhv:permission>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="UserListInfo"/></center></dhv:include>
 <table width="100%" border="0">
   <tr>
     <form name="userForm" method="post" action="Users.do?command=ListUsers">
     <td align="left">
-      <select name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= UserListInfo.getOptionValue("enabled") %>>Active Users</option>
-        <option <%= UserListInfo.getOptionValue("disabled") %>>Inactive Users</option>
+      <select name="listView" onChange="javascript:document.userForm.submit();">
+        <option <%= UserListInfo.getOptionValue("enabled") %>><dhv:label name="dependency.activeUsers">Active Users</dhv:label></option>
+        <option <%= UserListInfo.getOptionValue("disabled") %>><dhv:label name="admin.inactiveUsers">Inactive Users</dhv:label></option>
         <dhv:permission name="demo-view">
-        <option <%= UserListInfo.getOptionValue("aliases") %>>Aliased Users</option>
+        <option <%= UserListInfo.getOptionValue("aliases") %>><dhv:label name="admin.aliasedUsers">Aliased Users</dhv:label></option>
         </dhv:permission>
       </select>
     </td>
@@ -75,22 +76,22 @@ View Users
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th align="center">
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th nowrap>
-      <b><a href="Users.do?command=ListUsers&column=c.namelast">Name</a></b>
+      <b><a href="Users.do?command=ListUsers&column=c.namelast"><dhv:label name="contacts.name">Name</dhv:label></a></b>
       <%= UserListInfo.getSortIcon("c.namelast") %>
     </th>
     <th nowrap>
-      <b><a href="Users.do?command=ListUsers&column=a.username">Username</a></b>
+      <b><a href="Users.do?command=ListUsers&column=a.username"><dhv:label name="accounts.Username">Username</dhv:label></a></b>
       <%= UserListInfo.getSortIcon("a.username") %>
     </th>
     <th nowrap>
-      <b><a href="Users.do?command=ListUsers&column=role">Role</a></b>
+      <b><a href="Users.do?command=ListUsers&column=role"><dhv:label name="project.role">Role</dhv:label></a></b>
       <%= UserListInfo.getSortIcon("role") %>
     </th>
     <th nowrap>
-      <b>Reports To</b>
+      <b><dhv:label name="admin.reportsTo">Reports To</dhv:label></b>
     </th>
   </tr>
 <%
@@ -122,7 +123,7 @@ View Users
         </td>
         <td nowrap>
           <dhv:username id="<%= thisUser.getManagerId() %>"/>
-          <dhv:evaluate exp="<%=!(thisUser.getManagerUserEnabled())%>"><font color="red">*</font></dhv:evaluate>
+          <dhv:evaluate if="<%=!(thisUser.getManagerUserEnabled())%>"><font color="red">*</font></dhv:evaluate>
         </td>
       </tr>
 <%
@@ -131,7 +132,7 @@ View Users
 %>  
 <tr>
     <td class="containerBody" valign="center" colspan="5">
-      No users found.
+      <dhv:label name="admin.noUsersFound">No users found.</dhv:label>
     </td>
   </tr>
 <%  

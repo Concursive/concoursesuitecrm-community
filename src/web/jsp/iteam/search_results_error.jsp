@@ -17,6 +17,4 @@
   - Version: $Id$
   - Description: 
   --%>
-An invalid search request was made.<br />
-<br />
-Please check the search criteria and try again.
+<dhv:label name="project.invalidSearch.text" param="break=<br />">An invalid search request was made.<br />Please check the search criteria and try again.</dhv:label>

@@ -24,6 +24,7 @@ import java.io.IOException;
 import org.aspcfs.utils.DatabaseUtils;
 import java.text.*;
 import com.zeroio.utils.ContentUtils;
+import com.darkhorseventures.framework.actions.ActionContext;
 
 /**
  *  Class for working with the Lucene search engine
@@ -44,7 +45,7 @@ public class NewsArticleIndexer implements Indexer {
    *@exception  SQLException  Description of the Exception
    *@exception  IOException   Description of the Exception
    */
-  public static void add(IndexWriter writer, Connection db) throws SQLException, IOException {
+  public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     // TODO: Take into account the various status codes for news, as well as date ranges
     PreparedStatement pst = db.prepareStatement(
@@ -65,6 +66,7 @@ public class NewsArticleIndexer implements Indexer {
       newsArticle.setStatus(DatabaseUtils.getInt(rs, "status"));
       // add to index
       NewsArticleIndexer.add(writer, newsArticle, false);
+      DatabaseUtils.renewConnection(context, db);
     }
     rs.close();
     pst.close();

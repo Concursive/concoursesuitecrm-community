@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*" %>
@@ -34,46 +34,47 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<script language="JavaScript" TYPE="text/javascript">
+function reopen() {
+  window.location.href='Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>';
+}
+</script>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-Contacts
+<dhv:label name="accounts.Contacts">Contacts</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<%-- Begin the container contents --%>
-<dhv:permission name="accounts-accounts-contacts-add"><a href="Contacts.do?command=Prepare&orgId=<%=request.getParameter("orgId")%>">Add a Contact</a></dhv:permission>
-<center><%= ContactListInfo.getAlphabeticalPageLinks() %></center>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactListInfo"/>
-<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
-<tr>
-  <th width="8">
-    <strong>Action</strong>
-  </th>
-  <th>
-    <strong><a href="Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=c.namelast">Name</a></strong>
-    <%= ContactListInfo.getSortIcon("c.namelast") %>
-  </th>
-  <th>
-    <strong>Title</strong>
-  </th>   
-  <th>
-    <strong>Phone</strong>
-  </th>
-  <th>
-    <strong>Email</strong>
-  </th>
-</tr>
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:permission name="accounts-accounts-contacts-add"><a href="Contacts.do?command=Prepare&orgId=<%=request.getParameter("orgId")%>"><dhv:label name="accounts.accounts_contacts_list.AddAContact">Add a Contact</dhv:label></a></dhv:permission>
+  <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+  <center><dhv:pagedListAlphabeticalLinks object="ContactListInfo"/></center></dhv:include>
+  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactListInfo"/>
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+    <tr>
+      <th width="8">
+        &nbsp;
+      </th>
+      <th>
+        <strong><a href="Contacts.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=c.namelast"><dhv:label name="contacts.name">Name</dhv:label></a></strong>
+        <%= ContactListInfo.getSortIcon("c.namelast") %>
+      </th>
+      <th>
+        <strong><dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label></strong>
+      </th>
+      <th>
+        <strong><dhv:label name="accounts.accounts_add.Phone">Phone</dhv:label></strong>
+      </th>
+      <th>
+        <strong><dhv:label name="accounts.accounts_add.Email">Email</dhv:label></strong>
+      </th>
+    </tr>
 <%
 	Iterator j = ContactList.iterator();
 	if ( j.hasNext() ) {
@@ -97,11 +98,11 @@ Contacts
         <%= toHtml(thisContact.getTitle()) %>
       </td>
       <td valign="center" class="row<%= rowid %>" nowrap>
-        <%= toHtml(thisContact.getPhoneNumber("Business")) %>
+        <%= toHtml(thisContact.getPrimaryPhoneNumber()) %>
       </td>
       <td valign="center" class="row<%= rowid %>" nowrap>
-        <dhv:evaluate exp="<%= hasText(thisContact.getEmailAddress("Business")) %>">
-          <a href="mailto:<%= toHtml(thisContact.getEmailAddress("Business")) %>"><%= toHtml(thisContact.getEmailAddress("Business")) %></a>
+        <dhv:evaluate if="<%= hasText(thisContact.getPrimaryEmailAddress()) %>">
+          <a href="mailto:<%= toHtml(thisContact.getPrimaryEmailAddress()) %>"><%= toHtml(thisContact.getPrimaryEmailAddress()) %></a>
         </dhv:evaluate>
         &nbsp;
       </td>
@@ -110,14 +111,11 @@ Contacts
 <%} else {%>
 		<tr class="containerBody">
       <td colspan="5">
-        No contacts found.
+        <dhv:label name="accounts.accounts_contacts_detailsimport.NoContactsFound">No contacts found.</dhv:label>
       </td>
     </tr>
 <%}%>
 	</table>
 	<br>
   <dhv:pagedListControl object="ContactListInfo"/>
-</td>
-</tr>
-</table>
-
+</dhv:container>

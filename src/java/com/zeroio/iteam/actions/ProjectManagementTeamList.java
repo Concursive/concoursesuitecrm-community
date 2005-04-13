@@ -15,14 +15,23 @@
  */
 package com.zeroio.iteam.actions;
 
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.Project;
+import com.zeroio.iteam.base.ProjectList;
+import com.zeroio.iteam.base.TeamMemberList;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import com.darkhorseventures.framework.actions.*;
-import com.zeroio.iteam.base.*;
-import java.sql.*;
-import java.util.StringTokenizer;
-import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 //import com.zeroio.controller.*;
+
 /**
  *  Description of the Class
  *
@@ -52,6 +61,7 @@ public final class ProjectManagementTeamList extends CFSModule {
       db = getConnection(context);
       if ("my".equals(source) || "all".equals(source)) {
         projects.setProjectsForUser(getUserId(context));
+        projects.setIncludeGuestProjects(false);
         if ("open".equals(status)) {
           //Check if open or closed
           projects.setOpenProjectsOnly(true);
@@ -66,6 +76,11 @@ public final class ProjectManagementTeamList extends CFSModule {
         departmentList.addItem(0, "Without a department");
         context.getRequest().setAttribute("departments", departmentList);
         return "MakeDepartmentListOK";
+      } else if ("acct".equals(source) && "all".equals(status)) {
+        LookupList accountTypeList = new LookupList(db, "lookup_account_types");
+        accountTypeList.addItem(0, "Without a type");
+        context.getRequest().setAttribute("accountTypes", accountTypeList);
+        return "MakeAccountTypeListOK";
       }
     } catch (Exception e) {
 
@@ -110,7 +125,52 @@ public final class ProjectManagementTeamList extends CFSModule {
         //Load departments and get the contacts
         UserList users = new UserList();
         users.setDepartment(Integer.parseInt(id));
+        users.setRoleType(Constants.ROLETYPE_REGULAR); //fetch only regular users
         users.buildList(db);
+        users = UserList.sortEnabledUsers(users, new UserList());
+        context.getRequest().setAttribute("UserList", users);
+        return ("MakeUserListOK");
+      }
+      if ("acct".equals(source) && "all".equals(status)) {
+        //Load departments and get the contacts
+        UserList allAccountUsers = new UserList();
+        allAccountUsers.setBuildAccountUsersOnly(true);
+        allAccountUsers.setRoleType(Constants.ROLETYPE_REGULAR);
+        allAccountUsers.setBuildContactDetails(true);
+        allAccountUsers.buildList(db);
+        Iterator itr = allAccountUsers.iterator();
+        UserList users = new UserList();
+        
+        while (itr.hasNext()){
+          User thisUser = (User)itr.next();
+          Organization organization = new Organization(db,thisUser.getContact().getOrgId());
+          
+          //Append organization name if this user is not a primary contact of this organization
+          if (organization.getPrimaryContact() !=  null){
+            if (organization.getPrimaryContact().getId() != thisUser.getContact().getId()){
+              thisUser.getContact().setNameLast(thisUser.getContact().getNameLast() + " (" +organization.getName() + ")");
+            }
+          }else{
+            thisUser.getContact().setNameLast(thisUser.getContact().getNameLast() + " (" +organization.getName() + ")");
+          }
+          
+          //Filter the fetched user list based on the account type of the
+          //account to which the user belongs to
+          Iterator typesIterator = organization.getTypes().iterator();
+          if ((organization.getTypes().size() == 0) &&
+            (Integer.parseInt(id) == 0)){
+                //include if the account does not have a type and "without type" is chosen
+                users.add(thisUser);
+          }else{
+            while (typesIterator.hasNext()){
+              LookupElement lookupElement = (LookupElement)typesIterator.next();
+              //include if the account type is one of the chosen types
+              if (lookupElement.getCode() == Integer.parseInt(id)){
+                users.add(thisUser);
+              }
+            }
+          }
+        }
         context.getRequest().setAttribute("UserList", users);
         return ("MakeUserListOK");
       }

@@ -38,27 +38,28 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> >
-Export Data
+<a href="Leads.do"><dhv:label name="pipeline.pipeline">Pipeline</dhv:label></a> >
+<dhv:label name="accounts.accounts_relationships_view.ExportData">Export Data</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <%-- Display viewpoint info --%>
-<dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
 <%-- Begin the contents --%>
-<dhv:permission name="pipeline-reports-add"><a href="LeadsReports.do?command=ExportForm">Generate new export</a></dhv:permission>
-<center><%= LeadRptListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:permission name="pipeline-reports-add"><a href="LeadsReports.do?command=ExportForm"><dhv:label name="accounts.accounts_reports.GenerateNewExport">Generate new export</dhv:label></a></dhv:permission>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="LeadRptListInfo"/></center></dhv:include>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="LeadsReports.do?command=ExportList">
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= LeadRptListInfo.getOptionValue("my") %>>My Exported Data</option>
-        <option <%= LeadRptListInfo.getOptionValue("all") %>>All Exported Data</option>
+      <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= LeadRptListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_reports.MyExportedData">My Exported Data</dhv:label></option>
+        <option <%= LeadRptListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_reports.AllExportedData">All Exported Data</dhv:label></option>
       </select>
     </td>
     <td>
@@ -70,22 +71,22 @@ Export Data
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th>
-      <strong>Subject</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></strong>
     </th>
     <th>
-      <strong>Size</strong>
+      <strong><dhv:label name="accounts.accounts_documents_details.Size">Size</dhv:label></strong>
     </th>
     <th nowrap>
-      <strong>Create Date</strong>
+      <strong><dhv:label name="accounts.accounts_reports.CreateDate">Create Date</dhv:label></strong>
     </th>
     <th nowrap>
-      <strong>Created By</strong>
+      <strong><dhv:label name="accounts.accounts_reports.CreatedBy">Created By</dhv:label></strong>
     </th>
    <th nowrap>
-      <strong>D/L</strong>
+      <strong><dhv:label name="accounts.accounts_documents_details.DL">D/L</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -125,7 +126,7 @@ Export Data
 <br>
 <dhv:pagedListControl object="LeadRptListInfo"/>
 <%} else {%>
-  <tr class="containerBody"><td colspan="6">No exported data found.</td></tr>
+  <tr class="containerBody"><td colspan="6"><dhv:label name="accounts.accounts_reports.NoExporteddataFound">No exported data found.</dhv:label></td></tr>
 </table>
 <%}%>
 

@@ -25,10 +25,10 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
-Categories
+<dhv:label name="product.Categories">Categories</dhv:label>
 </td>
 </tr>
 </table>
@@ -36,10 +36,10 @@ Categories
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th width="35" align="center">
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="100%">
-      <strong>Description</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -50,7 +50,7 @@ Categories
     CategoryEditor thisEditor = (CategoryEditor) i.next();
 %>
     <tr class="row<%= rowid %>">
-      <dhv:permission name="admin-sysconfig-categories-edit"><td align="center"><a href="AdminCategories.do?command=ViewActive&moduleId=<%= thisEditor.getModuleId() %>&constantId=<%= thisEditor.getConstantId() %>">Edit</a></td></dhv:permission>
+      <dhv:permission name="admin-sysconfig-categories-edit"><td align="center"><a href="AdminCategories.do?command=ViewActive&moduleId=<%= thisEditor.getModuleId() %>&constantId=<%= thisEditor.getConstantId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Edit">Edit</dhv:label></a></td></dhv:permission>
       <td valign="center" width="100%"><%= toHtml(thisEditor.getDescription()) %></td>
     </tr>
 <%
@@ -58,7 +58,7 @@ Categories
 %>
 <dhv:evaluate if="<%= editorList.size() == 0 %>">
   <tr>
-    <td valign="center" colspan="4">No category editors to configure.</td>
+    <td valign="center" colspan="4"><dhv:label name="admin.noCategoryEditorsToConfigure">No category editors to configure.</dhv:label></td>
   </tr>
 </dhv:evaluate>
 </table>

@@ -26,8 +26,8 @@
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].header_description.focus();">
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
+<body onLoad="javascript:document.opportunityForm.header_description.focus();">
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></SCRIPT>
@@ -58,27 +58,39 @@ function checkForm(form) {
     }
   }
   if (selected == -1) {
-    message += "- Please select an opportunity type (account or contact)\r\n";
+    message += label("specify.opportunity.type", "- Please select an opportunity type (account or contact)\r\n");
+    formTest = false;
+  } else {
+    <%if (opportunityHeader.getId() > 0) {%>
+        if (form.type[0].checked){
+          form.contactLink.value = -1;
+        }
+        if (form.type[1].checked){
+          form.accountLink.value = -1;
+        }
+    <%} else{%>
+        if (form.opp_type[0].checked){
+          form.header_contactLink.value = -1;
+        }
+        if (form.opp_type[1].checked){
+          form.header_accountLink.value = -1;
+        }
+    <%}%>
+  }
+  if ((!checkNullString(form.component_alertText.value)) && (checkNullString(form.component_alertDate.value))) { 
+    message += label("specify.alert.date", "- Please specify an alert date\r\n");
     formTest = false;
   }
-  if ((!form.component_alertText.value == "") && (form.component_alertDate.value == "")) { 
-    message += "- Please specify an alert date\r\n";
-    formTest = false;
-  }
-  if ((!form.component_alertDate.value == "") && (form.component_alertText.value == "")) { 
-    message += "- Please specify an alert description\r\n";
+  if ((!checkNullString(form.component_alertDate.value)) && (checkNullString(form.component_alertText.value))) { 
+    message += label("specify.alert.description", "- Please specify an alert description\r\n");
     formTest = false;
   }
   if (!checkNumber(form.component_commission.value)) { 
-      message += "- Commission entered is invalid\r\n";
+      message += label("commission.entered.invalid", "- Commission entered is invalid\r\n");
       formTest = false;
     }
-  if ((!form.component_alertDate.value == "") && (!checkAlertDate(form.component_alertDate.value))) { 
-      alertMessage += "Alert Date is before today's date\r\n";
-  }
-      
   if (formTest == false) {
-    alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+    alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
     return false;
   } else {
     if(alertMessage != ""){
@@ -97,21 +109,21 @@ function checkForm(form) {
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> >
-Add Opportunity
+<a href="Leads.do"><dhv:label name="pipeline.pipeline">Pipeline</dhv:label></a> >
+<dhv:label name="accounts.accounts_contacts_oppcomponent_add.AddOpportunity">Add Opportunity</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td>
-<input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
+<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
 <br />
 <dhv:formMessage />
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
@@ -119,8 +131,8 @@ Add Opportunity
 <%@ include file="opportunity_include.jsp" %>
 &nbsp;
 <br>
-<input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
+<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
 <input type="hidden" name="dosubmit" value="true">
     </td>
   </tr>

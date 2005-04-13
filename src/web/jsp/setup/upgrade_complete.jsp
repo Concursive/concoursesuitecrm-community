@@ -24,18 +24,13 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Centric CRM Upgrade Complete!
+      <dhv:label name="setup.centricCRMUpgradeComplete">Centric CRM Upgrade Complete!</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      The system has been upgraded and users can now login. Please follow these
-      steps to make certain the system is usable:
-      <ul>
-        <li>Review the roles, under the Admin module, since the upgrade may have added
-        additional features in which you can now provide access to users by enabling permissions</li>
-        <li>Click on various modules and make sure everything appears to work</li>
-      </ul>
+      <dhv:label name="setup.systemUpgraded.text">The system has been upgraded and users can now login. Please follow these steps to make certain the system is usable:</dhv:label>
+      <dhv:label name="setup.systemUpgraded.notes"><ul><li>Review the roles, under the Admin module, since the upgrade may have added additional features in which you can now provide access to users by enabling permissions</li><li>Click on various modules and make sure everything appears to work</li></ul></dhv:label>
     </td>
   </tr>
 </table>
@@ -43,13 +38,13 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Upgrade Log
+      <dhv:label name="setup.upgradeLog">Upgrade Log</dhv:label>
     </th>
   </tr>
 <dhv:evaluate if="<%= installLog.size() == 0 %>">
   <tr>
     <td>
-      No scripts executed
+      <dhv:label name="setup.noScriptsExecuted">No scripts executed</dhv:label>
     </td>
   </tr>
 </dhv:evaluate>
@@ -69,18 +64,16 @@ String step = (String) installs.next();
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Next Steps
+      <dhv:label name="setup.nextSteps">Next Steps</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      Since the JavaServerPages have not yet been compiled, you should choose to precompile the
-      JSPs first so that the application works without compile delays.
-      Precompiling will occur in the background and you can continue to use Centric CRM.<br>
-      <br>
-      <input type="button" value="Precompile JSPs" onClick="javascript:popURL('setup/precompile.html','CRM_Precompile','500','325','yes','yes')"/><br>
-      <br>
-      <input type="button" value="Continue to Centric CRM >" onClick="window.location.href='MyCFS.do?command=Home'" />
+      <dhv:label name="setup.jspPagesNotYetCompiled.text">Since the JavaServerPages have not yet been compiled, you should choose to precompile the JSPs so that the application works without compile delays. Compiling will occur in the background and you can continue to use Centric CRM.</dhv:label><br />
+      <br />
+      <input type="button" value="<dhv:label name="button.precompileJsps">Precompile JSPs</dhv:label>" onClick="javascript:popURL('setup/precompile.html','CRM_Compile','500','325','yes','yes')"/><br />
+      <br />
+      <input type="button" value="<dhv:label name="button.continueToCentricCRMR">Continue to Centric CRM ></dhv:label>" onClick="window.location.href='index.jsp'" />
     </td>
   </tr>
 </table>

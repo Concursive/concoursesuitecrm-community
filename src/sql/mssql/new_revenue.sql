@@ -6,6 +6,7 @@
  *@version    $Id$
  */
 
+
 CREATE TABLE lookup_revenue_types (
   code INT IDENTITY PRIMARY KEY,
   description VARCHAR(50) NOT NULL,

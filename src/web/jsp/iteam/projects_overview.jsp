@@ -15,7 +15,7 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -37,13 +37,23 @@
 <jsp:useBean id="overviewTicketListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
+<%-- Trails --%>
+<table class="trails" cellspacing="0">
+<tr>
+<td>
+<a href="ProjectManagement.do"><dhv:label name="Projects" mainMenuItem="true">Projects</dhv:label></a> >
+<dhv:label name="Dashboard" subMenuItem="true">Dashboard</dhv:label>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <table class="note" cellspacing="0">
 <tr>
   <th>
     <img src="images/icons/stock_form-open-in-design-mode-16.gif" border="0" align="absmiddle" />
   </th>
   <td>
-    The following items are the latest from each of your projects.
+    <dhv:label name="project.latestItems.text">The following items are the latest from each of your projects.</dhv:label>
   </td>
 </tr>
 </table>
@@ -53,12 +63,12 @@
     <td align="left" valign="bottom">
       <img src="images/icons/stock_filter-data-by-criteria-16.gif" border="0" align="absmiddle" />
       <select size="1" name="listView" onChange="javascript:document.forms['listView'].submit();">
-        <option <%= overviewListInfo.getOptionValue("today") %>>Today</option>
-        <option <%= overviewListInfo.getOptionValue("24hours") %>>Last 24 Hours</option>
-        <option <%= overviewListInfo.getOptionValue("48hours") %>>Last 48 Hours</option>
-        <option <%= overviewListInfo.getOptionValue("7days") %>>Last 7 Days</option>
-        <option <%= overviewListInfo.getOptionValue("14days") %>>Last 14 Days</option>
-        <option <%= overviewListInfo.getOptionValue("30days") %>>Last 30 Days</option>
+        <option <%= overviewListInfo.getOptionValue("today") %>><dhv:label name="calendar.Today">Today</dhv:label></option>
+        <option <%= overviewListInfo.getOptionValue("24hours") %>><dhv:label name="project.lastTwentyFourHours">Last 24 Hours</dhv:label></option>
+        <option <%= overviewListInfo.getOptionValue("48hours") %>><dhv:label name="project.lastFortyEightHours">Last 48 Hours</dhv:label></option>
+        <option <%= overviewListInfo.getOptionValue("7days") %>><dhv:label name="project.lastSevenDays">Last 7 Days</dhv:label></option>
+        <option <%= overviewListInfo.getOptionValue("14days") %>><dhv:label name="project.lastFourteenDays">Last 14 Days</dhv:label></option>
+        <option <%= overviewListInfo.getOptionValue("30days") %>><dhv:label name="project.lastThirtyDays">Last 30 Days</dhv:label></option>
       </select>
     </td>
     </form>
@@ -71,14 +81,13 @@
 <td valign="top">
 
 <%-- Start news --%>
-<zeroio:debug value="Start News" />
 <dhv:evaluate if="<%= !overviewAssignmentListInfo.getExpandedSelection() && !overviewIssueListInfo.getExpandedSelection() && !overviewTicketListInfo.getExpandedSelection() && !overviewFileItemListListInfo.getExpandedSelection() %>">
 <dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="News" object="overviewNewsListInfo"/>
-<table cellpadding="4" cellspacing="0" width="100%" class="slimList">
+<table cellpadding="4" cellspacing="0" width="100%">
     <dhv:evaluate if="<%= newsList.isEmpty() %>">
     <tr>
       <td>
-        No News found.
+        <dhv:label name="project.noNewsFound">No News found.</dhv:label>
       </td>
     </tr>
     </dhv:evaluate>
@@ -89,7 +98,7 @@
       rowid = (rowid != 1?1:2);
       NewsArticle thisArticle = (NewsArticle) newsIterator.next();
 %>
-    <tr class="row<%= rowid %>">
+    <tr class="overviewrow<%= rowid %>">
       <td width="65%">
         <table border="0" cellpadding="2" cellspacing="0">
           <tr>
@@ -115,14 +124,13 @@
 <br />
 </dhv:evaluate>
 <%-- Start discussion topics --%>
-<zeroio:debug value="Start Discussion" />
 <dhv:evaluate if="<%= !overviewAssignmentListInfo.getExpandedSelection() && !overviewNewsListInfo.getExpandedSelection() && !overviewTicketListInfo.getExpandedSelection() && !overviewFileItemListListInfo.getExpandedSelection() %>">
 <dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="Discussion" object="overviewIssueListInfo"/>
-<table cellpadding="4" cellspacing="0" width="100%" class="slimList">
+<table cellpadding="4" cellspacing="0" width="100%">
     <dhv:evaluate if="<%= issueList.isEmpty() %>">
     <tr>
       <td>
-        No Topics found.
+        <dhv:label name="project.noTopicsFound">No Topics found.</dhv:label>
       </td>
     </tr>
     </dhv:evaluate>
@@ -133,7 +141,7 @@
       rowid = (rowid != 1?1:2);
       Issue thisIssue = (Issue) issueIterator.next();
 %>
-    <tr class="row<%= rowid %>">
+    <tr class="overviewrow<%= rowid %>">
       <td width="65%">
         <table border="0" cellpadding="2" cellspacing="0">
           <tr>
@@ -148,8 +156,17 @@
         </table>
       </td>
       <td colspan="2" width="35%">
-        <dhv:username id="<%= thisIssue.getModifiedBy() %>" /><br />
-        <zeroio:tz timestamp="<%= thisIssue.getReplyDate() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;" />
+        <dhv:evaluate if="<%= thisIssue.getReplyBy() > -1 %>">
+          <dhv:username id="<%= thisIssue.getReplyBy() %>" />
+        </dhv:evaluate>
+        <dhv:evaluate if="<%= thisIssue.getReplyBy() == -1 %>">
+          <dhv:username id="<%= thisIssue.getEnteredBy() %>" />
+        </dhv:evaluate>
+        <br />
+          <zeroio:tz timestamp="<%= thisIssue.getReplyDate() %>" dateOnly="true" default="&nbsp;" />
+          <dhv:evaluate if="<%= thisIssue.getReplyCount() > 0 %>">
+          (<%= thisIssue.getReplyCount() %> repl<%= thisIssue.getReplyCount() > 1 ? "ies" : "y" %>)
+        </dhv:evaluate>
       </td>
     </tr>
 <%
@@ -159,14 +176,13 @@
 <br />
 </dhv:evaluate>
 <%-- Start documents --%>
-<zeroio:debug value="Start Documents" />
 <dhv:evaluate if="<%= !overviewAssignmentListInfo.getExpandedSelection() && !overviewIssueListInfo.getExpandedSelection() && !overviewTicketListInfo.getExpandedSelection() && !overviewNewsListInfo.getExpandedSelection() %>">
 <dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="Documents" object="overviewFileItemListListInfo"/>
-<table cellpadding="4" cellspacing="0" width="100%" class="slimList">
+<table cellpadding="4" cellspacing="0" width="100%">
     <dhv:evaluate if="<%= fileItemList.isEmpty() %>">
     <tr>
       <td>
-        No Documents found.
+        <dhv:label name="project.noDocumentsFound">No Documents found.</dhv:label>
       </td>
     </tr>
     </dhv:evaluate>
@@ -177,7 +193,7 @@
       rowid = (rowid != 1?1:2);
       FileItem thisFile = (FileItem) documentIterator.next();
 %>
-    <tr class="row<%= rowid %>">
+    <tr class="overviewrow<%= rowid %>">
       <td width="65%">
         <table border="0" cellpadding="2" cellspacing="0">
           <tr>
@@ -204,21 +220,18 @@
 </dhv:evaluate>
 
 </td>
+<%-- gutter --%>
 <td width="8" nowrap>&nbsp;</td>
+<%-- 2nd column --%>
 <td valign="top">
-
-
 <%-- Start assignments --%>
-<zeroio:debug value="Start Assignments" />
-<zeroio:debug value="<%= "T: " + User.getTimeZone() %>" />
-<zeroio:debug value="<%= "L: " + User.getLocale() %>" />
 <dhv:evaluate if="<%= !overviewNewsListInfo.getExpandedSelection() && !overviewIssueListInfo.getExpandedSelection() && !overviewTicketListInfo.getExpandedSelection() && !overviewFileItemListListInfo.getExpandedSelection() %>">
 <dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="Activities" object="overviewAssignmentListInfo"/>
-<table cellpadding="4" cellspacing="0" width="100%" class="slimList">
+<table cellpadding="4" cellspacing="0" width="100%">
     <dhv:evaluate if="<%= assignmentList.isEmpty() %>">
     <tr>
       <td>
-        No Activities found.
+        <dhv:label name="project.noActivitiesFound">No Activities found.</dhv:label>
       </td>
     </tr>
     </dhv:evaluate>
@@ -235,11 +248,15 @@
         <table border="0" cellpadding="2" cellspacing="0">
           <tr>
             <td valign="top">
-              <zeroio:debug value="<%= " " + thisAssignment.getStatusGraphicTag() %>" />
               <%= thisAssignment.getStatusGraphicTag() %>
             </td>
             <td>
-              <a href="javascript:popURL('ProjectManagementAssignments.do?command=Modify&pid=<%= thisAssignment.getProjectId() %>&aid=<%= thisAssignment.getId() %>&popup=true','ITEAM_Activity','650','375','yes','yes');"><%= toHtml(thisAssignment.getRole()) %></a><br />
+              <a href="javascript:popURL('ProjectManagementAssignments.do?command=Modify&pid=<%= thisAssignment.getProjectId() %>&aid=<%= thisAssignment.getId() %>&popup=true','ITEAM_Activity','650','475','yes','yes');"><%= toHtml(thisAssignment.getRole()) %></a>
+              <dhv:evaluate if="<%= thisAssignment.hasNotes() %>">
+                <a href="javascript:popURL('ProjectManagementAssignments.do?command=ShowNotes&pid=<%= thisAssignment.getProjectId() %>&aid=<%= thisAssignment.getId() %>&popup=true','ITEAM_Assignment_Notes','400','500','yes','yes');"><img src="images/icons/stock_insert-note-16.gif" border="0" align="absmiddle" alt="Review all notes"/></a>
+                <%= thisAssignment.getNoteCount() %>
+              </dhv:evaluate>
+              <br />
               <a class="searchLink" href="ProjectManagement.do?command=ProjectCenter&pid=<%= thisAssignment.getProjectId() %>&section=Requirements"><zeroio:project id="<%= thisAssignment.getProjectId() %>"/></a>
             </td>
           </tr>
@@ -257,10 +274,9 @@
 </dhv:evaluate>
 
 <%-- Start tickets --%>
-<zeroio:debug value="Start Tickets" />
 <dhv:evaluate if="<%= !overviewAssignmentListInfo.getExpandedSelection() && !overviewNewsListInfo.getExpandedSelection() && !overviewIssueListInfo.getExpandedSelection() && !overviewFileItemListListInfo.getExpandedSelection() %>">
 <dhv:pagedListStatus tableClass="pagedListTab" showExpandLink="true" title="Tickets" object="overviewTicketListInfo"/>
-<table cellpadding="4" cellspacing="0" width="100%" class="slimList">
+<table cellpadding="4" cellspacing="0" width="100%">
     <dhv:evaluate if="<%= ticketList.isEmpty() %>">
     <tr>
       <td>
@@ -275,7 +291,7 @@
       rowid = (rowid != 1?1:2);
       Ticket thisTicket = (Ticket) ticketIterator.next();
 %>
-    <tr class="row<%= rowid %>">
+    <tr class="overviewrow<%= rowid %>">
       <td width="90%">
         <table border="0" cellpadding="2" cellspacing="0">
           <tr>
@@ -283,7 +299,7 @@
               <img src="images/icons/stock_macro-organizer-16.gif" border="0" align="absmiddle" />
             </td>
             <td>
-              <a href="ProjectManagementTickets.do?command=Details&pid=<%= thisTicket.getProjectId() %>&id=<%= thisTicket.getId() %>"><%= toHtml(thisTicket.getProblemHeader()) %></a><br />
+              <a href="ProjectManagementTickets.do?command=Details&pid=<%= thisTicket.getProjectId() %>&id=<%= thisTicket.getId() %>&return=details"><%= toHtml(thisTicket.getProblemHeader()) %></a><br />
               <a class="searchLink" href="ProjectManagement.do?command=ProjectCenter&pid=<%= thisTicket.getProjectId() %>&section=Tickets"><zeroio:project id="<%= thisTicket.getProjectId() %>"/></a>
             </td>
           </tr>
@@ -297,7 +313,6 @@
 </table>
 <br />
 </dhv:evaluate>
-
 </td>
 </tr>
 </table>

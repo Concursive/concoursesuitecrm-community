@@ -10,20 +10,13 @@ import java.sql.*;
 import org.aspcfs.modules.admin.base.Permission;
 import org.aspcfs.modules.admin.base.PermissionCategory;
 
-st = db.createStatement();
-rs = st.executeQuery(
-  "SELECT category_id " +
-  "FROM permission_category " +
-  "WHERE category = 'Accounts'");
-if(rs.next()){
-  categoryId = rs.getInt("category_id");
-}
+int categoryId = PermissionCategory.lookupId(db, "Accounts");
 
-print("Category Id for Call: " + categoryId);
-PermissionCategory thisCategory = new PermissionCategory(db, categoryId);
+print("Category Id for Acounts: " + categoryId);
 
 if (1==1) {
   //Check to see if the permission already exists before inserting
+  st = db.createStatement();
   rs = st.executeQuery(
     "SELECT count(permission_id) AS recordcount " +
     "FROM permission " +
@@ -31,19 +24,24 @@ if (1==1) {
   rs.next();
   hasPermission = (rs.getInt("recordcount") > 0);
   print("Permission Status: accounts-accounts-contacts-completed-calls " + hasPermission);
+  rs.close();
+  st.close();
   
   //Doesn't exist so insert the new permission
   if (!hasPermission) {
+    st = db.createStatement();
     rs = st.executeQuery(
       "SELECT max(p.level) AS maxlevel " +
       "FROM permission p, permission_category pc " +
       "WHERE p.category_id = pc.category_id AND pc.category ='Accounts'");
     rs.next();
     level = (rs.getInt("maxlevel") + 10);
+    rs.close();
+    st.close();
     print("level to insert: " + level);
     //Insert the new permission
     permission = new Permission();
-    permission.setCategoryId(thisCategory.getId());
+    permission.setCategoryId(categoryId);
     permission.setName("accounts-accounts-contacts-completed-calls");
     permission.setDescription("Completed Activities");
     permission.setView(false);
@@ -60,26 +58,32 @@ if (1==1) {
 
 if (1==1) {
   //Check to see if the permission already exists before inserting
+  st = db.createStatement();
   rs = st.executeQuery(
     "SELECT count(permission_id) AS recordcount " +
     "FROM permission " +
     "WHERE permission = 'accounts-accounts-contacts-imports'");
   rs.next();
   hasPermission = (rs.getInt("recordcount") > 0);
+  rs.close();
+  st.close();
   print("Permission Status: accounts-accounts-contacts-imports " + hasPermission);
   
   //Doesn't exist so insert the new permission
   if (!hasPermission) {
+    st = db.createStatement();
     rs = st.executeQuery(
       "SELECT max(p.level) AS maxlevel " +
       "FROM permission p, permission_category pc " +
       "WHERE p.category_id = pc.category_id AND pc.category ='Accounts'");
     rs.next();
     level = (rs.getInt("maxlevel") + 10);
+    rs.close();
+    st.close();
     print("level to insert: " + level);
     //Insert the new permission
     permission = new Permission();
-    permission.setCategoryId(thisCategory.getId());
+    permission.setCategoryId(categoryId);
     permission.setName("accounts-accounts-contacts-imports");
     permission.setDescription("Import Accounts/Contacts");
     permission.setView(true);

@@ -352,7 +352,6 @@ public class HtmlDialog {
           if (this.getMessage() != null) {
             htmlString.append("<table align=\"center\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" width=\"94%\"");
             htmlString.append("<tr><td valign=\"center\">");
-            htmlString.append("Please review carefully...");
             htmlString.append(this.getMessage().toString());
             htmlString.append("</td></tr></table>");
           }

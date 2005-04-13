@@ -15,16 +15,17 @@
  */
 package org.aspcfs.modules.admin.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.Vector;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.admin.base.PermissionList;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.Viewpoint;
+import org.aspcfs.modules.admin.base.ViewpointList;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
 
 /**
  *  Description of the Class
@@ -164,10 +165,9 @@ public final class Viewpoints extends CFSModule {
     if (!(hasPermission(context, "admin-roles-edit"))) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
+    boolean isValid = false;
     String userId = context.getRequest().getParameter("userId");
 
     Viewpoint thisViewpoint = (Viewpoint) context.getFormBean();
@@ -176,7 +176,10 @@ public final class Viewpoints extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      resultCount = thisViewpoint.update(db);
+      isValid = this.validateObject(context, db, thisViewpoint);
+      if (isValid) {
+        resultCount = thisViewpoint.update(db);
+      }
       if (resultCount == 1) {
         this.invalidateViewpoints(context);
       }
@@ -187,25 +190,20 @@ public final class Viewpoints extends CFSModule {
       thisUser.buildRecord(db, Integer.parseInt(userId));
       context.getRequest().setAttribute("UserRecord", thisUser);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "Users", "Update Viewpoint");
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        processErrors(context, thisViewpoint.getErrors());
-        return executeCommandViewpointDetails(context);
-      } else if (resultCount == 1) {
-        return ("ViewpointUpdateOK");
-      } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
-      }
+    if (resultCount == -1 || !isValid) {
+      processErrors(context, thisViewpoint.getErrors());
+      return executeCommandViewpointDetails(context);
+    } else if (resultCount == 1) {
+      return ("ViewpointUpdateOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
   }
 
@@ -233,8 +231,9 @@ public final class Viewpoints extends CFSModule {
     }
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       thisViewpoint = new Viewpoint(db, id);
-      htmlDialog.setTitle("Confirm");
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       htmlDialog.setShowAndConfirm(false);
       htmlDialog.setDeleteUrl("javascript:window.location.href='Viewpoints.do?command=DeleteViewpoint&id=" + id + "&userId=" + userId + "'");
     } catch (Exception e) {
@@ -303,14 +302,11 @@ public final class Viewpoints extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsertViewpoint(ActionContext context) {
-
     if (!(hasPermission(context, "admin-roles-add"))) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     boolean recordInserted = false;
-
+    boolean isValid = false;
     String userId = context.getRequest().getParameter("userId");
     Viewpoint thisViewpoint = (Viewpoint) context.getFormBean();
     thisViewpoint.setRequestItems(context.getRequest());
@@ -320,7 +316,10 @@ public final class Viewpoints extends CFSModule {
     Connection db = null;
     try {
       db = this.getConnection(context);
-      recordInserted = thisViewpoint.insert(db);
+      isValid = this.validateObject(context, db, thisViewpoint);
+      if (isValid) {
+        recordInserted = thisViewpoint.insert(db);
+      }
       if (recordInserted) {
         PermissionList permissionList = new PermissionList(db);
         context.getRequest().setAttribute("PermissionList", permissionList);
@@ -336,27 +335,18 @@ public final class Viewpoints extends CFSModule {
         thisUser.setBuildContact(true);
         thisUser.buildRecord(db, Integer.parseInt(userId));
         context.getRequest().setAttribute("UserRecord", thisUser);
-
-      } else {
-        processErrors(context, thisViewpoint.getErrors());
-
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "Users", "Insert a Viewpoint");
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("ViewpointAddOK");
-      } else {
-        return (executeCommandInsertViewpointForm(context));
-      }
+    if (recordInserted) {
+      return ("ViewpointAddOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return (executeCommandInsertViewpointForm(context));
     }
   }
 
@@ -378,6 +368,7 @@ public final class Viewpoints extends CFSModule {
     Viewpoint thisViewpoint = null;
     String viewpointId = context.getRequest().getParameter("id");
     String userId = context.getRequest().getParameter("userId");
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -386,6 +377,9 @@ public final class Viewpoints extends CFSModule {
       if(recordDeleted){
         //mark the viewpoints as invalid
         this.invalidateViewpoints(context);
+      } else {
+        thisViewpoint.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.viewPointDeletion"));
+        processErrors(context, thisViewpoint.getErrors());
       }
     } catch (Exception e) {
       errorMessage = e;

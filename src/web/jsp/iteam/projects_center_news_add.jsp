@@ -19,26 +19,41 @@
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.utils.web.*" %>
+<%@ page import="java.util.*,com.zeroio.iteam.base.*,org.aspcfs.utils.web.*,
+                 org.aspcfs.modules.base.Constants" %>
 <%@ page import="org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="newsArticle" class="com.zeroio.iteam.base.NewsArticle" scope="request"/>
+<jsp:useBean id="newsArticleCategoryList" class="com.zeroio.iteam.base.NewsArticleCategoryList" scope="request"/>
+<jsp:useBean id="portalTemplateList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="clientType" class="org.aspcfs.utils.web.ClientType" scope="session"/>
+<jsp:useBean id="taskCategoryList" class="org.aspcfs.modules.tasks.base.TaskCategoryList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Editor must go here, before the body onload --%>
 <dhv:evaluate if="<%= !clientType.showApplet() %>">
 <jsp:include page="../htmlarea_include.jsp" flush="true"/>
-<body onload="initEditor('intro');document.inputForm.subject.focus();">
+<body onload="initEditor('intro');">
 </dhv:evaluate>
 <%-- Use applet instead --%>
 <dhv:evaluate if="<%= clientType.showApplet() %>">
-<body onload="document.inputForm.subject.focus();">
+<body onload="document.inputForm.priorityId.focus();">
 </dhv:evaluate>
+<script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/checkDate.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popCalendar.js"></script>
 <script language="JavaScript">
+<%-- Setup Image Library --%>
+  <dhv:evaluate if="<%= newsArticle.getId() > 0 %>">
+    var ilConstant = <%= Constants.NEWSARTICLE_FILES %>;
+    var ilId = <%= newsArticle.getId() %>;
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= newsArticle.getId() == -1 %>">
+    var ilConstant = <%= Constants.PROJECTS_FILES %>;
+    var ilId = <%= Project.getId() %>;
+  </dhv:evaluate>
+<%-- Validations --%>
   function checkForm(form) {
     var formTest = true;
     var messageText = "";
@@ -47,15 +62,15 @@
 </dhv:evaluate>
     //Check required fields
     if (document.inputForm.subject.value == "") {    
-      messageText += "- Subject is a required field\r\n";
+      messageText += label("check.subject","- Subject is a required field\r\n");
       formTest = false;
     }
     if (document.inputForm.intro.value == "") {    
-      messageText += "- Intro is a required field\r\n";
+      messageText += label("check.intro",label("check.intro","- Intro is a required field\r\n"));
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The message could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("check.message","The message could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
       alert(messageText);
       return false;
     } else {
@@ -64,82 +79,115 @@
   }
 </script>
 <form method="POST" name="inputForm" action="ProjectManagementNews.do?command=Save&pid=<%= Project.getId() %>&auto-populate=true" onSubmit="return checkForm(this);">
-<table border="0" cellpadding="1" cellspacing="0" width="100%">
-  <tr class="subtab">
-    <td>
-      <img src="images/icons/stock_announcement-16.gif" border="0" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>"><zeroio:tabLabel name="News" object="Project"/></a> >
-      <%= newsArticle.getId() == -1 ? "Add" : "Update" %>
-    </td>
-  </tr>
-</table>
-<br>
-  <input type="submit" value=" Save " onClick="javascript:this.form.newPage.value='false'" />
+<%-- Trails --%>
+  <dhv:evaluate if="<%= !isPopup(request) %>">
+  <table border="0" cellpadding="1" cellspacing="0" width="100%">
+    <tr class="subtab">
+      <td>
+        <img src="images/icons/stock_announcement-16.gif" border="0" align="absmiddle" />
+        <a href="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>"><zeroio:tabLabel name="News" object="Project"/></a> >
+        <% if(newsArticle.getId() == -1 ) {%>
+          <dhv:label name="button.add">Add</dhv:label>
+        <%} else {%>
+          <dhv:label name="button.update">Update</dhv:label>
+        <%}%>
+      </td>
+    </tr>
+  </table>
+  <br />
+  <input type="submit" value=" <dhv:label name="global.button.save">Save</dhv:label> " onClick="javascript:this.form.newPage.value='false'" />
   <dhv:evaluate if="<%= newsArticle.getMessage() == null %>">
-    <input type="submit" value="Save and Add a Page" onClick="javascript:this.form.newPage.value='true'" />
+    <input type="submit" value="<dhv:label name="project.saveAndAddPage">Save and Add a Page</dhv:label>" onClick="javascript:this.form.newPage.value='true'" />
   </dhv:evaluate>
   <dhv:evaluate if="<%= newsArticle.getMessage() != null %>">
-    <input type="submit" value="Save and Modify Next Page" onClick="javascript:this.form.newPage.value='true'" />
+    <input type="submit" value="<dhv:label name="project.saveAndModifyNextPage">Save and Modify Next Page</dhv:label>" onClick="javascript:this.form.newPage.value='true'" />
   </dhv:evaluate>
-  <input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>';"><br />
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>';"><br />
+  </dhv:evaluate>
   <dhv:formMessage />
+  <%-- Begin details --%>
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2" align="left">
-        <strong><%= newsArticle.getId() == -1 ? "Add" : "Update" %> News Article</strong>
+        <% if(newsArticle.getId() == -1) {%>
+          <dhv:label name="project.addNewsArticle">Add News Article</dhv:label>
+        <%} else {%>
+          <dhv:label name="project.updateNewsArticle">Update News Article</dhv:label>
+        <%}%>
       </th>
     </tr>
     <tr class="containerBody">
       <td nowrap class="formLabel" valign="top">
-        Status
+        <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
       </td>
       <td>
-        <input type="radio" name="status" value="-1" <%= (newsArticle.getStatus() == -1 ? "checked" : "") %> /> Draft
-        <input type="radio" name="status" value="1" <%= (newsArticle.getStatus() == 1 ? "checked" : "") %> /> Unapproved
-        <input type="radio" name="status" value="2" <%= (newsArticle.getStatus() == 2 ? "checked" : "") %> /> Published
+        <input type="radio" name="status" value="-1" <%= (newsArticle.getStatus() == -1 ? "checked" : "") %> /> <dhv:label name="project.draft">Draft</dhv:label>
+        <input type="radio" name="status" value="1" <%= (newsArticle.getStatus() == 1 ? "checked" : "") %> /> <dhv:label name="project.unapproved">Unapproved</dhv:label>
+        <input type="radio" name="status" value="2" <%= (newsArticle.getStatus() == 2 ? "checked" : "") %> /> <dhv:label name="project.published">Published</dhv:label>
         <dhv:evaluate if="<%= newsArticle.getMessage() == null %>">
-          (1 Page)
+          <dhv:label name="project.onePage">(1 Page)</dhv:label>
         </dhv:evaluate>
         <dhv:evaluate if="<%= newsArticle.getMessage() != null %>">
-          (2 Pages)
+          <dhv:label name="project.twoPages">(2 Pages)</dhv:label>
         </dhv:evaluate>
       </td>
     </tr>
     <tr class="containerBody">
       <td nowrap class="formLabel" valign="top">
-        Position
+        <dhv:label name="project.position">Position</dhv:label>
       </td>
       <td>
         <input type="text" name="priorityId" size="6" maxlength="3" value="<%= newsArticle.getPriorityId() %>"><font color=red>*</font>
         <%= showAttribute(request, "priorityIdError") %>
-        Lower numbered messages appear before higher numbered messages
+        <dhv:label name="project.lowerNumberedMesg.text">Lower numbered messages appear before higher numbered messages</dhv:label>
       </td>
     </tr>
     <tr class="containerBody">
       <td nowrap class="formLabel">
-        Start Date/Time
+        <dhv:label name="project.startDateTime">Start Date/Time</dhv:label>
       </td>
       <td valign="top">
         <zeroio:dateSelect form="inputForm" field="startDate" timestamp="<%= newsArticle.getStartDate() %>" />
-        at
+       <dhv:label name="project.at">at</dhv:label>
         <zeroio:timeSelect baseName="startDate" value="<%= newsArticle.getStartDate() %>" timeZone="<%= newsArticle.getStartDateTimeZone() %>" showTimeZone="true" />
         <%=showAttribute(request,"startDateError")%>
       </td>
     </tr>
     <tr class="containerBody">
       <td nowrap class="formLabel">
-        Archive Date/Time
+        <dhv:label name="project.archiveDateTime">Archive Date/Time</dhv:label>
       </td>
       <td valign="top">
         <zeroio:dateSelect form="inputForm" field="endDate" timestamp="<%= newsArticle.getEndDate() %>" />
-        at
+       <dhv:label name="project.at">at</dhv:label>
         <zeroio:timeSelect baseName="endDate" value="<%= newsArticle.getEndDate() %>" timeZone="<%= newsArticle.getEndDateTimeZone() %>" showTimeZone="true" />
         <%=showAttribute(request,"endDateError")%><%= showWarningAttribute(request, "endDateWarning") %>
       </td>
     </tr>
     <tr class="containerBody">
       <td nowrap class="formLabel" valign="top">
-        Subject
+        Category
+      </td>
+      <td>
+        <%= newsArticleCategoryList.getHtmlSelect("categoryId", newsArticle.getCategoryId()) %>
+        <zeroio:permission name="project-news-add">
+          <a href="javascript:popURL('ProjectManagementNews.do?command=EditCategoryList&pid=<%= Project.getId() %>&form=inputForm&field=categoryId&previousId=' + document.inputForm.categoryId.options[document.inputForm.categoryId.selectedIndex].value + '&popup=true','EditList','600','300','yes','yes');">edit list</a>
+        </zeroio:permission>
+        <%= showAttribute(request, "categoryIdError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel" valign="top">
+        Link to List
+      </td>
+      <td>
+        <%= taskCategoryList.getHtmlSelect("taskCategoryId", newsArticle.getTaskCategoryId()) %>
+        <%= showAttribute(request, "taskCategoryIdError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel" valign="top">
+        <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
       </td>
       <td>
         <input type="text" name="subject" size="60" maxlength="255" value="<%= toHtmlValue(newsArticle.getSubject()) %>"><font color=red>*</font>
@@ -148,7 +196,7 @@
     </tr>
     <tr class="containerBody">
       <td nowrap class="formLabel" valign="top">
-        Intro (Page 1)
+        <dhv:label name="project.introPageOne">Intro (Page 1)</dhv:label>
       </td>
       <td>
         <table border="0" cellpadding="0" cellspacing="0" class="empty">
@@ -212,19 +260,23 @@
     </tr>
   </table>
   <br />
-  <input type="submit" value=" Save " onClick="javascript:this.form.newPage.value='false'" />
+  <input type="submit" value=" <dhv:label name="global.button.save">Save</dhv:label> " onClick="javascript:this.form.newPage.value='false'" />
   <dhv:evaluate if="<%= newsArticle.getMessage() == null %>">
-    <input type="submit" value="Save and Add a Page" onClick="javascript:this.form.newPage.value='true'" />
+    <input type="submit" value="<dhv:label name="project.saveAndAddPage">Save and Add a Page</dhv:label>" onClick="javascript:this.form.newPage.value='true'" />
   </dhv:evaluate>
   <dhv:evaluate if="<%= newsArticle.getMessage() != null %>">
-    <input type="submit" value="Save and Modify Next Page" onClick="javascript:this.form.newPage.value='true'" />
+    <input type="submit" value="<dhv:label name="project.saveAndModifyNextPage">Save and Modify Next Page</dhv:label>" onClick="javascript:this.form.newPage.value='true'" />
   </dhv:evaluate>
-  <input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>';" /><br>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>';" /><br>
+  <br />
   <input type="hidden" name="onlyWarnings" value="<%=(newsArticle.getOnlyWarnings()?"on":"off")%>" />
-  <input type="hidden" name="projectId" value="<%= Project.getId() %>" />
   <input type="hidden" name="id" value="<%= newsArticle.getId() %>" />
   <input type="hidden" name="modified" value="<%= newsArticle.getModified() %>" />
   <input type="hidden" name="newPage" value="false" />
   <input type="hidden" name="return" value="<%= request.getParameter("return") %>"/>
+  <%-- popup settings --%>
+  <input type="hidden" name="popup" value="<%= request.getParameter("popup") %>"/>
+  <input type="hidden" name="param" value="<%= newsArticle.getProjectId() %>"/>
+  <input type="hidden" name="param2" value="<%= newsArticle.getId() %>"/>
 </form>
 </body>

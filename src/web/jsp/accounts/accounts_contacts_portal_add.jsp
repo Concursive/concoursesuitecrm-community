@@ -35,30 +35,22 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-<a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
-Contact Details
+<a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> >
+<dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-    <% String param1 = "id=" + ContactDetails.getId(); %>
-        <strong><%= ContactDetails.getNameLastFirst() %>:</strong>
-        [ <dhv:container name="accountscontacts" selected="portal" param="<%= param1 %>"/> ]
-      <br /> <br />
-  <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
-  <br />
-  <dhv:formMessage />
-  <%@ include file="accounts_contacts_portal_include.jsp" %>
-  <br />
-  <input	type="submit" value="Save" onClick="this.form.dosubmit.value='true';" />
-  </td>
-  </tr>
-</table>
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:container name="accountscontacts" selected="portal" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
+    <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+    <br />
+    <dhv:formMessage />
+    <%@ include file="accounts_contacts_portal_include.jsp" %>
+    <br />
+    <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+  </dhv:container>
+</dhv:container>
 </form>

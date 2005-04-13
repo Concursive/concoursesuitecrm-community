@@ -15,7 +15,7 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <script language="javascript">
@@ -46,12 +46,12 @@
     popURL('ProjectManagementRequirements.do?command=Details&pid=' + thisProjectId + '&rid=' + thisRequirementId + '&popup=true','Outline_Details','650','375','yes','yes');
   }
   function deleteActivity() {
-    if (confirm('Are you sure?')) {
+    if (confirm(label('are.you.sure','Are you sure?'))) {
       scrollReload('ProjectManagementAssignments.do?command=Delete&pid=' + thisProjectId + '&rid=' + thisRequirementId + '&aid=' + thisActivityId);
     }
   }
   function deleteFolder() {
-    if (confirm('Are you sure?')) {
+    if (confirm(label('are.you.sure','Are you sure?'))) {
       scrollReload('ProjectManagementAssignmentsFolder.do?command=DeleteFolder&pid=' + thisProjectId + '&rid=' + thisRequirementId + '&folderId=' + thisFolderId);
     }
   }
@@ -62,13 +62,13 @@
     popURL('ProjectManagementAssignmentsFolder.do?command=ModifyFolder&pid=' + thisProjectId + '&folderId=' + thisFolderId + '&popup=true&return=ProjectAssignments','Folder_Modify','650','375','yes','yes');
   }
   function addActivity() {
-    popURL('ProjectManagementAssignments.do?command=Add&pid=' + thisProjectId + '&rid=' + thisRequirementId + '&folderId=' + thisFolderId + '&prevMapId=' + thisMapId + '&prevIndent=' + thisIndent + '&popup=true&return=ProjectAssignments&param=' + thisProjectId,'Assignment','650','400','yes','yes');
+    popURL('ProjectManagementAssignments.do?command=Add&pid=' + thisProjectId + '&rid=' + thisRequirementId + '&folderId=' + thisFolderId + '&prevMapId=' + thisMapId + '&prevIndent=' + thisIndent + '&popup=true&return=ProjectAssignments&param=' + thisProjectId,'Assignment','650','505','yes','yes');
   }
   function updateActivity() {
-    popURL('ProjectManagementAssignments.do?command=Modify&pid=' + thisProjectId + '&aid=' + thisActivityId + '&popup=true&return=ProjectAssignments','Assignment_Modify','650','375','yes','yes');
+    popURL('ProjectManagementAssignments.do?command=Modify&pid=' + thisProjectId + '&aid=' + thisActivityId + '&popup=true&return=ProjectAssignments','Assignment_Modify','650','475','yes','yes');
   }
   function moveActivity() {
-    popURL('ProjectManagementAssignments.do?command=Move&pid=' + thisProjectId + '&rid=' + thisRequirementId + '&aid=' + thisActivityId + '&popup=true&return=ProjectAssignments&param=' + thisProjectId,'Assignment_Move','400','375','yes','yes');
+    popURL('ProjectManagementAssignments.do?command=Move&pid=' + thisProjectId + '&rid=' + thisRequirementId + '&aid=' + thisActivityId + '&popup=true&return=ProjectAssignments&param=' + thisProjectId,'Assignment_Move','400','475','yes','yes');
   }
   function moveItemRight() {
     scrollReload('ProjectManagementAssignments.do?command=MoveItem&dir=r&pid=' + thisProjectId + '&rid=' + thisRequirementId + '&aid=' + thisActivityId + '&folderId=' + thisFolderId);
@@ -90,10 +90,10 @@
       <zeroio:permission name="project-plan-outline-modify">
       <tr>
         <td valign="top" colspan="2" width="100%" nowrap>
-          <a href="javascript:moveItemLeft()"><img alt="Unindent" src="images/icons/stock_left-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
-          <a href="javascript:moveItemRight()"><img alt="Indent" src="images/icons/stock_right-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
-          <a href="javascript:moveItemUp()"><img alt="Move Up" src="images/icons/stock_up-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
-          <a href="javascript:moveItemDown()"><img alt="Move Down" src="images/icons/stock_down-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
+          <a href="javascript:moveItemLeft()"><img alt="<dhv:label name='alt.unindent'>Unindent</dhv:label>" src="images/icons/stock_left-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
+          <a href="javascript:moveItemRight()"><img alt="<dhv:label name='alt.indent'>Indent</dhv:label>" src="images/icons/stock_right-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
+          <a href="javascript:moveItemUp()"><img alt="<dhv:label name='alt.moveUp'>Move Up</dhv:label>" src="images/icons/stock_up-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
+          <a href="javascript:moveItemDown()"><img alt="<dhv:label name='alt.moveDown'>Move Down</dhv:label>" src="images/icons/stock_down-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
         </td>
       </tr>
       </zeroio:permission>
@@ -104,7 +104,7 @@
           <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          Add Activity Folder
+          <dhv:label name="project.addActivityFolder">Add Activity Folder</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -115,7 +115,7 @@
           <img src="images/icons/stock_live-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          Add Activity
+          <dhv:label name="accounts.accounts_contacts_calls_add.AddActivity">Add Activity</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -126,7 +126,7 @@
           <img src="images/icons/stock_live-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View/Update this Activity
+          <dhv:label name="project.viewUpdateActivity">View/Update this Activity</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -150,7 +150,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete Activity
+          <dhv:label name="project.deleteActivity">Delete Activity</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -164,10 +164,10 @@
       <zeroio:permission name="project-plan-outline-modify">
       <tr>
         <td valign="top" colspan="2" width="100%" nowrap>
-          <a href="javascript:moveItemLeft()"><img alt="Unindent" src="images/icons/stock_left-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
-          <a href="javascript:moveItemRight()"><img alt="Indent" src="images/icons/stock_right-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
-          <a href="javascript:moveItemUp()"><img alt="Move Up" src="images/icons/stock_up-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
-          <a href="javascript:moveItemDown()"><img alt="Move Down" src="images/icons/stock_down-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
+          <a href="javascript:moveItemLeft()"><img alt="<dhv:label name='alt.unindent'>Unindent</dhv:label>" src="images/icons/stock_left-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
+          <a href="javascript:moveItemRight()"><img alt="<dhv:label name='alt.indent'>Indent</dhv:label>" src="images/icons/stock_right-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
+          <a href="javascript:moveItemUp()"><img alt="<dhv:label name='alt.moveUp'>Move Up</dhv:label>" src="images/icons/stock_up-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
+          <a href="javascript:moveItemDown()"><img alt="<dhv:label name='alt.moveDown'>Move Down</dhv:label>" src="images/icons/stock_down-16.gif" border="0" align="absmiddle" height="16" width="16"/></a>
         </td>
       </tr>
       </zeroio:permission>
@@ -178,7 +178,7 @@
           <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          Add Activity Folder
+          <dhv:label name="project.addActivityFolder">Add Activity Folder</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -189,7 +189,7 @@
           <img src="images/icons/stock_live-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          Add Activity
+          <dhv:label name="accounts.accounts_contacts_calls_add.AddActivity">Add Activity</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -200,7 +200,7 @@
           <img src="images/icons/stock_live-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Update this Folder
+          <dhv:label name="project.updateThisFolder">Update this Folder</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -224,7 +224,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          Delete Folder and Shift Contents Left
+          <dhv:label name="project.deleteFolderShiftLeft">Delete Folder and Shift Contents Left</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -242,7 +242,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          View Outline Details
+          <dhv:label name="project.viewOutlineDetails">View Outline Details</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -253,7 +253,7 @@
           <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          Add Activity Folder
+          <dhv:label name="project.addActivityFolder">Add Activity Folder</dhv:label>
         </td>
       </tr>
       </zeroio:permission>
@@ -264,7 +264,7 @@
           <img src="images/icons/stock_live-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Add Activity
+          <dhv:label name="accounts.accounts_contacts_calls_add.AddActivity">Add Activity</dhv:label>
         </td>
       </tr>
       </zeroio:permission>

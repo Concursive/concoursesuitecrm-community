@@ -32,7 +32,7 @@ import org.aspcfs.modules.base.DependencyList;
  */
 public class PaymentEFT extends GenericBean {
   private int id = -1;
-  private int paymentId = -1;
+  private int orderId = -1;
   private String bankName = null;
   private String routingNumber = null;
   private String accountNumber = null;
@@ -46,9 +46,39 @@ public class PaymentEFT extends GenericBean {
 
 
   /**
+   *  Sets the orderId attribute of the PaymentEFT object
+   *
+   * @param  tmp  The new orderId value
+   */
+  public void setOrderId(int tmp) {
+    this.orderId = tmp;
+  }
+
+
+  /**
+   *  Sets the orderId attribute of the PaymentEFT object
+   *
+   * @param  tmp  The new orderId value
+   */
+  public void setOrderId(String tmp) {
+    this.orderId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the orderId attribute of the PaymentEFT object
+   *
+   * @return    The orderId value
+   */
+  public int getOrderId() {
+    return orderId;
+  }
+
+
+  /**
    *  Sets the id attribute of the PaymentEFT object
    *
-   *@param  tmp  The new id value
+   * @param  tmp  The new id value
    */
   public void setId(int tmp) {
     this.id = tmp;
@@ -58,30 +88,10 @@ public class PaymentEFT extends GenericBean {
   /**
    *  Sets the id attribute of the PaymentEFT object
    *
-   *@param  tmp  The new id value
+   * @param  tmp  The new id value
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the paymentId attribute of the PaymentEFT object
-   *
-   *@param  tmp  The new paymentId value
-   */
-  public void setPaymentId(int tmp) {
-    this.paymentId = tmp;
-  }
-
-
-  /**
-   *  Sets the paymentId attribute of the PaymentEFT object
-   *
-   *@param  tmp  The new paymentId value
-   */
-  public void setPaymentId(String tmp) {
-    this.paymentId = Integer.parseInt(tmp);
   }
 
 
@@ -228,17 +238,7 @@ public class PaymentEFT extends GenericBean {
   }
 
 
-  /**
-   *  Gets the paymentId attribute of the PaymentEFT object
-   *
-   *@return    The paymentId value
-   */
-  public int getPaymentId() {
-    return paymentId;
-  }
-
-
-  /**
+   /**
    *  Gets the bankName attribute of the PaymentEFT object
    *
    *@return    The bankName value
@@ -371,13 +371,13 @@ public class PaymentEFT extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT eft.bank_id, eft.payment_id, " +
+        "SELECT eft.bank_id, " +
         "        eft.bank_name, eft.routing_number, " +
         "        eft.account_number, eft.name_on_account, " +
         "        eft.company_name_on_account, eft.entered, " +
-        "        eft.enteredby, eft.modified, eft.modifiedby " +
-        " FROM payment_eft eft " +
-        " WHERE eft.bank_id = ? "
+        "        eft.enteredby, eft.modified, eft.modifiedby, eft.order_id " +
+        "FROM payment_eft eft " +
+        "WHERE eft.bank_id = ? "
         );
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -401,7 +401,6 @@ public class PaymentEFT extends GenericBean {
   private void buildRecord(ResultSet rs) throws SQLException {
     //payment_eft table
     this.setId(rs.getInt("bank_id"));
-    paymentId = rs.getInt("payment_id");
     bankName = rs.getString("bank_name");
     routingNumber = rs.getString("routing_number");
     accountNumber = rs.getString("account_number");
@@ -412,6 +411,8 @@ public class PaymentEFT extends GenericBean {
     enteredBy = DatabaseUtils.getInt(rs, "enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = DatabaseUtils.getInt(rs, "modifiedby");
+    
+    orderId = DatabaseUtils.getInt(rs, "order_id");
   }
 
 
@@ -424,13 +425,9 @@ public class PaymentEFT extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
-    if (!isValid(db)) {
-      return result;
-    }
-
     StringBuffer sql = new StringBuffer();
     sql.append(
-        " INSERT INTO payment_eft(payment_id, bank_name, routing_number, account_number, " +
+        "INSERT INTO payment_eft(bank_name, routing_number, account_number, " +
         " 	name_on_account, company_name_on_account "
         );
     if (entered != null) {
@@ -440,7 +437,7 @@ public class PaymentEFT extends GenericBean {
     if (modified != null) {
       sql.append(" modified, ");
     }
-    sql.append(" modifiedby )");
+    sql.append(" modifiedby, order_id )");
     sql.append("VALUES( ?, ?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
@@ -449,10 +446,9 @@ public class PaymentEFT extends GenericBean {
     if (modified != null) {
       sql.append("?, ");
     }
-    sql.append("? )");
+    sql.append("?, ? )");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, this.getPaymentId());
     pst.setString(++i, this.getBankName());
     pst.setString(++i, this.getRoutingNumber());
     pst.setString(++i, this.getAccountNumber());
@@ -466,7 +462,7 @@ public class PaymentEFT extends GenericBean {
       pst.setTimestamp(++i, this.getModified());
     }
     pst.setInt(++i, this.getModifiedBy());
-
+    DatabaseUtils.setInt(pst, ++i, this.getOrderId());
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "payment_eft_bank_id_seq");
@@ -486,20 +482,11 @@ public class PaymentEFT extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Bank ID not specified");
     }
-    try {
-      db.setAutoCommit(false);
-      // delete the credit card info
-
-      PreparedStatement pst = db.prepareStatement(" DELETE FROM payment_eft WHERE bank_id = ? ");
-      pst.setInt(1, this.getId());
-      pst.execute();
-      pst.close();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-    } finally {
-      db.setAutoCommit(true);
-    }
+    // delete the credit card info
+    PreparedStatement pst = db.prepareStatement(" DELETE FROM payment_eft WHERE bank_id = ? ");
+    pst.setInt(1, this.getId());
+    pst.execute();
+    pst.close();
     return true;
   }
 
@@ -513,7 +500,7 @@ public class PaymentEFT extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
@@ -546,16 +533,5 @@ public class PaymentEFT extends GenericBean {
     return resultCount;
   }
 
-
-  /**
-   *  Gets the valid attribute of the PaymentEFT object
-   *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  public boolean isValid(Connection db) throws SQLException {
-    return true;
-  }
 }
 

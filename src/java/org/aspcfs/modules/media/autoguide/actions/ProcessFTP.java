@@ -15,23 +15,18 @@
  */
 package org.aspcfs.modules.media.autoguide.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
+import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.login.base.AuthenticationItem;
 import org.aspcfs.modules.service.base.SyncClientMap;
 import org.aspcfs.modules.service.base.SyncTable;
-import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.media.autoguide.base.*;
 import org.aspcfs.utils.ImageUtils;
-import org.aspcfs.modules.login.base.AuthenticationItem;
-import org.aspcfs.utils.StringUtils;
-import java.util.ArrayList;
-import java.util.HashMap;
-import com.zeroio.iteam.base.*;
-import com.isavvix.tools.*;
-import java.io.*;
+
+import java.io.File;
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
 
 /**
@@ -125,7 +120,7 @@ public final class ProcessFTP extends CFSModule {
             } else {
               //Create a thumbnail
               File thumbnail = new File(thisFile.getPath() + "TH");
-              ImageUtils.saveThumbnail(thisFile, thumbnail, 133d, -1d);
+              ImageUtils.saveThumbnail(thisFile, thumbnail, 133d, 133d);
 
               //Store thumbnail in database
               thisItem.setSubject("thumbnail");

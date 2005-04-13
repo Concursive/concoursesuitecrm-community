@@ -15,25 +15,25 @@
  */
 package org.aspcfs.modules.login.actions;
 
-import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.database.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.Hashtable;
-import java.util.TimeZone;
-import org.aspcfs.modules.actions.CFSModule;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.*;
-import org.aspcfs.modules.system.base.SiteList;
-import org.aspcfs.modules.system.base.Site;
-import org.aspcfs.modules.login.beans.UserBean;
-import org.aspcfs.modules.login.beans.LoginBean;
+import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.utils.StringUtils;
-import java.io.File;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.system.base.ApplicationVersion;
-import java.text.NumberFormat;
+import org.aspcfs.modules.login.beans.LoginBean;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.system.base.Site;
+import org.aspcfs.modules.system.base.SiteList;
+import org.aspcfs.utils.StringUtils;
+
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Hashtable;
 
 /**
  *  The Login module.

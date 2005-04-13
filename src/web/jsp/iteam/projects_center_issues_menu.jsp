@@ -54,7 +54,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View Topic
+          <dhv:label name="project.viewTopic">View Topic</dhv:label>
         </td>
       </tr>
     </zeroio:permission>
@@ -65,7 +65,7 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Modify Topic
+          <dhv:label name="project.modifyTopic">Modify Topic</dhv:label>
         </td>
       </tr>
     </zeroio:permission>
@@ -76,7 +76,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete Topic
+          <dhv:label name="project.deleteTopic">Delete Topic</dhv:label>
         </td>
       </tr>
     </zeroio:permission>

@@ -15,10 +15,11 @@
  */
 package org.aspcfs.modules.base;
 
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import org.aspcfs.utils.DateUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *  Represents an email address.
@@ -452,9 +453,7 @@ public class EmailAddress {
 
     this.setModified(rs.getTimestamp("modified"));
     this.setModifiedBy(rs.getInt("modifiedby"));
-    if (isContact) {
-      this.setPrimaryEmail(rs.getBoolean("primary_email"));
-    }
+    this.setPrimaryEmail(rs.getBoolean("primary_email"));
 
     if (modifiedBy == -1) {
       this.setModifiedBy(0);

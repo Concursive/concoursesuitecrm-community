@@ -28,13 +28,13 @@
   <tr class="subtab">
     <td>
       <img src="images/icons/stock_new-bcard-16.gif" border="0" align="absmiddle">
-      Team
+      <dhv:label name="documents.team.long_html">Team</dhv:label>
     </td>
   </tr>
 </table>
-<br>
+<br />
 <zeroio:permission name="project-team-edit">
-<a href="ProjectManagementTeam.do?command=Modify&pid=<%= Project.getId() %>">Modify Team</a><br>
+<a href="ProjectManagementTeam.do?command=Modify&pid=<%= Project.getId() %>"><dhv:label name="project.modifyTeam">Modify Team</dhv:label></a><br>
 </zeroio:permission>
 <zeroio:permission name="project-team-edit-role">
 <script language="javascript" type="text/javascript">
@@ -42,27 +42,24 @@
     window.frames['server_commands'].location.href='ProjectManagementTeam.do?command=ChangeRole&pid=' + pid + '&id=' + id + '&role=' + rid;
   }
 </script>
-<font color="blue">* Immediately change the team member's role by making changes below</font>
+<font color="blue"><dhv:label name="project.changeTeamMemberRole.text">* Immediately change the team member's role by making changes below</dhv:label></font>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0" width="0" border="0" frameborder="0"></iframe>
 </zeroio:permission>
-<dhv:pagedListStatus label="Members" title="<%= showError(request, "actionError") %>" object="projectTeamInfo"/>
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="false" title="Employees" object="projectEmployeeTeamInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-    <th><strong>Role</strong></th>
-    <th width="50%"><strong>Name</strong></th>
-    <th width="50%"><strong>Department</strong></th>
-    <zeroio:permission name="project-team-view-email">
-      <th nowrap><strong>Email Address</strong></th>
-    </zeroio:permission>
-    <th nowrap><strong>Status</strong></th>
-    <th nowrap><strong>Last Accessed</strong></th>
+    <th nowrap><dhv:label name="project.role">Role</dhv:label></th>
+    <th nowrap><dhv:label name="project.id">Id</dhv:label></th>
+    <th width="80%" nowrap><dhv:label name="contacts.name">Name / Department</dhv:label></th>
+    <th nowrap><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></th>
+    <th nowrap><dhv:label name="documents.team.lastAccessed">Last Accessed</dhv:label></th>
   </tr>
 <%
-  TeamMemberList team = Project.getTeam();
+  TeamMemberList team = Project.getEmployeeTeam();
   if (team.size() == 0) {
 %>
   <tr class="row2">
-    <td colspan="6">Team has not been defined</td>
+    <td colspan="5"><dhv:label name="project.employeeTeam.text">Employee team has not been defined</dhv:label></td>
   </tr>
 <%
   }
@@ -73,6 +70,10 @@
     TeamMember thisMember = (TeamMember) i.next();
     User thisContact = (User) thisMember.getUser();
     if (thisContact == null) thisContact = new User();
+    // Temp. fix for Weblogic
+    String roleName = "role" + thisMember.getUserId();
+    String roleValue = String.valueOf(thisMember.getUserLevel());
+    String roleOnChange = "javascript:updateRole(" + thisMember.getProjectId() + ", " + thisMember.getUserId() + ", this.options[this.selectedIndex].value);";
 %>    
   <tr class="row<%= rowId %>">
     <td valign="top" nowrap>
@@ -81,32 +82,117 @@
       </zeroio:permission>
       <zeroio:permission name="project-team-edit-role">
         <zeroio:roleSelect
-          name="<%= "role" + thisMember.getUserId() %>"
-          value="<%= thisMember.getUserLevel() %>"
-          onChange="<%= "javascript:updateRole(" + thisMember.getProjectId() + ", " + thisMember.getUserId() + ", this.options[this.selectedIndex].value);" %>"/>
+          name="<%= roleName %>"
+          value="<%= roleValue %>"
+          onChange="<%= roleOnChange %>"/>
       </zeroio:permission>
     </td>
-    <td valign="top"><%= toHtml(thisContact.getContact().getNameFirstLast()) %></td>
-    <td valign="top"><%= toHtml(thisContact.getContact().getDepartmentName()) %></td>
-    <zeroio:permission name="project-team-view-email"> 
-       <td valign="top" nowrap>
-        <dhv:evaluate if="<%= thisContact.getContact().getEmailAddress(1) != null %>"><a href="mailto:<%= thisContact.getContact().getEmailAddress(1) %>"><%= thisContact.getContact().getEmailAddress(1) %></a></dhv:evaluate>&nbsp;
-      </td>
-    </zeroio:permission>
+    <td valign="top"><%= thisMember.getUserId() %></td>
+    <td valign="top">
+      <%= toHtml(thisContact.getContact().getNameFirstLast()) %>
+      <dhv:evaluate if="<%= hasText(thisContact.getContact().getDepartmentName()) %>">
+        /
+        <%= toHtml(thisContact.getContact().getDepartmentName()) %>
+      </dhv:evaluate>
+      <zeroio:permission name="project-team-view-email">
+        <dhv:evaluate if="<%= thisContact.getContact().getEmailAddress(1) != null %>"><br /><a href="mailto:<%= thisContact.getContact().getEmailAddress(1) %>"><%= thisContact.getContact().getEmailAddress(1) %></a></dhv:evaluate>&nbsp;
+      </zeroio:permission>
+    </td>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_ADDED %>">
-      <td valign="top" nowrap>Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></td>
+      <td valign="top" nowrap>
+        <dhv:label name="project.added" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
+      </td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_PENDING %>">
-      <td valign="top" nowrap><font color="green">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></font></td>
+      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_INVITING %>">
-      <td valign="top" nowrap><font color="green">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></font></td>
+      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_MAILERROR %>">
-      <td valign="top" nowrap><font color="red">Invitation could not be sent to email address</font></td>
+      <td valign="top" nowrap><font color="red"><dhv:label name="project.invitationCouldNotBeSent">Invitation could not be sent to email address</dhv:label></font></td>
     </dhv:evaluate>
     <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_REFUSED %>">
-      <td valign="top" nowrap><font color="red">Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></font></td>
+      <td valign="top" nowrap><font color="red"><dhv:label name="project.invitationRefused" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>" >Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
+    </dhv:evaluate>
+    <td nowrap valign="top">
+      <zeroio:tz timestamp="<%= thisMember.getLastAccessed() %>" dateOnly="true" default="--" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
+    </td>
+  </tr>
+<%    
+  }
+%>
+</table>
+<br />
+<dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="false" title="Account Contacts" object="projectAccountContactTeamInfo"/>
+<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+  <tr>
+    <th nowrap><dhv:label name="project.role">Role</dhv:label></th>
+    <th nowrap><dhv:label name="project.id">Id</dhv:label></th>
+    <th width="80%"><dhv:label name="contacts.name">Name / Organization</dhv:label></th>
+    <th nowrap><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></th>
+    <th nowrap><dhv:label name="documents.team.lastAccessed">Last Accessed</dhv:label></th>
+  </tr>
+<%
+  team = Project.getAccountContactTeam();
+  if (team.size() == 0) {
+%>
+  <tr class="row2">
+    <td colspan="5"><dhv:label name="project.acctContactTeamNotDefined">Account contact team has not been defined</dhv:label></td>
+  </tr>
+<%
+  }
+  rowId = 0;
+  i = team.iterator();
+  while (i.hasNext()) {
+    rowId = (rowId != 1?1:2);
+    TeamMember thisMember = (TeamMember) i.next();
+    User thisContact = (User) thisMember.getUser();
+    if (thisContact == null) thisContact = new User();
+    // Temp. fix for Weblogic
+    String roleName = "role" + thisMember.getUserId();
+    String roleValue = String.valueOf(thisMember.getUserLevel());
+    String roleOnChange = "javascript:updateRole(" + thisMember.getProjectId() + ", " + thisMember.getUserId() + ", this.options[this.selectedIndex].value);";
+%>    
+  <tr class="row<%= rowId %>">
+    <td valign="top" nowrap>
+      <zeroio:permission name="project-team-edit-role" if="none">
+        <zeroio:role id="<%= thisMember.getUserLevel() %>"/>
+      </zeroio:permission>
+      <zeroio:permission name="project-team-edit-role">
+        <zeroio:roleSelect
+          name="<%= roleName %>"
+          value="<%= roleValue %>"
+          onChange="<%= roleOnChange %>"/>
+      </zeroio:permission>
+    </td>
+    <td valign="top"><%= thisMember.getUserId() %></td>
+    <td valign="top">
+      <%= toHtml(thisContact.getContact().getNameFirstLast()) %>
+      <dhv:evaluate if="<%= hasText(thisContact.getContact().getCompany()) %>">
+        /
+        <%= toHtml(thisContact.getContact().getCompany()) %>
+      </dhv:evaluate>
+      <zeroio:permission name="project-team-view-email">
+        <dhv:evaluate if="<%= thisContact.getContact().getEmailAddress(1) != null %>"><br /><a href="mailto:<%= thisContact.getContact().getEmailAddress(1) %>"><%= thisContact.getContact().getEmailAddress(1) %></a></dhv:evaluate>&nbsp;
+      </zeroio:permission>
+    </td>
+    <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_ADDED %>">
+      <td valign="top" nowrap>
+        <dhv:label name="project.added" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Added <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
+      </td>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_PENDING %>">
+      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_INVITING %>">
+      <td valign="top" nowrap><font color="green"><dhv:label name="project.invited" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">Invited <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_MAILERROR %>">
+      <td valign="top" nowrap><font color="red"><dhv:label name="project.invitationCouldNotBeSent">Invitation could not be sent to email address</dhv:label></font></td>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= thisMember.getStatus() == TeamMember.STATUS_REFUSED %>">
+      <td valign="top" nowrap><font color="red"><dhv:label name="project.invitationRefused" param="<%= "time="+getTime(pageContext,thisMember.getModified(),User.getTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>" >Invitation refused <zeroio:tz timestamp="<%= thisMember.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font></td>
     </dhv:evaluate>
     <td nowrap valign="top">
       <zeroio:tz timestamp="<%= thisMember.getLastAccessed() %>" dateOnly="true" default="--" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>

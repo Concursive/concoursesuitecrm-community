@@ -22,8 +22,8 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> > 
-Settings
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> > 
+<dhv:label name="Settings">Settings</dhv:label>
 </td>
 </tr>
 </table>
@@ -31,25 +31,28 @@ Settings
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>
-      <strong>Make a selection</strong>
+      <strong><dhv:label name="calendar.makeASelection">Make a selection</dhv:label></strong>
     </th>
   </tr>
   <dhv:permission name="myhomepage-profile-personal-view">
   <tr>
-    <td><a href="MyCFSProfile.do?command=MyCFSProfile">Update my personal information</a></td>
+    <td><a href="MyCFSProfile.do?command=MyCFSProfile"><dhv:label name="calendar.updatePersonalInformation">Update my personal information</dhv:label></a></td>
   </tr>
   </dhv:permission>
   <dhv:permission name="myhomepage-profile-settings-view,myhomepage-profile-view">
   <tr>
-    <td><a href="MyCFSSettings.do?command=MyCFSSettings">Configure my location</a></td>
+    <td><a href="MyCFSSettings.do?command=MyCFSSettings"><dhv:label name="calendar.configureMyLocation">Configure my location</dhv:label></a></td>
   </tr>
   </dhv:permission>
   <dhv:permission name="myhomepage-profile-password-edit">
   <tr>
-    <td><a href="MyCFSPassword.do?command=MyCFSPassword">Change my password</a></td>
+    <td><a href="MyCFSPassword.do?command=MyCFSPassword"><dhv:label name="calendar.changeMyPassword">Change my password</dhv:label></a></td>
   </tr>
   </dhv:permission>
+  <tr>
+    <td><a href="MyCFSWebdav.do?command=MyCFSWebdav"><dhv:label name="calendar.activateWebFolderAccess">Activate Web Folder Access</dhv:label></a></td>
+  </tr>
 </table>
 <br>
-<%--The time is currently <zeroio:tz timestamp="<%= new java.util.Date() %>"/> --%>
+<%-- The time is currently <zeroio:tz timestamp="<%= new java.util.Date() %>"/> --%>
 

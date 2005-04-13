@@ -15,16 +15,26 @@
  */
 package org.aspcfs.utils;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import java.util.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *  Provides essential methods for working with XML. XMLUtils is also a class
@@ -98,8 +108,6 @@ public class XMLUtils {
     if (System.getProperty("DEBUG") != null) {
       System.out.println("XMLUtils->Reading XML from request");
     }
-    boolean startElement = true;
-    boolean endElement = true;
     while ((line = br.readLine()) != null) {
       data.append(line.trim() + System.getProperty("line.separator"));
       if (cacheXML) {
@@ -493,7 +501,7 @@ public class XMLUtils {
    *@return       The firstChild value
    */
   public Element getFirstChild(String name) {
-    return this.getFirstChild(this.document, name);
+    return getFirstChild(this.document, name);
   }
 
 
@@ -504,7 +512,28 @@ public class XMLUtils {
    *@return       The firstElement value
    */
   public Element getFirstElement(String name) {
-    return this.getFirstElement(this.getDocumentElement(), name);
+    return getFirstElement(this.getDocumentElement(), name);
+  }
+
+  /** Locate a specific element based on its name and the value of one of its
+   * attributes.
+   * @param mappings
+   * @param nodeName
+   * @param attributeName
+   * @param attributeValue
+   * @return
+   */
+  public static Element getElement(Element mappings, String nodeName, String attributeName, String attributeValue) {
+    ArrayList elementList = new ArrayList();
+    XMLUtils.getAllChildren(mappings, nodeName, elementList);
+    Iterator items = elementList.iterator();
+    while (items.hasNext()) {
+      Element element = (Element) items.next();
+      if (attributeValue.equals(element.getAttribute(attributeName))) {
+        return element;
+      }
+    }
+    return null;
   }
 
 

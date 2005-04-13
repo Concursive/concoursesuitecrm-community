@@ -15,15 +15,21 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.troubletickets.base.*;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.base.Category;
+import org.aspcfs.modules.base.CategoryList;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.troubletickets.base.TicketCategoryDraft;
+import org.aspcfs.modules.troubletickets.base.TicketCategoryDraftList;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
  *  Maintains Category Editors for various components
@@ -49,6 +55,7 @@ public class CategoryEditor {
   private TicketCategoryDraftList topCategoryList = new TicketCategoryDraftList();
   private java.util.Date hierarchyCheck = new java.util.Date();
   private boolean hierarchyUpdating = false;
+  private SystemStatus systemStatus = null;
 
 
   /**
@@ -246,6 +253,26 @@ public class CategoryEditor {
    */
   public void setMaxLevels(String tmp) {
     this.maxLevels = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the systemStatus attribute of the CategoryEditor object
+   *
+   *@param  tmp  The new systemStatus value
+   */
+  public void setSystemStatus(SystemStatus tmp) {
+    this.systemStatus = tmp;
+  }
+
+
+  /**
+   *  Gets the systemStatus attribute of the CategoryEditor object
+   *
+   *@return    The systemStatus value
+   */
+  public SystemStatus getSystemStatus() {
+    return systemStatus;
   }
 
 
@@ -589,6 +616,7 @@ public class CategoryEditor {
    */
   public void toggleSubCategories(Connection db, TicketCategoryDraft thisCategory, boolean enabled) throws SQLException {
     //remove from universal list
+    boolean recordDeleted = false;
     if (thisCategory.getActualCatId() == -1) {
       categoryList.remove(new Integer(thisCategory.getId()));
       //remove from parent
@@ -600,7 +628,10 @@ public class CategoryEditor {
       if (thisCategory.getParentCode() == 0) {
         topCategoryList.remove(thisCategory);
       }
-      thisCategory.delete(db, tableName);
+      recordDeleted = thisCategory.delete(db, tableName);
+      if (!recordDeleted) {
+        thisCategory.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.ticketCategoryDeletion"));
+      }
     } else {
       thisCategory.setEnabled(enabled);
       thisCategory.update(db, tableName);

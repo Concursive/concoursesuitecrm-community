@@ -30,9 +30,9 @@
   <%-- title row --%>
   <tr>
     <td>&nbsp;</td>
-    <td colspan="6" nowrap class="eventName">
+    <td colspan="5" nowrap class="eventName">
       <img border="0" src="images/box-hold.gif" align="absmiddle" title="Activities" />
-      Pending Activities
+      <dhv:label name="myitems.pendingActivities">Pending Activities</dhv:label>
       (<%= callEventList.getPendingCalls().size() %>)
     </td>
   </tr>
@@ -44,22 +44,19 @@
     <tr>
       <th>&nbsp;</th>
       <th class="weekSelector" nowrap>
-        <strong>Due</strong>
+        <strong><dhv:label name="calendar.due">Due</dhv:label></strong>
       </th>
       <th class="weekSelector" nowrap>
-        <strong><dhv:label name="accounts.account">Account</dhv:label></strong>
+        <strong><dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label></strong>
       </th>
       <th class="weekSelector" nowrap>
-        <strong>Contact</strong>
-      </th>
-      <th class="weekSelector" nowrap>
-        <strong>Phone</strong>
+        <strong><dhv:label name="accounts.accounts_add.Phone">Phone</dhv:label></strong>
       </th>
       <th class="weekSelector" width="100%">
-        <strong>Description</strong>
+        <strong><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></strong>
       </th>
       <th class="weekSelector" nowrap>
-        <strong>Pri</strong>
+        <strong><dhv:label name="project.pri">Pri</dhv:label></strong>
       </th>
     </tr>
   <%  
@@ -79,10 +76,8 @@
        <zeroio:tz timestamp="<%= pendingCall.getAlertDate() %>" timeOnly="true"/>
      </td>
      <td nowrap valign="top">
+       <%= toString(pendingCall.getContactName()) %><br />
        <%= StringUtils.trimToSize(toString(pendingCall.getOrgName()), 20) %>
-     </td>
-     <td nowrap valign="top">
-       <%= toString(pendingCall.getContactName()) %>
      </td>
      <td nowrap valign="top">
         <% if (pendingCall.getContact().getPhoneNumberList().size() > 1) { %>
@@ -112,9 +107,9 @@
   <%-- title row --%>
   <tr>
     <td>&nbsp;</td>
-    <td colspan="4" nowrap class="eventName">
+    <td colspan="3" nowrap class="eventName">
       <img border="0" src="images/alertcall.gif" align="absmiddle" title="Completed Activities" />
-      Completed Activities
+      <dhv:label name="calendar.completedActivities">Completed Activities</dhv:label>
       (<%= callEventList.getCompletedCalls().size() %>)
     </td>
   </tr>
@@ -128,16 +123,13 @@
         &nbsp;
       </th>
       <th class="weekSelector">
-        <strong>Time</strong>
+        <strong><dhv:label name="calendar.time">Time</dhv:label></strong>
       </th>
-      <td class="weekSelector" nowrap>
-        <strong><dhv:label name="accounts.account">Account</dhv:label></strong>
-      </td>
       <th class="weekSelector">
-        <strong>Contact</strong>
+        <strong><dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label></strong>
       </th>
       <th class="weekSelector" width="100%">
-        <strong>Subject</strong>
+        <strong><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></strong>
       </th>
     </tr>
   <%
@@ -157,10 +149,8 @@
      <zeroio:tz timestamp="<%= completedCall.getCompleteDate() %>" timeOnly="true"/>
    </td>
    <td nowrap valign="top">
+     <%= toString(completedCall.getContactName()) %><br />
      <%= StringUtils.trimToSize(toString(completedCall.getOrgName()), 20) %>
-   </td>
-   <td nowrap valign="top">
-     <%= toString(completedCall.getContactName()) %>
    </td>
    <td valign="top">
      <%= StringUtils.trimToSize(toHtml(completedCall.getSubject()), 30) %>

@@ -22,7 +22,9 @@ import org.apache.lucene.index.Term;
 import java.sql.*;
 import java.io.IOException;
 import com.zeroio.utils.ContentUtils;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
 
 /**
  *  Class for working with the Lucene search engine
@@ -44,13 +46,15 @@ public class FileItemIndexer implements Indexer {
    *@exception  SQLException  Description of the Exception
    *@exception  IOException   Description of the Exception
    */
-  public static void add(IndexWriter writer, Connection db, String path) throws SQLException, IOException {
+  public static void add(IndexWriter writer, Connection db, String path, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT item_id, folder_id, link_item_id, subject, client_filename, modified, size, filename " +
+        "SELECT item_id, folder_id, link_module_id, link_item_id, subject, client_filename, modified, size, filename " +
         "FROM project_files " +
-        "WHERE link_module_id = ? ");
+        "WHERE link_module_id = ? " + 
+        "OR link_module_id = ? ");
     pst.setInt(1, Constants.PROJECTS_FILES);
+    pst.setInt(2, Constants.DOCUMENTS_DOCUMENTS );
     ResultSet rs = pst.executeQuery();
     while (rs.next()) {
       ++count;
@@ -58,6 +62,7 @@ public class FileItemIndexer implements Indexer {
       FileItem fileItem = new FileItem();
       fileItem.setId(rs.getInt("item_id"));
       fileItem.setFolderId(rs.getInt("folder_id"));
+      fileItem.setLinkModuleId(rs.getInt("link_module_id"));
       fileItem.setLinkItemId(rs.getInt("link_item_id"));
       fileItem.setSubject(rs.getString("subject"));
       fileItem.setClientFilename(rs.getString("client_filename"));
@@ -67,6 +72,7 @@ public class FileItemIndexer implements Indexer {
       fileItem.setDirectory(path);
       // add the document
       FileItemIndexer.add(writer, fileItem, false);
+      DatabaseUtils.renewConnection(context, db);
     }
     rs.close();
     pst.close();
@@ -89,7 +95,11 @@ public class FileItemIndexer implements Indexer {
     document.add(Field.Keyword("type", "file"));
     document.add(Field.Keyword("fileId", String.valueOf(fileItem.getId())));
     document.add(Field.Keyword("folderId", String.valueOf(fileItem.getFolderId())));
-    document.add(Field.Keyword("projectId", String.valueOf(fileItem.getLinkItemId())));
+    if (fileItem.getLinkModuleId() == Constants.PROJECTS_FILES) {
+      document.add(Field.Keyword("projectId", String.valueOf(fileItem.getLinkItemId())));
+    } else if (fileItem.getLinkModuleId() == Constants.DOCUMENTS_DOCUMENTS) {
+      document.add(Field.Keyword("documentStoreId", String.valueOf(fileItem.getLinkItemId())));
+    }
     document.add(Field.Text("title", fileItem.getSubject() + " - " + fileItem.getClientFilename()));
     document.add(Field.Text("filename", fileItem.getClientFilename()));
     document.add(Field.Text("extension", fileItem.getExtension()));

@@ -32,12 +32,13 @@ import org.aspcfs.modules.accounts.base.*;
 /**
  *  Actions for Account Ticket Folders
  *
- *@author      matt rajkowski
- *@created     December 15, 2003
- *@version     $Id$
+ *@author     matt rajkowski
+ *@created    December 15, 2003
+ *@version    $Id: AccountTicketFolders.java,v 1.3.12.1 2004/11/12 19:55:24
+ *      mrajkowski Exp $
  */
 public final class AccountTicketFolders extends CFSModule {
-  
+
   /**
    *  Fields: Shows a list of custom field records that are located "within" the
    *  selected Custom Folder. Also shows the details of a particular Custom
@@ -148,6 +149,49 @@ public final class AccountTicketFolders extends CFSModule {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandFolderList(ActionContext context) {
+    if (!(hasPermission(context, "tickets-tickets-view"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Ticket thisTicket = null;
+    try {
+      String ticketId = context.getRequest().getParameter("ticketId");
+      db = this.getConnection(context);
+      //Load the ticket
+      thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+      context.getRequest().setAttribute("ticketDetails", thisTicket);
+      //Load the organization
+      Organization thisOrganization = new Organization(db, thisTicket.getOrgId());
+      context.getRequest().setAttribute("orgDetails", thisOrganization);
+
+      //Show a list of the different folders available in Accounts
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.FOLDERS_TICKETS);
+      thisList.setLinkItemId(thisTicket.getId());
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(false);
+      thisList.setBuildTotalNumOfRecords(true);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("categoryList", thisList);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "View Tickets", "Custom Folder List");
+    return ("FolderListOK");
+  }
+
+
+  /**
    *  AddFolderRecord: Displays the form for inserting a new custom field record
    *  for the selected Account.
    *
@@ -169,7 +213,7 @@ public final class AccountTicketFolders extends CFSModule {
       //Load the organization
       Organization thisOrganization = new Organization(db, thisTicket.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      
+
       String selectedCatId = (String) context.getRequest().getParameter("catId");
       CustomFieldCategory thisCategory = new CustomFieldCategory(db,
           Integer.parseInt(selectedCatId));
@@ -217,7 +261,7 @@ public final class AccountTicketFolders extends CFSModule {
       //Load the organization
       Organization thisOrganization = new Organization(db, thisTicket.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      
+
       CustomFieldCategory thisCategory = new CustomFieldCategory(db,
           Integer.parseInt(selectedCatId));
       thisCategory.setLinkModuleId(Constants.FOLDERS_TICKETS);
@@ -257,6 +301,7 @@ public final class AccountTicketFolders extends CFSModule {
     Connection db = null;
     Ticket thisTicket = null;
     int resultCount = 0;
+    boolean isValid = false;
     try {
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
@@ -266,7 +311,7 @@ public final class AccountTicketFolders extends CFSModule {
       //Load the organization
       Organization thisOrganization = new Organization(db, thisTicket.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      
+
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
       thisList.setLinkModuleId(Constants.FOLDERS_TICKETS);
       thisList.setIncludeEnabled(Constants.TRUE);
@@ -291,27 +336,43 @@ public final class AccountTicketFolders extends CFSModule {
       thisCategory.setParameters(context);
       thisCategory.setModifiedBy(this.getUserId(context));
       if (!thisCategory.getReadOnly()) {
+        thisCategory.setCanNotContinue(true);
         resultCount = thisCategory.update(db);
+        Iterator groups = (Iterator) thisCategory.iterator();
+        isValid = true;
+        while (groups.hasNext()) {
+          CustomFieldGroup group = (CustomFieldGroup) groups.next();
+          Iterator fields = (Iterator) group.iterator();
+          while (fields.hasNext()) {
+            CustomField field = (CustomField) fields.next();
+            field.setValidateData(true);
+            field.setRecordId(thisCategory.getRecordId());
+            isValid = this.validateObject(context, db, field) && isValid;
+          }
+        }
+        thisCategory.setCanNotContinue(false);
+        if (isValid && resultCount != -1) {
+          resultCount = thisCategory.insertGroup(db, thisCategory.getRecordId());
+        }
       }
-      if (resultCount == -1) {
+      context.getRequest().setAttribute("Category", thisCategory);
+      if (resultCount == -1 || !isValid) {
         if (System.getProperty("DEBUG") != null) {
           System.out.println("TroubleTicketsFolders-> ModifyField validation error");
         }
+        return ("ModifyFieldsOK");
       } else {
         thisCategory.buildResources(db);
         CustomFieldRecord thisRecord = new CustomFieldRecord(db, thisCategory.getRecordId());
         context.getRequest().setAttribute("Record", thisRecord);
       }
-      context.getRequest().setAttribute("Category", thisCategory);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (resultCount == -1) {
-      return ("ModifyFieldsOK");
-    } else if (resultCount == 1) {
+    if (resultCount == 1 && isValid) {
       return ("UpdateFieldsOK");
     } else {
       context.getRequest().setAttribute("Error", CFSModule.NOT_UPDATED_MESSAGE);
@@ -333,6 +394,7 @@ public final class AccountTicketFolders extends CFSModule {
     Connection db = null;
     int resultCode = -1;
     Ticket thisTicket = null;
+    boolean isValid = false;
     try {
       String ticketId = context.getRequest().getParameter("ticketId");
       db = this.getConnection(context);
@@ -342,7 +404,7 @@ public final class AccountTicketFolders extends CFSModule {
       //Load the organization
       Organization thisOrganization = new Organization(db, thisTicket.getOrgId());
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      
+
       CustomFieldCategoryList thisList = new CustomFieldCategoryList();
       thisList.setLinkModuleId(Constants.FOLDERS_TICKETS);
       thisList.setIncludeEnabled(Constants.TRUE);
@@ -365,27 +427,45 @@ public final class AccountTicketFolders extends CFSModule {
       thisCategory.setEnteredBy(this.getUserId(context));
       thisCategory.setModifiedBy(this.getUserId(context));
       if (!thisCategory.getReadOnly()) {
+        thisCategory.setCanNotContinue(true);
         resultCode = thisCategory.insert(db);
+        Iterator groups = (Iterator) thisCategory.iterator();
+        isValid = true;
+        while (groups.hasNext()) {
+          CustomFieldGroup group = (CustomFieldGroup) groups.next();
+          Iterator fields = (Iterator) group.iterator();
+          while (fields.hasNext()) {
+            CustomField field = (CustomField) fields.next();
+            field.setValidateData(true);
+            field.setRecordId(thisCategory.getRecordId());
+            isValid = this.validateObject(context, db, field) && isValid;
+          }
+        }
+        thisCategory.setCanNotContinue(false);
+        if (isValid && resultCode != -1) {
+          resultCode = thisCategory.insertGroup(db, thisCategory.getRecordId());
+        }
       }
-      if (resultCode == -1) {
+      context.getRequest().setAttribute("Category", thisCategory);
+      if (resultCode == -1 || !isValid) {
+        if (thisCategory.getRecordId() != -1) {
+          CustomFieldRecord record = new CustomFieldRecord(db, thisCategory.getRecordId());
+          record.delete(db);
+        }
         if (System.getProperty("DEBUG") != null) {
           System.out.println("TroubleTicketsFolders-> InsertField validation error");
         }
+        return ("AddFolderRecordOK");
       } else {
         processInsertHook(context, thisCategory);
       }
-      context.getRequest().setAttribute("Category", thisCategory);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (resultCode == -1) {
-      return ("AddFolderRecordOK");
-    } else {
-      return (this.executeCommandFields(context));
-    }
+    return (this.executeCommandFields(context));
   }
 
 

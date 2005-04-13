@@ -41,7 +41,7 @@
 }else{ %>
         <tr>
         <td class="containerBody" colspan="2" valign="center">
-          No items in History.
+          <dhv:label name="actionList.noItemsInHistory">No items in History.</dhv:label>
         </td>
       </tr>
 <%}%>

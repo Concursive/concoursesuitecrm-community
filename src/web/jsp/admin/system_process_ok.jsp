@@ -16,4 +16,4 @@
   - Version: $Id$
   - Description: 
   --%>
-System response: OK
+<dhv:label name="admin.systemResponseOK">System response: OK</dhv:label>

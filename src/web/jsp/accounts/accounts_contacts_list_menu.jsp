@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
@@ -53,6 +53,12 @@
   function deleteContact() {
     popURLReturn('Contacts.do?command=ConfirmDelete&orgId=' + thisOrgId + '&id=' + thisContactId + '&popup=true','Contacts.do?command=View', 'Delete_contact','330','200','yes','no');
   }
+  function moveTheContact() {
+    popURLReturn('Contacts.do?command=MoveToAccount&orgId='+ thisOrgId + '&id='+ thisContactId + '&popup=true','Contacts.do?command=View', 'Move_contact','400','320','yes','no');
+  }
+  function sendMessage() {
+    popURL('MyActionContacts.do?command=PrepareMessage&actionSource=MyActionContacts&orgId=' + thisOrgId + '&contactId=' + thisContactId + '&messageType=addressRequest' + '&popup=true','Message','700','550','yes','yes');
+  }  
 </script>
 <div id="menuContactContainer" class="menu">
   <div id="menuContactContent">
@@ -64,7 +70,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View Details
+          <dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -75,7 +81,18 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Modify
+          <dhv:label name="global.button.modify">Modify</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+      <dhv:permission name="accounts-accounts-contacts-move-view">
+      <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
+           onclick="moveTheContact()">
+        <th>
+          <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="global.button.move">Move</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -86,7 +103,7 @@
           <img src="images/icons/stock_copy-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Clone
+          <dhv:label name="global.button.Clone">Clone</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -98,7 +115,7 @@
           <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Move
+          <dhv:label name="global.button.Move">Move</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -110,10 +127,20 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete
+          <dhv:label name="global.button.delete">Delete</dhv:label>
         </td>
       </tr>
       </dhv:permission>
-    </table>
+      <dhv:permission name="accounts-accounts-contact-updater-view">
+      <tr id="menuAddressRequest" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="sendMessage()">
+        <th>
+          <img src="images/icons/stock_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="global.button.sendAddressRequest">Send Address Request</dhv:label>
+        </td>
+      </tr>
+      </dhv:permission>
+     </table>
   </div>
 </div>

@@ -41,234 +41,229 @@
 <tr>
 <td width="100%">
   <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-  <a href="Accounts.do?command=Search">Search Results</a> >
+  <a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
   <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-  <a href="AccountsServiceContracts.do?command=List&orgId=<%= OrgDetails.getOrgId() %>">Service Contracts</a> >
-  Contract Details
+  <a href="AccountsServiceContracts.do?command=List&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.accounts_sc_add.ServiceContracts">Service Contracts</dhv:label></a> >
+  <dhv:label name="accounts.accounts_sc_add.ContractDetails">Contract Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-  <%@ include file="accounts_details_header_include.jsp" %>
-    <dhv:container name="accounts" selected="servicecontracts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-  <table cellpadding="4" cellspacing="0" border="0" width="100%">
-    <tr>
-      <td class="containerBack">
-      <dhv:permission name="accounts-service-contracts-edit">
-      <input type=submit value="Modify" />
-      </dhv:permission>
-      <dhv:permission name="accounts-service-contracts-delete">
-      <input type="button" value="Delete" onClick="javascript:popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_servicecontract','320','200','yes','no');" />
-      </dhv:permission>
-      <input type="hidden" name="orgId" value = <%= OrgDetails.getOrgId() %> />
-      <input type="hidden" name="id" value = <%= serviceContract.getId() %> />
-      <br /> <br />
-<%-- Start details --%>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-	    <strong>General Information</strong>
-	  </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Service Contract Number
-    </td>
-    <td>
-      <%= toHtml(serviceContract.getServiceContractNumber()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-    Contract Value
-    </td>
-    <td>
-      <zeroio:currency value="<%= serviceContract.getContractValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
-    </td>
-  </tr>
-   <tr class="containerBody">
-    <td class="formLabel">
-      Initial Contract Date
-    </td>
-    <td>
-      <zeroio:tz timestamp="<%=serviceContract.getInitialStartDate()%>" dateOnly="true" timeZone="<%=serviceContract.getInitialStartDateTimeZone()%>" showTimeZone="true" default="&nbsp;"/>
-      <% if(!User.getTimeZone().equals(serviceContract.getInitialStartDateTimeZone())){%>
-      <br />
-      <zeroio:tz timestamp="<%= serviceContract.getInitialStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% } %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Current Contract Date
-    </td>
-    <td>
-      <zeroio:tz timestamp="<%=serviceContract.getCurrentStartDate()%>" dateOnly="true" timeZone="<%=serviceContract.getCurrentStartDateTimeZone()%>" showTimeZone="true" default="&nbsp;"/>
-      <% if(!User.getTimeZone().equals(serviceContract.getCurrentStartDateTimeZone())){%>
-      <br />
-      <zeroio:tz timestamp="<%= serviceContract.getCurrentStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% } %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Current End Date
-    </td>
-    <td>
-      <zeroio:tz timestamp="<%= serviceContract.getCurrentEndDate() %>" dateOnly="true" timeZone="<%=serviceContract.getCurrentEndDateTimeZone()%>" showTimeZone="true" default="&nbsp;"/>
-      <% if(!User.getTimeZone().equals(serviceContract.getCurrentEndDateTimeZone())){%>
-      <br />
-      <zeroio:tz timestamp="<%= serviceContract.getCurrentEndDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% } %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Category
-    </td>
-    <td>
-      <dhv:evaluate if="<%= serviceContract.getCategory() > 0 %>">
-        <%= toHtml(serviceContractCategoryList.getSelectedValue(serviceContract.getCategory())) %>
-      </dhv:evaluate>&nbsp;
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Type
-    </td>
-    <td>
-      <dhv:evaluate if="<%= serviceContract.getType() > 0 %>">
-        <%= toHtml(serviceContractTypeList.getSelectedValue(serviceContract.getType())) %>
-      </dhv:evaluate>&nbsp;
-    </td>
-  </tr>
-  <tr class="containerBody">
-  <td class="formLabel">
-    Labor Categories
-  </td>
-  <td>
-      <dhv:evaluate if="<%= serviceContractProductList.size() > 0 %>">
-      <%
-        Iterator itr = serviceContractProductList.iterator();
-        int count = 0;
-        while (itr.hasNext()){
-          ServiceContractProduct scp = (ServiceContractProduct)itr.next();
-          if (count != 0){%>
-            , &nbsp;
-          <%}%>
-        <%=toHtml(scp.getProductSku())%>
-       <%
-          count++;
-        }
-       %>
-      </dhv:evaluate>&nbsp;
-  </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Contact
-    </td>
-    <td>
-      <dhv:evaluate if="<%= serviceContract.getContactId() > -1 %>">
-        <dhv:permission name="contacts-external_contacts-view"><a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= serviceContractContact.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"></dhv:permission><%= toHtml(serviceContractContact.getNameLastFirst()) %><dhv:permission name="contacts-external_contacts-view"></a></dhv:permission>
-      </dhv:evaluate>
-      &nbsp;
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td valign="top" class="formLabel">
-      Description
-    </td>
-    <td>
-      <%= toHtml(serviceContract.getDescription()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td valign="top" class="formLabel">
-      Billing Notes
-    </td>
-    <td>
-    <%= toHtml(serviceContract.getContractBillingNotes()) %>
-    </td>
-  </tr>
-</table>
-<br>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-	    <strong>Block Hour Information</strong>
-	  </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-    Total Hours Remaining
-    </td>
-    <td>
-      <%= serviceContract.getTotalHoursRemaining() %>
-      <dhv:evaluate if="<%= serviceContractHoursHistory.size() > 0 %>">
-      [<a href="javascript:popURL('AccountsServiceContracts.do?command=HoursHistory&id=<%= serviceContract.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');">History</a>]
-      </dhv:evaluate>&nbsp;
-    </td>
-  </tr>
-</table>
-<br>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-      <strong>Service Model Options</strong>
-    </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Response Time
-    </td>
-    <td>
-    <%= toHtml(responseModelList.getSelectedValue(serviceContract.getResponseTime())) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Telephone Service
-    </td>
-    <td>
-    <%= toHtml(phoneModelList.getSelectedValue(serviceContract.getTelephoneResponseModel())) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Onsite Service
-    </td>
-    <td>
-    <%= toHtml(onsiteModelList.getSelectedValue(serviceContract.getOnsiteResponseModel())) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Email Service
-    </td>
-    <td>
-    <%= toHtml(emailModelList.getSelectedValue(serviceContract.getEmailResponseModel())) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td valign="top" class="formLabel">
-      Service Model Notes
-    </td>
-    <td>
-    <%= toHtml(serviceContract.getServiceModelNotes()) %>
-    </td>
-  </tr>
-</table>
-<%= addHiddenParams(request, "popup|popupType|actionId") %>
-<%-- End Details --%>
-<br />
+<dhv:container name="accounts" selected="servicecontracts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
   <dhv:permission name="accounts-service-contracts-edit">
-  <input type="submit" value="Modify" />
+   <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />
   </dhv:permission>
   <dhv:permission name="accounts-service-contracts-delete">
-  <input type="button" value="Delete" onClick="javascript:popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_servicecontract','320','200','yes','no');" />
+    <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_servicecontract','320','200','yes','no');" />
   </dhv:permission>
-  </td>
-  </tr>
-</table>
+  <input type="hidden" name="orgId" value = <%= OrgDetails.getOrgId() %> />
+  <input type="hidden" name="id" value = <%= serviceContract.getId() %> />
+  <br />
+  <br />
+  <%-- Start details --%>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><dhv:label name="documents.details.generalInformation">General Information</dhv:label></strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accountasset_include.ServiceContractNumber">Service Contract Number</dhv:label>
+      </td>
+      <td>
+        <%= toHtml(serviceContract.getServiceContractNumber()) %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+      <dhv:label name="account.sc.contractValue">Contract Value</dhv:label>
+      </td>
+      <td>
+        <zeroio:currency value="<%= serviceContract.getContractValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      </td>
+    </tr>
+     <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="account.sc.initialContractDate">Initial Contract Date</dhv:label>
+      </td>
+      <td>
+        <zeroio:tz timestamp="<%=serviceContract.getInitialStartDate()%>" dateOnly="true" timeZone="<%=serviceContract.getInitialStartDateTimeZone()%>" showTimeZone="true" default="&nbsp;"/>
+        <% if(!User.getTimeZone().equals(serviceContract.getInitialStartDateTimeZone())){%>
+        <br />
+        <zeroio:tz timestamp="<%= serviceContract.getInitialStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+        <% } %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="account.sc.currentContractDate">Current Contract Date</dhv:label>
+      </td>
+      <td>
+        <zeroio:tz timestamp="<%=serviceContract.getCurrentStartDate()%>" dateOnly="true" timeZone="<%=serviceContract.getCurrentStartDateTimeZone()%>" showTimeZone="true" default="&nbsp;"/>
+        <% if(!User.getTimeZone().equals(serviceContract.getCurrentStartDateTimeZone())){%>
+        <br />
+        <zeroio:tz timestamp="<%= serviceContract.getCurrentStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+        <% } %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="account.sc.currentEndDate">Current End Date</dhv:label>
+      </td>
+      <td>
+        <zeroio:tz timestamp="<%= serviceContract.getCurrentEndDate() %>" dateOnly="true" timeZone="<%=serviceContract.getCurrentEndDateTimeZone()%>" showTimeZone="true" default="&nbsp;"/>
+        <% if(!User.getTimeZone().equals(serviceContract.getCurrentEndDateTimeZone())){%>
+        <br />
+        <zeroio:tz timestamp="<%= serviceContract.getCurrentEndDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+        <% } %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accountasset_include.Category">Category</dhv:label>
+      </td>
+      <td>
+        <dhv:evaluate if="<%= serviceContract.getCategory() > 0 %>">
+          <%= toHtml(serviceContractCategoryList.getSelectedValue(serviceContract.getCategory())) %>
+        </dhv:evaluate>&nbsp;
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
+      </td>
+      <td>
+        <dhv:evaluate if="<%= serviceContract.getType() > 0 %>">
+          <%= toHtml(serviceContractTypeList.getSelectedValue(serviceContract.getType())) %>
+        </dhv:evaluate>&nbsp;
+      </td>
+    </tr>
+    <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="account.sc.laborCategories">Labor Categories</dhv:label>
+    </td>
+    <td>
+        <dhv:evaluate if="<%= serviceContractProductList.size() > 0 %>">
+        <%
+          Iterator itr = serviceContractProductList.iterator();
+          int count = 0;
+          while (itr.hasNext()){
+            ServiceContractProduct scp = (ServiceContractProduct)itr.next();
+            if (count != 0){%>
+              , &nbsp;
+            <%}%>
+          <%=toHtml(scp.getProductName())%>
+         <%
+            count++;
+          }
+         %>
+        </dhv:evaluate>&nbsp;
+    </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
+      </td>
+      <td>
+        <dhv:evaluate if="<%= serviceContract.getContactId() > -1 %>">
+          <dhv:permission name="contacts-external_contacts-view"><a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= serviceContractContact.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"></dhv:permission><%= toHtml(serviceContractContact.getNameLastFirst()) %><dhv:permission name="contacts-external_contacts-view"></a></dhv:permission>
+        </dhv:evaluate>
+        &nbsp;
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td valign="top" class="formLabel">
+        <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
+      </td>
+      <td>
+        <%= toHtml(serviceContract.getDescription()) %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td valign="top" class="formLabel">
+        <dhv:label name="account.sc.billingNotes">Billing Notes</dhv:label>
+      </td>
+      <td>
+      <%= toHtml(serviceContract.getContractBillingNotes()) %>
+      </td>
+    </tr>
+  </table>
+  <br>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><dhv:label name="account.sc.blockHourInformation">Block Hour Information</dhv:label></strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+      <dhv:label name="account.sc.totalHoursRemaining">Total Hours Remaining</dhv:label>
+      </td>
+      <td>
+        <%= serviceContract.getTotalHoursRemaining() %>
+        <dhv:evaluate if="<%= serviceContractHoursHistory.size() > 0 %>">
+        [<a href="javascript:popURL('AccountsServiceContracts.do?command=HoursHistory&id=<%= serviceContract.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"><dhv:label name="accountsassets.history.long_html">History</dhv:label></a>]
+        </dhv:evaluate>&nbsp;
+      </td>
+    </tr>
+  </table>
+  <br>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><dhv:label name="accounts.accountasset_include.ServiceModelOptions">Service Model Options</dhv:label></strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accountasset_include.ResponseTime">Response Time</dhv:label>
+      </td>
+      <td>
+      <%= toHtml(responseModelList.getSelectedValue(serviceContract.getResponseTime())) %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accountasset_include.TelephoneService">Telephone Service</dhv:label>
+      </td>
+      <td>
+      <%= toHtml(phoneModelList.getSelectedValue(serviceContract.getTelephoneResponseModel())) %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accountasset_include.OnsiteService">Onsite Service</dhv:label>
+      </td>
+      <td>
+      <%= toHtml(onsiteModelList.getSelectedValue(serviceContract.getOnsiteResponseModel())) %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="account.sc.emailSercive">Email Service</dhv:label>
+      </td>
+      <td>
+      <%= toHtml(emailModelList.getSelectedValue(serviceContract.getEmailResponseModel())) %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td valign="top" class="formLabel">
+        <dhv:label name="account.sc.serviceModelNotes">Service Model Notes</dhv:label>
+      </td>
+      <td>
+      <%= toHtml(serviceContract.getServiceModelNotes()) %>
+      </td>
+    </tr>
+  </table>
+  <%= addHiddenParams(request, "popup|popupType|actionId") %>
+  <%-- End Details --%>
+  <br />
+  <dhv:permission name="accounts-service-contracts-edit">
+  <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />
+  </dhv:permission>
+  <dhv:permission name="accounts-service-contracts-delete">
+  <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsServiceContracts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_servicecontract','320','200','yes','no');" />
+  </dhv:permission>
+</dhv:container>
 </form>

@@ -27,15 +27,15 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManagerGroup.do?command=View">View Groups</a> >
-<a href="CampaignManagerGroup.do?command=Details&id=<%= request.getAttribute("id") %>">Group Details</a> >
-Contact List
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManagerGroup.do?command=View"><dhv:label name="campaign.viewGroups">View Groups</dhv:label></a> >
+<a href="CampaignManagerGroup.do?command=Details&id=<%= request.getAttribute("id") %>"><dhv:label name="campaign.groupDetails">Group Details</dhv:label></a> >
+<dhv:label name="campaign.contactList">Contact List</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<input type="button" name="cmd" value="Back to Criteria" onClick="window.location.href='CampaignManagerGroup.do?command=Details&id=<%= request.getAttribute("id") %>&return=<%= request.getParameter("return") %>'">
+<input type="button" name="cmd" value="<dhv:label name="campaign.backToCriteria">Back to Criteria</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=Details&id=<%= request.getAttribute("id") %>&return=<%= request.getParameter("return") %>'">
 </dhv:evaluate>
 <dhv:pagedListStatus object="CampaignGroupsPreviewInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
@@ -49,13 +49,13 @@ Contact List
       &nbsp;
     </th>
     <th width="33%">
-      Name
+      <dhv:label name="contacts.name">Name</dhv:label>
     </th>
     <th width="33%">
-      Company
+      <dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label>
     </th>
     <th width="34%">
-      Email
+      <dhv:label name="accounts.accounts_add.Email">Email</dhv:label>
     </th>
   </tr>
 <%
@@ -79,7 +79,7 @@ Contact List
       <%= toHtml(thisContact.getAffiliation()) %>
     </td>
     <td>
-      <%= toHtml(thisContact.getEmailAddress("Business")) %>
+      <%= toHtml(thisContact.getPrimaryEmailAddress()) %>
     </td>
   </tr>
   <%}%>
@@ -89,15 +89,15 @@ Contact List
 <%} else {%>
   <tr bgcolor="white">
     <td colspan="4">
-      No contacts matched query.
+      <dhv:label name="campaign.noContactsMatchedQuery">No contacts matched query.</dhv:label>
     </td>
   </tr>
 </table>
 <%}%>
 <br>
 <dhv:evaluate if="<%= !"true".equals(request.getParameter("popup")) %>">
-<input type="button" name="cmd" value="Back to Criteria" onClick="window.location.href='CampaignManagerGroup.do?command=Details&id=<%= request.getAttribute("id") %>&return=<%= request.getParameter("return") %>'">
+<input type="button" name="cmd" value="<dhv:label name="campaign.backToCriteria">Back to Criteria</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=Details&id=<%= request.getAttribute("id") %>&return=<%= request.getParameter("return") %>'">
 </dhv:evaluate>
 <dhv:evaluate if="<%= "true".equals(request.getParameter("popup")) %>">
-<input type="button" name="cmd" value="Close" onClick="window.close()">
+<input type="button" name="cmd" value="<dhv:label name="button.close">Close</dhv:label>" onClick="window.close()">
 </dhv:evaluate>

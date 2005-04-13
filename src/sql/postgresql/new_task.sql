@@ -24,7 +24,7 @@ CREATE TABLE lookup_task_loe (
 
 CREATE TABLE lookup_task_category (
   code SERIAL PRIMARY KEY,
-  description VARCHAR(50) NOT NULL,
+  description VARCHAR(255) NOT NULL,
   default_item BOOLEAN DEFAULT false,
   level INTEGER DEFAULT 0,
   enabled BOOLEAN DEFAULT true
@@ -36,7 +36,7 @@ CREATE TABLE task (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredby INT NOT NULL REFERENCES access(user_id),
   priority INTEGER NOT NULL REFERENCES lookup_task_priority,
-  description VARCHAR(80),
+  description VARCHAR(255),
   duedate TIMESTAMP(3),
   reminderid INT,
   notes TEXT,
@@ -75,3 +75,7 @@ CREATE TABLE taskcategory_project (
   project_id INTEGER NOT NULL REFERENCES projects(project_id)
 );
 
+CREATE TABLE taskcategorylink_news (
+  news_id INTEGER NOT NULL REFERENCES project_news(news_id),
+  category_id INTEGER NOT NULL REFERENCES lookup_task_category
+);

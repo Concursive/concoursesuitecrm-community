@@ -48,46 +48,46 @@
     message = "";
 <% if("pending".equals(request.getParameter("view"))){ %>
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
-      message += "- Please specify an alert date\r\n";
+      message += label("specify.alert.date", "- Please specify an alert date\r\n");
       formTest = false;
     }
     if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
-      message += "- Please specify an alert description\r\n";
+      message += label("specify.alert.description", "- Please specify an alert description\r\n");
       formTest = false;
     }
     if (form.alertText.value == "") { 
-      message += "- Please specify an alert description\r\n";
+      message += label("specify.alert.description", "- Please specify an alert description\r\n");
       formTest = false;
     }
     if (form.alertCallTypeId.value == "0") { 
-      message += "- Please specify an alert type\r\n";
+      message += label("specify.alert.type","- Please specify an alert type\r\n");
       formTest = false;
     }
   
 <% }else{ %>
   if (form.subject.value == "") { 
-      message += "- Blank records cannot be saved\r\n";
+      message += label("specify.blank.records","- Blank records cannot be saved\r\n");
       formTest = false;
     }
     
     if (form.callTypeId.value == "0") { 
-      message += "- Please specify a type\r\n";
+      message += label("specify.type","- Please specify a type\r\n");
       formTest = false;
     }
     
     <% if(CallDetails.getAlertDate() == null){ %>
     if ((!form.alertText.value == "") && (form.alertDate.value == "")) { 
-      message += "- Please specify an alert date\r\n";
+      message += label("specify.alert.date", "- Please specify an alert date\r\n");
       formTest = false;
     }
     if ((!form.alertDate.value == "") && (form.alertText.value == "")) { 
-      message += "- Please specify an alert description\r\n";
+      message += label("specify.alert.description", "- Please specify an alert description\r\n");
       formTest = false;
     }
     <% } %>
 <% } %>
   if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     } else {
       checkFollowup(form);
@@ -115,15 +115,12 @@
   
   <% if(!"pending".equals(request.getParameter("view")) && CallDetails.getAlertDate() == null){ %>
   function toggleSpan(cb, tag) {
-    var form = document.forms[0];
+    var form = document.addCall;
     if (cb.checked) {
       if (form.alertText.value == "") {
         form.alertText.value = form.subject.value;
       }
       showSpan(tag);
-      if (window.scrollTo) {
-        window.scrollTo(0, 1000);
-      }
       form.alertText.focus();
     } else {
       hideSpan(tag);
@@ -137,7 +134,7 @@
   }
   
   function addFollowup(hours, typeId){
-    var form = document.forms[0];
+    var form = document.addCall;
     var selectedIndex = 0;
     var callTypes = form.alertCallTypeId;
     
@@ -157,9 +154,9 @@ function showHistory() {
   }
 </script>
 <% if("pending".equals(request.getParameter("view"))){ %>
-  <body onLoad="javascript:document.forms[0].alertText.focus();">
+  <body onLoad="javascript:document.addCall.alertText.focus();">
 <%}else if(CallDetails.getStatusId() != Call.CANCELED){ %>
-  <body onLoad="javascript:document.forms[0].subject.focus();">
+  <body onLoad="javascript:document.addCall.subject.focus();">
 <% } %>
 <% request.setAttribute("includeDetails", "true"); %>
 <%@ include file="../contacts/contact_details_header_include.jsp" %><br>
@@ -169,10 +166,10 @@ function showHistory() {
     <td class="containerBack">
       <%-- include call update form --%>
       <dhv:evaluate if="<%= CallDetails.getStatusId() != Call.CANCELED %>">
-      <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
+      <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
       </dhv:evaluate>
-      <input type="button" value="Cancel" onClick="javascript:window.close();">
-      [<a href="javascript:showHistory();">View Contact History</a>]
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
+      [<a href="javascript:showHistory();"><dhv:label name="calendar.viewContactHistory">View Contact History</dhv:label></a>]
       <br />
       <dhv:formMessage />
       <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
@@ -207,9 +204,9 @@ function showHistory() {
       &nbsp;
       <br>
       <dhv:evaluate if="<%= CallDetails.getStatusId() != Call.CANCELED %>">
-      <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
+      <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
       </dhv:evaluate>
-      <input type="button" value="Cancel" onClick="javascript:window.close();">
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
       <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">

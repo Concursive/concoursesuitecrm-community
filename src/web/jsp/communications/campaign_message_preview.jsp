@@ -27,7 +27,7 @@ function downloadMessage(campaignId){
   if(fileList.selectedIndex != -1){
     window.location.href='CampaignManager.do?command=DownloadMessage&id=' + campaignId +  '&fid=' + fileList.value;
   }else{
-    alert('Please select a file to download');
+    alert(label("caution.selectfiletodownload","Please select a file to download"));
   }
 }
 </script>
@@ -35,71 +35,64 @@ function downloadMessage(campaignId){
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
-Message
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManager.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
+<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>"><dhv:label name="campaign.campaignDetails">Campaign Details</dhv:label></a> >
+<dhv:label name="project.message">Message</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-<% String param1 = "id=" + Campaign.getId(); %>
-<dhv:container name="communications" selected="message" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" width="100%">
-  <tr>
-    <td width="100%" class="containerBack">
-     <table cellpadding="4" cellspacing="0" width="100%" class="details">
-        <tr>
-          <th colspan="2" valign="center" align="left">
-             <strong>Message Details</strong>
-          </th>
-        </tr>
-        <tr class="containerBody">
-            <td valign="top" align="left">
-               <strong>From:</strong> <%= toHtml(Campaign.getReplyTo()) %><br>
-               <strong>Subject:</strong> <%= toHtml(Campaign.getSubject()) %><br>
-               &nbsp;<br>
-               <%= (Campaign.getMessage()) + "*" %><br />
-               <br />
-               * NOTE: If this message contains a link to a survey then the recipients of this message are provided a URL that is tailored for the survey.
-            </td>
-           <%
-            Iterator j = FileItemList.iterator();
-            if ( j.hasNext() ) {
-              int rowid = 0;
-            %>
-            <td valign="top" align="right" width="20%">
-              <table cellpadding="4" cellspacing="0" border="0" width="20%" class="empty">
-                <tr class="containerBody">
-                  <td valign="top" align="left">
-                       <strong>Attachments:</strong>
-                  </td>
-                </tr>
-                <tr>
-                  <td valign="top" align="left">
-                    <select size="3" name="attList" id="attList" multiple>
-              <%
-                while (j.hasNext()) {
-                  rowid = (rowid != 1?1:2);
-                  FileItem thisFile = (FileItem) j.next();
-                %>      
-                  <option value="<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></option>
-               <%}%>
-                  </select>
+<dhv:container name="communications" selected="message" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+   <table cellpadding="4" cellspacing="0" width="100%" class="details">
+      <tr>
+        <th colspan="2" valign="center" align="left">
+           <strong><dhv:label name="accounts.MessageDetails">Message Details</dhv:label></strong>
+        </th>
+      </tr>
+      <tr class="containerBody">
+          <td valign="top" align="left">
+             <dhv:label name="campaign.from.colon" param="<%= "from="+toHtml(Campaign.getReplyTo()) %>"><strong>From:</strong> <%= toHtml(Campaign.getReplyTo()) %></dhv:label><br />
+             <dhv:label name="mail.label.subject" param="<%= "subject="+toHtml(Campaign.getSubject()) %>"><strong>Subject:</strong> <%= toHtml(Campaign.getSubject()) %></dhv:label><br />
+             &nbsp;<br />
+             <%= (Campaign.getMessage()) + "*" %><br />
+             <br />
+             <dhv:label name="campaign.message.note">* NOTE: If this message contains a link to a survey then the recipients of this message are provided a URL that is tailored for the survey.</dhv:label>
+          </td>
+         <%
+          Iterator j = FileItemList.iterator();
+          if ( j.hasNext() ) {
+            int rowid = 0;
+          %>
+          <td valign="top" align="right" width="20%">
+            <table cellpadding="4" cellspacing="0" border="0" width="20%" class="empty">
+              <tr class="containerBody">
+                <td valign="top" align="left">
+                     <strong><dhv:label name="Attachments.colon">Attachments:</dhv:label></strong>
+                </td>
+              </tr>
+              <tr>
+                <td valign="top" align="left">
+                  <select size="3" name="attList" id="attList" multiple>
+            <%
+              while (j.hasNext()) {
+                rowid = (rowid != 1?1:2);
+                FileItem thisFile = (FileItem) j.next();
+              %>
+                <option value="<%= thisFile.getId() %>"><%= toHtml(thisFile.getClientFilename()) %></option>
+             <%}%>
+                </select>
+               </td>
+              </tr>
+              <tr class="containerBody">
+                 <td valign="top" align="center">
+                   <a href="javascript:downloadMessage('<%= Campaign.getId() %>');"><dhv:label name="accounts.accounts_documents_details.Download">Download</dhv:label></a><br>
                  </td>
-                </tr>
-                <tr class="containerBody">
-                   <td valign="top" align="center">
-                     <a href="javascript:downloadMessage('<%= Campaign.getId() %>');">Download</a><br>
-                   </td>
-                 </tr>
-                </table>
-             </td>
-           <%}%>
-        </tr>
-     </table>
-    </td>
-  </tr>
-</table>
+               </tr>
+              </table>
+           </td>
+         <%}%>
+      </tr>
+   </table>
+</dhv:container>
 

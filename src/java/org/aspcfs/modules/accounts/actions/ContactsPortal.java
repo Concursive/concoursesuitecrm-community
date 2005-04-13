@@ -15,24 +15,28 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import java.sql.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.ApplicationPrefs;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.admin.base.RoleList;
-import org.aspcfs.modules.admin.base.Role;
 import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.utils.DateUtils;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactEmailAddress;
+import org.aspcfs.modules.contacts.base.ContactEmailAddressList;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.SMTPMessage;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.Template;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  *  Action class to view, add, edit, disable and enable a portal user
@@ -89,9 +93,9 @@ public final class ContactsPortal extends CFSModule {
     if (!hasPermission(context, "portal-user-add")) {
       return ("PermissionError");
     }
-
     Connection db = null;
     Contact thisContact = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = this.getConnection(context);
       String id = (String) context.getRequest().getParameter("contactId");
@@ -111,10 +115,10 @@ public final class ContactsPortal extends CFSModule {
       roleList.setExcludeRoleType(Constants.ROLETYPE_REGULAR);
       roleList.setEnabledState(Constants.TRUE);
       roleList.buildList(db);
-      roleList.setEmptyHtmlSelectRecord("--None--");
+      roleList.setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("roleList", roleList);
 
-      thisContact.getEmailAddressList().setEmptyHtmlSelectRecord("--None--");
+      thisContact.getEmailAddressList().setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("ContactDetails", thisContact);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -170,7 +174,7 @@ public final class ContactsPortal extends CFSModule {
     if (!hasPermission(context, "portal-user-edit")) {
       return ("PermissionError");
     }
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     Contact thisContact = null;
     User thisPortalUser = null;
@@ -193,15 +197,14 @@ public final class ContactsPortal extends CFSModule {
         thisPortalUser = new User();
         thisPortalUser.buildRecord(db, thisContact.getUserId());
       }
-
       RoleList roleList = new RoleList();
       roleList.setExcludeRoleType(Constants.ROLETYPE_REGULAR);
       roleList.setEnabledState(Constants.TRUE);
       roleList.buildList(db);
-      roleList.setEmptyHtmlSelectRecord("--None--");
+      roleList.setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("roleList", roleList);
 
-      thisContact.getEmailAddressList().setEmptyHtmlSelectRecord("--None--");
+      thisContact.getEmailAddressList().setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("ContactDetails", thisContact);
       context.getRequest().setAttribute("portalUserDetails", thisPortalUser);
     } catch (Exception e) {
@@ -295,6 +298,7 @@ public final class ContactsPortal extends CFSModule {
     boolean recordCount = false;
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);     
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
       setOrganization(context, db, thisContact.getOrgId());
@@ -317,11 +321,14 @@ public final class ContactsPortal extends CFSModule {
         mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
         mail.setType("text/html");
         mail.setTo(emailAddress.getEmail());
-        mail.setSubject("Login information");
-        mail.setBody("Your self-service account has been disabled<br /><br />");
+        mail.setSubject(systemStatus.getLabel("mail.subject.loginInformation"));
+        mail.setBody(systemStatus.getLabel("mail.body.accountDisabled"));
         if (mail.send() == 2) {
           System.err.println(mail.getErrorMsg());
         }
+      } else {
+        thisUser.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.userNotDisabled"));
+        processErrors(context, thisUser.getErrors());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -351,6 +358,7 @@ public final class ContactsPortal extends CFSModule {
     boolean recordCount = false;
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       String id = (String) context.getRequest().getParameter("contactId");
       thisContact = new Contact(db, id);
       //Cannot change portal login information if the
@@ -372,11 +380,14 @@ public final class ContactsPortal extends CFSModule {
         mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
         mail.setType("text/html");
         mail.setTo(emailAddress.getEmail());
-        mail.setSubject("Login information");
-        mail.setBody("Your self-service account has been enabled.<br><br>");
+        mail.setSubject(systemStatus.getLabel("mail.subject.loginInformation"));
+        mail.setBody(systemStatus.getLabel("mail.body.accountEnabled"));
         if (mail.send() == 2) {
           System.err.println(mail.getErrorMsg());
         }
+      } else {
+        thisUser.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.userNotEnabled"));
+        processErrors(context, thisUser.getErrors());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -455,8 +466,9 @@ public final class ContactsPortal extends CFSModule {
     newUser.setTimeZone(getPref(context, "SYSTEM.TIMEZONE"));
     newUser.setCurrency(getPref(context, "SYSTEM.CURRENCY"));
     newUser.setLanguage(getPref(context, "SYSTEM.LANGUAGE"));
-    recordInserted = newUser.insert(db, context);
-
+    recordInserted = newUser.insert(db,context);
+    SystemStatus systemStatus = this.getSystemStatus(context);
+ 
     if (recordInserted) {
       //subsequently use this email address to email the user
       //of the portal access information
@@ -476,12 +488,22 @@ public final class ContactsPortal extends CFSModule {
       mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
       mail.setType("text/html");
       mail.setTo(emailAddress.getEmail());
-      mail.setSubject("Login information");
-      mail.setBody(
-          "A self-service account has been created for you.<br />" +
-          "<br />" +
-          "Your account username is: " + newUser.getUsername() + "<br />" +
-          "Your password is: " + password + "<br />");
+      mail.setSubject(systemStatus.getLabel("mail.subject.loginInformation"));
+      String message = systemStatus.getLabel("mail.body.userAccountCreationMessage");
+      if (message != null) {
+        HashMap map = new HashMap();
+        map.put("${user.username}", newUser.getUsername());
+        map.put("${password}", password);
+        Template template = new Template(message);
+        template.setParseElements(map);
+        mail.setBody(template.getParsedText());
+      } else {
+        mail.setBody(
+            "A self-service account has been created for you.<br />" +
+            "<br />" +
+            "Your account username is: " + newUser.getUsername() + "<br />" +
+            "Your password is: " + password + "<br />");
+      }
       if (mail.send() == 2) {
         System.err.println(mail.getErrorMsg());
       }
@@ -511,6 +533,7 @@ public final class ContactsPortal extends CFSModule {
     boolean expirationDateChanged = false;
     boolean newPassword = false;
     User newUser = new User();
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(((ConnectionElement) context.getSession().getAttribute("ConnectionElement")).getUrl());
 
     //has the portal role been changed?
     int newRoleId = Integer.parseInt((String) context.getRequest().getParameter("roleId"));
@@ -577,23 +600,31 @@ public final class ContactsPortal extends CFSModule {
       mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
       mail.setType("text/html");
       mail.setTo(emailAddress.getEmail());
-      mail.setSubject("Login information");
       String mailBody = "";
-      mailBody =
-          "Your self-service login information has changed.<br />" +
-          "<br />";
+      mail.setSubject(systemStatus.getLabel("mail.subject.loginInformation"));
+      mailBody = mailBody + systemStatus.getLabel("mail.body.loginInformationChanged");
       if (roleChanged) {
-        mailBody = mailBody + "Your account has been updated so that you now have access to login.<br /><br />";
+        mailBody = mailBody + systemStatus.getLabel("mail.body.accountLoginUpdated");
       }
       if (expirationDateChanged) {
         if ("".equals(tmpExpires.trim())) {
-          mailBody = mailBody + "The expiration date on your account has been removed.<br /><br />";
+          mailBody = mailBody + systemStatus.getLabel("mail.body.expirationRemoved");
         } else {
-          mailBody = mailBody + "Your account expires on " + tmpExpires + ".<br /><br />";
+          String message = systemStatus.getLabel("mail.body.accountExpiresOn");
+          HashMap map = new HashMap();
+          map.put("${expiration}", tmpExpires );
+          Template template = new Template(message);
+          template.setParseElements(map);
+          mailBody = mailBody + template.getParsedText();
         }
       }
       if (newPassword) {
-        mailBody = mailBody + "Your new password is: " + password + "<br /><br />";
+        String message = systemStatus.getLabel("mail.body.newPasswordIs");
+        HashMap map = new HashMap();
+        map.put("${password}", password );
+        Template template = new Template(message);
+        template.setParseElements(map);
+        mailBody = mailBody + template.getParsedText();
       }
       mail.setBody(mailBody);
       if (mail.send() == 2) {

@@ -15,17 +15,18 @@
  */
 package com.darkhorseventures.framework.beans;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-import com.darkhorseventures.framework.actions.*;
-import java.text.*;
-import java.lang.reflect.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.login.beans.*;
-import org.aspcfs.utils.*;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.utils.DateUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.TimeZone;
 
 /**
  *@author     Kevin Duffey

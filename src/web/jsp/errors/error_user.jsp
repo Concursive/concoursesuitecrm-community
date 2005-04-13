@@ -19,7 +19,7 @@
 <%@ page  import="java.util.*" %>
 <jsp:useBean id="errors" class="java.util.HashMap" scope="request"/>
 <img src="images/error.gif" border="0" align="absmiddle"/>
-<font color='red'>An Error Has Occurred</font>
+<font color='red'><dhv:label name="errors.anErrorHasOccured">An Error Has Occurred</dhv:label></font>
 <hr color="#BFBFBB" noshade>
 <%
   String errorMessage = (String)request.getAttribute("Error");
@@ -35,7 +35,7 @@
 <%  
     }
 %>
-No further information is available.
+<dhv:label name="errors.noFurtherInfoAvailable">No further information is available.</dhv:label>
 <%
   }
 %>

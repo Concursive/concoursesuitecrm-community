@@ -36,6 +36,7 @@ public class CustomerProductHistoryList extends ArrayList {
   private int orgId = -1;
   private int orderId = -1;
   private int customerProductId = -1;
+  private int orderItemId = -1;
 
 
   /**
@@ -97,6 +98,36 @@ public class CustomerProductHistoryList extends ArrayList {
    */
   public void setCustomerProductId(String tmp) {
     this.customerProductId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the orderItemId attribute of the CustomerProductHistoryList object
+   *
+   *@param  tmp  The new orderItemId value
+   */
+  public void setOrderItemId(int tmp) {
+    this.orderItemId = tmp;
+  }
+
+
+  /**
+   *  Sets the orderItemId attribute of the CustomerProductHistoryList object
+   *
+   *@param  tmp  The new orderItemId value
+   */
+  public void setOrderItemId(String tmp) {
+    this.orderItemId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the orderItemId attribute of the CustomerProductHistoryList object
+   *
+   *@return    The orderItemId value
+   */
+  public int getOrderItemId() {
+    return orderItemId;
   }
 
 
@@ -246,6 +277,9 @@ public class CustomerProductHistoryList extends ArrayList {
     if (orderId > -1) {
       sqlFilter.append("AND cph.order_id = ? ");
     }
+    if (orderItemId > -1) {
+      sqlFilter.append(" AND cph.order_item_id = ? ");
+    }
     if (customerProductId > -1) {
       sqlFilter.append("AND cph.customer_product_id = ? ");
     }
@@ -281,6 +315,9 @@ public class CustomerProductHistoryList extends ArrayList {
     }
     if (orderId > -1) {
       pst.setInt(++i, orderId);
+    }
+    if (orderItemId > -1) {
+      pst.setInt(++i, orderItemId);
     }
     if (customerProductId > -1) {
       pst.setInt(++i, customerProductId);

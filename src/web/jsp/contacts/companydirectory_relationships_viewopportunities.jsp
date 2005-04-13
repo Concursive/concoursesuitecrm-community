@@ -28,16 +28,16 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th valign="center" align="left">
-      <strong>Organization</strong>
+      <strong><dhv:label name="documents.details.organization">Organization</dhv:label></strong>
     </th>
     <th valign="center" align="left">
-      <strong>Description</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></strong>
     </th>
     <th valign="center" align="left">
-      <strong>Amount</strong>
+      <strong><dhv:label name="accounts.accounts_revenue_add.Amount">Amount</dhv:label></strong>
     </th>
     <th valign="center" align="left">
-      <strong>Close</strong>
+      <strong><dhv:label name="button.close">Close</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -69,7 +69,7 @@
 %>
   <tr>
     <td colspan="4">
-      No opportunities found.
+      <dhv:label name="accounts.accounts_contacts_oppcomponent_list.NoOpportunitiesFound">No opportunities found.</dhv:label>
     </td>
   </tr>
 <%

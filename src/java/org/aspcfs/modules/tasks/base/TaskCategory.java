@@ -15,13 +15,14 @@
  */
 package org.aspcfs.modules.tasks.base;
 
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import org.aspcfs.utils.DatabaseUtils;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *  Description of the Class
@@ -403,9 +404,6 @@ public class TaskCategory extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     String sql = null;
-    if (!isValid()) {
-      return false;
-    }
     try {
       db.setAutoCommit(false);
       sql = "INSERT INTO lookup_task_category " +
@@ -475,27 +473,6 @@ public class TaskCategory extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the TaskCategory object
-   *
-   *@return    The valid value
-   */
-  private boolean isValid() {
-    if (linkModuleId == -1) {
-      return false;
-    }
-
-    if (linkItemId == -1) {
-      return false;
-    }
-
-    if (description == null || "".equals(description.trim())) {
-      return false;
-    }
-    return true;
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  rs                Description of the Parameter
@@ -531,6 +508,13 @@ public class TaskCategory extends GenericBean {
       pst = db.prepareStatement(
           "DELETE from tasklink_project " +
           "WHERE task_id IN (SELECT task_id FROM task WHERE category_id = ?) ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      //Delete the news category link
+      pst = db.prepareStatement(
+          "DELETE from taskcategorylink_news " +
+          "WHERE category_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();

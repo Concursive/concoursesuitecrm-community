@@ -29,8 +29,7 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
-
-<%--TODO::START Document folder trails--%>
+<%-- START Document folder trails--%>
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
   <tr class="subtab">
     <td>
@@ -38,18 +37,18 @@
     </td>
   </tr>
 </table>
-<%--TODO::END Document folder trails--%>
+<%-- END Document folder trails--%>
 <br />
 <dhv:permission name="<%= permission_doc_folders_add %>">
 <img src="images/icons/stock_new-dir-16.gif" border="0" align="absmiddle"/>
-<a href="<%= documentFolderAdd %>&parentId=<%= fileItemList.getFolderId() %>&folderId=<%= fileItemList.getFolderId() %>">New Folder</a>
+<a href="<%= documentFolderAdd %>&parentId=<%= fileItemList.getFolderId() %>&folderId=<%= fileItemList.getFolderId() %>"><dhv:label name="documents.documents.newFolder">New Folder</dhv:label></a>
 </dhv:permission>
 <dhv:permission name="<%= permission_doc_folders_add+","+ permission_doc_files_upload %>" all="true">
 |
 </dhv:permission>
 <dhv:permission name="<%= permission_doc_files_upload %>">
 <img src="images/icons/stock_insert-file-16.gif" border="0" align="absmiddle"/>
-<a href="<%= documentFileAdd %>&parentId=<%= fileItemList.getFolderId() %>&folderId=<%= fileItemList.getFolderId() %>">Submit File</a>
+<a href="<%= documentFileAdd %>&parentId=<%= fileItemList.getFolderId() %>&folderId=<%= fileItemList.getFolderId() %>"><dhv:label name="documents.documents.submitFile">Submit File</dhv:label></a>
 </dhv:permission>
 <dhv:evaluate if="<%= fileItemList.getFolderId() != -1 %>">
 <dhv:permission name="<%= permission_doc_folders_edit %>">
@@ -57,7 +56,7 @@
 |
   </dhv:permission>
 <img src="images/icons/stock_rename-page-16.gif" border="0" align="absmiddle">
-<a href="<%= documentFolderModify %>&folderId=<%= fileItemList.getFolderId() %>&id=<%= fileItemList.getFolderId() %>&parentId=<%= fileItemList.getFolderId() %>">Rename Folder</a>
+<a href="<%= documentFolderModify %>&folderId=<%= fileItemList.getFolderId() %>&id=<%= fileItemList.getFolderId() %>&parentId=<%= fileItemList.getFolderId() %>"><dhv:label name="accounts.accounts_documents_list_menu.RenameFolder">Rename Folder</dhv:label></a>
 </dhv:permission>
 </dhv:evaluate>
 <dhv:permission name="<%= permission_doc_folders_add +","+ permission_doc_files_upload +","+ permission_doc_folders_edit %>" all="false">
@@ -66,16 +65,16 @@
 </dhv:permission>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-    <th width="8" align="center" nowrap><strong>Action</strong></th>
-    <th width="100%"><strong>File</strong></th>
-    <th align="center"><strong>Type</strong></th>
-    <th align="center"><strong>Size</strong></th>
-    <th align="center"><strong>Version</strong></th>
-    <th align="center" nowrap><strong>Date Modified</strong></th>
+    <th width="8" align="center" nowrap>&nbsp;</th>
+    <th width="100%"><strong><dhv:label name="contacts.companydirectory_confirm_importupload.File">File</dhv:label></strong></th>
+    <th align="center"><strong><dhv:label name="accounts.accounts_add.Type">Type</dhv:label></strong></th>
+    <th align="center"><strong><dhv:label name="accounts.accounts_documents_details.Size">Size</dhv:label></strong></th>
+    <th align="center"><strong><dhv:label name="accounts.accounts_documents_details.Version">Version</dhv:label></strong></th>
+    <th align="center" nowrap><strong><dhv:label name="documents.documents.dateModified">Date Modified</dhv:label></strong></th>
   </tr>
 <dhv:evaluate if="<%= fileItemList.size() == 0 && fileFolderList.size() == 0 %>">
   <tr class="row2">
-    <td colspan="6">No files to display.</td>
+    <td colspan="6"><dhv:label name="project.noFilesToDisplay">No files to display.</dhv:label></td>
   </tr>
 </dhv:evaluate>
 <%
@@ -98,10 +97,15 @@
       <a href="<%= documentFolderList %>&folderId=<%= thisFolder.getId() %><%= thisFolder.getDisplay() == 2?"&details=true":"" %>"><%= toHtml(thisFolder.getSubject()) %></a>
     </td>
     <td class="row<%= rowid %>" align="center" nowrap>
-      folder
+      <dhv:label name="project.folder.lowercase">folder</dhv:label>
     </td>
     <td class="row<%= rowid %>" align="center" nowrap>
-      <%= thisFolder.getItemCount() %> item<%= (thisFolder.getItemCount() == 1?"":"s") %>
+      <%= thisFolder.getItemCount() %> 
+      <% if (thisFolder.getItemCount() == 1) {%>
+        <dhv:label name="project.item.lowercase">item</dhv:label>
+      <%} else {%>
+        <dhv:label name="project.items.lowercase">items</dhv:label>
+      <%}%>
     </td>
     <td class="row<%= rowid %>" align="center" nowrap>
       --
@@ -133,7 +137,7 @@
     </td>
     <td class="row<%= rowid %>" align="center" nowrap><%= toHtml(thisFile.getExtension()) %></td>
     <td class="row<%= rowid %>" align="right" nowrap>
-      <%= thisFile.getRelativeSize() %> k&nbsp;
+      <%= thisFile.getRelativeSize() %> <dhv:label name="admin.oneThousand.abbreviation">k</dhv:label>&nbsp;
     </td>
     <td class="row<%= rowid %>" align="center" nowrap>
       <%= thisFile.getVersion() %>&nbsp;

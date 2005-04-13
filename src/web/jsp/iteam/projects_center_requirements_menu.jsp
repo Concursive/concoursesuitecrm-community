@@ -56,7 +56,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View Outline
+          <dhv:label name="project.viewOutlineDetails">View Outline Details</dhv:label>
         </td>
       </tr>
     <zeroio:permission name="project-plan-outline-edit">
@@ -66,11 +66,10 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Edit Outline Details
+          <dhv:label name="project.editOutlineDetails">Edit Outline Details</dhv:label>
         </td>
       </tr>
     </zeroio:permission>
-<%--
     <zeroio:permission name="project-plan-outline-edit">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="importAssignments()">
@@ -82,7 +81,6 @@
         </td>
       </tr>
     </zeroio:permission>
---%>
     <zeroio:permission name="project-plan-outline-delete">
       <tr onmouseover="cmOver(this)" onmouseout="cmOut(this)"
           onclick="deleteItem()">
@@ -90,7 +88,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete Outline
+          <dhv:label name="project.deleteOutline">Delete Outline</dhv:label>
         </td>
       </tr>
     </zeroio:permission>

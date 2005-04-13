@@ -26,27 +26,27 @@
 function updateSubList1() {
   var sel = document.forms['details'].elements['catCode'];
   var value = sel.options[sel.selectedIndex].value;
-  var url = "TroubleTickets.do?command=CategoryJSList&catCode=" + escape(value);
+  var url = "TroubleTickets.do?command=CategoryJSList&form=details&catCode=" + escape(value);
   window.frames['server_commands'].location.href=url;
 }
 function updateSubList2() {
   var sel = document.forms['details'].elements['subCat1'];
   var value = sel.options[sel.selectedIndex].value;
-  var url = "TroubleTickets.do?command=CategoryJSList&subCat1=" + escape(value);
+  var url = "TroubleTickets.do?command=CategoryJSList&form=details&subCat1=" + escape(value);
   window.frames['server_commands'].location.href=url;
 }
 <dhv:include name="ticket.subCat2" none="true">
 function updateSubList3() {
   var sel = document.forms['details'].elements['subCat2'];
   var value = sel.options[sel.selectedIndex].value;
-  var url = "TroubleTickets.do?command=CategoryJSList&subCat2=" + escape(value);
+  var url = "TroubleTickets.do?command=CategoryJSList&form=details&subCat2=" + escape(value);
   window.frames['server_commands'].location.href=url;
 }
 </dhv:include>
 function updateUserList() {
   var sel = document.forms['details'].elements['departmentCode'];
   var value = sel.options[sel.selectedIndex].value;
-  var url = "TroubleTickets.do?command=DepartmentJSList&departmentCode=" + escape(value);
+  var url = "TroubleTickets.do?command=DepartmentJSList&form=details&departmentCode=" + escape(value);
   window.frames['server_commands'].location.href=url;
 }
 
@@ -74,17 +74,17 @@ function checkForm(form) {
   formTest = true;
   message = "";
   if (form.problem.value == "") { 
-    message += "- <dhv:label name="ticket.issue">Issue</dhv:label> is required\r\n";
+    message += label("check.ticket.issue.entered","- Check that Issue is entered\r\n");
     formTest = false;
   }
   <dhv:include name="ticket.resolution" none="true">
   if (form.closeNow.checked && form.solution.value == "") { 
-    message += "- Resolution needs to be filled in when closing a ticket\r\n";
+    message += label("check.ticket.resolution.atclose","- Resolution needs to be filled in when closing a ticket\r\n");
     formTest = false;
   }
   </dhv:include>
   if (formTest == false) {
-    alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+    alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
     return false;
   } else {
     return true;
@@ -120,7 +120,7 @@ function resetAssignedDate(){
 		</tr>
     <tr class="containerBody">
       <td class="formLabel">
-        Contact
+        <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
       </td>
       <td>
       <% if ( TicketDetails.getThisContact() == null ) {%>
@@ -134,21 +134,27 @@ function resetAssignedDate(){
   <dhv:include name="ticket.contractNumber" none="true">
   <tr class="containerBody">
     <td class="formLabel">
-      Service Contract Number
+      <dhv:label name="accounts.accountasset_include.ServiceContractNumber">Service Contract Number</dhv:label>
     </td>
     <td>
      <table cellspacing="0" cellpadding="0" border="0" class="empty">
       <tr>
         <td>
-          <div id="addServiceContract"><%= toHtml((TicketDetails.getContractId() != -1) ? TicketDetails.getServiceContractNumber() :"None Selected") %></div>
+          <div id="addServiceContract">
+            <% if(TicketDetails.getContractId() != -1) {%>
+              <%= toHtml(TicketDetails.getServiceContractNumber()) %>
+            <%} else {%>
+              <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+            <%}%>
+          </div>
         </td>
         <td>
           <input type="hidden" name="contractId" id="contractId" value="<%= TicketDetails.getContractId() %>">
           <input type="hidden" name="serviceContractNumber" id="serviceContractNumber" value="<%= TicketDetails.getServiceContractNumber() %>">
           &nbsp;
           <%= showAttribute(request, "contractIdError") %>
-          [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled', <%= TicketDetails.getOrgId() %>);">Select</a>]
-          &nbsp [<a href="javascript:changeDivContent('addServiceContract','None Selected');javascript:resetNumericFieldValue('contractId');javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');javascript:changeDivContent('addLaborCategory','None Selected');javascript:resetNumericFieldValue('productId');">Clear</a>] 
+          [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled', <%= TicketDetails.getOrgId() %>);"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+          &nbsp [<a href="javascript:changeDivContent('addServiceContract',label('none.selected','None Selected'));javascript:resetNumericFieldValue('contractId');javascript:changeDivContent('addAsset',label('none.selected','None Selected'));javascript:resetNumericFieldValue('assetId');javascript:changeDivContent('addLaborCategory',label('none.selected','None Selected'));javascript:resetNumericFieldValue('productId');"><dhv:label name="button.clear">Clear</dhv:label></a>] 
         </td>
       </tr>
     </table>
@@ -158,21 +164,27 @@ function resetAssignedDate(){
   <dhv:include name="ticket.asset" none="true">
   <tr class="containerBody">
     <td class="formLabel">
-      Asset
+      <dhv:label name="account.asset">Asset</dhv:label>
     </td>
     <td>
      <table cellspacing="0" cellpadding="0" border="0" class="empty">
       <tr>
         <td>
-          <div id="addAsset"><%= toHtml((TicketDetails.getAssetId() != -1) ? TicketDetails.getAssetSerialNumber():"None Selected")%></div>
+          <div id="addAsset">
+            <% if(TicketDetails.getAssetId() != -1) {%>
+              <%= toHtml(TicketDetails.getAssetSerialNumber()) %>
+            <%} else {%>
+              <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+            <%}%>
+          </div>
         </td>
         <td>
           <input type="hidden" name="assetId" id="assetId" value="<%=  TicketDetails.getAssetId() %>">
           <input type="hidden" name="assetSerialNumber" id="assetSerialNumber" value="<%=  TicketDetails.getAssetSerialNumber() %>">
           &nbsp;
           <%= showAttribute(request, "assetIdError") %>
-          [<a href="javascript:popAssetListSingle('assetId','addAsset', 'filters=allassets|undercontract','contractId','addServiceContract');">Select</a>]
-          &nbsp [<a href="javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');">Clear</a>] 
+          [<a href="javascript:popAssetListSingle('assetId','addAsset', 'filters=allassets|undercontract','contractId','addServiceContract');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+          &nbsp [<a href="javascript:changeDivContent('addAsset',label('none.selected','None Selected'));javascript:resetNumericFieldValue('assetId');"><dhv:label name="button.clear">Clear</dhv:label></a>] 
         </td>
       </tr>
     </table>
@@ -182,21 +194,27 @@ function resetAssignedDate(){
   <dhv:include name="ticket.laborCategory" none="true">
   <tr class="containerBody">
     <td class="formLabel">
-      Labor Category
+      <dhv:label name="account.laborCategory">Labor Category</dhv:label>
     </td>
     <td>
      <table cellspacing="0" cellpadding="0" border="0" class="empty">
       <tr>
         <td>
-          <div id="addLaborCategory"><%= (TicketDetails.getProductId() != -1) ? TicketDetails.getProductSku() :"None Selected" %></div>
+          <div id="addLaborCategory">
+            <% if(TicketDetails.getProductId() != -1) {%>
+              <%= toHtml(TicketDetails.getProductName()) %>
+            <%} else {%>
+              <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+            <%}%>
+          </div>
         </td>
         <td>
           <input type="hidden" name="productId" id="productId" value="<%=  TicketDetails.getProductId() %>">
           <input type="hidden" name="productSku" id="productSku" value="<%=  TicketDetails.getProductSku() %>">
           &nbsp;
           <%= showAttribute(request, "productIdError") %>
-          [<a href="javascript:popProductListSingle('productId','addLaborCategory', 'filters=all|my|disabled');">Select</a>]
-          &nbsp [<a href="javascript:changeDivContent('addLaborCategory','None Selected');javascript:resetNumericFieldValue('productId');">Clear</a>] 
+          [<a href="javascript:popProductListSingle('productId','addLaborCategory', 'filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+          &nbsp [<a href="javascript:changeDivContent('addLaborCategory',label('none.selected','None Selected'));javascript:resetNumericFieldValue('productId');"><dhv:label name="button.clear">Clear</dhv:label></a>] 
         </td>
       </tr>
     </table>
@@ -209,7 +227,7 @@ function resetAssignedDate(){
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
 		<tr>
       <th colspan="2">
-        <strong>Classification</strong>
+        <strong><dhv:label name="accounts.accounts_add.Classification">Classification</dhv:label></strong>
       </th>
 		</tr>
 		<tr class="containerBody">
@@ -239,7 +257,7 @@ function resetAssignedDate(){
 		</tr>
 		 <tr class="containerBody">
       <td valign="top" class="formLabel">
-        Location
+        <dhv:label name="accounts.accountasset_include.Location">Location</dhv:label>
       </td>
       <td>
         <input type="text" name="location" value="<%= toHtmlValue(TicketDetails.getLocation()) %>" size="50" maxlength="256" />
@@ -248,7 +266,7 @@ function resetAssignedDate(){
   <dhv:include name="ticket.catCode" none="true">
 		<tr class="containerBody">
       <td class="formLabel">
-        Category
+        <dhv:label name="accounts.accountasset_include.Category">Category</dhv:label>
       </td>
       <td>
         <%= CategoryList.getHtmlSelect("catCode", TicketDetails.getCatCode()) %>
@@ -258,7 +276,7 @@ function resetAssignedDate(){
   <dhv:include name="ticket.subCat1" none="true">
 		<tr class="containerBody">
       <td class="formLabel">
-        Sub-level 1
+        <dhv:label name="account.ticket.subLevel1">Sub-level 1</dhv:label>
       </td>
       <td>
         <%= SubList1.getHtmlSelect("subCat1", TicketDetails.getSubCat1()) %>
@@ -268,7 +286,7 @@ function resetAssignedDate(){
   <dhv:include name="ticket.subCat2" none="true">
 		<tr class="containerBody">
       <td class="formLabel">
-        Sub-level 2
+        <dhv:label name="account.ticket.subLevel2">Sub-level 2</dhv:label>
       </td>
       <td>
         <%= SubList2.getHtmlSelect("subCat2", TicketDetails.getSubCat2()) %>
@@ -278,7 +296,7 @@ function resetAssignedDate(){
   <dhv:include name="ticket.subCat3" none="true">
 		<tr class="containerBody">
       <td class="formLabel">
-        Sub-level 3
+        <dhv:label name="account.ticket.subLevel3">Sub-level 3</dhv:label>
       </td>
       <td>
         <%= SubList3.getHtmlSelect("subCat3", TicketDetails.getSubCat3()) %>
@@ -288,7 +306,7 @@ function resetAssignedDate(){
   <dhv:include name="ticket.severity" none="true">
 		<tr class="containerBody">
       <td class="formLabel">
-        Severity
+        <dhv:label name="project.severity">Severity</dhv:label>
       </td>
       <td>
         <%= SeverityList.getHtmlSelect("severityCode", TicketDetails.getSeverityCode()) %>
@@ -300,13 +318,13 @@ function resetAssignedDate(){
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
       <th colspan="2">
-        <strong>Assignment</strong>
+        <strong><dhv:label name="project.assignment">Assignment</dhv:label></strong>
       </th>
 		</tr>
   <dhv:include name="ticket.priority" none="true">
 		<tr class="containerBody">
       <td class="formLabel">
-        Priority
+        <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label>
       </td>
       <td>
         <%= PriorityList.getHtmlSelect("priorityCode", TicketDetails.getPriorityCode()) %>
@@ -315,7 +333,7 @@ function resetAssignedDate(){
   </dhv:include>
 		<tr class="containerBody">
       <td class="formLabel">
-        Department
+        <dhv:label name="project.department">Department</dhv:label>
       </td>
       <td>
         <%= DepartmentList.getHtmlSelect("departmentCode", TicketDetails.getDepartmentCode()) %>
@@ -323,7 +341,7 @@ function resetAssignedDate(){
 		</tr>
 		<tr class="containerBody">
       <td nowrap class="formLabel">
-        Resource Assigned
+        <dhv:label name="project.resourceAssigned">Resource Assigned</dhv:label>
       </td>
       <td>
         <% UserList.setJsEvent("onChange=\"javascript:setAssignedDate();\"");%>
@@ -332,7 +350,7 @@ function resetAssignedDate(){
 		</tr>
     <tr class="containerBody">
       <td nowrap class="formLabel">
-        Assignment Date
+        <dhv:label name="account.ticket.assignmentDate">Assignment Date</dhv:label>
       </td>
       <td>
         <zeroio:dateSelect form="details" field="assignedDate" timestamp="<%= TicketDetails.getAssignedDate() %>"  timeZone="<%= TicketDetails.getAssignedDateTimeZone() %>" showTimeZone="true" />
@@ -359,7 +377,7 @@ function resetAssignedDate(){
               <textarea name="comment" cols="55" rows="5"><%= toString(TicketDetails.getComment()) %></textarea>
             </td>
             <td valign="top">
-              (This note is added to the <dhv:label name="tickets.ticket.lowercase">ticket</dhv:label>history. Previous notes for this <dhv:label name="tickets.ticket.lowercase">ticket</dhv:label>are listed under the history tab.)
+              <dhv:label name="tickets.noteAddedtoTicketHistory.brackets">(This note is added to the ticket history. Previous notes for this ticket are listed under the history tab.)</dhv:label>
             </td>
           </tr>
         </table>
@@ -370,13 +388,13 @@ function resetAssignedDate(){
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
       <th colspan="2">
-        <strong>Resolution</strong>
+        <strong><dhv:label name="accounts.accounts_asset_history.Resolution">Resolution</dhv:label></strong>
       </th>
 		</tr>
     <dhv:include name="ticket.cause" none="true">
     <tr class="containerBody">
       <td valign="top" class="formLabel">
-        Cause
+        <dhv:label name="account.ticket.cause">Cause</dhv:label>
       </td>
       <td>
         <textarea name="cause" cols="55" rows="8"><%= toString(TicketDetails.getCause()) %></textarea>
@@ -430,12 +448,12 @@ function resetAssignedDate(){
   <dhv:include name="ticket.feedback" none="true">
   <tr class="containerBody">
     <td class="formLabel">
-      Have our services met or exceeded your expectations?
+      <dhv:label name="account.serviceExpectation.question">Have our services met or exceeded your expectations?</dhv:label>
     </td>
     <td>
-      <input type="radio" name="expectation" value="1" <%= (TicketDetails.getExpectation() == 1) ? " checked" : "" %>>Yes
-      <input type="radio" name="expectation" value="0" <%= (TicketDetails.getExpectation() == 0) ? " checked" : "" %>>No
-      <input type="radio" name="expectation" value="-1" <%= (TicketDetails.getExpectation() == -1) ? " checked" : "" %>>Undecided
+      <input type="radio" name="expectation" value="1" <%= (TicketDetails.getExpectation() == 1) ? " checked" : "" %>><dhv:label name="account.yes">Yes</dhv:label>
+      <input type="radio" name="expectation" value="0" <%= (TicketDetails.getExpectation() == 0) ? " checked" : "" %>><dhv:label name="account.no">No</dhv:label>
+      <input type="radio" name="expectation" value="-1" <%= (TicketDetails.getExpectation() == -1) ? " checked" : "" %>><dhv:label name="account.undecided">Undecided</dhv:label>
     </td>
   </tr>
   </dhv:include>

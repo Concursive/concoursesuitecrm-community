@@ -15,14 +15,17 @@
  */
 package com.zeroio.iteam.base;
 
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
 
 /**
  *  Description of the Class
@@ -41,9 +44,13 @@ public class RequirementList extends ArrayList {
   private boolean buildAssignments = false;
   private boolean openOnly = false;
   private boolean closedOnly = false;
-
   private int enteredBy = -1;
   private int modifiedBy = -1;
+  // helpers
+  private int planActivityCount = -1;
+  private int planClosedCount = -1;
+  private int planUpcomingCount = -1;
+  private int planOverdueCount = -1;
 
 
   /**
@@ -154,6 +161,86 @@ public class RequirementList extends ArrayList {
 
 
   /**
+   *  Gets the planActivityCount attribute of the RequirementList object
+   *
+   *@return    The planActivityCount value
+   */
+  public int getPlanActivityCount() {
+    return planActivityCount;
+  }
+
+
+  /**
+   *  Sets the planActivityCount attribute of the RequirementList object
+   *
+   *@param  planActivityCount  The new planActivityCount value
+   */
+  public void setPlanActivityCount(int planActivityCount) {
+    this.planActivityCount = planActivityCount;
+  }
+
+
+  /**
+   *  Gets the planClosedCount attribute of the RequirementList object
+   *
+   *@return    The planClosedCount value
+   */
+  public int getPlanClosedCount() {
+    return planClosedCount;
+  }
+
+
+  /**
+   *  Sets the planClosedCount attribute of the RequirementList object
+   *
+   *@param  planClosedCount  The new planClosedCount value
+   */
+  public void setPlanClosedCount(int planClosedCount) {
+    this.planClosedCount = planClosedCount;
+  }
+
+
+  /**
+   *  Gets the planUpcomingCount attribute of the RequirementList object
+   *
+   *@return    The planUpcomingCount value
+   */
+  public int getPlanUpcomingCount() {
+    return planUpcomingCount;
+  }
+
+
+  /**
+   *  Sets the planUpcomingCount attribute of the RequirementList object
+   *
+   *@param  planUpcomingCount  The new planUpcomingCount value
+   */
+  public void setPlanUpcomingCount(int planUpcomingCount) {
+    this.planUpcomingCount = planUpcomingCount;
+  }
+
+
+  /**
+   *  Gets the planOverdueCount attribute of the RequirementList object
+   *
+   *@return    The planOverdueCount value
+   */
+  public int getPlanOverdueCount() {
+    return planOverdueCount;
+  }
+
+
+  /**
+   *  Sets the planOverdueCount attribute of the RequirementList object
+   *
+   *@param  planOverdueCount  The new planOverdueCount value
+   */
+  public void setPlanOverdueCount(int planOverdueCount) {
+    this.planOverdueCount = planOverdueCount;
+  }
+
+
+  /**
    *  Gets the htmlSelect attribute of the RequirementList object
    *
    *@param  selectName  Description of the Parameter
@@ -170,7 +257,7 @@ public class RequirementList extends ArrayList {
       Requirement thisRequirement = (Requirement) i.next();
       listSelect.addItem(
           thisRequirement.getId(),
-          thisRequirement.getShortDescription());
+          StringUtils.toHtml(thisRequirement.getShortDescription()));
     }
     return listSelect.getHtml(selectName, defaultKey);
   }
@@ -360,6 +447,68 @@ public class RequirementList extends ArrayList {
     while (requirements.hasNext()) {
       Requirement thisRequirement = (Requirement) requirements.next();
       thisRequirement.delete(db);
+    }
+  }
+  
+  
+  /**
+   *  Gets the percentClosed attribute of the RequirementList object
+   *
+   *@return    The percentClosed value
+   */
+  public int getPercentClosed() {
+    if (planActivityCount == 0 || planClosedCount == planActivityCount) {
+      return 100;
+    }
+    return (int) Math.round(((double) planClosedCount / (double) planActivityCount) * 100.0);
+  }
+
+
+  /**
+   *  Gets the percentUpcoming attribute of the RequirementList object
+   *
+   *@return    The percentUpcoming value
+   */
+  public int getPercentUpcoming() {
+    if (planActivityCount == 0 || planUpcomingCount == 0) {
+      return 0;
+    }
+    return (int) Math.round(((double) planUpcomingCount / (double) planActivityCount) * 100.0);
+  }
+
+
+  /**
+   *  Gets the percentOverdue attribute of the RequirementList object
+   *
+   *@return    The percentOverdue value
+   */
+  public int getPercentOverdue() {
+    if (planActivityCount == 0 || planOverdueCount == 0) {
+      return 0;
+    }
+    return (int) Math.round(((double) planOverdueCount / (double) planActivityCount) * 100.0);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildPlanActivityCounts(Connection db) throws SQLException {
+    planActivityCount = 0;
+    planClosedCount = 0;
+    planUpcomingCount = 0;
+    planOverdueCount = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Requirement thisRequirement = (Requirement) i.next();
+      thisRequirement.buildPlanActivityCounts(db);
+      planActivityCount += thisRequirement.getPlanActivityCount();
+      planClosedCount += thisRequirement.getPlanClosedCount();
+      planUpcomingCount += thisRequirement.getPlanUpcomingCount();
+      planOverdueCount += thisRequirement.getPlanOverdueCount();
     }
   }
 }

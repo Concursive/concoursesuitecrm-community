@@ -30,7 +30,7 @@
     <td>&nbsp;</td>
     <td colspan="3" nowrap class="eventName">
       <img border="0" src="images/box.gif" align="absmiddle" title="Incomplete Tasks" />
-      Incomplete Tasks
+      <dhv:label name="calendar.incompleteTasks">Incomplete Tasks</dhv:label>
       (<%= taskEventList.getPendingTasks().size() %>)
     </td>
   </tr>
@@ -44,13 +44,13 @@
         &nbsp;
       </th>
       <th class="weekSelector" width="100%">
-        <strong>Description</strong>
+        <strong><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></strong>
       </th>
       <th class="weekSelector" nowrap>
-        <strong>Priority</strong>
+        <strong><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></strong>
       </th>
       <th class="weekSelector" nowrap>
-        <strong>Age</strong>
+        <strong><dhv:label name="ticket.age">Age</dhv:label></strong>
       </th>
     </tr>
   <%  
@@ -59,21 +59,21 @@
       menuCount++;
     %>
     <tr>
-      <td>
-        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+     <td>
+       <%-- Use the unique id for opening the menu, and toggling the graphics --%>
         <a href="javascript:displayTaskMenu('select-arrow<%= menuCount %>','menuTask', '<%= Constants.TASKS %>', '<%=  pendingTask.getId() %>', '<%= pendingTask.getContactId() %>', '<%= ((pendingTask.getContactId()!=-1) && pendingTask.getContact().getEmployee())?"yes":"no" %>');"
-        onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuTask');"><img
+       onMouseOver="over(0, <%= menuCount %>)" onmouseout="out(0, <%= menuCount %>);hideMenu('menuTask');"><img 
         src="images/select-arrow.gif" name="select-arrow<%= menuCount %>" id="select-arrow<%= menuCount %>" align="absmiddle" border="0" /></a>
-      </td>
-      <td nowrap>
-        <%= toHtml(pendingTask.getDescription()) %>
-      </td>
-      <td nowrap>
-        <%= pendingTask.getPriority() %>
-      </td>
-      <td nowrap>
-        <%= pendingTask.getAge() %> 
-      </td>
+     </td>
+     <td nowrap>
+       <%= toHtml(pendingTask.getDescription()) %>
+     </td>
+     <td nowrap>
+       <%= pendingTask.getPriority() %>
+     </td>
+     <td nowrap>
+       <%= pendingTask.getAge() %> 
+     </td>
     </tr>
    <% }
    } %>

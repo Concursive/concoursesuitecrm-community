@@ -15,15 +15,16 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.utils.DatabaseUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  Represents a survey that can have introductory text and questions.
@@ -46,6 +47,7 @@ public class Survey extends SurveyBase {
   protected boolean enabled = true;
   //TODO: used later on to make sure that survey is not activated until all steps are completed
   protected int status = INCOMPLETE;
+  private int inactiveCount = -1;
 
 
   /**
@@ -153,6 +155,36 @@ public class Survey extends SurveyBase {
 
 
   /**
+   *  Sets the inactiveCount attribute of the Survey object
+   *
+   *@param  tmp  The new inactiveCount value
+   */
+  public void setInactiveCount(int tmp) {
+    this.inactiveCount = tmp;
+  }
+
+
+  /**
+   *  Sets the inactiveCount attribute of the Survey object
+   *
+   *@param  tmp  The new inactiveCount value
+   */
+  public void setInactiveCount(String tmp) {
+    this.inactiveCount = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the inactiveCount attribute of the Survey object
+   *
+   *@return    The inactiveCount value
+   */
+  public int getInactiveCount() {
+    return inactiveCount;
+  }
+
+
+  /**
    *  Gets the status attribute of the Survey object
    *
    *@return    The status value
@@ -200,17 +232,20 @@ public class Survey extends SurveyBase {
    *@return                   The id value
    *@exception  SQLException  Description of the Exception
    */
-  public static int getId(Connection db, int campaignId) throws SQLException {
+  public static int getId(Connection db, int campaignId, int surveyType) throws SQLException {
     int surveyId = -1;
     String sql =
-        "SELECT survey_id " +
-        "FROM campaign_survey_link " +
-        "WHERE campaign_id = ? ";
+        "SELECT csl.survey_id AS survey_Id " +
+        "FROM campaign_survey_link csl, survey s " +
+        "WHERE campaign_id = ? " +
+        "AND csl.survey_id = s.survey_id " +
+        "AND s.type = ? ";
     PreparedStatement pst = db.prepareStatement(sql);
     pst.setInt(1, campaignId);
+    pst.setInt(2, surveyType);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
-      surveyId = rs.getInt("survey_id");
+      surveyId = rs.getInt("survey_Id");
     }
     rs.close();
     pst.close();
@@ -450,8 +485,12 @@ public class Survey extends SurveyBase {
         "INSERT INTO survey " +
         "(name, description, intro, outro, itemLength, type, status, enteredBy, modifiedBy) " +
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+    boolean doCommit = false;
     try {
-      db.setAutoCommit(false);
+      doCommit = db.getAutoCommit();
+      if (doCommit == true) {
+        db.setAutoCommit(false);
+      }
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setString(++i, name);
@@ -459,7 +498,7 @@ public class Survey extends SurveyBase {
       pst.setString(++i, intro);
       pst.setString(++i, outro);
       pst.setInt(++i, itemLength);
-      pst.setInt(++i, 1);
+      pst.setInt(++i, Constants.SURVEY_REGULAR);
       pst.setInt(++i, status);
       pst.setInt(++i, enteredBy);
       pst.setInt(++i, enteredBy);
@@ -474,12 +513,18 @@ public class Survey extends SurveyBase {
         SurveyQuestion thisQuestion = (SurveyQuestion) x.next();
         thisQuestion.process(db, this.getId());
       }
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
 
     return true;
@@ -499,10 +544,10 @@ public class Survey extends SurveyBase {
     ResultSet rs = null;
     try {
       commit = db.getAutoCommit();
-
+      // TODO: Make these preparedStatements
       //Check to see if a survey is being used by any Inactive campaigns
       //If so, the survey can't be deleted
-      int inactiveCount = 0;
+      inactiveCount = 0;
       st = db.createStatement();
       rs = st.executeQuery(
           "SELECT COUNT(*) AS survey_count " +
@@ -513,12 +558,6 @@ public class Survey extends SurveyBase {
       rs.close();
       if (inactiveCount > 0) {
         st.close();
-        errors.put("actionError", "Survey could not be deleted because " +
-            inactiveCount + " " +
-            (inactiveCount == 1 ? "campaign is" : "campaigns are") +
-            " being built that " +
-            (inactiveCount == 1 ? "uses" : "use") +
-            " this survey.");
         return false;
       }
 
@@ -564,9 +603,11 @@ public class Survey extends SurveyBase {
     if (this.getId() == -1) {
       throw new SQLException("Survey ID was not specified");
     }
-
+    boolean doCommit = false;
     try {
-      db.setAutoCommit(false);
+      if ((doCommit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       System.out.println("Survey -- > Update Questions ");
       //update the question
       questions.process(db, this.getId());
@@ -587,7 +628,7 @@ public class Survey extends SurveyBase {
       pst.setString(++i, this.getIntro());
       pst.setString(++i, this.getOutro());
       pst.setInt(++i, this.getItemLength());
-      pst.setInt(++i, 1);
+      pst.setInt(++i, Constants.SURVEY_REGULAR);
       pst.setBoolean(++i, this.getEnabled());
       pst.setInt(++i, this.getModifiedBy());
       pst.setInt(++i, this.getId());
@@ -595,12 +636,18 @@ public class Survey extends SurveyBase {
       resultCount = pst.executeUpdate();
       pst.close();
 
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (Exception e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
     return resultCount;
   }
@@ -627,16 +674,15 @@ public class Survey extends SurveyBase {
       pst.setInt(++i, this.getId());
       rs = pst.executeQuery();
       if (rs.next()) {
-        int surveycount = rs.getInt("survey_count") ;
+        int surveycount = rs.getInt("survey_count");
         if (surveycount != 0) {
           Dependency thisDependency = new Dependency();
-          thisDependency.setName("Campaigns");
+          thisDependency.setName("campaigns");
           thisDependency.setCount(surveycount);
           thisDependency.setCanDelete(true);
           dependencyList.add(thisDependency);
         }
       }
-
       pst.close();
       db.commit();
     } catch (SQLException e) {
@@ -671,5 +717,24 @@ public class Survey extends SurveyBase {
     modifiedBy = rs.getInt("modifiedby");
   }
 
+
+  /**
+   *  Gets the addressSurveyId attribute of the Survey class
+   *
+   *@return    The addressSurveyId value
+   */
+  public static int getAddressSurveyId(Connection db) throws SQLException{
+    int addressSurveyId = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT survey_id " +
+        "FROM survey " +
+        "WHERE type = ? ");
+    pst.setInt(1, Constants.SURVEY_ADDRESS_REQUEST);
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+      addressSurveyId = rs.getInt("survey_id");
+    }
+    return addressSurveyId;
+  }
 }
 

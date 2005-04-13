@@ -26,8 +26,8 @@
 <table cellpadding="0" cellspacing="0" width="100%" border="0">
 <tr>
   <td>
-    Select a folder to move the item to:<br>
-    <img src="images/icons/stock_folder-16-19.gif" border="0" align="absmiddle">
+    <dhv:label name="accounts.accounts_documents_file_move.SelectFolderToMove">Select a folder to move the item to</dhv:label>:<br />
+    <img src="images/icons/stock_folder-16-19.gif" border="0" align="absmiddle" />
     <%= toHtml(FileFolder.getSubject()) %>
   </td>
 </tr>
@@ -39,11 +39,11 @@
       <img alt="" src="images/tree7o.gif" border="0" align="absmiddle" height="16" width="19"/>
       <img alt="" src="images/icons/stock_open-16-19.gif" border="0" align="absmiddle" height="16" width="19"/>
     <dhv:evaluate if="<%= FileFolder.getParentId() != -1 %>">
-      <a href="AccountsDocumentsFolders.do?command=SaveMove&orgId=<%= OrgDetails.getOrgId() %>&id=<%= FileFolder.getId() %>&popup=true&folderId=0&return=AccountsDocuments&param=<%= OrgDetails.getOrgId() %>&param2=<%= FileFolder.getParentId() %>">Home</a>
+      <a href="AccountsDocumentsFolders.do?command=SaveMove&orgId=<%= OrgDetails.getOrgId() %>&id=<%= FileFolder.getId() %>&popup=true&folderId=0&return=AccountsDocuments&param=<%= OrgDetails.getOrgId() %>&param2=<%= FileFolder.getParentId() %>"><dhv:label name="accounts.accounts_documents_file_move.Home">Home</dhv:label></a>
     </dhv:evaluate>
     <dhv:evaluate if="<%= FileFolder.getParentId() == -1 %>">
-      Home
-      (current folder)
+      <dhv:label name="accounts.accounts_documents_file_move.Home">Home</dhv:label>
+      <dhv:label name="accounts.accounts_documents_file_move.CurrentFolder">(current folder)</dhv:label>
     </dhv:evaluate>
     </td>
   </tr>
@@ -64,7 +64,7 @@
     </dhv:evaluate>
     <dhv:evaluate if="<%= FileFolder.getParentId() == thisFolder.getId() %>">
       <%= toHtml(thisFolder.getSubject()) %>
-      (current folder)
+      <dhv:label name="accounts.accounts_documents_file_move.CurrentFolder">(current folder)</dhv:label>
     </dhv:evaluate>
     </td>
   </tr>
@@ -72,5 +72,5 @@
   }
 %>
 </table>
-&nbsp;<br>
-<input type="button" value="Cancel" onClick="javascript:window.close()">
+&nbsp;<br />
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()" />

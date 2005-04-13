@@ -35,33 +35,34 @@
     window.frames['calendardetails'].location.href='MyCFS.do?command=Alerts&source=calendarDetails&return=<%=returnPage%>&inline=true';
   }
 </script>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" style="border: 1px solid #000">
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr>
     <td>
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <%-- User Selected Info --%>
   <tr>
     <td width="100%" valign="top" colspan="2" height="20" style="text-align: center !important">
-      <strong><div id="userName">Scheduled Actions for <%= CalendarInfo.getSelectedUserId()!=-1?toHtml(CalendarInfo.getSelectedUserName()) : toHtml(User.getUserRecord().getContact().getNameLastFirst())%></div></strong>
+      <strong><div id="userName"><dhv:label name="accounts.accounts_dashboard.ScheduledActionsFor">Scheduled Actions for</dhv:label> <%= CalendarInfo.getSelectedUserId()!=-1?toHtml(CalendarInfo.getSelectedUserName()) : toHtml(User.getUserRecord().getContact().getNameLastFirst())%></div></strong>
     </td>
   </tr>
   <%-- Calendar and Details --%>
   <tr valign="top">
     <td valign="top" width="320">
-      <iframe id="calendarid" name="calendar" frameborder="0" marginwidth="0" marginheight="0" width="320" height="400" src="MyCFS.do?command=MonthView&source=Calendar<%=returnPage!=null?"&return="+returnPage:""%>&reloadCalendarDetails=true">
+      <iframe id="calendarid" name="calendar" frameborder="0" marginwidth="0" marginheight="0" width="320" height="400" src="MyCFS.do?command=MonthView&source=Calendar<%=returnPage!=null?"&return="+returnPage:""%>&reloadCalendarDetails=true&inline=true">
       </iframe>
     </td>
     <td valign="top" height="380" width="100%"><%-- Change height 380 to 100% once Safari is udpated --%>
+      <%-- Calendar details --%>
       <table height="380" width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-          <td width="100%" style="border: 1px solid #000; background-color: #DEE0FA;">
+          <td width="100%" class="cellBox">
             <table width="100%" cellspacing="4" cellpadding="0" border="0">
               <tr>
                 <td valign="center" nowrap>
                   <select id="alerts" size="1" name="alertsView" onChange="javascript:fillFrame('calendardetails','MyCFS.do?command=Alerts&source=calendardetails&inline=true&return=Accounts&alertsView='+document.getElementById('alerts').value);">
-                    <option value="AccountsAll" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAll")?" selected":"" %>>All Sched. Actions</option>
-                    <option value="AccountsContractEndDates" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsEndDates")?" selected":"" %>>Contract End Dates</option>
-                    <option value="AccountsAlertDates" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAlertDates")?" selected":"" %>>Alert Dates</option>
+                    <option value="AccountsAll" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAll")?" selected":"" %>><dhv:label name="accounts.accounts_dashboard.AllSchedActions">All Sched. Actions</dhv:label></option>
+                    <option value="AccountsContractEndDates" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsEndDates")?" selected":"" %>><dhv:label name="accounts.accounts_dashboard.ContractEndDates">Contract End Dates</dhv:label></option>
+                    <option value="AccountsAlertDates" <%= CalendarInfo.getCalendarDetailsView().equalsIgnoreCase("AccountsAlertDates")?" selected":"" %>><dhv:label name="accounts.accounts_add.AlertDate">Alert Date</dhv:label></option>
                   </select>
                 <% if(NewUserList.size()!=0){%>
                   <%= NewUserList.getHtml("userId",CalendarInfo.getSelectedUserId()) %>

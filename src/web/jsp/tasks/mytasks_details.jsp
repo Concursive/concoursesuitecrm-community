@@ -19,26 +19,26 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<dhv:evaluate exp="<%= !isPopup(request) %>">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> > 
-<a href="MyTasks.do?command=ListTasks">Tasks</a> >
-Task Details
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> > 
+<a href="MyTasks.do?command=ListTasks"><dhv:label name="myitems.tasks">Tasks</dhv:label></a> >
+<dhv:label name="tasks.taskDetails">Task Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<dhv:formMessage />
-<dhv:evaluate exp="<%= isPopup(request) %>"> 
-<input type="button" value="Cancel" onClick="javascript:window.close();"><br>
+<dhv:formMessage showSpace="false"/>
+<dhv:evaluate if="<%= isPopup(request) %>">
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();"><br>
 </dhv:evaluate>
 <%@ include file="task_details_include.jsp" %>
 <br>
 <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
-<dhv:evaluate exp="<%= isPopup(request) %>">
-<input type="button" value="Cancel" onClick="javascript:window.close();">
+<dhv:evaluate if="<%= isPopup(request) %>">
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
 </dhv:evaluate>

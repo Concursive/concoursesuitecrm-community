@@ -15,16 +15,19 @@
  */
 package org.aspcfs.modules.base;
 
-import java.sql.*;
-import java.net.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.ActionContext;
-import com.zeroio.iteam.base.*;
-import org.aspcfs.modules.contacts.base.Contact;
+import com.zeroio.iteam.base.FileItemList;
+import org.aspcfs.apps.workFlowManager.ComponentContext;
 import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.apps.workFlowManager.*;
-import org.aspcfs.utils.*;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.SMTPMessage;
+import org.aspcfs.utils.SSLMessage;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
  *  A logged message sent to a person using 1 of several transports: SMTP, Fax,
@@ -44,6 +47,7 @@ public class Notification extends Thread {
   public final static int EMAILFAXLETTER = 6;
   public final static int IM = 7;
   public final static int SSL = 8;
+  public final static int BROADCAST = 9;
 
   public final static String EMAIL_TEXT = "Email";
   public final static String FAX_TEXT = "Fax";
@@ -585,7 +589,7 @@ public class Notification extends Thread {
         thisUser.setBuildContactDetails(true);
         thisUser.buildRecord(db, userToNotify);
         if (type == EMAIL) {
-          System.out.println("Notification-> To: " + thisUser.getContact().getEmailAddress("Business"));
+          System.out.println("Notification-> To: " + thisUser.getContact().getPrimaryEmailAddress());
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
           mail.setFrom(from);
@@ -593,7 +597,7 @@ public class Notification extends Thread {
             mail.addReplyTo(from);
           }
           mail.setType("text/html");
-          mail.addTo(thisUser.getContact().getEmailAddress("Business"));
+          mail.addTo(thisUser.getContact().getPrimaryEmailAddress());
           mail.setSubject(subject);
           mail.setBody(messageToSend);
           mail.setAttachments(fileAttachments);
@@ -632,9 +636,9 @@ public class Notification extends Thread {
         Contact thisContact = new Contact(db, String.valueOf(contactToNotify));
         //Determine the method...
         if (type == EMAILFAXLETTER) {
-          if (thisContact.getEmailAddress("Business").equals("") &&
+          if (("".equals(thisContact.getPrimaryEmailAddress())) &&
               thisContact.getPhoneNumber("Business Fax").equals("") &&
-              thisContact.getAddress("Business") != null) {
+              thisContact.getPrimaryAddress() != null) {
             type = LETTER;
           } else {
             type = EMAILFAX;
@@ -642,15 +646,15 @@ public class Notification extends Thread {
         }
         //2nd level
         if (type == EMAILFAX) {
-          if (thisContact.getEmailAddress("Business").equals("") &&
+          if (("".equals(thisContact.getPrimaryEmailAddress())) &&
               !thisContact.getPhoneNumber("Business Fax").equals("")) {
             type = FAX;
           } else {
             type = EMAIL;
           }
         } else if (type == EMAILLETTER) {
-          if (thisContact.getEmailAddress("Business").equals("") &&
-              thisContact.getAddress("Business") != null) {
+          if (("".equals(thisContact.getPrimaryEmailAddress())) &&
+              thisContact.getPrimaryAddress() != null) {
             type = LETTER;
           } else {
             type = EMAIL;
@@ -658,7 +662,7 @@ public class Notification extends Thread {
         }
         //Send it...
         if (type == EMAIL) {
-          System.out.println("Notification-> To: " + thisContact.getEmailAddress("Business"));
+          System.out.println("Notification-> To: " + thisContact.getPrimaryEmailAddress());
           SMTPMessage mail = new SMTPMessage();
           mail.setHost(host);
           mail.setFrom(from);
@@ -666,11 +670,7 @@ public class Notification extends Thread {
             mail.addReplyTo(from);
           }
           mail.setType("text/html");
-          if (thisContact.getEmailAddress("Business").equals("")) {
-            mail.addTo(thisContact.getEmailAddress("Personal"));
-          } else {
-            mail.addTo(thisContact.getEmailAddress("Business"));
-          }
+          mail.addTo(thisContact.getPrimaryEmailAddress());
           mail.setSubject(subject);
           mail.setBody(messageToSend);
           mail.setAttachments(fileAttachments);
@@ -690,6 +690,46 @@ public class Notification extends Thread {
         } else if (type == IM) {
 
           status = "IM Sent";
+        } else if (type == BROADCAST) {
+          SMTPMessage mail = new SMTPMessage();
+          mail.setHost(host);
+          mail.setFrom(from);
+          if (from != null && !from.equals("")) {
+            mail.addReplyTo(from);
+          }
+          mail.setType("text/html");
+          //sending to all email addresses
+          Iterator itr = thisContact.getEmailAddressList().iterator();
+          if (itr.hasNext()) {
+            while (itr.hasNext()) {
+              EmailAddress tmpEmailAddress = (EmailAddress) itr.next();
+              mail.addTo(tmpEmailAddress.getEmail());
+            }
+          }
+          //sending to all text message addresses
+          itr = thisContact.getTextMessageAddressList().iterator();
+          if (itr.hasNext()) {
+            while (itr.hasNext()) {
+              TextMessageAddress tmpTextMessageAddress = (TextMessageAddress) itr.next();
+              mail.addTo(tmpTextMessageAddress.getTextMessageAddress());
+            }
+          }
+          mail.setSubject(subject);
+          mail.setBody(messageToSend);
+          mail.setAttachments(fileAttachments);
+          int errorCode = mail.send();
+          if (errorCode > 0) {
+            status = "Email Error";
+            System.out.println("Send error: " + mail.getErrorMsg() + "<br><br>");
+            System.err.println("ReportBuilder Error: Report could not be sent");
+            System.err.println(mail.getErrorMsg());
+          } else {
+            status = "Email Sent";
+            insertNotification(db);
+            size = subject.length() +
+                messageToSend.length() +
+                fileAttachments.getFileSize();
+          }
         } else if (type == FAX) {
           String phoneNumber = thisContact.getPhoneNumber("Business Fax");
           System.out.println("Notification-> To: " + phoneNumber);

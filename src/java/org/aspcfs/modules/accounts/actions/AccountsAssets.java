@@ -15,27 +15,24 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import java.text.*;
-import java.io.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.modules.servicecontracts.base.*;
-import org.aspcfs.modules.assets.base.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.mycfs.base.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.login.beans.*;
-import org.aspcfs.modules.mycfs.beans.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.troubletickets.base.*;
+import org.aspcfs.modules.assets.base.Asset;
+import org.aspcfs.modules.assets.base.AssetList;
 import org.aspcfs.modules.base.CategoryList;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.modules.servicecontracts.base.ServiceContract;
+import org.aspcfs.modules.troubletickets.base.TicketList;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  *  Action handler to list, view, add, update and delete assets
@@ -126,7 +123,7 @@ public class AccountsAssets extends CFSModule {
       contactList.setEmptyHtmlSelectRecord("-- None --");
       context.getRequest().setAttribute("contactList", contactList);
 
-      String currentDate = this.getCurrentDateAsString(context);
+      String currentDate = getCurrentDateAsString(context);
       context.getRequest().setAttribute("currentDate", currentDate);
 
       return ("AccountsAssetsAddOK");
@@ -153,6 +150,7 @@ public class AccountsAssets extends CFSModule {
     }
     Connection db = null;
     boolean inserted = false;
+    boolean isValid = false;
     try {
       //Get a connection from the connection pool for this user
       db = this.getConnection(context);
@@ -161,10 +159,9 @@ public class AccountsAssets extends CFSModule {
       Asset thisAsset = (Asset) context.getFormBean();
       thisAsset.setEnteredBy(getUserId(context));
       thisAsset.setModifiedBy(getUserId(context));
-      inserted = thisAsset.insert(db);
-
-      if (!inserted) {
-        processErrors(context, thisAsset.getErrors());
+      isValid = this.validateObject(context, db, thisAsset);
+      if (isValid) {
+        inserted = thisAsset.insert(db);
       }
     } catch (Exception errorMessage) {
       //An error occurred, go to generic error message page
@@ -176,9 +173,8 @@ public class AccountsAssets extends CFSModule {
     }
     if (inserted) {
       return (executeCommandList(context));
-    } else {
-      return (executeCommandAdd(context));
     }
+    return (executeCommandAdd(context));
   }
 
 
@@ -236,36 +232,36 @@ public class AccountsAssets extends CFSModule {
     if (!hasPermission(context, "accounts-assets-edit")) {
       return ("PermissionError");
     }
+    boolean isValid = false;
     Connection db = null;
     int resultCount = -1;
     try {
       //Get a connection from the connection pool for this user
       db = this.getConnection(context);
       setOrganization(context, db);
-
       Asset thisAsset = (Asset) context.getFormBean();
       thisAsset.setModifiedBy(getUserId(context));
-      resultCount = thisAsset.update(db);
-      if (resultCount == -1) {
-        processErrors(context, thisAsset.getErrors());
+      isValid = this.validateObject(context, db, thisAsset);
+      if (isValid) {
+        resultCount = thisAsset.update(db);
       }
     } catch (Exception errorMessage) {
-      //An error occurred, go to generic error message page
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       //Always free the database connection
       this.freeConnection(context, db);
     }
-    if (resultCount == -1) {
-      return (executeCommandModify(context));
-    } else if (resultCount == 1) {
+    if (resultCount == 1) {
       if ("list".equals(context.getRequest().getParameter("return"))) {
         return executeCommandList(context);
       } else {
         return executeCommandView(context);
       }
     } else {
+      if (resultCount == -1 || !isValid) {
+        return (executeCommandModify(context));
+      }
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return ("UserError");
     }
@@ -292,18 +288,20 @@ public class AccountsAssets extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       Asset thisAsset = new Asset(db, id);
 
-      htmlDialog.setTitle("Centric CRM: Account Management - Asset");
       DependencyList dependencies = thisAsset.processDependencies(db);
-      htmlDialog.addMessage(dependencies.getHtmlString());
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (dependencies.canDelete()) {
-        htmlDialog.setHeader("The asset you are requesting to delete has the following dependencies within Centric CRM:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='AccountsAssets.do?command=Delete&action=delete&orgId=" + orgId + "&id=" + id + "'");
-        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountsAssets.do?command=Delete&action=delete&orgId=" + orgId + "&id=" + id + "'");
+        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       } else {
-        htmlDialog.setHeader("The asset cannot be deleted because it has the following dependencies within Centric CRM:");
-        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.unableHeader"));
+        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -330,8 +328,7 @@ public class AccountsAssets extends CFSModule {
     if (!hasPermission(context, "accounts-assets-delete")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     boolean recordDeleted = false;
     Connection db = null;
     Asset thisAsset = null;
@@ -345,31 +342,23 @@ public class AccountsAssets extends CFSModule {
       thisAsset.setId(context.getRequest().getParameter("id"));
       recordDeleted = thisAsset.deleteAll(db, this.getPath(context, "accounts"));
     } catch (Exception e) {
-      errorMessage = e;
-      context.getRequest().setAttribute("Error", errorMessage);
+      context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       //Always free the database connection
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (recordDeleted) {
-        context.getRequest().setAttribute("refreshUrl", "AccountsAssets.do?command=List&orgId=" + context.getRequest().getParameter("orgId"));
-        //return (executeCommandList(context));
-        return this.getReturn(context, "Delete");
-      }
-
-      processErrors(context, thisAsset.getErrors());
-      context.getRequest().setAttribute("refreshUrl", "AccountsAssets.do?command=View&orgId=" + context.getRequest().getParameter("orgId") + "&id=" + context.getRequest().getParameter("id"));
-      //return executeCommandView(context);
-      return this.getReturn(context, "Delete");
+    if (recordDeleted) {
+      context.getRequest().setAttribute("refreshUrl", "AccountsAssets.do?command=List&orgId=" + context.getRequest().getParameter("orgId"));
+      //return (executeCommandList(context));
+      return getReturn(context, "Delete");
     }
 
-    System.out.println(errorMessage);
-    context.getRequest().setAttribute("actionError", "Asset could not be deleted because of referential integrity .");
+    processErrors(context, thisAsset.getErrors());
+    context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.assetDeletion"));
     context.getRequest().setAttribute("refreshUrl", "AccountsAssets.do?command=View&orgId=" + context.getRequest().getParameter("orgId"));
-    return ("DeleteError");
+    //return executeCommandView(context);
+    return getReturn(context, "Delete");
   }
 
 

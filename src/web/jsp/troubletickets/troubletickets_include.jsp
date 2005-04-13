@@ -43,27 +43,27 @@
   function updateSubList1() {
     var sel = document.forms['addticket'].elements['catCode'];
     var value = sel.options[sel.selectedIndex].value;
-    var url = "TroubleTickets.do?command=CategoryJSList&catCode=" + escape(value);
+    var url = "TroubleTickets.do?command=CategoryJSList&form=addticket&catCode=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
   function updateSubList2() {
     var sel = document.forms['addticket'].elements['subCat1'];
     var value = sel.options[sel.selectedIndex].value;
-    var url = "TroubleTickets.do?command=CategoryJSList&subCat1=" + escape(value);
+    var url = "TroubleTickets.do?command=CategoryJSList&form=addticket&subCat1=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
 <dhv:include name="ticket.subCat2" none="true">
   function updateSubList3() {
     var sel = document.forms['addticket'].elements['subCat2'];
     var value = sel.options[sel.selectedIndex].value;
-    var url = "TroubleTickets.do?command=CategoryJSList&subCat2=" + escape(value);
+    var url = "TroubleTickets.do?command=CategoryJSList&form=addticket&subCat2=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
 </dhv:include>
   function updateUserList() {
     var sel = document.forms['addticket'].elements['departmentCode'];
     var value = sel.options[sel.selectedIndex].value;
-    var url = "TroubleTickets.do?command=DepartmentJSList&departmentCode=" + escape(value);
+    var url = "TroubleTickets.do?command=DepartmentJSList&form=addticket&departmentCode=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
   function updateContactList() {
@@ -79,22 +79,22 @@
     message = "";
     <dhv:include name="ticket.contact" none="true">
     if (form.contactId.value == "-1") { 
-      message += "- Check that a Contact is selected\r\n";
+      message += label("check.ticket.contact.entered","- Check that a Contact is selected\r\n");
       formTest = false;
     }
     </dhv:include>
     if (form.problem.value == "") { 
-      message += "- <dhv:label name="ticket.issue">Issue</dhv:label> is required\r\n";
+      message += label("check.issue.required","- Issue is required\r\n");
       formTest = false;
     }
     <dhv:include name="ticket.resolution" none="true">
     if (form.closeNow.checked && form.solution.value == "") { 
-      message += "- Resolution needs to be filled in when closing a ticket\r\n";
+      message += label("check.ticket.resolution.atclose","- Resolution needs to be filled in when closing a ticket\r\n");
       formTest = false;
     }
     </dhv:include>
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     } else {
       return true;
@@ -132,15 +132,15 @@
     //reset the sc and asset
     if (divName == 'changeaccount') {
       <dhv:include name="ticket.contractNumber" none="true">
-      changeDivContent('addServiceContract','None Selected');
+      changeDivContent('addServiceContract',label('none.selected','None Selected'));
       resetNumericFieldValue('contractId');
       </dhv:include>
       <dhv:include name="ticket.contractNumber" none="true">
-      changeDivContent('addAsset','None Selected');
+      changeDivContent('addAsset',label('none.selected','None Selected'));
       resetNumericFieldValue('assetId');
       </dhv:include>
       <dhv:include name="ticket.laborCategory" none="true">
-      changeDivContent('addLaborCategory','None Selected');
+      changeDivContent('addLaborCategory',label('none.selected','None Selected'));
       resetNumericFieldValue('productId');
       </dhv:include>
     }
@@ -161,21 +161,21 @@
     </dhv:permission>
     var orgId = document.forms['addticket'].orgId.value;
     if(orgId == -1){
-      alert('<dhv:label name="accounts.alert.invalidAccount">You have to select an Account first</dhv:label>');
+      alert(label("select.account.first",'You have to select an Account first'));
       return;
     }
     if(orgId == '0'){
       if (empPermission) {
-        popURL('CompanyDirectory.do?command=Prepare&popup=true&source=troubletickets', 'New_Employee','600','550','yes','yes');
+        popURL('CompanyDirectory.do?command=Prepare&container=false&popup=true&source=troubletickets', 'New_Employee','600','550','yes','yes');
       } else {
-        alert('You do not have permission to add employees');
+        alert(label('no.permission.addemployees','You do not have permission to add employees'));
         return;
       }
     }else{
       if (acctPermission) {
-        popURL('Contacts.do?command=Prepare&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','600','550','yes','yes');
+        popURL('Contacts.do?command=Prepare&container=false&popup=true&source=troubletickets&orgId=' + document.forms['addticket'].orgId.value, 'New_Contact','600','550','yes','yes');
       } else {
-        alert('You do not have permission to add contacts');
+        alert(label("no.permission.addcontacts","You do not have permission to add contacts"));
         return;
       }
     }
@@ -219,13 +219,19 @@
       <table cellspacing="0" cellpadding="0" border="0" class="empty">
         <tr>
           <td>
-            <div id="changeaccount"><%= TicketDetails.getOrgId() != -1 ? TicketDetails.getCompanyName() : "None Selected" %></div>
+            <div id="changeaccount">
+              <% if(TicketDetails.getOrgId() != -1) {%>
+                <%= toHtml(TicketDetails.getCompanyName()) %>
+              <%} else {%>
+                <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+              <%}%>
+            </div>
           </td>
           <td>
             <input type="hidden" name="orgId" id="orgId" value="<%=  TicketDetails.getOrgId() %>">
             &nbsp;<font color="red">*</font>
             <%= showAttribute(request, "orgIdError") %>
-            [<a href="javascript:popAccountsListSingle('orgId','changeaccount', 'showMyCompany=true&filters=all|my|disabled');">Select</a>]
+            [<a href="javascript:popAccountsListSingle('orgId','changeaccount', 'showMyCompany=true&filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
           </td>
         </tr>
       </table>
@@ -234,7 +240,7 @@
   <dhv:include name="ticket.contact" none="true">
   <tr>
     <td class="formLabel">
-      Contact
+      <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
     </td>
     <td valign="center">
 	<% if (TicketDetails == null || TicketDetails.getOrgId() == -1 || ContactList.size() == 0) { %>
@@ -243,28 +249,34 @@
       <%= ContactList.getHtmlSelect("contactId", TicketDetails.getContactId() ) %>
 	<%}%>
       <font color="red">*</font><%= showAttribute(request, "contactIdError") %>
-      [<a href="javascript:addNewContact();">Create New Contact</a>] 
+      [<a href="javascript:addNewContact();"><dhv:label name="account.createNewContact">Create New Contact</dhv:label></a>] 
     </td>
 	</tr>
   </dhv:include>
   <dhv:include name="ticket.contractNumber" none="true">
   <tr class="containerBody">
     <td class="formLabel">
-      Service Contract Number
+      <dhv:label name="accounts.accountasset_include.ServiceContractNumber">Service Contract Number</dhv:label>
     </td>
     <td>
      <table cellspacing="0" cellpadding="0" border="0" class="empty">
       <tr>
         <td>
-          <div id="addServiceContract"><%= (TicketDetails.getContractId() != -1) ? TicketDetails.getServiceContractNumber() :"None Selected" %></div>
+          <div id="addServiceContract">
+            <% if(TicketDetails.getContractId() != -1) {%>
+              <%= toHtml(TicketDetails.getServiceContractNumber()) %>
+            <%} else {%>
+              <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+            <%}%>
+          </div>
         </td>
         <td>
           <input type="hidden" name="contractId" id="contractId" value="<%=  TicketDetails.getContractId() %>">
           <input type="hidden" name="serviceContractNumber" id="serviceContractNumber" value="<%= TicketDetails.getServiceContractNumber() %>">
           &nbsp;
           <%= showAttribute(request, "contractIdError") %>
-          [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled');">Select</a>]
-          &nbsp [<a href="javascript:changeDivContent('addServiceContract','None Selected');javascript:resetNumericFieldValue('contractId');javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');javascript:changeDivContent('addLaborCategory','None Selected');javascript:resetNumericFieldValue('productId');">Clear</a>] 
+          [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+          &nbsp [<a href="javascript:changeDivContent('addServiceContract',label('none.selected','None Selected'));javascript:resetNumericFieldValue('contractId');javascript:changeDivContent('addAsset',label('none.selected','None Selected'));javascript:resetNumericFieldValue('assetId');javascript:changeDivContent('addLaborCategory',label('none.selected','None Selected'));javascript:resetNumericFieldValue('productId');"><dhv:label name="button.clear">Clear</dhv:label></a>] 
         </td>
       </tr>
     </table>
@@ -274,21 +286,27 @@
   <dhv:include name="ticket.asset" none="true">
   <tr class="containerBody">
     <td class="formLabel">
-      Asset
+      <dhv:label name="account.asset">Asset</dhv:label>
     </td>
     <td>
      <table cellspacing="0" cellpadding="0" border="0" class="empty">
       <tr>
         <td>
-          <div id="addAsset"><%= (TicketDetails.getAssetId() != -1) ? TicketDetails.getAssetSerialNumber() :"None Selected" %></div>
+          <div id="addAsset">
+            <% if(TicketDetails.getAssetId() != -1) {%>
+              <%= toHtml(TicketDetails.getAssetSerialNumber()) %>
+            <%} else {%>
+              <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+            <%}%>
+          </div>
         </td>
         <td>
           <input type="hidden" name="assetId" id="assetId" value="<%=  TicketDetails.getAssetId() %>">
           <input type="hidden" name="assetSerialNumber" id="assetSerialNumber" value="<%=  TicketDetails.getAssetSerialNumber() %>">
           &nbsp;
           <%= showAttribute(request, "assetIdError") %>
-          [<a href="javascript:popAssetListSingle('assetId','addAsset', 'filters=allassets|undercontract','contractId','addServiceContract');">Select</a>]
-          &nbsp [<a href="javascript:changeDivContent('addAsset','None Selected');javascript:resetNumericFieldValue('assetId');">Clear</a>] 
+          [<a href="javascript:popAssetListSingle('assetId','addAsset', 'filters=allassets|undercontract','contractId','addServiceContract');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+          &nbsp [<a href="javascript:changeDivContent('addAsset',label('none.selected','None Selected'));javascript:resetNumericFieldValue('assetId');"><dhv:label name="button.clear">Clear</dhv:label></a>] 
         </td>
       </tr>
     </table>
@@ -298,21 +316,27 @@
   <dhv:include name="ticket.laborCategory" none="true">
   <tr class="containerBody">
     <td class="formLabel">
-      Labor Category
+      <dhv:label name="account.laborCategory">Labor Category</dhv:label>
     </td>
     <td>
      <table cellspacing="0" cellpadding="0" border="0" class="empty">
       <tr>
         <td>
-          <div id="addLaborCategory"><%= (TicketDetails.getProductId() != -1) ? TicketDetails.getProductSku() :"None Selected" %></div>
+          <div id="addLaborCategory">
+            <% if(TicketDetails.getProductId() != -1) {%>
+              <%= toHtml(TicketDetails.getProductName()) %>
+            <%} else {%>
+              <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+            <%}%>
+          </div>
         </td>
         <td>
           <input type="hidden" name="productId" id="productId" value="<%=  TicketDetails.getProductId() %>">
           <input type="hidden" name="productSku" id="productSku" value="<%=  TicketDetails.getProductSku() %>">
           &nbsp;
           <%= showAttribute(request, "productIdError") %>
-          [<a href="javascript:popProductListSingle('productId','addLaborCategory', 'filters=all|my|disabled');">Select</a>]
-          &nbsp [<a href="javascript:changeDivContent('addLaborCategory','None Selected');javascript:resetNumericFieldValue('productId');">Clear</a>] 
+          [<a href="javascript:popProductListSingle('productId','addLaborCategory', 'filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+          &nbsp [<a href="javascript:changeDivContent('addLaborCategory',label('none.selected','None Selected'));javascript:resetNumericFieldValue('productId');"><dhv:label name="button.clear">Clear</dhv:label></a>] 
         </td>
       </tr>
     </table>
@@ -329,7 +353,7 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Classification</strong>
+      <strong><dhv:label name="accounts.accounts_add.Classification">Classification</dhv:label></strong>
     </th>
 	</tr>
 	<tr>
@@ -354,7 +378,7 @@
   <dhv:include name="ticket.location" none="true">
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Location
+      <dhv:label name="accounts.accountasset_include.Location">Location</dhv:label>
     </td>
     <td>
       <input type="text" name="location" value="<%= toHtmlValue(TicketDetails.getLocation()) %>" size="50" maxlength="256" />
@@ -364,7 +388,7 @@
 <dhv:include name="ticket.catCode" none="true">
 	<tr>
     <td class="formLabel">
-      Category
+      <dhv:label name="accounts.accountasset_include.Category">Category</dhv:label>
     </td>
     <td>
       <%= CategoryList.getHtmlSelect("catCode", TicketDetails.getCatCode()) %>
@@ -374,7 +398,7 @@
 <dhv:include name="ticket.subCat1" none="true">
 	<tr>
     <td class="formLabel" nowrap>
-      Sub-level 1
+      <dhv:label name="account.ticket.subLevel1">Sub-level 1</dhv:label>
     </td>
     <td>
       <%= SubList1.getHtmlSelect("subCat1", TicketDetails.getSubCat1()) %>
@@ -384,7 +408,7 @@
 <dhv:include name="ticket.subCat2" none="true">
 	<tr>
     <td class="formLabel" nowrap>
-      Sub-level 2
+      <dhv:label name="account.ticket.subLevel2">Sub-level 2</dhv:label>
     </td>
     <td>
       <%= SubList2.getHtmlSelect("subCat2", TicketDetails.getSubCat2()) %>
@@ -394,7 +418,7 @@
 <dhv:include name="ticket.subCat3" none="true">
 	<tr>
     <td class="formLabel" nowrap>
-      Sub-level 3
+      <dhv:label name="account.ticket.subLevel3">Sub-level 3</dhv:label>
     </td>
     <td>
       <%= SubList3.getHtmlSelect("subCat3", TicketDetails.getSubCat3()) %>
@@ -404,7 +428,7 @@
 <dhv:include name="ticket.severity" none="true">
 	<tr>
     <td class="formLabel">
-      Severity
+      <dhv:label name="project.severity">Severity</dhv:label>
     </td>
     <td>
       <%= SeverityList.getHtmlSelect("severityCode",  TicketDetails.getSeverityCode()) %>
@@ -416,13 +440,13 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
 	<tr>
     <th colspan="2">
-      <strong>Assignment</strong>
+      <strong><dhv:label name="project.assignment">Assignment</dhv:label></strong>
     </th>
 	</tr>
 <dhv:include name="ticket.priority" none="true">
 	<tr>
     <td class="formLabel">
-      Priority
+      <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label>
     </td>
     <td>
       <%= PriorityList.getHtmlSelect("priorityCode", TicketDetails.getPriorityCode()) %>
@@ -431,7 +455,7 @@
 </dhv:include>
 	<tr>
     <td class="formLabel">
-      Department
+      <dhv:label name="project.department">Department</dhv:label>
     </td>
     <td>
       <%= DepartmentList.getHtmlSelect("departmentCode", TicketDetails.getDepartmentCode()) %>
@@ -439,7 +463,7 @@
 	</tr>
 	<tr>
     <td class="formLabel">
-      Resource Assigned
+      <dhv:label name="project.resourceAssigned">Resource Assigned</dhv:label>
     </td>
     <td>
       <% UserList.setJsEvent("onChange=\"javascript:setAssignedDate();\"");%>
@@ -448,7 +472,7 @@
 	</tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Assignment Date
+      <dhv:label name="account.ticket.assignmentDate">Assignment Date</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="addticket" field="assignedDate" timestamp="<%= TicketDetails.getAssignedDate() %>"  timeZone="<%= TicketDetails.getAssignedDateTimeZone() %>" showTimeZone="true" />
@@ -477,13 +501,13 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
 	<tr>
     <th colspan="2">
-      <strong>Resolution</strong>
+      <strong><dhv:label name="accounts.accounts_asset_history.Resolution">Resolution</dhv:label></strong>
     </th>
 	</tr>
   <dhv:include name="ticket.cause" none="true">
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Cause
+      <dhv:label name="account.ticket.cause">Cause</dhv:label>
     </td>
     <td>
       <textarea name="cause" cols="55" rows="8"><%= toString(TicketDetails.getCause()) %></textarea>
@@ -508,7 +532,7 @@
   <dhv:include name="ticket.resolution.date" none="true">
   <tr class="containerBody">
     <td class="formLabel">
-      Resolution Date
+      <dhv:label name="ticket.resolutionDate">Resolution Date</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="addticket" field="resolutionDate" timestamp="<%= TicketDetails.getResolutionDate() %>"  timeZone="<%= TicketDetails.getResolutionDateTimeZone() %>"  showTimeZone="true" />
@@ -519,12 +543,12 @@
   <dhv:include name="ticket.feedback" none="true">
   <tr class="containerBody">
     <td class="formLabel">
-      Have our services met or exceeded your expectations?
+      <dhv:label name="account.serviceExpectation.question">Have our services met or exceeded your expectations?</dhv:label>
     </td>
     <td>
-      <input type="radio" name="expectation" value="1" <%= (TicketDetails.getExpectation() == 1) ? " checked" : "" %>>Yes
-      <input type="radio" name="expectation" value="0" <%= (TicketDetails.getExpectation() == 0) ? " checked" : "" %>>No
-      <input type="radio" name="expectation" value="-1" <%= (TicketDetails.getExpectation() == -1) ? " checked" : "" %>>Undecided
+      <input type="radio" name="expectation" value="1" <%= (TicketDetails.getExpectation() == 1) ? " checked" : "" %>><dhv:label name="account.yes">Yes</dhv:label>
+      <input type="radio" name="expectation" value="0" <%= (TicketDetails.getExpectation() == 0) ? " checked" : "" %>><dhv:label name="account.no">No</dhv:label>
+      <input type="radio" name="expectation" value="-1" <%= (TicketDetails.getExpectation() == -1) ? " checked" : "" %>><dhv:label name="account.undecided">Undecided</dhv:label>
     </td>
   </tr>
   </dhv:include>

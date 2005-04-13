@@ -1,0 +1,59 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  Assets module
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+
+String module = "Orders";
+int level = 1000;
+boolean hasFolders = false;
+boolean hasLookups = false;
+boolean hasViewpoints = false;
+boolean hasCategories = false;
+boolean hasScheduledEvents = false;
+boolean hasObjectEvents = false;
+boolean hasReports = true;
+boolean enabled = false;
+boolean active = false;
+
+print("Adding " + module + " module if it doesn't exist");
+
+//Check and insert a module
+boolean isNew = false;
+int moduleId = -1;
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT category_id " +
+  "FROM permission_category " +
+  "WHERE category = '" + module + "'");
+if (rs.next()) {
+  moduleId = rs.getInt("category_id");
+}
+rs.close();
+st.close();
+//Insert the category if needed
+if (moduleId == -1) {
+  print("Category not found, inserting...");
+  isNew = true;
+  PermissionCategory thisCategory = new PermissionCategory();
+  thisCategory.setCategory(module);
+  thisCategory.setDescription(null);
+  thisCategory.setLevel(level);
+  thisCategory.setEnabled(enabled);
+  thisCategory.setActive(active);
+  thisCategory.setFolders(hasFolders);
+  thisCategory.setLookups(hasLookups);
+  thisCategory.setViewpoints(hasViewpoints);
+  thisCategory.setCategories(hasCategories);
+  thisCategory.setScheduledEvents(hasScheduledEvents);
+  thisCategory.setObjectEvents(hasObjectEvents);
+  thisCategory.setReports(hasReports);
+  thisCategory.insert(db);
+  moduleId = thisCategory.getId();
+}
+
+print("Finished");

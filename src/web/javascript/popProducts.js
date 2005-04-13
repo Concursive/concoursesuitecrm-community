@@ -15,7 +15,7 @@ function popProductListSingle(hiddenFieldId, displayFieldId, params, orgId) {
   if (!contractId || contractId == '-1') {
     alert("A contract needs to be selected first");
   } else {
-    var newwin=window.open('ProductSelector.do?command=ListProducts&listType=single&reset=true&contractId=' + contractId + '&previousSelection='+document.getElementById(hiddenFieldId).value+'&displayFieldId='+displayFieldId+'&hiddenFieldId='+hiddenFieldId + params, title, windowParams);
+    var newwin=window.open('ProductsCatalog.do?command=PopupSelector&listType=single&reset=true&contractId=' + contractId + '&previousSelection=' + document.getElementById(hiddenFieldId).value + '&previousSelectionDisplay=' + document.getElementById(displayFieldId).text + '&displayFieldId=' + displayFieldId + '&hiddenFieldId=' + hiddenFieldId + params, title, windowParams);
     newwin.focus();
     if (newwin != null) {
       if (newwin.opener == null)
@@ -24,20 +24,22 @@ function popProductListSingle(hiddenFieldId, displayFieldId, params, orgId) {
   }
 }
 
-function setParentList(selectedValues, selectedIds, listType, displayFieldId, hiddenFieldId){
-  if(selectedIds.length == 0 && listType == "list"){
+function setParentList(productIds, productNames, listType, displayFieldId, hiddenFieldId, browserId){
+  if(productNames.length == 0 && listType == "list"){
     opener.deleteOptions(displayFieldId);
     opener.insertOption("None Selected", "", displayFieldId);
   }
   var i = 0;
-  opener.document.getElementById(hiddenFieldId).value = selectedIds[i];
-  opener.changeDivContent(displayFieldId, selectedValues[i]);
-   if (opener.document.getElementById('productSku')){
-     opener.document.getElementById('productSku').value = selectedValues[i];
-   }
-
+  if (listType == "list"){
+    opener.deleteOptions(displayFieldId);
+    for (i=0; i < productNames.length; i++) {
+      opener.insertOption(productNames[i], productIds[i], displayFieldId);
+    }
+  } else if(listType == "single") {
+    opener.document.getElementById(hiddenFieldId).value = productIds[i];
+    opener.changeDivContent(displayFieldId, productNames[i]);
+  }
 }
-
 
 function SetChecked(val, chkName, thisForm, browser) {
   var frm = document.forms[thisForm];

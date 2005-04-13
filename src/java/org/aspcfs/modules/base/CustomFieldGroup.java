@@ -32,6 +32,7 @@ public class CustomFieldGroup extends ArrayList {
   public final static int TRUE = 1;
   public final static int FALSE = 0;
   protected HashMap errors = new HashMap();
+  protected HashMap warnings = new HashMap();
 
   //Properties for a Group
   private int id = -1;
@@ -72,7 +73,15 @@ public class CustomFieldGroup extends ArrayList {
   public CustomFieldGroup(ResultSet rs) throws SQLException {
     buildRecord(rs);
   }
-  
+
+
+  /**
+   *  Constructor for the CustomFieldGroup object
+   *
+   *@param  db                Description of the Parameter
+   *@param  thisId            Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public CustomFieldGroup(Connection db, int thisId) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "SELECT * " +
@@ -97,7 +106,13 @@ public class CustomFieldGroup extends ArrayList {
   public void setId(int tmp) {
     this.id = tmp;
   }
-  
+
+
+  /**
+   *  Sets the id attribute of the CustomFieldGroup object
+   *
+   *@param  tmp  The new id value
+   */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
   }
@@ -167,7 +182,13 @@ public class CustomFieldGroup extends ArrayList {
   public void setLevel(int tmp) {
     this.level = tmp;
   }
-  
+
+
+  /**
+   *  Sets the level attribute of the CustomFieldGroup object
+   *
+   *@param  tmp  The new level value
+   */
   public void setLevel(String tmp) {
     this.level = Integer.parseInt(tmp);
   }
@@ -182,7 +203,13 @@ public class CustomFieldGroup extends ArrayList {
   public void setStartDate(java.sql.Timestamp tmp) {
     this.startDate = tmp;
   }
-   
+
+
+  /**
+   *  Sets the startDate attribute of the CustomFieldGroup object
+   *
+   *@param  tmp  The new startDate value
+   */
   public void setStartDate(String tmp) {
     this.startDate = DateUtils.parseTimestampString(tmp);
   }
@@ -197,7 +224,13 @@ public class CustomFieldGroup extends ArrayList {
   public void setEndDate(java.sql.Timestamp tmp) {
     this.endDate = tmp;
   }
-  
+
+
+  /**
+   *  Sets the endDate attribute of the CustomFieldGroup object
+   *
+   *@param  tmp  The new endDate value
+   */
   public void setEndDate(String tmp) {
     this.endDate = DateUtils.parseTimestampString(tmp);
   }
@@ -212,15 +245,33 @@ public class CustomFieldGroup extends ArrayList {
   public void setEntered(java.sql.Timestamp tmp) {
     this.entered = tmp;
   }
-  
+
+
+  /**
+   *  Sets the entered attribute of the CustomFieldGroup object
+   *
+   *@param  tmp  The new entered value
+   */
   public void setEntered(String tmp) {
     this.entered = DateUtils.parseTimestampString(tmp);
   }
-  
+
+
+  /**
+   *  Sets the modified attribute of the CustomFieldGroup object
+   *
+   *@param  tmp  The new modified value
+   */
   public void setModified(java.sql.Timestamp tmp) {
     this.modified = tmp;
   }
-  
+
+
+  /**
+   *  Sets the modified attribute of the CustomFieldGroup object
+   *
+   *@param  tmp  The new modified value
+   */
   public void setModified(String tmp) {
     this.modified = DateUtils.parseTimestampString(tmp);
   }
@@ -235,7 +286,13 @@ public class CustomFieldGroup extends ArrayList {
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
   }
-  
+
+
+  /**
+   *  Sets the enabled attribute of the CustomFieldGroup object
+   *
+   *@param  tmp  The new enabled value
+   */
   public void setEnabled(String tmp) {
     this.enabled = ("on".equalsIgnoreCase(tmp) || "false".equalsIgnoreCase(tmp));
   }
@@ -319,6 +376,26 @@ public class CustomFieldGroup extends ArrayList {
       CustomField thisField = (CustomField) i.next();
       thisField.setParameters(context);
     }
+  }
+
+
+  /**
+   *  Sets the warnings attribute of the CustomFieldGroup object
+   *
+   *@param  tmp  The new warnings value
+   */
+  public void setWarnings(HashMap tmp) {
+    this.warnings = tmp;
+  }
+
+
+  /**
+   *  Gets the warnings attribute of the CustomFieldGroup object
+   *
+   *@return    The warnings value
+   */
+  public HashMap getWarnings() {
+    return warnings;
   }
   
 
@@ -408,7 +485,13 @@ public class CustomFieldGroup extends ArrayList {
   public java.sql.Timestamp getEntered() {
     return entered;
   }
-  
+
+
+  /**
+   *  Gets the modified attribute of the CustomFieldGroup object
+   *
+   *@return    The modified value
+   */
   public java.sql.Timestamp getModified() {
     return modified;
   }
@@ -535,9 +618,6 @@ public class CustomFieldGroup extends ArrayList {
    *@since
    */
   public boolean insertGroup(Connection db) throws SQLException {
-    if (!isGroupValid()) {
-      return false;
-    }
     StringBuffer sql = new StringBuffer();
     level = this.retrieveNextLevel(db);
     sql.append("INSERT INTO custom_field_group ");
@@ -578,7 +658,7 @@ public class CustomFieldGroup extends ArrayList {
    *@since
    */
   public boolean updateGroup(Connection db) throws SQLException {
-    if (!isGroupValid() || id == -1) {
+    if (id == -1) {
       return false;
     }
 
@@ -727,22 +807,6 @@ public class CustomFieldGroup extends ArrayList {
 
 
   /**
-   *  Gets the groupValid attribute of the CustomFieldGroup object
-   *
-   *@return    The groupValid value
-   */
-  private boolean isGroupValid() {
-    if (categoryId == -1) {
-      errors.put("actionError", "Form data is missing");
-    }
-    if (name == null || name.equals("")) {
-      errors.put("nameError", "Name is required");
-    }
-    return (errors.size() == 0);
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  rs                Description of Parameter
@@ -804,12 +868,20 @@ public class CustomFieldGroup extends ArrayList {
     return i;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
   private int retrieveNextLevel(Connection db) throws SQLException {
     int returnLevel = 0;
     PreparedStatement pst = db.prepareStatement(
-      "SELECT MAX(level) as level " +
-      "FROM custom_field_group " +
-      "WHERE category_id = ? ");
+        "SELECT MAX(level) as level " +
+        "FROM custom_field_group " +
+        "WHERE category_id = ? ");
     pst.setInt(1, categoryId);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

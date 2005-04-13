@@ -7,7 +7,7 @@
  */
  
 CREATE TABLE help_module (
-  module_id serial PRIMARY KEY,
+  module_id SERIAL PRIMARY KEY,
   category_id INT REFERENCES permission_category(category_id), 
   module_brief_description TEXT,
   module_detail_description TEXT

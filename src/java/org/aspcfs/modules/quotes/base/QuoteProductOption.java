@@ -15,14 +15,13 @@
  */
 package org.aspcfs.modules.quotes.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.products.configurator.*;
+import org.aspcfs.modules.products.base.ProductOptionConfigurator;
+
+import java.sql.*;
+import java.util.ArrayList;
 
 /**
  *  Description of the Class
@@ -50,8 +49,178 @@ public class QuoteProductOption extends GenericBean {
   private Timestamp timestampValue = null;
   private int integerValue = -1;
   private String textValue = null;
-  // product details
+  // helper properties
   private int productId = -1;
+  private int optionId = -1;
+  private int configuratorId = -1;
+
+  //configurator properties
+  private String quoteUserInput = null;
+  private double quotePriceAdjust = 0;
+  private String quoteHtml = null;
+
+  private boolean buildConfigDetails = false;
+
+
+  /**
+   *  Gets the quotePriceAdjust attribute of the QuoteProductOption object
+   *
+   *@return    The quotePriceAdjust value
+   */
+  public double getQuotePriceAdjust() {
+    return quotePriceAdjust;
+  }
+
+
+  /**
+   *  Sets the quotePriceAdjust attribute of the QuoteProductOption object
+   *
+   *@param  tmp  The new quotePriceAdjust value
+   */
+  public void setQuotePriceAdjust(double tmp) {
+    this.quotePriceAdjust = tmp;
+  }
+
+
+  /**
+   *  Sets the quotePriceAdjust attribute of the QuoteProductOption object
+   *
+   *@param  tmp  The new quotePriceAdjust value
+   */
+  public void setQuotePriceAdjust(String tmp) {
+    this.quotePriceAdjust = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   *  Gets the quoteHtml attribute of the QuoteProductOption object
+   *
+   *@return    The quoteHtml value
+   */
+  public String getQuoteHtml() {
+    return quoteHtml;
+  }
+
+
+  /**
+   *  Sets the quoteHtml attribute of the QuoteProductOption object
+   *
+   *@param  tmp  The new quoteHtml value
+   */
+  public void setQuoteHtml(String tmp) {
+    this.quoteHtml = tmp;
+  }
+
+
+  /**
+   *  Gets the quoteUserInput attribute of the QuoteProductOption object
+   *
+   *@return    The quoteUserInput value
+   */
+  public String getQuoteUserInput() {
+    return quoteUserInput;
+  }
+
+
+  /**
+   *  Sets the quoteUserInput attribute of the QuoteProductOption object
+   *
+   *@param  tmp  The new quoteUserInput value
+   */
+  public void setQuoteUserInput(String tmp) {
+    this.quoteUserInput = tmp;
+  }
+
+
+  /**
+   *  Gets the buildConfigDetails attribute of the QuoteProductOption object
+   *
+   *@return    The buildConfigDetails value
+   */
+  public boolean getBuildConfigDetails() {
+    return buildConfigDetails;
+  }
+
+
+  /**
+   *  Sets the buildConfigDetails attribute of the QuoteProductOption object
+   *
+   *@param  tmp  The new buildConfigDetails value
+   */
+  public void setBuildConfigDetails(boolean tmp) {
+    this.buildConfigDetails = tmp;
+  }
+
+
+  /**
+   *  Sets the buildConfigDetails attribute of the QuoteProductOption object
+   *
+   *@param  tmp  The new buildConfigDetails value
+   */
+  public void setBuildConfigDetails(String tmp) {
+    this.buildConfigDetails = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the configuratorId attribute of the QuoteProductOption object
+   *
+   *@return    The configuratorId value
+   */
+  public int getConfiguratorId() {
+    return configuratorId;
+  }
+
+
+  /**
+   *  Sets the configuratorId attribute of the QuoteProductOption object
+   *
+   *@param  tmp  The new configuratorId value
+   */
+  public void setConfiguratorId(int tmp) {
+    this.configuratorId = tmp;
+  }
+
+
+  /**
+   *  Sets the configuratorId attribute of the QuoteProductOption object
+   *
+   *@param  tmp  The new configuratorId value
+   */
+  public void setConfiguratorId(String tmp) {
+    this.configuratorId = Integer.parseInt(tmp);
+  }
+
+
+
+  /**
+   *  Gets the optionId attribute of the QuoteProductOption object
+   *
+   *@return    The optionId value
+   */
+  public int getOptionId() {
+    return optionId;
+  }
+
+
+  /**
+   *  Sets the optionId attribute of the QuoteProductOption object
+   *
+   *@param  tmp  The new optionId value
+   */
+  public void setOptionId(int tmp) {
+    this.optionId = tmp;
+  }
+
+
+  /**
+   *  Sets the optionId attribute of the QuoteProductOption object
+   *
+   *@param  tmp  The new optionId value
+   */
+  public void setOptionId(String tmp) {
+    this.optionId = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -576,25 +745,23 @@ public class QuoteProductOption extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT opt.*, " +
-        " bool.value AS boolean_value,  " +
-        " float.value AS float_value, intr.value AS integer_value, " +
-        " tst.value AS timestamp_value, txt.value AS text_value, " +
-        " prod.product_id " +
-        " FROM quote_product_options opt " +
-        " LEFT JOIN quote_product_option_boolean bool " +
-        " ON ( opt.quote_product_option_id = bool.quote_product_option_id ) " +
-        " LEFT JOIN quote_product_option_float float " +
-        " ON ( opt.quote_product_option_id = float.quote_product_option_id ) " +
-        " LEFT JOIN quote_product_option_timestamp tst " +
-        " ON ( opt.quote_product_option_id = tst.quote_product_option_id ) " +
-        " LEFT JOIN quote_product_option_integer intr " +
-        " ON ( opt.quote_product_option_id = intr.quote_product_option_id ) " +
-        " LEFT JOIN quote_product_option_text txt " +
-        " ON ( opt.quote_product_option_id = txt.quote_product_option_id ), " +
-        " quote_product prod " +
-        " WHERE opt.item_id = prod.item_id " +
-        " AND opt.quote_product_option_id = ? "
+        "SELECT opt.*, " +
+        "bool.value AS boolean_value, " +
+        "float.value AS float_value, intr.value AS integer_value, " +
+        "tst.value AS timestamp_value, txt.value AS text_value, " +
+        "pom.option_id, po.configurator_id, " +
+        "prod.product_id " +
+        "FROM quote_product_options opt " +
+        "LEFT JOIN quote_product_option_boolean bool ON ( opt.quote_product_option_id = bool.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_float float ON ( opt.quote_product_option_id = float.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_timestamp tst ON ( opt.quote_product_option_id = tst.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_integer intr ON ( opt.quote_product_option_id = intr.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_text txt ON ( opt.quote_product_option_id = txt.quote_product_option_id ) " +
+        "LEFT JOIN product_option_map pom ON (opt.product_option_id = pom.product_option_id) " +
+        "LEFT JOIN product_option po ON (pom.option_id = po.option_id), " +
+        "quote_product prod " +
+        "WHERE opt.item_id = prod.item_id " +
+        "AND opt.quote_product_option_id = ? "
         );
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -606,6 +773,31 @@ public class QuoteProductOption extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Quote Product Option not found");
     }
+    if (buildConfigDetails) {
+      this.buildConfigDetails(db);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildConfigDetails(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Quote Product Option ID not specified");
+    }
+    // load the configurator
+    OptionConfigurator configurator =
+        (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, this.getConfiguratorId());
+    // query the properties
+    configurator.queryProperties(db, this.getOptionId(), false);
+    configurator.queryQuoteProperties(db, this.getId());
+    this.setQuoteHtml(configurator.getQuoteHtml());
+    this.setQuoteUserInput(configurator.getQuoteUserInput());
+    this.setQuotePriceAdjust(configurator.getQuotePriceAdjust());
   }
 
 
@@ -629,13 +821,15 @@ public class QuoteProductOption extends GenericBean {
     extendedPrice = DatabaseUtils.getDouble(rs, "extended_price");
     totalPrice = DatabaseUtils.getDouble(rs, "total_price");
     statusId = DatabaseUtils.getInt(rs, "status_id");
+    optionId = DatabaseUtils.getInt(rs, "option_id");
+    configuratorId = DatabaseUtils.getInt(rs, "configurator_id");
     productId = DatabaseUtils.getInt(rs, "product_id");
     // quote_product_option_ values tables
     booleanValue = rs.getBoolean("boolean_value");
     floatValue = DatabaseUtils.getDouble(rs, "float_value");
     integerValue = DatabaseUtils.getInt(rs, "integer_value");
-    timestampValue = rs.getTimestamp("timestamp_value");
     textValue = rs.getString("text_value");
+    timestampValue = rs.getTimestamp("timestamp_value");
   }
 
 
@@ -647,103 +841,30 @@ public class QuoteProductOption extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid(db)) {
-      return false;
-    }
-    try {
-      db.setAutoCommit(false);
-      StringBuffer sql = new StringBuffer();
-      sql.append(
-          " INSERT INTO quote_product_options(item_id, product_option_id, " +
-          "   quantity, price_currency, price_amount, recurring_currency, " +
-          "   recurring_amount, recurring_type, extended_price, total_price, status_id) "
-          );
+    StringBuffer sql = new StringBuffer();
+    sql.append(
+        " INSERT INTO quote_product_options(item_id, product_option_id, " +
+        "   quantity, price_currency, price_amount, recurring_currency, " +
+        "   recurring_amount, recurring_type, extended_price, total_price, status_id) "
+        );
 
-      sql.append(" VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setInt(++i, this.getItemId());
-      pst.setInt(++i, this.getProductOptionId());
-      DatabaseUtils.setInt(pst, ++i, this.getQuantity());
-      DatabaseUtils.setInt(pst, ++i, this.getPriceCurrency());
-      pst.setDouble(++i, this.getPriceAmount());
-      DatabaseUtils.setInt(pst, ++i, this.getRecurringCurrency());
-      pst.setDouble(++i, this.getRecurringAmount());
-      DatabaseUtils.setInt(pst, ++i, this.getRecurringType());
-      pst.setDouble(++i, this.getExtendedPrice());
-      pst.setDouble(++i, this.getTotalPrice());
-      DatabaseUtils.setInt(pst, ++i, this.getStatusId());
-      pst.execute();
-      pst.close();
-      this.setId(DatabaseUtils.getCurrVal(db, "quote_product_options_quote_product_option_id_seq"));
-
-      if (this.getBooleanValue() != false) {
-        sql = new StringBuffer("");
-        sql.append(
-            " INSERT INTO quote_product_option_boolean ( quote_product_option_id, value )" +
-            " VALUES ( ? , ? ) "
-            );
-        pst = db.prepareStatement(sql.toString());
-        pst.setInt(1, id);
-        pst.setBoolean(2, this.getBooleanValue());
-        pst.execute();
-        pst.close();
-      }
-      if (((int) this.getFloatValue()) > 0) {
-        sql = new StringBuffer("");
-        sql.append(
-            " INSERT INTO quote_product_option_float ( quote_product_option_id, value )" +
-            " VALUES ( ? , ? ) "
-            );
-        pst = db.prepareStatement(sql.toString());
-        pst.setInt(1, id);
-        pst.setDouble(2, this.getFloatValue());
-        pst.execute();
-        pst.close();
-      }
-      if (this.getTimestampValue() != null) {
-        sql = new StringBuffer("");
-        sql.append(
-            " INSERT INTO quote_product_option_timestamp ( quote_product_option_id, value )" +
-            " VALUES ( ? , ? ) "
-            );
-        pst = db.prepareStatement(sql.toString());
-        pst.setInt(1, id);
-        pst.setTimestamp(2, this.getTimestampValue());
-        pst.execute();
-        pst.close();
-      }
-      if (this.getIntegerValue() != -1) {
-        sql = new StringBuffer("");
-        sql.append(
-            " INSERT INTO quote_product_option_integer ( quote_product_option_id, value )" +
-            " VALUES ( ? , ? ) "
-            );
-        pst = db.prepareStatement(sql.toString());
-        pst.setInt(1, id);
-        DatabaseUtils.setInt(pst, 2, this.getIntegerValue());
-        pst.execute();
-        pst.close();
-      }
-      if (this.getTextValue() != null) {
-        sql = new StringBuffer("");
-        sql.append(
-            " INSERT INTO quote_product_option_text ( quote_product_option_id, value )" +
-            " VALUES ( ? , ? ) "
-            );
-        pst = db.prepareStatement(sql.toString());
-        pst.setInt(1, id);
-        pst.setString(2, this.getTextValue());
-        pst.execute();
-        pst.close();
-      }
-      db.commit();
-    } catch (Exception e) {
-      db.rollback();
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
-    }
+    sql.append(" VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, this.getItemId());
+    pst.setInt(++i, this.getProductOptionId());
+    DatabaseUtils.setInt(pst, ++i, this.getQuantity());
+    DatabaseUtils.setInt(pst, ++i, this.getPriceCurrency());
+    pst.setDouble(++i, this.getPriceAmount());
+    DatabaseUtils.setInt(pst, ++i, this.getRecurringCurrency());
+    pst.setDouble(++i, this.getRecurringAmount());
+    DatabaseUtils.setInt(pst, ++i, this.getRecurringType());
+    pst.setDouble(++i, this.getExtendedPrice());
+    pst.setDouble(++i, this.getTotalPrice());
+    DatabaseUtils.setInt(pst, ++i, this.getStatusId());
+    pst.execute();
+    pst.close();
+    this.setId(DatabaseUtils.getCurrVal(db, "quote_product_options_quote_product_option_id_seq"));
     return true;
   }
 
@@ -761,49 +882,53 @@ public class QuoteProductOption extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Quote Product Option ID not specified");
     }
+    boolean commit = true;
     try {
-      if (this.getBooleanValue() != false) {
-        pst = db.prepareStatement(" DELETE FROM quote_product_option_boolean WHERE quote_product_option_id = ? ");
-        pst.setInt(1, this.getId());
-        pst.execute();
-        pst.close();
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
       }
-//  System.out.println("QuoteProductOption:");
+      pst = db.prepareStatement(" DELETE FROM quote_product_option_boolean WHERE quote_product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
 
-      if (((int) this.getFloatValue()) > 0) {
-        pst = db.prepareStatement(" DELETE FROM quote_product_option_float WHERE quote_product_option_id = ? ");
-        pst.setInt(1, this.getId());
-        pst.execute();
-        pst.close();
-      }
-      if (this.getTimestampValue() != null) {
-        pst = db.prepareStatement(" DELETE FROM quote_product_option_timestamp WHERE quote_product_option_id = ? ");
-        pst.setInt(1, this.getId());
-        pst.execute();
-        pst.close();
-      }
-      if (this.getIntegerValue() != -1) {
-        pst = db.prepareStatement(" DELETE FROM quote_product_option_integer WHERE quote_product_option_id = ? ");
-        pst.setInt(1, this.getId());
-        pst.execute();
-        pst.close();
-      }
-      if (this.getTextValue() != null) {
-        pst = db.prepareStatement(" DELETE FROM quote_product_option_text WHERE quote_product_option_id = ? ");
-        pst.setInt(1, this.getId());
-        pst.execute();
-        pst.close();
-      }
+      pst = db.prepareStatement(" DELETE FROM quote_product_option_float WHERE quote_product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      result = pst.execute();
+      pst.close();
+
+      pst = db.prepareStatement(" DELETE FROM quote_product_option_timestamp WHERE quote_product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+
+      pst = db.prepareStatement(" DELETE FROM quote_product_option_integer WHERE quote_product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+
+      pst = db.prepareStatement(" DELETE FROM quote_product_option_text WHERE quote_product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
 
       pst = db.prepareStatement(" DELETE FROM quote_product_options WHERE quote_product_option_id = ? ");
       pst.setInt(1, this.getId());
       result = pst.execute();
       pst.close();
-
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      e.printStackTrace(System.out);
+      if (commit) {
+        db.rollback();
+      }
     } finally {
-//      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return result;
   }
@@ -818,7 +943,7 @@ public class QuoteProductOption extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
@@ -847,89 +972,59 @@ public class QuoteProductOption extends GenericBean {
     pst.setDouble(++i, this.getTotalPrice());
     DatabaseUtils.setInt(pst, ++i, this.getStatusId());
     pst.setInt(++i, this.getId());
-
     resultCount = pst.executeUpdate();
     pst.close();
-    int result1Count = -1;
-    if (this.getBooleanValue() != false) {
-      sql = new StringBuffer("");
-      sql.append(
-          " UPDATE quote_product_option_boolean " +
-          " SET value = ? " +
-          " WHERE quote_product_option_id = ? "
-          );
-      pst = db.prepareStatement(sql.toString());
-      pst.setBoolean(1, this.getBooleanValue());
-      DatabaseUtils.setInt(pst, 2, this.getId());
-      result1Count = pst.executeUpdate();
-      pst.close();
-    }
-    if (((int) this.getFloatValue()) > 0) {
-      sql = new StringBuffer("");
-      sql.append(
-          " UPDATE quote_product_option_float " +
-          " SET value = ? " +
-          " WHERE quote_product_option_id = ? "
-          );
-      pst = db.prepareStatement(sql.toString());
-      pst.setDouble(1, this.getFloatValue());
-      DatabaseUtils.setInt(pst, 2, this.getId());
-      result1Count = pst.executeUpdate();
-      pst.close();
-    }
-    if (this.getTimestampValue() != null) {
-      sql = new StringBuffer("");
-      sql.append(
-          " UPDATE quote_product_option_timestamp " +
-          " SET value = ? " +
-          " WHERE quote_product_option_id = ? "
-          );
-      pst = db.prepareStatement(sql.toString());
-      pst.setTimestamp(1, this.getTimestampValue());
-      DatabaseUtils.setInt(pst, 2, this.getId());
-      result1Count = pst.executeUpdate();
-      pst.close();
-    }
-    if (this.getIntegerValue() != -1) {
-      sql = new StringBuffer("");
-      sql.append(
-          " UPDATE quote_product_option_integer " +
-          " SET value = ? " +
-          " WHERE quote_product_option_id = ? "
-          );
-      pst = db.prepareStatement(sql.toString());
-      DatabaseUtils.setInt(pst, 1, this.getIntegerValue());
-      DatabaseUtils.setInt(pst, 2, this.getId());
-      result1Count = pst.executeUpdate();
-      pst.close();
-
-    }
-    if (this.getTextValue() != null) {
-      sql = new StringBuffer("");
-      sql.append(
-          " UPDATE quote_product_option_text " +
-          " SET value = ? " +
-          " WHERE quote_product_option_id = ? "
-          );
-      pst = db.prepareStatement(sql.toString());
-      pst.setString(1, this.getTextValue());
-      DatabaseUtils.setInt(pst, 2, this.getId());
-      result1Count = pst.executeUpdate();
-      pst.close();
-    }
     return resultCount;
   }
 
 
   /**
-   *  Gets the valid attribute of the QuoteProductOption object
+   *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@return                   The valid value
+   *@param  productId         Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  protected boolean isValid(Connection db) throws SQLException {
-    return true;
+  public void copyQuoteProductOption(Connection db, int productId) throws SQLException {
+    QuoteProductOption copyOption = new QuoteProductOption();
+    copyOption.setExtendedPrice(this.getExtendedPrice());
+    copyOption.setItemId(productId);
+    copyOption.setPriceAmount(this.getPriceAmount());
+    copyOption.setPriceCurrency(this.getPriceCurrency());
+    copyOption.setProductId(this.getProductId());
+    copyOption.setProductOptionId(this.getProductOptionId());
+    copyOption.setQuantity(this.getQuantity());
+    copyOption.setRecurringAmount(this.getRecurringAmount());
+    copyOption.setRecurringCurrency(this.getRecurringCurrency());
+    copyOption.setRecurringType(this.getRecurringType());
+    copyOption.setStatusId(this.getStatusId());
+    copyOption.setTotalPrice(this.getTotalPrice());
+    
+    copyOption.setOptionId(this.getOptionId());
+    copyOption.setConfiguratorId(this.getConfiguratorId());
+    copyOption.setQuoteUserInput(this.getQuoteUserInput());
+    copyOption.setQuotePriceAdjust(this.getQuotePriceAdjust());
+    OptionConfigurator configurator =
+            (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, copyOption.getConfiguratorId());
+    configurator.queryProperties(db, copyOption.getOptionId(), false);
+    //save the quote product option and its properties
+    configurator.saveQuoteOption(db, copyOption);
   }
+
+
+  /**
+   *  Gets the numberParams attribute of the QuoteProductOption class
+   *
+   *@return    The numberParams value
+   */
+  public static ArrayList getNumberParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("price_amount");
+    thisList.add("recurring_amount");
+    thisList.add("extended_price");
+    thisList.add("total_price");
+    return thisList;
+  }
+
 }
 

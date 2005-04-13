@@ -21,49 +21,46 @@
 <script language="JavaScript">
   function checkForm(form) {
     if (form.license.value.length == 0) {
-      alert("Enter the license key in the field to continue");
+      alert(label("check.licensekey","Enter the license key in the field to continue"));
       return false;
     }
     return true;
   }
 </script>
-<body onLoad="javascript:document.forms[0].license.focus();">
+<body onLoad="javascript:document.register.license.focus();">
 <dhv:formMessage showSpace="false" />
 <form name="register" action="Setup.do?command=Validate" method="post" onSubmit="return checkForm(this)">
 <table border="0" width="100%">
   <tr class="sectionTitle">
-    <th>Information</th>
+    <th><dhv:label name="setup.information">Information</dhv:label></th>
   </tr>
   <tr>
     <td>
-      If you have already registered for Centric CRM, you should have received a
-      license file by email.<br>
+      <dhv:label name="setup.ifRegisteredLicenceByEmail.text">If you have already registered for Centric CRM, you should have received a license file by email.</dhv:label><br>
       <ul>
-      <li>The license can only be used on the system that requested it</li>
-      <li>If you have misplaced your license or you are installing Centric CRM on a different server, then you can
-      <a href="Setup.do?command=Register">request a new license</a>
-      to be sent by email</li>
+      <li><dhv:label name="setup.licenseOnlyUsedOnSystem.text">The license can only be used on the system that requested it</dhv:label></li>
+      <li><dhv:label name="setup.installationIssues.license.text" param="license=<a href=\"Setup.do?command=Register\">|endLicense=</a>">If you have misplaced your license or you are installing Centric CRM on a different server, then you can <a href="Setup.do?command=Register">request a new license</a> to be sent by email</dhv:label></li>
       </ul>
     </td>
   </tr>
   <tr class="sectionTitle">
-    <th>Validation</th>
+    <th><dhv:label name="setup.validation">Validation</dhv:label></th>
   </tr>
   <tr>
     <td nowrap>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            License Key
+            <dhv:label name="setup.licenseKey">License Key</dhv:label>
           </td>
           <td nowrap>
-            Paste your license into the text field to continue:<br>
+            <dhv:label name="setup.pasteYourLicenseToContinue.text">Paste your license into the text field to continue:</dhv:label><br>
             <textarea cols="60" rows="5" name="license"></textarea>
           </td>
         </tr>
       </table>
       <br>
-      <input type="submit" value="Continue >"/>
+      <input type="submit" value="<dhv:label name="button.continueR">Continue ></dhv:label>"/>
     </td>
   </tr>
 </table>

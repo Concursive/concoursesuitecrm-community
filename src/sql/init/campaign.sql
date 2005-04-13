@@ -47,3 +47,4 @@ INSERT INTO lookup_access_types (link_module_id, description, default_item, leve
 INSERT INTO lookup_access_types (link_module_id, description, default_item, level, rule_id) VALUES (707031028, 'Public', @FALSE@, 2, 626030334);
 INSERT INTO lookup_access_types (link_module_id, description, default_item, level, rule_id) VALUES (707031028, 'Personal', @FALSE@, 3, 626030333);
                                                                                             
+INSERT INTO survey (name, description, intro, outro, type, enteredby, modifiedby) values ('Address Update Request', '','','',2,0,0);

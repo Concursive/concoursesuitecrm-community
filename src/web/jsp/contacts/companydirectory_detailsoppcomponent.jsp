@@ -27,204 +27,196 @@
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
 <form name="componentDetails" action="ExternalContactsOpps.do?command=ModifyComponent&id=<%= oppComponentDetails.getId() %>" method="post">
-<dhv:evaluate exp="<%= !isPopup(request) %>">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do">Contacts</a> > 
-<a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
-<a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>">Contact Details</a> >
-<a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>">Opportunities</a> >
-<a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= oppComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>">Opportunity Details</a> >
-Component Details
+<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+<a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
+<a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.Opportunities">Opportunities</dhv:label></a> >
+<a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= oppComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> >
+<dhv:label name="accounts.accounts_contacts_oppcomponent_add.ComponentDetails">Component Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<%@ include file="contact_details_header_include.jsp" %>
-<% String param1 = "id=" + ContactDetails.getId(); 
-   String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-<dhv:container name="contacts" selected="opportunities" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <%-- Begin container content --%>
-      <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
-      <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
-      <% FileItem thisFile = new FileItem(); %>
-      <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
-        <%= thisFile.getImageTag() %>
-      </dhv:evaluate>
-      <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
-      <br>
-      <br>
-      </dhv:permission>
-<dhv:sharing primaryBean="opportunityHeader" secondaryBeans="ContactDetails" action="edit"><input type="button" value="Modify" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=ModifyComponent&id=<%= oppComponentDetails.getId() %>&headerId=<%= oppComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';submit();"></dhv:sharing>
-<dhv:sharing primaryBean="opportunityHeader" secondaryBeans="ContactDetails" action="delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= ContactDetails.getId() %>&id=<%= oppComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=DetailsOpp&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:sharing>
-<dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
-<br>&nbsp;
-</dhv:permission>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-      <strong><%= toHtml(oppComponentDetails.getDescription()) %></strong>
-    </th>
-  </tr>  
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Owner
-    </td>
-    <td valign="center">
-      <dhv:username id="<%= oppComponentDetails.getOwner() %>"/>
-      <dhv:evaluate exp="<%= !(oppComponentDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
-    </td>
-  </tr>
-  <dhv:evaluate exp="<%= hasText(oppComponentDetails.getTypes().valuesAsString()) %>">
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Opportunity Type(s)
-    </td>
-    <td>  
-      <%= toHtml(oppComponentDetails.getTypes().valuesAsString()) %>
-     </td>
-  </tr>
-  </dhv:evaluate>  
-  <dhv:evaluate exp="<%= hasText(oppComponentDetails.getNotes()) %>">
-  <tr class="containerBody">
-    <td valign="top" nowrap class="formLabel">Additional Notes</td>
-    <td valign="top"><%= toHtml(oppComponentDetails.getNotes()) %></td>
-  </tr>
+<dhv:container name="contacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <img src="images/icons/stock_form-currency-field-16.gif" border="0" align="absmiddle">
+  <strong><%= toHtml(opportunityHeader.getDescription()) %></strong>
+  <% FileItem thisFile = new FileItem(); %>
+  <dhv:evaluate if="<%= opportunityHeader.hasFiles() %>">
+    <%= thisFile.getImageTag() %>
   </dhv:evaluate>
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Prob. of Close
-    </td>
-    <td>
-      <%= oppComponentDetails.getCloseProbValue() %>%
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Est. Close Date
-    </td>
-    <td>
-      <zeroio:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" dateOnly="true" timeZone="<%= oppComponentDetails.getCloseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% if(!User.getTimeZone().equals(oppComponentDetails.getCloseDateTimeZone())){%>
-      <br />
-      <zeroio:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% } %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Low Estimate
-    </td>
-    <td>
-      <zeroio:currency value="<%= oppComponentDetails.getLow() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Best Guess
-    </td>
-    <td>
-      <zeroio:currency value="<%= oppComponentDetails.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      High Estimate
-    </td>
-    <td>
-      <zeroio:currency value="<%= oppComponentDetails.getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
-    </td>
-  </tr>  
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Est. Term
-    </td>
-    <td>
-      <%= oppComponentDetails.getTerms() %> months
-    </td>
-  </tr>  
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Current Stage
-    </td>
-    <td>
-      <%= toHtml(oppComponentDetails.getStageName()) %>&nbsp;
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Current Stage Date
-    </td>
-    <td>
-      <zeroio:tz timestamp="<%= oppComponentDetails.getStageDate() %>" dateOnly="true" default="&nbsp;"/>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Est. Commission
-    </td>
-    <td>
-      <%= oppComponentDetails.getCommissionValue() %>%
-    </td>
-  </tr>
-<dhv:evaluate exp="<%= hasText(oppComponentDetails.getAlertText()) %>">
-   <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Alert Description
-    </td>
-    <td>
-       <%= toHtml(oppComponentDetails.getAlertText()) %>
-    </td>
-  </tr>
-</dhv:evaluate>
-<dhv:evaluate exp="<%= oppComponentDetails.getAlertDate() != null %>">
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Alert Date
-    </td>
-    <td>
-      <zeroio:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= oppComponentDetails.getAlertDateTimeZone() %>" showTimeZone="true"  default="&nbsp;"/>
-      <% if(!User.getTimeZone().equals(oppComponentDetails.getAlertDateTimeZone())){%>
-      <br>
-      <zeroio:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"  default="&nbsp;" />
-      <% } %>
-    </td>
-  </tr>
-</dhv:evaluate>  
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Entered
-    </td>
-    <td>
-      <dhv:username id="<%= oppComponentDetails.getEnteredBy() %>"/>
-      <zeroio:tz timestamp="<%= oppComponentDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel" nowrap>
-      Modified
-    </td>
-    <td>
-      <dhv:username id="<%= oppComponentDetails.getModifiedBy() %>"/>
-      <zeroio:tz timestamp="<%= oppComponentDetails.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
-    </td>
-  </tr>
-</table>
-<dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"><br></dhv:permission>
-<dhv:sharing primaryBean="opportunityHeader" secondaryBeans="ContactDetails" action="edit"><input type="button" value="Modify" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=ModifyComponent&id=<%= oppComponentDetails.getId() %>&headerId=<%= oppComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';submit();"></dhv:sharing>
-<dhv:sharing primaryBean="opportunityHeader" secondaryBeans="ContactDetails" action="delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= ContactDetails.getId() %>&id=<%= oppComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=DetailsOpp&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:sharing>
-<dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"></dhv:permission></td>
-</td></tr>
-</table>
-<input type="hidden" name="headerId" value="<%= oppComponentDetails.getHeaderId() %>">
-<input type="hidden" name="id" value="<%= oppComponentDetails.getId() %>">
-<input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
-<input type="hidden" name="actionSource" value="ExternalContactsOppComponents">
-<%= addHiddenParams(request, "popup|popupType|actionId") %>
+  <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
+    <br>
+    <br>
+  </dhv:permission>
+  <dhv:sharing primaryBean="opportunityHeader" secondaryBeans="ContactDetails" action="edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=ModifyComponent&id=<%= oppComponentDetails.getId() %>&headerId=<%= oppComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';submit();"></dhv:sharing>
+  <dhv:sharing primaryBean="opportunityHeader" secondaryBeans="ContactDetails" action="delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= ContactDetails.getId() %>&id=<%= oppComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=DetailsOpp&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:sharing>
+  <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete">
+    <br>&nbsp;
+  </dhv:permission>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <strong><%= toHtml(oppComponentDetails.getDescription()) %></strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label>
+      </td>
+      <td valign="center">
+        <dhv:username id="<%= oppComponentDetails.getOwner() %>"/>
+        <dhv:evaluate if="<%= !(oppComponentDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
+      </td>
+    </tr>
+    <dhv:evaluate if="<%= hasText(oppComponentDetails.getTypes().valuesAsString()) %>">
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityTypes">Opportunity Type(s)</dhv:label>
+      </td>
+      <td>
+        <%= toHtml(oppComponentDetails.getTypes().valuesAsString()) %>
+       </td>
+    </tr>
+    </dhv:evaluate>
+    <dhv:evaluate if="<%= hasText(oppComponentDetails.getNotes()) %>">
+    <tr class="containerBody">
+      <td valign="top" nowrap class="formLabel"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.AdditionalNotes">Additional Notes</dhv:label></td>
+      <td valign="top"><%= toHtml(oppComponentDetails.getNotes()) %></td>
+    </tr>
+    </dhv:evaluate>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_contacts_oppcomponent_add.ProbOfClose">Prob. of Close</dhv:label>
+      </td>
+      <td>
+        <%= oppComponentDetails.getCloseProbValue() %>%
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_contacts_oppcomponent_add.EstCloseDate">Est. Close Date</dhv:label>
+      </td>
+      <td>
+        <zeroio:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" dateOnly="true" timeZone="<%= oppComponentDetails.getCloseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+        <% if(!User.getTimeZone().equals(oppComponentDetails.getCloseDateTimeZone())){%>
+        <br />
+        <zeroio:tz timestamp="<%= oppComponentDetails.getCloseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+        <% } %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_contacts_oppcomponent_add.LowEstimate">Low Estimate</dhv:label>
+      </td>
+      <td>
+        <zeroio:currency value="<%= oppComponentDetails.getLow() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_contacts_oppcomponent_add.BestGuess">Best Guess</dhv:label>
+      </td>
+      <td>
+        <zeroio:currency value="<%= oppComponentDetails.getGuess() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_contacts_oppcomponent_add.HighEstimate">High Estimate</dhv:label>
+      </td>
+      <td>
+        <zeroio:currency value="<%= oppComponentDetails.getHigh() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_contacts_oppcomponent_add.EstTerm">Est. Term</dhv:label>
+      </td>
+      <td>
+        <%= oppComponentDetails.getTerms() %> <dhv:label name="accounts.accounts_contacts_oppcomponent_details.months">months</dhv:label>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label>
+      </td>
+      <td>
+        <%= toHtml(oppComponentDetails.getStageName()) %>&nbsp;
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStageDate">Current Stage Date</dhv:label>
+      </td>
+      <td>
+        <zeroio:tz timestamp="<%= oppComponentDetails.getStageDate() %>" dateOnly="true" default="&nbsp;"/>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_contacts_oppcomponent_details.EstCommission">Est. Commission</dhv:label>
+      </td>
+      <td>
+        <%= oppComponentDetails.getCommissionValue() %>%
+      </td>
+    </tr>
+  <dhv:evaluate if="<%= hasText(oppComponentDetails.getAlertText()) %>">
+     <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_add.AlertDescription">Alert Description</dhv:label>
+      </td>
+      <td>
+         <%= toHtml(oppComponentDetails.getAlertText()) %>
+      </td>
+    </tr>
+  </dhv:evaluate>
+  <dhv:evaluate if="<%= oppComponentDetails.getAlertDate() != null %>">
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_add.AlertDate">Alert Date</dhv:label>
+      </td>
+      <td>
+        <zeroio:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= oppComponentDetails.getAlertDateTimeZone() %>" showTimeZone="true"  default="&nbsp;"/>
+        <% if(!User.getTimeZone().equals(oppComponentDetails.getAlertDateTimeZone())){%>
+        <br>
+        <zeroio:tz timestamp="<%= oppComponentDetails.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"  default="&nbsp;" />
+        <% } %>
+      </td>
+    </tr>
+  </dhv:evaluate>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
+      </td>
+      <td>
+        <dhv:username id="<%= oppComponentDetails.getEnteredBy() %>"/>
+        <zeroio:tz timestamp="<%= oppComponentDetails.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel" nowrap>
+        <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>
+      </td>
+      <td>
+        <dhv:username id="<%= oppComponentDetails.getModifiedBy() %>"/>
+        <zeroio:tz timestamp="<%= oppComponentDetails.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
+      </td>
+    </tr>
+  </table>
+  <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"><br></dhv:permission>
+  <dhv:sharing primaryBean="opportunityHeader" secondaryBeans="ContactDetails" action="edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='ExternalContactsOppComponents.do?command=ModifyComponent&id=<%= oppComponentDetails.getId() %>&headerId=<%= oppComponentDetails.getHeaderId() %>&contactId=<%= ContactDetails.getId() %>';submit();"></dhv:sharing>
+  <dhv:sharing primaryBean="opportunityHeader" secondaryBeans="ContactDetails" action="delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=<%= ContactDetails.getId() %>&id=<%= oppComponentDetails.getId() %>&popup=true<%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=DetailsOpp&contactId=<%= ContactDetails.getId() %>', 'Delete_opp','320','200','yes','no')"></dhv:sharing>
+  <dhv:permission name="contacts-external_contacts-opportunities-edit,contacts-external_contacts-opportunities-delete"></dhv:permission></td>
+  <input type="hidden" name="headerId" value="<%= oppComponentDetails.getHeaderId() %>">
+  <input type="hidden" name="id" value="<%= oppComponentDetails.getId() %>">
+  <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
+  <input type="hidden" name="actionSource" value="ExternalContactsOppComponents">
+  <%= addHiddenParams(request, "popup|popupType|actionId") %>
+</dhv:container>
 </form>

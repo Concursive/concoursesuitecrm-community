@@ -21,25 +21,24 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-Create Attachments
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<dhv:label name="communications.campaign.CreateAttachments">Create Attachments</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-Customize and configure your Campaigns with the following attachments:<br>
+<dhv:label name="campaign.customizeCampaigns.text">Customize and configure your Campaigns with the following attachments:</dhv:label><br>
 &nbsp;<br>
 <dhv:permission name="campaign-campaigns-surveys-view">
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong><a href="CampaignManagerSurvey.do?command=View">Surveys</a></strong>
+      <strong><a href="CampaignManagerSurvey.do?command=View"><dhv:label name="campaign.surveys">Surveys</dhv:label></a></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td>
-      Create interactive surveys using quantitative, qualitative and open-ended questions.
-      Once associated with a campaign, the responses can be reviewed and analyzed.
+      <dhv:label name="campaign.createInteractiveSurveys.text">Create interactive surveys using quantitative, qualitative and open-ended questions. Once associated with a campaign, the responses can be reviewed and analyzed.</dhv:label>
     </td>
   </tr>
 </table>

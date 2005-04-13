@@ -19,9 +19,12 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.*;
 import java.io.IOException;
 import com.zeroio.utils.ContentUtils;
+import com.darkhorseventures.framework.actions.ActionContext;
 
 /**
  *  Class for working with the Lucene search engine
@@ -42,7 +45,7 @@ public class RequirementIndexer implements Indexer {
    *@exception  SQLException  Description of the Exception
    *@exception  IOException   Description of the Exception
    */
-  public static void add(IndexWriter writer, Connection db) throws SQLException, IOException {
+  public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT requirement_id, project_id, shortdescription, description, submittedBy, departmentBy, modified " +
@@ -62,6 +65,7 @@ public class RequirementIndexer implements Indexer {
       requirement.setModified(rs.getTimestamp("modified"));
       // add the document
       RequirementIndexer.add(writer, requirement, false);
+      DatabaseUtils.renewConnection(context, db);
     }
     rs.close();
     pst.close();

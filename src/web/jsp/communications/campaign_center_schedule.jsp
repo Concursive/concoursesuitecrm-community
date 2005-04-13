@@ -34,7 +34,7 @@
     formTest = true;
     message = "";
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     } else {
       return true;
@@ -42,8 +42,8 @@
   }
   
   function checkDelivery(){
-    var selectedIndex = document.forms[0].sendMethodId.options.selectedIndex;
-    if(document.forms[0].sendMethodId.options[selectedIndex].text.indexOf("Fax") != -1){
+    var selectedIndex = document.inputForm.sendMethodId.options.selectedIndex;
+    if(document.inputForm.sendMethodId.options[selectedIndex].text.indexOf("Fax") != -1){
       showSpan('faxError');
     }else{
       hideSpan('faxError');
@@ -55,10 +55,10 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> > 
-<a href="CampaignManager.do?command=View">Campaign List</a> >
-<a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>">Campaign Details</a> >
-Delivery
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> > 
+<a href="CampaignManager.do?command=View"><dhv:label name="campaign.campaignList">Campaign List</dhv:label></a> >
+<a href="CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>"><dhv:label name="campaign.campaignDetails">Campaign Details</dhv:label></a> >
+<dhv:label name="quotes.delivery">Delivery</dhv:label>
 </td>
 </tr>
 </table>
@@ -66,39 +66,40 @@ Delivery
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr class="containerHeader">
     <td>
-      <strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
+      <dhv:label name="campaign.campaign.colon" param="<%= "name="+toHtml(Campaign.getName()) %>"><strong>Campaign:</strong> <%= toHtml(Campaign.getName()) %></dhv:label>
     </td>
   </tr>
   <tr>
     <td class="containerBack">
 <dhv:permission name="campaign-campaigns-edit">
-<input type="submit" name="Save" value="Update Campaign Schedule">
+<input type="submit" name="Save" value="<dhv:label name="campaign.updateCampaignSchedule">Update Campaign Schedule</dhv:label>">
 </dhv:permission>
-<input type="button" value="Cancel" onClick="javascript:window.location.href='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'"><br>
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'"><br />
 <br />
 <dhv:formMessage />
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Delivery Options</strong>
+      <strong><dhv:label name="campaign.deliveryOptions">Delivery Options</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="center" nowrap>
-      Run Date
+      <dhv:label name="accounts.accounts_contacts_messages_view.RunDate">Run Date</dhv:label>
     </td>
     <td>
-      <input type="text" size="10" name="activeDate" value="<zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" />">
+      <dhv:permission name="campaign-campaigns-edit" none="true">
+        <input type="text" size="10" name="activeDate" value="<zeroio:tz timestamp="<%= Campaign.getActiveDate() %>" dateOnly="true" />" disabled="disabled">
+      </dhv:permission>
       <dhv:permission name="campaign-campaigns-edit">
-      <a href="javascript:popCalendar('inputForm', 'activeDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
-      <%= TimeZoneSelect.getSelect("activeDateTimeZone", (Campaign.getActiveDateTimeZone() == null) ? User.getTimeZone(): Campaign.getActiveDateTimeZone()).getHtml() %>
+        <zeroio:dateSelect form="inputForm" field="activeDate" timestamp="<%= Campaign.getActiveDate() %>"  timeZone="<%= (Campaign.getActiveDateTimeZone() == null) ? User.getTimeZone(): Campaign.getActiveDateTimeZone() %>" showTimeZone="true" />
       </dhv:permission>
       <%=showAttribute(request,"activeDateError")%>
     </td>
   </tr>
   <tr class="containerBody">
       <td class="formLabel" valign="center" nowrap>
-      Delivery Method
+      <dhv:label name="campaign.deliveryMethod">Delivery Method</dhv:label>
     </td>
     <td>
         <dhv:evaluate if="<%= "".equals(toString(FaxEnabled)) || "false".equals(toString(FaxEnabled)) %>">
@@ -106,15 +107,15 @@ Delivery
           %>
         </dhv:evaluate>
         <%= DeliveryList.getHtmlSelect("sendMethodId",Campaign.getSendMethodId() ) %>
-        <span id="faxError" style="display:none"><font color="red">Fax Server is not configured.</font></span>
+        <span id="faxError" style="display:none"><font color="red"><dhv:label name="campaign.faxServerNotSupported">Fax Server is not configured.</dhv:label></font></span>
     </td>
   </tr>
 </table>
-<br>
+<br />
 <dhv:permission name="campaign-campaigns-edit">
-<input type="submit" name="Save" value="Update Campaign Schedule">
+<input type="submit" name="Save" value="<dhv:label name="campaign.updateCampaignSchedule">Update Campaign Schedule</dhv:label>">
 </dhv:permission>
-<input type="button" value="Cancel" onClick="javascript:window.location.href='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'">
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='CampaignManager.do?command=ViewDetails&id=<%= Campaign.getId() %>'">
   </td>
   </tr>
 </table>

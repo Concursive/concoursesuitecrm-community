@@ -37,16 +37,16 @@
     var messageText = "";
     //Required fields
     if (form.shortDescription.value == "") {    
-      messageText += "- Title is a required field\r\n";
+      messageText += label("title.required","- Title is a required field\r\n");
       formTest = false;
     }
     if (form.description.value == "") {    
-      messageText += "- Description is a required field\r\n";
+      messageText += label("description.required","- Description is a required field\r\n");
       formTest = false;
     }
     
     //Check LOE number field
-    var valid = "0123456789.";
+    var valid = "0123456789.,";
     var ok = true;
     if (form.estimatedLoe.value != "") {
       for (var i=0; i<form.estimatedLoe.value.length; i++) {
@@ -56,13 +56,13 @@
         }
       }
       if (ok == false) {
-        messageText += "- Only numbers are allowed in the LOE field\r\n";
+        messageText += label("check.number.loefield","- Only numbers are allowed in the LOE field\r\n");
         formTest = false;
       }
     }
     
     if (formTest == false) {
-      messageText = "The outline form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("check.form","Form could not be saved, please check the following:\r\n\r\n") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
@@ -76,34 +76,43 @@
   <tr class="subtab">
     <td>
       <img border="0" src="images/icons/stock_list_bullet2-16.gif" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>">Outlines</a> >
-      <%= Requirement.getId() == -1?"Add":"Modify" %>
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>"><dhv:label name="project.outlines">Outlines</dhv:label></a> >
+      <% if(Requirement.getId() == -1) {%>
+        <dhv:label name="button.add">Add</dhv:label>
+      <%} else {%>
+        <dhv:label name="button.modify">Modify</dhv:label>
+      <%}%>
     </td>
   </tr>
 </table>
 <br>
-  <input type="submit" value=" Save ">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>';"><br />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>';"><br />
   <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        <strong><%= Requirement.getId()==-1?"Add":"Update" %> Outline</strong>
+        <strong>
+        <% if(Requirement.getId()==-1) {%>
+          <dhv:label name="project.addOutline">Add Outline</dhv:label>
+        <%} else {%>
+        <dhv:label name="project.updateOutline">Update Outline</dhv:label>
+        <%}%></strong>
       </th>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel">Title</td>
+      <td nowrap class="formLabel"><dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label></td>
       <td>
         <input type="text" name="shortDescription" size="57" maxlength="255" value="<%= toHtmlValue(Requirement.getShortDescription()) %>"><font color=red>*</font> <%= showAttribute(request, "shortDescriptionError") %>
       </td>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel" valign="top">Details</td>
+      <td nowrap class="formLabel" valign="top"><dhv:label name="contacts.details">Details</dhv:label></td>
       <td>
         <table border="0" cellpadding="0" cellspacing="0" class="empty">
           <tr>
             <td>
-              <textarea rows="8" name="description" cols="80"><%= toString(Requirement.getDescription()) %></textarea><br>
+              <textarea name="description" cols="55" rows="8"><%= toString(Requirement.getDescription()) %></textarea><br>
               <%= showAttribute(request, "descriptionError") %>
             </td>
             <td valign="top">
@@ -114,24 +123,24 @@
       </td>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel">Requested By</td>
+      <td nowrap class="formLabel"><dhv:label name="documents.details.requestedBy">Requested By</dhv:label></td>
       <td>
         <input type="text" name="submittedBy" size="24" maxlength="50" value="<%= toHtmlValue(Requirement.getSubmittedBy()) %>">
       </td>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel" valign="top">Department or<br>Company</td>
+      <td nowrap class="formLabel" valign="top"><dhv:label name="project.deptOrCompany" param="break=<br />">Department or<br />Company</dhv:label></td>
       <td valign="top">
         <input type="text" name="departmentBy" size="24" maxlength="50" value="<%= toHtmlValue(Requirement.getDepartmentBy()) %>">
       </td>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel" valign="top">Expected Dates</td>
+      <td nowrap class="formLabel" valign="top"><dhv:label name="project.expectedDates">Expected Dates</dhv:label></td>
       <td>
         <table border="0" cellspacing="0" cellpadding="0" class="empty">
           <tr>
             <td align="right">
-              Start:
+              <dhv:label name="project.start.colon">Start:</dhv:label>
             </td>
             <td>
               <zeroio:dateSelect form="inputForm" field="startDate" timestamp="<%= Requirement.getStartDate() %>" timeZone="<%= Requirement.getStartDateTimeZone() %>" showTimeZone="true" />
@@ -140,23 +149,24 @@
           </tr>
           <tr>
             <td align="right">
-              Finish:
+              <dhv:label name="project.finish.colon">Finish:</dhv:label>
             </td>
             <td>
               <zeroio:dateSelect form="inputForm" field="deadline" timestamp="<%= Requirement.getDeadline() %>" timeZone="<%= Requirement.getDeadlineTimeZone() %>" showTimeZone="true" />
-              <%=showAttribute(request,"deadlineError")%>
+              <%= showAttribute(request,"deadlineError") %>
+              <%= showWarningAttribute(request, "deadlineWarning") %>
             </td>
           </tr>
         </table>
       </td>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel" valign="top">Level of Effort</td>
+      <td nowrap class="formLabel" valign="top"><dhv:label name="project.levelOfEffort">Level of Effort</dhv:label></td>
       <td>
         <table border="0" cellspacing="0" cellpadding="0" class="empty">
           <tr>
             <td align="right">
-              Estimated:
+              <dhv:label name="project.estimated.colon">Estimated:</dhv:label>
             </td>
             <td>
               <input type="text" name="estimatedLoe" size="4" value="<%= Requirement.getEstimatedLoeValue() %>">
@@ -165,7 +175,7 @@
           </tr>
           <tr>
             <td align="right">
-              Actual:
+              <dhv:label name="project.actual">Actual:</dhv:label>
             </td>
             <td>
               <input type="text" name="actualLoe" size="4" value="<%= Requirement.getActualLoeValue() %>">
@@ -176,19 +186,19 @@
       </td>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel" valign="top">Status</td>
+      <td nowrap class="formLabel" valign="top"><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>
       <td>
         <input type="checkbox" name="approved" value="ON" <%= (Requirement.getApproved()?"checked":"") %>>
-        Outline Approved
+        <dhv:label name="project.outlineApproved">Outline Approved</dhv:label>
         <br>
         <input type="checkbox" name="closed" value="ON" <%= (Requirement.getClosed()?"checked":"") %>>
-        Outline Closed
+        <dhv:label name="project.outlineClosed">Outline Closed</dhv:label>
       </td>
     </tr>    
   </table>
   <br>
-  <input type="submit" value=" Save ">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>';">
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>';">
   <input type="hidden" name="id" value="<%= Requirement.getId() %>">
   <input type="hidden" name="pid" value="<%= Project.getId() %>">
   <input type="hidden" name="projectId" value="<%= Project.getId() %>">

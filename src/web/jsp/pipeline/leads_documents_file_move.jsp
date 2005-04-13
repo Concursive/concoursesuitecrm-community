@@ -27,7 +27,7 @@
 <table cellpadding="0" cellspacing="0" width="100%" border="0">
   <tr>
     <td>
-      Select a folder to move the item to:<br>
+      <dhv:label name="accounts.accounts_documents_file_move.SelectFolderToMove">Select a folder to move the item to</dhv:label>:<br>
       <%= FileItem.getImageTag("-23") %>
       <%= toHtml(FileItem.getSubject()) %>
     </td>
@@ -39,9 +39,9 @@
     <td valign="top" width="100%">
       <img alt="" src="images/tree7o.gif" border="0" align="absmiddle" height="16" width="19"/>
       <img alt="" src="images/icons/stock_open-16-19.gif" border="0" align="absmiddle" height="16" width="19"/>
-      <a href="LeadsDocuments.do?command=SaveMove&headerId=<%= opportunityHeader.getId() %>&fid=<%= FileItem.getId() %>&popup=true&folderId=0&return=LeadsDocuments&param=<%= opportunityHeader.getId() %>&param2=<%= FileItem.getFolderId() %>">Home</a>
+      <a href="LeadsDocuments.do?command=SaveMove&headerId=<%= opportunityHeader.getId() %>&fid=<%= FileItem.getId() %>&popup=true&folderId=0&return=LeadsDocuments&param=<%= opportunityHeader.getId() %>&param2=<%= FileItem.getFolderId() %>"><dhv:label name="accounts.accounts_documents_file_move.Home">Home</dhv:label></a>
       <dhv:evaluate if="<%= (FileItem.getFolderId() == 0) || (FileItem.getFolderId() == -1) %>">
-      (current folder)
+      <dhv:label name="accounts.accounts_documents_file_move.CurrentFolder">(current folder)</dhv:label>
       </dhv:evaluate>
     </td>
   </tr>
@@ -60,7 +60,7 @@
       <img border="0" src="images/icons/stock_open-16-19.gif" align="absmiddle">
       <a href="LeadsDocuments.do?command=SaveMove&headerId=<%= opportunityHeader.getId() %>&fid=<%= FileItem.getId() %>&popup=true&folderId=<%= thisFolder.getId() %>&return=LeadsDocuments&param=<%= opportunityHeader.getId() %>&param2=<%= FileItem.getFolderId() %>"><%= toHtml(thisFolder.getSubject()) %></a>
       <dhv:evaluate if="<%= FileItem.getFolderId() == thisFolder.getId() %>">
-      (current folder)
+      <dhv:label name="accounts.accounts_documents_file_move.CurrentFolder">(current folder)</dhv:label>
       </dhv:evaluate>
     </td>
   </tr>
@@ -68,6 +68,6 @@
   }
 %>
 </table>
-&nbsp;<br>
-<input type="button" value="Cancel" onClick="javascript:window.close()">
+<br />
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
 

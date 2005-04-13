@@ -26,9 +26,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Roles.do">View Roles</a> >
-Update Role
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Roles.do"><dhv:label name="admin.viewRoles">View Roles</dhv:label></a> >
+<dhv:label name="admin.updateRole">Update Role</dhv:label>
 </td>
 </tr>
 </table>
@@ -36,29 +36,29 @@ Update Role
 <input type="hidden" name="id" value="<%= Role.getId() %>">
 <input type="hidden" name="modified" value="<%= Role.getModified() %>">
 <dhv:permission name="admin-roles-edit">
-  <input type="submit" value="Update" name="Save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Save">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
 </dhv:permission>
 <br>
 <dhv:formMessage />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Update Role</strong>
+	    <strong><dhv:label name="admin.updateRole">Update Role</dhv:label></strong>
 	  </th>
   </tr>
   <tr>
-    <td class="formLabel">Role Name</td>
+    <td class="formLabel"><dhv:label name="admin.roleName">Role Name</dhv:label></td>
     <td><input type="text" name="role" maxlength="80" size="30" value="<%= toHtmlValue(Role.getRole()) %>"><font color="red">*</font> <%= showAttribute(request, "roleError") %></td>
   </tr>
   <tr>
-    <td class="formLabel">Description</td>
+    <td class="formLabel"><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></td>
     <td nowrap><input type="text" name="description" maxlength="255" size="60" value="<%= toHtmlValue(Role.getDescription()) %>"><font color="red">*</font> <%= showAttribute(request, "descriptionError") %></td>
   </tr>
  <%--
   <tr>
     <td class="formLabel">
-      Portal Role?
+      <dhv:label name="accounts.accounts_contacts_portal_include.PortalRole">Portal Role</dhv:label>?
     </td>
     <td>
     <%
@@ -75,7 +75,7 @@ Update Role
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th colspan="5">
-	    <strong>Permissions</strong>
+	    <strong><dhv:label name="documents.permissions.long_html">Permissions</dhv:label></strong>
 	  </th>
   </tr>
 <%
@@ -90,10 +90,10 @@ Update Role
     <td>
       <%= toHtml(thisPermission.getCategoryName()) %>
     </td>
-    <td width="40" align="center">Access/<br>View</td>
-    <td width="40" align="center">Add</td>
-    <td width="40" align="center">Edit</td>
-    <td width="40" align="center">Delete</td>
+    <td width="40" align="center"><dhv:label name="admin.accessView" param="break=<br />">Access/<br />View</dhv:label></td>
+    <td width="40" align="center"><dhv:label name="button.add">Add</dhv:label></td>
+    <td width="40" align="center"><dhv:label name="button.edit">Edit</dhv:label></td>
+    <td width="40" align="center"><dhv:label name="button.delete">Delete</dhv:label></td>
   </tr>
 <%
    }    
@@ -161,8 +161,8 @@ Update Role
 %>
 </table>
 <dhv:permission name="admin-roles-edit">
-  <br>
-  <input type="submit" value="Update" name="Save">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
+  <br />
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Save">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
 </dhv:permission>
 </form>

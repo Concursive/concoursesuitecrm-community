@@ -37,41 +37,34 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=ticketDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="Accounts.do?command=ViewTickets&orgId=<%=ticketDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
 <a href="AccountTickets.do?command=TicketDetails&id=<%=ticketDetails.getId()%>"><dhv:label name="accounts.tickets.details">Ticket Details</dhv:label></a> >
-<a href="AccountTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>">Activity Log</a> >
-View Activity Log
+<a href="AccountTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>"><dhv:label name="tickets.activitylog.long_html">Activity Log</dhv:label></a> >
+<dhv:label name="ticket.viewActivityLog">View Activity Log</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<dhv:container name="accounts" selected="tickets" param="<%= "orgId=" + ticketDetails.getOrgId() %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <%@ include file="accounts_ticket_header_include.jsp" %>
-      <% String param2 = "id=" + ticketDetails.getId(); %>
-      [ <dhv:container name="accountstickets" selected="activitylog" param="<%= param2 %>"/> ]
-      <br /> <br />
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:container name="accountstickets" selected="activitylog" param="<%= "id=" + ticketDetails.getId() %>">
+    <%@ include file="accounts_ticket_header_include.jsp" %>
     <dhv:permission name="accounts-accounts-tickets-activity-log-edit">
-      <input type="submit" value="Modify" />
+      <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />
     </dhv:permission>
     <dhv:permission name="accounts-accounts-tickets-activity-log-delete">
-      <input type="button" value="Delete" onClick="javascript:popURLReturn('AccountTicketActivityLog.do?command=ConfirmDelete&id=<%=ticketDetails.getId()%>&formId=<%=activityDetails.getId()%>&popup=true','AccountTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>', 'Delete_maintenancenote','320','200','yes','no');">
+      <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountTicketActivityLog.do?command=ConfirmDelete&id=<%=ticketDetails.getId()%>&formId=<%=activityDetails.getId()%>&popup=true','AccountTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>', 'Delete_maintenancenote','320','200','yes','no');">
     </dhv:permission>
       <br /><br />
     <%@ include file="../troubletickets/troubletickets_view_activity_include.jsp" %>
       <br />
     <dhv:permission name="accounts-accounts-tickets-activity-log-edit">
-      <input type="submit" value="Modify" />
+      <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />
     </dhv:permission>
     <dhv:permission name="accounts-accounts-tickets-activity-log-delete">
-      <input type="button" value="Delete" onClick="javascript:popURLReturn('AccountTicketActivityLog.do?command=ConfirmDelete&id=<%=ticketDetails.getId()%>&formId=<%=activityDetails.getId()%>&popup=true','AccountTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>', 'Delete_maintenancenote','320','200','yes','no');">
+      <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountTicketActivityLog.do?command=ConfirmDelete&id=<%=ticketDetails.getId()%>&formId=<%=activityDetails.getId()%>&popup=true','AccountTicketActivityLog.do?command=List&id=<%=ticketDetails.getId()%>', 'Delete_maintenancenote','320','200','yes','no');">
     </dhv:permission>
- </td>
- </tr>
-</table>
+  </dhv:container>
+</dhv:container>
 </form>

@@ -45,13 +45,13 @@
         &nbsp;
       </th>
       <th class="weekSelector">
-        <strong>Alert</strong>
+        <strong><dhv:label name="calendar.alert">Alert</dhv:label></strong>
       </th>
       <th class="weekSelector" nowrap>
-        <strong>Account Name</strong>
+        <strong><dhv:label name="organization.name">Account Name</dhv:label></strong>
       </th>
       <th class="weekSelector" nowrap>
-        <strong>Owner</strong>
+        <strong><dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label></strong>
       </th>
     </tr>
   <%  
@@ -73,7 +73,7 @@
        <%= thisOrg.getName() %>
      </td>
      <td nowrap valign="top">
-       <dhv:username id="<%= thisOrg.getEnteredBy() %>"/>
+       <dhv:username id="<%= thisOrg.getOwner() %>"/>
      </td>
     </tr>
    <% }
@@ -102,10 +102,10 @@
         &nbsp;
       </th>
       <th class="weekSelector" nowrap width="100%">
-        <strong>Account Name</strong>
+        <strong><dhv:label name="organization.name">Account Name</dhv:label></strong>
       </th>
-      <th class="weekSelector">
-        <strong>Owner</strong>
+      <th class="weekSelector" nowrap>
+        <strong><dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label></strong>
       </th>
     </tr>
   <%  
@@ -124,7 +124,7 @@
        <%= thisOrg.getName() %>
       </td>
       <td nowrap valign="top">
-        <dhv:username id="<%= thisOrg.getEnteredBy() %>"/>
+        <dhv:username id="<%= thisOrg.getOwner() %>"/>
       </td>
     </tr>
    <% }

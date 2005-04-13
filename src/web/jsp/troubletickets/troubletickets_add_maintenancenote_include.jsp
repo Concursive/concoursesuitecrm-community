@@ -16,6 +16,7 @@
   - Version: $Id$
   - Description: 
   --%>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -28,8 +29,8 @@
   
     formTest = true;
     message = "";
-    if (form.descriptionOfService.value == "") {
-      message += "- Description of Service is required\r\n";
+    if (checkNullString(form.descriptionOfService.value)) {
+      message += label("check.descriptionofservice","- Description of Service is required\r\n");
       formTest = false;
     }
     var i = 1;
@@ -50,19 +51,19 @@
     }
       
     for (i=1;i<partCount;i++){ 
-      if ((!parts[i].value == "") && (descriptions[i].value=="")){
-        message += "- Check that all items in row "+ i +" are filled in\r\n";
+      if ((!checkNullString(parts[i].value)) && (checkNullString(descriptions[i].value))){
+        message += label("check.allitems.part.one","- Check that all items in row ")+ i +label("check.allitems.part.two"," are filled in\r\n");
         formTest = false;
       }
 
-      if ((parts[i].value == "") && (!descriptions[i].value=="")){
-        message += "- Check that all items in row "+ i +" are filled in\r\n";
+      if ((checkNullString(parts[i].value)) && (!checkNullString(descriptions[i].value))){
+        message += label("check.allitems.part.one","- Check that all items in row ")+ i +label("check.allitems.part.two"," are filled in\r\n");
         formTest = false;
       }
     }
 
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     }
   }
@@ -71,12 +72,12 @@
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
-        <strong>General Maintenance Information</strong>
+        <strong><dhv:label name="tickets.generalMaintenanceInfo">General Maintenance Information</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
       <td valign="top" class="formLabel">
-        Description of Service
+        <dhv:label name="reports.helpdesk.ticket.activity.descOfService">Description of Service</dhv:label>
       </td>
       <td>
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
@@ -84,7 +85,7 @@
           <td>
           <textarea name="descriptionOfService" cols="50" rows="3"></textarea>
           <td valign="top">
-            <font color="red">*</font>
+            <font color="red">*</font><%= showAttribute(request, "descriptionOfServiceError") %>
           </td>
         </tr>
       </table>
@@ -95,49 +96,54 @@
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="4">
-        <strong>Replacement Parts</strong>
+        <strong><dhv:label name="reports.helpdesk.ticket.maintenance.replacementParts">Replacement Parts</dhv:label></strong>
       </th>
     </tr>
+<%int i=1;%>
+<%
+  if (maintenanceDetails != null) {
+    TicketReplacementPartList partList = maintenanceDetails.getTicketReplacementPartList();
+    if (partList != null && partList.size() > 0) {
+      Iterator iterator = (Iterator) maintenanceDetails.getTicketReplacementPartList().iterator();
+      while (iterator.hasNext()) {
+        TicketReplacementPart thisPart = (TicketReplacementPart) iterator.next();
+%>
     <tr class="containerBody">
       <td class="formLabel" nowrap>
-        Part 1
+        <dhv:label name="tickets.part" param="<%= "number="+i %>">Part <%= i %></dhv:label>
       </td>
       <td>
-        <input type="text" size="20" maxlength="50" name="partNumber1">
+        <input type="text" size="20" maxlength="50" name="partNumber<%= i %>" value="<%= toHtmlValue(thisPart.getPartNumber())%>"/> 
+        <br /><%= showAttribute(request, "partNumber"+i+"Error") %>
       </td>
       <td class="formLabel" nowrap>
-        Description 1
+        <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label> <%= i %>
       </td>
       <td>
-        <input type="text" size="55" name="partDescription1" maxlength="100">
+        <input type="text" size="55" name="partDescription<%= i %>" maxlength="100" value="<%= toHtmlValue(thisPart.getPartDescription())%>"/>
+        &nbsp; <%= showAttribute(request, "partDescription"+i+"Error") %>
       </td>
     </tr>
+
+<%      i++;
+      }
+    }
+  }%>
+<%
+  for(;i<=3;i++) { %>
     <tr class="containerBody">
       <td class="formLabel" nowrap>
-        Part 2
+        <dhv:label name="tickets.part" param="<%= "number="+i %>">Part <%= i %></dhv:label>
       </td>
       <td>
-        <input type="text" size="20"  maxlength="50" name="partNumber2">
+        <input type="text" size="20" maxlength="50" name="partNumber<%= i %>" /> &nbsp; <%= showAttribute(request, "partNumber"+i+"Error") %>
       </td>
       <td class="formLabel" nowrap>
-        Description 2
+        <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label> <%= i %>
       </td>
       <td>
-        <input type="text" size="55" name="partDescription2" maxlength="100">
+        <input type="text" size="55" name="partDescription<%= i %>" maxlength="100">&nbsp; <%= showAttribute(request, "partDescription"+i+"Error") %>
       </td>
     </tr>
-    <tr class="containerBody">
-      <td class="formLabel" nowrap>
-        Part 3
-      </td>
-      <td>
-        <input type="text" size="20" maxlength="50" name="partNumber3">
-      </td>
-      <td class="formLabel" nowrap>
-        Description 3
-      </td>
-      <td>
-        <input type="text" size="55" name="partDescription3" maxlength="100">
-      </td>
-    </tr>
+<%}%>
   </table>

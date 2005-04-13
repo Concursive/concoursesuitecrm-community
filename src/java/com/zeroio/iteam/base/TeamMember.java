@@ -15,10 +15,13 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import java.util.Calendar;
-import java.text.DateFormat;
 import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
 
 /**
  *  Represents a member of a project
@@ -56,7 +59,8 @@ public class TeamMember {
   private int roleId = -1;
   private int status = STATUS_ADDED;
   private java.sql.Timestamp lastAccessed = null;
-
+  //Other factors
+  private boolean temporaryAdmin = false;
 
   /**
    *  Constructor for the Assignment object
@@ -117,7 +121,7 @@ public class TeamMember {
     //project_team
     projectId = rs.getInt("project_id");
     userId = rs.getInt("user_id");
-    userLevel = DatabaseUtils.getInt(rs, "userLevel");
+    userLevel = DatabaseUtils.getInt(rs, "userlevel");
     entered = rs.getTimestamp("entered");
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
@@ -520,6 +524,13 @@ public class TeamMember {
     return ("--");
   }
 
+  public boolean isTemporaryAdmin() {
+    return temporaryAdmin;
+  }
+
+  public void setTemporaryAdmin(boolean temporaryAdmin) {
+    this.temporaryAdmin = temporaryAdmin;
+  }
 
   /**
    *  Description of the Method

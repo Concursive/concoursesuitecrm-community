@@ -22,34 +22,34 @@
 <jsp:useBean id="CategoryList" class="org.aspcfs.modules.base.CustomFieldCategoryList" scope="request"/>
 <jsp:useBean id="Category" class="org.aspcfs.modules.base.CustomFieldCategory" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<script type="text/javascript">
+function reopenContact(id) {
+  if (id == '<%= ContactDetails.getId() %>') {
+    scrollReload('ExternalContacts.do?command=SearchContacts');
+    return -1;
+  } else {
+    return '<%= ContactDetails.getId() %>';
+  }
+}
+</script>
 <form name="details" action="ExternalContacts.do?command=Fields&contactId=<%= ContactDetails.getId() %>" method="post">
-<dhv:evaluate exp="<%= !isPopup(request) %>">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do">Contacts</a> > 
-<a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
-<a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
-<a href="ExternalContacts.do?command=Fields&contactId=<%=ContactDetails.getId()%>">Folders</a> >
-Record Details
+<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+<a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
+<a href="ExternalContacts.do?command=Fields&contactId=<%=ContactDetails.getId()%>"><dhv:label name="accounts.folders.long_html">Folders</dhv:label></a> >
+<dhv:label name="contact.recordDetails">Record Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<%@ include file="contact_details_header_include.jsp" %>
-<% String param1 = "id=" + ContactDetails.getId(); 
-   String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-<dhv:container name="contacts" selected="folders" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      &nbsp;<br>
-      There are currently no custom folders configured for this module.<br>
-      Custom folders can be configured by an administrator.<br>
-      &nbsp;
-    </td>
-  </tr>
-</table>
+<dhv:container name="contacts" selected="folders" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:label name="accounts.accounts_nofields.NoCustomFoldersConfigured">There are currently no custom folders configured for this module.</dhv:label><br>
+  <dhv:label name="accounts.accounts_nofields.CustomfoldersConfiguredAdministrator">Custom folders can be configured by an administrator.</dhv:label><br>
+</dhv:container>
 </form>

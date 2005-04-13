@@ -1,4 +1,5 @@
-<%@ page import="java.util.*,java.text.*" %>
+<%@ page import="java.util.*,java.text.*,org.aspcfs.controller.SystemStatus,com.darkhorseventures.database.ConnectionElement,org.aspcfs.utils.*" %>
+<%@ page import="org.aspcfs.modules.admin.base.*, org.aspcfs.modules.login.beans.UserBean,org.aspcfs.modules.contacts.base.*,java.sql.*" %>
 <%@ page import="org.aspcfs.controller.ApplicationPrefs" %>
 <%! 
     
@@ -37,35 +38,13 @@ public static String replace(String str, String o, String n) {
     }
   }
   
-    public static String toHtml(String s) {
-      if (s != null) {
-        if (s.trim().equals("")) {
-          return ("&nbsp;");
-        } else {
-          return toHtmlValue(s);
-        }
-      } else {
-        return("&nbsp;");
-      }
-    }
+  public static String toHtml(String s) {
+    return StringUtils.toHtml(s);
+  }
     
-    public static String toHtmlValue(String s) {
-      if (s != null) {
-        String htmlReady = s.trim();
-        htmlReady = replace(htmlReady, "\"", "&quot;");
-        htmlReady = replace(htmlReady, "<", "&lt;");
-        htmlReady = replace(htmlReady, ">", "&gt;");
-        htmlReady = replace(htmlReady, "\r\n", "<br>");
-        htmlReady = replace(htmlReady, "\n\r", "<br>");
-        htmlReady = replace(htmlReady, "\n", "<br>");
-        htmlReady = replace(htmlReady, "\r", "<br>");
-        htmlReady = replace(htmlReady, "/&lt;", "<");
-        htmlReady = replace(htmlReady, "/&gt;", ">");
-        return(htmlReady);
-      } else {
-        return("");
-      }
-    }
+  public static String toHtmlValue(String s) {
+    return StringUtils.toHtmlValue(s);
+  }
     
   public static String toJavaScript(String s) {
     if (s != null) {
@@ -168,10 +147,10 @@ public static String replace(String str, String o, String n) {
 
     public static String showWarning(HttpServletRequest request, String warningEntry) {
       if (request.getAttribute(warningEntry) != null) {
-        return "&nbsp;<br /><img src=\"images/box-hold.gif\" border=\"0\" align=\"absmiddle\"/><font color='#FF9933'>" + toHtml((String)request.getAttribute(warningEntry)) + "</font><br>";
-      }else if(request.getParameter(warningEntry) != null){
-        return "&nbsp;<br /><img src=\"images/box-hold.gif\" border=\"0\" align=\"absmiddle\"/><font color='#FF9933'>" + toHtml((String)request.getParameter(warningEntry)) + "</font><br>";
-      }else{
+        return "&nbsp;<br /><img src=\"images/box-hold.gif\" border=\"0\" align=\"absmiddle\"/> <font color='#FF9933'>" + toHtml((String)request.getAttribute(warningEntry)) + "</font><br />&nbsp;<br />";
+      } else if(request.getParameter(warningEntry) != null){
+        return "&nbsp;<br /><img src=\"images/box-hold.gif\" border=\"0\" align=\"absmiddle\"/> <font color='#FF9933'>" + toHtml((String)request.getParameter(warningEntry)) + "</font><br />&nbsp;<br />";
+      } else{
         return "&nbsp;";
       }
     }
@@ -179,25 +158,25 @@ public static String replace(String str, String o, String n) {
     public static String showWarningAttribute(HttpServletRequest request, String warningEntry) {
       if (request.getAttribute(warningEntry) != null) {
         return "<font color='#FF9933'>" + toHtml((String)request.getAttribute(warningEntry)) + "</font>";
-      }else if(request.getParameter(warningEntry) != null){
+      } else if(request.getParameter(warningEntry) != null){
         return "<font color='#FF9933'>" + toHtml((String)request.getParameter(warningEntry)) + "</font>";
-      }else{
+      } else{
         return "";
       }
     }
     
     public static String showError(HttpServletRequest request, String errorEntry, boolean showSpace) {
       if (request.getAttribute(errorEntry) != null) {
-        return (showSpace ? "&nbsp;<br>" : "") + "<img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getAttribute(errorEntry)) + "</font><br>&nbsp;<br>";
+        return (showSpace ? "&nbsp;<br />" : "") + "<img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getAttribute(errorEntry)) + "</font><br />&nbsp;<br />";
       } else if (request.getParameter(errorEntry) != null) {
-        return (showSpace ? "&nbsp;<br>" : "") + "<img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getParameter(errorEntry)) + "</font><br>&nbsp;<br>";
+        return (showSpace ? "&nbsp;<br />" : "") + "<img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/> <font color='red'>" + toHtml((String)request.getParameter(errorEntry)) + "</font><br />&nbsp;<br />";
       } else {
         return (showSpace ? "&nbsp;" : "");
       }
     }
     
     public static boolean hasText(String in) {
-      return (in != null && !("".equals(in)));
+      return (in != null && !("".equals(in.trim())));
     }
 
     public static String toDateTimeString(java.sql.Timestamp inDate) {
@@ -237,7 +216,7 @@ public static String replace(String str, String o, String n) {
   }
     
   public static boolean isPopup(HttpServletRequest request){
-      return "true".equals(request.getParameter("popup"));
+      return (request.getParameter("popup") != null && "true".equals(request.getParameter("popup")));
     }
 
   public static boolean isInLinePopup(HttpServletRequest request){
@@ -275,5 +254,103 @@ public static String replace(String str, String o, String n) {
     } else {
       return null;
     }
+  }
+  
+  public String getTime(javax.servlet.jsp.PageContext context, Timestamp timestamp, String timeZone, int dateFormat, boolean showTimeZone, boolean userTimeZone, boolean dateOnly, String defaultValue) {
+    String result = null;
+    int timeFormat = DateFormat.SHORT;
+    if (timestamp != null && !"".equals(timestamp)) {
+      Locale locale = null;
+      // Retrieve the user's timezone from their session
+      UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+      if (thisUser != null) {
+        if (userTimeZone) {
+          if (timeZone == null) {
+            timeZone = thisUser.getUserRecord().getTimeZone();
+          }
+        }
+        // Still use the user's locale
+        locale = thisUser.getUserRecord().getLocale();
+      }
+      if (locale == null) {
+        locale = Locale.getDefault();
+      }
+
+      //Format the specified timestamp with the retrieved timezone
+      SimpleDateFormat formatter = null;
+      if (dateOnly) {
+        formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(dateFormat, locale);
+      } else {
+        formatter = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance(
+            dateFormat, timeFormat, locale);
+      }
+
+      //set the pattern
+      if (dateOnly) {
+        if ((showTimeZone) && (timeZone != null)) {
+          formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()) + " z");
+        } else {
+          formatter.applyPattern(DateUtils.get4DigitYearDateFormat(formatter.toPattern()));
+        }
+      } else {
+        SimpleDateFormat dateFormatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+            dateFormat, locale);
+        dateFormatter.applyPattern(DateUtils.get4DigitYearDateFormat(dateFormatter.toPattern()));
+
+        SimpleDateFormat timeFormatter = (SimpleDateFormat) SimpleDateFormat.getTimeInstance(
+            timeFormat, locale);
+
+        if ((showTimeZone) && (timeZone != null)) {
+          formatter.applyPattern(dateFormatter.toPattern() + " " + timeFormatter.toPattern() + " z");
+        } else {
+          formatter.applyPattern(dateFormatter.toPattern() + " " + timeFormatter.toPattern());
+        }
+      }
+      //set the timezone
+      if (timeZone != null) {
+        java.util.TimeZone tz = java.util.TimeZone.getTimeZone(timeZone);
+        formatter.setTimeZone(tz);
+      }
+      result = formatter.format(timestamp);
+    } else {
+      //no date found, output default
+      if (defaultValue == null || "".equals(defaultValue)) {
+        defaultValue="&nbsp;";
+      }
+      result = defaultValue;
+    }
+    return result;
+  }
+
+  public String getUsername(javax.servlet.jsp.PageContext context, int userId, boolean lastFirst, boolean firstInitialLast, String defaultText) {
+    String result = null;
+    Hashtable globalStatus = (Hashtable)context.getServletConfig().getServletContext().getAttribute("SystemStatus");
+    ConnectionElement ce = (ConnectionElement)context.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable)context.getServletConfig().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    User thisUser = systemStatus.getUser(userId);
+    if (thisUser != null) {
+      Contact thisContact = thisUser.getContact();
+      if (thisContact != null) {
+        if (lastFirst) {
+          result = StringUtils.toHtml(thisContact.getNameLastFirst());
+        } else if (firstInitialLast) {
+          result = StringUtils.toHtml(thisContact.getNameFirstInitialLast());
+        } else {
+          result = StringUtils.toHtml(thisContact.getNameFirstLast());
+        }
+      }
+    } else {
+      //NOTE: the default text will already be in the output format
+      if (defaultText == null || "".equals(defaultText)) {
+        return "&nbsp;";
+      }
+      String temp = systemStatus.getLabel(defaultText);
+      if ( temp != null || !"".equals(temp)) {
+        result = StringUtils.toHtml(systemStatus.getLabel(defaultText));
+      } else {
+        result = defaultText;
+      }
+    }
+    return result;
   }
 %>

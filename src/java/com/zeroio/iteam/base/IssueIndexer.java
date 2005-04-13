@@ -19,9 +19,12 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.*;
 import java.io.IOException;
 import com.zeroio.utils.ContentUtils;
+import com.darkhorseventures.framework.actions.ActionContext;
 
 /**
  *  Class for working with the Lucene search engine
@@ -41,7 +44,7 @@ public class IssueIndexer implements Indexer {
    *@exception  SQLException  Description of the Exception
    *@exception  IOException   Description of the Exception
    */
-  public static void add(IndexWriter writer, Connection db) throws SQLException, IOException {
+  public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT issue_id, project_id, category_id, subject, message, modified " +
@@ -56,10 +59,11 @@ public class IssueIndexer implements Indexer {
       issue.setProjectId(rs.getInt("project_id"));
       issue.setCategoryId(rs.getInt("category_id"));
       issue.setSubject(rs.getString("subject"));
-      issue.setMessage(rs.getString("message"));
+      issue.setBody(rs.getString("message"));
       issue.setModified(rs.getTimestamp("modified"));
       // add the document
       IssueIndexer.add(writer, issue, false);
+      DatabaseUtils.renewConnection(context, db);
     }
     rs.close();
     pst.close();
@@ -86,7 +90,7 @@ public class IssueIndexer implements Indexer {
     document.add(Field.Text("title", issue.getSubject()));
     document.add(Field.Text("contents",
         issue.getSubject() + " " +
-        ContentUtils.toText(issue.getMessage())));
+        ContentUtils.toText(issue.getBody())));
     if (modified) {
       document.add(Field.Keyword("modified", String.valueOf(System.currentTimeMillis())));
     } else {

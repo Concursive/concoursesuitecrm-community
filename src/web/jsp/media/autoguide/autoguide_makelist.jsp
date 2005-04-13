@@ -32,7 +32,7 @@ function newOpt(param, value) {
 function page_init() {
   var list = parent.document.forms['addVehicle'].elements['vehicle_makeId'];
   list.options.length = 0;
-  list.options[list.length] = newOpt("--None--", -1);
+  list.options[list.length] = newOpt(label("option.none","--None--"), -1);
   
   var list2 = parent.document.forms['addVehicle'].elements['vehicle_modelId'];
   list2.options.length = 0;

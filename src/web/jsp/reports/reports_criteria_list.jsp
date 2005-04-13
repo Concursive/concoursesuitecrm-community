@@ -38,34 +38,33 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Reports.do">Reports</a> >
-<a href="Reports.do">Queue</a> >
-<a href="Reports.do?command=RunReport">Modules</a> >
+<a href="Reports.do"><dhv:label name="qa.reports">Reports</dhv:label></a> >
+<a href="Reports.do"><dhv:label name="reports.queue">Queue</dhv:label></a> >
+<a href="Reports.do?command=RunReport"><dhv:label name="admin.modules">Modules</dhv:label></a> >
 <a href="Reports.do?command=ListReports&categoryId=<%= category.getId() %>"><%= toHtml(category.getCategory()) %></a> >
-Criteria List
+<dhv:label name="reports.criteriaList">Criteria List</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <strong><%= toHtml(report.getTitle()) %>:</strong>
 <%= toHtml(report.getDescription()) %>
-<p>Choose to base this report on previously saved criteria, or continue and create
-new criteria:</p>
+<p><dhv:label name="reports.baseReportOnSavedCriteria.text">Choose to base this report on previously saved criteria, or continue and create new criteria:</dhv:label></p>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="100%">
-      <strong>Subject</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></strong>
     </th>
     <th>
-      <strong>Date</strong>
+      <strong><dhv:label name="quotes.date">Date</dhv:label></strong>
     </th>
   </tr>
 <dhv:evaluate if="<%= criteriaList.size() == 0 %>">
   <tr>
-    <td colspan="3">No criteria found, choose continue to create new criteria.</td>
+    <td colspan="3"><dhv:label name="reports.noCriteriaFound">No criteria found, choose continue to create new criteria.</dhv:label></td>
   </tr>
 </dhv:evaluate>
 <%
@@ -84,4 +83,4 @@ new criteria:</p>
 %>
 </table>
 <br>
-<input type="button" value="Continue" onClick="javascript:window.location.href='Reports.do?command=ParameterList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=-1'"/>
+<input type="button" value="<dhv:label name="button.continue">Continue</dhv:label>" onClick="javascript:window.location.href='Reports.do?command=ParameterList&categoryId=<%= category.getId() %>&reportId=<%= report.getId() %>&criteriaId=-1'"/>

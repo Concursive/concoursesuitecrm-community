@@ -56,6 +56,7 @@ public class Message extends GenericBean {
   private boolean formatLineFeeds = true;
   private int accessType = -1;
   private boolean disableNameValidation = false;
+  private int inactiveCount = -1;
 
   /**
    *  Description of the Field
@@ -209,6 +210,36 @@ public class Message extends GenericBean {
    */
   public void setDisableNameValidation(String tmp) {
     this.disableNameValidation = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the inactiveCount attribute of the Message object
+   *
+   *@param  tmp  The new inactiveCount value
+   */
+  public void setInactiveCount(int tmp) {
+    this.inactiveCount = tmp;
+  }
+
+
+  /**
+   *  Sets the inactiveCount attribute of the Message object
+   *
+   *@param  tmp  The new inactiveCount value
+   */
+  public void setInactiveCount(String tmp) {
+    this.inactiveCount = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the inactiveCount attribute of the Message object
+   *
+   *@return    The inactiveCount value
+   */
+  public int getInactiveCount() {
+    return inactiveCount;
   }
 
 
@@ -740,9 +771,6 @@ public class Message extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
 
     StringBuffer sql = new StringBuffer();
 
@@ -810,11 +838,6 @@ public class Message extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
-
-    if (!isValid()) {
-      return -1;
-    }
-
     try {
       db.setAutoCommit(false);
       resultCount = this.update(db, false);
@@ -847,7 +870,7 @@ public class Message extends GenericBean {
 
       //Check to see if a message is being used by any unfinished campaigns
       //If so, the message can't be deleted
-      int inactiveCount = 0;
+      inactiveCount = 0;
       st = db.createStatement();
       rs = st.executeQuery(
           "SELECT COUNT(*) AS message_count " +
@@ -859,12 +882,6 @@ public class Message extends GenericBean {
       rs.close();
       if (inactiveCount > 0) {
         st.close();
-        errors.put("actionError", "Message could not be deleted because " +
-            inactiveCount + " " +
-            (inactiveCount == 1 ? "campaign is" : "campaigns are") +
-            " being built that " +
-            (inactiveCount == 1 ? "uses" : "use") +
-            " this message.");
         return false;
       }
 
@@ -918,7 +935,7 @@ public class Message extends GenericBean {
         int msgcount = rs.getInt("message_count");
         if (msgcount != 0) {
           Dependency thisDependency = new Dependency();
-          thisDependency.setName("Campaigns");
+          thisDependency.setName("campaigns");
           thisDependency.setCount(msgcount);
           thisDependency.setCanDelete(true);
           dependencyList.add(thisDependency);
@@ -934,37 +951,6 @@ public class Message extends GenericBean {
       db.setAutoCommit(true);
     }
     return dependencyList;
-  }
-
-
-  /**
-   *  Gets the valid attribute of the Message object
-   *
-   *@return                   The valid value
-   *@exception  SQLException  Description of Exception
-   *@since
-   */
-  public boolean isValid() throws SQLException {
-    errors.clear();
-
-    if ((name == null || name.trim().equals("")) && !disableNameValidation) {
-      errors.put("nameError", "Message name is required");
-    }
-
-    if (messageSubject == null || messageSubject.trim().equals("")) {
-      errors.put("messageSubjectError", "Message subject is required");
-    }
-
-    if (replyTo == null || replyTo.trim().equals("") ||
-        replyTo.indexOf("@") == -1 || replyTo.indexOf("@") == replyTo.length() - 1) {
-      errors.put("replyToError", "Full email address is required");
-    }
-
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
 

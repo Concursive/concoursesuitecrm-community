@@ -14,11 +14,12 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*" %>
+<%@ page import="org.aspcfs.modules.base.*" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="CallList" class="org.aspcfs.modules.contacts.base.CallList" scope="request"/>
@@ -46,55 +47,46 @@
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <% if (request.getParameter("return") == null) { %>
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%} else if (request.getParameter("return").equals("dashboard")) {%>
-<a href="Accounts.do?command=Dashboard">Dashboard</a> >
+<a href="Accounts.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
 <%}%>
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-<a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>">Contacts</a> >
-<a href="Contacts.do?command=Details&id=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>">Contact Details</a> >
-Activities
+<a href="Contacts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> >
+<a href="Contacts.do?command=Details&id=<%=ContactDetails.getId()%>&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
+<dhv:label name="accounts.accounts_calls_list.Activities">Activities</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<dhv:container name="accounts" selected="contacts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
 </dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <%-- include contact menu --%>
-      <% 
-      int i = 0;
-      String param1 = "id=" + ContactDetails.getId(); 
-    %>
-        <strong><%= ContactDetails.getNameLastFirst() %>:</strong>
-        [ <dhv:container name="accountscontacts" selected="calls" param="<%= param1 %>"/> ]
-        <br>
-        <br>
+<dhv:container name="accounts" selected="contacts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:container name="accountscontacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>">
+      <% int i = 0; %>
       <dhv:evaluate if="<%= !isPopup(request) %>">
-      <dhv:permission name="accounts-accounts-contacts-calls-add"><a href="AccountContactsCalls.do?command=Add&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&return=list">Add an Activity</a><br><br></dhv:permission>
+        <dhv:permission name="accounts-accounts-contacts-calls-add">
+        <a href="AccountContactsCalls.do?command=Add&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&return=list"><dhv:label name="accounts.accounts_contacts_calls_list.AddAnActivity">Add an Activity</dhv:label></a><br />
+        <br /></dhv:permission>
       </dhv:evaluate>
-<% if ((request.getParameter("pagedListSectionId") == null && !AccountContactCompletedCallsListInfo.getExpandedSelection()) || AccountContactCallsListInfo.getExpandedSelection()) { %>
+    <% if ((request.getParameter("pagedListSectionId") == null && !AccountContactCompletedCallsListInfo.getExpandedSelection()) || AccountContactCallsListInfo.getExpandedSelection()) { %>
       <%-- Pending list --%>
-      <dhv:pagedListStatus showExpandLink="true" title="Pending Activities" object="AccountContactCallsListInfo"/>
+      <dhv:pagedListStatus showExpandLink="true" title="<%= User.getSystemStatus(getServletConfig()).getLabel("accounts.accounts_contacts_calls_list.PendingActivities", "Pending Activities") %>" object="AccountContactCallsListInfo"/>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
           <th>
-            <strong>Action</strong>
+            &nbsp;
           </th>
           <th nowrap="true">
-            <strong>Due Date</strong>
+            <dhv:label name="accounts.accounts_calls_list.DueDate">Due Date</dhv:label>
           </th>
           <th nowrap="true">
-            <strong>Assigned To</strong>
+            <dhv:label name="accounts.accounts_contacts_calls_list.AssignedTo">Assigned To</dhv:label>
           </th>
           <th>
-            <strong>Type</strong>
+            <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
           </th>
           <th width="100%">
-            <strong>Description</strong>
+            <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
           </th>
         </tr>
 <%
@@ -142,7 +134,7 @@ Activities
     <%} else {%>
         <tr class="containerBody">
           <td colspan="5">
-            No activities found.
+            <dhv:label name="accounts.accounts_calls_list.NoActivitiesFound">No activities found.</dhv:label>
           </td>
         </tr>
     <%}%>
@@ -151,31 +143,29 @@ Activities
 <%}%>
 <% if ((request.getParameter("pagedListSectionId") == null && !AccountContactCallsListInfo.getExpandedSelection()) || AccountContactCompletedCallsListInfo.getExpandedSelection()) { %>
      <%-- Completed/Canceled list --%>
+      <%-- accounts.accounts_contacts_calls_list.CompletedCanceledActivities --%>
       <dhv:pagedListStatus showExpandLink="true" title="Completed/Canceled Activities" object="AccountContactCompletedCallsListInfo"/>
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
           <dhv:evaluate if="<%= !isPopup(request) %>">
           <th>
-            <strong>Action</strong>
+            &nbsp;
           </th>
           </dhv:evaluate>
           <th>
-            Status
+            <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
           </th>
           <th>
-            <strong>Type</strong>
+            <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
           </th>
-          <th width="100%">
-            <strong>Subject</strong>
+          <th width="50%">
+            <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
           </th>
-          <th>
-            Result
-          </th>
-          <th nowrap="true">
-            <strong>Entered By</strong>
+          <th width="50%">
+            <dhv:label name="accounts.accounts_calls_list.Result">Result</dhv:label>
           </th>
           <th nowrap="true">
-            Entered
+            <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
           </th>
         </tr>
 <%
@@ -201,7 +191,7 @@ Activities
           <td valign="top" nowrap>
             <%= toHtml(CallTypeList.getSelectedValue(thisCall.getCallTypeId())) %>
           </td>
-          <td width="100%" valign="top">
+          <td width="50%" valign="top">
             <dhv:evaluate if="<%= !isPopup(request) %>">
             <a href="AccountContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
               <%= toHtml(thisCall.getSubject()) %>
@@ -211,19 +201,17 @@ Activities
               <%= toHtml(thisCall.getSubject()) %>
             </dhv:evaluate>
           </td>
-          <td nowrap valign="top">
+          <td width="50%" valign="top">
             <%= toHtml(callResultList.getLookupList(thisCall.getResultId()).getSelectedValue(thisCall.getResultId())) %>
           </td>
           <td valign="top" nowrap>
-            <dhv:username id="<%= thisCall.getEnteredBy() %>" firstInitialLast="true"/>
-          </td>
-          <td valign="top" nowrap>
+            <dhv:username id="<%= thisCall.getEnteredBy() %>" firstInitialLast="true"/><br />
             <zeroio:tz timestamp="<%= thisCall.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
           </td>
         </tr>
         <dhv:evaluate if="<%= AccountContactCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>">
         <tr class="row<%= rowid %>">
-          <td colspan="8" valign="top">
+          <td colspan="7" valign="top">
             <%= toHtmlValue(thisCall.getNotes()) %>
           </td>
         </tr>
@@ -231,16 +219,13 @@ Activities
      <%}%>
     <%} else {%>
         <tr class="containerBody">
-          <td colspan="8">
-            No activities found.
+          <td colspan="7">
+            <dhv:label name="accounts.accounts_calls_list.NoActivitiesFound">No activities found.</dhv:label>
           </td>
         </tr>
     <%}%>
      </table>
 <%}%>
-     <%-- End Container --%>
-   </td>
- </tr>
-</table>
-
+  </dhv:container>
+</dhv:container>
 

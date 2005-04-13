@@ -1,0 +1,16 @@
+/*
+  Install templates.xml if it does not exist; this file gets copied during the
+  installation of each database
+*/
+
+import java.io.File;
+import org.aspcfs.utils.FileUtils;
+
+print("Copying templates.xml into place...");
+
+String fs = System.getProperty("file.separator");
+
+String copyFrom = "pref" + fs + "cfs" + fs + "system" + fs + "templates.xml";
+String copyTo = dbFileLibraryPath + fs + "templates.xml";
+
+FileUtils.copyFile(new File(copyFrom), new File(copyTo), true);

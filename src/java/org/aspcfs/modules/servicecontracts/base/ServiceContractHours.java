@@ -378,9 +378,6 @@ public class ServiceContractHours extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     int resultCount = -1;
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
@@ -408,17 +405,6 @@ public class ServiceContractHours extends GenericBean {
     pst.execute();
     id = DatabaseUtils.getCurrVal(db, "service_contract_hours_history_id_seq");
     pst.close();
-
-    return true;
-  }
-
-
-  /**
-   *  Gets the valid attribute of the ServiceContractHours object
-   *
-   *@return    The valid value
-   */
-  boolean isValid() {
 
     return true;
   }

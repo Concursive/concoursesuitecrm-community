@@ -39,7 +39,7 @@ CREATE TABLE lookup_call_result (
   enabled BOOLEAN DEFAULT true,
   next_required BOOLEAN NOT NULL DEFAULT false,
   next_days INT NOT NULL DEFAULT 0,
-  next_call_type_id INT,
+  next_call_type_id INTEGER,
   canceled_type BOOLEAN NOT NULL DEFAULT false
 );
 
@@ -65,8 +65,8 @@ CREATE TABLE opportunity_header (
 );
 
 CREATE TABLE opportunity_component (
-  id serial PRIMARY KEY,
-  opp_id int references opportunity_header(opp_id),
+  id SERIAL PRIMARY KEY,
+  opp_id INT REFERENCES opportunity_header(opp_id),
   owner INT NOT NULL REFERENCES access(user_id),
   description VARCHAR(80),
   closedate TIMESTAMP(3) NOT NULL,
@@ -85,7 +85,7 @@ CREATE TABLE opportunity_component (
   enteredby INT NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modifiedby INT NOT NULL REFERENCES access(user_id),  
-  closed TIMESTAMP,
+  closed TIMESTAMP(3),
   alert VARCHAR(100) DEFAULT NULL,
   enabled BOOLEAN NOT NULL DEFAULT true,
   notes TEXT,

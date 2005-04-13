@@ -31,7 +31,7 @@
     <td>&nbsp;</td>
     <td colspan="3" nowrap class="eventName">
       <img border="0" src="images/tree0.gif" align="absmiddle" title="Tickets" />
-      Tickets
+      <dhv:label name="tickets.tickets">Tickets</dhv:label>
       (<%= ticketEventList.getOpenTickets().size() %>)
     </td>
   </tr>
@@ -45,13 +45,13 @@
         &nbsp;
       </th>
       <th class="weekSelector" nowrap>
-        <strong>Ticket #</strong>
+        <strong><dhv:label name="tickets.symbol.number" param="number=">Ticket #</dhv:label></strong>
       </th>
-      <th class="weekSelector">
-        <strong>Company</strong>
+      <th class="weekSelector" nowrap>
+        <strong><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></strong>
       </th>
       <th class="weekSelector" width="100%">
-        <strong>Issue</strong>
+        <strong><dhv:label name="accounts.accounts_asset_history.Issue">Issue</dhv:label></strong>
       </th>
     </tr>
   <%  

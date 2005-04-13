@@ -27,34 +27,25 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-Documents
+<dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>
-<dhv:container name="accounts" selected="documents" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <%--TODO:: set the default strings here for the document_list.jsp --%> 
-      <%
-        String permission_doc_folders_add ="accounts-accounts-documents-add";
-        String permission_doc_files_upload = "accounts-accounts-documents-add";
-        String permission_doc_folders_edit = "accounts-accounts-documents-edit";
-        String documentFolderAdd ="AccountsDocumentsFolders.do?command=Add&orgId="+OrgDetails.getOrgId();
-        String documentFileAdd = "AccountsDocuments.do?command=Add&orgId="+ OrgDetails.getOrgId();
-        String documentFolderModify = "AccountsDocumentsFolders.do?command=Modify&orgId="+ OrgDetails.getOrgId();
-        String documentFolderList = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId();
-        String documentFileDetails = "AccountsDocuments.do?command=Details&orgId="+ OrgDetails.getOrgId();
-        String documentModule = "Accounts";
-        String specialID = ""+OrgDetails.getId();
-      %>
-      <%@ include file="documents_list_include.jsp" %>&nbsp;
-    </td>
-  </tr>
-</table>
-
+<dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <%
+    String permission_doc_folders_add ="accounts-accounts-documents-add";
+    String permission_doc_files_upload = "accounts-accounts-documents-add";
+    String permission_doc_folders_edit = "accounts-accounts-documents-edit";
+    String documentFolderAdd ="AccountsDocumentsFolders.do?command=Add&orgId="+OrgDetails.getOrgId();
+    String documentFileAdd = "AccountsDocuments.do?command=Add&orgId="+ OrgDetails.getOrgId();
+    String documentFolderModify = "AccountsDocumentsFolders.do?command=Modify&orgId="+ OrgDetails.getOrgId();
+    String documentFolderList = "AccountsDocuments.do?command=View&orgId="+OrgDetails.getOrgId();
+    String documentFileDetails = "AccountsDocuments.do?command=Details&orgId="+ OrgDetails.getOrgId();
+    String documentModule = "Accounts";
+    String specialID = ""+OrgDetails.getId();
+  %>
+  <%@ include file="documents_list_include.jsp" %>&nbsp;
+</dhv:container>

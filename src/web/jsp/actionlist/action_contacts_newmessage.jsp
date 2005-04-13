@@ -16,10 +16,11 @@
   - Version: $Id$
   - Description: 
   --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <form name="newMessageForm" action="MyCFSInbox.do?command=SendMessage&actionSource=MyActionContacts" method="post" onSubmit="return sendMessage();">
 <%@ include file="../newmessage.jsp" %>
-<br>
-<input type="submit" value="Send">
-<input type="button" value="Cancel" onClick="javascript:window.close();">
-<input type="hidden" name="contactId" value="<%= request.getParameter("contactId") %>">
+<br />
+<input type="submit" value="<dhv:label name="button.send">Send</dhv:label>" />
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();" />
+<input type="hidden" name="contactId" value="<%= request.getParameter("contactId") %>" />
 </form>

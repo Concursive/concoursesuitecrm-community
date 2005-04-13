@@ -15,19 +15,22 @@
  */
 package org.aspcfs.modules.setup.actions;
 
+import bsh.Interpreter;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.apps.help.ImportHelp;
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.modules.actions.CFSModule;
-import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.database.*;
-import org.aspcfs.modules.setup.beans.*;
-import java.sql.*;
-import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.system.base.ApplicationVersion;
-import java.util.*;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.controller.ApplicationPrefs;
-import bsh.*;
-import org.aspcfs.apps.help.ImportHelp;
+import org.aspcfs.utils.FileUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.io.File;
 
 /**
  *  Actions that facilitate upgrading an installation of Centric CRM
@@ -61,7 +64,6 @@ public class Upgrade extends CFSModule {
       return "NeedUpgradeOK";
     }
     addModuleBean(context, null, "Upgrade");
-    Connection db = null;
     // Check version info
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     if (prefs.isUpgradeable()) {
@@ -102,11 +104,12 @@ public class Upgrade extends CFSModule {
         boolean buildHelp = false;
         // Get a connection from the connection pool for this user
         db = this.getConnection(context);
+        // BEGIN DHV CODE ONLY
         // Prepare bean shell script, if needed
         Interpreter script = new Interpreter();
         script.set("db", db);
         script.set("dbFileLibraryPath", prefs.get("FILELIBRARY"));
-        // Determine if an upgrade needs to be executed
+        // Determine if an upgrade needs to be executed (2.9)
         versionToInstall = "2004-06-15";
         if (!isInstalled(db, versionToInstall)) {
           upgradeSQL(context, db, "2004-06-15.sql");
@@ -114,7 +117,7 @@ public class Upgrade extends CFSModule {
           installLog.add("2004-06-15 database changes installed");
           buildHelp = true;
         }
-        // Determine if an upgrade needs to be executed
+        // Determine if an upgrade needs to be executed (2.9.1)
         versionToInstall = "2004-08-30";
         if (!isInstalled(db, versionToInstall)) {
           upgradeSQL(context, db, "2004-08-30.sql");
@@ -123,6 +126,22 @@ public class Upgrade extends CFSModule {
           upgradeBSH(context, script, "2004-08-31.bsh");
           installLog.add("2004-08-30 database changes installed");
           buildHelp = true;
+        }
+        // Determine if an upgrade needs to be executed (2.9.2)
+        versionToInstall = "2005-01-14";
+        if (!isInstalled(db, versionToInstall)) {
+          upgradeSQL(context, db, "2005-01-14.sql");
+          installLog.add("2005-01-14 database changes installed");
+        }
+        // Determine if an upgrade needs to be executed (3.0)
+        versionToInstall = "2005-03-30";
+        if (!isInstalled(db, versionToInstall)) {
+          String setupPath =
+            context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs;
+          FileUtils.copyFile(new File(setupPath + "templates.xml"), new File(getDbNamePath(context) + "templates.xml"), false);
+          installLog.add("2005-03-30 files installed");
+          upgradeSQL(context, db, "2005-03-30.sql");
+          installLog.add("2005-03-30 database changes installed");
         }
         // Reinstall the help file if requested...
         if (buildHelp) {
@@ -134,6 +153,7 @@ public class Upgrade extends CFSModule {
           help.buildTableOfContents();
           help.insertTableOfContents(db);
         }
+        // END DHV CODE ONLY
         if (!prefs.save()) {
           context.getRequest().setAttribute("errorMessage", "No write permission on file library, build.properties");
           return "UpgradeERROR";
@@ -202,7 +222,6 @@ public class Upgrade extends CFSModule {
    */
   private boolean isInstalled(Connection db, String version) throws SQLException {
     boolean isInstalled = false;
-    String installedVersion = null;
     // Query the installed version
     PreparedStatement pst = db.prepareStatement(
         "SELECT script_version " +
@@ -216,26 +235,6 @@ public class Upgrade extends CFSModule {
     rs.close();
     pst.close();
     return isInstalled;
-  }
-
-
-  /**
-   *  Adds a feature to the Version attribute of the Upgrade object
-   *
-   *@param  db                The feature to be added to the Version attribute
-   *@param  filename          The feature to be added to the Version attribute
-   *@param  version           The feature to be added to the Version attribute
-   *@exception  SQLException  Description of the Exception
-   */
-  private void addVersion(Connection db, String filename, String version) throws SQLException {
-    // Add the specified version
-    PreparedStatement pst = db.prepareStatement(
-        "INSERT INTO database_version " +
-        "(script_filename, script_version) VALUES (?, ?) ");
-    pst.setString(1, filename);
-    pst.setString(2, version);
-    pst.execute();
-    pst.close();
   }
 
 

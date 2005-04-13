@@ -28,21 +28,21 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th colspan="2">
-      <strong>Activity Folder</strong>
+      <strong><dhv:label name="project.activityFolder">Activity Folder</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
-    <td valign="top" nowrap class="formLabel">Name</td>
+    <td valign="top" nowrap class="formLabel"><dhv:label name="contacts.name">Name</dhv:label></td>
     <td valign="top" nowrap>
       <%= toHtml(assignmentFolder.getName()) %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel" valign="top">Details</td>
+    <td nowrap class="formLabel" valign="top"><dhv:label name="contacts.details">Details</dhv:label></td>
     <td>
       <%= toHtml(assignmentFolder.getDescription()) %>
     </td>
   </tr>
 </table>
 <br />
-<input type="button" value="Close" onClick="javascript:window.close()">
+<input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close()">

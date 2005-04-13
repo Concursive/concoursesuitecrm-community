@@ -15,15 +15,19 @@
  */
 package org.aspcfs.utils;
 
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import javax.net.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.ApplicationPrefs;
+
 import javax.net.ssl.*;
-import javax.servlet.http.*;
-import java.security.cert.CertificateFactory;
-import javax.security.cert.*;
-import java.security.*;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.StringTokenizer;
 
 /**
  *  Utilities for working with HTTP
@@ -168,11 +172,7 @@ public class HTTPUtils {
   public static int convertUrlToPostscriptFile(String url, String baseFilename) {
     Process process;
     Runtime runtime;
-    java.io.InputStream input;
-    byte buffer[];
-    int bytes;
     String command[] = null;
-
     File osCheckFile = new File("/bin/sh");
     if (osCheckFile.exists()) {
       //Linux
@@ -223,6 +223,15 @@ public class HTTPUtils {
     return params;
   }
 
+  public static String getLink(ActionContext context, String url) {
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    boolean sslEnabled = "true".equals(prefs.get("ForceSSL"));
+    if (sslEnabled) {
+      return ("https://" + HTTPUtils.getServerUrl(context.getRequest()) + "/" + url);
+    } else {
+      return ("http://" + HTTPUtils.getServerUrl(context.getRequest()) + "/" + url);
+    }
+  }
 
   /**
    *  Returns the server's url that was specified in the request, excluding the

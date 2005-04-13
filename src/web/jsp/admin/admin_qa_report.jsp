@@ -21,13 +21,12 @@
 <%@ page import="java.util.*" %>
 <jsp:useBean id="contents" class="org.aspcfs.modules.help.base.HelpItemList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<font size="+1"><b>QA Report <%= new java.util.Date() %></b></font><br>
+<font size="+1"><b><dhv:label name="admin.qaReport">QA Report</dhv:label> <%= new java.util.Date() %></b></font><br>
 <%
   int modCount = 0;
   int itemCount = 0;
   String previousModule = "";
   String previousSection = "";
-  String previousSubsection = "";
   Iterator i = contents.iterator();
   boolean open = false;
   while (i.hasNext()) {

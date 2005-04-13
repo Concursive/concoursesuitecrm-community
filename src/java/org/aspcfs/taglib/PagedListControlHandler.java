@@ -15,10 +15,16 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
+import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.Template;
 import org.aspcfs.utils.web.PagedListInfo;
+
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.HashMap;
+import java.util.Hashtable;
 
 /**
  *  Provides a visual control panel (html form) that allows the user to jump to
@@ -39,7 +45,8 @@ public class PagedListControlHandler extends TagSupport {
   private boolean resetList = true;
   private boolean abbreviate = false;
   private boolean enableJScript = false;
-
+  private String form = "0";
+  
 
   /**
    *  Sets the name attribute of the PagedListControlHandler object
@@ -151,14 +158,21 @@ public class PagedListControlHandler extends TagSupport {
     this.enableJScript = DatabaseUtils.parseBoolean(tmp);
   }
 
+  public void setForm(String form) {
+    this.form = form;
+  }
 
   /**
    *  Description of the Method
    *
    *@return                   Description of the Returned Value
-   *@exception  JspException  Description of Exception
    */
-  public final int doStartTag() throws JspException {
+  public final int doStartTag() {
+    ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+    SystemStatus systemStatus = null;
+    if (ce != null) {
+      systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    }
     try {
       PagedListInfo pagedListInfo = (PagedListInfo) pageContext.getSession().getAttribute(object);
 
@@ -180,29 +194,41 @@ public class PagedListControlHandler extends TagSupport {
             ">");
         out.write("<input type=\"hidden\" name=\"offset\" value=\"\">");
         out.write("<input type=\"hidden\" name=\"pagedListInfoId\" value=\"" + object + "\">");
-
-        out.write("[" +
-            pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") +
-            "|" +
-            pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") +
-            "] ");
-
-        out.write("<font color=\"" + fontColor + "\">");
-        out.write("Page " + pagedListInfo.getNumericalPageEntry() + " ");
-
-        if (!abbreviate) {
-          out.write("of " + ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(pagedListInfo.getNumberOfPages())) + ", ");
+        if (systemStatus != null) {
+          HashMap map = new HashMap();
+          map.put("${pagedListInfo.numericalPageEntry}", "" + pagedListInfo.getNumericalPageEntry());
+          map.put("${pagedListInfo.numberOfPages}", ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(pagedListInfo.getNumberOfPages())));
+          out.write("[" +
+              pagedListInfo.getPreviousPageLink("<font class='underline'>" + systemStatus.getLabel("label.previous") + "</font>", "Previous", form) +
+              "|" +
+              pagedListInfo.getNextPageLink("<font class='underline'>" + systemStatus.getLabel("label.next") + "</font>", "Next", form) +
+              "] ");
+          out.write("<font color=\"" + fontColor + "\">");
+          if (!abbreviate) {
+            map.put("${pagedListInfo.itemsPerPageEntry}", pagedListInfo.getItemsPerPageEntry());
+            out.write(getLabel(map, systemStatus.getLabel("pagedListInfo.pagedListControlHandler.notAbbreviation")));
+          } else {
+            out.write(getLabel(map, systemStatus.getLabel("pagedListInfo.pagedListControlHandler.abbreviation")));
+            out.write("&nbsp;&nbsp;");
+          }
+          out.write("<input type=\"submit\" value=\"" + systemStatus.getLabel("button.go") + "\">");
         } else {
-          out.write("of " + ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(pagedListInfo.getNumberOfPages())));
+          out.write("[" +
+              pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous", form) +
+              "|" +
+              pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next", form) +
+              "] ");
+          out.write("<font color=\"" + fontColor + "\">");
+          out.write("Page " + pagedListInfo.getNumericalPageEntry() + " ");
+          if (!abbreviate) {
+            out.write("of " + ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(pagedListInfo.getNumberOfPages())) + ", ");
+            out.write("Items per page: " + pagedListInfo.getItemsPerPageEntry() + " ");
+          } else {
+            out.write("of " + ((pagedListInfo.getNumberOfPages() == 0) ? "1" : String.valueOf(pagedListInfo.getNumberOfPages())));
+            out.write("&nbsp;&nbsp;");
+          }
+          out.write("<input type=\"submit\" value=\"go\">");
         }
-
-        if (!abbreviate) {
-          out.write("Items per page: " + pagedListInfo.getItemsPerPageEntry() + " ");
-        } else {
-          out.write("&nbsp;&nbsp;");
-        }
-
-        out.write("<input type=\"submit\" value=\"go\">");
         out.write("</font>");
         out.write("</td>");
         out.write("</tr>");
@@ -225,6 +251,20 @@ public class PagedListControlHandler extends TagSupport {
    */
   public int doEndTag() {
     return EVAL_PAGE;
+  }
+
+
+  /**
+   *  Gets the label attribute of the PagedListControlHandler object
+   *
+   *@param  map    Description of the Parameter
+   *@param  input  Description of the Parameter
+   *@return        The label value
+   */
+  public String getLabel(HashMap map, String input) {
+    Template template = new Template(input);
+    template.setParseElements(map);
+    return template.getParsedText();
   }
 }
 

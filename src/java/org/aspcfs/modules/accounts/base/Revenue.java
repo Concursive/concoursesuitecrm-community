@@ -225,32 +225,6 @@ public class Revenue extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the Revenue object
-   *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  protected boolean isValid(Connection db) throws SQLException {
-    errors.clear();
-
-    if (description == null || description.trim().equals("")) {
-      errors.put("descriptionError", "Description cannot be left blank");
-    }
-
-    if (amount == 0) {
-      errors.put("amountError", "Amount needs to be entered");
-    }
-
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-
-  /**
    *  Gets the orgName attribute of the Revenue object
    *
    *@return    The orgName value
@@ -970,12 +944,7 @@ public class Revenue extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid(db)) {
-      return false;
-    }
-
     StringBuffer sql = new StringBuffer();
-
     sql.append(
         "INSERT INTO revenue " +
         "(org_id, transaction_id, month, year, amount, type, owner, description, ");
@@ -1075,11 +1044,6 @@ public class Revenue extends GenericBean {
    */
   protected int update(Connection db, boolean override) throws SQLException {
     int resultCount = 0;
-
-    if (!isValid(db)) {
-      return -1;
-    }
-
     if (this.getId() == -1) {
       throw new SQLException("Revenue ID was not specified");
     }

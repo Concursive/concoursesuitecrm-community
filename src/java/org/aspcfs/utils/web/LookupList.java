@@ -28,7 +28,8 @@ import org.aspcfs.modules.base.SyncableList;
  *
  *@author     mrajkowski
  *@created    September 7, 2001
- *@version    $Id$
+ *@version    $Id: LookupList.java,v 1.36.12.1 2004/11/29 20:53:42 mrajkowski
+ *      Exp $
  */
 public class LookupList extends HtmlSelect implements SyncableList {
   public static String uniqueField = "code";
@@ -43,6 +44,7 @@ public class LookupList extends HtmlSelect implements SyncableList {
   protected boolean showDisabledFlag = true;
   protected PagedListInfo pagedListInfo = null;
   protected HashMap selectedItems = null;
+  protected boolean excludeDisabledIfUnselected = false;
 
 
   /**
@@ -67,6 +69,33 @@ public class LookupList extends HtmlSelect implements SyncableList {
   public LookupList(Connection db, String thisTable) throws SQLException {
     tableName = thisTable;
     buildList(db);
+  }
+
+
+  /**
+   *  Constructor for the LookupList object
+   *
+   *@param  db                Description of the Parameter
+   *@param  moduleId          Description of the Parameter
+   *@param  lookupId          Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public LookupList(Connection db, int moduleId, int lookupId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT lll.table_name AS tableName " +
+        "FROM lookup_lists_lookup AS lll " +
+        "WHERE lll.category_id = ? " +
+        "AND lll.lookup_id = ? "
+        );
+    pst.setInt(1, moduleId);
+    pst.setInt(2, lookupId);
+    ResultSet rs = null;
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setTableName(rs.getString("tableName"));
+    } else {
+      throw new SQLException("No lookup table found");
+    }
   }
 
 
@@ -132,6 +161,36 @@ public class LookupList extends HtmlSelect implements SyncableList {
    */
   public void setSelectedItems(HashMap tmp) {
     this.selectedItems = tmp;
+  }
+
+
+  /**
+   *  Gets the excludeDisabledIfUnselected attribute of the LookupList object
+   *
+   *@return    The excludeDisabledIfUnselected value
+   */
+  public boolean getExcludeDisabledIfUnselected() {
+    return excludeDisabledIfUnselected;
+  }
+
+
+  /**
+   *  Sets the excludeDisabledIfUnselected attribute of the LookupList object
+   *
+   *@param  tmp  The new excludeDisabledIfUnselected value
+   */
+  public void setExcludeDisabledIfUnselected(boolean tmp) {
+    this.excludeDisabledIfUnselected = tmp;
+  }
+
+
+  /**
+   *  Sets the excludeDisabledIfUnselected attribute of the LookupList object
+   *
+   *@param  tmp  The new excludeDisabledIfUnselected value
+   */
+  public void setExcludeDisabledIfUnselected(String tmp) {
+    this.excludeDisabledIfUnselected = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -768,10 +827,10 @@ public class LookupList extends HtmlSelect implements SyncableList {
       }
 
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("description ", null);
+      pagedListInfo.setDefaultSort("enabled DESC,level,description ", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY level,description ");
+      sqlOrder.append("ORDER BY enabled DESC,level,description ");
     }
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);

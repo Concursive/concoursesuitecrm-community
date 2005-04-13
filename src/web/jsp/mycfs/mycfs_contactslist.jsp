@@ -67,8 +67,8 @@
 				<strong>Search</strong>
 				<input type="text" name="lastName" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("lastName")) %>"> <b>, </b>
 				<input type="text" name="firstName" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("firstName")) %>">
-				<input type="submit" value="search">
-				<input type="button" value="clear" onClick="clearSearchFields(true, '')">
+				<input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">
+				<input type="button" value="<dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label>" onClick="clearSearchFields(true, '')">
 			</td>
 		</tr>
 	</table>
@@ -79,13 +79,13 @@
   <%@ include file="contactlist_include.jsp" %>
   
 <% if("list".equals(request.getParameter("listType"))){ %>
-  <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','contactListView');">
-  <input type="button" value="Cancel" onClick="javascript:window.close();">
-  [<a href="javascript:SetChecked(1,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Check All</a>]
-  [<a href="javascript:SetChecked(0,'checkcontact','contactListView','<%=User.getBrowserId()%>');">Clear All</a>]
+  <input type="button" value="<dhv:label name="button.done">Done</dhv:label>" onClick="javascript:setFieldSubmit('finalsubmit','true','contactListView');">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
+  [<a href="javascript:SetChecked(1,'checkcontact','contactListView','<%=User.getBrowserId()%>');"><dhv:label name="quotes.checkAll">Check All</dhv:label></a>]
+  [<a href="javascript:SetChecked(0,'checkcontact','contactListView','<%=User.getBrowserId()%>');"><dhv:label name="quotes.clearAll">Clear All</dhv:label></a>]
   <br>
 <%}else{%>
-  <input type="button" value="Cancel" onClick="javascript:window.close();">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
 <%}%>
   &nbsp;<br>
 </form>

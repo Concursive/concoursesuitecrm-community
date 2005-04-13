@@ -15,12 +15,13 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
+<jsp:useBean id="projectCategoryList" class="com.zeroio.iteam.base.ProjectCategoryList" scope="request"/>
 <jsp:useBean id="currentMember" class="com.zeroio.iteam.base.TeamMember" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -29,59 +30,67 @@
   <tr class="subtab">
     <td>
       <img src="images/icons/stock_macro-objects-16.gif" border="0" align="absmiddle">
-      Overview
+      <dhv:label name="documents.details.overview">Overview</dhv:label>
     </td>
   </tr>
 </table>
 <br>
 <dhv:evaluate if="<%= currentMember.getRoleId() <= TeamMember.PROJECT_LEAD %>">
-<a href="ProjectManagement.do?command=ModifyProject&pid=<%= Project.getId() %>&return=ProjectCenter">Modify Project</a>
+<a href="ProjectManagement.do?command=ModifyProject&pid=<%= Project.getId() %>&return=ProjectCenter"><dhv:label name="project.modifyProject">Modify Project</dhv:label></a>
 |
-<a href="javascript:confirmDelete('ProjectManagement.do?command=DeleteProject&pid=<%= Project.getId() %>');">Delete Project</a>
+<a href="javascript:confirmDelete('ProjectManagement.do?command=DeleteProject&pid=<%= Project.getId() %>');"><dhv:label name="project.deleteProject">Delete Project</dhv:label></a>
 <br>
 <br>
 </dhv:evaluate>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th colspan="2">
-      <strong>General Information</strong>
+      <strong><dhv:label name="documents.details.generalInformation">General Information</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Status</td>
+    <td nowrap class="formLabel"><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>
     <td>
       <dhv:evaluate if="<%= !Project.getClosed() && Project.getApprovalDate() == null %>">
-        <img border="0" src="images/box-hold.gif" alt="On Hold" align="absmiddle">
+        <img border="0" src="images/box-hold.gif" alt="<dhv:label name='alt.onHold'>On Hold</dhv:label>" align="absmiddle">
       </dhv:evaluate>
       <dhv:evaluate if="<%= Project.getClosed() %>">
-        <font color="blue">This project was closed on
-        <zeroio:tz timestamp="<%= Project.getCloseDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
+        <font color="blue">
+          <dhv:label name="project.projectClosedOn" param="<%= "time="+ getTime(pageContext,Project.getCloseDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;")  %>">This project was closed on <zeroio:tz timestamp="<%= Project.getCloseDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
         </font>
       </dhv:evaluate>
       <dhv:evaluate if="<%= !Project.getClosed() %>">
         <dhv:evaluate if="<%= Project.getApprovalDate() == null %>">
-          <font color="red">This project is currently under review and has not been approved</font>
+          <font color="red"><dhv:label name="project.projectUnderReview.text">This project is currently under review and has not been approved</dhv:label></font>
         </dhv:evaluate>
         <dhv:evaluate if="<%= Project.getApprovalDate() != null %>">
-          <font color="darkgreen">This project was approved on <zeroio:tz timestamp="<%= Project.getApprovalDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></font>
+          <font color="darkgreen"><dhv:label name="project.projectApprovedOn" param="<%= "time="+getTime(pageContext,Project.getApprovalDate(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>">This project was approved on <zeroio:tz timestamp="<%= Project.getApprovalDate() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label></font>
         </dhv:evaluate>
       </dhv:evaluate>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Title</td>
+    <td nowrap class="formLabel"><dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label></td>
     <td>
       <%= toHtml(Project.getTitle()) %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Short Description</td>
+    <td nowrap class="formLabel"><dhv:label name="documents.details.shortDescription">Short Description</dhv:label></td>
     <td>
       <%= toHtml(Project.getShortDescription()) %>
     </td>
   </tr>
+  <dhv:evaluate if="<%= projectCategoryList.size() > 1 %>">
   <tr class="containerBody">
-    <td nowrap class="formLabel">Start Date</td>
+    <td nowrap class="formLabel">Category</td>
+    <td>
+      <%= toHtml(projectCategoryList.getValueFromId(Project.getCategoryId())) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <tr class="containerBody">
+    <td nowrap class="formLabel"><dhv:label name="documents.details.startDate">Start Date</dhv:label></td>
     <td>
       <zeroio:tz timestamp="<%= Project.getRequestDate() %>" dateOnly="true" timeZone="<%= Project.getRequestDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(Project.getRequestDateTimeZone())){%>
@@ -91,7 +100,7 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Estimated Close Date</td>
+    <td nowrap class="formLabel"><dhv:label name="project.estimatedCloseDate">Estimated Close Date</dhv:label></td>
     <td>
       <zeroio:tz timestamp="<%= Project.getEstimatedCloseDate() %>" dateOnly="true" timeZone="<%= Project.getEstimatedCloseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% if(!User.getTimeZone().equals(Project.getEstimatedCloseDateTimeZone())){%>
@@ -101,19 +110,19 @@
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Requested By</td>
+    <td nowrap class="formLabel"><dhv:label name="documents.details.requestedBy">Requested By</dhv:label></td>
     <td>
       <%= toHtml(Project.getRequestedBy()) %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Organization</td>
+    <td nowrap class="formLabel"><dhv:label name="documents.details.organization">Organization</dhv:label></td>
     <td>
       <%= toHtml(Project.getRequestedByDept()) %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Budget</td>
+    <td nowrap class="formLabel"><dhv:label name="project.budget">Budget</dhv:label></td>
     <td>
       <zeroio:currency value="<%= Project.getBudget() %>" code="<%= Project.getBudgetCurrency() %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
     </td>
@@ -127,14 +136,14 @@
   </tr>
   --%>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Entered</td>
+    <td nowrap class="formLabel"><dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label></td>
     <td>
       <dhv:username id="<%= Project.getEnteredBy() %>"/>
       <zeroio:tz timestamp="<%= Project.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Modified</td>
+    <td nowrap class="formLabel"><dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label></td>
     <td>
       <dhv:username id="<%= Project.getModifiedBy() %>"/>
       <zeroio:tz timestamp="<%= Project.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>

@@ -18,6 +18,7 @@
   - Description: 
   --%>
 <%@ page import="java.util.*,org.aspcfs.modules.admin.base.*,org.aspcfs.utils.StringUtils" %>
+<%@ page import="java.sql.*" %>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <html>
@@ -32,12 +33,19 @@ function page_init() {
   Iterator i = UserList.iterator();
   while (i.hasNext()) {
     User thisUser = (User)i.next();
+    Timestamp currentTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
+    String tempString = "";
+    if ((thisUser.getExpires() != null && currentTime.after(thisUser.getExpires())) || !thisUser.getEnabled()) {
+      tempString = " *";
+    }
 %>
   if ( !(inArray(parent.document.forms['projectMemberForm'].elements['selProjectList'], <%= thisUser.getId() %>)) ) {
     var newOpt = parent.document.createElement("OPTION");
-    newOpt.text='<%= StringUtils.jsStringEscape(thisUser.getContact().getNameFirstLast()) %>';
+    newOpt.text='<%= StringUtils.jsStringEscape(thisUser.getContact().getNameFirstLast()+tempString) %>';
     newOpt.value='<%= thisUser.getId() %>';
-    list.options[list.length] = newOpt;
+    if (newOpt.value != '0') {
+      list.options[list.length] = newOpt;
+    }
   }
   parent.initList(<%= thisUser.getId() %>);
 <%

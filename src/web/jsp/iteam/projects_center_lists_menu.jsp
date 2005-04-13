@@ -54,7 +54,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View Item
+          <dhv:label name="project.viewItem">View Item</dhv:label>
         </td>
       </tr>
     <zeroio:permission name="project-lists-modify">
@@ -64,7 +64,7 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Edit Item
+          <dhv:label name="project.editItem">Edit Item</dhv:label>
         </td>
       </tr>
     </zeroio:permission>
@@ -75,7 +75,7 @@
           <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Move Item to Another List
+          <dhv:label name="project.moveItemDiffList">Move Item to Another List</dhv:label>
         </td>
       </tr>
     </zeroio:permission>
@@ -86,7 +86,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete Item
+          <dhv:label name="project.deleteItem">Delete Item</dhv:label>
         </td>
       </tr>
     </zeroio:permission>

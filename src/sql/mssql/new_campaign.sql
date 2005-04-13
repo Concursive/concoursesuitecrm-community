@@ -180,7 +180,8 @@ CREATE TABLE active_survey_responses (
   contact_id INT NOT NULL DEFAULT -1,
   unique_code VARCHAR(255),
   ip_address VARCHAR(15) NOT NULL,
-  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  address_updated INT
 );
 
 CREATE TABLE active_survey_answers (

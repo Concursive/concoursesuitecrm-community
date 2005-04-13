@@ -15,15 +15,14 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.utils.Template;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
  *  This class bypasses the typical campaign process. Now a campaign can be
@@ -103,9 +102,7 @@ public class InstantCampaign extends Campaign {
    */
   public boolean activate(Connection db) throws SQLException {
     int resultCount = 0;
-    SQLException errorMessage = null;
     PreparedStatement pst = null;
-
     try {
       db.setAutoCommit(false);
       //Replace tags
@@ -177,43 +174,35 @@ public class InstantCampaign extends Campaign {
       }
       return true;
     } catch (SQLException e) {
-      errorMessage = e;
       db.rollback();
+      throw new SQLException(e.getMessage());
     } catch (Exception ee) {
       db.rollback();
-      ee.printStackTrace(System.out);
+      throw new SQLException(ee.getMessage());
     } finally {
       db.setAutoCommit(true);
     }
-    return false;
   }
 
 
   /**
-   *  Gets the valid attribute of the InstantCampaign object
+   *  Description of the Method
    *
-   *@param  thisMessage       Description of the Parameter
-   *@return                   The valid value
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean isValid(Message thisMessage) throws SQLException {
-    errors.clear();
-    instantMessage = thisMessage;
-    if (instantMessage != null) {
-      if (instantMessage.getMessageSubject() == null || instantMessage.getMessageSubject().trim().equals("")) {
-        errors.put("messageSubjectError", "Message subject is required");
-      }
-
-      if (instantMessage.getReplyTo() == null || instantMessage.getReplyTo().trim().equals("") ||
-          instantMessage.getReplyTo().indexOf("@") == -1 || instantMessage.getReplyTo().indexOf("@") == instantMessage.getReplyTo().length() - 1) {
-        errors.put("replyToError", "Full email address is required");
-      }
-    }
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
+  public int updateInstantCampaignMessage(Connection db, Message tmpMessage) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE campaign " +
+        "SET message = ? " +
+        "WHERE campaign_id = ? ");
+    int i = 0;
+    pst.setString(++i, tmpMessage.getMessageText());
+    pst.setInt(++i, this.getId());
+    int resultCount = pst.executeUpdate();
+    pst.close();
+    return resultCount;
   }
 }
 

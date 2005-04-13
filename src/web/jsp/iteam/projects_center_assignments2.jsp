@@ -15,9 +15,8 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
-<%-- <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %> --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
@@ -68,7 +67,7 @@
   <tr class="subtab">
     <td>
       <img border="0" src="images/icons/stock_list_bullet2-16.gif" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>">Outlines</a> >
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=<%= Project.getId() %>"><dhv:label name="project.outlines">Outlines</dhv:label></a> >
       <%= toHtml(requirement.getShortDescription()) %>
     </td>
   </tr>
@@ -80,9 +79,9 @@
     <td align="left">
       <img alt="" src="images/icons/stock_filter-data-by-criteria-16.gif" align="absmiddle">
       <select size="1" name="listView" onChange="javascript:document.forms['listView'].submit();">
-        <option <%= projectAssignmentsInfo.getOptionValue("all") %>>All Activities</option>
-        <option <%= projectAssignmentsInfo.getOptionValue("open") %>>Open Activities</option>
-        <option <%= projectAssignmentsInfo.getOptionValue("closed") %>>Closed Activities</option>
+        <option <%= projectAssignmentsInfo.getOptionValue("all") %>><dhv:label name="project.allActivities">All Activities</dhv:label></option>
+        <option <%= projectAssignmentsInfo.getOptionValue("open") %>><dhv:label name="project.openActivities">Open Activities</dhv:label></option>
+        <option <%= projectAssignmentsInfo.getOptionValue("closed") %>><dhv:label name="project.closedActivities">Closed Activities</dhv:label></option>
       </select>
     </td>
     </form>
@@ -91,11 +90,11 @@
 <%-- Plan Header --%>
 <table cellpadding="0" cellspacing="0" width="100%" border="1" rules="cols">
   <tr>
-    <td class="section" nowrap><strong>Outline</strong></td>
-    <td class="section" align="center" nowrap><strong>Assigned To</strong></td>
-    <td class="section" align="center"><strong>Effort</strong></td>
-    <td class="section" align="center"><strong>Start</strong></td>
-    <td class="section" align="center" nowrap><strong>&nbsp;End&nbsp;</strong></td>
+    <td class="section" nowrap><strong><dhv:label name="project.outlines">Outlines</dhv:label></strong></td>
+    <td class="section" align="center" nowrap><strong><dhv:label name="accounts.accounts_contacts_calls_list.AssignedTo">Assigned To</dhv:label></strong></td>
+    <td class="section" align="center"><strong><dhv:label name="project.effort">Effort</dhv:label></strong></td>
+    <td class="section" align="center"><strong><dhv:label name="project.start">Start</dhv:label></strong></td>
+    <td class="section" align="center" nowrap><strong>&nbsp;<dhv:label name="project.end">End</dhv:label>&nbsp;</strong></td>
   </tr>
 <%
   Requirement thisRequirement = requirement;
@@ -110,7 +109,7 @@
          onMouseOver="over(0, 'r<%= thisRequirement.getId() %>')"
          onmouseout="out(0, 'r<%= thisRequirement.getId() %>'); hideMenu('menuRequirement');"><img 
         src="images/menu.gif" name="menur<%= thisRequirement.getId() %>" id="menur<%= thisRequirement.getId() %>" align="absmiddle" border="0"></a>
-      (<%= thisRequirement.getGeneratedPlanActivityCount() %> activit<%= (thisRequirement.getAssignments().size() == 1?"y":"ies") %>)
+      (<%= thisRequirement.getPlanActivityCount() %> activit<%= (thisRequirement.getAssignments().size() == 1?"y":"ies") %>)
     </td>
     <td>
       &nbsp;
@@ -266,14 +265,14 @@
 <table border="0" width="100%">
   <tr>
     <td width>
-      <img border="0" src="images/box.gif" alt="Incomplete" align="absmiddle">
-      Item is incomplete<br>
-      <img border="0" src="images/box-checked.gif" alt="Completed" align="absmiddle">
-      Item has been completed<br>
-      <img border="0" src="images/box-closed.gif" alt="Closed" align="absmiddle">
-      Item has been closed<br>
-      <img border="0" src="images/box-hold.gif" alt="On Hold" align="absmiddle">
-      Item is on hold
+      <img border="0" src="images/box.gif" alt="<dhv:label name='quotes.incomplete'>Incomplete</dhv:label>" align="absmiddle">
+      <dhv:label name="project.itemIsIncomplete">Item is incomplete</dhv:label><br>
+      <img border="0" src="images/box-checked.gif" alt="<dhv:label name='alt.completed'>Completed</dhv:label>" align="absmiddle">
+      <dhv:label name="project.itemHasBeenCompleted">Item has been completed</dhv:label><br>
+      <img border="0" src="images/box-closed.gif" alt="<dhv:label name='quotes.closed'>Closed</dhv:label>" align="absmiddle">
+      <dhv:label name="project.itemClosed">Item has been closed</dhv:label><br>
+      <img border="0" src="images/box-hold.gif" alt="<dhv:label name='alt.onHold'>On Hold</dhv:label>" align="absmiddle">
+      <dhv:label name="project.itemOnHold">Item is on hold</dhv:label>
     </td>
   </tr>
 </table>

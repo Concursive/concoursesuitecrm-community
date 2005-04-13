@@ -14,67 +14,21 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%-- reusable contact form --%>
 <jsp:useBean id="ContactPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="ContactAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="ContactTextMessageAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="StateSelect" class="org.aspcfs.utils.web.StateSelect" scope="request"/>
 <jsp:useBean id="CountrySelect" class="org.aspcfs.utils.web.CountrySelect" scope="request"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
+<div align="center" style="padding:3px;"><dhv:label name="contact.internationalNumbers.note">Note: All international phone numbers must be preceded by a "+" symbol.</dhv:label></div>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Email Addresses</strong>
-	  </th>
-  </tr>
-<%
-  int ecount = 0;
-  int etotal = 3;
-  Iterator enumber = ContactDetails.getEmailAddressList().iterator();
-  while (enumber.hasNext()) {
-    ++ecount;
-    ContactEmailAddress thisEmailAddress = (ContactEmailAddress)enumber.next();
-%>  
-  <tr class="containerBody">
-    <td class="formLabel">
-      Email <%= ecount %>
-    </td>
-    <td>
-      <%= ContactEmailTypeList.getHtmlSelect("email"+ecount+"type", thisEmailAddress.getType()) %>
-      <input type="text" size="40" name="email<%= ecount %>address" maxlength="255" value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
-      <input type="radio" name="primaryEmail" value="<%= ecount %>" <%= (thisEmailAddress.getPrimaryEmail()) ? " checked" : "" %>>Primary
-      <dhv:evaluate if="<%= thisEmailAddress.getId() > 0 %>">
-        <input type="hidden" name="email<%= ecount %>id" value="<%= thisEmailAddress.getId() %>">
-        <input type="checkbox" name="email<%= ecount %>delete" value="on">mark to remove
-      </dhv:evaluate>
-    </td>
-  </tr>
-<%    
-  }
-  while (ecount < etotal) {
-    ++ecount;
-%>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Email <%= ecount %>
-    </td>
-    <td>
-      <%= ContactEmailTypeList.getHtmlSelect("email" + ecount + "type", ((ContactDetails.getEmailAddressTypeId(1)==-1)?1:ContactDetails.getEmailAddressTypeId(1))) %>
-      <input type="text" size="40" name="email<%=ecount%>address" maxlength="255">
-      <input type="radio" name="primaryEmail" value="<%= ecount %>">Primary
-    </td>
-  </tr>
-<%
-  }
-%>
-</table>
-<div align="center" style="padding:3px;">Note: All international phone numbers must be preceded by a "+" symbol.</div>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-	    <strong>Phone Numbers</strong>
+	    <strong><dhv:label name="accounts.accounts_add.PhoneNumbers">Phone Numbers</dhv:label></strong>
 	  </th>
   </tr>
 <%  
@@ -91,12 +45,12 @@
     </td>
     <td>
       <%= ContactPhoneTypeList.getHtmlSelect("phone" + icount + "type", thisPhoneNumber.getType()) %>
-      <input type="text" size="20" name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;ext.
+      <input type="text" size="20" name="phone<%= icount %>number" value="<%= toHtmlValue(thisPhoneNumber.getNumber()) %>">&nbsp;<dhv:label name="accounts.accounts_add.ext">ext.</dhv:label>
       <input type="text" size="5" name="phone<%= icount %>ext" maxlength="10" value="<%= toHtmlValue(thisPhoneNumber.getExtension()) %>">
-      <input type="radio" name="primaryNumber" value="<%= icount %>" <%= (thisPhoneNumber.getPrimaryNumber()) ? " checked" : "" %>>Primary
+      <input type="radio" name="primaryNumber" value="<%= icount %>" <%= (thisPhoneNumber.getPrimaryNumber()) ? " checked" : "" %>><dhv:label name="contact.primary">Primary</dhv:label>
       <dhv:evaluate if="<%= thisPhoneNumber.getId() > 0 %>">
         <input type="hidden" name="phone<%= icount %>id" value="<%= thisPhoneNumber.getId() %>">
-        <input type="checkbox" name="phone<%= icount %>delete" value="on">mark to remove
+        <input type="checkbox" name="phone<%= icount %>delete" value="on"><dhv:label name="accounts.accounts_modify.MarkToRemove">mark to remove</dhv:label>
       </dhv:evaluate>
       
     </td>
@@ -111,19 +65,158 @@
        <%= icount %>
     </td>
     <td>
-      <%= ContactPhoneTypeList.getHtmlSelect("phone"+icount+"type", "Business") %>
-      <input type="text" size="20" name="phone<%=icount%>number">&nbsp;ext.
+      <%= ContactPhoneTypeList.getHtmlSelect("phone"+icount+"type", "") %>
+      <input type="text" size="20" name="phone<%=icount%>number">&nbsp;<dhv:label name="accounts.accounts_add.ext">ext.</dhv:label>
       <input type="text" size="5" name="phone<%=icount%>ext" maxlength="10">
-      <input type="radio" name="primaryNumber" value="<%= icount %>">Primary
+      <input type="radio" name="primaryNumber" value="<%= icount %>"><dhv:label name="contact.primary">Primary</dhv:label>
     </td>
   </tr>
-<%}%>  
+<%}%>
+<%if (ContactDetails.getPhoneNumberList().size() >= 3) {
+    ++icount;
+%>
+  <tr class="containerBody">
+    <td class="formLabel">
+       <%= icount %>
+    </td>
+    <td>
+      <%= ContactPhoneTypeList.getHtmlSelect("phone"+icount+"type", "") %>
+      <input type="text" size="20" name="phone<%=icount%>number">&nbsp;<dhv:label name="accounts.accounts_add.ext">ext.</dhv:label>
+      <input type="text" size="5" name="phone<%=icount%>ext" maxlength="10">
+      <input type="radio" name="primaryNumber" value="<%= icount %>"><dhv:label name="contact.primary">Primary</dhv:label>
+    </td>
+  </tr>
+<%}%>
 </table>
-&nbsp;<br>  
+&nbsp;<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Addresses</strong>
+	    <strong><dhv:label name="accounts.accounts_add.EmailAddresses">Email Addresses</dhv:label></strong>
+	  </th>
+  </tr>
+<%
+  int ecount = 0;
+  int etotal = 3;
+  Iterator enumber = ContactDetails.getEmailAddressList().iterator();
+  while (enumber.hasNext()) {
+    ++ecount;
+    ContactEmailAddress thisEmailAddress = (ContactEmailAddress)enumber.next();
+%>  
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="accounts.accounts_add.Email">Email</dhv:label> <%= ecount %>
+    </td>
+    <td>
+      <%= ContactEmailTypeList.getHtmlSelect("email"+ecount+"type", thisEmailAddress.getType()) %>
+      <input type="text" size="40" name="email<%= ecount %>address" maxlength="255" value="<%= toHtmlValue(thisEmailAddress.getEmail()) %>">
+      <input type="radio" name="primaryEmail" value="<%= ecount %>" <%= (thisEmailAddress.getPrimaryEmail()) ? " checked" : "" %>><dhv:label name="contact.primary">Primary</dhv:label>
+      <dhv:evaluate if="<%= thisEmailAddress.getId() > 0 %>">
+        <input type="hidden" name="email<%= ecount %>id" value="<%= thisEmailAddress.getId() %>">
+        <input type="checkbox" name="email<%= ecount %>delete" value="on"><dhv:label name="accounts.accounts_modify.MarkToRemove">mark to remove</dhv:label>
+      </dhv:evaluate>
+    </td>
+  </tr>
+<%    
+  }
+  while (ecount < etotal) {
+    ++ecount;
+%>
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="accounts.accounts_add.Email">Email</dhv:label> <%= ecount %>
+    </td>
+    <td>
+      <%= ContactEmailTypeList.getHtmlSelect("email" + ecount + "type", ((ContactDetails.getEmailAddressTypeId(1)==-1)?1:ContactDetails.getEmailAddressTypeId(1))) %>
+      <input type="text" size="40" name="email<%=ecount%>address" maxlength="255">
+      <input type="radio" name="primaryEmail" value="<%= ecount %>"><dhv:label name="contact.primary">Primary</dhv:label>
+    </td>
+  </tr>
+<%
+  }
+%>
+<%if (ContactDetails.getEmailAddressList().size() >= 3) {
+    ++ecount;
+%>
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="accounts.accounts_add.Email">Email</dhv:label> <%= ecount %>
+    </td>
+    <td>
+      <%= ContactEmailTypeList.getHtmlSelect("email" + ecount + "type", ((ContactDetails.getEmailAddressTypeId(1)==-1)?1:ContactDetails.getEmailAddressTypeId(1))) %>
+      <input type="text" size="40" name="email<%=ecount%>address" maxlength="255">
+      <input type="radio" name="primaryEmail" value="<%= ecount %>"><dhv:label name="contact.primary">Primary</dhv:label>
+    </td>
+  </tr>
+<%
+  }
+%>
+</table>
+&nbsp;<br />
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+	    <strong><dhv:label name="accounts.accounts_add.TextMessageAddresses">Text Message Addresses</dhv:label></strong>
+	  </th>
+  </tr>
+<%
+  int tcount = 0;
+  int ttotal = 3;
+  Iterator tnumber = ContactDetails.getTextMessageAddressList().iterator();
+  while (tnumber.hasNext()) {
+    ++tcount;
+    ContactTextMessageAddress thisTextMessageAddress = (ContactTextMessageAddress)tnumber.next();
+%>  
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="accounts.accounts_add.TextMessageAddress">Text Message Address</dhv:label> <%= tcount %>
+    </td>
+    <td>
+      <%= ContactTextMessageAddressTypeList.getHtmlSelect("textmessage"+tcount+"type", thisTextMessageAddress.getType()) %>
+      <input type="text" size="40" name="textmessage<%= tcount %>address" maxlength="255" value="<%= toHtmlValue(thisTextMessageAddress.getTextMessageAddress()) %>">
+      <input type="radio" name="primaryTextMessageAddress" value="<%= tcount %>" <%= (thisTextMessageAddress.getPrimaryTextMessageAddress()) ? " checked" : "" %>><dhv:label name="contact.primary">Primary</dhv:label>
+      <dhv:evaluate if="<%= thisTextMessageAddress.getId() > 0 %>">
+        <input type="hidden" name="textmessage<%= tcount %>id" value="<%= thisTextMessageAddress.getId() %>">
+        <input type="checkbox" name="textmessage<%= tcount %>delete" value="on"><dhv:label name="accounts.accounts_modify.MarkToRemove">mark to remove</dhv:label>
+      </dhv:evaluate>
+    </td>
+  </tr>
+<%    
+  }
+  while (tcount < ttotal) {
+    ++tcount;
+%>
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="accounts.accounts_add.TextMessageAddress">Text Message Address</dhv:label> <%= tcount %>
+    </td>
+    <td>
+      <%= ContactTextMessageAddressTypeList.getHtmlSelect("textmessage" + tcount + "type", ((ContactDetails.getTextMessageAddressTypeId(1)==-1)?1:ContactDetails.getTextMessageAddressTypeId(1))) %>
+      <input type="text" size="40" name="textmessage<%=tcount%>address" maxlength="255">
+      <input type="radio" name="primaryTextMessageAddress" value="<%= tcount %>"><dhv:label name="contact.primary">Primary</dhv:label>
+    </td>
+  </tr>
+<%}%>
+<%if (ContactDetails.getTextMessageAddressList().size() >= 3) {
+    ++tcount;
+%>
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="accounts.accounts_add.TextMessageAddress">Text Message Address</dhv:label> <%= tcount %>
+    </td>
+    <td>
+      <%= ContactTextMessageAddressTypeList.getHtmlSelect("textmessage" + tcount + "type", ((ContactDetails.getTextMessageAddressTypeId(1)==-1)?1:ContactDetails.getTextMessageAddressTypeId(1))) %>
+      <input type="text" size="40" name="textmessage<%=tcount%>address" maxlength="255">
+      <input type="radio" name="primaryTextMessageAddress" value="<%= tcount %>"><dhv:label name="contact.primary">Primary</dhv:label>
+    </td>
+  </tr>
+<%}%>
+</table>
+&nbsp;<br />
+<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+  <tr>
+    <th colspan="2">
+      <strong><dhv:label name="accounts.accounts_add.Addresses">Addresses</dhv:label></strong>
     </th>
   </tr>
 <%  
@@ -137,16 +230,16 @@
   <tr class="containerBody">
     <input type="hidden" name="address<%= acount %>id" value="<%= thisAddress.getId() %>">
     <td class="formLabel">
-      Type
+      <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
     </td>
     <td>
       <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", thisAddress.getType()) %>
-      <input type="radio" name="primaryAddress" value="<%=acount%>" <%= thisAddress.getPrimaryAddress() ? " checked" : ""%>>Primary
+      <input type="radio" name="primaryAddress" value="<%=acount%>" <%= thisAddress.getPrimaryAddress() ? " checked" : ""%>><dhv:label name="contact.primary">Primary</dhv:label>
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Address Line 1
+      <dhv:label name="accounts.accounts_add.AddressLine1">Address Line 1</dhv:label>
     </td>
     <td>
       <input type="text" size="40" name="address<%= acount %>line1" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine1()) %>">
@@ -154,7 +247,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Address Line 2
+      <dhv:label name="accounts.accounts_add.AddressLine2">Address Line 2</dhv:label>
     </td>
     <td>
       <input type="text" size="40" name="address<%= acount %>line2" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine2()) %>">
@@ -162,7 +255,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Address Line 3
+      <dhv:label name="accounts.accounts_add.AddressLine3">Address Line 3</dhv:label>
     </td>
     <td>
       <input type="text" size="40" name="address<%= acount %>line3" maxlength="80" value="<%= toHtmlValue(thisAddress.getStreetAddressLine3()) %>">
@@ -170,7 +263,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      City
+      <dhv:label name="accounts.accounts_add.City">City</dhv:label>
     </td>
     <td>
       <input type="text" size="28" name="address<%= acount %>city" maxlength="80" value="<%= toHtmlValue(thisAddress.getCity()) %>">
@@ -178,7 +271,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      State/Province
+      <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
       <span name="state1<%= acount %>" ID="state1<%= acount %>" style="<%= ("UNITED STATES".equals(thisAddress.getCountry()) || "CANADA".equals(thisAddress.getCountry()))? "" : " display:none" %>">
@@ -193,7 +286,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Zip/Postal Code
+      <dhv:label name="accounts.accounts_add.ZipPostalCode">Zip/Postal Code</dhv:label>
     </td>
     <td>
       <input type="text" size="10" name="address<%= acount %>zip" maxlength="12" value="<%= toHtmlValue(thisAddress.getZip()) %>">
@@ -201,12 +294,16 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Country
+      <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
-      <% CountrySelect = new CountrySelect(); %>
+      <% if (!applicationPrefs.get("SYSTEM.COUNTRY").equals("UNITED STATES") && !applicationPrefs.get("SYSTEM.COUNTRY").equals("CANADA")) { %>
+      <script type="text/javascript">
+        update('address<%= acount %>country','<%= acount %>');
+      </script>
+      <% } CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -222,16 +319,16 @@
   
   <tr class="containerBody">
     <td class="formLabel">
-      Type
+      <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
     </td>
     <td>
-      <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", "Business") %>
+      <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", "") %>
       <input type="radio" name="primaryAddress" value="<%=acount%>">Primary
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Address Line 1
+      <dhv:label name="accounts.accounts_add.AddressLine1">Address Line 1</dhv:label>
     </td>
     <td>
       <input type="text" size="40" name="address<%= acount %>line1" maxlength="80">
@@ -239,7 +336,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Address Line 2
+      <dhv:label name="accounts.accounts_add.AddressLine2">Address Line 2</dhv:label>
     </td>
     <td>
       <input type="text" size="40" name="address<%= acount %>line2" maxlength="80">
@@ -247,7 +344,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Address Line 3
+      <dhv:label name="accounts.accounts_add.AddressLine3">Address Line 3</dhv:label>
     </td>
     <td>
       <input type="text" size="40" name="address<%= acount %>line3" maxlength="80">
@@ -255,7 +352,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      City
+      <dhv:label name="accounts.accounts_add.City">City</dhv:label>
     </td>
     <td>
       <input type="text" size="28" name="address<%= acount %>city" maxlength="80">
@@ -263,7 +360,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      State/Province
+      <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
     </td>
     <td>
       <span name="state1<%= acount %>" ID="state1<%= acount %>">
@@ -278,7 +375,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Zip/Postal Code
+      <dhv:label name="accounts.accounts_add.ZipPostalCode">Zip/Postal Code</dhv:label>
     </td>
     <td>
       <input type="text" size="10" name="address<%= acount %>zip" maxlength="12">
@@ -286,12 +383,105 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Country
+      <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
     </td>
     <td>
-      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <% CountrySelect = new CountrySelect(); %>
+      <% if (!applicationPrefs.get("SYSTEM.COUNTRY").equals("UNITED STATES") && !applicationPrefs.get("SYSTEM.COUNTRY").equals("CANADA")) { %>
+      <script type="text/javascript">
+        update('address<%= acount %>country','<%= acount %>');
+      </script>
+      <% } CountrySelect = new CountrySelect(); %>
+    </td>
+  </tr>
+  <dhv:evaluate if="<%= acount != atotal %>">
+  <tr class="containerBody">
+    <td colspan="2">
+      &nbsp;
+    </td>
+  </tr>
+  </dhv:evaluate>
+<%}
+  if (ContactDetails.getAddressList().size() >= 2) {
+    ++acount;
+%>
+  <tr class="containerBody">
+    <td class="formLabel">
+      <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
+    </td>
+    <td>
+      <%= ContactAddressTypeList.getHtmlSelect("address" + acount + "type", "") %>
+      <input type="radio" name="primaryAddress" value="<%=acount%>">Primary
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.AddressLine1">Address Line 1</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line1" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.AddressLine2">Address Line 2</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line2" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.AddressLine3">Address Line 3</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="40" name="address<%= acount %>line3" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.City">City</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="28" name="address<%= acount %>city" maxlength="80">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.StateProvince">State/Province</dhv:label>
+    </td>
+    <td>
+      <span name="state1<%= acount %>" ID="state1<%= acount %>">
+        <%= StateSelect.getHtml("address" + acount + "state") %>
+      </span>
+      <%-- If selected country is not US/Canada use textfield --%>
+      <span name="state2<%= acount %>" ID="state2<%= acount %>" style="display:none">
+        <input type="text" size="25" name="<%= "address" + acount + "otherState" %>">
+      </span>
+      <% StateSelect = new StateSelect(); %>
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.ZipPostalCode">Zip/Postal Code</dhv:label>
+    </td>
+    <td>
+      <input type="text" size="10" name="address<%= acount %>zip" maxlength="12">
+    </td>
+  </tr>
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accounts_add.Country">Country</dhv:label>
+    </td>
+    <td>
+      <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\""); %>
+      <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
+      <% if (!applicationPrefs.get("SYSTEM.COUNTRY").equals("UNITED STATES") && !applicationPrefs.get("SYSTEM.COUNTRY").equals("CANADA")) { %>
+      <script type="text/javascript">
+        update('address<%= acount %>country','<%= acount %>');
+      </script>
+      <% } CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
   <dhv:evaluate if="<%= acount != atotal %>">
@@ -302,17 +492,17 @@
   </tr>
   </dhv:evaluate>
 <%}%>  
+
 </table>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Additional Details</strong>
+      <strong><dhv:label name="accounts.accounts_add.AdditionalDetails">Additional Details</dhv:label></strong>
     </th>
-  </tr>
   <tr class="containerBody">
-    <td valign="top" class="formLabel">
-      Notes
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
     </td>
     <td>
       <TEXTAREA NAME="notes" ROWS="3" COLS="50"><%= toString(ContactDetails.getNotes()) %></TEXTAREA>

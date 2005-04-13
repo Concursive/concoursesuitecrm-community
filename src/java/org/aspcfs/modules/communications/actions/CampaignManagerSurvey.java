@@ -15,18 +15,21 @@
  */
 package org.aspcfs.modules.communications.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.communications.base.*;
 import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.utils.web.CustomFormList;
+import org.aspcfs.modules.communications.base.ItemList;
+import org.aspcfs.modules.communications.base.Survey;
+import org.aspcfs.modules.communications.base.SurveyList;
+import org.aspcfs.modules.communications.base.SurveyQuestionList;
+import org.aspcfs.utils.Template;
 import org.aspcfs.utils.web.CustomForm;
-import java.sql.*;
-import java.util.*;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.util.HashMap;
 
 /**
  *  Description of the Class
@@ -339,7 +342,7 @@ public final class CampaignManagerSurvey extends CFSModule {
     boolean recordDeleted = false;
     Survey thisSurvey = null;
     Connection db = null;
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = this.getConnection(context);
       thisSurvey = new Survey(db, Integer.parseInt(context.getRequest().getParameter("id")));
@@ -347,6 +350,15 @@ public final class CampaignManagerSurvey extends CFSModule {
         return ("PermissionError");
       }
       recordDeleted = thisSurvey.delete(db);
+      if (!recordDeleted) {
+        HashMap map = new HashMap();
+        map.put("${thisSurvey.inactiveCount}",""+thisSurvey.getInactiveCount());
+        map.put("${thisSurvey.campaign}",(thisSurvey.getInactiveCount() == 1 ? "campaign is" : "campaigns are"));
+        map.put("${thisSurvey.use}",(thisSurvey.getInactiveCount() == 1 ? "uses" : "use"));
+        Template template = new Template(systemStatus.getLabel("object.validation.actionError.canNotDeleteSurvey"));
+        template.setParseElements(map);
+        thisSurvey.getErrors().put("actionError", template.getParsedText());
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -470,6 +482,7 @@ public final class CampaignManagerSurvey extends CFSModule {
     }
     boolean recordInserted = false;
     int recordsModified = 0;
+    boolean isValid = false;
     Connection db = null;
     try {
       Survey newSurvey = (Survey) context.getFormBean();
@@ -483,28 +496,32 @@ public final class CampaignManagerSurvey extends CFSModule {
       newSurvey.setModifiedBy(getUserId(context));
       newSurvey.setRequestItems(context.getRequest());
       db = this.getConnection(context);
-      if (surveyId == -1) {
-        recordInserted = newSurvey.insert(db);
-      } else {
-        recordsModified = newSurvey.update(db);
+      isValid = this.validateObject(context, db, newSurvey);
+      if (isValid) {
+        if (surveyId == -1) {
+          recordInserted = newSurvey.insert(db);
+        } else {
+          recordsModified = newSurvey.update(db);
+        }
       }
-      if (recordInserted || recordsModified > 0) {
+      if ((recordInserted || recordsModified > 0) && isValid) {
         context.getRequest().setAttribute("SurveyDetails", newSurvey);
       } else {
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("CampaignManagerSurvey -- > Insert Errors " + newSurvey.getErrors());
+          System.out.println("CampaignManagerSurvey-> Insert Errors " + newSurvey.getErrors());
         }
         processErrors(context, newSurvey.getErrors());
       }
     } catch (Exception errorMessage) {
+      errorMessage.printStackTrace();  
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (recordInserted || recordsModified > 0) {
+    if ((recordInserted || recordsModified > 0) && isValid) {
       return ("InsertOK");
-    } else if (recordsModified == 0) {
+    } else if (recordsModified == 0 && isValid) {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return ("UserError");
     } else {
@@ -531,7 +548,15 @@ public final class CampaignManagerSurvey extends CFSModule {
     Survey thisSurvey = null;
     Connection db = null;
     //Insert Survey
-    executeCommandInsert(context);
+    String result = executeCommandInsert(context);
+    if (result.equals("AddOK")) {
+      if (context.getRequest().getParameter("pg") != null) {
+        if ("1".equals((String)context.getRequest().getParameter("pg"))) {
+          context.getRequest().setAttribute("pg", "0");
+        }
+      }
+      return "AddOK";
+    }
 
     //create CustomForm for adding
     CustomForm thisForm = getDynamicForm(context, "survey");
@@ -602,21 +627,23 @@ public final class CampaignManagerSurvey extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       thisSurvey = new Survey(db, id);
       if (!hasAuthority(context, thisSurvey.getEnteredBy())) {
         return ("PermissionError");
       }
-      htmlDialog.setTitle("Centric CRM: Campaign Manager");
 
       DependencyList dependencies = thisSurvey.processDependencies(db);
-      htmlDialog.addMessage(dependencies.getHtmlString());
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
 
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='CampaignManagerSurvey.do?command=Delete&id=" + id + "'");
       } else {
-        htmlDialog.setHeader("This survey cannot be deleted because at least one campaign is using it.");
-        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.surveyCampaignHeader"));
+        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       }
 
     } catch (Exception e) {
@@ -708,27 +735,19 @@ public final class CampaignManagerSurvey extends CFSModule {
     if (!(hasPermission(context, "campaign-campaigns-surveys-view"))) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
     Survey thisSurvey = null;
-
     try {
       db = this.getConnection(context);
       thisSurvey = new Survey(db, Integer.parseInt(context.getRequest().getParameter("id")));
       context.getRequest().setAttribute("ThankYouText", thisSurvey.getOutro());
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      return ("MockInsertOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("MockInsertOK");
   }
 }
 

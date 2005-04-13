@@ -29,31 +29,20 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="TroubleTickets.do?">Tickets</a> > 
+<a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> >
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
-  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+  <a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+  <a href="TroubleTickets.do?command=SearchTickets"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%}else{%> 
   <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
-Activity Log
+<dhv:label name="tickets.activitylog.long_html">Activity Log</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + ticketDetails.getId(); %>
-<dhv:container name="tickets" selected="form" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-  <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr align="left">
-    <th>
-	    <b>You do not have permissions to view this form</b>
-	  </th>
-  </tr>
-  </table>
- </td>
- </tr>
-</table>
+<dhv:container name="tickets" selected="form" object="ticketDetails" param="<%= param1 %>">
+  <%@ include file="ticket_header_include.jsp" %>
+  <b><dhv:label name="ticket.noPermissionForForm.text">You do not have permissions to view this form</dhv:label></b>
+</dhv:container>

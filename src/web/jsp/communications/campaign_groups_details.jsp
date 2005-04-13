@@ -24,16 +24,16 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManagerGroup.do?command=View">View Groups</a> >
-Group Details
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManagerGroup.do?command=View"><dhv:label name="campaign.viewGroups">View Groups</dhv:label></a> >
+<dhv:label name="campaign.groupDetails">Group Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:permission name="campaign-campaigns-groups-edit"><input type="button" name="cmd" value="Modify" onClick="window.location.href='CampaignManagerGroup.do?command=Modify&id=<%= request.getAttribute("id") %>'"></dhv:permission>
-<dhv:permission name="campaign-campaigns-groups-delete"><input type="button" name="cmd" value="Delete Group" onClick="popURLReturn('CampaignManagerGroup.do?command=ConfirmDelete&id=<%= request.getAttribute("id") %>&popup=true','CampaignManagerGroup.do?command=View', 'Delete_group','330','200','yes','no');"></dhv:permission>
-<input type="button" name="cmd" value="Preview" onClick="window.location.href='CampaignManagerGroup.do?command=Preview&id=<%= request.getAttribute("id") %>&reset=true'">
+<dhv:permission name="campaign-campaigns-groups-edit"><input type="button" name="cmd" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=Modify&id=<%= request.getAttribute("id") %>'"></dhv:permission>
+<dhv:permission name="campaign-campaigns-groups-delete"><input type="button" name="cmd" value="<dhv:label name="campaign.deleteGroup">Delete Group</dhv:label>" onClick="popURLReturn('CampaignManagerGroup.do?command=ConfirmDelete&id=<%= request.getAttribute("id") %>&popup=true','CampaignManagerGroup.do?command=View', 'Delete_group','330','200','yes','no');"></dhv:permission>
+<input type="button" name="cmd" value="<dhv:label name="button.preview">Preview</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=Preview&id=<%= request.getAttribute("id") %>&reset=true'">
 <br>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
@@ -44,7 +44,7 @@ Group Details
   </tr>
   <tr>
     <th colspan="2">
-      Criteria
+      <dhv:label name="accounts.accounts_reports_generate.Criteria">Criteria</dhv:label>
     </th>
   </tr>
 <%
@@ -54,7 +54,7 @@ Group Details
 %>
   <tr class="containerBody">
     <td colspan="2">
-      This group doesn't have any criteria defined
+      <dhv:label name="campaign.groupNoCriteriaDefined.text">This group doesn't have any criteria defined</dhv:label>
     </td>
   </tr>
 <%
@@ -79,7 +79,7 @@ Group Details
 %>
 </table>
 &nbsp;<br>
-<dhv:permission name="campaign-campaigns-groups-edit"><input type="button" name="cmd" value="Modify" onClick="window.location.href='CampaignManagerGroup.do?command=Modify&id=<%= request.getAttribute("id") %>'"></dhv:permission>
-<dhv:permission name="campaign-campaigns-groups-delete"><input type="button" name="cmd" value="Delete Group" onClick="popURLReturn('CampaignManagerGroup.do?command=ConfirmDelete&id=<%= request.getAttribute("id") %>&popup=true','CampaignManagerGroup.do?command=View', 'Delete_group','330','200','yes','no');"></dhv:permission>
-<input type="button" name="cmd" value="Preview" onClick="window.location.href='CampaignManagerGroup.do?command=Preview&id=<%= request.getAttribute("id") %>&reset=true'">
+<dhv:permission name="campaign-campaigns-groups-edit"><input type="button" name="cmd" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=Modify&id=<%= request.getAttribute("id") %>'"></dhv:permission>
+<dhv:permission name="campaign-campaigns-groups-delete"><input type="button" name="cmd" value="<dhv:label name="campaign.deleteGroup">Delete Group</dhv:label>" onClick="popURLReturn('CampaignManagerGroup.do?command=ConfirmDelete&id=<%= request.getAttribute("id") %>&popup=true','CampaignManagerGroup.do?command=View', 'Delete_group','330','200','yes','no');"></dhv:permission>
+<input type="button" name="cmd" value="<dhv:label name="button.preview">Preview</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=Preview&id=<%= request.getAttribute("id") %>&reset=true'">
 

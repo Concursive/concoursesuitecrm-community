@@ -74,13 +74,15 @@ public class Assignment extends GenericBean {
   private java.sql.Timestamp modified = null;
   private int modifiedBy = -1;
   private String dueDateTimeZone = null;
-//Tree variables -- move into new object
+  //Tree variables -- move into new object
   private int displayLevel = 0;
   private boolean levelOpen = false;
   private int indent = -1;
   private int prevIndent = -1;
   private int prevMapId = -1;
-
+  private String additionalNote = null;
+  private int noteCount = 0;
+  private AssignmentNote assignmentNote = null;
 
   /**
    *  Constructor for the Assignment object
@@ -162,6 +164,7 @@ public class Assignment extends GenericBean {
       throw new SQLException("Assignment record not found.");
     }
     statusTypeId = lookupStatusIdType(db, statusId);
+    AssignmentNoteList.queryNoteCount(db, this);
   }
 
 
@@ -494,7 +497,17 @@ public class Assignment extends GenericBean {
    *@param  tmp  The new priorityId value
    */
   public void setPriorityId(String tmp) {
-    this.priorityId = Integer.parseInt(tmp);
+    try {
+      if (tmp.toLowerCase().startsWith("h")) {
+        setPriorityId(3);
+      } else if (tmp.toLowerCase().startsWith("l")) {
+        setPriorityId(1);
+      } else {
+        this.priorityId = Integer.parseInt(tmp);
+      }
+    } catch (Exception e) {
+      setPriorityId(2);
+    }
   }
 
 
@@ -858,6 +871,13 @@ public class Assignment extends GenericBean {
     return dueDateTimeZone;
   }
 
+  public String getAdditionalNote() {
+    return additionalNote;
+  }
+
+  public void setAdditionalNote(String additionalNote) {
+    this.additionalNote = additionalNote;
+  }
 
   /**
    *  Gets the project attribute of the Assignment object
@@ -1254,7 +1274,47 @@ public class Assignment extends GenericBean {
     }
   }
 
+  public double getEstimatedLoeHours() {
+    if (estimatedLoe == -1) {
+      return 0;
+    }
+    if (estimatedLoeTypeId == -1) {
+      return 0;
+    }
+    switch (estimatedLoeTypeId) {
+      case 1: 
+        return (estimatedLoe / 60);
+      case 2: 
+        return (estimatedLoe);
+      case 3: 
+        return (estimatedLoe * 24);
+      case 4: 
+        return (estimatedLoe * 24 * 7);
+    }
+    return 0;
+  }
 
+  public double getActualLoeHours() {
+    if (actualLoe == -1) {
+      return 0;
+    }
+    if (actualLoeTypeId == -1) {
+      return 0;
+    }
+    switch (actualLoeTypeId) {
+      case 1:
+        return (actualLoe / 60);
+      case 2:
+        return (actualLoe);
+      case 3:
+        return (actualLoe * 24);
+      case 4:
+        return (actualLoe * 24 * 7);
+    }
+    return 0;
+  }
+  
+  
   /**
    *  Gets the actualLoeString attribute of the Assignment object
    *
@@ -1519,28 +1579,21 @@ public class Assignment extends GenericBean {
     return padded;
   }
 
-
-  /**
-   *  Gets the valid attribute of the Assignment object
-   *
-   *@return    The valid value
-   */
-  private boolean isValid() {
-    if (projectId == -1) {
-      errors.put("actionError", "Project ID not specified");
-    }
-    if (role == null || role.trim().equals("")) {
-      errors.put("roleError", "Required field");
-    }
-    if (statusId < 1) {
-      errors.put("statusIdError", "Required field");
-    }
-    if (requirementId == -1) {
-      errors.put("requirementIdError", "Required field");
-    }
-    return (!hasErrors());
+  public int getNoteCount() {
+    return noteCount;
   }
 
+  public void setNoteCount(int noteCount) {
+    this.noteCount = noteCount;
+  }
+
+  public boolean hasNotes() {
+    return noteCount > 0;
+  }
+
+  public AssignmentNote getAssignmentNote() {
+    return assignmentNote;
+  }
 
   /**
    *  Description of the Method
@@ -1550,9 +1603,6 @@ public class Assignment extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     statusTypeId = lookupStatusIdType(db, statusId);
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -1650,6 +1700,11 @@ public class Assignment extends GenericBean {
     indent = mapItem.getIndent();
     prevIndent = mapItem.getIndent();
     prevMapId = mapItem.getId();
+    // Insert any notes as well
+    assignmentNote = new AssignmentNote(this);
+    if (assignmentNote.isValid()) {
+      assignmentNote.insert(db);
+    }
     return true;
   }
 
@@ -1671,21 +1726,16 @@ public class Assignment extends GenericBean {
       if (commit) {
         db.setAutoCommit(false);
       }
+      // Remove any assignment notes
+      AssignmentNoteList.delete(db, id);
       //Remove the mapped item
       RequirementMapItem mapItem = new RequirementMapItem();
       mapItem.setProjectId(projectId);
       mapItem.setRequirementId(requirementId);
       mapItem.setAssignmentId(id);
       mapItem.remove(db);
-      //Delete related status items
-      PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM project_assignments_status " +
-          "WHERE assignment_id = ? ");
-      pst.setInt(1, id);
-      pst.executeUpdate();
-      pst.close();
       //Delete the actual assignment
-      pst = db.prepareStatement(
+      PreparedStatement pst = db.prepareStatement(
           "DELETE FROM project_assignments " +
           "WHERE assignment_id = ? ");
       pst.setInt(1, id);
@@ -1705,7 +1755,6 @@ public class Assignment extends GenericBean {
       }
     }
     if (recordCount == 0) {
-      errors.put("actionError", "Assignment could not be deleted because it no longer exists.");
       return false;
     } else {
       return true;
@@ -1736,9 +1785,6 @@ public class Assignment extends GenericBean {
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1 || this.projectId == -1) {
       throw new SQLException("ID was not specified");
-    }
-    if (!isValid()) {
-      return -1;
     }
     int resultCount = 0;
     boolean newStatus = false;
@@ -1851,6 +1897,11 @@ public class Assignment extends GenericBean {
     pst.setTimestamp(++i, modified);
     resultCount = pst.executeUpdate();
     pst.close();
+    // Insert any notes as well
+    assignmentNote = new AssignmentNote(this);
+    if (assignmentNote.isValid()) {
+      assignmentNote.insert(db);
+    }
     return resultCount;
   }
 
@@ -1966,7 +2017,16 @@ public class Assignment extends GenericBean {
   public static ArrayList getTimeZoneParams() {
     ArrayList thisList = new ArrayList();
     thisList.add("dueDate");
+    thisList.add("estStartDate");
     return thisList;
+  }
+  
+  public boolean isOverdue() {
+    if (dueDate == null || this.getComplete()) {
+      return false;
+    }
+    Timestamp rightNow = new Timestamp(System.currentTimeMillis());
+    return (rightNow.after(dueDate));
   }
 }
 

@@ -15,7 +15,7 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -38,14 +38,14 @@
   <tr class="subtab">
     <td>
       <img border="0" src="images/icons/stock_list_bullet2-16.gif" align="absmiddle">
-      Outlines
+      <dhv:label name="project.outlines">Outlines</dhv:label>
     </td>
   </tr>
 </table>
 <br>
 <zeroio:permission name="project-plan-outline-add">
 <img border="0" src="images/icons/stock_new_bullet-16.gif" align="absmiddle">
-<a href="ProjectManagementRequirements.do?command=Add&pid=<%= Project.getId() %>">New Outline</a><br>
+<a href="ProjectManagementRequirements.do?command=Add&pid=<%= Project.getId() %>"><dhv:label name="project.newOutline">New Outline</dhv:label></a><br>
 &nbsp;<br>
 </zeroio:permission>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -54,9 +54,9 @@
     <td align="left">
       <img alt="" src="images/icons/stock_filter-data-by-criteria-16.gif" align="absmiddle">
       <select name="listView" onChange="javascript:document.forms['reqView'].submit();">
-        <option <%= projectRequirementsInfo.getOptionValue("open") %>>Open Outlines</option>
-        <option <%= projectRequirementsInfo.getOptionValue("closed") %>>Closed Outlines</option>
-        <option <%= projectRequirementsInfo.getOptionValue("all") %>>All Outlines</option>
+        <option <%= projectRequirementsInfo.getOptionValue("open") %>><dhv:label name="project.openOutlines">Open Outlines</dhv:label></option>
+        <option <%= projectRequirementsInfo.getOptionValue("closed") %>><dhv:label name="project.closedOutlines">Closed Outlines</dhv:label></option>
+        <option <%= projectRequirementsInfo.getOptionValue("all") %>><dhv:label name="project.allOutlines">All Outlines</dhv:label></option>
       </select>
     </td>
     <td>
@@ -67,18 +67,18 @@
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-    <th width="8"><strong>Action</strong></th>
-    <th width="86" nowrap><strong>Start Date</strong></th>
-    <th width="100%"><strong>Description</strong></th>
-    <th><strong>Progress</strong></th>
-    <th width="118"><strong>Effort</strong></th>
+    <th width="8" nowrap>&nbsp;</th>
+    <th width="86" nowrap><strong><dhv:label name="documents.details.startDate">Start Date</dhv:label></strong></th>
+    <th width="100%" nowrap><strong><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></strong></th>
+    <th nowrap><strong><dhv:label name="project.progress">Progress</dhv:label></strong></th>
+    <th width="118"><strong><dhv:label name="project.effort">Effort</dhv:label></strong></th>
   </tr>
 <%    
   RequirementList requirements = Project.getRequirements();
   if (requirements.size() == 0) {
 %>
   <tr class="row2">
-    <td colspan="5">No outlines to display.</td>
+    <td colspan="5"><dhv:label name="project.noOutlinesToDisplay">No outlines to display.</dhv:label></td>
   </tr>
 <%
   }
@@ -90,71 +90,83 @@
     ++count;
     Requirement thisRequirement = (Requirement) i.next();
 %>    
-  <tr>
-    <td class="row<%= rowid %>" valign="top" align="center" nowrap>
+  <tr class="row<%= rowid %>">
+    <td valign="top" align="center" nowrap>
       <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisRequirement.getId() %>, <%= Project.getId() %>);"
          onMouseOver="over(0, <%= count %>)"
          onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img 
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>
     </td>
-    <td class="row<%= rowid %>" valign="top" nowrap>
+    <td valign="top" align="center" nowrap>
       <% if(!User.getTimeZone().equals(thisRequirement.getStartDateTimeZone())){%>
       <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } else { %>
       <zeroio:tz timestamp="<%= thisRequirement.getStartDate() %>" dateOnly="true" timeZone="<%= thisRequirement.getStartDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
       <% } %>
     </td>
-    <td class="row<%= rowid %>" valign="top">
-      <%-- <%= thisRequirement.getAssignmentTag("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + Project.getId() + "&" + (thisRequirement.isTreeOpen()?"contract":"expand") + "=" + thisRequirement.getId()) %> --%>
-      <%= thisRequirement.getStatusGraphicTag() %> 
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Assignments&rid=<%= thisRequirement.getId() %>&pid=<%= Project.getId() %>"><%= toHtml(thisRequirement.getShortDescription()) %></a>
-      <a href="javascript:popURL('ProjectManagementRequirements.do?command=Details&pid=<%= Project.getId() %>&rid=<%= thisRequirement.getId() %>&popup=true','Outline_Details','650','375','yes','yes');"><img src="images/icons/stock_insert-note-16.gif" border="0" align="absbottom"/></a><br>
-      <i>
-      <dhv:evaluate if="<%= hasText(thisRequirement.getSubmittedBy()) || hasText(thisRequirement.getDepartmentBy()) %>">
-        Requested By
-      </dhv:evaluate>
-      <dhv:evaluate if="<%= hasText(thisRequirement.getSubmittedBy()) %>">
-        <%= toHtml(thisRequirement.getSubmittedBy()) %>
-      </dhv:evaluate>
-      <dhv:evaluate if="<%= hasText(thisRequirement.getSubmittedBy()) && hasText(thisRequirement.getDepartmentBy()) %>">
-        /
-      </dhv:evaluate>
-      <dhv:evaluate if="<%= hasText(thisRequirement.getDepartmentBy()) %>">
-        <%= toHtml(thisRequirement.getDepartmentBy()) %>
-      </dhv:evaluate>
+    <td valign="top">
+      <table border="0" cellpadding="0" cellspacing="0" class="empty">
+        <tr>
+          <td valign="top" nowrap>
+            &nbsp;<%= thisRequirement.getStatusGraphicTag() %> 
+          </td>
+          <td valign="top">
+            <a href="ProjectManagement.do?command=ProjectCenter&section=Assignments&rid=<%= thisRequirement.getId() %>&pid=<%= Project.getId() %>"><%= toHtml(thisRequirement.getShortDescription()) %></a>
+            <a href="javascript:popURL('ProjectManagementRequirements.do?command=Details&pid=<%= Project.getId() %>&rid=<%= thisRequirement.getId() %>&popup=true','Outline_Details','650','375','yes','yes');"><img src="images/icons/stock_insert-note-16.gif" border="0" align="absbottom" /></a><br />
+            <i>
+            <dhv:evaluate if="<%= hasText(thisRequirement.getSubmittedBy()) || hasText(thisRequirement.getDepartmentBy()) %>">
+              <dhv:label name="documents.details.requestedBy">Requested By</dhv:label>
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= hasText(thisRequirement.getSubmittedBy()) %>">
+              <%= toHtml(thisRequirement.getSubmittedBy()) %>
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= hasText(thisRequirement.getSubmittedBy()) && hasText(thisRequirement.getDepartmentBy()) %>">
+              /
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= hasText(thisRequirement.getDepartmentBy()) %>">
+              <%= toHtml(thisRequirement.getDepartmentBy()) %>
+            </dhv:evaluate>
+            </i>
+          </td>
+        </tr>
+      </table>
     </td>
-    <td class="row<%= rowid %>" valign="top" align="right" nowrap>
+    <td valign="top" align="right" nowrap>
       <table cellpadding="1" cellspacing="1" class="empty">
-        <td>Progress:</td>
-        <dhv:evaluate if="<%= (thisRequirement.getPercentComplete() == 0 && thisRequirement.getPlanActivityCount() == 0) || thisRequirement.getPercentComplete() > 0 %>">
-          <dhv:evaluate if="<%= thisRequirement.getPlanActivityCount() == 0 %>">
-            <td width="<%= thisRequirement.getPercentComplete() %>" bgColor="#CCCCCC" nowrap></td>
-          </dhv:evaluate>
-          <dhv:evaluate if="<%= thisRequirement.getPlanActivityCount() > 0 %>">
-            <td width="<%= thisRequirement.getPercentComplete() %>" bgColor="green" nowrap></td>
-          </dhv:evaluate>
+        <td><dhv:label name="project.progress">Progress</dhv:label>:</td>
+        <dhv:evaluate if="<%= thisRequirement.getPlanActivityCount() == 0 %>">
+          <td width="<%= thisRequirement.getPercentClosed() %>" bgColor="#CCCCCC" nowrap class="progressCell"></td>
         </dhv:evaluate>
-        <dhv:evaluate if="<%= (thisRequirement.getPercentComplete() == 0 && thisRequirement.getPlanActivityCount() > 0) || thisRequirement.getPlanActivityCount() != thisRequirement.getPlanClosedCount() %>">
-          <td width="<%= thisRequirement.getPercentIncomplete() %>" bgColor="red" nowrap></td>
+        <dhv:evaluate if="<%= thisRequirement.getPlanActivityCount() > 0 %>">
+          <dhv:evaluate if="<%= thisRequirement.getPercentClosed() > 0 %>">
+            <td width="<%= thisRequirement.getPercentClosed()  %>" bgColor="green" nowrap class="progressCell"></td>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= thisRequirement.getPercentUpcoming() > 0 %>">
+            <td width="<%= thisRequirement.getPercentUpcoming() %>" bgColor="#99CC66" nowrap class="progressCell"></td>
+          </dhv:evaluate>
+          <dhv:evaluate if="<%= thisRequirement.getPercentOverdue() > 0 %>">
+            <td width="<%= thisRequirement.getPercentOverdue() %>" bgColor="red" nowrap class="progressCell"></td>
+          </dhv:evaluate>
         </dhv:evaluate>
       </table>
       <dhv:evaluate if="<%= thisRequirement.getPlanActivityCount() == 0 %>">
-        (0 activities)
+        <dhv:label name="project.zeroActivities">(0 activities)</dhv:label>
       </dhv:evaluate>
       <dhv:evaluate if="<%= thisRequirement.getPlanActivityCount() > 0 %>">
-        (<%= thisRequirement.getPlanClosedCount() %> of <%= thisRequirement.getPlanActivityCount() %>
-        activit<%= (thisRequirement.getPlanActivityCount() == 1?"y":"ies") %>
-        <%= (thisRequirement.getPlanClosedCount() == 1?"is":"are") %> complete)
+        <% if(thisRequirement.getPlanActivityCount() == 1) {%>
+          <dhv:label name="project.numberOfActivityComplete" param="<%= "complete="+thisRequirement.getPlanClosedCount() +"|total="+ thisRequirement.getPlanActivityCount() %>">(<%= thisRequirement.getPlanClosedCount() %> of <%= thisRequirement.getPlanActivityCount() %> activity is complete)</dhv:label>
+        <%} else {%>
+          <dhv:label name="project.numberOfActivitiesComplete" param="<%= "complete="+thisRequirement.getPlanClosedCount() +"|total="+ thisRequirement.getPlanActivityCount() %>">(<%= thisRequirement.getPlanClosedCount() %> of <%= thisRequirement.getPlanActivityCount() %> activities are complete)</dhv:label>
+        <%}%>
       </dhv:evaluate>
     </td>
-    <td class="row<%= rowid %>" valign="top" nowrap>
-      Due:
+    <td valign="top" nowrap>
       <% if(!User.getTimeZone().equals(thisRequirement.getDeadlineTimeZone())){%>
-      <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+        <dhv:label name="project.due.colon" param="<%= "date="+getTime(pageContext,thisRequirement.getDeadline(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>">Due: <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
       <% } else { %>
-      <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" dateOnly="true" timeZone="<%= thisRequirement.getDeadlineTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+        <dhv:label name="project.due.colon" param="<%= "date="+getTime(pageContext,thisRequirement.getDeadline(),thisRequirement.getDeadlineTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>">Due: <zeroio:tz timestamp="<%= thisRequirement.getDeadline() %>" timeZone="<%= thisRequirement.getDeadlineTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
       <% } %><br />
-      LOE: <%= thisRequirement.getEstimatedLoeString() %>
+      <dhv:label name="project.loe.colon" param="<%= "date="+thisRequirement.getEstimatedLoeString() %>">LOE: <%= thisRequirement.getEstimatedLoeString() %></dhv:label>
     </td>
   </tr>
 <%    
@@ -163,19 +175,19 @@
       while (assignments.hasNext()) {
         Assignment thisAssignment = (Assignment)assignments.next();
 %>
-  <tr>
-    <td class="row<%= rowid %>" valign="top" colspan="2">
+  <tr class="row<%= rowid %>">
+    <td valign="top" colspan="2">
       &nbsp;
     </td>
-    <td class="row<%= rowid %>" valign="top">
+    <td valign="top">
       <img border="0" src="images/treespace.gif" align="absmiddle">
       <%= thisAssignment.getStatusGraphicTag() %>
-      <a href="javascript:popURL('ProjectManagementAssignments.do?command=Modify&pid=<%= Project.getId() %>&aid=<%= thisAssignment.getId() %>&popup=true&return=ProjectRequirements&param=<%= Project.getId() %>','CFS_Assignment','600','325','yes','no');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Update this assignment';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisAssignment.getRole()) %></a>
+      <a href="javascript:popURL('ProjectManagementAssignments.do?command=Modify&pid=<%= Project.getId() %>&aid=<%= thisAssignment.getId() %>&popup=true&return=ProjectRequirements&param=<%= Project.getId() %>','CFS_Assignment','650','475','yes','yes');" style="text-decoration:none;color:black;" onMouseOver="this.style.color='blue';window.status='Update this assignment';return true;" onMouseOut="this.style.color='black';window.status='';return true;"><%= toHtml(thisAssignment.getRole()) %></a>
       (<dhv:username id="<%= thisAssignment.getUserAssignedId() %>"/>)
     </td>
-    <td class="row<%= rowid %>" valign="top" nowrap>
-      Due: <%= thisAssignment.getRelativeDueDateString(User.getTimeZone(), User.getLocale()) %><br />
-      LOE: <%= thisAssignment.getEstimatedLoeString() %>
+    <td valign="top" nowrap>
+      <dhv:label name="project.due.colon" param="<%= "date="+thisAssignment.getRelativeDueDateString(User.getTimeZone(), User.getLocale()) %>">Due: <%= thisAssignment.getRelativeDueDateString(User.getTimeZone(), User.getLocale()) %></dhv:label><br />
+      <dhv:label name="project.loe.colon" param="<%= "date="+thisAssignment.getEstimatedLoeString() %>">LOE: <%= thisAssignment.getEstimatedLoeString() %></dhv:label>
     </td>
   </tr>
 <%
@@ -190,12 +202,12 @@
 <table border="0" width="100%">
   <tr>
     <td>
-      <img border="0" src="images/box.gif" alt="Incomplete" align="absmiddle" />
-      Item is incomplete<br />
-      <img border="0" src="images/box-checked.gif" alt="Completed" align="absmiddle" />
-      Item has been completed (or closed)<br />
-      <img border="0" src="images/box-hold.gif" alt="On Hold" align="absmiddle" />
-      Item has not been approved
+      <img border="0" src="images/box.gif" alt="<dhv:label name='quotes.incomplete'>Incomplete</dhv:label>" align="absmiddle" />
+      <dhv:label name="project.itemIsIncomplete">Item is incomplete</dhv:label><br />
+      <img border="0" src="images/box-checked.gif" alt="<dhv:label name='alt.completed'>Completed</dhv:label>" align="absmiddle" />
+      <dhv:label name="project.itemHasBeenCompleted">Item has been completed</dhv:label><br />
+      <img border="0" src="images/box-hold.gif" alt="<dhv:label name='alt.onHold'>On Hold</dhv:label>" align="absmiddle" />
+      <dhv:label name="project.itemNotApproved">Item has not been approved</dhv:label>
     </td>
   </tr>
 </table>

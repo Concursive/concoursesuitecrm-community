@@ -17,8 +17,8 @@
   - Version: $Id$
   - Description: 
   --%>
-<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="categoryList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
@@ -35,19 +35,19 @@
     var messageText = "";
     //Check required fields
     if (form.title.value == "") {
-      messageText += "- Title is a required field\r\n";
+      messageText += label("title.required","- Title is a required field\r\n");
       formTest = false;
     }
     if (form.shortDescription.value == "") {    
-      messageText += "- Description is a required field\r\n";
+      messageText += label("description.required","- Description is a required field\r\n");
       formTest = false;
     }
     if (form.requestDate.value == "") {    
-      messageText += "- Start Date is a required field\r\n";
+      messageText += label("startdate.required","- Start Date is a required field\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("Form.not.submitted","The form could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
       alert(messageText);
       return false;
     } else {
@@ -61,14 +61,14 @@
   <tr class="subtab">
     <td>
       <img src="images/icons/stock_macro-objects-16.gif" border="0" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Details&pid=<%= Project.getId() %>">Overview</a> >
-      Modify Project
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Details&pid=<%= Project.getId() %>"><dhv:label name="documents.details.overview">Overview</dhv:label></a> >
+      <dhv:label name="project.modifyProject">Modify Project</dhv:label>
     </td>
   </tr>
 </table>
 <br />
-<input type="submit" value=" Update ">
-<input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Details&pid=<%= Project.getId() %>'"><br />
+<input type="submit" value=" <dhv:label name="global.button.update">Update</dhv:label> ">
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Details&pid=<%= Project.getId() %>'"><br />
 &nbsp;
 <dhv:formMessage />
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
@@ -76,7 +76,7 @@
   <input type="hidden" name="modified" value="<%= Project.getModified() %>">
   <tr>
     <th colspan="2" valign="center">
-      <strong>Update Project Information</strong>
+      <strong><dhv:label name="project.updateProjectInformation">Update Project Information</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
@@ -90,90 +90,91 @@
     projectClosedCheck = " checked";
   }
 %>
-    <td class="formLabel" valign="middle" nowrap>Status</td>
+    <td class="formLabel" valign="middle" nowrap><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>
     <td>
       <input type="checkbox" name="approved" value="ON"<%= projectApprovedCheck %>>
-      Approved <zeroio:tz timestamp="<%= Project.getApprovalDate() %>"/><br />
+      <dhv:label name="documents.details.approved">Approved</dhv:label> <zeroio:tz timestamp="<%= Project.getApprovalDate() %>"/><br />
       <input type="checkbox" name="closed" value="ON"<%= projectClosedCheck %>>
-      Closed <zeroio:tz timestamp="<%= Project.getCloseDate() %>"/>
+      <dhv:label name="quotes.closed">Closed</dhv:label> <zeroio:tz timestamp="<%= Project.getCloseDate() %>"/>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Title</td>
+    <td nowrap class="formLabel"><dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label></td>
     <td>
       <input type="text" name="title" size="57" maxlength="100" value="<%= toHtmlValue(Project.getTitle()) %>"><font color=red>*</font> <%= showAttribute(request, "titleError") %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Short Description</td>
+    <td nowrap class="formLabel"><dhv:label name="documents.details.shortDescription">Short Description</dhv:label></td>
     <td>
       <input type="text" name="shortDescription" size="57" maxlength="200" value="<%= toHtmlValue(Project.getShortDescription()) %>"><font color=red>*</font>
       <%= showAttribute(request, "shortDescriptionError") %>
     </td>
   </tr>
+  <dhv:evaluate if="<%= categoryList.size() > 1 %>">
   <tr class="containerBody">
-    <td nowrap class="formLabel">Start Date</td>
+    <td nowrap class="formLabel">Category</td>
+    <td>
+      <%= categoryList.getHtmlSelect("categoryId", Project.getCategoryId()) %>
+    </td>
+  </tr>
+  </dhv:evaluate>
+  <tr class="containerBody">
+    <td nowrap class="formLabel"><dhv:label name="documents.details.startDate">Start Date</dhv:label></td>
     <td>
       <zeroio:dateSelect form="inputForm" field="requestDate" timestamp="<%= Project.getRequestDate() %>"/>
-      at
+     <dhv:label name="project.at">at</dhv:label>
       <zeroio:timeSelect baseName="requestDate" value="<%= Project.getRequestDate() %>" timeZone="<%= Project.getRequestDateTimeZone() %>" showTimeZone="true" />
       <font color="red">*</font>
       <%= showAttribute(request, "requestDateError") %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Estimated Close Date</td>
+    <td nowrap class="formLabel"><dhv:label name="project.estimatedCloseDate">Estimated Close Date</dhv:label></td>
     <td>
       <zeroio:dateSelect form="inputForm" field="estimatedCloseDate" timestamp="<%= Project.getEstimatedCloseDate() %>" />
-      at
+     <dhv:label name="project.at">at</dhv:label>
       <zeroio:timeSelect baseName="estimatedCloseDate" value="<%= Project.getEstimatedCloseDate() %>" timeZone="<%= Project.getEstimatedCloseDateTimeZone() %>" showTimeZone="true" />
       <%= showAttribute(request, "estimatedCloseDateError") %><%= showWarningAttribute(request, "estimatedCloseDateWarning") %>
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Requested By</td>
+    <td nowrap class="formLabel"><dhv:label name="documents.details.requestedBy">Requested By</dhv:label></td>
     <td>
       <input type="text" name="requestedBy" size="24" maxlength="50" value="<%= toHtmlValue(Project.getRequestedBy()) %>">
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Organization</td>
+    <td nowrap class="formLabel"><dhv:label name="documents.details.organization">Organization</dhv:label></td>
     <td>
       <input type="text" name="requestedByDept" size="24" maxlength="50" value="<%= toHtmlValue(Project.getRequestedByDept()) %>">
     </td>
   </tr>
   <tr class="containerBody">
-    <td nowrap class="formLabel">Budget</td>
+    <td nowrap class="formLabel"><dhv:label name="project.budget">Budget</dhv:label></td>
     <td>
       <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
       <input type="hidden" name="budgetCurrency" value="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" />
       <input type="text" name="budget" size="15" value="<zeroio:number value="<%= Project.getBudget() %>" locale="<%= User.getLocale() %>" />">
-      <%=showAttribute(request,"budgetError")%>
+      <%= showAttribute(request,"budgetError") %>
     </td>
   </tr>
-  <%--
-  <tr class="containerBody">
-    <td nowrap class="formLabel">Category</td>
-    <td>
-      <%= categoryList.getHtmlSelect("categoryId", -1) %>
-      <a href="javascript:popURL('ProjectManagementCategories.do?command=Edit&popup=true','Category_Editor','400','375','yes','yes');">Edit List</a>
-    </td>
-  </tr>
-  --%>
 </table>
 <br />
 <input type="hidden" name="onlyWarnings" value="<%=(Project.getOnlyWarnings()?"on":"off")%>" />
 <input type="hidden" name="portal" value="<%= Project.getPortal() %>">
 <input type="hidden" name="allowGuests" value="<%= Project.getAllowGuests() %>">
+<input type="hidden" name="showCalendar" value="<%= Project.getShowCalendar() %>">
 <input type="hidden" name="showNews" value="<%= Project.getShowNews() %>">
 <input type="hidden" name="showDetails" value="<%= Project.getShowDetails() %>">
 <input type="hidden" name="showTeam" value="<%= Project.getShowTeam() %>">
+<input type="hidden" name="showAccounts" value="<%= Project.getShowAccounts() %>">
 <input type="hidden" name="showPlan" value="<%= Project.getShowPlan() %>">
 <input type="hidden" name="showLists" value="<%= Project.getShowLists() %>">
 <input type="hidden" name="showDiscussion" value="<%= Project.getShowDiscussion() %>">
 <input type="hidden" name="showTickets" value="<%= Project.getShowTickets() %>">
 <input type="hidden" name="showDocuments" value="<%= Project.getShowDocuments() %>">
-<input type="submit" value=" Update ">
-<input type="button" value="Cancel" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Details&pid=<%= Project.getId() %>'">
+<input type="submit" value=" <dhv:label name="global.button.update">Update</dhv:label> ">
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Details&pid=<%= Project.getId() %>'">
 </form>
 </body>

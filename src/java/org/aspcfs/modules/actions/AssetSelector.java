@@ -15,16 +15,20 @@
  */
 package org.aspcfs.modules.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.web.PagedListInfo;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.assets.base.Asset;
+import org.aspcfs.modules.assets.base.AssetList;
+import org.aspcfs.modules.base.CategoryList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.FilterList;
 import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.modules.servicecontracts.base.*;
-import org.aspcfs.modules.assets.base.*;
-import org.aspcfs.modules.base.*;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  *  Description of the Class
@@ -51,7 +55,7 @@ public final class AssetSelector extends CFSModule {
     AssetList finalAssets = null;
     ArrayList selectedList = (ArrayList) context.getSession().getAttribute("SelectedAssets");
     int tmpContractId = -1;
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     if (selectedList == null || "true".equals(context.getRequest().getParameter("reset"))) {
       selectedList = new ArrayList();
     }
@@ -100,9 +104,9 @@ public final class AssetSelector extends CFSModule {
           finalAssets.add(thisAsset);
         }
       }
-
+      
       LookupList assetStatusList = new LookupList(db, "lookup_asset_status");
-      assetStatusList.addItem(-1, "--None--");
+      assetStatusList.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("assetStatusList", assetStatusList);
 
       buildCategories(context, db, null);

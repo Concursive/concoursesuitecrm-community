@@ -28,19 +28,23 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> >
-<a href="MyCFSInbox.do?command=Inbox">Mailbox</a> >
-Message Details
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> >
+<a href="MyCFSInbox.do?command=Inbox"><dhv:label name="Mailbox">Mailbox</dhv:label></a> >
+<dhv:label name="accounts.MessageDetails">Message Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:evaluate if="<%= !InboxInfo.getListView().equalsIgnoreCase("sent") %>">
-<input type="button" name="btn" value="Reply" onClick="javascript:window.location.href='MyCFSInbox.do?command=ReplyToMessage&id=<%=NoteDetails.getId()%>'">
-<input type="button" value="<%= (NoteDetails.getStatus() != 2?"Archive":"Send to Inbox") %>" onClick="javascript:window.location.href='MyCFSInbox.do?command=CFSNoteTrash&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>';">
+<input type="button" name="btn" value="<dhv:label name="project.reply">Reply</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=ReplyToMessage&id=<%=NoteDetails.getId()%>&forwardType=<%= Constants.CFSNOTE %>'">
+<% if(NoteDetails.getStatus() != 2) {%>
+  <input type="button" value="<dhv:label name="accounts.accounts_list_menu.Archive">Archive</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=CFSNoteTrash&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>';">
+<%} else {%>
+  <input type="button" value="<dhv:label name="calendar.sendToInbox">Send to Inbox</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=CFSNoteTrash&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>';">
+<%}%>
 </dhv:evaluate>
-<input type="button" name="btn" value="Forward" onClick="javascript:window.location.href='MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%=NoteDetails.getId()%>'">
-<input type="button" name="btn" value="Delete" onClick="javascript:confirmDelete('MyCFSInbox.do?command=CFSNoteDelete&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>');">
+<input type="button" name="btn" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%=NoteDetails.getId()%>'">
+<input type="button" name="btn" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:confirmDelete('MyCFSInbox.do?command=CFSNoteDelete&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>');">
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
@@ -50,7 +54,7 @@ Message Details
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      From
+      <dhv:label name="campaign.from">From</dhv:label>
     </td>
     <td>
       <%= toHtml(NoteDetails.getSentName()) %>
@@ -58,7 +62,7 @@ Message Details
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Received
+      <dhv:label name="calendar.received">Received</dhv:label>
     </td>
     <td>
       <zeroio:tz timestamp="<%= NoteDetails.getEntered() %>" default="&nbsp;" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
@@ -66,7 +70,7 @@ Message Details
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Text
+      <dhv:label name="campaign.text">Text</dhv:label>
     </td>
     <td>
       <%= toHtml(NoteDetails.getBody()) %>
@@ -75,9 +79,13 @@ Message Details
 </table>
 <br>
 <dhv:evaluate if="<%= !InboxInfo.getListView().equalsIgnoreCase("sent") %>">
-<input type="button" name="btn" value="Reply" onClick="javascript:window.location.href='MyCFSInbox.do?command=ReplyToMessage&id=<%=NoteDetails.getId()%>'">
-<input type="button" value="<%= (NoteDetails.getStatus() != 2?"Archive":"Send to Inbox") %>" onClick="javascript:window.location.href='MyCFSInbox.do?command=CFSNoteTrash&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>';">
+<input type="button" name="btn" value="<dhv:label name="project.reply">Reply</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=ReplyToMessage&id=<%=NoteDetails.getId()%>&forwardType=<%= Constants.CFSNOTE %>'">
+<% if(NoteDetails.getStatus() != 2) {%>
+  <input type="button" value="<dhv:label name="accounts.accounts_list_menu.Archive">Archive</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=CFSNoteTrash&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>';">
+<%} else {%>
+  <input type="button" value="<dhv:label name="calendar.sendToInbox">Send to Inbox</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=CFSNoteTrash&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>';">
+<%}%>
 </dhv:evaluate>
-<input type="button" name="btn" value="Forward" onClick="javascript:window.location.href='MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%=NoteDetails.getId()%>'">
-<input type="button" name="btn" value="Delete" onClick="javascript:confirmDelete('MyCFSInbox.do?command=CFSNoteDelete&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>');">
+<input type="button" name="btn" value="<dhv:label name="accounts.accounts_calls_list_menu.Forward">Forward</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=ForwardMessage&forwardType=<%= Constants.CFSNOTE %>&id=<%=NoteDetails.getId()%>'">
+<input type="button" name="btn" value="<dhv:label name="button.delete">Delete</dhv:label>" onClick="javascript:confirmDelete('MyCFSInbox.do?command=CFSNoteDelete&id=<%= NoteDetails.getId() %>&type=<%= NoteDetails.getType() %>');">
 

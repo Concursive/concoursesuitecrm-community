@@ -33,7 +33,7 @@ import java.util.*;
  *@version    $Id: PagedListStatusHandler.java,v 1.9 2003/03/21 13:50:06
  *      mrajkowski Exp $
  */
-public class PagedListStatusHandler extends TagSupport {
+public class PagedListStatusHandler extends BodyTagSupport {
   private String name = "statusProperties";
   private String label = "Records";
   private String object = null;
@@ -51,7 +51,7 @@ public class PagedListStatusHandler extends TagSupport {
   private boolean scrollReload = false;
   private boolean enableJScript = false;
   private String type = null;
-
+  private String form = "0";
 
   /**
    *  Sets the name attribute of the PagedListStatusHandler object
@@ -302,6 +302,28 @@ public class PagedListStatusHandler extends TagSupport {
     this.enableJScript = DatabaseUtils.parseBoolean(tmp);
   }
 
+  public void setForm(String form) {
+    this.form = form;
+  }
+  
+  /**
+   *  Description of the Method
+   *
+   *@return                   Description of the Return Value
+   *@exception  JspException  Description of the Exception
+   */
+  public final int doAfterBody() throws JspException {
+    try {
+      // Display the body
+      BodyContent bodyContent = getBodyContent();
+      if (bodyContent != null) {
+        title = bodyContent.getString();
+      }
+    } catch (Exception e) {
+    }
+    return SKIP_BODY;
+  }
+
 
   /**
    *  Description of the Method
@@ -309,7 +331,15 @@ public class PagedListStatusHandler extends TagSupport {
    *@return                   Description of the Return Value
    *@exception  JspException  Description of the Exception
    */
-  public final int doStartTag() throws JspException {
+  public final int doEndTag() throws JspException {
+    ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
+    if (ce == null) {
+      System.out.println("PagedListStatusHandler-> ConnectionElement is null");
+    }
+    SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    if (systemStatus == null) {
+      System.out.println("PagedListStatusHandler-> SystemStatus is null");
+    }
     try {
       PagedListInfo pagedListInfo = (PagedListInfo) pageContext.getSession().getAttribute(object);
       if (pagedListInfo != null) {
@@ -337,16 +367,9 @@ public class PagedListStatusHandler extends TagSupport {
               ((bgColor != null) ? " bgColor=\"" + bgColor + "\"" : "") +
               ((tdClass != null) ? " class=\"" + tdClass + "\"" : "") +
               ">");
+          // Show the title
           String newLabel = null;
           if (type != null && !"".equals(type)) {
-            ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
-            if (ce == null) {
-              System.out.println("PagedListStatusHandler-> ConnectionElement is null");
-            }
-            SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-            if (systemStatus == null) {
-              System.out.println("PagedListStatusHandler-> SystemStatus is null");
-            }
             if (systemStatus != null) {
               newLabel = systemStatus.getLabel(type);
             }
@@ -371,58 +394,106 @@ public class PagedListStatusHandler extends TagSupport {
             out.write("<td nowrap width=\"100%\" valign=\"bottom\" " +
                 "align=\"left\"" +
                 ">");
-            out.write(" (" + pagedListInfo.getExpandLink("Show more", "Return to overview") + ")");
+            if (systemStatus != null) {
+              out.write(" (" + pagedListInfo.getExpandLink(systemStatus.getLabel("pagedListInfo.showMore"), systemStatus.getLabel("pagedListInfo.returnToOverview")) + ")");
+            } else {
+              out.write(" (" + pagedListInfo.getExpandLink("Show more", "Return to overview") + ")");
+            }
             out.write("</td>");
+          } else {
+            out.write("<td nowrap width=\"100%\" valign=\"bottom\" align=\"left\" >&nbsp;</td>");
           }
         }
-
-        //The status cell on the right
-        out.write("<td valign=\"bottom\" align=\"" + (showControlOnly ? "center" : "right") + "\" nowrap>");
-        //Display record count
-        if (pagedListInfo.getMaxRecords() > 0) {
-          if ((pagedListInfo.getCurrentOffset() + 1) <= pagedListInfo.getMaxRecords()) {
-            if (pagedListInfo.getItemsPerPage() == 1) {
-              //1 of 20 [Previous|Next]
-              out.write(String.valueOf(pagedListInfo.getCurrentOffset() + 1));
-            } else {
-              //Items 1 to 10 of 20 total [Previous|Next]
-              out.write(label + " " + (pagedListInfo.getCurrentOffset() + 1) + " to ");
-              if (pagedListInfo.getItemsPerPage() <= 0) {
-                out.write(String.valueOf(pagedListInfo.getMaxRecords()));
-              } else if ((pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()) < pagedListInfo.getMaxRecords()) {
-                out.write(String.valueOf(pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()));
+        String returnAction = pageContext.getRequest().getParameter("return");
+        if (returnAction == null || !returnAction.equals("details")) {
+          //The status cell on the right
+          out.write("<td valign=\"bottom\" align=\"" + (showControlOnly ? "center" : "right") + "\" nowrap>");
+          //Display record count
+          if (systemStatus != null) {
+            HashMap map = new HashMap();
+            if (pagedListInfo.getMaxRecords() > 0) {
+              if ((pagedListInfo.getCurrentOffset() + 1) <= pagedListInfo.getMaxRecords()) {
+                if (pagedListInfo.getItemsPerPage() == 1) {
+                  //1 of 20 [Previous|Next]
+                  map.put("${pagedListInfo.currentOffset}",String.valueOf(pagedListInfo.getCurrentOffset() + 1));
+                  map.put("${pagedListInfo.maxRecords}",""+pagedListInfo.getMaxRecords());
+                  out.write(getLabel(map, systemStatus.getLabel("pagedListInfo.pagedListStatus.oneItemsPerPageData")));
+                } else {
+                  //Items 1 to 10 of 20 total [Previous|Next]
+                  map.put("${pagedListInfo.currentOffset}",String.valueOf(pagedListInfo.getCurrentOffset() + 1));
+                  map.put("${label}",""+label);
+                  if (pagedListInfo.getItemsPerPage() <= 0) {
+                    map.put("${pagedListInfo.itemsPerPageDecision}", String.valueOf(pagedListInfo.getMaxRecords()));
+                  } else if ((pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()) < pagedListInfo.getMaxRecords()) {
+                    map.put("${pagedListInfo.itemsPerPageDecision}", String.valueOf(pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()));
+                  } else {
+                    map.put("${pagedListInfo.itemsPerPageDecision}", String.valueOf(pagedListInfo.getMaxRecords()));
+                  }
+                  map.put("${pagedListInfo.maxRecords}", ""+pagedListInfo.getMaxRecords());
+                  out.write(getLabel(map, systemStatus.getLabel("pagedListInfo.pagedListStatus.itemsPerPageData")));
+                }
               } else {
-                out.write(String.valueOf(pagedListInfo.getMaxRecords()));
+                  out.write(getLabel(map, systemStatus.getLabel("pagedListInfo.pagedListStatus.endOfList")));
               }
-            }
-            out.write(" of " + pagedListInfo.getMaxRecords());
-            if (pagedListInfo.getItemsPerPage() != 1) {
-              out.write(" total");
+            } else {
+              map.put("${label}", label.toLowerCase());
+              out.write(getLabel(map, systemStatus.getLabel("pagedListInfo.pagedListStatus.noneAvailable")));
             }
           } else {
-            out.write("End of list");
+            if (pagedListInfo.getMaxRecords() > 0) {
+              if ((pagedListInfo.getCurrentOffset() + 1) <= pagedListInfo.getMaxRecords()) {
+                if (pagedListInfo.getItemsPerPage() == 1) {
+                  //1 of 20 [Previous|Next]
+                  out.write(String.valueOf(pagedListInfo.getCurrentOffset() + 1));
+                } else {
+                  //Items 1 to 10 of 20 total [Previous|Next]
+                  out.write(label + " " + (pagedListInfo.getCurrentOffset() + 1) + " to ");
+                  if (pagedListInfo.getItemsPerPage() <= 0) {
+                    out.write(String.valueOf(pagedListInfo.getMaxRecords()));
+                  } else if ((pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()) < pagedListInfo.getMaxRecords()) {
+                    out.write(String.valueOf(pagedListInfo.getCurrentOffset() + pagedListInfo.getItemsPerPage()));
+                  } else {
+                    out.write(String.valueOf(pagedListInfo.getMaxRecords()));
+                  }
+              }
+              out.write(" of " + pagedListInfo.getMaxRecords());
+              if (pagedListInfo.getItemsPerPage() != 1) {
+                  out.write(" total");
+                }
+              } else {
+                out.write("End of list");
+              }
+            } else {
+              out.write("No " + label.toLowerCase() + " to display");
+            }
           }
-        } else {
-          out.write("No " + label.toLowerCase() + " to display");
-        }
-        //Display next/previous buttons
-        if (pagedListInfo.getItemsPerPage() > 0) {
-          if (pagedListInfo.getExpandedSelection() || !showExpandLink) {
-            pagedListInfo.setScrollReload(scrollReload);
-            out.write(" [" +
-                pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous") +
-                "|" +
-                pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next") +
-                "]");
-            out.write(" ");
+          //Display next/previous buttons
+          if (pagedListInfo.getItemsPerPage() > 0) {
+            if (pagedListInfo.getExpandedSelection() || !showExpandLink) {
+              pagedListInfo.setScrollReload(scrollReload);
+              if (systemStatus != null) {
+                out.write(" [" +
+                    pagedListInfo.getPreviousPageLink("<font class='underline'>" + systemStatus.getLabel("label.previous") + "</font>", "Previous", form) +
+                    "|" +
+                    pagedListInfo.getNextPageLink("<font class='underline'>" + systemStatus.getLabel("label.next") + "</font>", "Next", form) +
+                    "]");
+              } else {
+                out.write(" [" +
+                    pagedListInfo.getPreviousPageLink("<font class='underline'>Previous</font>", "Previous", form) +
+                    "|" +
+                    pagedListInfo.getNextPageLink("<font class='underline'>Next</font>", "Next", form) +
+                    "]");
+              }
+              out.write(" ");
+            }
           }
+          //Display refresh icon
+          if (pagedListInfo.hasLink() && showRefresh) {
+            out.write(" " + pagedListInfo.getRefreshTag("<img src=\"images/refresh.gif\" border=\"0\" align=\"absbottom\" />"));
+          }
+          //Close the cell
+          out.write("</td>");
         }
-        //Display refresh icon
-        if (pagedListInfo.hasLink() && showRefresh) {
-          out.write(" " + pagedListInfo.getRefreshTag("<img src=\"images/refresh.gif\" border=\"0\" align=\"absbottom\" />"));
-        }
-        //Close the cell
-        out.write("</td>");
         //Close the table
         out.write("</tr></table>");
       } else {
@@ -431,17 +502,20 @@ public class PagedListStatusHandler extends TagSupport {
     } catch (Exception e) {
       e.printStackTrace(System.out);
     }
-    return SKIP_BODY;
+    return EVAL_PAGE;
   }
 
-
   /**
-   *  Description of the Method
+   *  Gets the label attribute of the PagedListStatusHandler object
    *
-   *@return    Description of the Return Value
+   *@param  map    Description of the Parameter
+   *@param  input  Description of the Parameter
+   *@return        The label value
    */
-  public int doEndTag() {
-    return EVAL_PAGE;
+  public String getLabel(HashMap map, String input) {
+    Template template = new Template(input);
+    template.setParseElements(map);
+    return template.getParsedText();
   }
 }
 

@@ -27,7 +27,7 @@
   function updateCategoryList(id) {
     var sel = document.forms['addAccountAsset'].elements['level' + id];
     var value = sel.options[sel.selectedIndex].value;
-    var url = "AccountsAssets.do?command=CategoryJSList&level=" + id + "&code=" + escape(value);
+    var url = "AccountsAssets.do?command=CategoryJSList&form=addAccountAsset&level=" + id + "&code=" + escape(value);
     window.frames['server_commands'].location.href=url;
   }
   function doCheck(form) {
@@ -42,15 +42,15 @@
     formTest = true;
     message = "";
     if (form.dateListed.value == "") { 
-      message += "- Date Listed is required\r\n";
+      message += label("data.list.required", "- Date Listed is required\r\n");
       formTest = false;
     }
     if (form.serialNumber.value == "") {
-      message += "- Serial Number is required\r\n";
+      message += label("serial.number.required", "- Serial Number is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     }
   }
@@ -63,12 +63,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Specific Information</strong>
+	    <strong><dhv:label name="accounts.accountasset_include.SpecificInformation">Specific Information</dhv:label></strong>
 	  </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Vendor
+    <dhv:label name="accounts.accountasset_include.Vendor">Vendor</dhv:label>
     </td>
     <td>
       <input type="text" size="20" name="vendor" maxlength="30" value="<%= toHtmlValue(asset.getVendor()) %>">
@@ -77,7 +77,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Manufacturer
+      <dhv:label name="accounts.accountasset_include.Manufacturer">Manufacturer</dhv:label>
     </td>
     <td>
       <input type="text" size="20" name="manufacturer" maxlength="30" value="<%= toHtmlValue(asset.getManufacturer()) %>">
@@ -86,7 +86,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Serial Number
+      <dhv:label name="accounts.accountasset_include.SerialNumber">Serial Number</dhv:label>
     </td>
     <td>
       <input type="text" size="20" name="serialNumber" maxlength="30" value="<%= toHtmlValue(asset.getSerialNumber()) %>">
@@ -96,7 +96,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Model/Version
+      <dhv:label name="accounts.accountasset_include.ModelVersion">Model/Version</dhv:label>
     </td>
     <td>
       <input type="text" size="20" name="modelVersion" maxlength="30" value="<%= toHtmlValue(asset.getModelVersion()) %>">
@@ -105,7 +105,7 @@
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Description
+      <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
     </td>
     <td>
       <textarea name="description" rows="3" cols="50"><%= toString(asset.getDescription()) %></textarea>
@@ -114,7 +114,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Date Listed
+      <dhv:label name="accounts.accountasset_include.DateListed">Date Listed</dhv:label>
     </td>
     <td>
     <%if ((asset.getDateListed() == null) && (request.getAttribute("dateListedError") == null)){%>
@@ -128,7 +128,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Location
+      <dhv:label name="accounts.accountasset_include.Location">Location</dhv:label>
     </td>
     <td>
       <input type="text" name="location"  size="50" maxlength="256" value="<%= toHtmlValue(asset.getLocation()) %>">
@@ -137,7 +137,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Asset Tag
+      <dhv:label name="accounts.accountasset_include.AssetTag">Asset Tag</dhv:label>
     </td>
     <td>
       <input type="text" size="20" name="assetTag" maxlength="30" value="<%= toHtmlValue(asset.getAssetTag()) %>">
@@ -146,7 +146,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Status
+      <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
     </td>
     <td>
       <%= assetStatusList.getHtmlSelect("status", asset.getStatus()) %>
@@ -157,12 +157,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Category</strong>
+	    <strong><dhv:label name="accounts.accountasset_include.Category">Category</dhv:label></strong>
 	  </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Level 1
+      <dhv:label name="accounts.accountasset_include.Level1">Level 1</dhv:label>
     </td>
     <td>
       <%= categoryList1.getHtmlSelect("level1", asset.getLevel1()) %>
@@ -170,7 +170,7 @@
 	</tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Level 2
+      <dhv:label name="accounts.accountasset_include.Level2">Level 2</dhv:label>
     </td>
     <td>
       <%= categoryList2.getHtmlSelect("level2", asset.getLevel2()) %>
@@ -178,7 +178,7 @@
 	</tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Level 3
+      <dhv:label name="accounts.accountasset_include.Level3">Level 3</dhv:label>
     </td>
     <td>
       <%= categoryList3.getHtmlSelect("level3", asset.getLevel3()) %>
@@ -189,25 +189,34 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Service Contract</strong>
+	    <strong>
+	    <dhv:label name="accounts.accountasset_include.ServiceContract">Service Contract</dhv:label>
+	    </strong>
 	  </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Service Contract Number
+      <dhv:label name="accounts.accountasset_include.ServiceContractNumber">Service Contract Number</dhv:label>
     </td>
     <td>
      <table cellspacing="0" cellpadding="0" border="0" class="empty">
       <tr>
         <td>
-          <div id="addServiceContract"><%= (asset.getContractId() != -1)? asset.getServiceContractNumber() :"None Selected" %></div>
-        </td>
+          <div id="addServiceContract">
+            <dhv:evaluate if="<%= asset.getContractId() != -1 %>">
+              <%= toHtml(asset.getServiceContractNumber()) %>
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= asset.getContractId() == -1 %>">
+              <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+            </dhv:evaluate>
+          </div>
+        </td> 
         <td>
           <input type="hidden" name="contractId" id="contractId" value="<%= asset.getContractId() %>">
           <input type="hidden" name="serviceContractNumber" id="serviceContractNumber" value="<%= toHtmlValue(asset.getServiceContractNumber()) %>">
           <%= showAttribute(request, "contractIdError") %>
-          [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled', <%=OrgDetails.getOrgId()%>);">Select</a>]
-          &nbsp [<a href="javascript:changeDivContent('addServiceContract','None Selected');javascript:resetNumericFieldValue('contractId');">Clear</a>] 
+          [<a href="javascript:popServiceContractListSingle('contractId','addServiceContract', 'filters=all|my|disabled', <%=OrgDetails.getOrgId()%>);"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+          &nbsp; [<a href="javascript:changeDivContent('addServiceContract',label('none.selected','None Selected'));javascript:resetNumericFieldValue('contractId');"><dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label></a>] 
         </td>
       </tr>
     </table>
@@ -215,7 +224,7 @@
   </tr>
 	<tr class="containerBody">
     <td class="formLabel">
-      Contact
+      <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
     </td>
     <td>
       <%= contactList.getHtmlSelect("contactId", asset.getContactId() ) %>
@@ -226,12 +235,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Service Model Options</strong>
+      <strong><dhv:label name="accounts.accountasset_include.ServiceModelOptions">Service Model Options</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Response Time
+      <dhv:label name="accounts.accountasset_include.ResponseTime">Response Time</dhv:label>
     </td>
     <td>
       <%= responseModelList.getHtmlSelect("responseTime",asset.getResponseTime()) %>
@@ -239,7 +248,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Telephone Service
+      <dhv:label name="accounts.accountasset_include.TelephoneService">Telephone Service</dhv:label>
     </td>
     <td>
       <%= phoneModelList.getHtmlSelect("telephoneResponseModel", asset.getTelephoneResponseModel()) %>
@@ -247,7 +256,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Onsite Service
+      <dhv:label name="accounts.accountasset_include.OnsiteService">Onsite Service</dhv:label>
     </td>
     <td>
       <%= onsiteModelList.getHtmlSelect("onsiteResponseModel", asset.getOnsiteResponseModel()) %>
@@ -255,7 +264,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Email Service Model
+      <dhv:label name="accounts.accountasset_include.EmailServiceModel">Email Service Model</dhv:label>
     </td>
     <td>
       <%= emailModelList.getHtmlSelect("emailResponseModel" ,asset.getEmailResponseModel()) %>
@@ -266,12 +275,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Warranty Information</strong>
+      <strong><dhv:label name="accounts.accountasset_include.WarrantyInformation">Warranty Information</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Expiration Date
+      <dhv:label name="accounts.accountasset_include.ExpirationDate">Expiration Date</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="addAccountAsset" field="expirationDate" timestamp="<%= asset.getExpirationDate() %>" timeZone="<%= asset.getExpirationDateTimeZone() %>" showTimeZone="true" />
@@ -280,7 +289,7 @@
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-    Inclusions
+      <dhv:label name="accounts.accountasset_include.Inclusions">Inclusions</dhv:label>
     </td>
     <td>
       <textarea name="inclusions" rows="3" cols="50"><%= toString(asset.getInclusions()) %></textarea>
@@ -288,7 +297,7 @@
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Exclusions
+      <dhv:label name="accounts.accountasset_include.Exclusions">Exclusions</dhv:label>
     </td>
     <td>
       <textarea name="exclusions" rows="3" cols="50"><%= toString(asset.getExclusions()) %></textarea>
@@ -299,12 +308,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Financial Information</strong>
+      <strong><dhv:label name="accounts.accountasset_include.FinancialInformation">Financial Information</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Purchase Date
+      <dhv:label name="accounts.accountasset_include.PurchaseDate">Purchase Date</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="addAccountAsset" field="purchaseDate" timestamp="<%= asset.getPurchaseDate() %>" timeZone="<%= asset.getPurchaseDateTimeZone() %>" showTimeZone="true" />
@@ -313,7 +322,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Purchase Cost
+      <dhv:label name="accounts.accountasset_include.PurchaseCost">Purchase Cost</dhv:label>
     </td>
     <td>
       <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
@@ -323,7 +332,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      P.O. Number
+      <dhv:label name="accounts.accountasset_include.PONumber">P.O. Number</dhv:label>
     </td>
     <td>
       <input type="text" size="20" name="poNumber" maxlength="30" value="<%= toHtmlValue(asset.getPoNumber()) %>">
@@ -332,7 +341,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Purchased From
+      <dhv:label name="accounts.accountasset_include.PurchasedFrom">Purchased From</dhv:label>
     </td>
     <td>
       <input type="text" size="20" name="purchasedFrom" maxlength="30" value="<%= toHtmlValue(asset.getPurchasedFrom()) %>">
@@ -340,16 +349,16 @@
     </td>
   </tr>
 </table>
-&nbsp;<br> 
+<br /> 
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Other Information</strong>
+      <strong><dhv:label name="accounts.accountasset_include.OtherInformation">Other Information</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Notes
+      <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
     </td>
     <td>
       <textarea name="notes" rows="3" cols="50"><%= toString(asset.getNotes()) %></textarea>

@@ -36,9 +36,9 @@
   function clearForm() {
     document.forms['searchLeads'].searchDescription.value="";
     document.forms['searchLeads'].searchcodeOrgId.value="";
-    changeDivContent('changeaccount', ' All ');
+    changeDivContent('changeaccount', label('label.all','All'));
     document.forms['searchLeads'].searchcodeContactId.value="";
-    changeDivContent('changecontact', ' Any ');
+    changeDivContent('changecontact', label('label.any','Any'));
     document.forms['searchLeads'].searchcodeStage.options.selectedIndex = 0;
     document.forms['searchLeads'].searchdateCloseDateStart.value="";
     document.forms['searchLeads'].searchdateCloseDateEnd.value="";
@@ -50,7 +50,7 @@
   }
   
   function updateOwnedBy(){
-    if(document.forms[0].listView.value == "all" || document.forms[0].listView.value == "closed"){
+    if(document.searchLeads.listView.value == "all" || document.searchLeads.listView.value == "closed"){
       showSpan('ownedby');
     }else{
       document.forms['searchLeads'].listFilter2.options.selectedIndex = 0;
@@ -68,14 +68,14 @@
     <% } %>
   }
 </script>
-<body onLoad="javascript:document.forms[0].searchDescription.focus();checkOwnedBy();">
+<body onLoad="javascript:document.searchLeads.searchDescription.focus();checkOwnedBy();">
 <form name="searchLeads" action="Leads.do?command=Search" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> > 
-Search Opportunities
+<a href="Leads.do"><dhv:label name="pipeline.pipeline">Pipeline</dhv:label></a> > 
+<dhv:label name="pipeline.searchOpportunities">Search Opportunities</dhv:label>
 </td>
 </tr>
 </table>
@@ -84,12 +84,12 @@ Search Opportunities
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Search Pipeline</strong>
+      <strong><dhv:label name="pipeline.searchPipeline">Search Pipeline</dhv:label></strong>
     </th>
   </tr>
   <tr>
     <td class="formLabel" nowrap>
-      Opportunity Description
+      <dhv:label name="pipeline.opportunityDescription">Opportunity Description</dhv:label>
     </td>
     <td>
       <input type="text" size="35" name="searchDescription" value="<%= SearchOppListInfo.getSearchOptionValue("searchDescription") %>">
@@ -97,7 +97,7 @@ Search Opportunities
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      Account(s)
+      <dhv:label name="pipeline.accounts.bracket">Account(s)</dhv:label>
     </td>
     <td>
       <table cellspacing="0" cellpadding="0" border="0" class="empty">
@@ -105,7 +105,7 @@ Search Opportunities
           <td>
             <div id="changeaccount">
               <%if("".equals(SearchOppListInfo.getSearchOptionValue("searchcodeOrgId")) || "-1".equals(SearchOppListInfo.getSearchOptionValue("searchcodeOrgId"))){ %>
-                &nbsp;All&nbsp;
+                &nbsp;<dhv:label name="quotes.all">All</dhv:label>&nbsp;
               <% }else{ %>
                 <%= toHtmlValue(OrgDetails.getName()) %>
               <% } %>
@@ -113,7 +113,7 @@ Search Opportunities
           </td>
           <td>
             <input type="hidden" name="searchcodeOrgId" id="searchcodeOrgId" value="<%= SearchOppListInfo.getSearchOptionValue("searchcodeOrgId") %>">
-            &nbsp;[<a href="javascript:popAccountsListSingle('searchcodeOrgId','changeaccount', 'filters=all|my|disabled');">Select</a>]
+            &nbsp;[<a href="javascript:popAccountsListSingle('searchcodeOrgId','changeaccount', 'filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
           </td>
         </tr>
       </table>
@@ -121,7 +121,7 @@ Search Opportunities
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Contact
+      <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
     </td>
     <td>
       <table class="empty">
@@ -129,7 +129,7 @@ Search Opportunities
           <td>
             <div id="changecontact">
             <%if("".equals(SearchOppListInfo.getSearchOptionValue("searchcodeContactId")) || "-1".equals(SearchOppListInfo.getSearchOptionValue("searchcodeContactId"))){ %>
-              &nbsp;Any&nbsp;
+              &nbsp;<dhv:label name="pipeline.any">Any</dhv:label>&nbsp;
             <% }else{ %>
               <%= toHtmlValue(ContactDetails.getValidName()) %>
             <% } %>
@@ -137,7 +137,7 @@ Search Opportunities
           </td>
           <td>
             <input type="hidden" id="contactId" name="searchcodeContactId" value="<%= SearchOppListInfo.getSearchOptionValue("searchcodeContactId") %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('contactId','changecontact', 'reset=true');">Select</a>]
+            &nbsp;[<a href="javascript:popContactsListSingle('contactId','changecontact', 'reset=true');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
           </td>
         </tr>
       </table>
@@ -145,7 +145,7 @@ Search Opportunities
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      Current Stage
+      <dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label>
     </td>
     <td>
       <%= StageList.getHtmlSelect("searchcodeStage", SearchOppListInfo.getSearchOptionValue("searchcodeStage")) %>
@@ -153,18 +153,18 @@ Search Opportunities
   </tr>
   <tr>
     <td valign="top" class="formLabel">
-      Est. Close Date between
+      <dhv:label name="pipeline.estimatedCloseDateBetween">Estimated Close Date between</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="searchLeads" field="searchdateCloseDateStart" timestamp="<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateStart") %>" />
-      &nbsp;and <%=showAttribute(request,"searchdateCloseDateStartError")%><br>
+      &nbsp;<dhv:label name="admin.and.lowercase">and</dhv:label> <%=showAttribute(request,"searchdateCloseDateStartError")%><br>
       <zeroio:dateSelect form="searchLeads" field="searchdateCloseDateEnd" timestamp="<%= SearchOppListInfo.getSearchOptionValue("searchdateCloseDateEnd") %>" />
       &nbsp;<%=showAttribute(request,"searchdateCloseDateEndError")%>
     </td>
   </tr>
   <tr>
     <td class="formLabel">
-      Opportunity Type
+      <dhv:label name="pipeline.opportunityType">Opportunity Type</dhv:label>
     </td>
     <td>
       <%= TypeSelect.getHtmlSelect("listFilter1", SearchOppListInfo.getFilterKey("listFilter1")) %>
@@ -172,19 +172,19 @@ Search Opportunities
   </tr>
   <tr>
     <td class="formLabel">
-      Source
+      <dhv:label name="contact.source">Source</dhv:label>
     </td>
     <td align="left" valign="bottom">
       <select size="1" name="listView" onChange="javascript:updateOwnedBy();">
-        <option <%= SearchOppListInfo.getOptionValue("my") %>>My Open Opportunities</option>
-        <option <%= SearchOppListInfo.getOptionValue("all") %>>All Open Opportunities</option>
-        <option <%= SearchOppListInfo.getOptionValue("closed") %>>All Closed Opportunities</option>
+        <option <%= SearchOppListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.MyOpenOpportunities">My Open Opportunities</dhv:label></option>
+        <option <%= SearchOppListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllOpenOpportunities">All Open Opportunities</dhv:label></option>
+        <option <%= SearchOppListInfo.getOptionValue("closed") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllClosedOpportunities">All Closed Opportunities</dhv:label></option>
       </select>
     </td>
   </tr>
   <tr id="ownedby" style="display:none">
     <td class="formLabel">
-      Owned By
+      <dhv:label name="reports.accounts.contacts.ownedBy">Owned By</dhv:label>
     </td>
     <td>
       <% 
@@ -196,8 +196,8 @@ Search Opportunities
   </tr>
 </table>
 &nbsp;<br>
-<input type="submit" value="Search">
-<input type="button" value="Clear" onClick="javascript:clearForm();">
+<input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">
+<input type="button" value="<dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label>" onClick="javascript:clearForm();">
 <input type="hidden" name="source" value="searchForm">
 </form>
 </body>

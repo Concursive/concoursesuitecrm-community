@@ -36,23 +36,24 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManagerAttachment.do">Create Attachments</a> >
-Surveys
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManagerAttachment.do"><dhv:label name="communications.campaign.CreateAttachments">Create Attachments</dhv:label></a> >
+<dhv:label name="campaign.surveys">Surveys</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:permission name="campaign-campaigns-surveys-add"><a href="CampaignManagerSurvey.do?command=Add">Add a Survey</a></dhv:permission>
+<dhv:permission name="campaign-campaigns-surveys-add"><a href="CampaignManagerSurvey.do?command=Add"><dhv:label name="campaign.addSurvey">Add a Survey</dhv:label></a></dhv:permission>
 <dhv:permission name="campaign-campaigns-surveys-add" none="true"><br></dhv:permission>
-<center><%= CampaignSurveyListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="CampaignSurveyListInfo"/></center></dhv:include>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="CampaignManagerSurvey.do?command=View">
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= CampaignSurveyListInfo.getOptionValue("my") %>>My Surveys</option>
-        <option <%= CampaignSurveyListInfo.getOptionValue("all") %>>All Surveys</option>
+      <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= CampaignSurveyListInfo.getOptionValue("my") %>><dhv:label name="campaign.mySurveys">My Surveys</dhv:label></option>
+        <option <%= CampaignSurveyListInfo.getOptionValue("all") %>><dhv:label name="campaign.allSurveys">All Surveys</dhv:label></option>
       </select>
     </td>
     <td>
@@ -64,17 +65,17 @@ Surveys
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
    <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th nowrap>
-      <a href="CampaignManagerSurvey.do?command=View&column=name"><strong>Name</strong></a>
+      <a href="CampaignManagerSurvey.do?command=View&column=name"><strong><dhv:label name="contacts.name">Name</dhv:label></strong></a>
       <%= CampaignSurveyListInfo.getSortIcon("name") %>
     </th>  
     <th nowrap>
-      <strong>Entered By</strong>
+      <strong><dhv:label name="accounts.accounts_calls_list.EnteredBy">Entered By</dhv:label></strong>
     </th>
     <th nowrap>
-      <a href="CampaignManagerSurvey.do?command=View&column=s.modified"><strong>Last Modified</strong></a>
+      <a href="CampaignManagerSurvey.do?command=View&column=s.modified"><strong><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></strong></a>
       <%= CampaignSurveyListInfo.getSortIcon("s.modified") %>
     </th>
   </tr>
@@ -109,7 +110,7 @@ Surveys
   } else {%>  
   <tr>
     <td class="containerBody" colspan="5">
-      No surveys found.
+      <dhv:label name="campaign.noSurveysFound">No surveys found.</dhv:label>
     </td>
   </tr>
 <%}%>

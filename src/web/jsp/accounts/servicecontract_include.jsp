@@ -39,31 +39,31 @@
     message = "";
     alertMessage = "";
     if (form.serviceContractNumber.value == "") { 
-      message += "- Service Contract Number is required\r\n";
+      message += label("check.servicecontract.number","- Service Contract Number is required\r\n");
       formTest = false;
     }
     if (form.initialStartDate.value == "") { 
-      message += "- Initial Contract Date is required\r\n";
+      message += label("check.init.contract.date","- Initial Contract Date is required\r\n");
       formTest = false;
     }
     if (form.responseTime.value < 1){ 
-      message += "- Response Time is required\r\n";
+      message += label("check.response.time","- Response Time is required\r\n");
       formTest = false;
     }
     if (form.telephoneResponseModel.value < 1){ 
-      message += "- Telephone Service is required\r\n";
+      message += label("check.telephone.service","- Telephone Service is required\r\n");
       formTest = false;
     }
     if (form.onsiteResponseModel.value < 1){ 
-      message += "- Onsite Service is required\r\n";
+      message += label("check.onsite.service","- Onsite Service is required\r\n");
       formTest = false;
     }
     if (form.emailResponseModel.value < 1){ 
-      message += "- Email Service is required\r\n";
+      message += label("check.email.service","- Email Service is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     }else{
       var test = form.selectedList;
@@ -79,33 +79,34 @@
       document.getElementById('totalHoursRemaining').value = '';
     <%}else{%>
       document.getElementById('adjustmentHours').value = '';
-      changeDivContent('hours','No adjustment');
-      changeDivContent('netRemainingHours','No adjustment');
+      changeDivContent('hours',label("no.adjustment","No adjustment"));
+      changeDivContent('netRemainingHours',label("no.adjustment","No adjustment"));
     <%}%>
     document.getElementById('adjustmentReason').value = '-1';
-    changeDivContent('reason','No adjustment');
+    changeDivContent('reason',label("no.adjustment","No adjustment"));
     document.getElementById('adjustmentNotes').value = '';
-    changeDivContent('notes','No adjustment');
+    changeDivContent('notes',label("no.adjustment","No adjustment"));
   }
 </script>
 <%-- start details --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>General Information</strong>
+	    <strong><dhv:label name="documents.details.generalInformation">General Information</dhv:label></strong>
 	  </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Service Contract Number
+      <dhv:label name="accounts.accountasset_include.ServiceContractNumber">Service Contract Number</dhv:label>
     </td>
     <td>
-      <input type="text" size="7" name="serviceContractNumber" maxlength="8" value="<%= toHtmlValue(serviceContract.getServiceContractNumber()) %>"><font color="red">*</font>
+      <input type="text" size="10" name="serviceContractNumber" maxlength="8" value="<%= toHtmlValue(serviceContract.getServiceContractNumber()) %>"><font color="red">*</font>
+      <%= showAttribute(request, "serviceContractNumberError") %>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Contract Value
+      <dhv:label name="account.sc.contractValue">Contract Value</dhv:label>
     </td>
     <td>
       <%= applicationPrefs.get("SYSTEM.CURRENCY") %>
@@ -115,7 +116,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Initial Contract Date
+      <dhv:label name="account.sc.initialContractDate">Initial Contract Date</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="addServiceContract" field="initialStartDate" timestamp="<%= serviceContract.getInitialStartDate() %>" timeZone="<%=serviceContract.getInitialStartDateTimeZone()%>" showTimeZone="true" />
@@ -125,7 +126,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Current Contract Date
+      <dhv:label name="account.sc.currentContractDate">Current Contract Date</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="addServiceContract" field="currentStartDate" timestamp="<%= serviceContract.getCurrentStartDate() %>" timeZone="<%=serviceContract.getCurrentStartDateTimeZone()%>" showTimeZone="true" />
@@ -134,7 +135,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Current End Date
+      <dhv:label name="account.sc.currentEndDate">Current End Date</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="addServiceContract" field="currentEndDate" timestamp="<%= serviceContract.getCurrentEndDate() %>" timeZone="<%=serviceContract.getCurrentEndDateTimeZone()%>" showTimeZone="true" />
@@ -143,7 +144,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Category
+      <dhv:label name="accounts.accountasset_include.Category">Category</dhv:label>
     </td>
     <td>
     <%= serviceContractCategoryList.getHtmlSelect("category",serviceContract.getCategory()) %>
@@ -151,7 +152,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Type
+      <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
     </td>
     <td>
     <%= serviceContractTypeList.getHtmlSelect("type",serviceContract.getType()) %>
@@ -159,7 +160,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" valign="top">
-      Labor Categories
+      <dhv:label name="account.sc.laborCategories">Labor Categories</dhv:label>
     </td>
     <td>
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
@@ -172,16 +173,16 @@
                 while (itr.hasNext()){
                   ServiceContractProduct scp = (ServiceContractProduct)itr.next(); 
             %>
-                <option value="<%=scp.getProductId()%>"><%=toHtml(scp.getProductSku())%></option>
+                <option value="<%=scp.getProductId()%>"><%=toHtml(scp.getProductName())%></option>
              <%}
              }else{%>
-                <option value="-1">None Selected</option>
+                <option value="-1"><dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label></option>
              <%}%>
             </select>
             <input type="hidden" name="previousSelection" value="" />
           </td>
           <td valign="top">
-            &nbsp;[<a href="javascript:popProductCatalogSelectMultiple('selectedList','<%=serviceContract.getId()%>');">Select</a>]
+            &nbsp;[<a href="javascript:popProductCatalogSelectMultiple('selectedList','<%=serviceContract.getId()%>');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
           </td>
         </tr>
       </table>
@@ -189,7 +190,7 @@
   </tr>
 	<tr class="containerBody">
     <td class="formLabel">
-      Contact
+      <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
     </td>
     <td>
       <%= contactList.getHtmlSelect("contactId", serviceContract.getContactId() ) %>
@@ -197,7 +198,7 @@
 	</tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Description
+      <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
     </td>
     <td>
       <textarea name="description" rows="3" cols="50"><%= toString(serviceContract.getDescription()) %></textarea>
@@ -205,7 +206,7 @@
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Billing Notes
+      <dhv:label name="account.sc.billingNotes">Billing Notes</dhv:label>
     </td>
     <td>
       <textarea name="contractBillingNotes" rows="3" cols="50"><%= toString(serviceContract.getContractBillingNotes()) %></textarea>
@@ -216,12 +217,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Block Hour Information</strong>
+	    <strong><dhv:label name="account.sc.blockHourInformation">Block Hour Information</dhv:label></strong>
 	  </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-    Total Hours Remaining
+    <dhv:label name="account.sc.totalHoursRemaining">Total Hours Remaining</dhv:label>
     </td>
     <td>
      <table cellspacing="0" cellpadding="0" border="0" class="empty">
@@ -232,11 +233,11 @@
         <td>
           <input type="hidden" name="totalHoursRemaining" id="totalHoursRemaining" value="<%= ((serviceContract.getId() == -1) && (serviceContract.getTotalHoursRemaining() == 0)) ? "" : "" + serviceContract.getTotalHoursRemaining() %>"/>
           <dhv:evaluate if="<%= serviceContract.getId() == -1 %>">
-          &nbsp [<a href="javascript:popContractHours('totalHoursRemaining','hoursRemaining', 'adjustmentReason','reason','adjustmentNotes','notes');">Adjust</a>]
-          &nbsp [<a href="javascript:clearAdjustment();">Clear</a>]
+          &nbsp [<a href="javascript:popContractHours('totalHoursRemaining','hoursRemaining', 'adjustmentReason','reason','adjustmentNotes','notes');"><dhv:label name="account.sc.adjust">Adjust</dhv:label></a>]
+          &nbsp [<a href="javascript:clearAdjustment();"><dhv:label name="button.clear">Clear</dhv:label></a>]
           </dhv:evaluate>
           <dhv:evaluate if="<%= serviceContractHoursHistory.size() > 0 %>">
-          &nbsp [<a href="javascript:popURL('AccountsServiceContracts.do?command=HoursHistory&id=<%= serviceContract.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');">History</a>]
+          &nbsp [<a href="javascript:popURL('AccountsServiceContracts.do?command=HoursHistory&id=<%= serviceContract.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"><dhv:label name="accountsassets.history.long_html">History</dhv:label></a>]
           </dhv:evaluate>&nbsp;
         </td>
         </tr>
@@ -246,18 +247,24 @@
   <dhv:evaluate if="<%= serviceContract.getId() != -1 %>">
     <tr class="containerBody">
       <td class="formLabel">
-        Adjustment Hours
+        <dhv:label name="account.sc.adjustmentHours">Adjustment Hours</dhv:label>
       </td>
       <td>
        <table cellspacing="0" cellpadding="0" border="0" class="empty">
         <tr>
           <td>
-              <div id="hours"><%= ((serviceContract.getAdjustmentHours() == 0.0) ? "No adjustment" : "" + serviceContract.getAdjustmentHours()) %></div>
+            <div id="hours">
+<% if(serviceContract.getAdjustmentHours() != 0.0) {%>
+  <%= serviceContract.getAdjustmentHours() %>
+<%} else {%>
+  <dhv:label name="account.sc.noAdjustment">No adjustment</dhv:label>
+<%}%>
+            </div>
           </td>
           <td>
             <input type="hidden" name="adjustmentHours" id="adjustmentHours" value="<%=serviceContract.getAdjustmentHours()%>" />
-            &nbsp [<a href="javascript:popContractHours('adjustmentHours','hours', 'adjustmentReason','reason','adjustmentNotes','notes');">Adjust</a>]
-            &nbsp [<a href="javascript:clearAdjustment();">Clear</a>]
+            &nbsp [<a href="javascript:popContractHours('adjustmentHours','hours', 'adjustmentReason','reason','adjustmentNotes','notes');"><dhv:label name="account.sc.adjust">Adjust</dhv:label></a>]
+            &nbsp [<a href="javascript:clearAdjustment();"><dhv:label name="button.clear">Clear</dhv:label></a>]
           </td>
         </tr>
       </table>
@@ -304,7 +311,13 @@
         Hours after Adjustment
       </td>
       <td>
-        <div id="netRemainingHours"><%= ((serviceContract.getNetHours() == 0.0) ? "No adjustment" : "" + serviceContract.getNetHours()) %></div>
+        <div id="netRemainingHours">
+<% if(serviceContract.getNetHours() != 0.0) {%>
+  <%= serviceContract.getNetHours() %>
+<%} else {%>
+  <dhv:label name="account.sc.noAdjustment">No adjustment</dhv:label>
+<%}%>
+        </div>
          <input type="hidden" name="netHours" id="netHours" value="<%=((serviceContract.getNetHours() == 0.0) ? "" : "" + serviceContract.getNetHours())%>" />
      </td>
     </tr>
@@ -314,12 +327,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Service Model Options</strong>
+      <strong><dhv:label name="accounts.accountasset_include.ServiceModelOptions">Service Model Options</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Response Time
+      <dhv:label name="accounts.accountasset_include.ResponseTime">Response Time</dhv:label>
     </td>
     <td>
       <%= responseModelList.getHtmlSelect("responseTime", serviceContract.getResponseTime()) %><font color="red">*</font>
@@ -327,7 +340,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Telephone Service
+      <dhv:label name="accounts.accountasset_include.TelephoneService">Telephone Service</dhv:label>
     </td>
     <td>
       <%= phoneModelList.getHtmlSelect("telephoneResponseModel", serviceContract.getTelephoneResponseModel()) %><font color="red">*</font>
@@ -335,7 +348,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-    Onsite Service
+    <dhv:label name="accounts.accountasset_include.OnsiteService">Onsite Service</dhv:label>
     </td>
     <td>
       <%= onsiteModelList.getHtmlSelect("onsiteResponseModel", serviceContract.getOnsiteResponseModel()) %><font color="red">*</font>
@@ -343,7 +356,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Email Service
+      <dhv:label name="account.sc.emailSercive">Email Service</dhv:label>
     </td>
     <td>
       <%= emailModelList.getHtmlSelect("emailResponseModel", serviceContract.getEmailResponseModel()) %><font color="red">*</font>
@@ -351,7 +364,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap valign="top" class="formLabel">
-      Service Model Notes
+      <dhv:label name="account.sc.serviceModelNotes">Service Model Notes</dhv:label>
     </td>
     <td>
       <textarea name="serviceModelNotes" rows="3" cols="50"><%= toString(serviceContract.getServiceModelNotes()) %></textarea>

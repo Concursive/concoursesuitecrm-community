@@ -36,22 +36,22 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do">Contacts</a> > 
-View Imports
+<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<dhv:label name="accounts.ViewImports">View Imports</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:permission name="contacts-external_contacts-imports-add">
-  <a href="ExternalContactsImports.do?command=New">New Import</a><br>
+  <a href="ExternalContactsImports.do?command=New"><dhv:label name="contacts.companydirectory_confirm_importupload.NewImport">New Import</dhv:label></a><br>
 </dhv:permission><br>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="ExternalContactsImports.do?command=View">
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= ExternalContactsImportListInfo.getOptionValue("all") %>>All Imports</option>
-        <option <%= ExternalContactsImportListInfo.getOptionValue("my") %>>My Imports</option>
+      <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= ExternalContactsImportListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_listimports.AllImports">All Imports</dhv:label></option>
+        <option <%= ExternalContactsImportListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_listimports.MyImports">My Imports</dhv:label></option>
       </select>
     </td>
     <td>
@@ -63,35 +63,35 @@ View Imports
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th rowspan="2" valign="middle">
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th rowspan="2" valign="middle" width="100%">
-      <strong><a href="ExternalContactsImports.do?command=View&column=m.name">Name</a></strong>
+      <strong><a href="ExternalContactsImports.do?command=View&column=m.name"><dhv:label name="contacts.name">Name</dhv:label></a></strong>
       <%= ExternalContactsImportListInfo.getSortIcon("m.name") %>
     </th>
     <th rowspan="2" valign="middle">
-      <strong>Status</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
     </th>
     <th colspan="3" style="text-align:center !important">
-      <strong>Results</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_listimports.Results">Results</dhv:label></strong>
     </th>
     <th rowspan="2" valign="middle" nowrap>
-      <strong><a href="ExternalContactsImports.do?command=View&column=m.entered">Entered</a></strong>
+      <strong><a href="ExternalContactsImports.do?command=View&column=m.entered"><dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label></a></strong>
       <%= ExternalContactsImportListInfo.getSortIcon("m.entered") %>
     </th>
     <th rowspan="2" valign="middle">
-      <strong>Modified</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label></strong>
     </th>
   </tr>
   <tr>
     <th>
-      <strong>Total</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_listimports.Total">Total</dhv:label></strong>
     </th>
     <th>
-      <strong>Success</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_listimports.Success">Success</dhv:label></strong>
     </th>
     <th>
-      <strong>Failed</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_listimports.Failed">Failed</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -112,7 +112,7 @@ View Imports
     <td width="100%" nowrap>
       <a href="ExternalContactsImports.do?command=Details&importId=<%= thisImport.getId() %>"><%= toHtmlValue(thisImport.getName()) %></a>
       <dhv:evaluate if="<%= !thisImport.canProcess() && thisImport.getFile().hasVersion(Import.ERROR_FILE_VERSION) %>">
-      &nbsp;<%= thisImport.getFile().getImageTag() %><br />[<a href="javascript:window.location.href='ExternalContactsImports.do?command=Download&importId=<%= thisImport.getId() %>&fid=<%= thisImport.getFile().getId() %>&ver=<%= Import.ERROR_FILE_VERSION %>';">Download Error File</a>]
+      &nbsp;<%= thisImport.getFile().getImageTag() %><br />[<a href="javascript:window.location.href='ExternalContactsImports.do?command=Download&importId=<%= thisImport.getId() %>&fid=<%= thisImport.getFile().getId() %>&ver=<%= Import.ERROR_FILE_VERSION %>';"><dhv:label name="accounts.accounts_contacts_detailsimport.DownloadErrorFile">Download Error File</dhv:label></a>]
       </dhv:evaluate>
     </td>
     <td>
@@ -138,7 +138,7 @@ View Imports
 }else{%>
       <tr>
         <td class="containerBody" colspan="8" valign="center">
-          No imports found.
+          <dhv:label name="accounts.accounts_contacts_listimports.NoImportsFound">No imports found.</dhv:label>
         </td>
       </tr>
 <%}%>

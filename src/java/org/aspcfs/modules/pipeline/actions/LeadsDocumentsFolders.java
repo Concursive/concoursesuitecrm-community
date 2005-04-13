@@ -79,10 +79,10 @@ public final class LeadsDocumentsFolders extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
     boolean recordInserted = false;
+    boolean isValid = false;
     try {
       db = this.getConnection(context);
       int opportunityId = addOpportunity(context, db);
@@ -96,32 +96,30 @@ public final class LeadsDocumentsFolders extends CFSModule {
       thisFolder.setLinkModuleId(Constants.DOCUMENTS_OPPORTUNITIES);
       thisFolder.setLinkItemId(opportunityId);
       if (newFolder) {
-        recordInserted = thisFolder.insert(db);
+        isValid = this.validateObject(context, db, thisFolder);
+        if (isValid) {
+          recordInserted = thisFolder.insert(db);
+        }
       } else {
-        resultCount = thisFolder.update(db);
-      }
-      if (!recordInserted && resultCount < 1) {
-        processErrors(context, thisFolder.getErrors());
+        isValid = this.validateObject(context, db, thisFolder);
+        if (isValid) {
+          resultCount = thisFolder.update(db);
+        }
       }
       //Build array of folder trails
       ProjectManagementFileFolders.buildHierarchy(db, context);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("InsertOK");
-      } else if (resultCount == 1) {
-        return ("UpdateOK");
-      } else {
-        return (executeCommandAdd(context));
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (recordInserted) {
+      return ("InsertOK");
+    } else if (resultCount == 1) {
+      return ("UpdateOK");
     }
+    return (executeCommandAdd(context));
   }
 
 

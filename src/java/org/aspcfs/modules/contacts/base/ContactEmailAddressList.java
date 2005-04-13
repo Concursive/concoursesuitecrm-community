@@ -15,15 +15,16 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.base.EmailAddressList;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.EmailAddressList;
 import org.aspcfs.utils.web.HtmlSelect;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
  *  Contains a list of email addresses... currently used to build the list from

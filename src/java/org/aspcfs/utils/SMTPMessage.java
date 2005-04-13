@@ -15,19 +15,26 @@
  */
 package org.aspcfs.utils;
 
-import java.util.*;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.*;
-import javax.mail.internet.*;
-import javax.activation.*;
-import java.io.*;
-import com.zeroio.iteam.base.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.util.*;
 
 /**
  *  A wrapper around Sun's JavaMail API. Makes sending email a snap.
  *
  *@author     mrajkowski
  *@created    July 12, 2001
- *@version    $Id$
+ *@version    $Id: SMTPMessage.java,v 1.11.4.1 2004/11/29 20:53:41 mrajkowski
+ *      Exp $
  */
 public class SMTPMessage {
 
@@ -35,11 +42,12 @@ public class SMTPMessage {
   private String from = "";
   private ArrayList to = new ArrayList();
   private ArrayList cc = new ArrayList();
+  private ArrayList bcc = new ArrayList();
   private String subject = "";
   private String body = "";
   private String type = "text";
   private String errorMsg = "";
-  private ArrayList replyTo = new ArrayList();
+  private HashMap replyTo = new HashMap();
   private FileItemList attachments = null;
   private ArrayList byteArrayAttachments = null;
 
@@ -107,6 +115,21 @@ public class SMTPMessage {
 
 
   /**
+   *  Sets the bcc attribute of the SMTPMessage object
+   *
+   *@param  tmp  The new bcc value
+   */
+  public void setBcc(String tmp) {
+    bcc.clear();
+    if (tmp.indexOf(",") > -1) {
+      addMultiple(bcc, tmp);
+    } else {
+      addBcc(tmp);
+    }
+  }
+
+
+  /**
    *  Sets the Subject attribute of the SMTPMessage object
    *
    *@param  tmp  The new Subject value
@@ -133,7 +156,7 @@ public class SMTPMessage {
    *
    *@return    The replyTo value
    */
-  public ArrayList getReplyTo() {
+  public HashMap getReplyTo() {
     return replyTo;
   }
 
@@ -143,7 +166,7 @@ public class SMTPMessage {
    *
    *@param  replyTo  The new replyTo value
    */
-  public void setReplyTo(ArrayList replyTo) {
+  public void setReplyTo(HashMap replyTo) {
     this.replyTo = replyTo;
   }
 
@@ -170,6 +193,13 @@ public class SMTPMessage {
     type = tmp;
   }
 
+  public String getSubject() {
+    return subject;
+  }
+
+  public String getBody() {
+    return body;
+  }
 
   /**
    *  Gets the ErrorMsg attribute of the SMTPMessage object
@@ -196,10 +226,21 @@ public class SMTPMessage {
   /**
    *  Adds a feature to the ReplyTo attribute of the SMTPMessage object
    *
-   *@param  tmp  The feature to be added to the ReplyTo attribute
+   *@param  address  The feature to be added to the ReplyTo attribute
    */
-  public void addReplyTo(String tmp) {
-    replyTo.add(tmp);
+  public void addReplyTo(String address) {
+    replyTo.put(address, "");
+  }
+
+
+  /**
+   *  Adds a feature to the ReplyTo attribute of the SMTPMessage object
+   *
+   *@param  address   The feature to be added to the ReplyTo attribute
+   *@param  personal  The feature to be added to the ReplyTo attribute
+   */
+  public void addReplyTo(String address, String personal) {
+    replyTo.put(address, personal);
   }
 
 
@@ -211,6 +252,16 @@ public class SMTPMessage {
    */
   public void addCc(String tmp) {
     cc.add(tmp);
+  }
+
+
+  /**
+   *  Adds a feature to the Bcc attribute of the SMTPMessage object
+   *
+   *@param  tmp  The feature to be added to the Bcc attribute
+   */
+  public void addBcc(String tmp) {
+    bcc.add(tmp);
   }
 
 
@@ -313,8 +364,17 @@ public class SMTPMessage {
       //Set the Reply to addresses
       if (replyTo.size() > 0) {
         InternetAddress[] tempReply = new InternetAddress[replyTo.size()];
-        for (int i = 0; i < replyTo.size(); i++) {
-          tempReply[i] = new InternetAddress((String) replyTo.get(i));
+        Iterator i = replyTo.keySet().iterator();
+        int count = 0;
+        while (i.hasNext()) {
+          String address = (String) i.next();
+          String personal = (String) replyTo.get(address);
+          if (personal != null && !"".equals(personal)) {
+            tempReply[count] = new InternetAddress(address, personal);
+          } else {
+            tempReply[count] = new InternetAddress(address);
+          }
+          ++count;
         }
         message.setReplyTo(tempReply);
       }
@@ -329,6 +389,12 @@ public class SMTPMessage {
       for (int i = 0; i < cc.size(); i++) {
         message.addRecipient(Message.RecipientType.CC,
             new InternetAddress((String) cc.get(i)));
+      }
+
+      // Set the bcc address(es)
+      for (int i = 0; i < bcc.size(); i++) {
+        message.addRecipient(Message.RecipientType.BCC,
+            new InternetAddress((String) bcc.get(i)));
       }
 
       // Set the subject
@@ -408,6 +474,9 @@ public class SMTPMessage {
     } catch (javax.mail.MessagingException me) {
       errorMsg = me.toString();
       return 2;
+    } catch (java.io.UnsupportedEncodingException ue) {
+      errorMsg = ue.toString();
+      return 2;
     }
   }
 
@@ -470,7 +539,7 @@ public class SMTPMessage {
     StringTokenizer st = new StringTokenizer(emails, ",");
     while (st.hasMoreTokens()) {
       String email = st.nextToken();
-      list.add(email);
+      list.add(email.trim());
     }
   }
 }

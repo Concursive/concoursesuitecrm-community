@@ -34,8 +34,8 @@ function newOpt(param, value) {
 function page_init() {
   var list = parent.document.forms['addticket'].elements['contactId'];
   list.options.length = 0;
-<dhv:evaluate exp="<%= (ContactList.size() == 0) %>">
-  list.options[list.length] = newOpt("-- None --", "-1");
+<dhv:evaluate if="<%= (ContactList.size() == 0) %>">
+  list.options[list.length] = newOpt(label("option.none","-- None --"), "-1");
 </dhv:evaluate>
 <%
   Iterator list1 = ContactList.iterator();
@@ -46,7 +46,6 @@ function page_init() {
 <%
   }
 %>
-
 }
 </script>
 </body>

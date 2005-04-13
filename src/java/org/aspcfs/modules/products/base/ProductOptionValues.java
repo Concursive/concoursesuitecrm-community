@@ -57,139 +57,196 @@ public class ProductOptionValues extends GenericBean {
   private int recurringCurrency = -1;
   private double recurringAmount = 0.0;
   private int recurringType = -1;
-  //other supplimentary fields
-  private String optionName = null;
-  private String productName = null;
+  // multiplier
+  private double value = 0.0;
+  private double multiplier = 0.0;
+  // range
+  private int rangeMin = -1;
+  private int rangeMax = -1;
+  private int costCurrency = -1;
+  private double costAmount = 0.0;
 
 
   /**
-   *  Gets the id attribute of the ProductOptionValues object
+   *  Sets the rangeMin attribute of the ProductOptionValues object
    *
-   *@return    The id value
+   *@param  tmp  The new rangeMin value
    */
-  public int getId() {
-    return id;
+  public void setRangeMin(int tmp) {
+    this.rangeMin = tmp;
   }
 
 
   /**
-   *  Gets the optionId attribute of the ProductOptionValues object
+   *  Sets the rangeMin attribute of the ProductOptionValues object
    *
-   *@return    The optionId value
+   *@param  tmp  The new rangeMin value
    */
-  public int getOptionId() {
-    return optionId;
+  public void setRangeMin(String tmp) {
+    this.rangeMin = Integer.parseInt(tmp);
   }
 
 
   /**
-   *  Gets the resultId attribute of the ProductOptionValues object
+   *  Sets the rangeMax attribute of the ProductOptionValues object
    *
-   *@return    The resultId value
+   *@param  tmp  The new rangeMax value
    */
-  public int getResultId() {
-    return resultId;
+  public void setRangeMax(int tmp) {
+    this.rangeMax = tmp;
   }
 
 
   /**
-   *  Gets the priceCurrency attribute of the ProductOptionValues object
+   *  Sets the rangeMax attribute of the ProductOptionValues object
    *
-   *@return    The priceCurrency value
+   *@param  tmp  The new rangeMax value
    */
-  public int getPriceCurrency() {
-    return priceCurrency;
+  public void setRangeMax(String tmp) {
+    this.rangeMax = Integer.parseInt(tmp);
   }
 
 
   /**
-   *  Gets the priceAmount attribute of the ProductOptionValues object
+   *  Sets the costCurrency attribute of the ProductOptionValues object
    *
-   *@return    The priceAmount value
+   *@param  tmp  The new costCurrency value
    */
-  public double getPriceAmount() {
-    return priceAmount;
+  public void setCostCurrency(int tmp) {
+    this.costCurrency = tmp;
   }
 
 
   /**
-   *  Gets the recurringCurrency attribute of the ProductOptionValues object
+   *  Sets the costCurrency attribute of the ProductOptionValues object
    *
-   *@return    The recurringCurrency value
+   *@param  tmp  The new costCurrency value
    */
-  public int getRecurringCurrency() {
-    return recurringCurrency;
+  public void setCostCurrency(String tmp) {
+    this.costCurrency = Integer.parseInt(tmp);
   }
 
 
   /**
-   *  Gets the recurringAmount attribute of the ProductOptionValues object
+   *  Sets the costAmount attribute of the ProductOptionValues object
    *
-   *@return    The recurringAmount value
+   *@param  tmp  The new costAmount value
    */
-  public double getRecurringAmount() {
-    return recurringAmount;
+  public void setCostAmount(double tmp) {
+    this.costAmount = tmp;
   }
 
 
   /**
-   *  Gets the recurringType attribute of the ProductOptionValues object
+   *  Sets the costAmount attribute of the ProductOptionValues object
    *
-   *@return    The recurringType value
+   *@param  tmp  The new costAmount value
    */
-  public int getRecurringType() {
-    return recurringType;
+  public void setCostAmount(String tmp) {
+    this.costAmount = Double.parseDouble(tmp);
   }
 
 
   /**
-   *  Gets the optionName attribute of the ProductOptionValues object
+   *  Gets the costCurrency attribute of the ProductOptionValues object
    *
-   *@return    The optionName value
+   *@return    The costCurrency value
    */
-  public String getOptionName() {
-    return optionName;
+  public int getCostCurrency() {
+    return costCurrency;
   }
 
 
   /**
-   *  Gets the productName attribute of the ProductOptionValues object
+   *  Gets the costAmount attribute of the ProductOptionValues object
    *
-   *@return    The productName value
+   *@return    The costAmount value
    */
-  public String getProductName() {
-    return productName;
+  public double getCostAmount() {
+    return costAmount;
   }
 
 
   /**
-   *  Gets the description attribute of the ProductOptionValues object
+   *  Gets the rangeMin attribute of the ProductOptionValues object
    *
-   *@return    The description value
+   *@return    The rangeMin value
    */
-  public String getDescription() {
-    return description;
+  public int getRangeMin() {
+    return rangeMin;
   }
 
 
   /**
-   *  Gets the msrpCurrency attribute of the ProductOptionValues object
+   *  Gets the rangeMax attribute of the ProductOptionValues object
    *
-   *@return    The msrpCurrency value
+   *@return    The rangeMax value
    */
-  public int getMsrpCurrency() {
-    return msrpCurrency;
+  public int getRangeMax() {
+    return rangeMax;
+  }
+
+
+
+  /**
+   *  Sets the value attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new value value
+   */
+  public void setValue(double tmp) {
+    this.value = tmp;
   }
 
 
   /**
-   *  Gets the msrpAmount attribute of the ProductOptionValues object
+   *  Sets the value attribute of the ProductOptionValues object
    *
-   *@return    The msrpAmount value
+   *@param  tmp  The new value value
    */
-  public double getMsrpAmount() {
-    return msrpAmount;
+  public void setValue(String tmp) {
+    this.value = Double.parseDouble(tmp);
   }
+
+
+  /**
+   *  Sets the multiplier attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new multiplier value
+   */
+  public void setMultiplier(double tmp) {
+    this.multiplier = tmp;
+  }
+
+
+  /**
+   *  Sets the multiplier attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new multiplier value
+   */
+  public void setMultiplier(String tmp) {
+    this.multiplier = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   *  Gets the value attribute of the ProductOptionValues object
+   *
+   *@return    The value value
+   */
+  public double getValue() {
+    return value;
+  }
+
+
+  /**
+   *  Gets the multiplier attribute of the ProductOptionValues object
+   *
+   *@return    The multiplier value
+   */
+  public double getMultiplier() {
+    return multiplier;
+  }
+
 
 
   /**
@@ -253,106 +310,6 @@ public class ProductOptionValues extends GenericBean {
 
 
   /**
-   *  Sets the priceCurrency attribute of the ProductOptionValues object
-   *
-   *@param  tmp  The new priceCurrency value
-   */
-  public void setPriceCurrency(int tmp) {
-    this.priceCurrency = tmp;
-  }
-
-
-  /**
-   *  Sets the priceCurrency attribute of the ProductOptionValues object
-   *
-   *@param  tmp  The new priceCurrency value
-   */
-  public void setPriceCurrency(String tmp) {
-    this.priceCurrency = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the priceAmount attribute of the ProductOptionValues object
-   *
-   *@param  tmp  The new priceAmount value
-   */
-  public void setPriceAmount(double tmp) {
-    this.priceAmount = tmp;
-  }
-
-
-  /**
-   *  Sets the recurringCurrency attribute of the ProductOptionValues object
-   *
-   *@param  tmp  The new recurringCurrency value
-   */
-  public void setRecurringCurrency(int tmp) {
-    this.recurringCurrency = tmp;
-  }
-
-
-  /**
-   *  Sets the recurringCurrency attribute of the ProductOptionValues object
-   *
-   *@param  tmp  The new recurringCurrency value
-   */
-  public void setRecurringCurrency(String tmp) {
-    this.recurringCurrency = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the recurringAmount attribute of the ProductOptionValues object
-   *
-   *@param  tmp  The new recurringAmount value
-   */
-  public void setRecurringAmount(double tmp) {
-    this.recurringAmount = tmp;
-  }
-
-
-  /**
-   *  Sets the recurringType attribute of the ProductOptionValues object
-   *
-   *@param  tmp  The new recurringType value
-   */
-  public void setRecurringType(int tmp) {
-    this.recurringType = tmp;
-  }
-
-
-  /**
-   *  Sets the recurringType attribute of the ProductOptionValues object
-   *
-   *@param  tmp  The new recurringType value
-   */
-  public void setRecurringType(String tmp) {
-    this.recurringType = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the optionName attribute of the ProductOptionValues object
-   *
-   *@param  tmp  The new optionName value
-   */
-  public void setOptionName(String tmp) {
-    this.optionName = tmp;
-  }
-
-
-  /**
-   *  Sets the productName attribute of the ProductOptionValues object
-   *
-   *@param  tmp  The new productName value
-   */
-  public void setProductName(String tmp) {
-    this.productName = tmp;
-  }
-
-
-  /**
    *  Sets the description attribute of the ProductOptionValues object
    *
    *@param  tmp  The new description value
@@ -389,6 +346,226 @@ public class ProductOptionValues extends GenericBean {
    */
   public void setMsrpAmount(double tmp) {
     this.msrpAmount = tmp;
+  }
+
+
+  /**
+   *  Sets the msrpAmount attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new msrpAmount value
+   */
+  public void setMsrpAmount(String tmp) {
+    this.msrpAmount = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   *  Sets the priceCurrency attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new priceCurrency value
+   */
+  public void setPriceCurrency(int tmp) {
+    this.priceCurrency = tmp;
+  }
+
+
+  /**
+   *  Sets the priceCurrency attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new priceCurrency value
+   */
+  public void setPriceCurrency(String tmp) {
+    this.priceCurrency = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the priceAmount attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new priceAmount value
+   */
+  public void setPriceAmount(double tmp) {
+    this.priceAmount = tmp;
+  }
+
+
+  /**
+   *  Sets the priceAmount attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new priceAmount value
+   */
+  public void setPriceAmount(String tmp) {
+    this.priceAmount = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   *  Sets the recurringCurrency attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new recurringCurrency value
+   */
+  public void setRecurringCurrency(int tmp) {
+    this.recurringCurrency = tmp;
+  }
+
+
+  /**
+   *  Sets the recurringCurrency attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new recurringCurrency value
+   */
+  public void setRecurringCurrency(String tmp) {
+    this.recurringCurrency = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the recurringAmount attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new recurringAmount value
+   */
+  public void setRecurringAmount(double tmp) {
+    this.recurringAmount = tmp;
+  }
+
+
+  /**
+   *  Sets the recurringAmount attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new recurringAmount value
+   */
+  public void setRecurringAmount(String tmp) {
+    this.recurringAmount = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   *  Sets the recurringType attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new recurringType value
+   */
+  public void setRecurringType(int tmp) {
+    this.recurringType = tmp;
+  }
+
+
+  /**
+   *  Sets the recurringType attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new recurringType value
+   */
+  public void setRecurringType(String tmp) {
+    this.recurringType = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the id attribute of the ProductOptionValues object
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the optionId attribute of the ProductOptionValues object
+   *
+   *@return    The optionId value
+   */
+  public int getOptionId() {
+    return optionId;
+  }
+
+
+  /**
+   *  Gets the resultId attribute of the ProductOptionValues object
+   *
+   *@return    The resultId value
+   */
+  public int getResultId() {
+    return resultId;
+  }
+
+
+  /**
+   *  Gets the description attribute of the ProductOptionValues object
+   *
+   *@return    The description value
+   */
+  public String getDescription() {
+    return description;
+  }
+
+
+  /**
+   *  Gets the msrpCurrency attribute of the ProductOptionValues object
+   *
+   *@return    The msrpCurrency value
+   */
+  public int getMsrpCurrency() {
+    return msrpCurrency;
+  }
+
+
+  /**
+   *  Gets the msrpAmount attribute of the ProductOptionValues object
+   *
+   *@return    The msrpAmount value
+   */
+  public double getMsrpAmount() {
+    return msrpAmount;
+  }
+
+
+  /**
+   *  Gets the priceCurrency attribute of the ProductOptionValues object
+   *
+   *@return    The priceCurrency value
+   */
+  public int getPriceCurrency() {
+    return priceCurrency;
+  }
+
+
+  /**
+   *  Gets the priceAmount attribute of the ProductOptionValues object
+   *
+   *@return    The priceAmount value
+   */
+  public double getPriceAmount() {
+    return priceAmount;
+  }
+
+
+  /**
+   *  Gets the recurringCurrency attribute of the ProductOptionValues object
+   *
+   *@return    The recurringCurrency value
+   */
+  public int getRecurringCurrency() {
+    return recurringCurrency;
+  }
+
+
+  /**
+   *  Gets the recurringAmount attribute of the ProductOptionValues object
+   *
+   *@return    The recurringAmount value
+   */
+  public double getRecurringAmount() {
+    return recurringAmount;
+  }
+
+
+  /**
+   *  Gets the recurringType attribute of the ProductOptionValues object
+   *
+   *@return    The recurringType value
+   */
+  public int getRecurringType() {
+    return recurringType;
   }
 
 
@@ -430,20 +607,12 @@ public class ProductOptionValues extends GenericBean {
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
-      throw new SQLException("Invalid Product Option Values Number");
+      throw new SQLException("Invalid Product Option Value");
     }
     PreparedStatement pst = db.prepareStatement(
         "SELECT " +
-        " poptvalues.*, " +
-        " popt.short_description AS option_name , " +
-        " pctlg.product_name AS product_name " +
+        " poptvalues.* " +
         " FROM product_option_values AS poptvalues " +
-        " LEFT JOIN product_option as popt " +
-        " ON ( poptvalues.option_id = popt.option_id ) " +
-        " LEFT JOIN product_option_map as poptmap " +
-        " ON ( poptvalues.value_id = poptmap.value_id ) " +
-        " LEFT JOIN product_catalog AS pctlg " +
-        " ON ( poptmap.product_id = pctlg.product_id ) " +
         " WHERE poptvalues.value_id = ? "
         );
     pst.setInt(1, id);
@@ -453,8 +622,8 @@ public class ProductOptionValues extends GenericBean {
     }
     rs.close();
     pst.close();
-    if (this.id == -1) {
-      throw new SQLException("Product Category not found");
+    if (this.getId() == -1) {
+      throw new SQLException("Product Option Value not found");
     }
   }
 
@@ -471,6 +640,7 @@ public class ProductOptionValues extends GenericBean {
     this.setOptionId(DatabaseUtils.getInt(rs, "option_id"));
     this.setResultId(DatabaseUtils.getInt(rs, "result_id"));
     this.setDescription(rs.getString("description"));
+    // pricing info
     this.setMsrpCurrency(rs.getInt("msrp_currency"));
     this.setMsrpAmount(rs.getDouble("msrp_amount"));
     this.setPriceCurrency(DatabaseUtils.getInt(rs, "price_currency"));
@@ -478,65 +648,14 @@ public class ProductOptionValues extends GenericBean {
     this.setRecurringCurrency(DatabaseUtils.getInt(rs, "price_currency"));
     this.setRecurringAmount(rs.getDouble("recurring_amount"));
     this.setRecurringType(DatabaseUtils.getInt(rs, "recurring_type"));
-
-    // product_option table
-    this.setOptionName(rs.getString("option_name"));
-
-    // product_catalog table
-    this.setProductName(rs.getString("product_name"));
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@param  baseFilePath      Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
-  public boolean delete(Connection db, String baseFilePath) throws SQLException {
-    boolean result = false;
-    if (this.getId() == -1) {
-      throw new SQLException("Product Category ID not specified.");
-    }
-    try {
-      int i = 0;
-      db.setAutoCommit(false);
-      /*
-       *  /Delete any documents
-       *  FileItemList fileList = new FileItemList();
-       *  fileList.setLinkModuleId(Constants.DOCUMENTS_PRODUCT_CATEGORY);
-       *  fileList.setLinkItemId(this.getId());
-       *  fileList.buildList(db);
-       *  fileList.delete(db, baseFilePath);
-       *  fileList = null;
-       *  /Delete any folder data
-       *  CustomFieldRecordList folderList = new CustomFieldRecordList();
-       *  folderList.setLinkModuleId(Constants.FOLDERS_PRODUCT_CATEGORY);
-       *  folderList.setLinkItemId(this.getId());
-       *  folderList.buildList(db);
-       *  folderList.delete(db);
-       *  folderList = null;
-       */
-      //delete all the dependencies that contain the product_option_values id
-
-      //delete the product_option_values_map s that have category1_id = id
-      PreparedStatement pst = db.prepareStatement(
-          " DELETE from product_option_values " +
-          " WHERE value_id = ? "
-          );
-      pst.setInt(++i, this.getId());
-      pst.execute();
-      pst.close();
-      db.commit();
-      result = true;
-    } catch (SQLException e) {
-      db.rollback();
-    } finally {
-      db.setAutoCommit(true);
-    }
-    return result;
+    // multiplier info
+    this.setValue(rs.getDouble("value"));
+    this.setMultiplier(rs.getDouble("multiplier"));
+    // range info
+    this.setRangeMin(rs.getInt("range_min"));
+    this.setRangeMax(rs.getInt("range_max"));
+    this.setCostCurrency(DatabaseUtils.getInt(rs, "cost_currency"));
+    this.setCostAmount(rs.getDouble("cost_amount"));
   }
 
 
@@ -550,38 +669,34 @@ public class ProductOptionValues extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
     StringBuffer sql = new StringBuffer();
-    try {
-      db.setAutoCommit(false);
-      sql.append(
-          " INSERT INTO product_option_values(  option_id, " +
-          " result_id, description, msrp_currency, msrp_amount, " +
-          " price_currency, price_amount, " +
-          " recurring_currency, recurring_amount, recurring_type )"
-          );
-      sql.append("VALUES ( ?,?,?,?,?,?,?,?,?,? )");
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(sql.toString());
-      DatabaseUtils.setInt(pst, ++i, this.getOptionId());
-      DatabaseUtils.setInt(pst, ++i, this.getResultId());
-      pst.setString(++i, this.getDescription());
-      DatabaseUtils.setInt(pst, ++i, this.getMsrpCurrency());
-      pst.setDouble(++i, this.getMsrpAmount());
-      DatabaseUtils.setInt(pst, ++i, this.getPriceCurrency());
-      pst.setDouble(++i, this.getPriceAmount());
-      DatabaseUtils.setInt(pst, ++i, this.getRecurringCurrency());
-      pst.setDouble(++i, this.getRecurringAmount());
-      DatabaseUtils.setInt(pst, ++i, this.getRecurringType());
-      pst.execute();
-      pst.close();
-      id = DatabaseUtils.getCurrVal(db, "product_option_values_value_id_seq");
-      db.commit();
-      result = true;
-    } catch (SQLException e) {
-      db.rollback();
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
-    }
+    sql.append(
+        "INSERT INTO product_option_values (option_id, " +
+        "result_id, description, msrp_currency, msrp_amount, " +
+        "price_currency, price_amount, " +
+        "recurring_currency, recurring_amount, recurring_type, value, multiplier, range_min, range_max, cost_currency, cost_amount ) ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    DatabaseUtils.setInt(pst, ++i, this.getOptionId());
+    DatabaseUtils.setInt(pst, ++i, this.getResultId());
+    pst.setString(++i, this.getDescription());
+    DatabaseUtils.setInt(pst, ++i, this.getMsrpCurrency());
+    pst.setDouble(++i, this.getMsrpAmount());
+    DatabaseUtils.setInt(pst, ++i, this.getPriceCurrency());
+    pst.setDouble(++i, this.getPriceAmount());
+    DatabaseUtils.setInt(pst, ++i, this.getRecurringCurrency());
+    pst.setDouble(++i, this.getRecurringAmount());
+    DatabaseUtils.setInt(pst, ++i, this.getRecurringType());
+    pst.setDouble(++i, this.getValue());
+    pst.setDouble(++i, this.getMultiplier());
+    pst.setInt(++i, this.getRangeMin());
+    pst.setInt(++i, this.getRangeMax());
+    DatabaseUtils.setInt(pst, ++i, this.getCostCurrency());
+    pst.setDouble(++i, this.getCostAmount());
+    pst.execute();
+    pst.close();
+    id = DatabaseUtils.getCurrVal(db, "product_option_values_value_id_seq");
+    result = true;
     return result;
   }
 
@@ -595,18 +710,18 @@ public class ProductOptionValues extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        " UPDATE product_option_values SET option_id = ?, result_id = ?, " +
-        " description = ?, msrp_currency = ?, mspr_amount = ? " +
-        " price_currency = ?, price_amount = ?, recurring_currency = ?, " +
-        " recurring_amount = ?, recurring_type = ? "
-        );
-    sql.append(" WHERE value_id = ? ");
+        "UPDATE product_option_values SET option_id = ?, result_id = ?, " +
+        "description = ?, msrp_currency = ?, mspr_amount = ? " +
+        "price_currency = ?, price_amount = ?, recurring_currency = ?, " +
+        "recurring_amount = ?, recurring_type = ?, value = ?, multiplier = ?, " +
+        "range_min = ?, range_max = ?, cost_currency=?, cost_amount = ? ");
+    sql.append("WHERE value_id = ? ");
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -620,6 +735,12 @@ public class ProductOptionValues extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, this.getRecurringCurrency());
     pst.setDouble(++i, this.getRecurringAmount());
     DatabaseUtils.setInt(pst, ++i, this.getRecurringType());
+    pst.setDouble(++i, this.getValue());
+    pst.setDouble(++i, this.getMultiplier());
+    pst.setInt(++i, this.getRangeMin());
+    pst.setInt(++i, this.getRangeMax());
+    DatabaseUtils.setInt(pst, ++i, this.getCostCurrency());
+    pst.setDouble(++i, this.getCostAmount());
     DatabaseUtils.setInt(pst, ++i, this.getId());
     resultCount = pst.executeUpdate();
     pst.close();
@@ -635,7 +756,6 @@ public class ProductOptionValues extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean isValid(Connection db) throws SQLException {
-// This method contains additional error catching statements
     if (this.getId() == -1) {
       return false;
     }
@@ -644,38 +764,17 @@ public class ProductOptionValues extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  Gets the numberParams attribute of the ProductOptionValues class
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   *@return    The numberParams value
    */
-  public DependencyList processDependencies(Connection db) throws SQLException {
-    // This method checks all the mappings for any product_option_values with the current id
-    // The currently known mappings are product_option_values_map, product_catalog_category_map
-    if (this.getId() == -1) {
-      throw new SQLException("Product Category ID not specified");
-    }
-    String sql = null;
-    DependencyList dependencyList = new DependencyList();
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-    int i = 0;
-    /*
-     *  /Check for documents
-     *  Dependency docDependency = new Dependency();
-     *  docDependency.setName("Documents");
-     *  docDependency.setCount(FileItemList.retrieveRecordCount(db, Constants.DOCUMENTS_PRODUCT_CATEGORY, this.getId()));
-     *  docDependency.setCanDelete(true);
-     *  dependencyList.add(docDependency);
-     *  /Check for folders
-     *  Dependency folderDependency = new Dependency();
-     *  folderDependency.setName("Folders");
-     *  folderDependency.setCount(CustomFieldRecordList.retrieveRecordCount(db, Constants.FOLDERS_PRODUCT_CATEGORY, this.getId()));
-     *  folderDependency.setCanDelete(true);
-     *  dependencyList.add(folderDependency);
-     */
-    return dependencyList;
+  public static ArrayList getNumberParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("price_amount");
+    thisList.add("msrp_amount");
+    thisList.add("cost_amount");
+    return thisList;
   }
+
 }
 

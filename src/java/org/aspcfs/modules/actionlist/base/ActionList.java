@@ -15,23 +15,21 @@
  */
 package org.aspcfs.modules.actionlist.base;
 
-import java.util.*;
-import java.text.*;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.framework.beans.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.admin.base.User;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.base.*;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.*;
+import java.text.DateFormat;
 
 /**
  *  Description of the Class
  *
  * @author     akhi_m
  * @created    April 18, 2003
+ * @version    $Id$
  */
 public class ActionList extends GenericBean {
   private int id = -1;
@@ -51,13 +49,13 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *Constructor for the ActionList object
+   *  Constructor for the ActionList object
    */
   public ActionList() { }
 
 
   /**
-   *Constructor for the ActionList object
+   *  Constructor for the ActionList object
    *
    * @param  db                Description of the Parameter
    * @param  id                Description of the Parameter
@@ -69,7 +67,7 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *Constructor for the ActionList object
+   *  Constructor for the ActionList object
    *
    * @param  rs                Description of the Parameter
    * @exception  SQLException  Description of the Exception
@@ -531,9 +529,6 @@ public class ActionList extends GenericBean {
    * @exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid(db)) {
-      return false;
-    }
     try {
       db.setAutoCommit(false);
       int i = 0;
@@ -574,9 +569,6 @@ public class ActionList extends GenericBean {
     if (id == -1) {
       throw new SQLException("Id not specified");
     }
-    if (!isValid(db)) {
-      return -1;
-    }
     try {
       db.setAutoCommit(false);
       ActionList previousList = new ActionList(db, id);
@@ -584,7 +576,7 @@ public class ActionList extends GenericBean {
       PreparedStatement pst = db.prepareStatement(
           "UPDATE action_list " +
           "SET modifiedby = ?, description = ?, " +
-          "modified = CURRENT_TIMESTAMP, completedate = ? " +
+          "modified = CURRENT_TIMESTAMP, completedate = ?, owner = ? " +
           "WHERE action_id = ? AND modified = ? "
           );
       pst.setInt(++i, this.getModifiedBy());
@@ -596,6 +588,7 @@ public class ActionList extends GenericBean {
       } else {
         pst.setTimestamp(++i, null);
       }
+      pst.setInt(++i, this.getOwner());
       pst.setInt(++i, id);
       pst.setTimestamp(++i, this.getModified());
       count = pst.executeUpdate();
@@ -651,7 +644,6 @@ public class ActionList extends GenericBean {
    * @exception  SQLException  Description of the Exception
    */
   public boolean deleteRelationships(Connection db) throws SQLException {
-    String sql = null;
     boolean commit = true;
     try {
       commit = db.getAutoCommit();
@@ -698,7 +690,6 @@ public class ActionList extends GenericBean {
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     ResultSet rs = null;
-    String sql = null;
     DependencyList dependencyList = new DependencyList();
     try {
       int i = 0;
@@ -713,7 +704,7 @@ public class ActionList extends GenericBean {
         int linkcount = rs.getInt("total");
         if (linkcount != 0) {
           Dependency thisDependency = new Dependency();
-          thisDependency.setName("Total Items");
+          thisDependency.setName("items");
           thisDependency.setCount(linkcount);
           thisDependency.setCanDelete(true);
           dependencyList.add(thisDependency);
@@ -800,24 +791,21 @@ public class ActionList extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the ActionList object
+   *  Description of the Method
    *
    * @param  db                Description of the Parameter
-   * @return                   The valid value
+   * @param  newOwner          Description of the Parameter
+   * @return                   Description of the Return Value
    * @exception  SQLException  Description of the Exception
    */
-  protected boolean isValid(Connection db) throws SQLException {
-    errors.clear();
-
-    if (this.getDescription() == null || this.getDescription().equals("")) {
-      errors.put("descriptionError", "Description is required");
-    }
-
-    if (hasErrors()) {
+  public boolean reassign(Connection db, int newOwner) throws SQLException {
+    int result = -1;
+    this.setOwner(newOwner);
+    result = this.update(db);
+    if (result == -1) {
       return false;
-    } else {
-      return true;
     }
+    return true;
   }
 
 }

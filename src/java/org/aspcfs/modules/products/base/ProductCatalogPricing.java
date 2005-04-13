@@ -15,26 +15,17 @@
  */
 package org.aspcfs.modules.products.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import com.zeroio.iteam.base.FileItem;
-import com.zeroio.iteam.base.FileItemList;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.tasks.base.TaskList;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.actionlist.base.ActionList;
-import org.aspcfs.modules.actionlist.base.ActionItemLog;
-import org.aspcfs.modules.actionlist.base.ActionItemLogList;
-import org.aspcfs.modules.base.CustomFieldRecordList;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
 
 /**
  *  This class contains the price info for a Product Catalog.
@@ -62,8 +53,231 @@ public class ProductCatalogPricing extends GenericBean {
   private Timestamp modified = null;
   private Timestamp startDate = null;
   private Timestamp expirationDate = null;
+  private boolean enabled = false;
+  private int costCurrency = -1;
+  private double costAmount = 0.0;
+
   //other supplimentary fields
   private String productName = null;
+  private String taxName = null;
+  private String msrpCurrencyName = null;
+  private String priceCurrencyName = null;
+  private String recurringCurrencyName = null;
+  private String recurringTypeName = null;
+  private String costCurrencyName = null;
+
+
+
+  /**
+   *  Sets the enabled attribute of the ProductCatalogPricing object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(boolean tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the ProductCatalogPricing object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the costCurrency attribute of the ProductCatalogPricing object
+   *
+   *@param  tmp  The new costCurrency value
+   */
+  public void setCostCurrency(int tmp) {
+    this.costCurrency = tmp;
+  }
+
+
+  /**
+   *  Sets the costCurrency attribute of the ProductCatalogPricing object
+   *
+   *@param  tmp  The new costCurrency value
+   */
+  public void setCostCurrency(String tmp) {
+    this.costCurrency = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the costAmount attribute of the ProductCatalogPricing object
+   *
+   *@param  tmp  The new costAmount value
+   */
+  public void setCostAmount(double tmp) {
+    this.costAmount = tmp;
+  }
+
+
+  /**
+   *  Sets the costAmount attribute of the ProductOptionValues object
+   *
+   *@param  tmp  The new costAmount value
+   */
+  public void setCostAmount(String tmp) {
+    this.costAmount = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   *  Sets the costCurrencyName attribute of the ProductCatalogPricing object
+   *
+   *@param  tmp  The new costCurrencyName value
+   */
+  public void setCostCurrencyName(String tmp) {
+    this.costCurrencyName = tmp;
+  }
+
+
+  /**
+   *  Gets the costCurrencyName attribute of the ProductCatalogPricing object
+   *
+   *@return    The costCurrencyName value
+   */
+  public String getCostCurrencyName() {
+    return costCurrencyName;
+  }
+
+
+  /**
+   *  Gets the costCurrency attribute of the ProductCatalogPricing object
+   *
+   *@return    The costCurrency value
+   */
+  public int getCostCurrency() {
+    return costCurrency;
+  }
+
+
+  /**
+   *  Gets the costAmount attribute of the ProductCatalogPricing object
+   *
+   *@return    The costAmount value
+   */
+  public double getCostAmount() {
+    return costAmount;
+  }
+
+
+  /**
+   *  Gets the enabled attribute of the ProductCatalogPricing object
+   *
+   *@return    The enabled value
+   */
+  public boolean getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   *  Sets the taxName attribute of the ProductCatalogPricing object
+   *
+   *@param  tmp  The new taxName value
+   */
+  public void setTaxName(String tmp) {
+    this.taxName = tmp;
+  }
+
+
+  /**
+   *  Gets the taxName attribute of the ProductCatalogPricing object
+   *
+   *@return    The taxName value
+   */
+  public String getTaxName() {
+    return taxName;
+  }
+
+
+  /**
+   *  Sets the msrpCurrencyName attribute of the ProductCatalogPricing object
+   *
+   *@param  tmp  The new msrpCurrencyName value
+   */
+  public void setMsrpCurrencyName(String tmp) {
+    this.msrpCurrencyName = tmp;
+  }
+
+
+  /**
+   *  Sets the priceCurrencyName attribute of the ProductCatalogPricing object
+   *
+   *@param  tmp  The new priceCurrencyName value
+   */
+  public void setPriceCurrencyName(String tmp) {
+    this.priceCurrencyName = tmp;
+  }
+
+
+  /**
+   *  Sets the recurringCurrencyName attribute of the ProductCatalogPricing
+   *  object
+   *
+   *@param  tmp  The new recurringCurrencyName value
+   */
+  public void setRecurringCurrencyName(String tmp) {
+    this.recurringCurrencyName = tmp;
+  }
+
+
+  /**
+   *  Sets the recurringTypeName attribute of the ProductCatalogPricing object
+   *
+   *@param  tmp  The new recurringTypeName value
+   */
+  public void setRecurringTypeName(String tmp) {
+    this.recurringTypeName = tmp;
+  }
+
+
+  /**
+   *  Gets the msrpCurrencyName attribute of the ProductCatalogPricing object
+   *
+   *@return    The msrpCurrencyName value
+   */
+  public String getMsrpCurrencyName() {
+    return msrpCurrencyName;
+  }
+
+
+  /**
+   *  Gets the priceCurrencyName attribute of the ProductCatalogPricing object
+   *
+   *@return    The priceCurrencyName value
+   */
+  public String getPriceCurrencyName() {
+    return priceCurrencyName;
+  }
+
+
+  /**
+   *  Gets the recurringCurrencyName attribute of the ProductCatalogPricing
+   *  object
+   *
+   *@return    The recurringCurrencyName value
+   */
+  public String getRecurringCurrencyName() {
+    return recurringCurrencyName;
+  }
+
+
+  /**
+   *  Gets the recurringTypeName attribute of the ProductCatalogPricing object
+   *
+   *@return    The recurringTypeName value
+   */
+  public String getRecurringTypeName() {
+    return recurringTypeName;
+  }
 
 
   /**
@@ -327,6 +541,16 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
+   *  Sets the msrpAmount attribute of the ProductCatalogPricing object
+   *
+   *@param  tmp  The new msrpAmount value
+   */
+  public void setMsrpAmount(String tmp) {
+    this.msrpAmount = Double.parseDouble(tmp);
+  }
+
+
+  /**
    *  Sets the priceCurrency attribute of the ProductCatalogPricing object
    *
    *@param  tmp  The new priceCurrency value
@@ -357,6 +581,16 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
+   *  Sets the priceAmount attribute of the ProductCatalogPricing object
+   *
+   *@param  tmp  The new priceAmount value
+   */
+  public void setPriceAmount(String tmp) {
+    this.priceAmount = Double.parseDouble(tmp);
+  }
+
+
+  /**
    *  Sets the recurringCurrency attribute of the ProductCatalogPricing object
    *
    *@param  tmp  The new recurringCurrency value
@@ -383,6 +617,16 @@ public class ProductCatalogPricing extends GenericBean {
    */
   public void setRecurringAmount(double tmp) {
     this.recurringAmount = tmp;
+  }
+
+
+  /**
+   *  Sets the recurringAmount attribute of the ProductCatalogPricing object
+   *
+   *@param  tmp  The new recurringAmount value
+   */
+  public void setRecurringAmount(String tmp) {
+    this.recurringAmount = Double.parseDouble(tmp);
   }
 
 
@@ -573,18 +817,29 @@ public class ProductCatalogPricing extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
-    if (this.getId() == -1) {
+    if (id == -1) {
       throw new SQLException("Invalid Product Catalog Pricing ID");
     }
     PreparedStatement pst = db.prepareStatement(
-        " SELECT " +
-        " pctlgprice.* , pctlg.product_name AS product_name" +
-        " FROM product_catalog_pricing pctlgprice, " +
-        " LEFT JOIN product_catalog AS pctlg " +
-        " ON ( pctlgprice.product_id = pctlg.product_id ) " +
-        " WHERE pctlgprice.price_id = ? "
-        );
-    pst.setInt(1, this.getId());
+        "SELECT " +
+        "pctlgprice.*, " +
+        "pctlg.product_name AS product_name, " +
+        "lpt.description AS tax_name, " +
+        "lcmsrp.description AS msrp_currency_name, " +
+        "lcpc.description AS price_currency_name, " +
+        "lcrc.description AS recurring_currency_name, " +
+        "lrt.description AS recurring_type_name, " +
+        "lccc.description AS cost_currency_name " +
+        "FROM product_catalog_pricing pctlgprice " +
+        "LEFT JOIN product_catalog AS pctlg ON (pctlgprice.product_id = pctlg.product_id) " +
+        "LEFT JOIN lookup_product_tax AS lpt ON (pctlgprice.tax_id = lpt.code) " +
+        "LEFT JOIN lookup_currency AS lcmsrp ON (pctlgprice.msrp_currency = lcmsrp.code) " +
+        "LEFT JOIN lookup_currency AS lcpc ON (pctlgprice.price_currency = lcpc.code) " +
+        "LEFT JOIN lookup_currency AS lcrc ON (pctlgprice.recurring_currency = lcrc.code) " +
+        "LEFT JOIN lookup_recurring_type AS lrt ON (pctlgprice.recurring_type = lrt.code) " +
+        "LEFT JOIN lookup_currency AS lccc ON (pctlgprice.cost_currency = lccc.code) " +
+        "WHERE pctlgprice.price_id = ? ");
+    pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
@@ -620,8 +875,17 @@ public class ProductCatalogPricing extends GenericBean {
     this.setModified(rs.getTimestamp("modified"));
     this.setStartDate(rs.getTimestamp("start_date"));
     this.setExpirationDate(rs.getTimestamp("expiration_date"));
+    this.setEnabled(rs.getBoolean("enabled"));
+    this.setCostCurrency(DatabaseUtils.getInt(rs, "cost_currency"));
+    this.setCostAmount(rs.getDouble("cost_amount"));
     //product_catalog
     this.setProductName(rs.getString("product_name"));
+    this.setTaxName(rs.getString("tax_name"));
+    this.setMsrpCurrencyName(rs.getString("msrp_currency_name"));
+    this.setPriceCurrencyName(rs.getString("price_currency_name"));
+    this.setRecurringCurrencyName(rs.getString("recurring_currency_name"));
+    this.setRecurringTypeName(rs.getString("recurring_type_name"));
+    this.setCostCurrencyName(rs.getString("cost_currency_name"));
   }
 
 
@@ -638,19 +902,23 @@ public class ProductCatalogPricing extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Product Catalog Pricing ID invalid");
     }
+    boolean commit = true;
     int i = 0;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       PreparedStatement pst = null;
       /*
-       *  /Delete any documents
+       *  Delete any documents
        *  FileItemList fileList = new FileItemList();
        *  fileList.setLinkModuleId(Constants.DOCUMENTS_PRODUCT_CATALOG_PRICING);
        *  fileList.setLinkItemId(this.getId());
        *  fileList.buildList(db);
        *  fileList.delete(db, baseFilePath);
        *  fileList = null;
-       *  /Delete any folder data
+       *  Delete any folder data
        *  CustomFieldRecordList folderList = new CustomFieldRecordList();
        *  folderList.setLinkModuleId(Constants.FOLDERS_PRODUCT_CATALOG_PRICING);
        *  folderList.setLinkItemId(this.getId());
@@ -668,12 +936,19 @@ public class ProductCatalogPricing extends GenericBean {
       pst.execute();
       pst.close();
 
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
       result = true;
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return result;
   }
@@ -700,56 +975,83 @@ public class ProductCatalogPricing extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    // check to see if the price being inserted is enabled.
+    // If enabled then disable all the other prices associated with
+    // the product
+    boolean canCommit = false;
     boolean result = false;
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        " INSERT INTO product_catalog_pricing( " +
-        " product_id, tax_id, msrp_currency, msrp_amount, " +
-        " price_currency , price_amount , recurring_currency , " +
-        " recurring_amount, recurring_type, enteredby, "
-        );
-    if (entered != null) {
-      sql.append(" entered, ");
-    }
-    sql.append(" modifiedby, ");
-    if (modified != null) {
-      sql.append(" modified, ");
-    }
-    sql.append(" start_date, expiration_date) ");
-    sql.append(" VALUES ( ?,?,?,?,?,?,?,?,?,?, ");
-    if (entered != null) {
+    try {
+      canCommit = db.getAutoCommit();
+      if (canCommit) {
+        db.setAutoCommit(false);
+      }
+      // insert the new price which is active
+      StringBuffer sql = new StringBuffer();
+      sql.append(
+          " INSERT INTO product_catalog_pricing( " +
+          " product_id, tax_id, msrp_currency, msrp_amount, " +
+          " price_currency , price_amount , recurring_currency , " +
+          " recurring_amount, recurring_type, enteredby, "
+          );
+      if (entered != null) {
+        sql.append(" entered, ");
+      }
+      sql.append(" modifiedby, ");
+      if (modified != null) {
+        sql.append(" modified, ");
+      }
+      sql.append(" start_date, expiration_date, enabled, cost_currency, cost_amount) ");
+      sql.append(" VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      if (entered != null) {
+        sql.append(" ?, ");
+      }
       sql.append(" ?, ");
+      if (modified != null) {
+        sql.append(" ?, ");
+      }
+      sql.append("?, ?, ?, ?, ? )");
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql.toString());
+      DatabaseUtils.setInt(pst, ++i, this.getProductId());
+      DatabaseUtils.setInt(pst, ++i, this.getTaxId());
+      DatabaseUtils.setInt(pst, ++i, this.getMsrpCurrency());
+      pst.setDouble(++i, this.getMsrpAmount());
+      DatabaseUtils.setInt(pst, ++i, this.getPriceCurrency());
+      pst.setDouble(++i, this.getPriceAmount());
+      DatabaseUtils.setInt(pst, ++i, this.getRecurringCurrency());
+      pst.setDouble(++i, this.getRecurringAmount());
+      DatabaseUtils.setInt(pst, ++i, this.getRecurringType());
+      DatabaseUtils.setInt(pst, ++i, this.getEnteredBy());
+      if (entered != null) {
+        pst.setTimestamp(++i, this.getEntered());
+      }
+      DatabaseUtils.setInt(pst, ++i, this.getModifiedBy());
+      if (modified != null) {
+        pst.setTimestamp(++i, this.getModified());
+      }
+      DatabaseUtils.setTimestamp(pst, ++i, this.getStartDate());
+      DatabaseUtils.setTimestamp(pst, ++i, this.getExpirationDate());
+      pst.setBoolean(++i, this.getEnabled());
+      DatabaseUtils.setInt(pst, ++i, this.getCostCurrency());
+      pst.setDouble(++i, this.getCostAmount());
+      pst.execute();
+      pst.close();
+      id = DatabaseUtils.getCurrVal(db, "product_catalog_pricing_price_id_seq");
+      result = true;
+      if (canCommit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace(System.out);
+      if (canCommit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (canCommit) {
+        db.setAutoCommit(true);
+      }
     }
-    sql.append(" ?, ");
-    if (modified != null) {
-      sql.append(" ?, ");
-    }
-    sql.append("?,?)");
-    int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql.toString());
-    DatabaseUtils.setInt(pst, ++i, this.getProductId());
-    DatabaseUtils.setInt(pst, ++i, this.getTaxId());
-    DatabaseUtils.setInt(pst, ++i, this.getMsrpCurrency());
-    pst.setDouble(++i, this.getMsrpAmount());
-    DatabaseUtils.setInt(pst, ++i, this.getPriceCurrency());
-    pst.setDouble(++i, this.getPriceAmount());
-    DatabaseUtils.setInt(pst, ++i, this.getRecurringCurrency());
-    pst.setDouble(++i, this.getRecurringAmount());
-    DatabaseUtils.setInt(pst, ++i, this.getRecurringType());
-    DatabaseUtils.setInt(pst, ++i, this.getEnteredBy());
-    if (entered != null) {
-      pst.setTimestamp(++i, this.getEntered());
-    }
-    DatabaseUtils.setInt(pst, ++i, this.getModifiedBy());
-    if (modified != null) {
-      pst.setTimestamp(++i, this.getModified());
-    }
-    DatabaseUtils.setTimestamp(pst, ++i, this.getStartDate());
-    DatabaseUtils.setTimestamp(pst, ++i, this.getExpirationDate());
-    pst.execute();
-    pst.close();
-    id = DatabaseUtils.getCurrVal(db, "product_catalog_pricing_price_id_seq");
-    result = true;
     return result;
   }
 
@@ -763,24 +1065,23 @@ public class ProductCatalogPricing extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
-    ResultSet rs = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        " UPDATE product_catalog_pricing SET " +
-        " product_id = ?, tax_id = ?, msrp_currency = ?, " +
-        " msrp_amount = ?, price_currency = ?, price_amount = ?, " +
-        " recurring_currency = ?, recurring_amount = ?, " +
-        " recurring_type = ?, enteredby = ?, entered = ?, " +
-        " modifiedby = ?, modified = ?, start_date = ?, expiration_date = ?, " +
-        " WHERE price_id = ? AND modified = ? "
-        );
+        "UPDATE product_catalog_pricing SET " +
+        "product_id = ?, tax_id = ?, msrp_currency = ?, " +
+        "msrp_amount = ?, price_currency = ?, price_amount = ?, " +
+        "recurring_currency = ?, recurring_amount = ?, " +
+        "recurring_type = ?, modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+        "start_date = ?, expiration_date = ?, enabled = ?, " +
+        "cost_currency = ?, cost_amount = ? " +
+        "WHERE price_id = ? ");
     int i = 0;
     pst = db.prepareStatement(sql.toString());
-    DatabaseUtils.setInt(pst, ++i, this.getProductId());
+    pst.setInt(++i, this.getProductId());
     DatabaseUtils.setInt(pst, ++i, this.getTaxId());
     DatabaseUtils.setInt(pst, ++i, this.getMsrpCurrency());
     pst.setDouble(++i, this.getMsrpAmount());
@@ -789,14 +1090,13 @@ public class ProductCatalogPricing extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, this.getRecurringCurrency());
     pst.setDouble(++i, this.getRecurringAmount());
     DatabaseUtils.setInt(pst, ++i, this.getRecurringType());
-    DatabaseUtils.setInt(pst, ++i, this.getEnteredBy());
-    DatabaseUtils.setTimestamp(pst, ++i, this.getEntered());
     DatabaseUtils.setInt(pst, ++i, this.getModifiedBy());
-    DatabaseUtils.setTimestamp(pst, ++i, this.getModified());
     DatabaseUtils.setTimestamp(pst, ++i, this.getStartDate());
     DatabaseUtils.setTimestamp(pst, ++i, this.getExpirationDate());
-    DatabaseUtils.setInt(pst, ++i, this.getId());
-    DatabaseUtils.setTimestamp(pst, ++i, this.getModified());
+    pst.setBoolean(++i, this.getEnabled());
+    DatabaseUtils.setInt(pst, ++i, this.getCostCurrency());
+    pst.setDouble(++i, this.getCostAmount());
+    pst.setInt(++i, this.getId());
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;
@@ -816,21 +1116,20 @@ public class ProductCatalogPricing extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Product Catalog Pricing ID not specified");
     }
-    String sql = null;
     DependencyList dependencyList = new DependencyList();
     PreparedStatement pst = null;
     ResultSet rs = null;
     int i = 0;
     /*
-     *  /Check for documents
+     *  Check for documents
      *  Dependency docDependency = new Dependency();
-     *  docDependency.setName("Documents");
+     *  docDependency.setName("documents");
      *  docDependency.setCount(FileItemList.retrieveRecordCount(db, Constants.DOCUMENTS_PRODUCT_CATALOG, this.getId()));
      *  docDependency.setCanDelete(true);
      *  dependencyList.add(docDependency);
-     *  /Check for folders
+     *  Check for folders
      *  Dependency folderDependency = new Dependency();
-     *  folderDependency.setName("Folders");
+     *  folderDependency.setName("folders");
      *  folderDependency.setCount(CustomFieldRecordList.retrieveRecordCount(db, Constants.FOLDERS_PRODUCT_CATALOG, this.getId()));
      *  folderDependency.setCanDelete(true);
      *  dependencyList.add(folderDependency);
@@ -854,7 +1153,7 @@ public class ProductCatalogPricing extends GenericBean {
         int priceCount = rs.getInt("pricecount");
         if (priceCount != 0) {
           Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of products that have only this price ");
+          thisDependency.setName("numberOfProductsThatHaveOnlyThisPrice");
           thisDependency.setCount(priceCount);
           thisDependency.setCanDelete(false);
           dependencyList.add(thisDependency);
@@ -869,17 +1168,273 @@ public class ProductCatalogPricing extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the ProductCatalogPricing object
+   *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@return                   The valid value
+   *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean isValid(Connection db) throws SQLException {
-    if (id == -1) {
+  private int disableAllPrices(Connection db) throws SQLException {
+    if (this.getProductId() == -1) {
+      throw new SQLException("Product Catalog Id not specified");
+    }
+    int resultCount = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE product_catalog_pricing " +
+        "SET enabled = false " +
+        "WHERE product_catalog_pricing.product_id = ? ");
+    pst.setInt(1, this.getProductId());
+    resultCount = pst.executeUpdate();
+    pst.close();
+    return resultCount;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  status            Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean updatePriceStatus(Connection db, boolean status) throws SQLException {
+    if (this.getProductId() == -1) {
+      throw new SQLException("Product Catalog Id not specified");
+    }
+    if (status) {
+      //price is being enabled. hence check to see if it is in a valid state
+      if (!isValidPriceState(db)) {
+        return false;
+      }
+    }
+    int resultCount = -1;
+    boolean commit = false;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(
+          "UPDATE product_catalog_pricing " +
+          "SET enabled = ? " +
+          "WHERE product_id = ? AND price_id = ? ");
+      pst.setBoolean(++i, status);
+      pst.setInt(++i, this.getProductId());
+      pst.setInt(++i, this.getId());
+      resultCount = pst.executeUpdate();
+      pst.close();
+      if (commit) {
+        db.commit();
+      }
+    } catch (Exception e) {
+      if (commit) {
+        db.rollback();
+      }
+      e.printStackTrace(System.out);
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return (resultCount > 0);
+  }
+
+
+  /**
+   *  Gets the priceValid attribute of the ProductCatalogPricing object
+   *
+   *@return                   The priceValid value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean isPriceValid() throws SQLException {
+    if (this.id == -1) {
+      throw new SQLException("Price ID not specified");
+    }
+    boolean valid = true;
+    if (expirationDate != null) {
+      //check if expiration date is before the todays date
+      if (expirationDate.before(DateUtils.getDate(Calendar.getInstance()))) {
+        valid = false;
+      } else if (startDate != null) {
+        if (expirationDate.before(startDate)) {
+          valid = false;
+        }
+      }
+    }
+    return valid;
+  }
+
+
+  /**
+   *  Gets the numberParams attribute of the ProductCatalogPricing class
+   *
+   *@return    The numberParams value
+   */
+  public static ArrayList getNumberParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("priceAmount");
+    thisList.add("msrpAmount");
+    thisList.add("costAmount");
+    thisList.add("recurringAmount");
+    return thisList;
+  }
+
+
+  /**
+   *  Gets the validPriceState attribute of the ProductCatalogPricing object
+   *
+   *@param  db                Description of the Parameter
+   *@param  status            Description of the Parameter
+   *@return                   The validPriceState value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean isValidPriceState(Connection db) throws SQLException {
+    // No Active prices exist. Check to see if this price is value
+    if (!isPriceValid()) {
+      return false;
+    }
+    // price needs to be enabled. check if active pricings already exists
+    ProductCatalogPricingList priceList = new ProductCatalogPricingList();
+    priceList.setProductId(this.productId);
+    priceList.setEnabled(Constants.TRUE);
+    priceList.buildList(db);
+    if (priceList.size() > 0) {
+      Iterator activePrices = (Iterator) priceList.iterator();
+      while (activePrices.hasNext()) {
+        ProductCatalogPricing activePrice = (ProductCatalogPricing) activePrices.next();
+        if (this.getStartDate() != null && this.getExpirationDate() != null) {
+//            System.out.println("Case1:: startDate is "+this.getStartDate().toString()+" and the exp date is "+ this.getExpirationDate().toString());
+          if (!compatiblePriceBounds(db, activePrice)) {
+            return false;
+          }
+        } else if (this.getStartDate() == null && this.getExpirationDate() != null) {
+//            System.out.println("Case2:: the exp date is "+ this.getExpirationDate().toString());
+          if (!compatiblePriceExpirationBound(db, activePrice)) {
+            return false;
+          }
+        } else if (this.getStartDate() != null && this.getExpirationDate() == null) {
+//            System.out.println("Case3:: startDate is "+this.getStartDate().toString());
+          if (!compatiblePriceStartBound(db, activePrice)) {
+            return false;
+          }
+        } else {
+//            System.out.println("Case4:: hence false");
+          // Open bounded price can not be inserted when active prices already exist
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+
+  /**
+   *  Check price compatibility with a given ProductCatalogPricing when the
+   *  start and expiration dates of this are not null
+   *
+   *@param  db                Description of the Parameter
+   *@param  price             Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean compatiblePriceBounds(Connection db, ProductCatalogPricing price) throws SQLException {
+//    System.out.println("Compatible price bounds method..");
+    if (price.getStartDate() != null && price.getExpirationDate() != null) {
+//      System.out.println("Trial 1:: active price exp date is "+price.getStartDate().toString()+" and current exp date is "+this.getStartDate().toString());
+      if (price.getStartDate().before(this.getStartDate()) && price.getExpirationDate().after(this.getStartDate())) {
+        return false;
+      }
+//      System.out.println("Trial 1:: active price exp date is "+price.getExpirationDate().toString()+" and current exp date is "+this.getExpirationDate().toString());
+      if (price.getStartDate().before(this.getExpirationDate()) && price.getExpirationDate().after(this.getExpirationDate())) {
+        return false;
+      }
+    } else if (price.getStartDate() == null && price.getExpirationDate() != null) {
+//      System.out.println("Trial 2:: active price exp is "+price.getExpirationDate().toString()+" and current price st date is "+this.getStartDate().toString());
+      if (price.getExpirationDate().after(this.getStartDate())) {
+        return false;
+      }
+//      System.out.println("Trial 2:: active price exp date is "+price.getExpirationDate().toString()+" and current exp date is "+this.getExpirationDate().toString());
+      if (price.getExpirationDate().after(this.getExpirationDate())) {
+        return false;
+      }
+    } else if (price.getStartDate() != null && price.getExpirationDate() == null) {
+//      System.out.println("Trial 3:: active price start date is "+ price.getStartDate().toString()+" and the current start date is "+ this.getStartDate().toString());
+      if (price.getStartDate().before(this.getStartDate())) {
+        return false;
+      }
+      if (price.getStartDate().before(this.getExpirationDate())) {
+        return false;
+      }
+    } else {
+//      System.out.println("Trial 4:: hence false");
       return false;
     }
     return true;
   }
+
+
+  /**
+   *  Check price compatibility when the start date of the current price is null
+   *
+   *@param  db                Description of the Parameter
+   *@param  price             Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean compatiblePriceExpirationBound(Connection db, ProductCatalogPricing price) throws SQLException {
+    if (price.getStartDate() != null && price.getExpirationDate() != null) {
+//      System.out.println("Trial 1:: active price start data is "+price.getStartDate().toString()+" and current price exp date is "+this.getExpirationDate().toString());
+      if (price.getStartDate().before(this.getExpirationDate())) {
+        return false;
+      }
+    } else if (price.getStartDate() == null && price.getExpirationDate() != null) {
+//      System.out.println("Trial 2:: hence false");
+      return false;
+    } else if (price.getStartDate() != null && price.getExpirationDate() == null) {
+//      System.out.println("Trial 3:: active price start date is "+price.getStartDate().toString()+" and the current exp date is "+this.getExpirationDate().toString());
+      if (price.getStartDate().before(this.getExpirationDate())) {
+        return false;
+      }
+    } else {
+//      System.out.println("Trial 4:: hence false ");
+      return false;
+    }
+    return true;
+  }
+
+
+  /**
+   *  Check price compatibility when the expiration date of the current price is
+   *  null
+   *
+   *@param  db                Description of the Parameter
+   *@param  price             Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean compatiblePriceStartBound(Connection db, ProductCatalogPricing price) throws SQLException {
+    if (price.getStartDate() != null && price.getExpirationDate() != null) {
+//      System.out.println("Trial 1:: active price exp date is "+price.getExpirationDate().toString()+" and the start date is "+this.getStartDate().toString());
+      if (price.getExpirationDate().after(this.getStartDate())) {
+        return false;
+      }
+    } else if (price.getStartDate() == null && price.getExpirationDate() != null) {
+//      System.out.println("Trial 2:: active price exp date is "+ price.getExpirationDate().toString()+" and the current price start date is "+ this.getStartDate().toString());
+      if (price.getExpirationDate().after(this.getStartDate())) {
+        return false;
+      }
+    } else if (price.getStartDate() != null && price.getExpirationDate() == null) {
+//      System.out.println("Trial 3:: hence false");
+      return false;
+    } else {
+//      System.out.println("Trial 4:: hence false");
+      return false;
+    }
+    return true;
+  }
+
 }
 

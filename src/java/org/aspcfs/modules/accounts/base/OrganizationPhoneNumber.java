@@ -156,7 +156,7 @@ public class OrganizationPhoneNumber extends PhoneNumber {
   public void insert(Connection db, int orgId, int enteredBy) throws SQLException {
     StringBuffer sql = new StringBuffer();
     sql.append("INSERT INTO organization_phone " +
-        "(org_id, phone_type, number, extension, ");
+        "(org_id, phone_type, number, extension, primary_number,");
     if (this.getEntered() != null) {
       sql.append("entered, ");
     }
@@ -164,7 +164,7 @@ public class OrganizationPhoneNumber extends PhoneNumber {
       sql.append("modified, ");
     }
     sql.append("enteredBy, modifiedBy ) ");
-    sql.append("VALUES (?, ?, ?, ?, ");
+    sql.append("VALUES (?, ?, ?, ?, ?, ");
     if (this.getEntered() != null) {
       sql.append("?, ");
     }
@@ -188,6 +188,7 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     }
     pst.setString(++i, this.getNumber());
     pst.setString(++i, this.getExtension());
+    pst.setBoolean(++i, this.getPrimaryNumber());
     if (this.getEntered() != null) {
       pst.setTimestamp(++i, this.getEntered());
     }
@@ -214,7 +215,7 @@ public class OrganizationPhoneNumber extends PhoneNumber {
   public void update(Connection db, int modifiedBy) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE organization_phone " +
-        "SET phone_type = ?, number = ?, extension = ?, modifiedby = ?, " +
+        "SET phone_type = ?, number = ?, extension = ?, primary_number = ?, modifiedby = ?, " +
         "modified = CURRENT_TIMESTAMP " +
         "WHERE phone_id = ? ");
     int i = 0;
@@ -225,6 +226,7 @@ public class OrganizationPhoneNumber extends PhoneNumber {
     }
     pst.setString(++i, this.getNumber());
     pst.setString(++i, this.getExtension());
+    pst.setBoolean(++i, this.getPrimaryNumber());
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
     pst.execute();

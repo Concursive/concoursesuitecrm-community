@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.sql.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.AddressList;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
 /**
  *  Description of the Class
@@ -58,6 +60,23 @@ public class OrderAddressList extends AddressList {
    *  Constructor for the OrderAddressList object
    */
   public OrderAddressList() { }
+
+
+  /**
+   *  Constructor for the OrderAddressList object
+   *
+   *@param  request  Description of the Parameter
+   */
+  public OrderAddressList(HttpServletRequest request) {
+    int i = 0;
+    while (request.getParameter("address" + (++i) + "type") != null) {
+      OrderAddress thisAddress = new OrderAddress();
+      thisAddress.buildRecord(request, i);
+      if (thisAddress.isValid()) {
+        this.addElement(thisAddress);
+      }
+    }
+  }
 
 
   /**
@@ -145,6 +164,21 @@ public class OrderAddressList extends AddressList {
     }
     rs.close();
     pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void delete(Connection db) throws SQLException {
+    Iterator addressIterator = this.iterator();
+    while (addressIterator.hasNext()) {
+      OrderAddress thisAddress = (OrderAddress) addressIterator.next();
+      thisAddress.delete(db);
+    }
   }
 }
 

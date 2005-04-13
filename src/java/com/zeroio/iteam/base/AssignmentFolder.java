@@ -635,19 +635,6 @@ public class AssignmentFolder extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the AssignmentFolder object
-   *
-   *@return    The valid value
-   */
-  private boolean isValid() {
-    if ("".equals(name)) {
-      errors.put("nameError", "Required field");
-    }
-    return (!hasErrors());
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -655,9 +642,6 @@ public class AssignmentFolder extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO project_assignments_folder " +
@@ -825,7 +809,6 @@ public class AssignmentFolder extends GenericBean {
       }
     }
     if (recordCount == 0) {
-      errors.put("actionError", "Folder could not be deleted because it no longer exists.");
       return false;
     } else {
       return true;
@@ -856,9 +839,6 @@ public class AssignmentFolder extends GenericBean {
   public int update(Connection db) throws SQLException {
     if (this.getId() == -1 || this.projectId == -1) {
       throw new SQLException("ID was not specified");
-    }
-    if (!isValid()) {
-      return -1;
     }
     int resultCount = 0;
     PreparedStatement pst = db.prepareStatement(

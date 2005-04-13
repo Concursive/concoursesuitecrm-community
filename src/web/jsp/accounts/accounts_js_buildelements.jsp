@@ -21,11 +21,8 @@
 <jsp:useBean id="OrgPhoneTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/><html>
 <jsp:useBean id="OrgAddressTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/><html>
 <jsp:useBean id="OrgEmailTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/><html>
-<head>
-</head>
 <body onload="page_init();">
 <script language="JavaScript">
-
 function newOpt(param, value) {
   var newOpt = parent.document.createElement("OPTION");
 	newOpt.text=param;
@@ -151,5 +148,3 @@ function page_init() {
 }
 </script>
 </body>
-</html>
-

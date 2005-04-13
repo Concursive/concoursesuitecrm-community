@@ -25,9 +25,9 @@
 <tr>
   <td>
     <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> >
-    <a href="AccountContactsImports.do?command=View">Import</a> >
-    <a href="AccountContactsImports.do?command=New">New Import</a> >
-    Upload Complete
+    <a href="AccountContactsImports.do?command=View"><dhv:label name="contacts.companydirectory_confirm_importupload.Import">Import</dhv:label></a> >
+    <a href="AccountContactsImports.do?command=New"><dhv:label name="contacts.companydirectory_confirm_importupload.NewImport">New Import</dhv:label></a> >
+    <dhv:label name="contacts.companydirectory_confirm_importupload.UploadComplete">Upload Complete</dhv:label>
   </td>
 </tr>
 </table>
@@ -35,21 +35,21 @@
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td>Your file to import has been received, but has not been processed.<br />
-    To begin processing, use the &quot;Process Now&quot; button. 
-    However, since processing requires a few minutes of configuration, you can choose to process the file later by using the &quot;Process Later&quot; button.</td>
+    <td><dhv:label name="contacts.companydirectory_confirm_importupload.NotProcessed">Your file to import has been received, but has not been processed.</dhv:label><br />
+      <dhv:label name="contacts.companydirectory_confirm_importupload.ToBeginProcessing">To begin processing, use the &quot;Process Now&quot; button.  However, since processing requires a few minutes of configuration, you can choose to process the file later by using the &quot;Process Later&quot; button.</dhv:label>
+    </td>
   </tr>
 </table>
 <%-- Import Details --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Details</strong>
+      <strong><dhv:label name="contacts.details">Details</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    Name
+    <dhv:label name="contacts.name">Name</dhv:label>
   </td>
   <td>
     <%= toString(ImportDetails.getName()) %>
@@ -57,7 +57,7 @@
   </tr>
   <tr class="containerBody">
   <td valign="top" class="formLabel" nowrap>
-    Description
+    <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
   </td>
   <td>
     <%= toHtml(ImportDetails.getDescription()) %>
@@ -65,23 +65,23 @@
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    File
+    <dhv:label name="contacts.companydirectory_confirm_importupload.File">File</dhv:label>
   </td>
   <td>
-    <%= ImportDetails.getFile().getClientFilename() %>&nbsp;&nbsp;[ <a href="javascript:window.location.href='AccountContactsImports.do?command=Download&importId=<%= ImportDetails.getId() %>&fid=<%= ImportDetails.getFile().getId() %>'">Download File</a> ]
+    <%= ImportDetails.getFile().getClientFilename() %>&nbsp;&nbsp;[ <a href="javascript:window.location.href='AccountContactsImports.do?command=Download&importId=<%= ImportDetails.getId() %>&fid=<%= ImportDetails.getFile().getId() %>'"><dhv:label name="accounts.accounts_contacts_detailsimport.DownloadFile">Download File</dhv:label></a> ]
   </td>
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    File Size
+    <dhv:label name="contacts.companydirectory_confirm_importupload.FileSize">File Size</dhv:label>
   </td>
   <td>
-    <%= ImportDetails.getFile().getRelativeSize() %> k&nbsp;
+    <%= ImportDetails.getFile().getRelativeSize() %> <dhv:label name="admin.oneThousand.abbreviation">k</dhv:label>&nbsp;
   </td>
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    Status
+    <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
   </td>
   <td>
     <%= ImportDetails.getStatusString() %> &nbsp;
@@ -89,7 +89,7 @@
   </tr>
   <tr class="containerBody">
   <td class="formLabel" nowrap>
-    Entered
+    <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
   </td>
   <td>
     <dhv:username id="<%= ImportDetails.getEnteredBy() %>"/>
@@ -98,7 +98,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Modified
+      <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>
     </td>
     <td>
       <dhv:username id="<%= ImportDetails.getModifiedBy() %>"/>
@@ -106,6 +106,6 @@
     </td>
   </tr>
 </table><br>
-<input type="button" value="Process Now" onClick="javascript:window.location.href='AccountContactsImports.do?command=InitValidate&importId=<%= ImportDetails.getId() %>';">&nbsp;
-<input type="button" value="Process Later" onClick="javascript:window.location.href='AccountContactsImports.do';">
+<input type="button" value="<dhv:label name="global.button.ProcessNow">Process Now</dhv:label>" onClick="javascript:window.location.href='AccountContactsImports.do?command=InitValidate&importId=<%= ImportDetails.getId() %>';">&nbsp;
+<input type="button" value="<dhv:label name="global.button.ProcessLater">Process Later</dhv:label>" onClick="javascript:window.location.href='AccountContactsImports.do';">
 

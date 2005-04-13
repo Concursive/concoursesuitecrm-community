@@ -30,47 +30,42 @@
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/tasks.js"></SCRIPT>
 <SCRIPT language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<form name="details" action="TroubleTicketMaintenanceNotes.do?command=Modify&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>&return=view" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="TroubleTickets.do?"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
-  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+  <a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+  <a href="TroubleTickets.do?command=SearchTickets"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%}else{%> 
   <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
 <a href="TroubleTickets.do?command=Details&id=<%= ticketDetails.getId() %>"><dhv:label name="tickets.details">Ticket Details</dhv:label></a> >
-<a href="TroubleTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>">Maintenance Notes</a> >
-View Maintenance Note
+<a href="TroubleTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>"><dhv:label name="tickets.maintenancenotes.long_html">Maintenance Notes</dhv:label></a> >
+<dhv:label name="ticket.viewMaintenanceNote">View Maintenance Note</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + ticketDetails.getId(); %>
-<dhv:container name="tickets" selected="maintenancenotes" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-  <form name="details" action="TroubleTicketMaintenanceNotes.do?command=Modify&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>&return=view" method="post">
-    <dhv:permission name="tickets-maintenance-report-edit">
-      <input type="submit" value="Modify" />
-    </dhv:permission>
-    <dhv:permission name="tickets-maintenance-report-delete">
-      <input type="button" value="Delete" onClick="javascript:popURLReturn('TroubleTicketMaintenanceNotes.do?command=ConfirmDelete&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>&popup=true','TroubleTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>', 'Delete_maintenancenote','320','200','yes','no');">
-    </dhv:permission>
-      <br /><br />
+<dhv:container name="tickets" selected="maintenancenotes" object="ticketDetails" param="<%= param1 %>">
+  <%@ include file="ticket_header_include.jsp" %>
+  <dhv:permission name="tickets-maintenance-report-edit">
+    <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />
+  </dhv:permission>
+  <dhv:permission name="tickets-maintenance-report-delete">
+    <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('TroubleTicketMaintenanceNotes.do?command=ConfirmDelete&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>&popup=true','TroubleTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>', 'Delete_maintenancenote','320','200','yes','no');">
+  </dhv:permission>
+    <br /><br />
     <%@ include file="troubletickets_view_maintenancenote_include.jsp" %>
-      <br />
-    <dhv:permission name="tickets-maintenance-report-edit">
-      <input type="submit" value="Modify" />
-    </dhv:permission>
-    <dhv:permission name="tickets-maintenance-report-delete">
-      <input type="button" value="Delete" onClick="javascript:popURLReturn('TroubleTicketMaintenanceNotes.do?command=ConfirmDelete&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>&popup=true','TroubleTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>', 'Delete_maintenancenote','320','200','yes','no');">
-    </dhv:permission>
-  </form>
- </td>
- </tr>
-</table>
+    <br />
+  <dhv:permission name="tickets-maintenance-report-edit">
+    <input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" />
+  </dhv:permission>
+  <dhv:permission name="tickets-maintenance-report-delete">
+    <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('TroubleTicketMaintenanceNotes.do?command=ConfirmDelete&id=<%=ticketDetails.getId()%>&formId=<%=maintenanceDetails.getId()%>&popup=true','TroubleTicketMaintenanceNotes.do?command=List&id=<%=ticketDetails.getId()%>', 'Delete_maintenancenote','320','200','yes','no');">
+  </dhv:permission>
+</dhv:container>
+</form>

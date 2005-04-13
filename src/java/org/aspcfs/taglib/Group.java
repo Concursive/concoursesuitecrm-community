@@ -176,6 +176,9 @@ public class Group extends TagSupport {
                         System.out.println("Group --> Printing Field " + thisField.getHtmlElement());
                       }
                       out.write(thisField.getHtmlElement() + (thisField.getRequired() ? "<font color=\"red\">*</font>" : ""));
+                      if (pageContext.getRequest().getAttribute(thisField.getName() + "Error") != null){
+                        out.write( "&nbsp;<font color='#006699'>"+ (String)pageContext.getRequest().getAttribute(thisField.getName() + "Error") + "</font>");
+                      }
                     }
                     if (!hiddenColumn) {
                       out.write(thisColumn.getEndTag());

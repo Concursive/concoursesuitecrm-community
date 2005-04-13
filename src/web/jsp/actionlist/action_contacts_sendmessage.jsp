@@ -38,11 +38,21 @@
 <script language="JavaScript">
   function updateMessageList() {
     document.forms['sendMessage'].elements['messageId'].selectedIndex = 0;
-    document.forms['sendMessage'].action = 'CampaignManager.do?command=MessageJSList&actionSource=MyActionContacts<%= addLinkParams(request, "popup|popupType|actionId")%>';
+    messageType = "<%=request.getAttribute("messageType")%>";
+    if (messageType == "addressRequest"){
+      document.forms['sendMessage'].action = 'MyActionContacts.do?command=PrepareMessage&actionSource=MyActionContacts&messageType=addressRequest&orgId=<%=request.getAttribute("orgId")%><%= addLinkParams(request, "popup|popupType|contactId|actionId|actionListId")%>';
+    }else{
+      document.forms['sendMessage'].action = 'MyActionContacts.do?command=PrepareMessage&actionSource=MyActionContacts<%= addLinkParams(request, "popup|popupType|contactId|actionId|actionListId")%>';
+    }
     document.forms['sendMessage'].submit();
   }
   function updateMessage(){
-    document.forms['sendMessage'].action = 'MyActionContacts.do?command=PrepareMessage<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    messageType = "<%=request.getAttribute("messageType")%>";
+    if (messageType == "addressRequest"){
+      document.forms['sendMessage'].action = 'MyActionContacts.do?command=PrepareMessage&actionSource=MyActionContacts&messageType=addressRequest&orgId=<%=request.getAttribute("orgId")%><%= addLinkParams(request, "popup|popupType|contactId|actionId|actionListId") %>';
+    }else{
+      document.forms['sendMessage'].action = 'MyActionContacts.do?command=PrepareMessage&actionSource=MyActionContacts<%= addLinkParams(request, "popup|popupType|contactId|actionId|actionListId") %>';
+    }
     document.forms['sendMessage'].submit();
   }
   function checkForm(form) {
@@ -53,17 +63,20 @@
 </dhv:evaluate>
     return true;
   }
-
 </script>
-<form name="sendMessage" action="MyActionContacts.do?command=SendMessage&auto-populate=true&actionSource=MyActionContacts" method="post" onSubmit="return checkForm(this);">
+<% if ("addressRequest".equals(request.getAttribute("messageType"))){%>
+  <form name="sendMessage" action="MyActionContacts.do?command=SendAddressRequest&auto-populate=true&actionSource=MyActionContacts&orgId=<%=request.getAttribute("orgId")%>" method="post" onSubmit="return checkForm(this);">
+<%}else{%>
+  <form name="sendMessage" action="MyActionContacts.do?command=SendMessage&auto-populate=true&actionSource=MyActionContacts" method="post" onSubmit="return checkForm(this);">
+<%}%>
 <dhv:formMessage showSpace="false"/>
-Start by choosing an existing message or create a new one:<br>
+<dhv:label name="actionList.chooseCreateMessage.text">Start by choosing an existing message or create a new one:</dhv:label><br />
 <SELECT SIZE="1" name="listView" onChange="javascript:updateMessageList();">
-  <OPTION VALUE="my"<dhv:evaluate if="<%= "my".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>My Messages</OPTION>
-  <OPTION VALUE="all"<dhv:evaluate if="<%= "all".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>All Messages</OPTION>
-  <OPTION VALUE="hierarchy"<dhv:evaluate if="<%= "hierarchy".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>Controlled Hierarchy Messages</OPTION>
-  <OPTION VALUE="personal"<dhv:evaluate if="<%= "personal".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>Personal Messages</OPTION>
-  <OPTION VALUE="new"<dhv:evaluate if="<%= "new".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>>New Message</OPTION>
+  <OPTION VALUE="my"<dhv:evaluate if="<%= "my".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>><dhv:label name="accounts.accounts_contacts_messages_view.MyMessages">My Messages</dhv:label></OPTION>
+  <OPTION VALUE="all"<dhv:evaluate if="<%= "all".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>><dhv:label name="accounts.accounts_contacts_messages_view.AllMessages">All Messages</dhv:label></OPTION>
+  <OPTION VALUE="hierarchy"<dhv:evaluate if="<%= "hierarchy".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>><dhv:label name="actionList.controlledHierarchyMessages">Controlled Hierarchy Messages</dhv:label></OPTION>
+  <OPTION VALUE="personal"<dhv:evaluate if="<%= "personal".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>><dhv:label name="actionList.personalMessages">Personal Messages</dhv:label></OPTION>
+  <OPTION VALUE="new"<dhv:evaluate if="<%= "new".equals((String) request.getParameter("listView")) %>"> selected</dhv:evaluate>><dhv:label name="actionList.newMessage">New Message</dhv:label></OPTION>
 </SELECT>
 <%if(!"new".equals(request.getParameter("listView"))){ %>
 <% 
@@ -73,16 +86,20 @@ Start by choosing an existing message or create a new one:<br>
 <%= messageList.getHtmlSelect("messageId", (request.getParameter("messageId") != null ? Integer.parseInt(request.getParameter("messageId")) : -1)) %>
 <% }else{ %>
   <select size="1" name="messageId">
-    <option value="0">--None--</option>
+    <option value="0"><dhv:label name="calendar.none.4dashes">--None--</dhv:label></option>
   </select>  
 <% } %>
 <%-- include the message form from create messages --%>
 <%@ include file="../communications/message_include.jsp" %>
-<br>
-<input type="submit" value="Send Message">
-<input type="button" value="Cancel" onClick="javascript:window.close();">
-<br>
-<input type="hidden" name="contactId" value="<%= request.getParameter("contactId") %>">
+<br />
+<% if ("addressRequest".equals(request.getAttribute("messageType"))){%>
+  Note: The recipient's contact information will be attached with the chosen message.
+<%}%>
+<br />
+<input type="submit" value="<dhv:label name="button.sendMessage">Send Message</dhv:label>" />
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();" />
+<br />
+<input type="hidden" name="contactId" value="<%= request.getParameter("contactId") %>" />
 </form>
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </body>

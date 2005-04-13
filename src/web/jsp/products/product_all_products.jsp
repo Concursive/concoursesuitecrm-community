@@ -35,26 +35,26 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
-Labor Category Editor
+<dhv:label name="product.laborCategoryEditor">Labor Category Editor</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:permission name="admin-sysconfig-products-add"><a href="ProductsCatalog.do?command=AddProduct&moduleId=<%= PermissionCategory.getId() %>">Add an item</a></dhv:permission>
+<dhv:permission name="admin-sysconfig-products-add"><a href="ProductsCatalog.do?command=AddProduct&moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="product.addItem">Add Item</dhv:label></a></dhv:permission>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="productCatalogListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
 		<th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="20%"> 
-      <strong>Code</strong>
+      <strong><dhv:label name="product.code">Code</dhv:label></strong>
     </th>
     <th width="80%"> 
-      <strong>Description</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></strong>
     </th>
   </tr>
  <%
@@ -82,7 +82,7 @@ Labor Category Editor
      <%}%>
    <%}else{%>
        <tr class="row2">
-        <td colspan="3">No products found.</td>
+        <td colspan="3"><dhv:label name="calendar.noProductsFound">No products found.</dhv:label></td>
        </tr>
    <%}%>
   </table>

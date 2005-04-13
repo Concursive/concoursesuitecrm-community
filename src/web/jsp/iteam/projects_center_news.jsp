@@ -23,6 +23,8 @@
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="newsList" class="com.zeroio.iteam.base.NewsArticleList" scope="request"/>
 <jsp:useBean id="projectNewsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="newsArticleCategoryList" class="com.zeroio.iteam.base.NewsArticleCategoryList" scope="request"/>
+<jsp:useBean id="taskCategoryList" class="org.aspcfs.modules.tasks.base.TaskCategoryList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
@@ -38,25 +40,26 @@
 <br>
 <zeroio:permission name="project-news-add">
 <img src="images/icons/stock_new-news-16.gif" border="0" align="absmiddle">
-<a href="ProjectManagementNews.do?command=Add&pid=<%= Project.getId() %>">Add News Article</a><br>
+<a href="ProjectManagementNews.do?command=Add&pid=<%= Project.getId() %>"><dhv:label name="project.addNewsArticle">Add News Article</dhv:label></a><br>
 &nbsp;<br>
 </zeroio:permission>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <form name="newsView" method="post" action="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>">
     <td align="left">
+      <%-- filters --%>
       <zeroio:permission name="project-news-view-archived,project-news-view-unreleased" if="any">
-      <img alt="" src="images/icons/stock_filter-data-by-criteria-16.gif" align="absmiddle">
+      <img alt="" src="images/icons/stock_filter-data-by-criteria-16.gif" align="absmiddle" />
       <select name="listView" onChange="javascript:document.forms['newsView'].submit();">
-        <option <%= projectNewsInfo.getOptionValue("current") %>>Current News</option>
+        <option <%= projectNewsInfo.getOptionValue("current") %>><dhv:label name="project.currentNews">Current News</dhv:label></option>
       <zeroio:permission name="project-news-view-archived">
-        <option <%= projectNewsInfo.getOptionValue("archived") %>>Archived News</option>
+        <option <%= projectNewsInfo.getOptionValue("archived") %>><dhv:label name="project.archivedNews">Archived News</dhv:label></option>
       </zeroio:permission>
       <zeroio:permission name="project-news-view-unreleased">
         <option <%= projectNewsInfo.getOptionValue("unreleased") %>>Unreleased News</option>
       </zeroio:permission>
       <zeroio:permission name="project-news-view-unreleased">
-        <option <%= projectNewsInfo.getOptionValue("drafts") %>>News Drafts</option>
+        <option <%= projectNewsInfo.getOptionValue("drafts") %>><dhv:label name="project.newsDrafts">News Drafts</dhv:label></option>
       </zeroio:permission>
       </select>
       </zeroio:permission>
@@ -71,75 +74,20 @@
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th>
-        <strong>News</strong>
+        <strong><dhv:label name="project.news">News</dhv:label></strong>
       </th>
     </tr>
     <tr class="row2">
       <td>
-        No news articles to display.
+        <dhv:label name="project.noNewsArticlesToDisplay">No news articles to display.</dhv:label>
       </td>
     </tr>
   </table>
 </dhv:evaluate>
 <%
-  Iterator i = newsList.iterator();
-  while (i.hasNext()) {
-    NewsArticle thisArticle = (NewsArticle) i.next();
+String subSection = (String) request.getAttribute("IncludeSubSection");
+String includeSubSection = "projects_center_" + subSection + ".jsp";
 %>
-<table cellpadding="4" cellspacing="0" width="100%" style="border: 1px solid #000;">
-  <tr class="pagedList">
-    <th width="100%">
-      <img alt="" src="images/icons/stock_news-16.gif" align="absmiddle">
-      <font size="2"><strong><%= toHtml(thisArticle.getSubject()) %></strong></font>
-      <font color="red">
-      <dhv:evaluate if="<%= thisArticle.getStatus() == NewsArticle.DRAFT %>">(Draft)</dhv:evaluate>
-      <dhv:evaluate if="<%= thisArticle.getStatus() == NewsArticle.UNAPPROVED %>">(Unapproved)</dhv:evaluate>
-      </font>
-    </th>
-  </tr>
-  <tr class="row1">
-    <td valign="middle" nowrap style="border-bottom: 1px solid #000">
-      <table border="0" cellpadding="0" cellspacing="0" width="100%" class="empty">
-        <tr>
-          <td width="100%">
-            By <dhv:username id="<%= thisArticle.getEnteredBy() %>"/>
-            -
-            Posted on
-            <zeroio:tz timestamp="<%= thisArticle.getStartDate() %>" dateOnly="true" timeZone="<%= thisArticle.getStartDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-            <% if(!User.getTimeZone().equals(thisArticle.getStartDateTimeZone())){%>
-            <br />
-            <zeroio:tz timestamp="<%= thisArticle.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-            <% } %>
-          </td>
-          <td align="right" nowrap valign="top">
-            <zeroio:permission name="project-news-edit">
-              <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle">
-              <a href="ProjectManagementNews.do?command=Edit&pid=<%= Project.getId() %>&id=<%= thisArticle.getId() %>">Edit this article</a>
-            </zeroio:permission>
-            <zeroio:permission name="project-news-delete">
-              <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle">
-              <a href="javascript:confirmDelete('ProjectManagementNews.do?command=Delete&pid=<%= Project.getId() %>&id=<%= thisArticle.getId() %>');">Delete this article</a>
-            </zeroio:permission>
-            &nbsp;
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr class="row2">
-    <td>
-      <%= thisArticle.getIntro() %>
-      <dhv:evaluate if="<%= thisArticle.getMessage() != null && thisArticle.getMessage().length() > 0 %>">
-        <br>
-        <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle">
-        <a href="javascript:popURL('ProjectManagementNews.do?command=Details&pid=<%= Project.getId() %>&id=<%= thisArticle.getId() %>&popup=true','News_Details','600','500','yes','yes');">Read more</a>
-      </dhv:evaluate>
-    </td>
-  </tr>
-</table>
-&nbsp;<br>
-<%
-  }
-%>
-<br>
+<jsp:include page="<%= includeSubSection %>" flush="true"/>
+<br />
 <dhv:pagedListControl object="projectNewsInfo"/>

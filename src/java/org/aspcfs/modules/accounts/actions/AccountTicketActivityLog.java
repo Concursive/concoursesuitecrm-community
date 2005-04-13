@@ -15,23 +15,22 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import java.sql.Timestamp;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.servicecontracts.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import java.text.*;
-import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.modules.troubletickets.base.TicketActivityLog;
+import org.aspcfs.modules.troubletickets.base.TicketActivityLogList;
+import org.aspcfs.modules.troubletickets.base.TicketPerDayDescription;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  *  Action class to view, add, edit, delete and list activity log
@@ -183,6 +182,7 @@ public final class AccountTicketActivityLog extends CFSModule {
     }
     Connection db = null;
     boolean inserted = false;
+    boolean isValid = false;
 
     try {
       String ticketId = context.getRequest().getParameter("id");
@@ -209,12 +209,25 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setRequestItems(context.getRequest());
       thisMaintenance.setRequest(context.getRequest());
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
-      inserted = thisMaintenance.insert(db);
+      isValid = this.validateObject(context, db, thisMaintenance);
+      for (int i=1; (context.getRequest().getParameter("activityDate" + i) != null) || (context.getRequest().getParameter("descriptionOfService" + i) != null);i++) {
+        if (!(context.getRequest().getParameter("activityDate" + i).trim().equals("")) || !(context.getRequest().getParameter("descriptionOfService" + i).trim().equals(""))) {
+          TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
+          HashMap map = new HashMap();
+          map.put("descriptionOfService", context.getRequest().getParameter("descriptionOfService" + i));
+          map.put("activityDateTimeZone", context.getRequest().getParameter("activityDate" + i + "TimeZone"));
+          map.put("activityDate", context.getRequest().getParameter("activityDate" + i));
+          map.put("request", context.getRequest());
+          map.put("parseItem", ""+i);
+          isValid = this.validateObject(context, db, thisPerDayDescription, map) && isValid;
+        }
+      }
+      if (isValid) {
+        inserted = thisMaintenance.insert(db);
+      }
       if (!inserted) {
         context.getRequest().setAttribute("ticketDetails", thisTicket);
         context.getRequest().setAttribute("activityDetails", thisMaintenance);
-        processErrors(context, thisMaintenance.getErrors());
-        processWarnings(context, thisMaintenance.getWarnings());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -222,11 +235,10 @@ public final class AccountTicketActivityLog extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (!inserted) {
-      return executeCommandAdd(context);
-    } else {
+    if (inserted) {
       return executeCommandList(context);
     }
+    return executeCommandAdd(context);
   }
 
 
@@ -240,6 +252,7 @@ public final class AccountTicketActivityLog extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-tickets-activity-log-edit")) {
       return ("PermissionError");
     }
+    boolean isValid = false;
     Connection db = null;
     int resultCount = -1;
     try {
@@ -270,12 +283,25 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setModified(modified);
       thisMaintenance.setRequest(context.getRequest());
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
-      resultCount = thisMaintenance.update(db);
+      isValid = this.validateObject(context, db, thisMaintenance);
+      for (int i=1;context.getRequest().getParameter("activityDate" + i) != null;i++) {
+        if (!(context.getRequest().getParameter("activityDate" + i).trim().equals(""))) {
+          TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
+          HashMap map = new HashMap();
+          map.put("descriptionOfService", context.getRequest().getParameter("descriptionOfService" + i));
+          map.put("activityDateTimeZone", context.getRequest().getParameter("activityDate" + i + "TimeZone"));
+          map.put("activityDate", context.getRequest().getParameter("activityDate" + i));
+          map.put("request", context.getRequest());
+          map.put("parseItem", ""+i);
+          isValid = this.validateObject(context, db, thisPerDayDescription, map) && isValid;
+        }
+      }
+      if (isValid) {
+        resultCount = thisMaintenance.update(db);
+      }
       if (resultCount == -1) {
         context.getRequest().setAttribute("ticketDetails", thisTicket);
         context.getRequest().setAttribute("activityDetails", thisMaintenance);
-        processErrors(context, thisMaintenance.getErrors());
-        processWarnings(context, thisMaintenance.getWarnings());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -283,18 +309,13 @@ public final class AccountTicketActivityLog extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (resultCount == -1) {
-      return (executeCommandModify(context));
-    } else if (resultCount == 1) {
+    if (resultCount == 1) {
       if ("list".equals(context.getRequest().getParameter("return"))) {
         return executeCommandList(context);
-      } else {
-        return executeCommandView(context);
       }
-    } else {
-      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-      return ("UserError");
+      return executeCommandView(context);
     }
+    return (executeCommandModify(context));
   }
 
 
@@ -361,19 +382,21 @@ public final class AccountTicketActivityLog extends CFSModule {
       String formId = context.getRequest().getParameter("formId");
       // Load the ticket
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       Ticket thisTicket = new Ticket();
       thisTicket.queryRecord(db, Integer.parseInt(ticketId));
       context.getRequest().setAttribute("ticketDetails", thisTicket);
       // Prepare the HTML Dialog
-      htmlDialog.setTitle("Centric CRM: Confirm Delete");
       TicketActivityLog thisMaintenance = new TicketActivityLog();
       thisMaintenance.queryRecord(db, Integer.parseInt(formId));
       DependencyList dependencies = new DependencyList();
       dependencies = thisMaintenance.processDependencies();
-      htmlDialog.addMessage(dependencies.getHtmlString());
-      htmlDialog.setHeader("The form you are requesting to delete may have dependencies within Centric CRM:");
-      htmlDialog.addButton("Delete", "javascript:window.location.href='AccountTicketActivityLog.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
-      htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+      htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.formHeader"));
+      htmlDialog.addButton(systemStatus.getLabel("button.delete"), "javascript:window.location.href='AccountTicketActivityLog.do?command=Delete&id=" + ticketId + "&formId=" + formId + "'");
+      htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -395,6 +418,7 @@ public final class AccountTicketActivityLog extends CFSModule {
     if (!hasPermission(context, "accounts-accounts-tickets-activity-log-delete")) {
       return ("PermissionError");
     }
+    SystemStatus systemStatus = this.getSystemStatus(context);
     boolean recordDeleted = false;
     Ticket thisTicket = null;
     Connection db = null;
@@ -413,7 +437,7 @@ public final class AccountTicketActivityLog extends CFSModule {
       thisMaintenance.setRelatedContractId(thisTicket.getContractId());
       recordDeleted = thisMaintenance.delete(db);
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError", "The note could not be deleted because of referential integrity .");
+      context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.noteDeletion"));
       context.getRequest().setAttribute("refreshUrl", "AccountTicketActivityLog.do?command=View&id=" + ticketId);
       return ("DeleteError");
     } finally {
@@ -422,12 +446,12 @@ public final class AccountTicketActivityLog extends CFSModule {
     // The record was deleted
     if (recordDeleted) {
       context.getRequest().setAttribute("refreshUrl", "AccountTicketActivityLog.do?command=List&id=" + ticketId);
-      return this.getReturn(context, "Delete");
+      return getReturn(context, "Delete");
     }
     // An error occurred, so notify the user
     processErrors(context, thisTicket.getErrors());
     context.getRequest().setAttribute("refreshUrl", "AccountTicketActivityLog.do?command=View&id=" + ticketId + "&formId=" + formId);
-    return this.getReturn(context, "Delete");
+    return getReturn(context, "Delete");
   }
 
 

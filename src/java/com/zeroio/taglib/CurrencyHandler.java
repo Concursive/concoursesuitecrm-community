@@ -20,6 +20,7 @@ import javax.servlet.jsp.tagext.*;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
+import org.aspcfs.utils.StringUtils;
 
 /**
  *  This Class formats the specified amount with the specified currency
@@ -35,6 +36,8 @@ public class CurrencyHandler extends TagSupport {
   private String code = null;
   private String defaultValue = null;
   private Locale locale = null;
+  private boolean fractionDigits = true;
+  private boolean truncate = true;
 
 
   /**
@@ -78,6 +81,26 @@ public class CurrencyHandler extends TagSupport {
 
 
   /**
+   *  Sets the fractionDigits attribute of the CurrencyHandler object
+   *
+   *@param  tmp  The new fractionDigits value
+   */
+  public void setFractionDigits(boolean tmp) {
+    this.fractionDigits = tmp;
+  }
+
+
+  /**
+   *  Sets the truncate attribute of the CurrencyHandler object
+   *
+   *@param  tmp  The new truncate value
+   */
+  public void setTruncate(boolean tmp) {
+    this.truncate = tmp;
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@return                   Description of the Return Value
@@ -87,11 +110,17 @@ public class CurrencyHandler extends TagSupport {
     try {
       if (value > -1) {
         NumberFormat formatter = NumberFormat.getCurrencyInstance(locale);
+        if (!truncate) {
+          formatter.setMaximumFractionDigits(4);
+        }
         if (code != null) {
           Currency currency = Currency.getInstance(code);
           formatter.setCurrency(currency);
         }
-        this.pageContext.getOut().write(formatter.format(value));
+        if (!fractionDigits) {
+          formatter.setMaximumFractionDigits(0);
+        }
+        this.pageContext.getOut().write(StringUtils.toHtmlValue(formatter.format(value)));
       } else {
         //no date found, output default
         if (defaultValue != null) {

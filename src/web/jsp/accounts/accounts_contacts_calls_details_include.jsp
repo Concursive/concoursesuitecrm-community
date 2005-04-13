@@ -19,24 +19,24 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Activity Details</strong>  
+      <strong><dhv:label name="accounts.accounts_contacts_calls_add.ActivityDetails">Activity Details</dhv:label></strong>  
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Type
+      <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>
     </td>
     <td>
       <%= toHtml(CallDetails.getCallType()) %>
-      <dhv:evaluate if="<%= CallDetails.hasLength() %>">
-      Length:
+      <dhv:evaluate if="<%= CallDetails.hasLength() %>">,
+      <dhv:label name="accounts.accounts_contacts_calls_details_include.Length">Length:</dhv:label>
       <%= toHtml(CallDetails.getLengthText()) %>
       </dhv:evaluate>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Subject
+    <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
     </td>
     <td>
       <%= toHtml(CallDetails.getSubject()) %>
@@ -44,7 +44,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel" valign="top">
-      Notes
+      <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
     </td>
     <td>
       <%= toHtml(CallDetails.getNotes()) %>
@@ -52,7 +52,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Result
+      <dhv:label name="accounts.accounts_calls_list.Result">Result</dhv:label>
     </td>
     <td>
       <%= toHtml(CallResult.getDescription()) %>

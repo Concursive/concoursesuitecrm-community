@@ -42,319 +42,316 @@
 <tr>
 <td width="100%">
   <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-  <a href="Accounts.do?command=Search">Search Results</a> >
+  <a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
   <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-  <a href="AccountsAssets.do?command=List&orgId=<%= OrgDetails.getOrgId() %>">Assets</a> >
-  Asset Details
+  <a href="AccountsAssets.do?command=List&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.Assets">Assets</dhv:label></a> >
+  <dhv:label name="accounts.accounts_asset_details.AssetDetails">Asset Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<dhv:container name="accounts" selected="assets" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-    <tr>
-      <td class="containerBack">
-      <% String param2 = "id=" + asset.getId(); %>
-      [ <dhv:container name="accountsassets" selected="details" param="<%= param2 %>"/> ]
-      <br /><br />
-      <dhv:permission name="accounts-assets-edit"><input type=submit value="Modify"></dhv:permission>
-      <dhv:permission name="accounts-assets-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');"></dhv:permission>
-      <input type=hidden name="orgId" value = <%= OrgDetails.getOrgId() %> >
-      <input type=hidden name="id" value = <%= asset.getOrgId() %> >
-      <br /><br />
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-	    <strong>Specific Information</strong>
-	  </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Vendor
-    </td>
-    <td>
-      <%= toHtml(asset.getVendor()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Manufacturer
-    </td>
-    <td>
-      <%= toHtml(asset.getManufacturer()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Serial Number
-    </td>
-    <td>
-      <%= toHtml(asset.getSerialNumber()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Model/Version
-    </td>
-    <td>
-      <%= toHtml(asset.getModelVersion()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td valign="top" class="formLabel">
-      Description
-    </td>
-    <td>
-      <%= toHtml(asset.getDescription()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Date Listed
-    </td>
-    <td>
-      <zeroio:tz timestamp="<%= asset.getDateListed() %>" dateOnly="true" timeZone="<%= asset.getDateListedTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% if(!User.getTimeZone().equals(asset.getDateListedTimeZone())){%>
-      <br />
-      <zeroio:tz timestamp="<%= asset.getDateListed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% } %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Location
-    </td>
-    <td>
-      <%= toHtml(asset.getLocation()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Asset Tag
-    </td>
-    <td>
-      <%= toHtml(asset.getAssetTag()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Status
-    </td>
-    <td>
-      <dhv:evaluate if="<%= asset.getStatus() > 0 %>">
-        <%= toHtml(assetStatusList.getSelectedValue(asset.getStatus())) %>
-      </dhv:evaluate>&nbsp;
-    </td>
-  </tr>
-</table>
-<br>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-	    <strong>Category</strong>
-	  </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Level 1
-    </td>
-    <td>
-      <dhv:evaluate if="<%= asset.getLevel1() > 0 %>">
-        <%= toHtml(categoryList1.getSelectedValue(asset.getLevel1())) %>
-      </dhv:evaluate>&nbsp;
-    </td>
-	</tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Level 2
-    </td>
-    <td>
-      <dhv:evaluate if="<%= asset.getLevel2() > 0 %>">
-        <%= toHtml(categoryList2.getSelectedValue(asset.getLevel2())) %>
-      </dhv:evaluate>&nbsp;
-    </td>
-	</tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Level 3
-    </td>
-    <td>
-      <dhv:evaluate if="<%= asset.getLevel3() > 0 %>">
-        <%= toHtml(categoryList3.getSelectedValue(asset.getLevel3())) %>
-      </dhv:evaluate>&nbsp;
-    </td>
-	</tr>
-</table>
-<br>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-	    <strong>Service Contract</strong>
-	  </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Service Contract Number
-    </td>
-    <td>
-    <%= (asset.getContractId() != -1) ? toHtml(asset.getServiceContractNumber()) :"None Selected" %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Contact
-    </td>
-    <td>
-      <dhv:evaluate if="<%= assetContact.getId() > 0 %>">
-        <dhv:permission name="contacts-external_contacts-view"><a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= assetContact.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"></dhv:permission><%= toHtml(assetContact.getNameLastFirst()) %><dhv:permission name="contacts-external_contacts-view"></a></dhv:permission>
-      </dhv:evaluate>
-      &nbsp;
-    </td>
-  </tr>
-</table>
-<br>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-      <strong>Service Model Options</strong>
-    </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Response Time
-    </td>
-    <td>
-      <%= asset.getResponseTime() == -1 ? "Default - " + toHtml(responseModelList.getSelectedValue(serviceContract.getResponseTime())) : toHtml(responseModelList.getSelectedValue(asset.getResponseTime())) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Telephone Service Model
-    </td>
-    <td>
-      <%= asset.getTelephoneResponseModel() == -1 ? "Default - " + toHtml(phoneModelList.getSelectedValue(serviceContract.getTelephoneResponseModel())) : toHtml(phoneModelList.getSelectedValue(asset.getTelephoneResponseModel())) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Onsite Service Model
-    </td>
-    <td>
-    <%= asset.getOnsiteResponseModel() == -1 ? "Default - " + toHtml(onsiteModelList.getSelectedValue(serviceContract.getOnsiteResponseModel())) : toHtml(onsiteModelList.getSelectedValue(asset.getOnsiteResponseModel())) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Email Service Model
-    </td>
-    <td>
-    <%= asset.getEmailResponseModel() == -1 ? "Default - " + toHtml(emailModelList.getSelectedValue(serviceContract.getEmailResponseModel())) : toHtml(emailModelList.getSelectedValue(asset.getEmailResponseModel())) %>
-    </td>
-  </tr>
-</table>
-<br>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-      <strong>Warranty Information</strong>
-    </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Expiration Date
-    </td>
-    <td>
-      <zeroio:tz timestamp="<%= asset.getExpirationDate() %>" dateOnly="true" timeZone="<%= asset.getExpirationDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% if(!User.getTimeZone().equals(asset.getExpirationDateTimeZone())){%>
-      <br />
-      <zeroio:tz timestamp="<%= asset.getExpirationDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% } %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td valign="top" class="formLabel">
-      Inclusions
-    </td>
-    <td>
-      <%= toHtml(asset.getInclusions()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td valign="top" class="formLabel">
-      Exclusions
-    </td>
-    <td>
-      <%= toHtml(asset.getExclusions()) %>
-    </td>
-  </tr>
-</table>
-<br>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-      <strong>Financial Information</strong>
-    </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Purchase Date
-    </td>
-    <td>
-      <zeroio:tz timestamp="<%=asset.getPurchaseDate()%>" dateOnly="true" timeZone="<%= asset.getPurchaseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% if(!User.getTimeZone().equals(asset.getPurchaseDateTimeZone())){%>
-      <br />
-      <zeroio:tz timestamp="<%= asset.getPurchaseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% } %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Purchase Cost
-    </td>
-    <td>
-      <zeroio:currency value="<%= asset.getPurchaseCost() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      P.O. Number
-    </td>
-    <td>
-      <%= toHtml(asset.getPoNumber()) %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Purchased From
-    </td>
-    <td>
-      <%= toHtml(asset.getPurchasedFrom()) %>
-    </td>
-  </tr>
-</table>
-<br>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-      <strong>Other Information</strong>
-    </th>
-  </tr>
-  <tr class="containerBody">
-    <td valign="top" class="formLabel">
-      Notes
-    </td>
-    <td>
-      <%= toHtml(asset.getNotes()) %>
-    </td>
-  </tr>
-</table>
-<%= addHiddenParams(request, "popup|popupType|actionId") %>
-<%-- end details --%>
-<br />
-  <dhv:permission name="accounts-assets-edit"><input type="submit" value="Modify" /></dhv:permission>
-  <dhv:permission name="accounts-assets-delete"><input type="button" value="Delete" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');"></dhv:permission>
-  </td>
-  </tr>
-</table>
+<dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:container name="accountsassets" selected="details" object="asset" param="<%= "id=" + asset.getId() %>">
+    <dhv:permission name="accounts-assets-edit"><input type=submit value="<dhv:label name="global.button.modify">Modify</dhv:label>"></dhv:permission>
+    <dhv:permission name="accounts-assets-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');"></dhv:permission>
+    <input type=hidden name="orgId" value = <%= OrgDetails.getOrgId() %> >
+    <input type=hidden name="id" value = <%= asset.getOrgId() %> >
+    <br /><br />
+    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+      <tr>
+        <th colspan="2">
+          <strong><dhv:label name="accounts.accountasset_include.SpecificInformation">Specific Information</dhv:label></strong>
+        </th>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.Vendor">Vendor</dhv:label>
+        </td>
+        <td>
+          <%= toHtml(asset.getVendor()) %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.Manufacturer">Manufacturer</dhv:label>
+        </td>
+        <td>
+          <%= toHtml(asset.getManufacturer()) %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.SerialNumber">Serial Number</dhv:label>
+        </td>
+        <td>
+          <%= toHtml(asset.getSerialNumber()) %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.ModelVersion">Model/Version</dhv:label>
+        </td>
+        <td>
+          <%= toHtml(asset.getModelVersion()) %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td valign="top" class="formLabel">
+          <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
+        </td>
+        <td>
+          <%= toHtml(asset.getDescription()) %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.DateListed">Date Listed</dhv:label>
+        </td>
+        <td>
+          <zeroio:tz timestamp="<%= asset.getDateListed() %>" dateOnly="true" timeZone="<%= asset.getDateListedTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+          <% if(!User.getTimeZone().equals(asset.getDateListedTimeZone())){%>
+          <br />
+          <zeroio:tz timestamp="<%= asset.getDateListed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+          <% } %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.Location">Location</dhv:label>
+        </td>
+        <td>
+          <%= toHtml(asset.getLocation()) %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.AssetTag">Asset Tag</dhv:label>
+        </td>
+        <td>
+          <%= toHtml(asset.getAssetTag()) %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
+        </td>
+        <td>
+          <dhv:evaluate if="<%= asset.getStatus() > 0 %>">
+            <%= toHtml(assetStatusList.getSelectedValue(asset.getStatus())) %>
+          </dhv:evaluate>&nbsp;
+        </td>
+      </tr>
+    </table>
+    <br>
+    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+      <tr>
+        <th colspan="2">
+          <strong><dhv:label name="accounts.accountasset_include.Category">Category</dhv:label></strong>
+        </th>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.Level1">Level 1</dhv:label>
+        </td>
+        <td>
+          <dhv:evaluate if="<%= asset.getLevel1() > 0 %>">
+            <%= toHtml(categoryList1.getSelectedValue(asset.getLevel1())) %>
+          </dhv:evaluate>&nbsp;
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.Level2">Level 2</dhv:label>
+        </td>
+        <td>
+          <dhv:evaluate if="<%= asset.getLevel2() > 0 %>">
+            <%= toHtml(categoryList2.getSelectedValue(asset.getLevel2())) %>
+          </dhv:evaluate>&nbsp;
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.Level3">Level 3</dhv:label>
+        </td>
+        <td>
+          <dhv:evaluate if="<%= asset.getLevel3() > 0 %>">
+            <%= toHtml(categoryList3.getSelectedValue(asset.getLevel3())) %>
+          </dhv:evaluate>&nbsp;
+        </td>
+      </tr>
+    </table>
+    <br>
+    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+      <tr>
+        <th colspan="2">
+          <strong><dhv:label name="accounts.accountasset_include.ServiceContract">Service Contract</dhv:label></strong>
+        </th>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.ServiceContractNumber">Service Contract Number</dhv:label>
+        </td>
+        <td>
+        <% if(asset.getContractId() != -1) {%>
+            <%= toHtml(asset.getServiceContractNumber()) %>
+          <%} else {%>
+            <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+          <%}%>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
+        </td>
+        <td>
+          <dhv:evaluate if="<%= assetContact.getId() > 0 %>">
+            <dhv:permission name="contacts-external_contacts-view"><a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= assetContact.getId() %>&popup=true&popupType=inline','Details','650','500','yes','yes');"></dhv:permission><%= toHtml(assetContact.getNameLastFirst()) %><dhv:permission name="contacts-external_contacts-view"></a></dhv:permission>
+          </dhv:evaluate>
+          &nbsp;
+        </td>
+      </tr>
+    </table>
+    <br>
+    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+      <tr>
+        <th colspan="2">
+          <strong><dhv:label name="accounts.accountasset_include.ServiceModelOptions">Service Model Options</dhv:label></strong>
+        </th>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.ResponseTime">Response Time</dhv:label>
+        </td>
+        <td>
+          <%= asset.getResponseTime() == -1 ? "Default - " + toHtml(responseModelList.getSelectedValue(serviceContract.getResponseTime())) : toHtml(responseModelList.getSelectedValue(asset.getResponseTime())) %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td nowrap class="formLabel">
+          <dhv:label name="accounts.accountasset_include.TelephoneService">Telephone Service</dhv:label>
+        </td>
+        <td>
+          <%= asset.getTelephoneResponseModel() == -1 ? "Default - " + toHtml(phoneModelList.getSelectedValue(serviceContract.getTelephoneResponseModel())) : toHtml(phoneModelList.getSelectedValue(asset.getTelephoneResponseModel())) %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td nowrap class="formLabel">
+          <dhv:label name="accounts.accountasset_include.OnsiteService">Onsite Service</dhv:label>
+        </td>
+        <td>
+        <%= asset.getOnsiteResponseModel() == -1 ? "Default - " + toHtml(onsiteModelList.getSelectedValue(serviceContract.getOnsiteResponseModel())) : toHtml(onsiteModelList.getSelectedValue(asset.getOnsiteResponseModel())) %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td nowrap class="formLabel">
+          <dhv:label name="accounts.accountasset_include.EmailServiceModel">Email Service Model</dhv:label>
+        </td>
+        <td>
+        <%= asset.getEmailResponseModel() == -1 ? "Default - " + toHtml(emailModelList.getSelectedValue(serviceContract.getEmailResponseModel())) : toHtml(emailModelList.getSelectedValue(asset.getEmailResponseModel())) %>
+        </td>
+      </tr>
+    </table>
+    <br>
+    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+      <tr>
+        <th colspan="2">
+          <strong><dhv:label name="accounts.accountasset_include.WarrantyInformation">Warranty Information</dhv:label></strong>
+        </th>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.ExpirationDate">Expiration Date</dhv:label>
+        </td>
+        <td>
+          <zeroio:tz timestamp="<%= asset.getExpirationDate() %>" dateOnly="true" timeZone="<%= asset.getExpirationDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+          <% if(!User.getTimeZone().equals(asset.getExpirationDateTimeZone())){%>
+          <br />
+          <zeroio:tz timestamp="<%= asset.getExpirationDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+          <% } %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td valign="top" class="formLabel">
+          <dhv:label name="accounts.accountasset_include.Inclusions">Inclusions</dhv:label>
+        </td>
+        <td>
+          <%= toHtml(asset.getInclusions()) %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td valign="top" class="formLabel">
+          <dhv:label name="accounts.accountasset_include.Exclusions">Exclusions</dhv:label>
+        </td>
+        <td>
+          <%= toHtml(asset.getExclusions()) %>
+        </td>
+      </tr>
+    </table>
+    <br>
+    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+      <tr>
+        <th colspan="2">
+          <strong><dhv:label name="accounts.accountasset_include.FinancialInformation">Financial Information</dhv:label></strong>
+        </th>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.PurchaseDate">Purchase Date</dhv:label>
+        </td>
+        <td>
+          <zeroio:tz timestamp="<%=asset.getPurchaseDate()%>" dateOnly="true" timeZone="<%= asset.getPurchaseDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+          <% if(!User.getTimeZone().equals(asset.getPurchaseDateTimeZone())){%>
+          <br />
+          <zeroio:tz timestamp="<%= asset.getPurchaseDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+          <% } %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.PurchaseCost">Purchase Cost</dhv:label>
+        </td>
+        <td>
+          <zeroio:currency value="<%= asset.getPurchaseCost() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.PONumber">P.O. Number</dhv:label>
+        </td>
+        <td>
+          <%= toHtml(asset.getPoNumber()) %>
+        </td>
+      </tr>
+      <tr class="containerBody">
+        <td class="formLabel">
+          <dhv:label name="accounts.accountasset_include.PurchasedFrom">Purchased From</dhv:label>
+        </td>
+        <td>
+          <%= toHtml(asset.getPurchasedFrom()) %>
+        </td>
+      </tr>
+    </table>
+    <br>
+    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+      <tr>
+        <th colspan="2">
+          <strong><dhv:label name="accounts.accountasset_include.OtherInformation">Other Information</dhv:label></strong>
+        </th>
+      </tr>
+      <tr class="containerBody">
+        <td valign="top" class="formLabel">
+          <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
+        </td>
+        <td>
+          <%= toHtml(asset.getNotes()) %>
+        </td>
+      </tr>
+    </table>
+    <%= addHiddenParams(request, "popup|popupType|actionId") %>
+    <%-- end details --%>
+    <br />
+    <dhv:permission name="accounts-assets-edit"><input type="submit" value="<dhv:label name="global.button.modify">Modify</dhv:label>" /></dhv:permission>
+    <dhv:permission name="accounts-assets-delete"><input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('AccountsAssets.do?command=ConfirmDelete&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>&popup=true','AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>', 'Delete_asset','320','200','yes','no');"></dhv:permission>
+  </dhv:container>
+</dhv:container>
 </form>

@@ -15,332 +15,68 @@
  */
 package org.aspcfs.modules.products.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.SyncableList;
-import java.util.Calendar;
 
 /**
- *  List class for a Product Option
+ *  Description of the Class
  *
  *@author     partha
  *@created    March 19, 2004
  *@version    $Id: ProductOptionList.java,v 1.1.2.2 2004/03/19 20:46:00 partha
  *      Exp $
  */
-public class ProductOptionList extends ArrayList implements SyncableList {
-  //sync api
-  /**
-   *  Description of the Field
-   */
-  public final static String tableName = "product_option";
-  /**
-   *  Description of the Field
-   */
-  public final static String uniqueField = "option_id";
-  private Timestamp lastAnchor = null;
-  private Timestamp nextAnchor = null;
-  private int syncType = Constants.NO_SYNC;
+public class ProductOptionList extends ArrayList {
   //filters
   private PagedListInfo pagedListInfo = null;
-  private int enteredBy = -1;
   private int id = -1;
   private int parentId = -1;
-  private int allowCustomerConfigure = Constants.UNDEFINED;
-  private int allowUserConfigure = Constants.UNDEFINED;
+  private String name = null;
+  private int configuratorId = -1;
   private int enabled = Constants.UNDEFINED;
-  private int topOnly = Constants.UNDEFINED;
   //other supplimentary fields
   private int productId = -1;
   private String productName = null;
-  private int resultType = -1;
-  private String parentName = null;
   //resources
   private boolean buildResources = false;
-
+  private boolean buildConfigDetails = false;
+  
 
   /**
-   *  Sets the buildResources attribute of the ProductOptionList object
+   *  Gets the buildConfigDetails attribute of the ProductOptionList object
    *
-   *@param  tmp  The new buildResources value
+   *@return    The buildConfigDetails value
    */
-  public void setBuildResources(boolean tmp) {
-    this.buildResources = tmp;
+  public boolean getBuildConfigDetails() {
+    return buildConfigDetails;
   }
 
 
   /**
-   *  Sets the buildResources attribute of the ProductOptionList object
+   *  Sets the buildConfigDetails attribute of the ProductOptionList object
    *
-   *@param  tmp  The new buildResources value
+   *@param  tmp  The new buildConfigDetails value
    */
-  public void setBuildResources(String tmp) {
-    this.buildResources = DatabaseUtils.parseBoolean(tmp);
+  public void setBuildConfigDetails(boolean tmp) {
+    this.buildConfigDetails = tmp;
   }
 
 
   /**
-   *  Gets the buildResources attribute of the ProductOptionList object
+   *  Sets the buildConfigDetails attribute of the ProductOptionList object
    *
-   *@return    The buildResources value
+   *@param  tmp  The new buildConfigDetails value
    */
-  public boolean getBuildResources() {
-    return buildResources;
-  }
-
-
-  /**
-   *  Sets the productId attribute of the ProductOptionList object
-   *
-   *@param  tmp  The new productId value
-   */
-  public void setProductId(int tmp) {
-    this.productId = tmp;
-  }
-
-
-  /**
-   *  Sets the productId attribute of the ProductOptionList object
-   *
-   *@param  tmp  The new productId value
-   */
-  public void setProductId(String tmp) {
-    this.productId = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Gets the productId attribute of the ProductOptionList object
-   *
-   *@return    The productId value
-   */
-  public int getProductId() {
-    return productId;
-  }
-
-
-  /**
-   *  Gets the tableName attribute of the ProductOptionList object
-   *
-   *@return    The tableName value
-   */
-  public String getTableName() {
-    return tableName;
-  }
-
-
-  /**
-   *  Gets the uniqueField attribute of the ProductOptionList object
-   *
-   *@return    The uniqueField value
-   */
-  public String getUniqueField() {
-    return uniqueField;
-  }
-
-
-  /**
-   *  Gets the lastAnchor attribute of the ProductOptionList object
-   *
-   *@return    The lastAnchor value
-   */
-  public Timestamp getLastAnchor() {
-    return lastAnchor;
-  }
-
-
-  /**
-   *  Gets the nextAnchor attribute of the ProductOptionList object
-   *
-   *@return    The nextAnchor value
-   */
-  public Timestamp getNextAnchor() {
-    return nextAnchor;
-  }
-
-
-  /**
-   *  Gets the syncType attribute of the ProductOptionList object
-   *
-   *@return    The syncType value
-   */
-  public int getSyncType() {
-    return syncType;
-  }
-
-
-  /**
-   *  Gets the pagedListInfo attribute of the ProductOptionList object
-   *
-   *@return    The pagedListInfo value
-   */
-  public PagedListInfo getPagedListInfo() {
-    return pagedListInfo;
-  }
-
-
-  /**
-   *  Gets the enteredBy attribute of the ProductOptionList object
-   *
-   *@return    The enteredBy value
-   */
-  public int getEnteredBy() {
-    return enteredBy;
-  }
-
-
-  /**
-   *  Gets the id attribute of the ProductOptionList object
-   *
-   *@return    The id value
-   */
-  public int getId() {
-    return id;
-  }
-
-
-  /**
-   *  Gets the parentId attribute of the ProductOptionList object
-   *
-   *@return    The parentId value
-   */
-  public int getParentId() {
-    return parentId;
-  }
-
-
-  /**
-   *  Gets the allowCustomerConfigure attribute of the ProductOptionList object
-   *
-   *@return    The allowCustomerConfigure value
-   */
-  public int getAllowCustomerConfigure() {
-    return allowCustomerConfigure;
-  }
-
-
-  /**
-   *  Gets the allowUserConfigure attribute of the ProductOptionList object
-   *
-   *@return    The allowUserConfigure value
-   */
-  public int getAllowUserConfigure() {
-    return allowUserConfigure;
-  }
-
-
-  /**
-   *  Gets the enabled attribute of the ProductOptionList object
-   *
-   *@return    The enabled value
-   */
-  public int getEnabled() {
-    return enabled;
-  }
-
-
-  /**
-   *  Gets the productName attribute of the ProductOptionList object
-   *
-   *@return    The productName value
-   */
-  public String getProductName() {
-    return productName;
-  }
-
-
-  /**
-   *  Gets the resultType attribute of the ProductOptionList object
-   *
-   *@return    The resultType value
-   */
-  public int getResultType() {
-    return resultType;
-  }
-
-
-  /**
-   *  Gets the parentName attribute of the ProductOptionList object
-   *
-   *@return    The parentName value
-   */
-  public String getParentName() {
-    return parentName;
-  }
-
-
-  /**
-   *  Gets the topOnly attribute of the ProductOptionList object
-   *
-   *@return    The topOnly value
-   */
-  public int getTopOnly() {
-    return topOnly;
-  }
-
-
-  /**
-   *  Sets the lastAnchor attribute of the ProductOptionList object
-   *
-   *@param  tmp  The new lastAnchor value
-   */
-  public void setLastAnchor(Timestamp tmp) {
-    this.lastAnchor = tmp;
-  }
-
-
-  /**
-   *  Sets the lastAnchor attribute of the ProductOptionList object
-   *
-   *@param  tmp  The new lastAnchor value
-   */
-  public void setLastAnchor(String tmp) {
-    this.lastAnchor = DatabaseUtils.parseTimestamp(tmp);
-  }
-
-
-  /**
-   *  Sets the nextAnchor attribute of the ProductOptionList object
-   *
-   *@param  tmp  The new nextAnchor value
-   */
-  public void setNextAnchor(Timestamp tmp) {
-    this.nextAnchor = tmp;
-  }
-
-
-  /**
-   *  Sets the nextAnchor attribute of the ProductOptionList object
-   *
-   *@param  tmp  The new nextAnchor value
-   */
-  public void setNextAnchor(String tmp) {
-    this.nextAnchor = DatabaseUtils.parseTimestamp(tmp);
-  }
-
-
-  /**
-   *  Sets the syncType attribute of the ProductOptionList object
-   *
-   *@param  tmp  The new syncType value
-   */
-  public void setSyncType(int tmp) {
-    this.syncType = tmp;
-  }
-
-
-  /**
-   *  Sets the syncType attribute of the ProductOptionList object
-   *
-   *@param  tmp  The new syncType value
-   */
-  public void setSyncType(String tmp) {
-    this.syncType = Integer.parseInt(tmp);
+  public void setBuildConfigDetails(String tmp) {
+    this.buildConfigDetails = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -351,26 +87,6 @@ public class ProductOptionList extends ArrayList implements SyncableList {
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
-  }
-
-
-  /**
-   *  Sets the enteredBy attribute of the ProductOptionList object
-   *
-   *@param  tmp  The new enteredBy value
-   */
-  public void setEnteredBy(int tmp) {
-    this.enteredBy = tmp;
-  }
-
-
-  /**
-   *  Sets the enteredBy attribute of the ProductOptionList object
-   *
-   *@param  tmp  The new enteredBy value
-   */
-  public void setEnteredBy(String tmp) {
-    this.enteredBy = Integer.parseInt(tmp);
   }
 
 
@@ -415,42 +131,32 @@ public class ProductOptionList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the allowCustomerConfigure attribute of the ProductOptionList object
+   *  Sets the name attribute of the ProductOptionList object
    *
-   *@param  tmp  The new allowCustomerConfigure value
+   *@param  tmp  The new name value
    */
-  public void setAllowCustomerConfigure(int tmp) {
-    this.allowCustomerConfigure = tmp;
+  public void setName(String tmp) {
+    this.name = tmp;
   }
 
 
   /**
-   *  Sets the allowCustomerConfigure attribute of the ProductOptionList object
+   *  Sets the configuratorId attribute of the ProductOptionList object
    *
-   *@param  tmp  The new allowCustomerConfigure value
+   *@param  tmp  The new configuratorId value
    */
-  public void setAllowCustomerConfigure(String tmp) {
-    this.allowCustomerConfigure = Integer.parseInt(tmp);
+  public void setConfiguratorId(int tmp) {
+    this.configuratorId = tmp;
   }
 
 
   /**
-   *  Sets the allowUserConfigure attribute of the ProductOptionList object
+   *  Sets the configuratorId attribute of the ProductOptionList object
    *
-   *@param  tmp  The new allowUserConfigure value
+   *@param  tmp  The new configuratorId value
    */
-  public void setAllowUserConfigure(int tmp) {
-    this.allowUserConfigure = tmp;
-  }
-
-
-  /**
-   *  Sets the allowUserConfigure attribute of the ProductOptionList object
-   *
-   *@param  tmp  The new allowUserConfigure value
-   */
-  public void setAllowUserConfigure(String tmp) {
-    this.allowUserConfigure = Integer.parseInt(tmp);
+  public void setConfiguratorId(String tmp) {
+    this.configuratorId = Integer.parseInt(tmp);
   }
 
 
@@ -475,6 +181,26 @@ public class ProductOptionList extends ArrayList implements SyncableList {
 
 
   /**
+   *  Sets the productId attribute of the ProductOptionList object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(int tmp) {
+    this.productId = tmp;
+  }
+
+
+  /**
+   *  Sets the productId attribute of the ProductOptionList object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(String tmp) {
+    this.productId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the productName attribute of the ProductOptionList object
    *
    *@param  tmp  The new productName value
@@ -485,52 +211,112 @@ public class ProductOptionList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the resultType attribute of the ProductOptionList object
+   *  Sets the buildResources attribute of the ProductOptionList object
    *
-   *@param  tmp  The new resultType value
+   *@param  tmp  The new buildResources value
    */
-  public void setResultType(int tmp) {
-    this.resultType = tmp;
+  public void setBuildResources(boolean tmp) {
+    this.buildResources = tmp;
   }
 
 
   /**
-   *  Sets the resultType attribute of the ProductOptionList object
+   *  Sets the buildResources attribute of the ProductOptionList object
    *
-   *@param  tmp  The new resultType value
+   *@param  tmp  The new buildResources value
    */
-  public void setResultType(String tmp) {
-    this.resultType = Integer.parseInt(tmp);
+  public void setBuildResources(String tmp) {
+    this.buildResources = DatabaseUtils.parseBoolean(tmp);
   }
 
 
   /**
-   *  Sets the parentName attribute of the ProductOptionList object
+   *  Gets the pagedListInfo attribute of the ProductOptionList object
    *
-   *@param  tmp  The new parentName value
+   *@return    The pagedListInfo value
    */
-  public void setParentName(String tmp) {
-    this.parentName = tmp;
+  public PagedListInfo getPagedListInfo() {
+    return pagedListInfo;
   }
 
 
   /**
-   *  Sets the topOnly attribute of the ProductOptionList object
+   *  Gets the id attribute of the ProductOptionList object
    *
-   *@param  tmp  The new topOnly value
+   *@return    The id value
    */
-  public void setTopOnly(int tmp) {
-    this.topOnly = tmp;
+  public int getId() {
+    return id;
   }
 
 
   /**
-   *  Sets the topOnly attribute of the ProductOptionList object
+   *  Gets the parentId attribute of the ProductOptionList object
    *
-   *@param  tmp  The new topOnly value
+   *@return    The parentId value
    */
-  public void setTopOnly(String tmp) {
-    this.topOnly = Integer.parseInt(tmp);
+  public int getParentId() {
+    return parentId;
+  }
+
+
+  /**
+   *  Gets the name attribute of the ProductOptionList object
+   *
+   *@return    The name value
+   */
+  public String getName() {
+    return name;
+  }
+
+
+  /**
+   *  Gets the configuratorId attribute of the ProductOptionList object
+   *
+   *@return    The configuratorId value
+   */
+  public int getConfiguratorId() {
+    return configuratorId;
+  }
+
+
+  /**
+   *  Gets the enabled attribute of the ProductOptionList object
+   *
+   *@return    The enabled value
+   */
+  public int getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   *  Gets the productId attribute of the ProductOptionList object
+   *
+   *@return    The productId value
+   */
+  public int getProductId() {
+    return productId;
+  }
+
+
+  /**
+   *  Gets the productName attribute of the ProductOptionList object
+   *
+   *@return    The productName value
+   */
+  public String getProductName() {
+    return productName;
+  }
+
+
+  /**
+   *  Gets the buildResources attribute of the ProductOptionList object
+   *
+   *@return    The buildResources value
+   */
+  public boolean getBuildResources() {
+    return buildResources;
   }
 
 
@@ -558,10 +344,11 @@ public class ProductOptionList extends ArrayList implements SyncableList {
 
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-        " SELECT COUNT(popt.*) AS recordcount " +
-        " FROM product_option AS popt " +
-        " WHERE popt.option_id > 0"
-        );
+        "SELECT COUNT(*) AS recordcount " +
+        "FROM product_option AS popt " +
+        "LEFT JOIN product_option_configurator AS poptconf ON ( popt.configurator_id = poptconf.configurator_id ) " +
+        "LEFT JOIN product_option AS popt2 ON ( popt.parent_id = popt2.option_id ) " +
+        "WHERE popt.option_id > 0 ");
 
     createFilter(sqlFilter, db);
 
@@ -576,6 +363,21 @@ public class ProductOptionList extends ArrayList implements SyncableList {
       }
       rs.close();
       pst.close();
+
+      // Determine column to sort by
+      pagedListInfo.setDefaultSort("popt.option_id", null);
+      boolean flag = true;
+      if (DatabaseUtils.getType(db) == DatabaseUtils.MSSQL) {
+        if (pagedListInfo.getColumnToSortBy().equals("popt.short_description")) {
+          sqlOrder.append("ORDER BY CONVERT(VARCHAR(2000),popt.short_description) ");
+          flag = false;
+        }
+      }
+      if (flag) {
+        pagedListInfo.appendSqlTail(db, sqlOrder);
+      }
+    } else {
+      sqlOrder.append("ORDER BY popt.option_id ");
     }
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -584,13 +386,14 @@ public class ProductOptionList extends ArrayList implements SyncableList {
       sqlSelect.append(" SELECT ");
     }
     sqlSelect.append(
-        "   popt.*, " +
-        "   poptconf.result_type as result_type, " +
-        "   popt2.short_description as parent_name " +
-        " FROM product_option AS popt " +
-        " LEFT JOIN product_option_configurator as poptconf ON ( popt.configurator_id = poptconf.configurator_id ) " +
-        " LEFT JOIN product_option as popt2 ON ( popt.parent_id = popt2.option_id ) " +
-        " WHERE popt.option_id > -1 ");
+        "popt.*, " +
+        "poptconf.result_type as result_type, " +
+        "poptconf.configurator_name as conf_name, " +
+        "popt2.option_name as parent_name " +
+        "FROM product_option AS popt " +
+        "LEFT JOIN product_option_configurator AS poptconf ON ( popt.configurator_id = poptconf.configurator_id ) " +
+        "LEFT JOIN product_option AS popt2 ON ( popt.parent_id = popt2.option_id ) " +
+        "WHERE popt.option_id > 0 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -615,8 +418,14 @@ public class ProductOptionList extends ArrayList implements SyncableList {
       Iterator i = this.iterator();
       while (i.hasNext()) {
         ProductOption thisOption = (ProductOption) i.next();
-        thisOption.setProductId(this.productId);
         thisOption.buildOptionValues(db);
+      }
+    }
+    if (buildConfigDetails) {
+      Iterator i = this.iterator();
+      while (i.hasNext()) {
+        ProductOption thisOption = (ProductOption) i.next();
+        thisOption.buildConfigDetails(db);
       }
     }
   }
@@ -627,14 +436,13 @@ public class ProductOptionList extends ArrayList implements SyncableList {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@param  basePath          Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void delete(Connection db, String basePath) throws SQLException {
+  public void delete(Connection db) throws SQLException {
     Iterator options = this.iterator();
     while (options.hasNext()) {
       ProductOption productOption = (ProductOption) options.next();
-      productOption.delete(db, basePath);
+      productOption.delete(db);
     }
   }
 
@@ -646,64 +454,26 @@ public class ProductOptionList extends ArrayList implements SyncableList {
    *@param  db         Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter, Connection db) {
-
-    if (enteredBy > -1) {
-      sqlFilter.append(" AND popt.enteredby = ? ");
-    }
-
     if (id > -1) {
-      sqlFilter.append(" AND popt.option_id = ? ");
+      sqlFilter.append("AND popt.option_id = ? ");
     }
-    if (topOnly == Constants.TRUE) {
-      sqlFilter.append(" AND popt.parent_id IS NULL ");
-    } else if (topOnly == Constants.FALSE) {
-      sqlFilter.append(" AND popt.parent_id IS NOT NULL ");
+    if (name != null) {
+      sqlFilter.append("AND popt.option_name = ? ");
     }
     if (parentId > -1) {
-      sqlFilter.append(" AND popt.parent_id = ? ");
-    }
-    if (allowCustomerConfigure != Constants.UNDEFINED) {
-      sqlFilter.append(" AND popt.allow_customer_configure = ? ");
-    }
-    if (allowUserConfigure != Constants.UNDEFINED) {
-      sqlFilter.append(" AND popt.allow_user_configure = ? ");
+      sqlFilter.append("AND popt.parent_id = ? ");
     }
     if (productName != null) {
-      sqlFilter.append(" AND pctlg.product_name = ? ");
+      sqlFilter.append("AND pctlg.product_name = ? ");
     }
-
-    if (resultType > -1) {
-      sqlFilter.append(" AND poptconf.result_type = ? ");
-    }
-
-    if (parentName != null) {
-      sqlFilter.append(" AND popt2.short_description = ? ");
-    }
-
-    //Sync API
-    if (syncType == Constants.SYNC_INSERTS) {
-      if (lastAnchor != null) {
-        sqlFilter.append("AND popt.entered >= ? ");
-      }
-      sqlFilter.append("AND popt.entered < ? ");
-    } else if (syncType == Constants.SYNC_UPDATES) {
-      sqlFilter.append("AND popt.modified >= ? ");
-      sqlFilter.append("AND popt.entered < ? ");
-      sqlFilter.append("AND popt.modified < ? ");
-    } else if (syncType == Constants.SYNC_QUERY) {
-      if (lastAnchor != null) {
-        sqlFilter.append("AND popt.entered >= ? ");
-      }
-      if (nextAnchor != null) {
-        sqlFilter.append("AND popt.entered < ? ");
-      }
-    }
-
     if (enabled != Constants.UNDEFINED) {
       sqlFilter.append("AND popt.enabled = ? ");
     }
     if (productId > -1) {
       sqlFilter.append("AND popt.option_id IN (SELECT option_id FROM product_option_map WHERE product_id = ?) ");
+    }
+    if (configuratorId > -1) {
+      sqlFilter.append("AND popt.configurator_id = ? ");
     }
   }
 
@@ -717,64 +487,168 @@ public class ProductOptionList extends ArrayList implements SyncableList {
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
-    if (enteredBy > -1) {
-      pst.setInt(++i, enteredBy);
-    }
     if (id > -1) {
       pst.setInt(++i, id);
     }
+
+    if (name != null) {
+      pst.setString(++i, name);
+    }
+
     if (parentId > -1) {
       pst.setInt(++i, parentId);
     }
-    if (allowCustomerConfigure == Constants.TRUE) {
-      pst.setBoolean(++i, true);
-    } else if (allowCustomerConfigure == Constants.FALSE) {
-      pst.setBoolean(++i, false);
-    }
-    if (allowUserConfigure == Constants.TRUE) {
-      pst.setBoolean(++i, true);
-    } else if (allowUserConfigure == Constants.FALSE) {
-      pst.setBoolean(++i, false);
-    }
+
     if (productName != null) {
       pst.setString(++i, productName);
     }
 
-    if (resultType > -1) {
-      pst.setInt(++i, resultType);
-    }
-
-    if (parentName != null) {
-      pst.setString(++i, parentName);
-    }
-
-    //Sync API
-    if (syncType == Constants.SYNC_INSERTS) {
-      if (lastAnchor != null) {
-        pst.setTimestamp(++i, lastAnchor);
-      }
-      pst.setTimestamp(++i, nextAnchor);
-    } else if (syncType == Constants.SYNC_UPDATES) {
-      pst.setTimestamp(++i, lastAnchor);
-      pst.setTimestamp(++i, lastAnchor);
-      pst.setTimestamp(++i, nextAnchor);
-    } else if (syncType == Constants.SYNC_QUERY) {
-      if (lastAnchor != null) {
-        pst.setTimestamp(++i, lastAnchor);
-      }
-      if (nextAnchor != null) {
-        pst.setTimestamp(++i, nextAnchor);
-      }
-    }
     if (enabled == Constants.TRUE) {
       pst.setBoolean(++i, true);
     } else if (enabled == Constants.FALSE) {
       pst.setBoolean(++i, false);
     }
+
     if (productId > -1) {
       pst.setInt(++i, productId);
     }
+
+    if (configuratorId > -1) {
+      pst.setInt(++i, configuratorId);
+    }
     return i;
+  }
+
+
+  /**
+   *  Adds a feature to the ProductMapping attribute of the ProductOptionList
+   *  object
+   *
+   *@param  db                The feature to be added to the ProductMapping
+   *      attribute
+   *@param  productId         The feature to be added to the ProductMapping
+   *      attribute
+   *@exception  SQLException  Description of the Exception
+   */
+  public void addProductMapping(Connection db, int productId) throws SQLException {
+    if (productId == -1) {
+      throw new SQLException("Invalid Product ID specified");
+    }
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ProductOption thisOption = (ProductOption) i.next();
+      thisOption.addProductMapping(db, productId);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  productId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void removeProductMapping(Connection db, int productId) throws SQLException {
+    if (productId == -1) {
+      throw new SQLException("Invalid Product ID specified");
+    }
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ProductOption thisOption = (ProductOption) i.next();
+      thisOption.removeProductMapping(db, productId);
+    }
+  }
+
+
+  /**
+   *  Adds a feature to the ProductMapping attribute of the ProductOptionList
+   *  object
+   *
+   *@param  db                The feature to be added to the ProductMapping
+   *      attribute
+   *@param  oldList           The feature to be added to the ProductMapping
+   *      attribute
+   *@param  productId         The feature to be added to the ProductMapping
+   *      attribute
+   *@exception  SQLException  Description of the Exception
+   */
+  public void addProductMapping(Connection db, ProductOptionList oldList, int productId) throws SQLException {
+    try {
+      db.setAutoCommit(false);
+      // Remove the mappings of elements present in the oldList and not this list
+      Iterator i = oldList.iterator();
+      while (i.hasNext()) {
+        ProductOption oldOption = (ProductOption) i.next();
+        boolean exists = false;
+        Iterator j = this.iterator();
+        while (j.hasNext()) {
+          ProductOption thisOption = (ProductOption) j.next();
+          if (oldOption.getId() == thisOption.getId()) {
+            exists = true;
+            j.remove();
+            break;
+          }
+        }
+        if (!exists) {
+          // old option does not exist. hence remove the values and mappings
+          //oldOption.removeProductValues(db, productId);
+          oldOption.removeProductMapping(db, productId);
+        }
+      }
+
+      // Add mappings for the elements now present in this list
+      this.addProductMapping(db, productId);
+      db.commit();
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      db.rollback();
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+  }
+
+
+  /**
+   *  Gets the optionFromId attribute of the ProductOptionList object
+   *
+   *@param  id                Description of the Parameter
+   *@return                   The optionFromId value
+   *@exception  SQLException  Description of the Exception
+   */
+  public ProductOption getOptionFromId(int id) throws SQLException {
+    ProductOption result = null;
+    if (this.size() > 0) {
+      Iterator iterator = (Iterator) this.iterator();
+      while (iterator.hasNext()) {
+        ProductOption option = (ProductOption) iterator.next();
+        if (option.getId() == id) {
+          result = option;
+          break;
+        }
+      }
+    }
+    return result;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@return    Description of the Return Value
+   */
+  public boolean hasValues() {
+    int counter = 0;
+    Iterator iterator = (Iterator) this.iterator();
+    while (iterator.hasNext()) {
+      ProductOption option = (ProductOption) iterator.next();
+      counter += option.getOptionValuesList().size();
+    }
+    if (counter == 0) {
+      return false;
+    }
+    return true;
   }
 }
 

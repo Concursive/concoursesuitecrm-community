@@ -15,20 +15,26 @@
  */
 package org.aspcfs.apps.reportRunner;
 
-import org.aspcfs.modules.system.base.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.*;
-import java.lang.reflect.*;
-import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.modules.system.base.Site;
+import org.aspcfs.modules.system.base.SiteList;
+import org.aspcfs.utils.AppUtils;
+import org.aspcfs.utils.SiteUtils;
+import org.aspcfs.utils.Dictionary;
+
+import java.lang.reflect.Constructor;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *  Processes all JasperReport queues, either as a standalone application or as
  *  a jcron task
  *
- *@author     matt rajkowski
- *@created    October 3, 2003
- *@version    $Id: ReportRunner.java,v 1.1.2.1 2003/10/03 20:54:54 mrajkowski
+ * @author   matt rajkowski
+ * @created  October 3, 2003
+ * @version  $Id: ReportRunner.java,v 1.1.2.1 2003/10/03 20:54:54 mrajkowski
  *      Exp $
  */
 public class ReportRunner {
@@ -78,11 +84,42 @@ public class ReportRunner {
 
 
   /**
-   *  process the reports
+   * jcrontab startup with dictionary
    *
-   *@param  args  Description of the Parameter
+   * @param args        Description of the Parameter
+   * @param dictionary  Description of the Parameter
+   */
+  public static void doTask(String args[], Dictionary dictionary) {
+    if (args.length == 0) {
+      System.out.println("Usage: ReportRunner [config file]");
+      System.out.println("ExitValue: 2");
+    } else {
+      ReportRunner thisRunner = new ReportRunner();
+      thisRunner.execute(args, dictionary);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("ExitValue: 0");
+      }
+    }
+  }
+
+
+  /**
+   * Process reports without a dictionary
+   *
+   * @param args  Description of the Parameter
    */
   private void execute(String args[]) {
+    this.execute(args, null);
+  }
+
+
+  /**
+   *  process the reports
+   *
+   * @param args        Description of the Parameter
+   * @param dictionary  Description of the Parameter
+   */
+  private void execute(String args[], Dictionary dictionary) {
     String filename = args[0];
     taskList.add("org.aspcfs.apps.reportRunner.task.ProcessJasperReports");
     AppUtils.loadConfig(filename, config);
@@ -95,7 +132,7 @@ public class ReportRunner {
         SiteList siteList = SiteUtils.getSiteList(config);
         //Process each site
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("ReportRunner-> Processing each site");
+          System.out.println("ReportRunner-> Processing each site (" + siteList.size() + ")");
         }
         Iterator i = siteList.iterator();
         while (i.hasNext()) {
@@ -111,9 +148,9 @@ public class ReportRunner {
             try {
               //Construct the object, which executes the task
               Class thisClass = Class.forName((String) classes.next());
-              Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), Site.class, HashMap.class};
+              Class[] paramClass = new Class[]{Class.forName("java.sql.Connection"), Site.class, HashMap.class, Dictionary.class};
               Constructor constructor = thisClass.getConstructor(paramClass);
-              Object[] paramObject = new Object[]{db, thisSite, config};
+              Object[] paramObject = new Object[]{db, thisSite, config, dictionary};
               Object theTask = constructor.newInstance(paramObject);
               theTask = null;
             } catch (Exception e) {

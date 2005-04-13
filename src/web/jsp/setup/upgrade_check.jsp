@@ -25,7 +25,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
 <script language="JavaScript">
   function checkForm(form) {
-    if (confirm("Are you sure you want to upgrade the system now?")) {
+    if (confirm(label("check.upgradesystem","Are you sure you want to upgrade the system now?"))) {
       showProgress();
       return true;
     } else {
@@ -41,19 +41,18 @@
 <form name="configure" method="POST" action="Upgrade.do?command=PerformUpgrade" onSubmit="return checkForm(this)">
 <table border="0" width="100%">
   <tr class="sectionTitle">
-    <th>Centric CRM Upgrade</th>
+    <th><dhv:label name="setup.centricCRMUpgrade">Centric CRM Upgrade</dhv:label></th>
   </tr>
   <tr>
     <td nowrap>
-      You are now logged in as administrator.<br />
-      Make sure you have backed up your database and file library.<br />
+      <dhv:label name="setup.loggedInAsAdmin.text">You are now logged in as administrator.<br />Make sure you have backed up your database and file library.</dhv:label><br />
       <br />
-      Please review the following information<br />
+      <dhv:label name="setup.reviewInformation.request">Please review the following information</dhv:label><br />
       <br />
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            Previous version:
+            <dhv:label name="setup.previousVersion.colon">Previous version:</dhv:label>
           </td>
           <td>
             <%= toHtml(installedVersion) %>
@@ -61,7 +60,7 @@
         </tr>
         <tr>
           <td class="formLabel">
-            Upgrade to:
+            <dhv:label name="setup.upgradeTo.colon">Upgrade to:</dhv:label>
           </td>
           <td>
             <%= toHtml(newVersion) %>
@@ -72,8 +71,7 @@
       <dhv:evaluate if="<%= "0".equals(status) %>">
         <table class="highlight" cellspacing="0">
           <tr>
-            <td>This system appears to already have been upgraded. Continuing will
-              mark this system as upgraded, allowing users to login.</td>
+            <td><dhv:label name="setup.systemAlreadyUpgraded.text">This system appears to already have been upgraded. Continuing will mark this system as upgraded, allowing users to login.</dhv:label></td>
           </tr>
         </table>
         <br />
@@ -82,7 +80,7 @@
         <input type="submit" value="Upgrade >"/>
       </span>
       <span id="progress" name="progress" style="display:none">
-        <font color="blue"><b>Please Wait... upgrading Centric CRM!</b></font>
+        <font color="blue"><b><dhv:label name="setup.pleaseWaitUpgrading.text">Please Wait... upgrading Centric CRM!</dhv:label></b></font>
       </span>
     </td>
   </tr>

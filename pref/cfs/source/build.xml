@@ -43,9 +43,7 @@
   
   <!-- Typical usage -->
   <target name="usage">
-    <echo message="Further instructions will appear if settings are missing"/>
-    <echo message=""/>
-    <echo message="ant deploy: compile code and create .war file"/>
+    <echo message="ant deploy: compile code and create .war file in dist directory"/>
     <echo message="ant installdb: install database schema into a new/clean database"/>
     <echo message="ant docs: generate JavaDocs for all packages"/>
     <echo message="ant clean: delete the temporary build folder used by the install"/>
@@ -177,7 +175,7 @@
   
   <target name="taskdef.jasper" depends="init">
     <taskdef name="compileJasperReport" 
-        classname="dori.jasper.ant.JRAntCompileTask">
+        classname="net.sf.jasperreports.ant.JRAntCompileTask">
         <classpath>
           <fileset dir="${build.lib.dir}">
             <include name="*.jar"/>
@@ -247,7 +245,8 @@
     <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on"
            debug="true" debuglevel="lines, vars, source">
     -->
-    <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="on">
+    <javac srcdir="${src.classes.dir}" destdir="${build.classes.dir}" verbose="off" deprecation="off"
+        fork="true" memoryInitialSize="168m" memoryMaximumSize="168m">
       <classpath>
         <path refid="cfs2.classpath"/>
       </classpath>
@@ -280,6 +279,15 @@
     <jar jarfile="${build.lib.dir}/jcrontab.jar"
           basedir="${build.classes.dir}"
           includes="org/jcrontab/**/*.class"/>
+    <!-- webdav.jar -->
+    <copy todir="${build.classes.dir}/org/apache/catalina/servlets">
+      <fileset dir="${src.classes.dir}/org/apache/catalina/servlets">
+        <include name="LocalStrings.properties"/>
+      </fileset>
+    </copy>
+    <jar jarfile="${build.lib.dir}/webdav.jar"
+          basedir="${build.classes.dir}"
+          includes="org/apache/**/*.class,org/apache/**/*.properties"/>
   </target>
   
   <target name="build"
@@ -341,6 +349,19 @@
         <exclude name="web.xml"/>
       </fileset>
     </copy>
+    <!-- Copy the language files -->
+    <mkdir dir="${dist.dir}/cfs/WEB-INF/languages"/>
+    <copy todir="${dist.dir}/cfs/WEB-INF/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <mkdir dir="${dist.dir}/cfs/javascript/languages"/>
+    <copy todir="${dist.dir}/cfs/javascript/languages">
+      <fileset dir="${src.dir}/languages">
+        <include name="*.js"/>
+      </fileset>
+    </copy>
     <!-- Copy the default preference files -->
     <copy todir="${dist.dir}/cfs/WEB-INF/setup" verbose="true">
       <fileset dir="${pref.dir}/cfs/system">
@@ -357,7 +378,7 @@
     <compileJasperReport
         srcdir="${dist.dir}/cfs/WEB-INF/reports"
         destdir="${dist.dir}/cfs/WEB-INF/reports"
-        compiler="dori.jasper.engine.design.JRBshCompiler"/>
+        compiler="net.sf.jasperreports.engine.design.JRBshCompiler"/>
     <delete>
         <fileset dir= "${dist.dir}/cfs/WEB-INF/reports" includes="*.xml"/>
     </delete>
@@ -441,7 +462,7 @@
     <echo message="SQL files prepared for database type: ${SITE.DBTYPE}"/>
   </target>
   
-  <target name="install.database" depends="init,install.prepare">
+  <target name="install.database" depends="init,install.prepare,install.language">
     <echo message="Building database"/>
     <!-- TODO: Optionally create database -->
     
@@ -458,36 +479,26 @@
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_gatekeeper.sql"/>
       <transaction src="${build.sql.dir}/gatekeeper.sql"/>
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_cdb.sql"/>
-      <transaction src="${build.sql.dir}/cdb.sql"/>
       <transaction src="${build.sql.dir}/code_tables.sql"/>
       <transaction src="${build.sql.dir}/access.sql"/>
       <transaction src="${build.sql.dir}/organization.sql"/>
-      <transaction src="${build.sql.dir}/data.sql"/>
       <!-- opportunities -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_opportunity.sql"/>
-      <transaction src="${build.sql.dir}/opportunity.sql"/>
       <!-- project management -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_project.sql"/>
-      <transaction src="${build.sql.dir}/project.sql"/>
       <!-- product catalog -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_product.sql"/>
-      <transaction src="${build.sql.dir}/product.sql"/>
       <!-- service contracts and assets -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_service_contract.sql"/>
-      <transaction src="${build.sql.dir}/service_contract.sql"/>
       <!-- tickets -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_tms.sql"/>
-      <transaction src="${build.sql.dir}/tms.sql"/>
       <!-- quotes, orders -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_quote.sql"/>
-      <transaction src="${build.sql.dir}/quote.sql"/>
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_order.sql"/>
-      <transaction src="${build.sql.dir}/order.sql"/>
       <!-- custom fields -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_custom_field.sql"/>
       <!-- communications manager -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_campaign.sql"/>
-      <transaction src="${build.sql.dir}/campaign.sql"/>
       <!-- help -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_help.sql"/>
       <!-- synchronization api -->
@@ -495,10 +506,10 @@
       <transaction src="${build.sql.dir}/sync.sql"/>
       <!-- revenue manager -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_revenue.sql"/>
-      <transaction src="${build.sql.dir}/revenue.sql"/>
       <!-- task management -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_task.sql"/>
-      <transaction src="${build.sql.dir}/task.sql"/>
+      <!-- document management -->
+      <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_documents.sql"/>
       <!-- framework data -->
       <transaction src="${src.sql.dir}/${SITE.DBTYPE}/new_workflow.sql"/>
       <!-- additional fields -->
@@ -575,7 +586,38 @@
       <arg value="${SITE.PASSWORD}"/>
     </java>
   </target>
-  
+
+  <target name="install.language" unless="LOCALE.NAME">
+    <!-- Ask for the language -->
+    <echo message="Only available locales can be selected..."/>
+    <input message="Which locale should be used for the data? "
+           addproperty="LOCALE.NAME"
+           validargs="en_US"/>
+  </target>
+
+  <target name="install.lookup" depends="init,install.prepare.dbname,install.language">
+    <echo message="Installing lookuplists: ${build.web.dir}${fs}WEB-INF${fs}fileLibrary${fs}${DATABASE.NAME}${fs}lookuplists_${LOCALE.NAME}.xml"/>
+    <mkdir dir="${build.web.dir}/WEB-INF/fileLibrary/${DATABASE.NAME}"/>
+    <copy todir="${build.web.dir}/WEB-INF/fileLibrary/${DATABASE.NAME}">
+      <fileset dir="${pref.dir}/cfs/system">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+    <java classname="org.aspcfs.apps.lookuplists.ImportLookupLists" fork="yes" failonerror="yes">
+      <classpath>
+        <path refid="cfs2.classpath"/>
+        <fileset dir="${build.lib.dir}">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+      <arg value="${build.web.dir}/WEB-INF/fileLibrary/${DATABASE.NAME}/lookuplists_${LOCALE.NAME}.xml"/>
+      <arg value="${SITE.DRIVER}"/>
+      <arg value="${SITE.URL}${DATABASE.NAME}"/>
+      <arg value="${SITE.USER}"/>
+      <arg value="${SITE.PASSWORD}"/>
+    </java>
+  </target>
+
   <!-- Copy the default .XML preferences for this system -->
   <target name="install.copyprefs" depends="init,install.prepare.dbname,taskdef.upgradeDatabase,taskdef.jasper">
     <mkdir dir="${build.web.dir}/WEB-INF/fileLibrary/${DATABASE.NAME}"/>
@@ -616,7 +658,7 @@
   </target>
   
   <!-- Installs a new database -->
-  <target name="installdb" depends="install.database,install.permissions,install.help,install.copyprefs"
+  <target name="installdb" depends="install.database,install.permissions,install.lookup,install.help,install.copyprefs"
     description="Create tables, insert base records and permissions into new database, copy XML files">
   </target>
   

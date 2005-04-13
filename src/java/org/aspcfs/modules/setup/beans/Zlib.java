@@ -15,19 +15,16 @@
  */
 package org.aspcfs.modules.setup.beans;
 
-import org.aspcfs.utils.HTTPUtils;
-import org.aspcfs.utils.XMLUtils;
-import org.aspcfs.utils.PrivateString;
-import org.aspcfs.utils.ObjectUtils;
-import org.aspcfs.utils.SMTPMessage;
-import org.aspcfs.utils.StringUtils;
-import java.io.*;
-import java.security.*;
-import com.sun.crypto.provider.*;
-import sun.misc.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import sun.misc.BASE64Decoder;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.security.Key;
+import java.util.HashMap;
 
 /**
  *  Handles the information that appears in the license
@@ -53,6 +50,7 @@ public class Zlib {
   private String os = null;
   private String java = null;
   private String webserver = null;
+  private SystemStatus systemStatus = null;
 
 
   /**
@@ -230,6 +228,26 @@ public class Zlib {
 
 
   /**
+   *  Sets the systemStatus attribute of the Zlib object
+   *
+   *@param  tmp  The new systemStatus value
+   */
+  public void setSystemStatus(SystemStatus tmp) {
+    this.systemStatus = tmp;
+  }
+
+
+  /**
+   *  Gets the systemStatus attribute of the Zlib object
+   *
+   *@return    The systemStatus value
+   */
+  public SystemStatus getSystemStatus() {
+    return systemStatus;
+  }
+
+
+  /**
    *  Gets the key attribute of the Zlib object
    *
    *@return    The key value
@@ -400,18 +418,27 @@ public class Zlib {
     mail.addTo(email);
     mail.setFrom("Centric CRM Registration <registration@centriccrm.com>");
     mail.addReplyTo("registration@centriccrm.com");
-    mail.setSubject("Centric CRM Registration");
-    mail.setBody(
-        "Thank you for registering Centric CRM." + CRLF +
-        CRLF +
-        "Paste the complete registation code from the attached file " +
-        "(including the <license> tags) into the Centric CRM license validation field." + CRLF +
-        CRLF +
-        "Some mail programs may have a problem with the attachment, if so please report " +
-        "the client mail application name and the mail server software name to Centric CRM." + CRLF +
-        CRLF +
-        "The Centric CRM Team"
-        );
+    if (systemStatus != null) {
+      mail.setSubject(systemStatus.getLabel("mail.subject.crmRegistration"));
+      HashMap map = new HashMap();
+      map.put("${crlf}", "" + CRLF);
+      Template template = new Template(systemStatus.getLabel("mail.body.crmRegistration"));
+      template.setParseElements(map);
+      mail.setBody(template.getParsedText());
+    } else {
+      mail.setSubject("Centric CRM Registration");
+      mail.setBody(
+          "Thank you for registering Centric CRM." + CRLF +
+          CRLF +
+          "Paste the complete registation code from the attached file " +
+          "(including the <license> tags) into the Centric CRM license validation field." + CRLF +
+          CRLF +
+          "Some mail programs may have a problem with the attachment, if so please report " +
+          "the client mail application name and the mail server software name to Centric CRM." + CRLF +
+          CRLF +
+          "The Centric CRM Team" + CRLF
+          );
+    }
     mail.addByteArrayAttachment("license.txt", theLicense, "text/plain");
     if (mail.send() == 2) {
       mailError = mail.getErrorMsg();

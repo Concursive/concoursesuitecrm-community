@@ -15,15 +15,20 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import com.zeroio.iteam.base.*;
-import org.apache.lucene.index.IndexWriter;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.Indexer;
+import com.zeroio.utils.ContentUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
-import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.io.IOException;
-import org.aspcfs.modules.troubletickets.base.Ticket;
-import com.zeroio.utils.ContentUtils;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *  Class for working with the Lucene search engine
@@ -43,10 +48,10 @@ public class TicketIndexer implements Indexer {
    *@exception  SQLException  Description of the Exception
    *@exception  IOException   Description of the Exception
    */
-  public static void add(IndexWriter writer, Connection db) throws SQLException, IOException {
+  public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
-        "SELECT ticketid, project_id, problem, solution, location, cause, modified " +
+        "SELECT ticketid, project_id, problem, solution, location, cause, modified, key_count " +
         "FROM ticket t, ticketlink_project l " +
         "WHERE t.ticketid = l.ticket_id ");
     ResultSet rs = pst.executeQuery();
@@ -61,8 +66,10 @@ public class TicketIndexer implements Indexer {
       ticket.setLocation(rs.getString("location"));
       ticket.setCause(rs.getString("cause"));
       ticket.setModified(rs.getTimestamp("modified"));
+      ticket.setProjectTicketCount(rs.getInt("key_count"));
       // add the document
       TicketIndexer.add(writer, ticket, false);
+      DatabaseUtils.renewConnection(context, db);
     }
     rs.close();
     pst.close();
@@ -83,8 +90,11 @@ public class TicketIndexer implements Indexer {
     Document document = new Document();
     document.add(Field.Keyword("type", "ticket"));
     document.add(Field.Keyword("ticketId", String.valueOf(ticket.getId())));
+    if (ticket.getProjectTicketCount() > 0) {
+      document.add(Field.Keyword("projectTicketId", String.valueOf(ticket.getProjectTicketCount())));
+    }
     document.add(Field.Keyword("projectId", String.valueOf(ticket.getProjectId())));
-    document.add(Field.Text("title", ticket.getProblem().length() > 150 ? ticket.getProblem().substring(0, 150) : ticket.getProblem()));
+    document.add(Field.Text("title", "#" + ticket.getProjectTicketCount() + " " + (ticket.getProblem().length() > 150 ? ContentUtils.toText(ticket.getProblem().substring(0, 150)) : ContentUtils.toText(ticket.getProblem()))));
     document.add(Field.Text("contents",
         ContentUtils.toText(ticket.getProblem()) + " " +
         ContentUtils.toText(ticket.getSolution()) + " " +

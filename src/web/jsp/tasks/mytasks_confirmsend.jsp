@@ -17,12 +17,13 @@
   - Description: 
   --%>
 <%-- Trails --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> > 
-<a href="MyTasks.do?command=ListTasks">Tasks</a> >
-Forward Task
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> > 
+<a href="MyTasks.do?command=ListTasks"><dhv:label name="myitems.tasks">Tasks</dhv:label></a> >
+<dhv:label name="tasks.forwardTask">Forward Task</dhv:label>
 </td>
 </tr>
 </table>

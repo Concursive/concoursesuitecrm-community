@@ -27,24 +27,22 @@
   Iterator i = s.iterator();
   if (i.hasNext()) {
 		int rowid = 0;
-		int count = 0;
 %>
 <br>
-This task is linked to :
+<dhv:label name="tasks.taskLinkedTo.colon">This task is linked to :</dhv:label>
 <br>
 <form name="deleteView" method="post" action="MyTasks.do?command=Delete&id=<%=Task.getId()%>">
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
    <tr>
     <th align="center" width="8%">
-      Dependency
+      <dhv:label name="tasks.dependency">Dependency</dhv:label>
     </th>
     <th align="center" width="8%">
-      Count
+      <dhv:label name="campaign.count">Count</dhv:label>
     </th>
    </tr>
 <%
   while (i.hasNext()) {
-    count++;
     if (rowid != 1) {
       rowid = 1;
     } else {
@@ -60,22 +58,23 @@ This task is linked to :
 <%
   }%>
   </table>
-  <input type="submit" value="Delete All">
-  <input type="button" value="Hide All" onClick="javascript:setFieldSubmit('action','hide','taskDeleteView')">
-  <input type="button" value="Cancel" onClick="javascript:window.close()">
+  <input type="submit" value="<dhv:label name="button.deleteAll">Delete All</dhv:label>">
+  <input type="button" value="<dhv:label name="button.hideAll">Hide All</dhv:label>" onClick="javascript:setFieldSubmit('action','hide','taskDeleteView')">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
 </form>
   <% } else{ %>
   <br>
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
       <td align="center">
-        <strong>The task "<%=Task.getDescription()%>" has been deleted.</strong>
+      <% String temp = "taskDescription="+Task.getDescription(); %>
+        <strong><dhv:label name="tasks.taskHasBeenDeleted.text" param="<%= temp %>">The task "<%=Task.getDescription()%>" has been deleted.</dhv:label></strong>
       </td>
     </tr>
     <br>
     <tr>
       <td align="right">
-        <input type="button" value="OK" onClick="javascript:opener.window.location.href='MyTasks.do?command=ListTasks';javascript:window.close()">
+        <input type="button" value="<dhv:label name="button.ok">OK</dhv:label>" onClick="javascript:opener.window.location.href='MyTasks.do?command=ListTasks';javascript:window.close()">
       </td>
     </tr>
     </table>

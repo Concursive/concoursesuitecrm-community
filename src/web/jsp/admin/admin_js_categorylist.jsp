@@ -21,9 +21,6 @@
 <jsp:useBean id="ParentCategory" class="org.aspcfs.modules.troubletickets.base.TicketCategoryDraft" scope="request"/>
 <jsp:useBean id="categoryEditor" class="org.aspcfs.modules.admin.base.CategoryEditor" scope="request"/>
 <jsp:useBean id="categoryList" class="org.aspcfs.modules.troubletickets.base.TicketCategoryDraftList" scope="request"/>
-<html>
-<head>
-</head>
 <body onload="page_init();">
 <script language="JavaScript">
 function newOpt(param, value, color) {
@@ -74,5 +71,3 @@ function resetList(list) {
 }
 </script>
 </body>
-</html>
-

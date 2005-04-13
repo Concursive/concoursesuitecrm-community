@@ -21,10 +21,9 @@
 <%@ include file="../initPage.jsp" %>
 <html>
 <head>
-  <title>Thank you for visiting our survey page</title>
+  <title><dhv:label name="campaign.surveyPage.thankYou">Thank you for visiting our survey page</dhv:label></title>
 </head>
 <body>
-  The requested survey could not be found.<br>
-  It may have been deleted.
+  <dhv:label name="campaign.requestedSurveyNotFound.text" param="break=<br />">The requested survey could not be found.<br />It may have been deleted.</dhv:label>
 </body>
 </html>

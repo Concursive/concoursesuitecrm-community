@@ -34,6 +34,9 @@ import org.aspcfs.modules.admin.base.Role;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.base.*;
 import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.products.base.*;
+import org.aspcfs.modules.orders.beans.*;
+import org.aspcfs.controller.*;
 
 /**
  *  Description of the Class
@@ -78,10 +81,18 @@ public final class AccountOrders extends CFSModule {
       db = this.getConnection(context);
       orderList.setPagedListInfo(orderListInfo);
       orderList.setOrgId(Integer.parseInt(orgid));
+      orderList.setClosedOnly(Constants.FALSE);
       //orderList.setBuildDetails(true);
       //orderList.setBuildTypes(false);
       orderList.buildList(db);
       thisOrganization = new Organization(db, Integer.parseInt(orgid));
+      
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_order_type");
+      context.getRequest().setAttribute("typeSelect", typeSelect);
+      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      context.getRequest().setAttribute("statusSelect", statusSelect);
+
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -110,19 +121,38 @@ public final class AccountOrders extends CFSModule {
     String orderId = context.getRequest().getParameter("id");
     Connection db = null;
     Order newOrder = null;
+    ProductOptionList optionList = null;
+    ProductOptionValuesList optionValuesList = null;
     Organization thisOrganization = null;
     try {
       db = this.getConnection(context);
-      newOrder = new Order(db, Integer.parseInt(orderId));
-      newOrder.buildProducts(db);
+      newOrder = new Order();
+      newOrder.setBuildProducts(true);
+      newOrder.queryRecord(db, Integer.parseInt(orderId));
+
+      optionList = new ProductOptionList();
+      optionList.buildList(db);
+      context.getRequest().setAttribute("productOptionList", optionList);
+
+      optionValuesList = new ProductOptionValuesList();
+      optionValuesList.buildList(db);
+      context.getRequest().setAttribute("productOptionValuesList", optionValuesList);
+      
       thisOrganization = new Organization(db, newOrder.getOrgId());
 
-      /*
-      //find record permissions for portal users
-      if (!isRecordAccessPermitted(context, newOrder.getOrgId())) {
-        return ("PermissionError");
-      }
-      */
+      OrderPaymentList paymentList = new OrderPaymentList();
+      paymentList.setOrderId(newOrder.getId());
+      paymentList.buildList(db);
+      context.getRequest().setAttribute("paymentList", paymentList);
+      
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_order_type");
+      context.getRequest().setAttribute("typeSelect", typeSelect);
+      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      context.getRequest().setAttribute("statusSelect", statusSelect);
+      LookupList paymentSelect = systemStatus.getLookupList(db, "lookup_payment_status");
+      context.getRequest().setAttribute("paymentSelect", paymentSelect);
+      
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -132,6 +162,134 @@ public final class AccountOrders extends CFSModule {
     context.getRequest().setAttribute("OrderDetails", newOrder);
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
     return ("DetailsOK");
+  }
+
+  public String executeCommandModifyStatus(ActionContext context) {
+    /*
+     *  if (!(hasPermission(context, "orders-orders-view"))) {
+     *  return ("PermissionError");
+     *  }
+     */
+    Exception errorMessage = null;
+    Connection db = null;
+    Order newOrder = null;
+    ProductOptionList optionList = null;
+    ProductOptionValuesList optionValuesList = null;
+    Organization thisOrganization = null;
+    try {
+      String tempOrderId = context.getRequest().getParameter("id");
+
+      //TODO: code for RecordAccessPermission
+      int tempid = Integer.parseInt(tempOrderId);
+      db = this.getConnection(context);
+      newOrder = new Order();
+      newOrder.setBuildProducts(true);
+      newOrder.queryRecord(db, tempid);
+ 
+      optionList = new ProductOptionList();
+      optionList.buildList(db);
+      context.getRequest().setAttribute("productOptionList", optionList);
+      
+      optionValuesList = new ProductOptionValuesList();
+      optionValuesList.buildList(db);
+      context.getRequest().setAttribute("productOptionValuesList", optionValuesList);
+      
+      OrderPaymentList paymentList = new OrderPaymentList();
+      paymentList.setOrderId(newOrder.getId());
+      paymentList.buildList(db);
+      context.getRequest().setAttribute("paymentList", paymentList);
+      
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList typeSelect = systemStatus.getLookupList(db, "lookup_order_type");
+      context.getRequest().setAttribute("typeSelect", typeSelect);
+      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_order_status");
+      context.getRequest().setAttribute("statusSelect", statusSelect);
+
+      StatusBean statusBean = new StatusBean();
+      statusBean.setStatusId(newOrder.getStatusId());
+      context.getRequest().setAttribute("statusBean", statusBean);
+
+      thisOrganization = new Organization(db, newOrder.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    context.getRequest().setAttribute("OrderDetails", newOrder);
+    return ("ModifyStatusOK");
+  }
+  
+  public String executeCommandDelete(ActionContext context) {
+    Connection db = null;
+    try {
+      String tempOrderId = context.getRequest().getParameter("id");
+
+      //TODO: code for RecordAccessPermission
+      int tempid = Integer.parseInt(tempOrderId);
+      db = this.getConnection(context);
+      Order newOrder = new Order();
+      newOrder.setBuildProducts(true);
+      newOrder.queryRecord(db, tempid);
+      newOrder.delete(db);
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "DeleteOK";
+  }
+
+  public String executeCommandSaveStatus(ActionContext context) {
+    /*
+     *  if (!(hasPermission(context, "orders-orders-view"))) {
+     *  return ("PermissionError");
+     *  }
+     */
+    Exception errorMessage = null;
+    Connection db = null;
+    Order newOrder = null;
+    ProductOptionList optionList = null;
+    Organization thisOrganization = null;
+    ProductOptionValuesList optionValuesList = null;
+    try {
+      String tempOrderId = context.getRequest().getParameter("id");
+
+      //TODO: code for RecordAccessPermission
+      int tempid = Integer.parseInt(tempOrderId);
+      db = this.getConnection(context);
+      newOrder = new Order();
+      newOrder.setBuildProducts(true);
+      newOrder.queryRecord(db, tempid);
+      optionList = new ProductOptionList();
+      optionList.buildList(db);
+      context.getRequest().setAttribute("productOptionList", optionList);
+
+      Calendar now = Calendar.getInstance();
+      Timestamp rightNow = new Timestamp(now.getTimeInMillis());
+      StatusBean statusBean = (StatusBean) context.getFormBean();
+      if (statusBean.getStatusId() != -1 && statusBean.getStatusId() != 0) {
+        newOrder.setStatusId(statusBean.getStatusId());
+      }
+      newOrder.setModified(rightNow);
+      newOrder.update(db);
+
+      thisOrganization = new Organization(db, newOrder.getOrgId());
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+      
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+      context.getRequest().setAttribute("OrderDetails", newOrder);
+      return ("SaveStatusOK");
   }
 
 

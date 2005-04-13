@@ -15,17 +15,21 @@
  */
 package org.aspcfs.apps.help;
 
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import com.darkhorseventures.database.*;
-import org.aspcfs.modules.admin.base.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.utils.XMLUtils;
 import org.w3c.dom.*;
-import org.aspcfs.utils.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *  Description of the Class
@@ -116,7 +120,7 @@ public class ImportHelp {
    */
   public static void main(String[] args) {
     if ((args.length != 4) && (args.length != 5)) {
-      System.out.println("Synopsis: java ExportHelp [filepath][driver][uri][user] <passwd>");
+      System.out.println("Usage: java ImportHelp [filepath][driver][uri][user] <passwd>");
     } else {
       System.setProperty("DEBUG", "1");
       new ImportHelp(args);

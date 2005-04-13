@@ -241,5 +241,34 @@ public class ActionItemLogList extends ArrayList {
     }
     return thisList;
   }
+
+
+  /**
+   *  Gets the number oflinked ActionItem Logs
+   *  associated with the provided type
+   *
+   *@param  db                Description of the Parameter
+   *@param  linkItemId        Description of the Parameter
+   *@param  type              Description of the Parameter
+   *@return                   The linkedActionItemLogCount value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int getLinkedActionItemLogCount(Connection db, int linkItemId, int type) throws SQLException {
+    int count = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(action_id) as numberOfLinkedItems " +
+        "FROM action_item ai, action_item_log al " +
+        "WHERE  al.link_item_id = ? AND al.type =? AND ai.item_id = al.item_id ");
+    pst.setInt(1, linkItemId);
+    pst.setInt(2, type);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      count = rs.getInt("numberOfLinkedItems");
+    }
+    rs.close();
+    pst.close();
+
+    return count;
+  }
 }
 

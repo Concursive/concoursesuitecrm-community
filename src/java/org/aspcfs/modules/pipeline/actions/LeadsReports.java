@@ -121,7 +121,10 @@ public final class LeadsReports extends CFSModule {
       return ("PermissionError");
     }
     Connection db = null;
+    ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");
+    int userId = viewpointInfo.getVpUserId(this.getUserId(context));
     boolean recordInserted = false;
+    boolean isValid = false;
     //Process the parameters
     String subject = context.getRequest().getParameter("subject");
     String ownerCriteria = context.getRequest().getParameter("criteria1");
@@ -139,9 +142,9 @@ public final class LeadsReports extends CFSModule {
     oppReport.setPagedListInfo(thisInfo);
     //Apply the filters
     if (ownerCriteria.equals("my")) {
-      oppReport.setOwner(this.getUserId(context));
+      oppReport.setOwner(userId);
     } else if (ownerCriteria.equals("all")) {
-      oppReport.setOwnerIdRange(this.getUserRange(context));
+      oppReport.setOwnerIdRange(this.getUserRange(context, userId));
     }
     try {
       db = this.getConnection(context);
@@ -149,14 +152,18 @@ public final class LeadsReports extends CFSModule {
       oppReport.buildReportFull(db, context);
       oppReport.setEnteredBy(getUserId(context));
       oppReport.setModifiedBy(getUserId(context));
-      oppReport.saveAndInsert(db);
+      isValid = this.validateObject(context, db, oppReport);
+      if (isValid) {
+        oppReport.saveAndInsert(db);
+        return "ExportOK";
+      }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    return "ExportOK";
+    return "ExportFormOK";
   }
 
 

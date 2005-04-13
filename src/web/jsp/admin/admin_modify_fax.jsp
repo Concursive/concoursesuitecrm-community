@@ -23,9 +23,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="AdminConfig.do?command=ListGlobalParams">Configure System</a> >
-Modify Setting
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="AdminConfig.do?command=ListGlobalParams"><dhv:label name="admin.configureSystem">Configure System</dhv:label></a> >
+<dhv:label name="admin.modifySetting">Modify Setting</dhv:label>
 </td>
 </tr>
 </table>
@@ -33,28 +33,22 @@ Modify Setting
 <table class="note" cellspacing="0">
 <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td><b>Which 
-fax server should Centric CRM use?</b><br />
-Users will have the
-capability to send faxes using Centric CRM.<br />
-<font color="red">* </font>The HylaFax server application requires Linux or Unix.<br />
-The faxing component requires a properly configured
-<a href="http://www.hylafax.org" target="_new">HylaFax</a> server including fax hardware.<br />
+    <td><b><dhv:label name="admin.faxServer.text" param="server=<a href=\"http://www.hylafax.org\" target=\"_new\">|end=</a>">Which fax server should Centric CRM use?</b><br />Users will have the capability to send faxes using Centric CRM.<br /><font color="red">* </font>The HylaFax server application requires Linux or Unix.<br />The faxing component requires a properly configured <a href="http://www.hylafax.org" target="_new">HylaFax</a> server including fax hardware.</dhv:label><br />
 <ul>
-<li>The specified server must allow this server to send faxes</li>
-<li>Leave blank if faxing will not be used</li>
+<li><dhv:label name="admin.faxServer.note.1">The specified server must allow this server to send faxes</dhv:label></li>
+<li><dhv:label name="admin.faxServer.note.2">Leave blank if faxing will not be used</dhv:label></li>
 </ul>
 </td></tr></table>
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
-        <strong>Modify Fax Server</strong>
+        <strong><dhv:label name="admin.modifyFaxServer">Modify Fax Server</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
       <td class="formLabel">
-        Fax Server
+        <dhv:label name="admin.faxServer">Fax Server</dhv:label>
       </td>
       <td>
          <input type="text" size="30" name="fax" value="<%= toHtmlValue(getPref(getServletContext(), "FAXSERVER")) %>"/>
@@ -62,7 +56,7 @@ The faxing component requires a properly configured
     </tr>
   </table>
   <br />
-  <input type="submit" value="Update">
-  <input type="button" value="Cancel" onClick="javascript:window.location.href='AdminConfig.do?command=ListGlobalParams';">
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AdminConfig.do?command=ListGlobalParams';">
 </dhv:permission>
 </form>

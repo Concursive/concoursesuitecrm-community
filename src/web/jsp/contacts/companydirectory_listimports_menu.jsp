@@ -83,7 +83,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View Details
+          <dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -93,7 +93,7 @@
           <img src="images/icons/stock_compile-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Process
+          <dhv:label name="accounts.accounts_contacts_detailsimport.Process">Process</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -103,7 +103,7 @@
           <img src="images/icons/stock_calc-cancel-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Cancel
+          <dhv:label name="global.button.cancel">Cancel</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -113,7 +113,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete
+          <dhv:label name="global.button.delete">Delete</dhv:label>
         </td>
       </tr>
       </dhv:permission>

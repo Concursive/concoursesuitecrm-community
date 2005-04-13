@@ -318,32 +318,6 @@ public class RegistrationBean extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the RegistrationBean object
-   *
-   *@return    The valid value
-   */
-  public boolean isValid() {
-    errors.clear();
-    if (profile == null || "".equals(profile.trim())) {
-      errors.put("profileError", "Profile is a required field");
-    }
-    if (nameFirst == null || "".equals(nameFirst.trim())) {
-      errors.put("nameFirstError", "First name is a required field");
-    }
-    if (nameLast == null || "".equals(nameLast.trim())) {
-      errors.put("nameLastError", "Last name is a required field");
-    }
-    if (company == null || "".equals(company.trim())) {
-      errors.put("companyError", "Company is a required field");
-    }
-    if (email == null || "".equals(email.trim())) {
-      errors.put("emailError", "Email is a required field");
-    }
-    return (!hasErrors());
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@return                                                     Description of

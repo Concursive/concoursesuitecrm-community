@@ -138,6 +138,85 @@ public class FileFolderHierarchy {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  baseFilePath      Description of the Parameter
+   *@param  parentId          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean deleteFolderHierarchy(Connection db, String baseFilePath, int parentId) throws SQLException {
+
+    //Deleting files in the folder
+    ResultSet rs = null;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT * FROM project_files " +
+        "WHERE folder_id = ? ");
+    int i = 0;
+    pst.setInt(++i, parentId);
+    rs = pst.executeQuery();
+
+    FileItemList fileItemList = new FileItemList(); 
+    while (rs.next()) {
+      FileItem tmpFileItem = new FileItem();
+      tmpFileItem.setId(rs.getInt("item_id"));
+      tmpFileItem.setLinkModuleId(rs.getInt("link_module_id"));
+      tmpFileItem.setLinkItemId(rs.getInt("link_item_id"));
+      fileItemList.add(tmpFileItem);
+    }
+    rs.close();
+    pst.close();
+    
+    Iterator itr = fileItemList.iterator();
+    while (itr.hasNext()){
+      FileItem tmpFileItem = (FileItem)itr.next();
+      tmpFileItem.delete(db, baseFilePath);
+    }
+
+    rs = null;
+    //fetching sub folders of a folder
+    pst = db.prepareStatement(
+        "SELECT * " +
+        "FROM project_folders pf " +
+        "WHERE pf.link_module_id = ? " +
+        "AND pf.link_item_id = ? " +
+        "AND pf.parent_id = ? ");
+    i = 0;
+    pst.setInt(++i, linkModuleId);
+    pst.setInt(++i, linkItemId);
+    pst.setInt(++i, parentId);
+    rs = pst.executeQuery();
+
+    ArrayList list = new ArrayList();
+    while (rs.next()) {
+      int folderId = rs.getInt("folder_id");
+      list.add(new Integer(folderId));
+    }
+    rs.close();
+    pst.close();
+    
+    itr = list.iterator();
+    while (itr.hasNext()){
+      int folderId = ((Integer)itr.next()).intValue();
+      this.deleteFolderHierarchy(db, baseFilePath, folderId);
+      FileFolder fileFolder = new FileFolder();
+      fileFolder.setId(parentId);
+      fileFolder.deleteBlankFolder(db);
+    }
+    
+    FileFolder fileFolder = new FileFolder();
+    fileFolder.setId(parentId);
+    fileFolder.deleteBlankFolder(db);
+
+
+    //db.commit();
+    //db.setAutoCommit(true);
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
    *@param  folderList        Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */

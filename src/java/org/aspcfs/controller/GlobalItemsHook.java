@@ -73,15 +73,14 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     if (systemStatus.hasPermission(userId, "globalitems-search-view")) {
       items.append(
           "<!-- Site Search -->" +
-          "<table class='globalItem'>" +
+          "<table class=\"globalItem\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">" +
           "<form action='Search.do?command=SiteSearch' method='post'>" +
-          "<tr><th>Search data...</th></tr>" +
+          "<tr><th>" + systemStatus.getLabel("search.header") + "</th></tr>" +
           "<tr>" +
-          "<td nowrap><center>" +
+          "<td nowrap>" +
           "<img src=\"images/icons/stock_zoom-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
           "<input type='text' size='10' name='search'>" +
-          "<input type='submit' value='go' name='Search'>" +
-          "</center>" +
+          "<input type='submit' value='" + systemStatus.getLabel("search.go") + "' name='Search'>" +
           "</td>" +
           "</tr>" +
           "</form>" +
@@ -95,14 +94,14 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
             "<!-- Quick Action -->" +
             "<script language='javascript' type='text/javascript' src='javascript/popURL.js'></script>" +
             "<script language='javascript' type='text/javascript' src='javascript/quickAction.js'></script>" +
-            "<table class='globalItem'>" +
-            "<tr><th>Quick Actions</th></tr>" +
+            "<table class=\"globalItem\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">" +
+            "<tr><th>" + systemStatus.getLabel("quickactions.header") + "</th></tr>" +
             "<tr>" +
-            "<td nowrap align='center'>" +
+            "<td nowrap>" +
             "<img src=\"images/icons/stock_hyperlink-target-16.gif\" border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/> " +
             "<select name='quickAction' onChange='javascript:quickAction(this.options[this.selectedIndex].value);this.selectedIndex = 0'>");
 
-        items.append("<option value='0'>Select...</option>");
+        items.append("<option value='0'>" + systemStatus.getLabel("quickactions.select") + "</option>");
         /*
          *  if (systemStatus.hasPermission(userId, "contacts-external_contacts-calls-add")) {
          *  items.append("<option value='call'>Add a Call</option>");
@@ -114,10 +113,10 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
          *  }
          */
         if (systemStatus.hasPermission(userId, "myhomepage-tasks-add")) {
-          items.append("<option value='task'>Add a Task</option>");
+          items.append("<option value='task'>" + systemStatus.getLabel("quickactions.addTask") + "</option>");
         }
         if (systemStatus.hasPermission(userId, "tickets-tickets-add")) {
-          items.append("<option value='ticket'>Add a Ticket</option>");
+          items.append("<option value='ticket'>" + systemStatus.getLabel("quickactions.addTicket") + "</option>");
         }
         /*
          *  if (systemStatus.hasPermission(userId, "myhomepage-inbox-add")) {
@@ -141,10 +140,10 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
       //Output
       items.append(
           "<!-- My Items -->" +
-          "<table class='globalItem'>" +
-          "<tr><th>My Items</th></tr>" +
+          "<table class=\"globalItem\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">" +
+          "<tr><th>" + systemStatus.getLabel("myitems.header") + "</th></tr>" +
           "<tr>" +
-          "<td>");
+          "<td nowrap>");
 
       try {
         int myItems = 0;
@@ -176,7 +175,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           rs.close();
           pst.close();
           if (callCount > 0) {
-            items.append("<a href='MyCFS.do?command=Home' class='s'>Pending Calls</a> (" + paint(callCount) + ")<br>");
+            items.append("<a href='MyCFS.do?command=Home' class='s'>" + systemStatus.getLabel("myitems.pendingActivities") + "</a> (" + paint(callCount) + ")<br>");
             ++myItems;
           }
         }
@@ -201,7 +200,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           rs.close();
           pst.close();
           if (activityCount > 0) {
-            items.append("<a href='ProjectManagement.do?command=Overview' class='s'>Assigned Activities</a> (" + paint(activityCount) + ")<br>");
+            items.append("<a href='ProjectManagement.do?command=Overview' class='s'>" + systemStatus.getLabel("myitems.assignedActivities") + "</a> (" + paint(activityCount) + ")<br>");
             ++myItems;
           }
         }
@@ -223,7 +222,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           rs.close();
           pst.close();
           if (ticketCount > 0) {
-            items.append("<a href='TroubleTickets.do?command=Home' class='s'>Assigned Tickets</a> (" + paint(ticketCount) + ")<br>");
+            items.append("<a href='TroubleTickets.do?command=Home' class='s'>" + systemStatus.getLabel("myitems.assignedTickets") + "</a> (" + paint(ticketCount) + ")<br>");
             ++myItems;
           }
         }
@@ -249,7 +248,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           rs.close();
           pst.close();
           if (ticketCount > 0) {
-            items.append("<a href='TroubleTickets.do?command=Home' class='s'>Unassigned Tickets</a> (" + paint(ticketCount) + ")<br>");
+            items.append("<a href='TroubleTickets.do?command=Home' class='s'>" + systemStatus.getLabel("myitems.unassignedTickets") + "</a> (" + paint(ticketCount) + ")<br>");
             ++myItems;
           }
         }
@@ -271,7 +270,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           rs.close();
           pst.close();
           if (inboxCount > 0) {
-            items.append("<a href='MyCFSInbox.do?command=Inbox&return=1' class='s'>Inbox</a> (" + paint(inboxCount) + " new)<br>");
+            items.append("<a href='MyCFSInbox.do?command=Inbox&return=1' class='s'>" + systemStatus.getLabel("myitems.inbox") + "</a> (" + paint(inboxCount) + " new)<br>");
             ++myItems;
           }
         }
@@ -280,14 +279,14 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
         if (systemStatus.hasPermission(userId, "myhomepage-tasks-view")) {
           int taskCount = TaskList.queryPendingCount(db, userId);
           if (taskCount > 0) {
-            items.append("<a href='MyTasks.do?command=ListTasks' class='s'>Tasks</a> (" + paint(taskCount) + " incomplete)<br>");
+            items.append("<a href='MyTasks.do?command=ListTasks' class='s'>" + systemStatus.getLabel("myitems.tasks") + "</a> (" + paint(taskCount) + " incomplete)<br>");
             ++myItems;
           }
         }
 
         //Default no items
         if (myItems == 0) {
-          items.append("No items found<br>&nbsp;<br>");
+          items.append(systemStatus.getLabel("myitems.noItems") + "<br />&nbsp;<br />");
         }
       } catch (Exception e) {
         System.out.println("GlobalItemsHook Error-> " + e.toString());
@@ -305,8 +304,8 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
     if (systemStatus.hasPermission(userId, "globalitems-recentitems-view")) {
       items.append(
           "<!-- Recent Items -->" +
-          "<table class='globalItem'>" +
-          "<tr><th>Recent Items</th></tr>" +
+          "<table class=\"globalItem\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">" +
+          "<tr><th>" + systemStatus.getLabel("myitems.recentItems") + "</th></tr>" +
           "<tr>" +
           "<td>");
 
@@ -322,7 +321,7 @@ public class GlobalItemsHook implements ControllerGlobalItemsHook {
           }
         }
       } else {
-        items.append("No recent items<br>&nbsp;<br>");
+        items.append(systemStatus.getLabel("myitems.noRecentItems") + "<br>&nbsp;<br>");
       }
 
       items.append(

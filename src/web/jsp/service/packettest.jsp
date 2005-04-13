@@ -17,6 +17,6 @@
   - Description:
   --%>
 <form name="postXML" action="ProcessPacket.do" method="post">
-	<input type="submit" value="Insert" name="Save"><br>
+	<input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>" name="Save"><br>
 	<textarea cols="80" rows="20" name="data"></textarea>
 </form>

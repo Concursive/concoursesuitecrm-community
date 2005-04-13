@@ -36,12 +36,13 @@ Vehicle Inventory List
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="../../accounts/accounts_details_header_include.jsp" %>
-<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-<dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>
-    <td class="containerBack">
+    <td width="100%"><%@ include file="../../accounts/accounts_details_header_include.jsp" %></td>
+    <td class="tabSpace2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="containerBackSide">
 <dhv:permission name="accounts-autoguide-inventory-add"><a href="AccountsAutoGuide.do?command=AccountAdd&orgId=<%= OrgDetails.getOrgId() %>">Add a Vehicle</a></dhv:permission>
 <dhv:permission name="accounts-autoguide-inventory-add" none="true"><br></dhv:permission>
 <center>&nbsp;</center>
@@ -49,12 +50,12 @@ Vehicle Inventory List
   <tr>
     <form name="listView" method="post" action="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>">
     <td align="left" nowrap>
-      Layout: <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= AutoGuideAccountInfo.getOptionValue("list") %>>List View</option>
+      Layout: <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= AutoGuideAccountInfo.getOptionValue("list") %>><dhv:label name="project.listView">List View</dhv:label></option>
         <option <%= AutoGuideAccountInfo.getOptionValue("slides") %>>Ad View</option>
       </select>
       &nbsp;
-      <% listFilterSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+      <% listFilterSelect.setJsEvent("onChange=\"javascript:document.listView.submit();\""); %>
 			View: <%= listFilterSelect.getHtml("listFilter1", AutoGuideAccountInfo.getFilterKey("listFilter1")) %>
     </td>
     <td>
@@ -68,11 +69,11 @@ Vehicle Inventory List
   <tr>
     <dhv:permission name="accounts-autoguide-inventory-edit,accounts-autoguide-inventory-delete">
     <th valign="center">
-      <strong>Action</strong>
+      &nbsp;
     </th>
     </dhv:permission>
     <th>
-      <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Year</a></strong>
+      <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id"><dhv:label name="accounts.accounts_revenue_add.Year">Year</dhv:label></a></strong>
     </th>
     <th>
       <strong><a href="AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>&column=i.inventory_id">Make</a></strong>
@@ -116,7 +117,7 @@ Vehicle Inventory List
       <tr class="row<%= rowid %>">
         <dhv:permission name="accounts-autoguide-inventory-edit,accounts-autoguide-inventory-delete">
         <td width="8" valign="center" nowrap>
-          <dhv:permission name="accounts-autoguide-inventory-edit"><a href="AccountsAutoGuide.do?command=AccountModify&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId()%>&return=list">Edit</a></dhv:permission><dhv:permission name="accounts-autoguide-inventory-edit,accounts-autoguide-inventory-delete" all="true">|</dhv:permission><dhv:permission name="accounts-autoguide-inventory-delete"><a href="javascript:confirmDelete('AccountsAutoGuide.do?command=Delete&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId() %>');">Del</a></dhv:permission>
+          <dhv:permission name="accounts-autoguide-inventory-edit"><a href="AccountsAutoGuide.do?command=AccountModify&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId()%>&return=list"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Edit">Edit</dhv:label></a></dhv:permission><dhv:permission name="accounts-autoguide-inventory-edit,accounts-autoguide-inventory-delete" all="true">|</dhv:permission><dhv:permission name="accounts-autoguide-inventory-delete"><a href="javascript:confirmDelete('AccountsAutoGuide.do?command=Delete&orgId=<%= OrgDetails.getOrgId() %>&id=<%= thisItem.getId() %>');"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Del">Del</dhv:label></a></dhv:permission>
         </td>
         </dhv:permission>
         <td nowrap>
@@ -127,7 +128,7 @@ Vehicle Inventory List
         </td>
         <td nowrap>
           <%= toHtml(thisItem.getVehicle().getModel().getName()) %>
-					<dhv:evaluate exp="<%= hasText(thisItem.getStyle()) %>">
+					<dhv:evaluate if="<%= hasText(thisItem.getStyle()) %>">
 						<%= toHtml(thisItem.getStyle()) %>
 					</dhv:evaluate>
         </td>

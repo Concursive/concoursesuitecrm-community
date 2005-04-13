@@ -31,8 +31,7 @@
     <td>&nbsp;</td>
     <td colspan="3" nowrap class="eventName">
       <img border="0" src="images/box.gif" align="absmiddle" title="Quotes" />
-      Quotes pending your approval
-      (<%= quoteEventList.getTodaysQuotes().size() %>)
+      <dhv:label name="calendar.quotesPendingApproval" param="<%= "size="+quoteEventList.getTodaysQuotes().size() %>">Quotes pending your approval (<%= quoteEventList.getTodaysQuotes().size() %>)</dhv:label>
     </td>
   </tr>
   <%-- include quote details --%>
@@ -45,13 +44,13 @@
         &nbsp;
       </th>
       <th class="weekSelector" nowrap>
-        <strong>Quote #</strong>
+        <strong><dhv:label name="accounts.accounts_quotes_list.Quote">Quote</dhv:label> #</strong>
       </th>
       <th class="weekSelector">
-        <strong>Due</strong>
+        <strong><dhv:label name="calendar.due">Due</dhv:label></strong>
       </th>
       <th class="weekSelector" width="100%">
-        <strong>Description</strong>
+        <strong><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></strong>
       </th>
     </tr>
   <%  

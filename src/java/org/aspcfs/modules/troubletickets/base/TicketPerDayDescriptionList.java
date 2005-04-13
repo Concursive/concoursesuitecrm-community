@@ -62,18 +62,18 @@ public class TicketPerDayDescriptionList extends ArrayList {
     totalLaborMinutes = 0;
     while (request.getParameter("activityDate" + i) != null) {
       if (!(request.getParameter("activityDate" + i).trim().equals(""))) {
-        TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
+          TicketPerDayDescription thisPerDayDescription = new TicketPerDayDescription();
         try {
-          thisPerDayDescription.buildRecord(request, i);
-          this.totalTravelHours = totalTravelHours + thisPerDayDescription.getTravelHours();
-          this.totalTravelMinutes = totalTravelMinutes + thisPerDayDescription.getTravelMinutes();
-          this.totalLaborHours = totalLaborHours + thisPerDayDescription.getLaborHours();
-          this.totalLaborMinutes = totalLaborMinutes + thisPerDayDescription.getLaborMinutes();
+            thisPerDayDescription.buildRecord(request, i);
+            this.totalTravelHours = totalTravelHours + thisPerDayDescription.getTravelHours();
+            this.totalTravelMinutes = totalTravelMinutes + thisPerDayDescription.getTravelMinutes();
+            this.totalLaborHours = totalLaborHours + thisPerDayDescription.getLaborHours();
+            this.totalLaborMinutes = totalLaborMinutes + thisPerDayDescription.getLaborMinutes();
         } catch (Exception e) {
           errors.put("activityDate" + i + "Error", "invalid date");
+          }
+          this.add(thisPerDayDescription);
         }
-        this.add(thisPerDayDescription);
-      }
       i++;
     }
     totalTravelHours = totalTravelHours + totalTravelMinutes / 60;

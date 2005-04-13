@@ -16,7 +16,6 @@
 package org.aspcfs.modules.system.base;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.sql.*;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.base.Constants;

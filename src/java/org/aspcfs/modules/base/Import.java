@@ -26,6 +26,7 @@ import com.zeroio.iteam.base.FileItem;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.controller.ImportManager;
+import org.aspcfs.controller.SystemStatus;
 
 /**
  *  Represents a base Import
@@ -74,6 +75,19 @@ public class Import extends GenericBean {
 
   private boolean buildFileDetails = false;
   private FileItem file = null;
+
+  //read only
+  private SystemStatus systemStatus = null;
+
+
+  /**
+   *  Sets the systemStatus attribute of the Import object
+   *
+   *@param  tmp  The new systemStatus value
+   */
+  public void setSystemStatus(SystemStatus tmp) {
+    this.systemStatus = tmp;
+  }
 
 
   /**
@@ -529,29 +543,29 @@ public class Import extends GenericBean {
   public String getStatusString() {
     String tmp = null;
     switch (statusId) {
-        case UNPROCESSED:
-          tmp = "Import Pending";
-          break;
-        case QUEUED:
-          tmp = "Queued";
-          break;
-        case RUNNING:
-          tmp = "Running";
-          break;
-        case FAILED:
-          tmp = "Failed";
-          break;
-        case CANCELED:
-          tmp = "Canceled";
-          break;
-        case PROCESSED_UNAPPROVED:
-          tmp = "Pending Approval";
-          break;
-        case PROCESSED_APPROVED:
-          tmp = "Approved";
-          break;
-        default:
-          break;
+      case UNPROCESSED:
+        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.pending") : "Import Pending");
+        break;
+      case QUEUED:
+        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.queued") : "Queued");
+        break;
+      case RUNNING:
+        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.running") : "Running");
+        break;
+      case FAILED:
+        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.failed") : "Failed");
+        break;
+      case CANCELED:
+        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.cancelled") : "Cancelled");
+        break;
+      case PROCESSED_UNAPPROVED:
+        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.pendingApproval") : "Pending Approval");
+        break;
+      case PROCESSED_APPROVED:
+        tmp = (systemStatus != null ? systemStatus.getLabel("contact.import.status.approved") : "Approved");
+        break;
+      default:
+        break;
     }
     return tmp;
   }
@@ -731,18 +745,18 @@ public class Import extends GenericBean {
   public String getColumnDelimiter() {
     if (columnDelimiter == null) {
       switch (fileType) {
-          case ACT:
-            //TODO: use delimiter for ACT
-            break;
-          case EXCEL_CSV:
-            columnDelimiter = ",";
-            break;
-          case OUTLOOK_CSV:
-            //TODO: use delimiter for OUTLOOK_CSV
-            break;
-          default:
-            //TODO: Add checks to make sure the custom delimter is valid
-            break;
+        case ACT:
+          //TODO: use delimiter for ACT
+          break;
+        case EXCEL_CSV:
+          columnDelimiter = ",";
+          break;
+        case OUTLOOK_CSV:
+          //TODO: use delimiter for OUTLOOK_CSV
+          break;
+        default:
+          //TODO: Add checks to make sure the custom delimter is valid
+          break;
       }
     }
     return columnDelimiter;
@@ -824,7 +838,7 @@ public class Import extends GenericBean {
       }
 
       if (previousStatus == PROCESSED_UNAPPROVED && status == PROCESSED_APPROVED) {
-        if (type == Constants.IMPORT_CONTACTS || type == Constants.IMPORT_ACCOUNT_CONTACTS) {
+        if (type == Constants.IMPORT_CONTACTS || type == Constants.IMPORT_ACCOUNT_CONTACTS || type == Constants.IMPORT_SALES) {
           Contact.updateImportStatus(db, this.getId(), PROCESSED_APPROVED);
           if (type == Constants.IMPORT_ACCOUNT_CONTACTS) {
             Organization.updateImportStatus(db, this.getId(), PROCESSED_APPROVED);
@@ -899,11 +913,6 @@ public class Import extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     String sql = null;
-    /*
-     *  if (!isValid()) {
-     *  return false;
-     *  }
-     */
     boolean commit = true;
     try {
       commit = db.getAutoCommit();
@@ -970,29 +979,4 @@ public class Import extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
   }
-
-
-  /**
-   *  Gets the valid attribute of the Import object
-   *
-   *@return    The valid value
-   */
-  protected boolean isValid() {
-    errors.clear();
-
-    if (this.getName() == null || this.getName().trim().equals("")) {
-      errors.put("nameError", "Name is required");
-    }
-
-    if (this.getType() < 0) {
-      errors.put("typeError", "Type is required");
-    }
-
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
-  }
 }
-

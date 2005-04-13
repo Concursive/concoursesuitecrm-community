@@ -15,15 +15,18 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.sql.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.base.Dependency;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.utils.DatabaseUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
-import com.darkhorseventures.framework.beans.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.utils.web.*;
+import java.util.Iterator;
 
 /**
  *  Represents a Role (User Group)
@@ -447,9 +450,6 @@ public class Role extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("ID was not specified");
     }
-    if (!isValid(db)) {
-      return -1;
-    }
     int resultCount = 0;
     try {
       db.setAutoCommit(false);
@@ -498,6 +498,7 @@ public class Role extends GenericBean {
         "SELECT COUNT(*) AS user_count " +
         "FROM access " +
         "WHERE role_id = ? " +
+        "AND user_id <> 0 " +
         "AND enabled = ? ");
     pst.setInt(++i, this.getId());
     pst.setBoolean(++i, true);
@@ -506,7 +507,7 @@ public class Role extends GenericBean {
       int usercount = rs.getInt("user_count");
       if (usercount != 0) {
         Dependency thisDependency = new Dependency();
-        thisDependency.setName("Active Users");
+        thisDependency.setName("activeUsers");
         thisDependency.setCount(usercount);
         thisDependency.setCanDelete(true);
         dependencyList.add(thisDependency);
@@ -526,9 +527,6 @@ public class Role extends GenericBean {
    *@exception  SQLException  Description of Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid(db)) {
-      return false;
-    }
     try {
       db.setAutoCommit(false);
       StringBuffer sql = new StringBuffer();
@@ -591,7 +589,6 @@ public class Role extends GenericBean {
       throw new SQLException("ID was not specified");
     }
     if (buildUserCount(db, true)) {
-      errors.put("actionError", "Role cannot be deleted... there are active users assigned to this role.");
       return false;
     }
     int recordCount = 0;
@@ -619,7 +616,6 @@ public class Role extends GenericBean {
       db.setAutoCommit(true);
     }
     if (recordCount == 0) {
-      errors.put("actionError", "Role could not be deleted because it no longer exists.");
       return false;
     } else {
       return true;
@@ -659,34 +655,6 @@ public class Role extends GenericBean {
     pst.setBoolean(++i, delete);
     pst.execute();
     pst.close();
-  }
-
-
-  /**
-   *  Gets the Valid attribute of the Role object
-   *
-   *@param  db                Description of Parameter
-   *@return                   The Valid value
-   *@exception  SQLException  Description of Exception
-   *@since
-   */
-  protected boolean isValid(Connection db) throws SQLException {
-    errors.clear();
-    if (role == null || role.trim().equals("")) {
-      errors.put("roleError", "Role cannot be left blank");
-    } else {
-      if (isDuplicate(db)) {
-        errors.put("roleError", "Role name is already in use");
-      }
-    }
-    if (description == null || description.trim().equals("")) {
-      errors.put("descriptionError", "Description cannot be left blank");
-    }
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
 
@@ -746,7 +714,7 @@ public class Role extends GenericBean {
    *@exception  SQLException  Description of Exception
    *@since
    */
-  private boolean isDuplicate(Connection db) throws SQLException {
+  public boolean isDuplicate(Connection db) throws SQLException {
     boolean duplicate = false;
     int i = 0;
     StringBuffer sql = new StringBuffer();

@@ -388,7 +388,11 @@ public class SearchCriteriaElement {
    */
   public boolean insert(int listid, Connection db) throws SQLException {
     this.buildOperatorData(db);
+    boolean doCommit = false;
     try {
+      if ((doCommit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO saved_criteriaelement ( id, field, operator, operatorid, value, source, value_id ) " +
           "VALUES ( ?, ?, ?, ?, ?, ?, ? ) ");
@@ -403,12 +407,18 @@ public class SearchCriteriaElement {
       DatabaseUtils.setInt(pst, ++i, valueId);
       pst.execute();
       pst.close();
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }

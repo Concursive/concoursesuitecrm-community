@@ -379,6 +379,14 @@ public class ControllerServlet extends HttpServlet
     if (System.getProperty("DEBUG") != null) {
       System.out.println("");
       System.out.println("** Requested action: " + actionPath);
+      System.out.println("** " + new java.util.Date());
+    }
+    try {
+      request.setCharacterEncoding("UTF-8");
+    } catch (Exception e) {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("ControllerServlet-> Unsupported encoding");
+      }
     }
     // we have the action name derived from the action path passed in, so now we need to
     // look it up in our list of Actions to see if there is a Action for this action.
@@ -529,6 +537,8 @@ public class ControllerServlet extends HttpServlet
         System.out.println("No Such Method Exception for method executeCommand" + context.getCommand() + ". MESAGE = " + nm.getMessage());
       } catch (IllegalAccessException ia) {
         System.out.println("Illegal Access Exception. MESSAGE = " + ia.getMessage());
+      } catch (java.lang.reflect.InvocationTargetException ite) {
+        result = "GraphicsError";
       } catch (Exception e) {
         e.printStackTrace(System.out);
         System.out.println("Exception. MESSAGE = " + e.getMessage());
@@ -674,6 +684,9 @@ public class ControllerServlet extends HttpServlet
 
           if ((forwardPath != null) && (forwardPath.length() > 0)) {
             try {
+              if (System.getProperty("DEBUG") != null) {
+                System.out.println("ControllerServlet-> Resource: " + resource.getName());
+              }
               getServletContext().getRequestDispatcher(forwardPath).forward(request, response);
             } catch (Throwable t) {
               System.out.println("Throwable exception trying to forward to " + forwardPath + "MESSAGE: " + t.getMessage());

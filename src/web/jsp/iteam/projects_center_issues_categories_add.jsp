@@ -32,11 +32,11 @@
     var messageText = "";
     //Check required fields
     if (form.subject.value == "") {
-      messageText += "- Forum name is a required field\r\n";
+      messageText += label("check.forum.name","- Forum name is a required field\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The message could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("check.message","The message could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
@@ -50,32 +50,40 @@
   <tr class="subtab">
     <td>
       <img border="0" src="images/icons/stock_data-explorer-16.gif" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>">Forums</a> >
-      <%= IssueCategory.getId() == -1 ? "Add" : "Modify" %>
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>"><dhv:label name="project.forums">Forums</dhv:label></a> >
+      <% if(IssueCategory.getId() == -1) {%>
+        <dhv:label name="button.add">Add</dhv:label>
+      <%} else {%>
+        <dhv:label name="button.modify">Modify</dhv:label>
+      <%}%>
     </td>
   </tr>
 </table>
 <br />
-  <input type="submit" value=" Save ">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>';"><br />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>';"><br />
   <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
       <th colspan="2">
-        <strong><%= IssueCategory.getId() == -1 ? "Add" : "Modify" %> Forum</strong>
+        <% if(IssueCategory.getId() == -1) { %>
+          <dhv:label name="project.addForum">Add Forum</dhv:label>
+        <%} else {%>
+          <dhv:label name="project.modifyForum">Modify Forum</dhv:label>
+        <%}%>
       </th>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel">Name</td>
+      <td nowrap class="formLabel"><dhv:label name="contacts.name">Name</dhv:label></td>
       <td>
         <input type="text" name="subject" size="57" maxlength="255" value="<%= toHtmlValue(IssueCategory.getSubject()) %>"><font color=red>*</font>
         <%= showAttribute(request, "subjectError") %>
       </td>
     </tr>
   </table>
-  &nbsp;<br>
-  <input type="submit" value=" Save ">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>';">
+  <br />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>';">
   <input type="hidden" name="pid" value="<%= Project.getId() %>">
   <input type="hidden" name="id" value="<%= IssueCategory.getId() %>">
   <input type="hidden" name="projectId" value="<%= Project.getId() %>">

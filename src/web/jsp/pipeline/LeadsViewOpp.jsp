@@ -42,49 +42,50 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> >
-Search Results
+<a href="Leads.do"><dhv:label name="pipeline.pipeline">Pipeline</dhv:label></a> >
+<dhv:label name="accounts.SearchResults">Search Results</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<dhv:permission name="pipeline-opportunities-add"><a href="Leads.do?command=Prepare&source=list">Add an Opportunity</a></dhv:permission>
-<center><%= SearchOppListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:permission name="pipeline-opportunities-add"><a href="Leads.do?command=Prepare&source=list"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a></dhv:permission>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="SearchOppListInfo"/></center></dhv:include>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SearchOppListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th valign="center">
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th valign="center" nowrap>
-      <strong><a href="Leads.do?command=Search&column=x.description">Component</a></strong>
-      <%= SearchOppListInfo.getSortIcon("x.description") %>
+      <strong><a href="Leads.do?command=Search&column=oc.description"><dhv:label name="accounts.accounts_contacts_opps_details.Component">Component</dhv:label></a></strong>
+      <%= SearchOppListInfo.getSortIcon("oc.description") %>
     </th>
     <th valign="center" nowrap>
-      <strong><a href="Leads.do?command=Search&column=guessvalue">Amount</a></strong>
+      <strong><a href="Leads.do?command=Search&column=guessvalue"><dhv:label name="accounts.accounts_revenue_add.Amount">Amount</dhv:label></a></strong>
       <%= SearchOppListInfo.getSortIcon("guessvalue") %>
     </th>
     <th valign="center" nowrap>
-      <strong><a href="Leads.do?command=Search&column=closeprob">Prob.</a></strong>
+      <strong><a href="Leads.do?command=Search&column=closeprob"><dhv:label name="reports.pipeline.probability">Probability</dhv:label></a></strong>
       <%= SearchOppListInfo.getSortIcon("closeprob") %>
     </th>
     <th valign="center" nowrap>
-      <strong><a href="Leads.do?command=Search&column=closedate">Close Date</a></strong>
+      <strong><a href="Leads.do?command=Search&column=closedate"><dhv:label name="accounts.accounts_contacts_opps_details.CloseDate">Close Date</dhv:label></a></strong>
       <%= SearchOppListInfo.getSortIcon("closedate") %>
     </th>
     <th valign="center" nowrap>
-      <strong><a href="Leads.do?command=Search&column=terms">Term</a></strong>
+      <strong><a href="Leads.do?command=Search&column=terms"><dhv:label name="reports.pipeline.term">Term</dhv:label></a></strong>
       <%= SearchOppListInfo.getSortIcon("terms") %>
     </th>
     <th valign="center" nowrap>
       <strong>Organization</strong>
     </th>
     <th valign="center" nowrap>
-      <strong><a href="Leads.do?command=Search&column=ct.namelast">Contact</a></strong>
+      <strong><a href="Leads.do?command=Search&column=ct.namelast"><dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label></a></strong>
       <%= SearchOppListInfo.getSortIcon("ct.namelast") %>
     </th>
   </tr>
@@ -155,8 +156,8 @@ Search Results
   } else {%>
   <tr class="containerBody">
     <td colspan="8" valign="center">
-      No opportunities found with the specified search parameters.<br />
-      <a href="Leads.do?command=SearchForm">Modify Search</a>.
+      <dhv:label name="pipeline.noOpportunitiesFound.text">No opportunities found with the specified search parameters.</dhv:label><br />
+      <a href="Leads.do?command=SearchForm"><dhv:label name="accounts.accounts_list.ModifySearch">Modify Search</dhv:label></a>.
     </td>
   </tr>
 <%}%>

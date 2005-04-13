@@ -1,4 +1,4 @@
-#header, #footer, #rightcol, #menutabs, #topmenutabs, #toptabs {
+#header, #footer, #rightcol, #rightnavcol, #menutabs, #topmenutabs, #toptabs {
   display: none;
 }
 #menuFileContainer, #menucallContainer, #menuOppContainer, 

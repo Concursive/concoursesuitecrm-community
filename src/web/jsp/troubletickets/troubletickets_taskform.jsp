@@ -21,17 +21,20 @@
 <%@ page import="java.util.*, org.aspcfs.modules.base.Constants"%>
 <jsp:useBean id="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].description.focus();">
+<body onLoad="javascript:document.addTask.description.focus();">
 <form name="addTask" action="TroubleTicketTasks.do?command=Save&id=<%= Task.getId() %>&auto-populate=true" method="post" onSubmit="return validateTask();">
-<dhv:formMessage />
-<%@ include file="../tasks/task_include.jsp" %>
-
-<br>
-<input type="submit" value="<%= Task.getId() == -1 ? "Save" : "Update" %>">
-<input type="button" value="Cancel" onClick="javascript:window.close();">
-<input type="hidden" name="ticketId" value="<%= request.getParameter("ticketId") %>">
-<input type="hidden" name="type" value="<%= Constants.TICKET_OBJECT %>">
-<input type="hidden" name="return" value="TroubleTicketTasks.do?command=List&ticketId=<%= request.getParameter("ticketId") %>">
+  <dhv:formMessage showSpace="false"/>
+  <%@ include file="../tasks/task_include.jsp" %>
+  <br>
+  <% if (Task.getId() == -1) { %>
+  <input type="submit" value="<dhv:label name="button.save">Save</dhv:label>" />
+  <%} else {%>
+  <input type="submit" value="<dhv:label name="button.update">Update</dhv:label>"/>
+  <%}%>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
+  <input type="hidden" name="ticketId" value="<%= request.getParameter("ticketId") %>">
+  <input type="hidden" name="type" value="<%= Constants.TICKET_OBJECT %>">
+  <input type="hidden" name="return" value="TroubleTicketTasks.do?command=List&ticketId=<%= request.getParameter("ticketId") %>">
 </form>
 </body>
 

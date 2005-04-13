@@ -15,14 +15,14 @@
  */
 package org.aspcfs.utils;
 
-import java.io.*;
-import javax.imageio.*;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *  Various utilities that relate to Image processing
@@ -47,44 +47,57 @@ public class ImageUtils {
     double ratioWidth = maxWidth / thumbnailImage.getWidth();
     double ratioHeight = maxHeight / thumbnailImage.getHeight();
     double ratio = 1;
-    if (maxWidth > 0 && maxHeight < 0) {
-      ratio = ratioWidth;
-    } else if (maxHeight > 0 && maxWidth < 0) {
-      ratio = ratioHeight;
+    if (thumbnailImage.getWidth() <= maxWidth && thumbnailImage.getHeight() <= maxHeight) {
+      ratio = 1;
     } else {
-      if (ratioWidth < ratioHeight) {
+      // Conform to Width
+      if (maxWidth > 0 && maxHeight <= 0) {
         ratio = ratioWidth;
-      } else {
+      }
+      // Conform to Height
+      if (maxWidth <= 0 && maxHeight > 0) {
         ratio = ratioHeight;
+      }
+      // Conform to Width and Height
+      if (maxWidth > 0 && maxHeight > 0) {
+        if (ratioWidth < ratioHeight) {
+          ratio = ratioWidth;
+        } else {
+          ratio = ratioHeight;
+        }
       }
     }
     if (System.getProperty("DEBUG") != null) {
       System.out.println("ImageUtils-> Ratio: " + ratio);
     }
 
-    //Soften
-    try {
-      float softenFactor = 0.05f;
-      float[] softenArray = {0, softenFactor, 0, softenFactor, 1 - (softenFactor * 4), softenFactor, 0, softenFactor, 0};
-      Kernel kernel = new Kernel(3, 3, softenArray);
+    if (ratio == 1.0) {
+      FileUtils.copyFile(originalFile, thumbnailFile);
+    } else {
+      //Soften
+      try {
+        float softenFactor = 0.05f;
+        float[] softenArray = {0, softenFactor, 0, softenFactor, 1-(softenFactor*4), softenFactor, 0, softenFactor, 0};
+        Kernel kernel = new Kernel(3, 3, softenArray);
+        ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+        thumbnailImage = cOp.filter(thumbnailImage, null);
+      } catch (Exception e) {
+        System.out.println("ImageUtils-> Soften: " + e.getMessage());
+      }
+
+      //Sharpen
+      /* float[] sharpenArray = { 0, -1, 0, -1, 5, -1, 0, -1, 0 };
+      Kernel kernel = new Kernel(3, 3, sharpenArray);
       ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
       thumbnailImage = cOp.filter(thumbnailImage, null);
-    } catch (Exception e) {
+       */
+
+      //Scale
+      AffineTransform at = AffineTransform.getScaleInstance(ratio, ratio);
+      AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+      thumbnailImage = op.filter(thumbnailImage, null);
+      ImageIO.write(thumbnailImage, "jpg", thumbnailFile);
     }
-
-    //Sharpen
-    /*
-     *  float[] sharpenArray = { 0, -1, 0, -1, 5, -1, 0, -1, 0 };
-     *  Kernel kernel = new Kernel(3, 3, sharpenArray);
-     *  ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-     *  thumbnailImage = cOp.filter(thumbnailImage, null);
-     */
-    //Scale
-    AffineTransform at = AffineTransform.getScaleInstance(ratio, ratio);
-    AffineTransformOp op = new AffineTransformOp(at, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-    thumbnailImage = op.filter(thumbnailImage, null);
-
-    ImageIO.write(thumbnailImage, "jpg", thumbnailFile);
   }
 
 
@@ -98,11 +111,7 @@ public class ImageUtils {
   public static int convertPostscriptToTiffG3File(String baseFilename) {
     Process process;
     Runtime runtime;
-    java.io.InputStream input;
-    byte buffer[];
-    int bytes;
     String[] command = null;
-
     File osCheckFile = new File("/bin/sh");
     if (osCheckFile.exists()) {
       //Linux
@@ -135,8 +144,8 @@ public class ImageUtils {
 
 
   /**
-   *  Uses HtmlDoc command line tool, pipes an HTML URL to GhostScript which
-   *  outputs a JPEG file with the given dimensions.
+   *  Uses HtmlDoc command line tool, pipes an HTML URL to GhostScript
+   *  which outputs a JPEG file with the given dimensions.
    *
    *@param  url        Description of the Parameter
    *@param  filename   Description of the Parameter
@@ -145,15 +154,18 @@ public class ImageUtils {
    *@return            Description of the Return Value
    */
   public static int urlToJpegThumbnail(String url, String filename, double maxWidth, double maxHeight) {
+    // Determine paths
+    File gsPath = new File("/usr/bin/gs");
+    if (!gsPath.exists()) {
+      gsPath = new File("/sw/bin/gs");
+    }
     Process process;
     Runtime runtime;
     java.io.InputStream input;
-    byte buffer[];
-    int bytes;
     String command[] = {"/bin/sh", "-c", "/usr/bin/htmldoc --quiet --jpeg " +
         "--webpage -t ps --left 0 --top 0 " +
         "--header ... --footer ... --landscape " + url + " " +
-        "| /usr/bin/gs -q -sDEVICE=jpeg -dNOPAUSE -dBATCH -sOutputFile=- -"};
+        "| " + gsPath.getAbsoluteFile() + " -q -sDEVICE=jpeg -dNOPAUSE -dBATCH -sOutputFile=- -"};
     runtime = Runtime.getRuntime();
     try {
       process = runtime.exec(command);
@@ -201,8 +213,8 @@ public class ImageUtils {
 
 
   /**
-   *  Uses HtmlDoc command line tool, pipes an HTML URL to GhostScript which
-   *  outputs a JPEG file.
+   *  Uses HtmlDoc command line tool, pipes an HTML URL to GhostScript
+   *  which outputs a JPEG file.
    *
    *@param  url       Description of the Parameter
    *@param  filename  Description of the Parameter
@@ -212,8 +224,6 @@ public class ImageUtils {
     Process process;
     Runtime runtime;
     java.io.InputStream input;
-    byte buffer[];
-    int bytes;
     String command[] = {"/bin/sh", "-c", "/usr/bin/htmldoc --quiet --jpeg " +
         "--webpage -t ps --left 0 --top 0 " +
         "--header ... --footer ... " + url + " " +

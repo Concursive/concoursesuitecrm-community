@@ -1,0 +1,211 @@
+#!/bin/sh
+//usr/bin/true; exec java -classpath .:$CATALINA_HOME/common/lib/servlet-api.jar:lib/bsh.jar:lib/bcprov-jdk14-121.jar:build/lib/aspcfs.jar bsh.Interpreter "$0" "$@"
+
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.FileUtils;
+import org.aspcfs.utils.StringHelper;
+
+String CRLF = System.getProperty("line.separator");
+String fs = System.getProperty("file.separator");
+HashMap terms = new HashMap();
+HashMap variables = new HashMap();
+HashMap context = new HashMap();
+context.put("maxVariableName", new Integer(0));
+
+void processDirectory(File dir) {
+  if (dir.isDirectory()) {
+    //print("To process: " + dir.toString());
+    if (!dir.getPath().endsWith("CVS")) {
+      String[] children = dir.list();
+      for (int i = 0; i < children.length; i++) {
+        processDirectory(new File(dir, children[i]));
+      }
+    }
+  } else {
+    if (dir.isFile() && dir.exists() && dir.toString().endsWith(".jsp")) {
+      //print("To process: " + dir.toString());
+      processFile(dir);
+    }
+  }
+}
+
+void processFile(File checkFile) {
+  int lineCount = 0;
+  boolean foundTag = false;
+  boolean tagAlert = true;
+  try {
+    // Read the file and check for tags
+    BufferedReader in = new BufferedReader(new FileReader(checkFile));
+    String line = null;
+    while ((line = in.readLine()) != null) {
+      ++lineCount;
+      // Check for tag
+      if (line.indexOf("dhv-taglib.tld") > -1) {
+        foundTag = true;
+      }
+      
+      // Check for tags
+      if (1 == 1) {
+        int i = 0;
+        while (line.indexOf("<dhv:label", i) > -1) {
+          if (!foundTag && tagAlert) {
+            if (!checkFile.toString().endsWith("_include.jsp")) {
+              print("ERROR: taglib not found: " + checkFile.toString());
+            }
+            tagAlert = false;
+          }
+          int labelBegin = line.indexOf("<dhv:label", i);
+          int nameBegin = line.indexOf("name=\"", labelBegin) + 6;
+          int nameEnd = line.indexOf("\"", nameBegin);
+          String name = line.substring(nameBegin, nameEnd);
+          int valueBegin = line.indexOf(">", nameEnd) + 1;
+          int valueEnd = line.indexOf("</dhv:label>", valueBegin);
+          String value = line.substring(valueBegin, valueEnd);
+          // See if there is a parameter specified
+          if (line.indexOf("param=\"", labelBegin) > -1) {
+            int paramBegin = line.indexOf("param=\"", labelBegin) + 7;
+            int paramEnd = line.indexOf("\"", paramBegin);
+            String param = line.substring(paramBegin, paramEnd);
+            valueBegin = line.indexOf("\">", paramEnd) + 2;
+            value = line.substring(valueBegin, valueEnd);
+            while (value.indexOf("<%=") > -1 && value.indexOf("%>") > -1) {
+              value = StringUtils.replace(value, value.substring(value.indexOf("<%="), value.indexOf("%>") +2), "${param}");
+              print("CHECK: " + checkFile.toString() + " " + value);
+            }
+            
+          }
+          
+          //print(name + "=" + value);
+          
+          if (terms.containsKey(name)) {
+            String existingValue = (String) terms.get(name);
+            if (!existingValue.equals(value)) {
+              print("ERROR: Duplicate key has different value: " + checkFile.toString() + " " + name);
+            }
+          } else {
+            terms.put(name, value);
+          }
+          i = valueEnd;
+        }
+      }
+      // Check for javascript
+      if (1 == 1) {
+        Integer maxVariableName = (Integer) context.get("maxVariableName");
+        int i = 0;
+        while (line.indexOf("label(\"", i) > -1) {
+          int labelBegin = line.indexOf("label(\"", i);
+          // Name
+          int nameBegin = line.indexOf("label(\"", labelBegin) + 7;
+          int nameEnd = line.indexOf("\"", nameBegin);
+          String name = line.substring(nameBegin, nameEnd);
+          // Value
+          int valueBegin = line.indexOf("\"", nameEnd + 1) + 1;
+          int valueEnd = line.indexOf("\")", valueBegin);
+          String value = line.substring(valueBegin, valueEnd);
+          //print(name + "=" + value);
+          if (variables.containsKey(name)) {
+            String existingValue = (String) variables.get(name);
+            if (!existingValue.equals(value)) {
+              print("ERROR: Duplicate key has different value: " + checkFile.toString() + " " + name);
+            }
+          } else {
+            variables.put(name, value);
+            int nameLength = name.length();
+            if (nameLength > maxVariableName.intValue()) {
+              context.put("maxVariableName", new Integer(nameLength));
+            }
+          }
+          i = nameEnd;
+        }
+      }
+    }
+  } catch (Exception e) {
+    print("ERROR: " + checkFile.toString() + ", line: " + lineCount);
+  }
+}
+
+void writeJSPDictionary() {
+  print("Writing XML...");
+  BufferedWriter out = new BufferedWriter(new FileWriter("dictionary.xml"));
+  out.write("<aspcfs>" + CRLF);
+  out.write("  <config name=\"system.fields.label\" enabled=\"true\">" + CRLF);
+  Iterator i = terms.keySet().iterator();
+  while (i.hasNext()) {
+    String name = (String) i.next();
+    String value = (String) terms.get(name);
+    out.write("    <param name=\"" + name + "\">" + CRLF);
+    out.write("      <value><![CDATA[" + value + "]]></value>" + CRLF);
+    out.write("    </param>");
+    out.write(CRLF);
+  }
+  out.write("  </config>" + CRLF);
+  out.write("</aspcfs>" + CRLF);
+  out.close();
+}
+
+void writeJSPLog() {
+  print("Writing Text...");
+  BufferedWriter out = new BufferedWriter(new FileWriter("dictionary.txt"));
+  Iterator i = terms.keySet().iterator();
+  while (i.hasNext()) {
+    String name = (String) i.next();
+    String value = (String) terms.get(name);
+    out.write(value + "=" + name);
+    out.write(CRLF);
+  }
+  out.close();
+}
+
+void writeJavaScriptDictionary() {
+  Integer maxVariableName = (Integer) context.get("maxVariableName");
+  print("Writing JavaScript...");
+  BufferedWriter out = new BufferedWriter(new FileWriter("dictionary.js"));
+  out.write("if (!FrameworkI18N) {" + CRLF);
+  out.write("  var FrameworkI18N = {" + CRLF);
+  out.write("    message:" + CRLF);
+  out.write("    {" + CRLF);
+  Iterator i = variables.keySet().iterator();
+  String padding = null;
+  String name = null;
+  String value = null;
+  while (i.hasNext()) {
+    name = (String) i.next();
+    value = (String) variables.get(name);
+    padding = StringHelper.prepad("", maxVariableName.intValue() - name.length(), ' ');
+    out.write("      \"" + name + "\":" + padding + "\"" + value + "\"");
+    if (i.hasNext()) {
+      out.write(",");
+    }
+    out.write(CRLF);
+  }
+  out.write("    }" + CRLF);
+  out.write("  }" + CRLF);
+  out.write("}" + CRLF);
+  out.close();
+}
+
+if (bsh.args.length == 0) {
+  print("Usage:");
+  print("  dictionary <directory>");
+  print("");
+  System.exit(0);
+}
+
+// Recursively get a list of files to check
+String directory = bsh.args[0];
+File dir = new File(directory);
+if (!dir.isDirectory()) {
+  print("A directory was not specified.");
+  System.exit(0);
+}
+processDirectory(dir);
+print("Terms: " + terms.size());
+writeJSPDictionary();
+writeJSPLog();
+print("Variables: " + variables.size());
+Integer maxVariableName = (Integer) context.get("maxVariableName");
+print("Length: " + maxVariableName.intValue());
+writeJavaScriptDictionary();
+print("Done.");
+

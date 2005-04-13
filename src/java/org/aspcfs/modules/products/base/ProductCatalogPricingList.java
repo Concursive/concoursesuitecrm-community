@@ -50,8 +50,133 @@ public class ProductCatalogPricingList extends ArrayList implements SyncableList
   //filters
   private PagedListInfo pagedListInfo = null;
   private int id = -1;
+  private int productId = -1;
+  private int enabled = Constants.UNDEFINED;
+  private int isValidNow = Constants.UNDEFINED;
+
   //other supplimentary fields
   private String productName = null;
+  private Timestamp currentTime = null;
+
+
+  /**
+   *  Sets the enabled attribute of the ProductCatalogPricingList object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(int tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   *  Sets the enabled attribute of the ProductCatalogPricingList object
+   *
+   *@param  tmp  The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the currentTime attribute of the ProductCatalogPricingList object
+   *
+   *@param  tmp  The new currentTime value
+   */
+  public void setCurrentTime(Timestamp tmp) {
+    this.currentTime = tmp;
+  }
+
+
+  /**
+   *  Sets the currentTime attribute of the ProductCatalogPricingList object
+   *
+   *@param  tmp  The new currentTime value
+   */
+  public void setCurrentTime(String tmp) {
+    this.currentTime = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the isValidNow attribute of the ProductCatalogPricingList object
+   *
+   *@param  tmp  The new isValidNow value
+   */
+  public void setIsValidNow(int tmp) {
+    this.isValidNow = tmp;
+  }
+
+
+  /**
+   *  Sets the isValidNow attribute of the ProductCatalogPricingList object
+   *
+   *@param  tmp  The new isValidNow value
+   */
+  public void setIsValidNow(String tmp) {
+    this.isValidNow = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the isValidNow attribute of the ProductCatalogPricingList object
+   *
+   *@return    The isValidNow value
+   */
+  public int getIsValidNow() {
+    return isValidNow;
+  }
+
+
+  /**
+   *  Gets the currentTime attribute of the ProductCatalogPricingList object
+   *
+   *@return    The currentTime value
+   */
+  public Timestamp getCurrentTime() {
+    return currentTime;
+  }
+
+
+  /**
+   *  Gets the enabled attribute of the ProductCatalogPricingList object
+   *
+   *@return    The enabled value
+   */
+  public int getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   *  Sets the productId attribute of the ProductCatalogPricingList object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(int tmp) {
+    this.productId = tmp;
+  }
+
+
+  /**
+   *  Sets the productId attribute of the ProductCatalogPricingList object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(String tmp) {
+    this.productId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the productId attribute of the ProductCatalogPricingList object
+   *
+   *@return    The productId value
+   */
+  public int getProductId() {
+    return productId;
+  }
 
 
   /**
@@ -257,9 +382,16 @@ public class ProductCatalogPricingList extends ArrayList implements SyncableList
     StringBuffer sqlOrder = new StringBuffer();
     //Need to build a base SQL statement for counting records
     sqlCount.append(
-        " SELECT COUNT(poptconfig.*) AS recordcount " +
-        " FROM product_catalog_pricing AS pctlgpricing " +
-        " WHERE pctlgpricing.price_id > 0"
+        "SELECT COUNT(poptconfig.*) AS recordcount " +
+        "FROM product_catalog_pricing pctlgprice " +
+        "LEFT JOIN product_catalog AS pctlg ON ( pctlgprice.product_id = pctlg.product_id ) " +
+        "LEFT JOIN lookup_product_tax AS lpt ON (pctlgprice.tax_id = lpt.code) " +
+        "LEFT JOIN lookup_currency AS lcmsrp ON (pctlgprice.msrp_currency = lcmsrp.code) " +
+        "LEFT JOIN lookup_currency AS lcpc ON (pctlgprice.price_currency = lcpc.code) " +
+        "LEFT JOIN lookup_currency AS lcrc ON (pctlgprice.recurring_currency = lcrc.code) " +
+        "LEFT JOIN lookup_recurring_type AS lrt ON (pctlgprice.recurring_type = lrt.code) " +
+        "LEFT JOIN lookup_currency AS lccc ON (pctlgprice.cost_currency = lccc.code) " +
+        "WHERE pctlgprice.price_id > 0 "
         );
 
     createFilter(sqlFilter, db);
@@ -280,17 +412,27 @@ public class ProductCatalogPricingList extends ArrayList implements SyncableList
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
     } else {
-      sqlSelect.append(" SELECT ");
+      sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " pctlgprice.*, " +
-        " pctlg.product_name AS product_name " +
-        " FROM product_catalog_pricing pctlgprice, " +
-        " LEFT JOIN product_catalog AS pctlg " +
-        " ON ( pctlgprice.product_id = pctlg.product_id ) " +
-        " WHERE pctlgprice.price_id > -1 "
-        );
-    sqlOrder.append(" ORDER BY pctlgprice.priceAmount ");
+        "pctlgprice.*, " +
+        "pctlg.product_name AS product_name, " +
+        "lpt.description AS tax_name, " +
+        "lcmsrp.description AS msrp_currency_name, " +
+        "lcpc.description AS price_currency_name, " +
+        "lcrc.description AS recurring_currency_name, " +
+        "lrt.description AS recurring_type_name, " +
+        "lccc.description AS cost_currency_name " +
+        "FROM product_catalog_pricing pctlgprice " +
+        "LEFT JOIN product_catalog AS pctlg ON ( pctlgprice.product_id = pctlg.product_id ) " +
+        "LEFT JOIN lookup_product_tax AS lpt ON (pctlgprice.tax_id = lpt.code) " +
+        "LEFT JOIN lookup_currency AS lcmsrp ON (pctlgprice.msrp_currency = lcmsrp.code) " +
+        "LEFT JOIN lookup_currency AS lcpc ON (pctlgprice.price_currency = lcpc.code) " +
+        "LEFT JOIN lookup_currency AS lcrc ON (pctlgprice.recurring_currency = lcrc.code) " +
+        "LEFT JOIN lookup_recurring_type AS lrt ON (pctlgprice.recurring_type = lrt.code) " +
+        "LEFT JOIN lookup_currency AS lccc ON (pctlgprice.cost_currency = lccc.code) " +
+        "WHERE pctlgprice.price_id > 0 ");
+    sqlOrder.append("ORDER BY pctlgprice.price_amount ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -305,28 +447,12 @@ public class ProductCatalogPricingList extends ArrayList implements SyncableList
         break;
       }
       ++count;
-      ProductCatalogPricing productOptionConfigurator = new ProductCatalogPricing(rs);
-      this.add(productOptionConfigurator);
+      ProductCatalogPricing catalogPricing = new ProductCatalogPricing(rs);
+      this.add(catalogPricing);
     }
     rs.close();
     pst.close();
 
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@param  basePath          Description of the Parameter
-   *@exception  SQLException  Description of the Exception
-   */
-  public void delete(Connection db, String basePath) throws SQLException {
-    Iterator configurators = this.iterator();
-    while (configurators.hasNext()) {
-      ProductCatalogPricing productOptionConfigurator = (ProductCatalogPricing) configurators.next();
-      productOptionConfigurator.delete(db, basePath);
-    }
   }
 
 
@@ -339,10 +465,22 @@ public class ProductCatalogPricingList extends ArrayList implements SyncableList
   private void createFilter(StringBuffer sqlFilter, Connection db) {
 
     if (id > -1) {
-      sqlFilter.append(" AND poptconfig.configurator_id = ? ");
+      sqlFilter.append("AND pctlgprice.price_id = ? ");
     }
     if (productName != null) {
-      sqlFilter.append(" AND pctlg.product_name = ? ");
+      sqlFilter.append("AND pctlg.product_name = ? ");
+    }
+    if (productId > -1) {
+      sqlFilter.append("AND pctlgprice.product_id = ? ");
+    }
+    if (enabled != Constants.UNDEFINED) {
+      sqlFilter.append("AND pctlgprice.enabled = ? ");
+    }
+    if (isValidNow == Constants.TRUE) {
+      sqlFilter.append("AND (pctlgprice.expiration_date IS NULL OR pctlgprice.expiration_date > ?) ");
+      sqlFilter.append("AND (pctlgprice.start_date < ? OR pctlgprice.start_date IS NULL) ");
+    } else if (isValidNow == Constants.FALSE) {
+      sqlFilter.append("AND (pctlgprice.start_date > ? OR pctlgprice.expiration_date < ?) ");
     }
   }
 
@@ -361,6 +499,19 @@ public class ProductCatalogPricingList extends ArrayList implements SyncableList
     }
     if (productName != null) {
       pst.setString(++i, productName);
+    }
+    if (productId > -1) {
+      pst.setInt(++i, productId);
+    }
+    if (enabled == Constants.TRUE) {
+      pst.setBoolean(++i, true);
+    } else if (enabled == Constants.FALSE) {
+      pst.setBoolean(++i, false);
+    }
+    if (isValidNow != Constants.UNDEFINED) {
+      currentTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
+      pst.setTimestamp(++i, currentTime);
+      pst.setTimestamp(++i, currentTime);
     }
     return i;
   }

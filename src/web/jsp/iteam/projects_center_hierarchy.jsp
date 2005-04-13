@@ -26,13 +26,13 @@
 <table cellpadding="0" cellspacing="0" width="100%" border="0">
 <tr>
   <td>
-    Select a folder to move the item to:<br>
+    <dhv:label name="accounts.accounts_documents_file_move.SelectFolderToMove">Select a folder to move the item to</dhv:label>:<br />
     <%= assignment.getStatusGraphicTag() %>
     <%= toHtml(assignment.getRole()) %>
   </td>
 </tr>
 </table>
-&nbsp;<br>
+<br />
 <table cellpadding="0" cellspacing="0" width="100%" border="1" rules="cols">
 <%
 Requirement thisRequirement = requirement;
@@ -80,7 +80,7 @@ Requirement thisRequirement = requirement;
       <img border="0" src="images/folder1open.gif" align="absmiddle" align="absmiddle" height="16" width="19">
       <a href="ProjectManagementAssignments.do?command=SaveMove&pid=<%= project.getId() %>&rid=<%= requirement.getId() %>&aid=<%= assignment.getId() %>&popup=true&parent=<%= thisFolder.getId() %>&return=ProjectAssignments&param=<%= project.getId() %>&param2=<%= requirement.getId() %>"><%= toHtml(thisFolder.getName()) %></a>
       <dhv:evaluate if="<%= assignment.getFolderId() == thisFolder.getId() %>">
-      (current folder)
+      <dhv:label name="accounts.accounts_documents_file_move.CurrentFolder">(current folder)</dhv:label>
       </dhv:evaluate>
     </td>
   </tr>
@@ -89,5 +89,5 @@ Requirement thisRequirement = requirement;
   }
 %>
 </table>
-&nbsp;<br>
-<input type="button" value="Cancel" onClick="javascript:window.close()">
+<br />
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">

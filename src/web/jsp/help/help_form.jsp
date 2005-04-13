@@ -32,7 +32,7 @@
     //Check required fields
     if (form.description.value == "") {    
       form.dosubmit.value = "true";
-      alert("Description is required, please verify then try submitting the information again.");
+      alert(label("description.required.resubmit","Description is required, please verify then try submitting the information again."));
       formTest = false;
     }
   
@@ -47,44 +47,45 @@
   <table border="0" width="100%" cellspacing="0" cellpadding="4">
     <tr class="title">
       <td>
-        <font color="#000000"><b>Help for this page</b></font>
+        <font color="#000000"><b><dhv:label name="help.helpForThisPage">Help for this page</dhv:label></b></font>
       </td>
     </tr>
     <tr>
       <td>
-        Module: <b><%= toHtmlValue(Help.getModule()) %></b> 
+        <dhv:label name="admin.module.colon">Module:</dhv:label>
+        <b><%= toHtmlValue(Help.getModule()) %></b>
       </td>
     </tr>
     <tr>
       <td>
-        Section: <b><%= toHtmlValue(Help.getSection()) %></b>
+        <dhv:label name="help.section.colon" param="<%= "help.section="+toHtml(Help.getSection()) %>">Section: <b><%= toHtml(Help.getSection()) %></b></dhv:label>
       </td>
     </tr>
     <tr>
       <td>
-        Sub-section: <b><%= toHtmlValue(Help.getSubsection()) %></b>
+        <dhv:label name="help.subsection.colon" param="<%= "help.subsection="+toHtml(Help.getSubsection()) %>">Sub-section: <b><%= toHtml(Help.getSubsection()) %></b></dhv:label>
       </td>
     </tr>
     <tr>
       <td>
-        Entered: <dhv:username id="<%= Help.getEnteredBy() %>"/> <%= toDateTimeString(Help.getEntered()) %>
+        <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>: <dhv:username id="<%= Help.getEnteredBy() %>"/> <%= toDateTimeString(Help.getEntered()) %>
       </td>
     </tr>
     <tr>
       <td>
-        Modified: <dhv:username id="<%= Help.getModifiedBy() %>"/> <%= toDateTimeString(Help.getModified()) %>
+        <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>: <dhv:username id="<%= Help.getModifiedBy() %>"/> <%= toDateTimeString(Help.getModified()) %>
       </td>
     </tr>
     <tr>
       <td>
-        Help:<br>
+        <dhv:label name="help.help.colon">Help:</dhv:label><br />
         <textarea rows='18' name='description' cols='50'><%= toString(Help.getDescription()) %></textarea>
       </td>
     </tr>      
     <tr>
       <td>
-          <input type="submit" value="Update">
-          <input type="submit" value="Cancel" onClick="javascript:this.form.action='';this.form.dosubmit.value='false';window.close();">
+        <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>">
+        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='';this.form.dosubmit.value='false';window.close();">
       </td>
     </tr>
   </table>

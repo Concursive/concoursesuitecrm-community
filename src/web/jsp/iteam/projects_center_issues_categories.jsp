@@ -36,30 +36,30 @@
   <tr class="subtab">
     <td>
       <img border="0" src="images/icons/stock_data-explorer-16.gif" align="absmiddle">
-      Forums
+      <dhv:label name="project.forums">Forums</dhv:label>
     </td>
   </tr>
 </table>
 <br>
 <zeroio:permission name="project-discussion-forums-add">
 <img border="0" src="images/icons/stock_new-callouts2-16.gif" align="absmiddle">
-<a href="ProjectManagementIssueCategories.do?command=Add&pid=<%= Project.getId() %>">New Forum</a><br>
+<a href="ProjectManagementIssueCategories.do?command=Add&pid=<%= Project.getId() %>"><dhv:label name="project.newForum">New Forum</dhv:label></a><br>
 </zeroio:permission>
 <dhv:pagedListStatus label="Forums" title="<%= showError(request, "actionError") %>" object="projectIssueCategoryInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-    <th width="8" nowrap><strong>Action</strong></th>
-    <th width="100%"><strong>Forum</strong></th>
-    <th align="center" nowrap><strong>Topics</strong></th>
-    <th align="center" nowrap><strong>Posts</strong></th>
-    <th align="center" nowrap><strong>Last Post</strong></th>
+    <th width="8" nowrap>&nbsp;</th>
+    <th width="100%" nowrap><strong><dhv:label name="project.forum">Forum</dhv:label></strong></th>
+    <th align="center" nowrap><strong><dhv:label name="project.topics">Topics</dhv:label></strong></th>
+    <th align="center" nowrap><strong><dhv:label name="project.posts">Posts</dhv:label></strong></th>
+    <th align="center" nowrap><strong><dhv:label name="project.lastPost">Last Post</dhv:label></strong></th>
   </tr>
 <%
 	IssueCategoryList issueCategoryList = Project.getIssueCategories();
   if (issueCategoryList.size() == 0) {
 %>
   <tr class="row2">
-    <td colspan="5">No forums to display.</td>
+    <td colspan="5"><dhv:label name="project.noForumsToDisplay">No forums to display.</dhv:label></td>
   </tr>
 <%
   }
@@ -71,24 +71,32 @@
     rowid = (rowid != 1?1:2);
     IssueCategory thisCategory = (IssueCategory) i.next();
 %>    
-  <tr>
-    <td class="row<%= rowid %>" valign="top" nowrap>
+  <tr class="row<%= rowid %>">
+    <td valign="top" nowrap>
       <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisCategory.getId() %>);"
          onMouseOver="over(0, <%= count %>)"
          onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img 
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>
     </td>
-    <td class="row<%= rowid %>" valign="top" width="100%">
-      <img border="0" src="images/icons/stock_draw-callouts2-16.gif" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= thisCategory.getProjectId() %>&cid=<%= thisCategory.getId() %>&resetList=true"><%= toHtml(thisCategory.getSubject()) %></a>
+    <td valign="top" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" class="empty">
+        <tr>
+          <td valign="top" nowrap>
+            <img border="0" src="images/icons/stock_draw-callouts2-16.gif" align="absmiddle">&nbsp;
+          </td>
+          <td valign="top" width="100%">
+            <a href="ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= thisCategory.getProjectId() %>&cid=<%= thisCategory.getId() %>&resetList=true"><%= toHtml(thisCategory.getSubject()) %></a>
+          </td>
+        </tr>
+      </table>
     </td>
-    <td class="row<%= rowid %>" valign="top" align="center" nowrap>
+    <td valign="top" align="center" nowrap>
       <%= ((thisCategory.getTopicsCount()==0) ? "0" : "" + thisCategory.getTopicsCount()) %>
     </td>
-    <td class="row<%= rowid %>" valign="top" align="center" nowrap>
+    <td valign="top" align="center" nowrap>
       <%= ((thisCategory.getPostsCount()==0) ? "0" : "" + thisCategory.getPostsCount()) %>
     </td>
-    <td class="row<%= rowid %>" valign="top" align="center" nowrap>
+    <td valign="top" align="center" nowrap>
       <dhv:evaluate if="<%= thisCategory.getPostsCount() > 0 %>">
       <zeroio:tz timestamp="<%= thisCategory.getLastPostDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/><br />
       </dhv:evaluate>

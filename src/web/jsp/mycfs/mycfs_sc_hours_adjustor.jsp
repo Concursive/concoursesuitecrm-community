@@ -36,22 +36,22 @@
     formTest = true;
     message = "";
     if (form.adjustmentHours.value == "") { 
-      message += "- Hours is required\r\n";
+      message += label("select.hours","- Hours is required\r\n");
       formTest = false;
     }
 
     if (!checkRealNumber(form.adjustmentHours.value)) { 
-      message += "- Hours is invalid\r\n";
+      message += label("check.hours.invalid","- Hours is invalid\r\n");
       formTest = false;
     }
 
     if (form.adjustmentReason.value == -1) { 
-      message += "- Reason is required\r\n";
+      message += label("select.reason","- Reason is required\r\n");
       formTest = false;
     }
 
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     }
   }
@@ -65,33 +65,33 @@
 <input type="hidden" name="displayFieldId3" value="<%= toHtmlValue(request.getParameter("displayFieldId3")) %>" />
 <%
   if (!"true".equals(request.getAttribute("finalsubmit"))) {
-     String source = request.getParameter("source");
 %>
-  <body onLoad="javascript:document.forms[0].adjustmentHours.focus();" >
+  <body onLoad="javascript:document.serviceContractHoursAdjust.adjustmentHours.focus();" >
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
     <tr>
       <td class="containerBack">
-      <input type="submit" value="Adjust"  onClick="this.form.dosubmit.value='true';" />
-      <input type="button" value="Cancel" onClick="window.close()" />
+      <input type="submit" value="<dhv:label name="account.sc.adjust">Adjust</dhv:label>"  onClick="this.form.dosubmit.value='true';" />
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.close()" />
       <br /><br />
+<%= showError(request, "actionError") %>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Adjustment Information</strong>
+	    <strong><dhv:label name="calendar.adjustmentInformation">Adjustment Information</dhv:label></strong>
 	  </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Hours
+      <dhv:label name="calendar.hours">Hours</dhv:label>
     </td>
     <td>
       <input type="text" size="7" name="adjustmentHours" maxlength="8" ><font color="red">*</font>
-      (Use "-" to substract hours)
+      <dhv:label name="calendar.useMinusToSubtractHours">(Use "-" to substract hours)</dhv:label>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Reason
+      <dhv:label name="account.sc.reason">Reason</dhv:label>
     </td>
     <td>
       <%= adjustmentReasonList.getHtmlSelect("adjustmentReason", -1) %><font color="red">*</font>
@@ -99,7 +99,7 @@
   </tr>
   <tr class="containerBody">
     <td valign="top" class="formLabel">
-      Notes
+      <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
     </td>
     <td>
       <textarea name="adjustmentNotes" rows="3" cols="50"></textarea>
@@ -107,8 +107,8 @@
   </tr>
   </table>
   <br>
-  <input type="submit" value="Adjust" onClick="this.form.dosubmit.value='true';" />
-  <input type="button" value="Cancel" onClick="window.close()" />
+  <input type="submit" value="<dhv:label name="account.sc.adjust">Adjust</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.close()" />
   <input type="hidden" name="dosubmit" value="true" />
   </td>
   </tr>
@@ -160,7 +160,6 @@
       displayValues[<%= count %>] = "<%= toHtml(serviceContractHours.getAdjustmentNotes()) %>";
       displayFields[<%= count %>] = "<%=df3%>";
       <%}%>
-      
   </script>
   </body>
 <% }%>

@@ -31,7 +31,7 @@
     popURL('CalendarCalls.do?command=View&contactId=<%= ContactDetails.getId() %>&popup=true&source=calendar','CONTACT_HISTORY','650','500','yes','yes');
   }
 </script>
-<body onLoad="javascript:document.forms[0].subject.focus();">
+<body onLoad="javascript:document.addCall.subject.focus();">
 <% request.setAttribute("includeDetails", "true"); %>
 <%@ include file="../contacts/contact_details_header_include.jsp" %><br>
 <form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true&actionSource=CalendarCalls" onSubmit="return doCheck(this);" method="post">
@@ -39,17 +39,16 @@
   <tr>
     <td class="containerBack">
       <%-- include call add form --%>
-      <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-      <input type="button" value="Cancel" onClick="javascript:window.close();">
-      [<a href="javascript:showHistory();">View Contact History</a>]
+      <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
+      [<a href="javascript:showHistory();"><dhv:label name="calendar.viewContactHistory">View Contact History</dhv:label></a>]
       <br />
       <dhv:formMessage />
       <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <%@ include file="../contacts/call_include.jsp" %>
-      &nbsp;
-      <br>
-      <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-      <input type="button" value="Cancel" onClick="javascript:window.close();">
+      <br />
+      <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
       <input type="hidden" name="dosubmit" value="true">
       <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
       <dhv:evaluate if="<%= PreviousCallDetails.getId() > -1 %>">

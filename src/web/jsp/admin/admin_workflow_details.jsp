@@ -36,13 +36,13 @@
       for (i = 0; i < size; i++) {
         hideSpan(id + '-' + (i + 1));
       }
-      changeDivContent(id+'-label', 'Show');
+      changeDivContent(id+'-label', label('label.show','Show'));
     } else {
       showSpan(id);
       for (i = 0; i < size; i++) {
         showSpan(id + '-' + (i + 1));
       }
-      changeDivContent(id+'-label', 'Hide');
+      changeDivContent(id+'-label', label('label.hide','Hide'));
     }
   }
 </SCRIPT>
@@ -50,16 +50,16 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
 <dhv:evaluate if="<%= "AdminObjectEvents".equals(request.getParameter("return")) %>">
-<a href="<%= request.getParameter("return") %>.do?moduleId=<%= PermissionCategory.getId() %>">Object Events</a> >
+<a href="<%= request.getParameter("return") %>.do?moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.objectEvents">Object Events</dhv:label></a> >
 </dhv:evaluate>
 <dhv:evaluate if="<%= "AdminScheduledEvents".equals(request.getParameter("return")) %>">
-<a href="<%= request.getParameter("return") %>.do?moduleId=<%= PermissionCategory.getId() %>">Scheduled Events</a> >
+<a href="<%= request.getParameter("return") %>.do?moduleId=<%= PermissionCategory.getId() %>"><dhv:label name="admin.scheduledEvents">Scheduled Events</dhv:label></a> >
 </dhv:evaluate>
-Process Details
+<dhv:label name="admin.processDetails">Process Details</dhv:label>
 </td>
 </tr>
 </table>
@@ -67,7 +67,7 @@ Process Details
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>
-      <strong>Process: <%= toHtml(process.getDescription()) %></strong>
+      <strong><dhv:label name="admin.process.colon">Process:</dhv:label> <%= toHtml(process.getDescription()) %></strong>
     </th>
   </tr>
   <tr>
@@ -92,17 +92,17 @@ Process Details
 <%-- Global Parameters --%>
   <tr>
     <td colspan="2">
-      <strong>Global Parameters</strong>
+      <strong><dhv:label name="admin.globalParameters">Global Parameters</dhv:label></strong>
       (<%= process.getParameters().size() %>)
-      [<a href="javascript:toggle('params-global', <%= process.getParameters().size() %>)"><div id="params-global-label" style="display:inline">Show</div></a>]
+      [<a href="javascript:toggle('params-global', <%= process.getParameters().size() %>)"><div id="params-global-label" style="display:inline"><dhv:label name="admin.show">Show</dhv:label></div></a>]
     </td>
   </tr>
   <tr id="params-global" style="display:none" class="title">
     <td width="50%">
-      <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name</strong>
+      <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<dhv:label name="contacts.name">Name</dhv:label></strong>
     </td>
     <td width="50%">
-      <strong>Value</strong>
+      <strong><dhv:label name="product.value">Value</dhv:label></strong>
     </td>
   </tr>
 <%
@@ -114,7 +114,7 @@ Process Details
 %>
   <tr id="params-global-<%= globalCount %>" style="display:none" class="containerBack">
     <td width="50%" valign="top" nowrap>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= toHtml(param.getName()) %><dhv:evaluate if="<%= !param.getEnabled() %>"> <font color="red">(disabled)</font></dhv:evaluate>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= toHtml(param.getName()) %><dhv:evaluate if="<%= !param.getEnabled() %>"> <font color="red"><dhv:label name="account.disabled.brackets">(disabled)</dhv:label></font></dhv:evaluate>
     </td>
     <td width="50%" valign="top" nowrap>
       <%= toHtml(param.getValue()) %>
@@ -138,7 +138,7 @@ Process Details
       <table border="0" cellpadding="0" cellspacing="0" class="empty">
         <tr>
           <td width="100" nowrap>
-            <strong>Step <%= count %>:</strong><dhv:evaluate if="<%= !component.getEnabled() %>"><br><font color="red">(disabled)</font></dhv:evaluate>
+            <strong><dhv:label name="admin.step">Step</dhv:label> <%= count %>:</strong><dhv:evaluate if="<%= !component.getEnabled() %>"><br><font color="red"><dhv:label name="account.disabled.brackets">(disabled)</dhv:label></font></dhv:evaluate>
           </td>
           <td>
             <strong><%= component.getDescription() %></strong>
@@ -151,14 +151,14 @@ Process Details
 <%-- Component Parameters --%>
   <tr>
     <td colspan="2">
-      <strong>Parameters</strong>
+      <strong><dhv:label name="admin.parameters">Parameters</dhv:label></strong>
       (<%= component.getParameters().size() %>)
       [<a href="javascript:toggle('params-<%= component.getId() %>', <%= component.getParameters().size() %>)"><div id="params-<%= component.getId() %>-label" style="display:inline">Show</div></a>]
     </td>
   </tr>
   <tr id="params-<%= component.getId() %>" style="display:none" class="title">
     <td width="50%" nowrap>
-      <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name</strong>
+      <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<dhv:label name="contacts.name">Name</dhv:label></strong>
     </td>
     <td width="50%" nowrap>
       <strong>Value</strong>
@@ -173,7 +173,7 @@ Process Details
 %>
   <tr id="params-<%= component.getId() %>-<%= paramCount %>" style="display:none" class="containerBack">
     <td width="50%" valign="top" nowrap>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= toHtml(param.getName()) %><dhv:evaluate if="<%= !param.getEnabled() %>"> <font color="red">(disabled)</font></dhv:evaluate>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= toHtml(param.getName()) %><dhv:evaluate if="<%= !param.getEnabled() %>"> <font color="red"><dhv:label name="account.disabled.brackets">(disabled)</dhv:label></font></dhv:evaluate>
     </td>
     <td width="50%" valign="top" nowrap>
       <%= toHtml(param.getValue()) %>
@@ -185,14 +185,13 @@ Process Details
 </dhv:evaluate>
   <tr>
     <td width="50%">
-      <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Results</strong>
+      <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<dhv:label name="accounts.accounts_contacts_listimports.Results">Results</dhv:label></strong>
     </td>
     <td width="50%" nowrap>
-      <strong>Go to</strong>
+      <strong><dhv:label name="admin.goTo">Go to</dhv:label></strong>
     </td>
   </tr>
 <%
-    int sameId = -1;
     //For each component, get the children components
     HashMap childrenMap = component.getChildren();
     //For each child component, get the possible result types
@@ -210,7 +209,7 @@ Process Details
   <dhv:evaluate if="<%= thisResult.intValue() == -1 %>">
   <tr>
     <td>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End of step
+      <dhv:label name="admin.endOfStep">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;End of step</dhv:label>
     </td>
     <td>
 <%
@@ -230,8 +229,16 @@ Process Details
   <dhv:evaluate if="<%= thisResult.intValue() > -1 %>">
   <tr>
     <td>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= thisResult.intValue() == Constants.TRUE ? "Yes" : "No" %>
-      <%= (thisComponent.getEnabled()?"":"<font color=\"red\">(disabled)</font>") %>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<% if(thisResult.intValue() == Constants.TRUE) {%>
+  <dhv:label name="account.yes">Yes</dhv:label>
+<%} else {%>
+  <dhv:label name="account.no">No</dhv:label>
+<%}%>
+<font color="red"><% if(thisComponent.getEnabled()) {%>
+<%} else {%>
+  <dhv:label name="account.disabled.brackets">(disabled)</dhv:label>
+<%}%></font>
     </td>
     <td>
 <%
@@ -251,11 +258,16 @@ Process Details
   <dhv:evaluate if="<%= resultSet.size() == 1 && (thisResult.intValue() == 0 || thisResult.intValue() == 1) %>">
   <tr>
     <td>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= thisResult.intValue() == Constants.TRUE ? "No" : "Yes" %>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<% if(thisResult.intValue() == Constants.TRUE) {%>
+  <dhv:label name="account.no">No</dhv:label>
+<%} else {%>
+  <dhv:label name="account.yes">Yes</dhv:label>
+<%}%>
     </td>
     <td>
       <img src="images/pr-end.gif" border="0" align="absbottom">
-      Stop
+      <dhv:label name="admin.stop">Stop</dhv:label>
     </td>
   </tr>
   </dhv:evaluate>
@@ -267,11 +279,11 @@ Process Details
   <dhv:evaluate if="<%= childrenMap.isEmpty() %>">
   <tr>
     <td>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Process Finished
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<dhv:label name="admin.processFinished">Process Finished</dhv:label>
     </td>
     <td>
       <img src="images/pr-end.gif" border="0" align="absbottom">
-      Stop
+      <dhv:label name="admin.stop">Stop</dhv:label>
     </td>
   </tr>
   </dhv:evaluate>

@@ -99,8 +99,27 @@ ALTER TABLE [call_log] WITH NOCHECK ADD
 	CONSTRAINT [DF__call_log__alertd__14B10FFA] DEFAULT ('America/New_York') FOR [alertdate_timezone]
 GO
 
-ALTER TABLE project_issues
-	DROP CONSTRAINT FK__project_i__type___6D181FEC
+
+EXEC sp_executesql N'
+DECLARE @sql nvarchar(4000)
+DECLARE CNSTR CURSOR LOCAL FAST_FORWARD READ_ONLY FOR
+     SELECT ''ALTER TABLE ''+@table+'' DROP CONSTRAINT ''+QUOTENAME(o.name)
+     FROM dbo.syscolumns
+     INNER JOIN dbo.sysobjects ON syscolumns.id = sysobjects.id
+     INNER JOIN dbo.sysreferences ON syscolumns.id = sysreferences.fkeyid
+     INNER JOIN dbo.sysobjects o ON sysreferences.constid = o.id
+     WHERE sysobjects.name = ''project_issues''
+       AND syscolumns.name = ''type_id''
+       AND o.name LIKE ''FK__project_i__type%''
+OPEN CNSTR
+FETCH CNSTR INTO @sql
+WHILE @@FETCH_STATUS=0
+BEGIN 
+    EXEC sp_executesql @sql
+    FETCH CNSTR INTO @sql
+END
+CLOSE CNSTR DEALLOCATE CNSTR',N'@table nvarchar(261)','[project_issues]'
+GO
 
 DROP TABLE lookup_project_issues;
 
@@ -133,7 +152,7 @@ CREATE TABLE [lookup_project_category] (
 GO
 
 
-ALTER TABLE projects ADD approvalby integer;
+ALTER TABLE projects ADD approvalBy integer;
 ALTER TABLE projects ADD category_id integer;
 
 ALTER TABLE projects ADD portal BIT;
@@ -217,9 +236,29 @@ CREATE TABLE [project_assignments_folder] (
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
-ALTER TABLE project_assignments
-	DROP CONSTRAINT FK__project_a__activ__6AFACD50;
 DROP INDEX project_assignments.project_assignments_idx;
+
+EXEC sp_executesql N'
+DECLARE @sql nvarchar(4000)
+DECLARE CNSTR CURSOR LOCAL FAST_FORWARD READ_ONLY FOR
+     SELECT ''ALTER TABLE ''+@table+'' DROP CONSTRAINT ''+QUOTENAME(o.name)
+     FROM dbo.syscolumns
+     INNER JOIN dbo.sysobjects ON syscolumns.id = sysobjects.id
+     INNER JOIN dbo.sysreferences ON syscolumns.id = sysreferences.fkeyid
+     INNER JOIN dbo.sysobjects o ON sysreferences.constid = o.id
+     WHERE sysobjects.name = ''project_assignments''
+       AND syscolumns.name = ''activity_id''
+       AND o.name LIKE ''FK__project_a__activ%''
+OPEN CNSTR
+FETCH CNSTR INTO @sql
+WHILE @@FETCH_STATUS=0
+BEGIN 
+    EXEC sp_executesql @sql
+    FETCH CNSTR INTO @sql
+END
+CLOSE CNSTR DEALLOCATE CNSTR',N'@table nvarchar(261)','[project_assignments]'
+GO
+
 ALTER TABLE project_assignments DROP COLUMN activity_id;
 
 ALTER TABLE project_assignments ADD folder_id integer;
@@ -243,7 +282,6 @@ CREATE TABLE [project_issues_categories] (
 GO
 
 DROP INDEX project_issues.project_issues_limit_idx;
-DROP INDEX project_issues.project_issues_idx;
 ALTER TABLE project_issues DROP COLUMN type_id;
 ALTER TABLE project_issues ADD category_id integer;
 
@@ -258,6 +296,7 @@ ALTER TABLE project_issues ALTER COLUMN last_reply_date DATETIME NOT NULL;
 ALTER TABLE project_issues ADD last_reply_by integer;
 
 
+
 ALTER TABLE project_folders DROP COLUMN parent;
 ALTER TABLE project_folders ADD parent_id integer;
 
@@ -265,17 +304,17 @@ ALTER TABLE project_folders ADD entered DATETIME;
 UPDATE project_folders SET entered = CURRENT_TIMESTAMP WHERE entered IS NULL;
 ALTER TABLE project_folders ALTER COLUMN entered DATETIME NOT NULL;
 
-ALTER TABLE project_folders ADD enteredby INTEGER;
-UPDATE project_folders SET enteredby = 0 WHERE enteredby IS NULL;
-ALTER TABLE project_folders ALTER COLUMN enteredby INTEGER NOT NULL;
+ALTER TABLE project_folders ADD enteredBy INTEGER REFERENCES access(user_id);
+UPDATE project_folders SET enteredBy = 0 WHERE enteredBy IS NULL;
+ALTER TABLE project_folders ALTER COLUMN enteredBy INTEGER NOT NULL;
 
 ALTER TABLE project_folders ADD modified DATETIME;
 UPDATE project_folders SET modified = CURRENT_TIMESTAMP WHERE modified IS NULL;
 ALTER TABLE project_folders ALTER COLUMN modified DATETIME NOT NULL;
 
-ALTER TABLE project_folders ADD modifiedBy INTEGER;
-UPDATE project_folders SET modifiedby = 0 WHERE modifiedby IS NULL;
-ALTER TABLE project_folders ALTER COLUMN modifiedby INTEGER NOT NULL;
+ALTER TABLE project_folders ADD modifiedBy INTEGER REFERENCES access(user_id);
+UPDATE project_folders SET modifiedBy = 0 WHERE modifiedBy IS NULL;
+ALTER TABLE project_folders ALTER COLUMN modifiedBy INTEGER NOT NULL;
 
 ALTER TABLE project_folders ADD display integer;
 
@@ -571,6 +610,10 @@ GO
 
 
 
+DROP INDEX project_issues.project_issues_idx;
+
+
+
  CREATE  UNIQUE  INDEX [project_team_uni_idx] ON [project_team]([project_id], [user_id]) ON [PRIMARY]
 GO
 
@@ -722,12 +765,9 @@ GO
 
 
 
-ALTER TABLE [project_assignments_folder] WITH NOCHECK ADD 
-	 PRIMARY KEY  CLUSTERED 
-	(
-		[folder_id]
-	)  ON [PRIMARY] 
+ALTER TABLE [project_assignments_folder] ADD CONSTRAINT [project_assignments_folder_pkey] PRIMARY KEY ([folder_id])
 GO
+
 
 ALTER TABLE [project_assignments_folder] WITH NOCHECK ADD 
 	CONSTRAINT [DF__project_a__enter__5C37ACAD] DEFAULT (getdate()) FOR [entered],
@@ -811,12 +851,6 @@ ALTER TABLE [project_issues_categories] ADD
 	) REFERENCES [projects] (
 		[project_id]
 	)
-GO
-
-
-ALTER TABLE [project_issues] WITH NOCHECK ADD 
-	CONSTRAINT [DF__project_i__reply__08162EEB] DEFAULT (0) FOR [reply_count],
-	CONSTRAINT [DF__project_i__last___090A5324] DEFAULT (getdate()) FOR [last_reply_date]
 GO
 
 

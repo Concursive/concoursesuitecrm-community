@@ -24,21 +24,21 @@
     var formTest = true;
     var messageText = "";
     if (form.subject.value == "") {
-      messageText += "- Subject is required\r\n";
+      messageText += label("Subject.required", "- Subject is required\r\n");
       formTest = false;
     }
     if (form.id<%= TicketDetails.getId() %>.value.length < 5) {
-      messageText += "- File is required\r\n";
+      messageText += label("file.required", "- File is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("File.not.submitted", "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
     } else {
-      if (form.upload.value != 'Please Wait...') {
-        form.upload.value='Please Wait...';
+      if (form.upload.value != label("button.pleasewait","Please Wait...")) {
+        form.upload.value=label("button.pleasewait","Please Wait...");
         return true;
       } else {
         return false;
@@ -50,21 +50,22 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <img border="0" src="images/file.gif" align="absmiddle"><b>Upload a New Document</b>
+      <img border="0" src="images/file.gif" align="absmiddle"><b><dhv:label name="accounts.accounts_documents_upload.UploadNewDocument">Upload a New Document</dhv:label></b>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Subject
+      <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
     </td>
     <td>
       <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>">
       <input type="text" name="subject" size="59" maxlength="255" value="<%= toHtmlValue((String)request.getAttribute("subject")) %>"><font color="red">*</font>
+      <%= showAttribute(request, "subjectError") %>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      File
+      <dhv:label name="contacts.companydirectory_confirm_importupload.File">File</dhv:label>
     </td>
     <td>
       <input type="file" name="id<%= TicketDetails.getId() %>" size="45">

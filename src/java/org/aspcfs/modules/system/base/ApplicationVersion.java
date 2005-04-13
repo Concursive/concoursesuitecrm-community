@@ -26,9 +26,9 @@ import org.aspcfs.controller.ApplicationPrefs;
  *      Exp $
  */
 public class ApplicationVersion {
-  public final static String VERSION = "2.9.1 (2004-11-03)";
-  public final static String APP_VERSION = "2004-11-03";
-  public final static String DB_VERSION = "2004-10-03";
+  public final static String VERSION = "3.0 Test 2 (2005-04-06)";
+  public final static String APP_VERSION = "2005-04-06";
+  public final static String DB_VERSION = "2005-04-06";
 
 
   /**
@@ -38,8 +38,13 @@ public class ApplicationVersion {
    *@return        The outOfDate value
    */
   public static boolean isOutOfDate(ApplicationPrefs prefs) {
+    // BEGIN DHV CODE ONLY
     String installedVersion = getInstalledVersion(prefs);
-    return !installedVersion.equals(ApplicationVersion.VERSION);
+    if (installedVersion != null) {
+      return !installedVersion.equals(ApplicationVersion.VERSION);
+    }
+    // END DHV CODE ONLY
+    return false;
   }
 
 

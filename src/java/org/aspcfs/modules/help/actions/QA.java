@@ -15,19 +15,17 @@
  */
 package org.aspcfs.modules.help.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.webutils.FileDownload;
 import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.PermissionCategoryList;
 import org.aspcfs.modules.help.base.*;
-import org.aspcfs.modules.admin.base.*;
-import com.zeroio.webutils.*;
-import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.utils.web.LookupElement;
-import com.isavvix.tools.*;
-import java.sql.*;
-import java.util.StringTokenizer;
 import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
+import java.util.StringTokenizer;
 
 /**
  *  QA Tool Manager
@@ -71,7 +69,7 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "QA");
+    return getReturn(context, "QA");
   }
 
 
@@ -103,7 +101,7 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "ModifyIntro");
+    return getReturn(context, "ModifyIntro");
   }
 
 
@@ -118,13 +116,11 @@ public final class QA extends CFSModule {
       return ("PermissionError");
     }
     Connection db = null;
-    int resultCount = -1;
     HelpItem thisItem = (HelpItem) context.getFormBean();
-
     try {
       db = this.getConnection(context);
       thisItem.setModifiedBy(this.getUserId(context));
-      resultCount = thisItem.update(db);
+      thisItem.update(db);
     } catch (Exception e) {
       e.printStackTrace(System.out);
       context.getRequest().setAttribute("Error", e);
@@ -133,7 +129,7 @@ public final class QA extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("refreshUrl", "QA.do?module=" + thisItem.getModule() + (thisItem.getSection() != null ? "&section=" + thisItem.getSection() : "") + (thisItem.getSubsection() != null ? "&subsection=" + thisItem.getSubsection() : "") + HTTPUtils.addLinkParams(context.getRequest(), "popup"));
-    return this.getReturn(context, "SaveIntro");
+    return getReturn(context, "SaveIntro");
   }
 
 
@@ -158,7 +154,7 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "FeaturePrepare");
+    return getReturn(context, "FeaturePrepare");
   }
 
 
@@ -187,7 +183,7 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "FeatureModify");
+    return getReturn(context, "FeatureModify");
   }
 
 
@@ -244,22 +240,22 @@ public final class QA extends CFSModule {
     if (resultCount == 1) {
       if ("loop".equals(target)) {
         context.getRequest().setAttribute("redirectUrl", "HelpFeatures.do?command=PrepareFeature&linkHelpId=" + thisFeature.getLinkHelpId() + "&target=" + target);
-        return this.getReturn(context, "FeatureReInsert");
+        return getReturn(context, "FeatureReInsert");
       }
-      return this.getReturn(context, "FeatureUpdate");
+      return getReturn(context, "FeatureUpdate");
     } else if (recordInserted) {
       if ("loop".equals(target)) {
         context.getRequest().setAttribute("redirectUrl", "HelpFeatures.do?command=PrepareFeature&linkHelpId=" + thisFeature.getLinkHelpId() + "&target=" + target);
-        return this.getReturn(context, "FeatureReInsert");
+        return getReturn(context, "FeatureReInsert");
       }
-      return this.getReturn(context, "FeatureInsert");
+      return getReturn(context, "FeatureInsert");
     }
     if (thisFeature.getId() > 0) {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
     } else {
       processErrors(context, thisFeature.getErrors());
     }
-    return this.getReturn(context, "FeaturePrepare");
+    return getReturn(context, "FeaturePrepare");
   }
 
 
@@ -288,7 +284,7 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "FeatureDelete");
+    return getReturn(context, "FeatureDelete");
   }
 
 
@@ -362,7 +358,7 @@ public final class QA extends CFSModule {
     if (!(hasPermission(context, "qa-add"))) {
       return ("PermissionError");
     }
-    return this.getReturn(context, "RulePrepare");
+    return getReturn(context, "RulePrepare");
   }
 
 
@@ -389,7 +385,7 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "RuleModify");
+    return getReturn(context, "RuleModify");
   }
 
 
@@ -436,22 +432,22 @@ public final class QA extends CFSModule {
     if (resultCount == 1) {
       if ("loop".equals(target)) {
         context.getRequest().setAttribute("redirectUrl", "HelpRules.do?command=PrepareRule&linkHelpId=" + thisRule.getLinkHelpId() + "&target=" + target);
-        return this.getReturn(context, "RuleReInsert");
+        return getReturn(context, "RuleReInsert");
       }
-      return this.getReturn(context, "RuleUpdate");
+      return getReturn(context, "RuleUpdate");
     } else if (recordInserted) {
       if ("loop".equals(target)) {
         context.getRequest().setAttribute("redirectUrl", "HelpRules.do?command=PrepareRule&linkHelpId=" + thisRule.getLinkHelpId() + "&target=" + target);
-        return this.getReturn(context, "RuleReInsert");
+        return getReturn(context, "RuleReInsert");
       }
-      return this.getReturn(context, "RuleInsert");
+      return getReturn(context, "RuleInsert");
     }
     if (thisRule.getId() > 0) {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
     } else {
       processErrors(context, thisRule.getErrors());
     }
-    return this.getReturn(context, "RulePrepare");
+    return getReturn(context, "RulePrepare");
   }
 
 
@@ -480,7 +476,7 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "RuleDelete");
+    return getReturn(context, "RuleDelete");
   }
 
 
@@ -554,7 +550,7 @@ public final class QA extends CFSModule {
     if (!(hasPermission(context, "qa-add"))) {
       return ("PermissionError");
     }
-    return this.getReturn(context, "TipPrepare");
+    return getReturn(context, "TipPrepare");
   }
 
 
@@ -581,7 +577,7 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "TipModify");
+    return getReturn(context, "TipModify");
   }
 
 
@@ -629,22 +625,22 @@ public final class QA extends CFSModule {
     if (resultCount == 1) {
       if ("loop".equals(target)) {
         context.getRequest().setAttribute("redirectUrl", "HelpTips.do?command=PrepareTip&linkHelpId=" + thisTip.getLinkHelpId() + "&target=" + target);
-        return this.getReturn(context, "TipReInsert");
+        return getReturn(context, "TipReInsert");
       }
-      return this.getReturn(context, "TipUpdate");
+      return getReturn(context, "TipUpdate");
     } else if (recordInserted) {
       if ("loop".equals(target)) {
         context.getRequest().setAttribute("redirectUrl", "HelpTips.do?command=PrepareTip&linkHelpId=" + thisTip.getLinkHelpId() + "&target=" + target);
-        return this.getReturn(context, "TipReInsert");
+        return getReturn(context, "TipReInsert");
       }
-      return this.getReturn(context, "TipInsert");
+      return getReturn(context, "TipInsert");
     }
     if (thisTip.getId() > 0) {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
     } else {
       processErrors(context, thisTip.getErrors());
     }
-    return this.getReturn(context, "TipPrepare");
+    return getReturn(context, "TipPrepare");
   }
 
 
@@ -673,7 +669,7 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "TipDelete");
+    return getReturn(context, "TipDelete");
   }
 
 
@@ -687,7 +683,7 @@ public final class QA extends CFSModule {
     if (!(hasPermission(context, "qa-add"))) {
       return ("PermissionError");
     }
-    return this.getReturn(context, "NotePrepare");
+    return getReturn(context, "NotePrepare");
   }
 
 
@@ -714,7 +710,7 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "NoteModify");
+    return getReturn(context, "NoteModify");
   }
 
 
@@ -765,22 +761,22 @@ public final class QA extends CFSModule {
     if (resultCount == 1) {
       if ("loop".equals(target)) {
         context.getRequest().setAttribute("redirectUrl", "HelpNotes.do?command=PrepareNote&linkHelpId=" + thisNote.getLinkHelpId() + "&target=" + target);
-        return this.getReturn(context, "NoteReInsert");
+        return getReturn(context, "NoteReInsert");
       }
-      return this.getReturn(context, "NoteUpdate");
+      return getReturn(context, "NoteUpdate");
     } else if (recordInserted) {
       if ("loop".equals(target)) {
         context.getRequest().setAttribute("redirectUrl", "HelpNotes.do?command=PrepareNote&linkHelpId=" + thisNote.getLinkHelpId() + "&target=" + target);
-        return this.getReturn(context, "NoteReInsert");
+        return getReturn(context, "NoteReInsert");
       }
-      return this.getReturn(context, "NoteInsert");
+      return getReturn(context, "NoteInsert");
     }
     if (thisNote.getId() > 0) {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
     } else {
       processErrors(context, thisNote.getErrors());
     }
-    return this.getReturn(context, "NotePrepare");
+    return getReturn(context, "NotePrepare");
   }
 
 
@@ -809,7 +805,7 @@ public final class QA extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "NoteDelete");
+    return getReturn(context, "NoteDelete");
   }
 
 

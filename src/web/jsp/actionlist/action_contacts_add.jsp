@@ -20,13 +20,28 @@
 <%@ page import="org.aspcfs.modules.base.Constants" %>
 <jsp:useBean id="SCL" class="org.aspcfs.modules.communications.base.SearchCriteriaList" scope="request"/>
 <jsp:useBean id="ActionList" class="org.aspcfs.modules.actionlist.base.ActionList" scope="request"/>
+<jsp:useBean id="viewUser" class="java.lang.String" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" type="text/javascript" src="javascript/checkString.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
-function saveCriteria() {
-  saveValues();
-  return true;
+
+function checkForm(form) {
+    formTest = true;
+    message = "";
+    saveValues();
+    if (checkNullString(form.searchCriteriaText.value)) { 
+      message += label("check.criteria","- Criteria is required\r\n");
+      formTest = false;
+    }
+    if (formTest == false) {
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
+      return false;
+    }
+    return true;
 }
+</SCRIPT>
+
 </SCRIPT>
 <%
   String returnURL = "MyActionLists.do?command=List&linkModuleId=" + Constants.ACTIONLISTS_CONTACTS;
@@ -34,28 +49,29 @@ function saveCriteria() {
    returnURL = "MyActionContacts.do?command=List&actionId=" + ActionList.getId();
   }
 %>
-<form name="searchForm" method="post" action="MyActionContacts.do?command=Save&actionId=<%= ActionList.getId() %>" onSubmit="return saveCriteria();">
+<form name="searchForm" method="post" action="MyActionContacts.do?command=Save&actionId=<%= ActionList.getId() %>" onSubmit="return checkForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> >
-<a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>">Action Lists</a> >
-<a href="MyActionContacts.do?command=List&actionId=<%= request.getParameter("actionId") %>">List Details</a> >
-Add Contacts
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> >
+<a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>"><dhv:label name="myitems.actionLists">Action Lists</dhv:label></a> >
+<a href="MyActionContacts.do?command=List&actionId=<%= request.getParameter("actionId") %>"><dhv:label name="actionList.listDetails">List Details</dhv:label></a> >
+<dhv:label name="actionList.addContacts">Add Contacts</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<input type="submit" value="Save">
-<input type="button" value="Cancel" onClick="javascript:window.location.href='<%= returnURL %>'">
-<input type="button" value="Preview" onClick="javascript:popPreview()">
-<br>
+<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" />
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='<%= returnURL %>'" />
+<input type="button" value="<dhv:label name="button.preview">Preview</dhv:label>" onClick="javascript:popPreview()">
+<br />
+<dhv:formMessage />
 <%-- include jsp for contact criteria --%>
 <%@ include file="../communications/group_criteria_include.jsp" %>
-<br>
+<br />
 <input type="hidden" name="actionId" value="<%= ActionList.getId() %>">
-<input type="submit" value="Save">
-<input type="button" value="Cancel" onClick="javascript:window.location.href='<%= returnURL %>'">
-<input type="button" value="Preview" onClick="javascript:popPreview()">
+<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" />
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='<%= returnURL %>'" />
+<input type="button" value="<dhv:label name="button.preview">Preview</dhv:label>" onClick="javascript:popPreview()">
 </form>

@@ -15,14 +15,16 @@
  */
 package com.zeroio.iteam.base;
 
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
 
 /**
  *  Description of the Class
@@ -358,8 +360,8 @@ public class IssueList extends ArrayList {
       sqlFilter.append("AND i.last_reply_date < ? ");
     }
     if (forUser > -1) {
-      sqlFilter.append("AND (i.project_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
-          "AND status IS NULL )) ");
+      sqlFilter.append("AND (i.project_id IN (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
+          "AND status IS NULL) OR i.project_id IN (SELECT project_id FROM projects WHERE allow_guests = ? AND approvaldate IS NOT NULL)) ");
     }
   }
 
@@ -387,9 +389,17 @@ public class IssueList extends ArrayList {
     }
     if (forUser > -1) {
       pst.setInt(++i, forUser);
+      pst.setBoolean(++i, true);
     }
     return i;
   }
 
+  public void delete(Connection db, String basePath) throws SQLException {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Issue thisIssue = (Issue) i.next();
+      thisIssue.delete(db, basePath);
+    }
+  }
 }
 

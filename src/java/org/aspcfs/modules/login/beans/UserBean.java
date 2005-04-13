@@ -15,16 +15,18 @@
  */
 package org.aspcfs.modules.login.beans;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import javax.servlet.http.*;
-import javax.servlet.*;
 import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.utils.web.ClientType;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Hashtable;
+import java.util.Locale;
 
 /**
  *  User Session record -- maintained while the user is logged in

@@ -15,34 +15,40 @@
  */
 package org.aspcfs.modules.troubletickets.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.sql.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.*;
-import com.zeroio.iteam.base.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.contacts.base.*;
-import java.io.*;
-import java.text.*;
+import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.FileItem;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.accounts.base.OrganizationReport;
 import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.Report;
+import org.aspcfs.modules.base.ReportRow;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris
- *@created    March 8, 2002
- *@version    $Id$
+ * @author chris
+ * @version $Id$
+ * @created March 8, 2002
  */
 public class TicketReport extends TicketList {
   protected Report rep = new Report();
   //default delimiter is comma
   protected String delimiter = ",";
-  protected String header = "Centric CRM Tickets";
+  protected String header = null;
   protected String tdFormat = "";
   protected String filePath = "";
   protected String filenameToUse = "";
@@ -85,15 +91,16 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Constructor for the TicketReport object
+   * Constructor for the TicketReport object
    */
-  public TicketReport() { }
+  public TicketReport() {
+  }
 
 
   /**
-   *  Sets the rep attribute of the TicketReport object
+   * Sets the rep attribute of the TicketReport object
    *
-   *@param  tmp  The new rep value
+   * @param tmp The new rep value
    */
   public void setRep(Report tmp) {
     this.rep = tmp;
@@ -101,9 +108,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the delimiter attribute of the TicketReport object
+   * Sets the delimiter attribute of the TicketReport object
    *
-   *@param  tmp  The new delimiter value
+   * @param tmp The new delimiter value
    */
   public void setDelimiter(String tmp) {
     this.delimiter = tmp;
@@ -111,9 +118,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the header attribute of the TicketReport object
+   * Sets the header attribute of the TicketReport object
    *
-   *@param  tmp  The new header value
+   * @param tmp The new header value
    */
   public void setHeader(String tmp) {
     this.header = tmp;
@@ -121,9 +128,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the tdFormat attribute of the TicketReport object
+   * Sets the tdFormat attribute of the TicketReport object
    *
-   *@param  tmp  The new tdFormat value
+   * @param tmp The new tdFormat value
    */
   public void setTdFormat(String tmp) {
     this.tdFormat = tmp;
@@ -131,10 +138,10 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayEstimatedResolutionDate attribute of the TicketReport
-   *  object
+   * Sets the displayEstimatedResolutionDate attribute of the TicketReport
+   * object
    *
-   *@param  tmp  The new displayEstimatedResolutionDate value
+   * @param tmp The new displayEstimatedResolutionDate value
    */
   public void setDisplayEstimatedResolutionDate(boolean tmp) {
     this.displayEstimatedResolutionDate = tmp;
@@ -142,10 +149,10 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayEstimatedResolutionDate attribute of the TicketReport
-   *  object
+   * Sets the displayEstimatedResolutionDate attribute of the TicketReport
+   * object
    *
-   *@param  tmp  The new displayEstimatedResolutionDate value
+   * @param tmp The new displayEstimatedResolutionDate value
    */
   public void setDisplayEstimatedResolutionDate(String tmp) {
     this.displayEstimatedResolutionDate = DatabaseUtils.parseBoolean(tmp);
@@ -153,9 +160,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayResolutionDate attribute of the TicketReport object
+   * Sets the displayResolutionDate attribute of the TicketReport object
    *
-   *@param  tmp  The new displayResolutionDate value
+   * @param tmp The new displayResolutionDate value
    */
   public void setDisplayResolutionDate(boolean tmp) {
     this.displayResolutionDate = tmp;
@@ -163,9 +170,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayResolutionDate attribute of the TicketReport object
+   * Sets the displayResolutionDate attribute of the TicketReport object
    *
-   *@param  tmp  The new displayResolutionDate value
+   * @param tmp The new displayResolutionDate value
    */
   public void setDisplayResolutionDate(String tmp) {
     this.displayResolutionDate = DatabaseUtils.parseBoolean(tmp);
@@ -173,9 +180,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayAssignmentDate attribute of the TicketReport object
+   * Sets the displayAssignmentDate attribute of the TicketReport object
    *
-   *@param  tmp  The new displayAssignmentDate value
+   * @param tmp The new displayAssignmentDate value
    */
   public void setDisplayAssignmentDate(boolean tmp) {
     this.displayAssignmentDate = tmp;
@@ -183,9 +190,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayAssignmentDate attribute of the TicketReport object
+   * Sets the displayAssignmentDate attribute of the TicketReport object
    *
-   *@param  tmp  The new displayAssignmentDate value
+   * @param tmp The new displayAssignmentDate value
    */
   public void setDisplayAssignmentDate(String tmp) {
     this.displayAssignmentDate = DatabaseUtils.parseBoolean(tmp);
@@ -193,9 +200,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayComment attribute of the TicketReport object
+   * Sets the displayComment attribute of the TicketReport object
    *
-   *@param  tmp  The new displayComment value
+   * @param tmp The new displayComment value
    */
   public void setDisplayComment(boolean tmp) {
     this.displayComment = tmp;
@@ -203,9 +210,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayComment attribute of the TicketReport object
+   * Sets the displayComment attribute of the TicketReport object
    *
-   *@param  tmp  The new displayComment value
+   * @param tmp The new displayComment value
    */
   public void setDisplayComment(String tmp) {
     this.displayComment = DatabaseUtils.parseBoolean(tmp);
@@ -213,9 +220,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayIssueNotes attribute of the TicketReport object
+   * Sets the displayIssueNotes attribute of the TicketReport object
    *
-   *@param  tmp  The new displayIssueNotes value
+   * @param tmp The new displayIssueNotes value
    */
   public void setDisplayIssueNotes(boolean tmp) {
     this.displayIssueNotes = tmp;
@@ -223,9 +230,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayIssueNotes attribute of the TicketReport object
+   * Sets the displayIssueNotes attribute of the TicketReport object
    *
-   *@param  tmp  The new displayIssueNotes value
+   * @param tmp The new displayIssueNotes value
    */
   public void setDisplayIssueNotes(String tmp) {
     this.displayIssueNotes = DatabaseUtils.parseBoolean(tmp);
@@ -233,9 +240,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayIssueNotes attribute of the TicketReport object
+   * Gets the displayIssueNotes attribute of the TicketReport object
    *
-   *@return    The displayIssueNotes value
+   * @return The displayIssueNotes value
    */
   public boolean getDisplayIssueNotes() {
     return displayIssueNotes;
@@ -243,10 +250,10 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayEstimatedResolutionDate attribute of the TicketReport
-   *  object
+   * Gets the displayEstimatedResolutionDate attribute of the TicketReport
+   * object
    *
-   *@return    The displayEstimatedResolutionDate value
+   * @return The displayEstimatedResolutionDate value
    */
   public boolean getDisplayEstimatedResolutionDate() {
     return displayEstimatedResolutionDate;
@@ -254,9 +261,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayResolutionDate attribute of the TicketReport object
+   * Gets the displayResolutionDate attribute of the TicketReport object
    *
-   *@return    The displayResolutionDate value
+   * @return The displayResolutionDate value
    */
   public boolean getDisplayResolutionDate() {
     return displayResolutionDate;
@@ -264,9 +271,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayAssignmentDate attribute of the TicketReport object
+   * Gets the displayAssignmentDate attribute of the TicketReport object
    *
-   *@return    The displayAssignmentDate value
+   * @return The displayAssignmentDate value
    */
   public boolean getDisplayAssignmentDate() {
     return displayAssignmentDate;
@@ -274,9 +281,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayComment attribute of the TicketReport object
+   * Gets the displayComment attribute of the TicketReport object
    *
-   *@return    The displayComment value
+   * @return The displayComment value
    */
   public boolean getDisplayComment() {
     return displayComment;
@@ -284,9 +291,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the rep attribute of the TicketReport object
+   * Gets the rep attribute of the TicketReport object
    *
-   *@return    The rep value
+   * @return The rep value
    */
   public Report getRep() {
     return rep;
@@ -294,9 +301,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the delimiter attribute of the TicketReport object
+   * Gets the delimiter attribute of the TicketReport object
    *
-   *@return    The delimiter value
+   * @return The delimiter value
    */
   public String getDelimiter() {
     return delimiter;
@@ -304,9 +311,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the header attribute of the TicketReport object
+   * Gets the header attribute of the TicketReport object
    *
-   *@return    The header value
+   * @return The header value
    */
   public String getHeader() {
     return header;
@@ -314,9 +321,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the tdFormat attribute of the TicketReport object
+   * Gets the tdFormat attribute of the TicketReport object
    *
-   *@return    The tdFormat value
+   * @return The tdFormat value
    */
   public String getTdFormat() {
     return tdFormat;
@@ -324,9 +331,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the filePath attribute of the TicketReport object
+   * Gets the filePath attribute of the TicketReport object
    *
-   *@return    The filePath value
+   * @return The filePath value
    */
   public String getFilePath() {
     return filePath;
@@ -334,9 +341,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the thisItem attribute of the TicketReport object
+   * Gets the thisItem attribute of the TicketReport object
    *
-   *@return    The thisItem value
+   * @return The thisItem value
    */
   public FileItem getThisItem() {
     return thisItem;
@@ -344,9 +351,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the filePath attribute of the TicketReport object
+   * Sets the filePath attribute of the TicketReport object
    *
-   *@param  tmp  The new filePath value
+   * @param tmp The new filePath value
    */
   public void setFilePath(String tmp) {
     this.filePath = tmp;
@@ -354,9 +361,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the thisItem attribute of the TicketReport object
+   * Sets the thisItem attribute of the TicketReport object
    *
-   *@param  tmp  The new thisItem value
+   * @param tmp The new thisItem value
    */
   public void setThisItem(FileItem tmp) {
     this.thisItem = tmp;
@@ -364,9 +371,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the subject attribute of the TicketReport object
+   * Gets the subject attribute of the TicketReport object
    *
-   *@return    The subject value
+   * @return The subject value
    */
   public String getSubject() {
     return subject;
@@ -374,9 +381,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the enteredBy attribute of the TicketReport object
+   * Gets the enteredBy attribute of the TicketReport object
    *
-   *@return    The enteredBy value
+   * @return The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -384,9 +391,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the modifiedBy attribute of the TicketReport object
+   * Gets the modifiedBy attribute of the TicketReport object
    *
-   *@return    The modifiedBy value
+   * @return The modifiedBy value
    */
   public int getModifiedBy() {
     return modifiedBy;
@@ -394,9 +401,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the subject attribute of the TicketReport object
+   * Sets the subject attribute of the TicketReport object
    *
-   *@param  tmp  The new subject value
+   * @param tmp The new subject value
    */
   public void setSubject(String tmp) {
     this.subject = tmp;
@@ -404,9 +411,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the enteredBy attribute of the TicketReport object
+   * Sets the enteredBy attribute of the TicketReport object
    *
-   *@param  tmp  The new enteredBy value
+   * @param tmp The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -414,9 +421,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the modifiedBy attribute of the TicketReport object
+   * Sets the modifiedBy attribute of the TicketReport object
    *
-   *@param  tmp  The new modifiedBy value
+   * @param tmp The new modifiedBy value
    */
   public void setModifiedBy(int tmp) {
     this.modifiedBy = tmp;
@@ -424,9 +431,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayId attribute of the TicketReport object
+   * Gets the displayId attribute of the TicketReport object
    *
-   *@return    The displayId value
+   * @return The displayId value
    */
   public boolean getDisplayId() {
     return displayId;
@@ -434,9 +441,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayProblem attribute of the TicketReport object
+   * Gets the displayProblem attribute of the TicketReport object
    *
-   *@return    The displayProblem value
+   * @return The displayProblem value
    */
   public boolean getDisplayProblem() {
     return displayProblem;
@@ -444,9 +451,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayLocation attribute of the TicketReport object
+   * Gets the displayLocation attribute of the TicketReport object
    *
-   *@return    The displayLocation value
+   * @return The displayLocation value
    */
   public boolean getDisplayLocation() {
     return displayLocation;
@@ -454,9 +461,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displaySourceName attribute of the TicketReport object
+   * Gets the displaySourceName attribute of the TicketReport object
    *
-   *@return    The displaySourceName value
+   * @return The displaySourceName value
    */
   public boolean getDisplaySourceName() {
     return displaySourceName;
@@ -464,9 +471,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayContactName attribute of the TicketReport object
+   * Gets the displayContactName attribute of the TicketReport object
    *
-   *@return    The displayContactName value
+   * @return The displayContactName value
    */
   public boolean getDisplayContactName() {
     return displayContactName;
@@ -474,9 +481,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displaySeverity attribute of the TicketReport object
+   * Gets the displaySeverity attribute of the TicketReport object
    *
-   *@return    The displaySeverity value
+   * @return The displaySeverity value
    */
   public boolean getDisplaySeverity() {
     return displaySeverity;
@@ -484,9 +491,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayPriority attribute of the TicketReport object
+   * Gets the displayPriority attribute of the TicketReport object
    *
-   *@return    The displayPriority value
+   * @return The displayPriority value
    */
   public boolean getDisplayPriority() {
     return displayPriority;
@@ -494,9 +501,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayCategory attribute of the TicketReport object
+   * Gets the displayCategory attribute of the TicketReport object
    *
-   *@return    The displayCategory value
+   * @return The displayCategory value
    */
   public boolean getDisplayCategory() {
     return displayCategory;
@@ -504,9 +511,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayDepartment attribute of the TicketReport object
+   * Gets the displayDepartment attribute of the TicketReport object
    *
-   *@return    The displayDepartment value
+   * @return The displayDepartment value
    */
   public boolean getDisplayDepartment() {
     return displayDepartment;
@@ -514,9 +521,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayOwner attribute of the TicketReport object
+   * Gets the displayOwner attribute of the TicketReport object
    *
-   *@return    The displayOwner value
+   * @return The displayOwner value
    */
   public boolean getDisplayOwner() {
     return displayOwner;
@@ -524,9 +531,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displaySolution attribute of the TicketReport object
+   * Gets the displaySolution attribute of the TicketReport object
    *
-   *@return    The displaySolution value
+   * @return The displaySolution value
    */
   public boolean getDisplaySolution() {
     return displaySolution;
@@ -534,9 +541,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayClosed attribute of the TicketReport object
+   * Gets the displayClosed attribute of the TicketReport object
    *
-   *@return    The displayClosed value
+   * @return The displayClosed value
    */
   public boolean getDisplayClosed() {
     return displayClosed;
@@ -544,9 +551,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayEntered attribute of the TicketReport object
+   * Gets the displayEntered attribute of the TicketReport object
    *
-   *@return    The displayEntered value
+   * @return The displayEntered value
    */
   public boolean getDisplayEntered() {
     return displayEntered;
@@ -554,9 +561,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayEnteredBy attribute of the TicketReport object
+   * Gets the displayEnteredBy attribute of the TicketReport object
    *
-   *@return    The displayEnteredBy value
+   * @return The displayEnteredBy value
    */
   public boolean getDisplayEnteredBy() {
     return displayEnteredBy;
@@ -564,9 +571,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayModified attribute of the TicketReport object
+   * Gets the displayModified attribute of the TicketReport object
    *
-   *@return    The displayModified value
+   * @return The displayModified value
    */
   public boolean getDisplayModified() {
     return displayModified;
@@ -574,9 +581,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayModifiedBy attribute of the TicketReport object
+   * Gets the displayModifiedBy attribute of the TicketReport object
    *
-   *@return    The displayModifiedBy value
+   * @return The displayModifiedBy value
    */
   public boolean getDisplayModifiedBy() {
     return displayModifiedBy;
@@ -584,9 +591,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayId attribute of the TicketReport object
+   * Sets the displayId attribute of the TicketReport object
    *
-   *@param  tmp  The new displayId value
+   * @param tmp The new displayId value
    */
   public void setDisplayId(boolean tmp) {
     this.displayId = tmp;
@@ -594,9 +601,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayProblem attribute of the TicketReport object
+   * Sets the displayProblem attribute of the TicketReport object
    *
-   *@param  tmp  The new displayProblem value
+   * @param tmp The new displayProblem value
    */
   public void setDisplayProblem(boolean tmp) {
     this.displayProblem = tmp;
@@ -604,9 +611,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayLocation attribute of the TicketReport object
+   * Sets the displayLocation attribute of the TicketReport object
    *
-   *@param  tmp  The new displayLocation value
+   * @param tmp The new displayLocation value
    */
   public void setDisplayLocation(boolean tmp) {
     this.displayLocation = tmp;
@@ -614,9 +621,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displaySourceName attribute of the TicketReport object
+   * Sets the displaySourceName attribute of the TicketReport object
    *
-   *@param  tmp  The new displaySourceName value
+   * @param tmp The new displaySourceName value
    */
   public void setDisplaySourceName(boolean tmp) {
     this.displaySourceName = tmp;
@@ -624,9 +631,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayContactName attribute of the TicketReport object
+   * Sets the displayContactName attribute of the TicketReport object
    *
-   *@param  tmp  The new displayContactName value
+   * @param tmp The new displayContactName value
    */
   public void setDisplayContactName(boolean tmp) {
     this.displayContactName = tmp;
@@ -634,9 +641,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displaySeverity attribute of the TicketReport object
+   * Sets the displaySeverity attribute of the TicketReport object
    *
-   *@param  tmp  The new displaySeverity value
+   * @param tmp The new displaySeverity value
    */
   public void setDisplaySeverity(boolean tmp) {
     this.displaySeverity = tmp;
@@ -644,9 +651,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayPriority attribute of the TicketReport object
+   * Sets the displayPriority attribute of the TicketReport object
    *
-   *@param  tmp  The new displayPriority value
+   * @param tmp The new displayPriority value
    */
   public void setDisplayPriority(boolean tmp) {
     this.displayPriority = tmp;
@@ -654,9 +661,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayCategory attribute of the TicketReport object
+   * Sets the displayCategory attribute of the TicketReport object
    *
-   *@param  tmp  The new displayCategory value
+   * @param tmp The new displayCategory value
    */
   public void setDisplayCategory(boolean tmp) {
     this.displayCategory = tmp;
@@ -664,9 +671,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayDepartment attribute of the TicketReport object
+   * Sets the displayDepartment attribute of the TicketReport object
    *
-   *@param  tmp  The new displayDepartment value
+   * @param tmp The new displayDepartment value
    */
   public void setDisplayDepartment(boolean tmp) {
     this.displayDepartment = tmp;
@@ -674,9 +681,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayOwner attribute of the TicketReport object
+   * Sets the displayOwner attribute of the TicketReport object
    *
-   *@param  tmp  The new displayOwner value
+   * @param tmp The new displayOwner value
    */
   public void setDisplayOwner(boolean tmp) {
     this.displayOwner = tmp;
@@ -684,9 +691,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displaySolution attribute of the TicketReport object
+   * Sets the displaySolution attribute of the TicketReport object
    *
-   *@param  tmp  The new displaySolution value
+   * @param tmp The new displaySolution value
    */
   public void setDisplaySolution(boolean tmp) {
     this.displaySolution = tmp;
@@ -694,9 +701,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayClosed attribute of the TicketReport object
+   * Sets the displayClosed attribute of the TicketReport object
    *
-   *@param  tmp  The new displayClosed value
+   * @param tmp The new displayClosed value
    */
   public void setDisplayClosed(boolean tmp) {
     this.displayClosed = tmp;
@@ -704,9 +711,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayEntered attribute of the TicketReport object
+   * Sets the displayEntered attribute of the TicketReport object
    *
-   *@param  tmp  The new displayEntered value
+   * @param tmp The new displayEntered value
    */
   public void setDisplayEntered(boolean tmp) {
     this.displayEntered = tmp;
@@ -714,9 +721,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayEnteredBy attribute of the TicketReport object
+   * Sets the displayEnteredBy attribute of the TicketReport object
    *
-   *@param  tmp  The new displayEnteredBy value
+   * @param tmp The new displayEnteredBy value
    */
   public void setDisplayEnteredBy(boolean tmp) {
     this.displayEnteredBy = tmp;
@@ -724,9 +731,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayModified attribute of the TicketReport object
+   * Sets the displayModified attribute of the TicketReport object
    *
-   *@param  tmp  The new displayModified value
+   * @param tmp The new displayModified value
    */
   public void setDisplayModified(boolean tmp) {
     this.displayModified = tmp;
@@ -734,9 +741,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayModifiedBy attribute of the TicketReport object
+   * Sets the displayModifiedBy attribute of the TicketReport object
    *
-   *@param  tmp  The new displayModifiedBy value
+   * @param tmp The new displayModifiedBy value
    */
   public void setDisplayModifiedBy(boolean tmp) {
     this.displayModifiedBy = tmp;
@@ -744,9 +751,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the orgReportJoin attribute of the TicketReport object
+   * Gets the orgReportJoin attribute of the TicketReport object
    *
-   *@return    The orgReportJoin value
+   * @return The orgReportJoin value
    */
   public OrganizationReport getOrgReportJoin() {
     return orgReportJoin;
@@ -754,9 +761,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the joinOrgs attribute of the TicketReport object
+   * Gets the joinOrgs attribute of the TicketReport object
    *
-   *@return    The joinOrgs value
+   * @return The joinOrgs value
    */
   public boolean getJoinOrgs() {
     return joinOrgs;
@@ -764,9 +771,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the orgReportJoin attribute of the TicketReport object
+   * Sets the orgReportJoin attribute of the TicketReport object
    *
-   *@param  tmp  The new orgReportJoin value
+   * @param tmp The new orgReportJoin value
    */
   public void setOrgReportJoin(OrganizationReport tmp) {
     this.orgReportJoin = tmp;
@@ -774,9 +781,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the joinOrgs attribute of the TicketReport object
+   * Sets the joinOrgs attribute of the TicketReport object
    *
-   *@param  tmp  The new joinOrgs value
+   * @param tmp The new joinOrgs value
    */
   public void setJoinOrgs(boolean tmp) {
     this.joinOrgs = tmp;
@@ -784,9 +791,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayAssignedTo attribute of the TicketReport object
+   * Gets the displayAssignedTo attribute of the TicketReport object
    *
-   *@return    The displayAssignedTo value
+   * @return The displayAssignedTo value
    */
   public boolean getDisplayAssignedTo() {
     return displayAssignedTo;
@@ -794,9 +801,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayAssignedTo attribute of the TicketReport object
+   * Sets the displayAssignedTo attribute of the TicketReport object
    *
-   *@param  displayAssignedTo  The new displayAssignedTo value
+   * @param displayAssignedTo The new displayAssignedTo value
    */
   public void setDisplayAssignedTo(boolean displayAssignedTo) {
     this.displayAssignedTo = displayAssignedTo;
@@ -804,9 +811,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the displayOrganization attribute of the TicketReport object
+   * Gets the displayOrganization attribute of the TicketReport object
    *
-   *@return    The displayOrganization value
+   * @return The displayOrganization value
    */
   public boolean getDisplayOrganization() {
     return displayOrganization;
@@ -814,9 +821,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the displayOrganization attribute of the TicketReport object
+   * Sets the displayOrganization attribute of the TicketReport object
    *
-   *@param  displayOrganization  The new displayOrganization value
+   * @param displayOrganization The new displayOrganization value
    */
   public void setDisplayOrganization(boolean displayOrganization) {
     this.displayOrganization = displayOrganization;
@@ -824,9 +831,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the limitId attribute of the TicketReport object
+   * Gets the limitId attribute of the TicketReport object
    *
-   *@return    The limitId value
+   * @return The limitId value
    */
   public int getLimitId() {
     return limitId;
@@ -834,9 +841,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the limitId attribute of the TicketReport object
+   * Sets the limitId attribute of the TicketReport object
    *
-   *@param  limitId  The new limitId value
+   * @param limitId The new limitId value
    */
   public void setLimitId(int limitId) {
     this.limitId = limitId;
@@ -844,9 +851,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the criteria attribute of the TicketReport object
+   * Gets the criteria attribute of the TicketReport object
    *
-   *@return    The criteria value
+   * @return The criteria value
    */
   public ArrayList getCriteria() {
     return criteria;
@@ -854,24 +861,22 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the criteria attribute of the TicketReport object
+   * Sets the criteria attribute of the TicketReport object
    *
-   *@param  criteriaString  The new criteria value
+   * @param criteriaString The new criteria value
    */
   public void setCriteria(String[] criteriaString) {
     if (criteriaString != null) {
       params = criteriaString;
     }
-
     criteria = new ArrayList(Arrays.asList(params));
-    this.criteria = criteria;
   }
 
 
   /**
-   *  Gets the createdBy attribute of the TicketReport object
+   * Gets the createdBy attribute of the TicketReport object
    *
-   *@return    The createdBy value
+   * @return The createdBy value
    */
   public int getCreatedBy() {
     return createdBy;
@@ -879,9 +884,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the createdBy attribute of the TicketReport object
+   * Sets the createdBy attribute of the TicketReport object
    *
-   *@param  createdBy  The new createdBy value
+   * @param createdBy The new createdBy value
    */
   public void setCreatedBy(int createdBy) {
     this.createdBy = createdBy;
@@ -889,7 +894,7 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the criteriaVars attribute of the TicketReport object
+   * Sets the criteriaVars attribute of the TicketReport object
    */
   public void setCriteriaVars() {
     if (!(criteria.contains("ticketid"))) {
@@ -965,9 +970,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the params attribute of the TicketReport object
+   * Gets the params attribute of the TicketReport object
    *
-   *@return    The params value
+   * @return The params value
    */
   public String[] getParams() {
     return params;
@@ -975,9 +980,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the params attribute of the TicketReport object
+   * Sets the params attribute of the TicketReport object
    *
-   *@param  params  The new params value
+   * @param params The new params value
    */
   public void setParams(String[] params) {
     this.params = params;
@@ -985,9 +990,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Gets the filenameToUse attribute of the TicketReport object
+   * Gets the filenameToUse attribute of the TicketReport object
    *
-   *@return    The filenameToUse value
+   * @return The filenameToUse value
    */
   public String getFilenameToUse() {
     return filenameToUse;
@@ -995,9 +1000,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Sets the filenameToUse attribute of the TicketReport object
+   * Sets the filenameToUse attribute of the TicketReport object
    *
-   *@param  filenameToUse  The new filenameToUse value
+   * @param filenameToUse The new filenameToUse value
    */
   public void setFilenameToUse(String filenameToUse) {
     this.filenameToUse = filenameToUse;
@@ -1005,16 +1010,18 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void buildReportBaseInfo() {
     rep.setDelimitedCharacter(delimiter);
-    rep.setHeader(header + ": " + subject);
+    if (header != null) {
+      rep.setHeader(header + ": " + subject);
+    }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    */
   public void buildReportHeaders() {
     if (joinOrgs) {
@@ -1094,9 +1101,9 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  passedReport  Description of the Parameter
+   * @param passedReport Description of the Parameter
    */
   public void buildReportHeaders(Report passedReport) {
     Iterator y = criteria.iterator();
@@ -1173,22 +1180,31 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildReportData(Connection db, ActionContext context) throws SQLException {
     this.buildList(db);
 
     boolean writeOut = false;
     Organization tempOrg = null;
+    SystemStatus systemStatus = null;
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
+        "ConnectionElement");
+    systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
+        "SystemStatus")).get(ce.getUrl());
 
     Iterator x = this.iterator();
     while (x.hasNext()) {
       Ticket thisTic = (Ticket) x.next();
-      thisTic.buildHistory(db);
+      if (systemStatus != null) {
+        thisTic.buildHistory(db, systemStatus);
+      } else {
+        thisTic.buildHistory(db);
+      }
       thisTic.buildContactInformation(db);
       ReportRow thisRow = new ReportRow();
 
@@ -1246,17 +1262,21 @@ public class TicketReport extends TicketList {
             thisRow.addCell(thisTic.getEnteredString());
           }
           if (param.equals("enteredBy")) {
-            thisRow.addCell(UserList.retrieveUserContact(context, thisTic.getEnteredBy()).getNameLastFirst());
+            thisRow.addCell(
+                UserList.retrieveUserContact(context, thisTic.getEnteredBy()).getNameLastFirst());
           }
           if (param.equals("modified")) {
             thisRow.addCell(thisTic.getModifiedString());
           }
           if (param.equals("modifiedBy")) {
-            thisRow.addCell(UserList.retrieveUserContact(context, thisTic.getModifiedBy()).getNameLastFirst());
+            thisRow.addCell(
+                UserList.retrieveUserContact(context, thisTic.getModifiedBy()).getNameLastFirst());
           }
           if (param.equals("assignedTo")) {
             if (thisTic.getAssignedTo() > 0) {
-              thisRow.addCell(UserList.retrieveUserContact(context, thisTic.getAssignedTo()).getNameLastFirst());
+              thisRow.addCell(
+                  UserList.retrieveUserContact(
+                      context, thisTic.getAssignedTo()).getNameLastFirst());
             } else {
               thisRow.addCell("Unassigned");
             }
@@ -1268,13 +1288,18 @@ public class TicketReport extends TicketList {
             thisRow.addCell(thisTic.getHistory().getComments());
           }
           if (param.equals("assignmentDate")) {
-            thisRow.addCell(thisTic.getAssignedDateString());
+            thisRow.addCell(
+                DateUtils.getDateAsString(thisTic.getAssignedDate(), context));
           }
           if (param.equals("estimatedResolutionDate")) {
-            thisRow.addCell(thisTic.getEstimatedResolutionDateString());
+            thisRow.addCell(
+                DateUtils.getDateAsString(
+                    thisTic.getEstimatedResolutionDate(), context));
           }
           if (param.equals("resolutionDate")) {
-            thisRow.addCell(thisTic.getResolutionDateString());
+            thisRow.addCell(
+                DateUtils.getDateAsString(
+                    thisTic.getResolutionDate(), context));
           }
           if (param.equals("organization")) {
             thisRow.addCell(thisTic.getCompanyName());
@@ -1288,11 +1313,11 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param db      Description of the Parameter
+   * @param context Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   public void buildReportFull(Connection db, ActionContext context) throws SQLException {
     buildReportBaseInfo();
@@ -1302,11 +1327,11 @@ public class TicketReport extends TicketList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db             Description of the Parameter
-   *@return                Description of the Return Value
-   *@exception  Exception  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws Exception Description of the Exception
    */
   public boolean saveAndInsert(Connection db) throws Exception {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");

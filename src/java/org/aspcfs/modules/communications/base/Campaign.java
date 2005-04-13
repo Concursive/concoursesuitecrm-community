@@ -15,28 +15,29 @@
  */
 package org.aspcfs.modules.communications.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.Template;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
+import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.iteam.base.FileItemList;
 import org.aspcfs.modules.actionlist.base.ActionItemLog;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.Template;
+import org.aspcfs.utils.PasswordHash;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.*;
 
 /**
  *  Description of the Class
  *
  *@author     Wesley_S_Gillette
  *@created    November 16, 2001
- *@version    $Id$
+ *@version    $Id: Campaign.java,v 1.58.12.1 2004/11/12 19:55:24 mrajkowski Exp
+ *      $
  */
 public class Campaign extends GenericBean {
 
@@ -84,6 +85,7 @@ public class Campaign extends GenericBean {
 
   private int files = 0;
   private String deliveryName = null;
+  private int deliveryType = -1;
   private ContactList contactList = null;
   private int recipientCount = -1;
   private int responseCount = -1;
@@ -98,6 +100,11 @@ public class Campaign extends GenericBean {
   private LinkedHashMap groups = null;
   private java.sql.Timestamp lastResponse = null;
   private String messageSubject = null;
+  private boolean hasAddressRequest = false;
+  private int addressSurveyId = -1;
+  private int addressResponseCount = -1;
+  private java.sql.Timestamp lastAddressResponse = null;
+  private boolean hasSurvey = false;
 
 
   /**
@@ -245,12 +252,162 @@ public class Campaign extends GenericBean {
 
 
   /**
+   *  Sets the hasAddressRequest attribute of the Campaign object
+   *
+   *@param  tmp  The new hasAddressRequest value
+   */
+  public void setHasAddressRequest(boolean tmp) {
+    this.hasAddressRequest = tmp;
+  }
+
+
+  /**
+   *  Sets the hasAddressRequest attribute of the Campaign object
+   *
+   *@param  tmp  The new hasAddressRequest value
+   */
+  public void setHasAddressRequest(String tmp) {
+    this.hasAddressRequest = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the addressSurveyId attribute of the Campaign object
+   *
+   *@param  tmp  The new addressSurveyId value
+   */
+  public void setAddressSurveyId(int tmp) {
+    this.addressSurveyId = tmp;
+  }
+
+
+  /**
+   *  Sets the addressSurveyId attribute of the Campaign object
+   *
+   *@param  tmp  The new addressSurveyId value
+   */
+  public void setAddressSurveyId(String tmp) {
+    this.addressSurveyId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the addressResponseCount attribute of the Campaign object
+   *
+   *@param  tmp  The new addressResponseCount value
+   */
+  public void setAddressResponseCount(int tmp) {
+    this.addressResponseCount = tmp;
+  }
+
+
+  /**
+   *  Sets the addressResponseCount attribute of the Campaign object
+   *
+   *@param  tmp  The new addressResponseCount value
+   */
+  public void setAddressResponseCount(String tmp) {
+    this.addressResponseCount = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the lastAddressResponse attribute of the Campaign object
+   *
+   *@param  tmp  The new lastAddressResponse value
+   */
+  public void setLastAddressResponse(java.sql.Timestamp tmp) {
+    this.lastAddressResponse = tmp;
+  }
+
+
+  /**
+   *  Sets the lastAddressResponse attribute of the Campaign object
+   *
+   *@param  tmp  The new lastAddressResponse value
+   */
+  public void setLastAddressResponse(String tmp) {
+    this.lastAddressResponse = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the hasSurvey attribute of the Campaign object
+   *
+   *@param  tmp  The new hasSurvey value
+   */
+  public void setHasSurvey(boolean tmp) {
+    this.hasSurvey = tmp;
+  }
+
+
+  /**
+   *  Sets the hasSurvey attribute of the Campaign object
+   *
+   *@param  tmp  The new hasSurvey value
+   */
+  public void setHasSurvey(String tmp) {
+    this.hasSurvey = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Gets the messageSubject attribute of the Campaign object
    *
    *@return    The messageSubject value
    */
   public String getMessageSubject() {
     return messageSubject;
+  }
+
+
+  /**
+   *  Gets the hasAddressRequest attribute of the Campaign object
+   *
+   *@return    The hasAddressRequest value
+   */
+  public boolean getHasAddressRequest() {
+    return hasAddressRequest;
+  }
+
+
+  /**
+   *  Gets the addressSurveyId attribute of the Campaign object
+   *
+   *@return    The addressSurveyId value
+   */
+  public int getAddressSurveyId() {
+    return addressSurveyId;
+  }
+
+
+  /**
+   *  Gets the addressResponseCount attribute of the Campaign object
+   *
+   *@return    The addressResponseCount value
+   */
+  public int getAddressResponseCount() {
+    return addressResponseCount;
+  }
+
+
+  /**
+   *  Gets the lastAddressResponse attribute of the Campaign object
+   *
+   *@return    The lastAddressResponse value
+   */
+  public java.sql.Timestamp getLastAddressResponse() {
+    return lastAddressResponse;
+  }
+
+
+  /**
+   *  Gets the hasSurvey attribute of the Campaign object
+   *
+   *@return    The hasSurvey value
+   */
+  public boolean getHasSurvey() {
+    return hasSurvey;
   }
 
 
@@ -283,6 +440,21 @@ public class Campaign extends GenericBean {
     String tmp = "";
     try {
       return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(lastResponse);
+    } catch (NullPointerException e) {
+    }
+    return tmp;
+  }
+
+
+  /**
+   *  Gets the lastAddressResponseString attribute of the Campaign object
+   *
+   *@return    The lastAddressResponseString value
+   */
+  public String getLastAddressResponseString() {
+    String tmp = "";
+    try {
+      return DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).format(lastAddressResponse);
     } catch (NullPointerException e) {
     }
     return tmp;
@@ -349,7 +521,7 @@ public class Campaign extends GenericBean {
     ResultSet rs = null;
 
     String sql =
-        "SELECT c.*, msg.name as messageName, msg.subject as messageSubject, dt.description as delivery " +
+        "SELECT c.*, msg.name AS messageName, msg.subject AS messageSubject, dt.code AS deliveryType, dt.description AS deliveryTypeName " +
         "FROM campaign c " +
         "LEFT JOIN message msg ON (c.message_id = msg.id) " +
         "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
@@ -367,8 +539,12 @@ public class Campaign extends GenericBean {
     }
     buildRecipientCount(db);
     buildResponseCount(db);
+    buildAddressResponseCount(db);
     buildLastResponse(db);
+    buildLastAddressResponse(db);
     buildSurveyId(db);
+    buildHasAddressRequest(db);
+    buildHasSurvey(db);
     setGroupList(db);
     buildFileCount(db);
     buildGroups(db);
@@ -903,6 +1079,26 @@ public class Campaign extends GenericBean {
 
 
   /**
+   *  Sets the deliveryType attribute of the Campaign object
+   *
+   *@param  tmp  The new deliveryType value
+   */
+  public void setDeliveryType(int tmp) {
+    this.deliveryType = tmp;
+  }
+
+
+  /**
+   *  Sets the deliveryType attribute of the Campaign object
+   *
+   *@param  tmp  The new deliveryType value
+   */
+  public void setDeliveryType(String tmp) {
+    this.deliveryType = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the Groups attribute of the Campaign object
    *
    *@param  request  The new Groups value
@@ -984,6 +1180,16 @@ public class Campaign extends GenericBean {
    */
   public String getDeliveryName() {
     return deliveryName;
+  }
+
+
+  /**
+   *  Gets the deliveryType attribute of the Campaign object
+   *
+   *@return    The deliveryType value
+   */
+  public int getDeliveryType() {
+    return deliveryType;
   }
 
 
@@ -1501,14 +1707,16 @@ public class Campaign extends GenericBean {
    */
   public void buildResponseCount(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT count(sr.contact_id) " +
+        "SELECT count(sr.contact_id) AS reccount " +
         "FROM active_survey_responses sr, active_survey sa " +
-        "WHERE campaign_id = ? AND (sr.active_survey_id = sa.active_survey_id) ");
+        "WHERE campaign_id = ? " +
+        "AND (sr.active_survey_id = sa.active_survey_id) " +
+        "AND sa.type = ? ");
     pst.setInt(1, id);
+    pst.setInt(2, Constants.SURVEY_REGULAR);
     ResultSet rs = pst.executeQuery();
-    int count = 0;
-    while (rs.next()) {
-      this.setResponseCount(rs.getInt(1));
+    if (rs.next()) {
+      this.setResponseCount(rs.getInt("reccount"));
     }
     rs.close();
     pst.close();
@@ -1516,21 +1724,73 @@ public class Campaign extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  Builds the total number of people who responded to the address update
+   *  request : counts a person only once.
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildAddressResponseCount(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(sr.contact_id) AS reccount " +
+        "FROM active_survey_responses sr, active_survey sa " +
+        "WHERE campaign_id = ? " +
+        "AND (sr.active_survey_id = sa.active_survey_id) " +
+        "AND sa.type = ? ");
+    pst.setInt(1, id);
+    pst.setInt(2, Constants.SURVEY_ADDRESS_REQUEST);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setAddressResponseCount(rs.getInt("reccount"));
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
+   *  Fetches the time at which the last response for a survey was recieved
    *
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
   public void buildLastResponse(Connection db) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
-        "SELECT max(sr.entered) as lastresponse " +
+        "SELECT max(sr.entered) AS lastresponse " +
         "FROM active_survey_responses sr, active_survey sa " +
-        "WHERE campaign_id = ? AND (sr.active_survey_id = sa.active_survey_id) ");
+        "WHERE campaign_id = ? " +
+        "AND (sr.active_survey_id = sa.active_survey_id) " +
+        "AND sa.type = ? ");
     pst.setInt(1, id);
+    pst.setInt(2, Constants.SURVEY_REGULAR);
     ResultSet rs = pst.executeQuery();
-    int count = 0;
     if (rs.next()) {
       this.setLastResponse(rs.getTimestamp("lastresponse"));
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
+   *  Fetches the time at which the last response to an address update request
+   *  was recieved
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildLastAddressResponse(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT max(sr.entered) AS lastresponse " +
+        "FROM active_survey_responses sr, active_survey sa " +
+        "WHERE campaign_id = ? " +
+        "AND (sr.active_survey_id = sa.active_survey_id) " +
+        "AND sa.type = ? ");
+    pst.setInt(1, id);
+    pst.setInt(2, Constants.SURVEY_ADDRESS_REQUEST);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setLastAddressResponse(rs.getTimestamp("lastresponse"));
     }
     rs.close();
     pst.close();
@@ -1590,9 +1850,43 @@ public class Campaign extends GenericBean {
    */
   public void buildSurveyId(Connection db) throws SQLException {
     if (active) {
-      surveyId = ActiveSurvey.getId(db, this.id);
+      surveyId = ActiveSurvey.getId(db, this.id, Constants.SURVEY_REGULAR);
     } else {
-      surveyId = Survey.getId(db, this.id);
+      surveyId = Survey.getId(db, this.id, Constants.SURVEY_REGULAR);
+    }
+  }
+
+
+  /**
+   *  Determines whether an address update request is attached with the campaign
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildHasAddressRequest(Connection db) throws SQLException {
+    if (Survey.getId(db, this.id, Constants.SURVEY_ADDRESS_REQUEST) != -1) {
+      this.setHasAddressRequest(true);
+    } else if (ActiveSurvey.getId(db, this.id, Constants.SURVEY_ADDRESS_REQUEST) != -1) {
+      this.setHasAddressRequest(true);
+    } else {
+      this.setHasAddressRequest(false);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildHasSurvey(Connection db) throws SQLException {
+    if (Survey.getId(db, this.id, Constants.SURVEY_REGULAR) != -1) {
+      this.setHasSurvey(true);
+    } else if (ActiveSurvey.getId(db, this.id, Constants.SURVEY_REGULAR) != -1) {
+      this.setHasSurvey(true);
+    } else {
+      this.setHasSurvey(false);
     }
   }
 
@@ -1664,9 +1958,6 @@ public class Campaign extends GenericBean {
    *@since                    1.5
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid(db)) {
-      return false;
-    }
     StringBuffer sql = new StringBuffer();
     boolean commit = true;
     try {
@@ -1880,10 +2171,6 @@ public class Campaign extends GenericBean {
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
 
-    if (!isValid(db)) {
-      return -1;
-    }
-
     try {
       db.setAutoCommit(false);
       resultCount = this.update(db, false);
@@ -1947,9 +2234,15 @@ public class Campaign extends GenericBean {
       pst.close();
 
       //Delete the attached survey
-      int activeSurveyId = (ActiveSurvey.getId(db, id));
+      int activeSurveyId = (ActiveSurvey.getId(db, id, Constants.SURVEY_REGULAR));
       if (activeSurveyId > -1) {
         ActiveSurvey thisSurvey = new ActiveSurvey(db, activeSurveyId);
+        thisSurvey.delete(db);
+      }
+      //Delete the attached address request
+      int addSurveyId = (ActiveSurvey.getId(db, id, Constants.SURVEY_ADDRESS_REQUEST));
+      if (addSurveyId > -1) {
+        ActiveSurvey thisSurvey = new ActiveSurvey(db, addSurveyId);
         thisSurvey.delete(db);
       }
 
@@ -2043,9 +2336,15 @@ public class Campaign extends GenericBean {
         pst.close();
 
         //Remove attached survey if campaign has one
-        int activeSurveyId = ActiveSurvey.getId(db, id);
+        int activeSurveyId = ActiveSurvey.getId(db, id, Constants.SURVEY_REGULAR);
         if (activeSurveyId > -1) {
           ActiveSurvey activeSurvey = new ActiveSurvey(db, activeSurveyId);
+          activeSurvey.delete(db);
+        }
+        //Remove address request if campaign has one
+        int addSurveyId = ActiveSurvey.getId(db, id, Constants.SURVEY_ADDRESS_REQUEST);
+        if (addSurveyId > -1) {
+          ActiveSurvey activeSurvey = new ActiveSurvey(db, addSurveyId);
           activeSurvey.delete(db);
         }
       }
@@ -2083,12 +2382,9 @@ public class Campaign extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
-    SQLException message = null;
     PreparedStatement pst = null;
-
     try {
       db.setAutoCommit(false);
-
       //See if the campaign is not already active
       pst = db.prepareStatement(
           "UPDATE campaign " +
@@ -2126,6 +2422,15 @@ public class Campaign extends GenericBean {
           activeSurvey.insert(db);
           this.surveyId = activeSurvey.getId();
         }
+        if (this.hasAddressRequest) {
+          Survey thisSurvey = new Survey(db, Survey.getAddressSurveyId(db));
+          ActiveSurvey activeSurvey = new ActiveSurvey(thisSurvey);
+          activeSurvey.setEnteredBy(userId);
+          activeSurvey.setModifiedBy(userId);
+          activeSurvey.setCampaignId(id);
+          activeSurvey.insert(db);
+          this.addressSurveyId = activeSurvey.getId();
+        }
 
         //Lock in the message
         Message thisMessage = new Message(db, this.getMessageId());
@@ -2142,14 +2447,22 @@ public class Campaign extends GenericBean {
         if (this.surveyId > -1) {
           template.addParseElement("${survey_url}", "<a href=\"http://" + this.getServerName() + "/ProcessSurvey.do?id=${surveyId=" + this.getActiveSurveyId() + "}\">http://" + this.getServerName() + "/ProcessSurvey.do?id=${surveyId=" + this.getActiveSurveyId() + "}</a>");
           if (thisMessage.getMessageText().indexOf("${survey_url}") == -1) {
-            template.setText(thisMessage.getMessageText() + "<br><br>You can take the survey at the following web-site: ${survey_url}");
+            template.setText(thisMessage.getMessageText() + "<br><br>You can take the survey at the following web-site:<br />${survey_url}");
           } else {
             template.setText(thisMessage.getMessageText());
           }
-        } else {
+        }
+        if (this.hasAddressRequest) {
+          thisMessage.setMessageText(
+              thisMessage.getMessageText() + "<br />" +
+              "${server_name=" + serverName + "}" + "<br />" +
+              "${contact_address=" + addressSurveyId + "}" + "<br />" +
+              "${survey_url_address=" + addressSurveyId + "}");
           template.setText(thisMessage.getMessageText());
         }
-
+        if ((this.surveyId == -1) && (!this.hasAddressRequest)) {
+          template.setText(thisMessage.getMessageText());
+        }
         //Finalize the campaign activation
         pst = db.prepareStatement(
             "UPDATE campaign " +
@@ -2170,20 +2483,16 @@ public class Campaign extends GenericBean {
         pst.setInt(++i, id);
         resultCount = pst.executeUpdate();
         pst.close();
-
         db.commit();
       }
     } catch (SQLException e) {
-      message = e;
       db.rollback();
+      throw new SQLException(e.getMessage());
     } catch (Exception ee) {
       db.rollback();
-      ee.printStackTrace(System.out);
+      throw new SQLException(ee.getMessage());
     } finally {
       db.setAutoCommit(true);
-    }
-    if (message != null) {
-      throw new SQLException(message.getMessage());
     }
     return resultCount;
   }
@@ -2228,9 +2537,6 @@ public class Campaign extends GenericBean {
    *@since                    1.17
    */
   public int insertRun(Connection db) throws SQLException {
-    if (!isValid(db)) {
-      return -1;
-    }
     CampaignRun thisRun = new CampaignRun();
     thisRun.setCampaignId(this.getId());
     thisRun.setTotalContacts(this.getRecipientCount());
@@ -2323,9 +2629,7 @@ public class Campaign extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
-
     int resultCount = 0;
-
     PreparedStatement pst = null;
     try {
       db.setAutoCommit(false);
@@ -2335,13 +2639,19 @@ public class Campaign extends GenericBean {
           "modified = CURRENT_TIMESTAMP " +
           "WHERE campaign_id = ? ");
       pst.setInt(1, modifiedBy);
-      pst.setInt(2, id);
+      pst.setInt(2, this.id);
       resultCount = pst.executeUpdate();
+      pst.close();
 
-      pst = db.prepareStatement("DELETE FROM campaign_survey_link WHERE campaign_id = ? ");
+      //Fetching the survey Id that need to be deleted and removing it from the campaign
+      int tmpSurveyId = Survey.getId(db, this.id, Constants.SURVEY_REGULAR);
+      pst = db.prepareStatement("DELETE FROM campaign_survey_link WHERE campaign_id = ? AND survey_id = ? ");
       pst.setInt(1, id);
+      pst.setInt(2, tmpSurveyId);
       pst.execute();
+      pst.close();
 
+      //Inserting the new survey (i.e, associating it with the campaign)
       if (surveyId > -1) {
         pst = db.prepareStatement(
             "INSERT INTO campaign_survey_link " +
@@ -2350,8 +2660,64 @@ public class Campaign extends GenericBean {
         pst.setInt(2, surveyId);
         pst.execute();
       }
-
       pst.close();
+      db.commit();
+    } catch (SQLException e) {
+      db.rollback();
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return resultCount;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int updateAddressRequest(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Campaign ID was not specified");
+    }
+
+    int resultCount = 0;
+
+    PreparedStatement pst = null;
+    try {
+      db.setAutoCommit(false);
+
+      pst = db.prepareStatement(
+          "UPDATE campaign " +
+          "SET modifiedby = ?, " +
+          "modified = CURRENT_TIMESTAMP " +
+          "WHERE campaign_id = ? ");
+      pst.setInt(1, modifiedBy);
+      pst.setInt(2, id);
+      resultCount = pst.executeUpdate();
+
+      //Fetching the survey Id's that need to be deleted
+      int tmpSurveyId = Survey.getId(db, this.id, Constants.SURVEY_ADDRESS_REQUEST);
+      pst = db.prepareStatement("DELETE FROM campaign_survey_link WHERE campaign_id = ? AND survey_id = ? ");
+      pst.setInt(1, id);
+      pst.setInt(2, tmpSurveyId);
+      pst.execute();
+      pst.close();
+
+      if (hasAddressRequest) {
+        if (surveyId > -1) {
+          pst = db.prepareStatement(
+              "INSERT INTO campaign_survey_link " +
+              "(campaign_id, survey_id) VALUES (?, ?) ");
+          pst.setInt(1, id);
+          pst.setInt(2, surveyId);
+          pst.execute();
+          pst.close();
+        }
+      }
       db.commit();
     } catch (SQLException e) {
       db.rollback();
@@ -2376,9 +2742,6 @@ public class Campaign extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Campaign ID was not specified");
     }
-    if (!isValid(db)) {
-      return resultCount;
-    }
     PreparedStatement pst = null;
     int i = 0;
     pst = db.prepareStatement(
@@ -2395,32 +2758,8 @@ public class Campaign extends GenericBean {
     pst.setInt(++i, sendMethodId);
     resultCount = pst.executeUpdate();
     pst.close();
-
     return resultCount;
   }
-
-
-  /**
-   *  Gets the valid attribute of the Message object
-   *
-   *@param  db                Description of Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.15
-   */
-  protected boolean isValid(Connection db) throws SQLException {
-
-    if (name == null || name.trim().equals("")) {
-      errors.put("nameError", "Campaign name is required");
-    }
-
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
 
 
   /**
@@ -2521,7 +2860,8 @@ public class Campaign extends GenericBean {
     messageName = rs.getString("messageName");
     messageSubject = rs.getString("messageSubject");
     //lookup_delivery_options table
-    deliveryName = rs.getString("delivery");
+    deliveryType = rs.getInt("deliveryType");
+    deliveryName = rs.getString("deliveryTypeName");
   }
 
 
@@ -2587,6 +2927,38 @@ public class Campaign extends GenericBean {
     thisList.add("activeDate");
     thisList.add("inactiveDate");
     return thisList;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  tmpUserId         Description of the Parameter
+   *@param  password          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static boolean authenticateForBroadcast(Connection db, int tmpUserId, String password) throws SQLException {
+    String pw = "";
+    String encryptedPassword = PasswordHash.encrypt(password);
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT a.password " +
+        "FROM access a " +
+        "WHERE user_id = ? " +
+        "AND a.enabled = ? ");
+    pst.setInt(1, tmpUserId);
+    pst.setBoolean(2, true);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      pw = rs.getString("password");
+    }
+    rs.close();
+    pst.close();
+    if (pw == null || pw.trim().equals("") || !pw.equals(encryptedPassword)) {
+      return false;
+    }
+    return true;
   }
 }
 

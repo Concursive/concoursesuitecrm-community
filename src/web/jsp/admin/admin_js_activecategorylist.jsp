@@ -21,9 +21,6 @@
 <%@ page import="org.aspcfs.utils.web.HtmlOption" %>
 <jsp:useBean id="categoryEditor" class="org.aspcfs.modules.admin.base.CategoryEditor" scope="request"/>
 <jsp:useBean id="categoryList" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
-<html>
-<head>
-</head>
 <body onload="page_init();">
 <script language="JavaScript">
 function newOpt(param, value, color) {
@@ -71,5 +68,3 @@ function resetList(list) {
 }
 </script>
 </body>
-</html>
-

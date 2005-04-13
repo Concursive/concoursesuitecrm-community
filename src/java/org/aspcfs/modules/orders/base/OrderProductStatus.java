@@ -404,9 +404,6 @@ public class OrderProductStatus extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
-    if (!isValid(db)) {
-      return result;
-    }
     StringBuffer sql = new StringBuffer();
     sql.append(" INSERT INTO order_product_status(order_id, item_id, status_id, ");
     if (entered != null) {
@@ -458,19 +455,30 @@ public class OrderProductStatus extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Order ID not specified");
     }
+    boolean commit = true;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       // delete the product order status
       PreparedStatement pst = db.prepareStatement(
           " DELETE FROM order_product_status WHERE order_product_status_id = ?");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -485,7 +493,7 @@ public class OrderProductStatus extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
@@ -511,16 +519,5 @@ public class OrderProductStatus extends GenericBean {
     return resultCount;
   }
 
-
-  /**
-   *  Gets the valid attribute of the OrderProductStatus object
-   *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  public boolean isValid(Connection db) throws SQLException {
-    return true;
-  }
 }
 

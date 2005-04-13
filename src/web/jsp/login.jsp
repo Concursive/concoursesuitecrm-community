@@ -1,6 +1,26 @@
+<%-- 
+  - Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+  - rights reserved. This material cannot be distributed without written
+  - permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
+  - this material for internal use is hereby granted, provided that the above
+  - copyright notice and this permission notice appear in all copies. DARK HORSE
+  - VENTURES LLC MAKES NO REPRESENTATIONS AND EXTENDS NO WARRANTIES, EXPRESS OR
+  - IMPLIED, WITH RESPECT TO THE SOFTWARE, INCLUDING, BUT NOT LIMITED TO, THE
+  - IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR ANY PARTICULAR
+  - PURPOSE, AND THE WARRANTY AGAINST INFRINGEMENT OF PATENTS OR OTHER
+  - INTELLECTUAL PROPERTY RIGHTS. THE SOFTWARE IS PROVIDED "AS IS", AND IN NO
+  - EVENT SHALL DARK HORSE VENTURES LLC OR ANY OF ITS AFFILIATES BE LIABLE FOR
+  - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
+  - DAMAGES RELATING TO THE SOFTWARE.
+  - 
+  - Version: $Id$
+  - Description: 
+  --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ page import="org.aspcfs.modules.system.base.ApplicationVersion" %>
 <jsp:useBean id="LoginBean" class="org.aspcfs.modules.login.beans.LoginBean" scope="request"/>
 <%-- BEGIN DHV CODE ONLY --%>
+<jsp:useBean id="APP_VERSION" class="java.lang.String" scope="application"/>
 <jsp:useBean id="APP_TEXT" class="java.lang.String" scope="application"/>
 <jsp:useBean id="APP_ORGANIZATION" class="java.lang.String" scope="application"/>
 <%-- END DHV CODE ONLY --%>
@@ -18,7 +38,7 @@
 <%@ include file="initPage.jsp" %>
 <html>
 <head>
-<title>Centric CRM</title>
+<title><dhv:label name="templates.CentricCRM">Centric CRM</dhv:label></title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 <link rel="stylesheet" href="css/template-login.css" type="text/css">
@@ -41,7 +61,7 @@
 %>">
 <table width="100%" border="0" cellspacing="0" cellpadding="0" height="100%">
   <tr>
-    <td height="10%" valign="top" width="100%">
+    <td height="7%" valign="top" width="100%">
       &nbsp;
     </td>
   </tr>
@@ -64,10 +84,17 @@
                 <td align="center" valign="center" colspan="4">
                 <table style="border:1px #EFEFEF solid;background: #EFEFEF" align="center" width="50%">
                 <tr><td align="center">
-                  <font size="2"><strong>Centric CRM <%= ("https".equals(request.getScheme())?"Secure ":"") %>Login</strong><br />
+                  <font size="2"><strong><dhv:label name="templates.CentricCRM">Centric CRM</dhv:label> 
+                    <% if("https".equals(request.getScheme())) {%>
+                      <dhv:label name="calendar.secureLogin">Secure Login</dhv:label>
+                    <%} else {%>
+                      <dhv:label name="calendar.login">Login</dhv:label>
+                    <%}%></strong>
 <%-- BEGIN DHV CODE ONLY --%>
-                  <%= toHtml(APP_TEXT) %><dhv:evaluate if="<%= hasText(APP_ORGANIZATION) %>"><br />Licensed To: <%= toHtml(APP_ORGANIZATION) %></dhv:evaluate></font>
+                  <br /><%= toHtml(APP_TEXT) %>
+                  <dhv:evaluate if="<%= hasText(APP_ORGANIZATION) %>"><br /><dhv:label name="calendar.licensedTo.colon" param="<%= "organization="+toHtml(APP_ORGANIZATION) %>">Licensed to: <%= toHtml(APP_ORGANIZATION) %></dhv:label></dhv:evaluate>
 <%-- END DHV CODE ONLY --%>
+                  </font>
                 </td></tr>
                 </table>
                 </td>
@@ -79,8 +106,8 @@
 %>              
               <tr> 
                 <td align="center" colspan="4">
-                  <font size="2">This site is configured for secure connections only</font><br />
-                  <font size="2"><a href="https://<%= getServerUrl(request) %>">Go to Secure Login</a></font>
+                  <font size="2"><dhv:label name="calendar.siteSecureConnections.text">This site is configured for secure connections only</dhv:label></font><br />
+                  <font size="2"><a href="https://<%= getServerUrl(request) %>"><dhv:label name="calendar.goToSecureLogin">Go to Secure Login</dhv:label></a></font>
                 </td>
               </tr>
 <%} else {%>
@@ -100,7 +127,7 @@
               <table border="0">
               <tr>
                 <td align="right">
-                  <font size="2">Username:</font>
+                  <font size="2"><dhv:label name="accounts.Username">Username</dhv:label>:</font>
                 </td>
                 <td>
                   <font size="2"><input type="text" name="username" value="<%= LoginBean.getUsername() %>" size="20">&nbsp;</font>
@@ -108,7 +135,7 @@
               </tr>
               <tr>
                 <td align="right">
-                  <font size="2">Password:</font>
+                  <font size="2"><dhv:label name="setup.password.colon">Password:</dhv:label></font>
                 </td>
                 <td>
                   <font size="2"><input type="password" name="password" size="20"></font>
@@ -117,7 +144,7 @@
               <tr>
                 <td align="right">&nbsp;</td>
                 <td>
-                  <input type="submit" value="Login" name="action">
+                  <input type="submit" value="<dhv:label name="calendar.login">Login</dhv:label>" name="action">
                 </td>
               </tr>
               </table>
@@ -134,12 +161,17 @@
       </table>
     </td>
   </tr>
-  <tr> 
-    <td height="5%" valign="top" width="100%">
+  <tr>
+    <td height="8%" valign="top" width="100%">
       <%-- Copyright --%>
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="center">&#169; Copyright 2000-2004 Dark Horse Ventures, LLC &#149; All rights reserved.</td>
+          <td align="center">
+<%-- BEGIN DHV CODE ONLY --%>
+            <%= toHtml(APP_VERSION) %><br />
+<%-- END DHV CODE ONLY --%>
+            &#169; Copyright 2000-2005 Dark Horse Ventures, LLC &#149; <dhv:label name="global.label.allRightsReserved">All rights reserved.</dhv:label>
+          </td>
         </tr>
       </table>
     </td>

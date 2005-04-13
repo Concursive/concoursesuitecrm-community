@@ -15,12 +15,15 @@
  */
 package org.aspcfs.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.controller.*;
-import com.darkhorseventures.database.*;
-import java.util.*;
+import com.darkhorseventures.database.ConnectionElement;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.utils.Template;
+
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
 
 /**
  *  This Class evaluates whether a SystemStatus preference exists for the
@@ -34,7 +37,8 @@ import java.util.*;
 public class LabelHandler extends TagSupport {
   private String labelName = null;
   private HashMap params = null;
-
+  private boolean mainMenuItem = false;
+  private boolean subMenuItem = false;
 
   /**
    *  Sets the Name attribute of the LabelHandler object
@@ -44,6 +48,14 @@ public class LabelHandler extends TagSupport {
    */
   public final void setName(String tmp) {
     labelName = tmp;
+  }
+
+  public final void setMainMenuItem(boolean tmp) {
+    mainMenuItem = tmp;
+  }
+
+  public final void setSubMenuItem(boolean tmp) {
+    subMenuItem = tmp;
   }
 
 
@@ -59,10 +71,6 @@ public class LabelHandler extends TagSupport {
       String pair = tokens.nextToken();
       String param = pair.substring(0, pair.indexOf("="));
       String value = pair.substring(pair.indexOf("=") + 1);
-      if (System.getProperty("DEBUG") != null) {
-        System.out.println("LabelHandler: Param-> " + param);
-        System.out.println("LabelHandler: Value-> " + value);
-      }
       params.put("${" + param + "}", value);
     }
   }
@@ -73,46 +81,50 @@ public class LabelHandler extends TagSupport {
    *  so, the found label will be used, otherwise the body tag will be used.
    *
    *@return                   Description of the Returned Value
-   *@exception  JspException  Description of Exception
    *@since                    1.1
    */
-  public final int doStartTag() throws JspException {
-    boolean result = true;
+  public final int doStartTag() {
     String newLabel = null;
 
+    // Use the system status if available
     ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
     if (ce == null) {
-      System.out.println("FieldHandler-> ConnectionElement is null");
-    }
-    SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-    if (systemStatus == null) {
-      System.out.println("FieldHandler-> SystemStatus is null");
-    }
-    // Look up the label key in system status to get the value
-    if (systemStatus != null) {
-      newLabel = systemStatus.getLabel(labelName);
-      // If there are any parameters to substitute then do so
-      if (newLabel != null && params != null) {
-        Template labelText = new Template(newLabel);
-        labelText.setParseElements(params);
-        newLabel = labelText.getParsedText();
+      ApplicationPrefs prefs = (ApplicationPrefs) pageContext.getServletContext().getAttribute("applicationPrefs");
+      if (prefs != null) {
+        newLabel = prefs.getLabel(labelName);
       }
+    } else {
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      if (systemStatus == null) {
+        System.out.println("LabelHandler-> SystemStatus is null");
+      }
+      // Look up the label key in system status to get the value
+      if (systemStatus != null) {
+        if (mainMenuItem) {
+          newLabel = systemStatus.getMenuProperty(labelName, "page_title");
+        } else if (subMenuItem) {
+          newLabel = systemStatus.getSubMenuProperty(labelName);
+        } else {
+          newLabel = systemStatus.getLabel(labelName);
+        }
+      }
+    }
+    // If there are any parameters to substitute then do so
+    if (newLabel != null && params != null && params.size() > 0) {
+      Template labelText = new Template(newLabel);
+      labelText.setParseElements(params);
+      newLabel = labelText.getParsedText();
     }
     // Output the label value, else output the body of the tag
     if (newLabel != null) {
       try {
         this.pageContext.getOut().write(newLabel);
-        result = false;
+        return SKIP_BODY;
       } catch (java.io.IOException e) {
         //Nowhere to output
       }
     }
-
-    if (result) {
-      return EVAL_BODY_INCLUDE;
-    } else {
-      return SKIP_BODY;
-    }
+    return EVAL_BODY_INCLUDE;
   }
 
 }

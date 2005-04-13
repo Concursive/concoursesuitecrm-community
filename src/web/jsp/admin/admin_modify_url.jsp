@@ -24,9 +24,9 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="AdminConfig.do?command=ListGlobalParams">Configure System</a> >
-Modify Setting
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="AdminConfig.do?command=ListGlobalParams"><dhv:label name="admin.configureSystem">Configure System</dhv:label></a> >
+<dhv:label name="admin.modifySetting">Modify Setting</dhv:label>
 </td>
 </tr>
 </table>
@@ -34,38 +34,35 @@ Modify Setting
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td><b>Which
-Centric URL should be included in emails to allow the user to return back to the site?</b>
+    <td><b><dhv:label name="admin.defaultURL.question">Which Centric URL should be included in emails to allow the user to return back to the site?</dhv:label></b>
 <ul>
-<li>Typically this is used when a survey is sent to a contact</li>
-<li>The URL must be specific and must exist in your DNS</li>
-<li>If a domain name is not configured, you can specify the IP address, include the full path to
-get to the Centric CRM web application.</li>
+<li><dhv:label name="admin.url.note.1">Typically this is used when a survey is sent to a contact</dhv:label></li>
+<li><dhv:label name="admin.url.note.2">The URL must be specific and must exist in your DNS</dhv:label></li>
+<li><dhv:label name="admin.url.note.3">If a domain name is not configured, you can specify the IP address, include the full path to get to the Centric CRM web application.</dhv:label></li>
 </ul>
 </td></tr></table>
 <dhv:permission name="admin-sysconfig-view">
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
-        <strong>Server URL</strong>
+        <strong><dhv:label name="admin.serverURL">Server URL</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
       <td class="formLabel">
-        Centric CRM URL
+        <dhv:label name="admin.centricCrmUrl">Centric CRM URL</dhv:label>
       </td>
       <td>
          <input type="text" size="40" name="url" value="<%= toHtmlValue(getPref(getServletContext(), "WEBSERVER.URL")) %>"/><font color="red">*</font>
-         <input type="button" value="Test" onClick="javascript:popURL('<%= request.getScheme() %>://' + document.forms[0].url.value + '/setup/testpage_ok.jsp','CRM_UrlTest','500','325','yes','yes');"/>
+         <input type="button" value="Test" onClick="javascript:popURL('<%= request.getScheme() %>://' + document.modifyTimeout.url.value + '/setup/testpage_ok.jsp','CRM_UrlTest','500','325','yes','yes');"/>
          <%= showAttribute(request, "urlError") %>
          <br />
-         (ex: www.yourcompany.com<%= request.getContextPath() %> or
-         crm.yourcompany.com)
+         <dhv:label name="admin.serverURL.example" param="<%= "contextPath="+request.getContextPath() %>">(ex: www.yourcompany.com<%= request.getContextPath() %> or crm.yourcompany.com)</dhv:label>
       </td>
     </tr>
   </table>
   <br />
-  <input type="submit" value="Update">
-  <input type="button" value="Cancel" onClick="javascript:window.location.href='AdminConfig.do?command=ListGlobalParams';">
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='AdminConfig.do?command=ListGlobalParams';">
 </dhv:permission>
 </form>

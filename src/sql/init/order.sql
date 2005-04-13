@@ -30,3 +30,9 @@ INSERT INTO lookup_creditcard_types (description) VALUES ('Visa');
 INSERT INTO lookup_creditcard_types (description) VALUES ('Master Card');
 INSERT INTO lookup_creditcard_types (description) VALUES ('American Express');
 INSERT INTO lookup_creditcard_types (description) VALUES ('Discover');
+
+INSERT INTO lookup_payment_status (description) VALUES ('Pending');
+INSERT INTO lookup_payment_status (description) VALUES ('In Progress');
+INSERT INTO lookup_payment_status (description) VALUES ('Approved');
+INSERT INTO lookup_payment_status (description) VALUES ('Declined');
+

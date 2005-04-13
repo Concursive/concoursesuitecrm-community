@@ -25,12 +25,16 @@ import org.aspcfs.utils.DatabaseUtils;
  *
  *@author     Mathur
  *@created    February 4, 2003
- *@version    $Id$
+ *@version    $Id: SurveyResponseList.java,v 1.5 2004/10/12 13:58:36 mrajkowski
+ *      Exp $
  */
 public class SurveyResponseList extends ArrayList {
 
   private PagedListInfo pagedListInfo = null;
   private int surveyId = -1;
+  private int addressUpdated = -1;
+
+  private boolean onlyNotUpdated = false;
 
 
   /**
@@ -70,12 +74,72 @@ public class SurveyResponseList extends ArrayList {
 
 
   /**
+   *  Sets the addressUpdated attribute of the SurveyResponseList object
+   *
+   *@param  tmp  The new addressUpdated value
+   */
+  public void setAddressUpdated(int tmp) {
+    this.addressUpdated = tmp;
+  }
+
+
+  /**
+   *  Sets the addressUpdated attribute of the SurveyResponseList object
+   *
+   *@param  tmp  The new addressUpdated value
+   */
+  public void setAddressUpdated(String tmp) {
+    this.addressUpdated = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the onlyNotUpdated attribute of the SurveyResponseList object
+   *
+   *@param  tmp  The new onlyNotUpdated value
+   */
+  public void setOnlyNotUpdated(boolean tmp) {
+    this.onlyNotUpdated = tmp;
+  }
+
+
+  /**
+   *  Sets the onlyNotUpdated attribute of the SurveyResponseList object
+   *
+   *@param  tmp  The new onlyNotUpdated value
+   */
+  public void setOnlyNotUpdated(String tmp) {
+    this.onlyNotUpdated = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Gets the surveyId attribute of the SurveyResponseList object
    *
    *@return    The surveyId value
    */
   public int getSurveyId() {
     return surveyId;
+  }
+
+
+  /**
+   *  Gets the addressUpdated attribute of the SurveyResponseList object
+   *
+   *@return    The addressUpdated value
+   */
+  public int getAddressUpdated() {
+    return addressUpdated;
+  }
+
+
+  /**
+   *  Gets the onlyNotUpdated attribute of the SurveyResponseList object
+   *
+   *@return    The onlyNotUpdated value
+   */
+  public boolean getOnlyNotUpdated() {
+    return onlyNotUpdated;
   }
 
 
@@ -195,6 +259,14 @@ public class SurveyResponseList extends ArrayList {
     if (surveyId != -1) {
       sqlFilter.append("AND sr.active_survey_id = ? ");
     }
+
+    if (addressUpdated != -1) {
+      sqlFilter.append("AND sr.address_updated = ? ");
+    }
+    
+    if (this.onlyNotUpdated){
+      sqlFilter.append("AND sr.address_updated = ? AND sr.contact_id NOT IN (SELECT contact_id FROM active_survey_responses WHERE active_survey_id = ? AND address_updated = ?) ");
+    }
   }
 
 
@@ -210,6 +282,14 @@ public class SurveyResponseList extends ArrayList {
 
     if (surveyId != -1) {
       pst.setInt(++i, surveyId);
+    }
+    if (addressUpdated != -1) {
+      pst.setInt(++i, addressUpdated);
+    }
+    if (this.onlyNotUpdated){
+      pst.setInt(++i, SurveyResponse.ADDRESS_VALID);
+      pst.setInt(++i, this.getSurveyId());
+      pst.setInt(++i, SurveyResponse.ADDRESS_UPDATED);
     }
     return i;
   }

@@ -26,7 +26,7 @@
 <table cellpadding="0" cellspacing="0" width="100%" border="0">
 <tr>
   <td>
-    Select a folder to move the item to:<br>
+    <dhv:label name="accounts.accounts_documents_file_move.SelectFolderToMove">Select a folder to move the item to</dhv:label>:<br>
     <img src="images/icons/stock_folder-16-19.gif" border="0" align="absmiddle">
     <%= toHtml(FileFolder.getSubject()) %>
   </td>
@@ -39,11 +39,11 @@
       <img alt="" src="images/tree7o.gif" border="0" align="absmiddle" height="16" width="19"/>
       <img alt="" src="images/icons/stock_open-16-19.gif" border="0" align="absmiddle" height="16" width="19"/>
     <dhv:evaluate if="<%= FileFolder.getParentId() != -1 %>">
-      <a href="TroubleTicketsDocumentsFolders.do?command=SaveMove&tId=<%= TicketDetails.getId() %>&id=<%= FileFolder.getId() %>&popup=true&folderId=0&return=TroubleTicketsDocuments&param=<%= TicketDetails.getId() %>&param2=<%= FileFolder.getParentId() %>">Home</a>
+      <a href="TroubleTicketsDocumentsFolders.do?command=SaveMove&tId=<%= TicketDetails.getId() %>&id=<%= FileFolder.getId() %>&popup=true&folderId=0&return=TroubleTicketsDocuments&param=<%= TicketDetails.getId() %>&param2=<%= FileFolder.getParentId() %>"><dhv:label name="accounts.accounts_documents_file_move.Home">Home</dhv:label></a>
     </dhv:evaluate>
     <dhv:evaluate if="<%= FileFolder.getParentId() == -1 %>">
-      Home
-      (current folder)
+      <dhv:label name="accounts.accounts_documents_file_move.Home">Home</dhv:label>
+      <dhv:label name="accounts.accounts_documents_file_move.CurrentFolder">(current folder)</dhv:label>
     </dhv:evaluate>
     </td>
   </tr>
@@ -67,7 +67,7 @@
         (selected folder)
     <% } else {%>
       <%= toHtml(thisFolder.getSubject()) %>
-      (current folder)
+      <dhv:label name="accounts.accounts_documents_file_move.CurrentFolder">(current folder)</dhv:label>
     <% } %>
     </td>
   </tr>
@@ -75,6 +75,6 @@
   }
 %>
 </table>
-&nbsp;<br>
-<input type="button" value="Cancel" onClick="javascript:window.close()">
+<br>
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
 

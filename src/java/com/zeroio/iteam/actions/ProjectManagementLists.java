@@ -15,20 +15,17 @@
  */
 package com.zeroio.iteam.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import com.zeroio.iteam.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.Project;
+import com.zeroio.webutils.FileDownload;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.tasks.base.*;
+import org.aspcfs.modules.tasks.base.Task;
+import org.aspcfs.modules.tasks.base.TaskCategory;
+import org.aspcfs.modules.tasks.base.TaskCategoryList;
 import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.utils.web.HtmlSelect;
-import com.zeroio.webutils.FileDownload;
+
+import java.sql.Connection;
 
 /**
  *  Handles web actions for the Project Management Lists sub module
@@ -53,7 +50,7 @@ public final class ProjectManagementLists extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-lists-modify")) {
         return "PermissionError";
@@ -93,15 +90,15 @@ public final class ProjectManagementLists extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
     boolean recordInserted = false;
+    boolean isValid = false;
     try {
       db = this.getConnection(context);
       //Verify the user has access to the project
       String projectId = (String) context.getRequest().getParameter("pid");
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-lists-modify")) {
         return "PermissionError";
@@ -115,39 +112,37 @@ public final class ProjectManagementLists extends CFSModule {
       thisTask.setProjectId(thisProject.getId());
       //TODO: Need to do this in a transaction, but in the object
       if (newTask) {
-        recordInserted = thisTask.insert(db);
+        isValid = this.validateObject(context, db, thisTask);
+        if (isValid) {
+          recordInserted = thisTask.insert(db);
+        }
         if (recordInserted) {
           thisTask.insertProjectLink(db, thisProject.getId());
           indexAddItem(context, thisTask);
         }
       } else {
-        resultCount = thisTask.update(db);
-        indexAddItem(context, thisTask);
-      }
-      if (!recordInserted && resultCount < 1) {
-        processErrors(context, thisTask.getErrors());
+        isValid =this.validateObject(context, db, thisTask);
+        if (isValid) {
+          resultCount = thisTask.update(db);
+          indexAddItem(context, thisTask);
+        }
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (recordInserted) {
-        if ("true".equals(context.getRequest().getParameter("donew"))) {
-          context.getRequest().removeAttribute("Task");
-          return (executeCommandAdd(context));
-        }
-        return ("AddOK");
-      } else if (resultCount == 1) {
-        return ("UpdateOK");
-      } else {
-        return executeCommandAdd(context);
+    if (recordInserted) {
+      if ("true".equals(context.getRequest().getParameter("donew"))) {
+        context.getRequest().removeAttribute("Task");
+        return (executeCommandAdd(context));
       }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("AddOK");
+    } else if (resultCount == 1) {
+      return ("UpdateOK");
     }
+    return executeCommandAdd(context);
   }
 
 
@@ -164,7 +159,7 @@ public final class ProjectManagementLists extends CFSModule {
       String taskId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
       //Verify the project permissions
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       if (thisProject.getId() == -1) {
         throw new Exception("Invalid access to project");
       }
@@ -197,7 +192,7 @@ public final class ProjectManagementLists extends CFSModule {
       String taskId = context.getRequest().getParameter("id");
       db = this.getConnection(context);
       //Verify the project permissions
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       if (thisProject.getId() == -1) {
         throw new Exception("Invalid access to project");
       }
@@ -207,7 +202,8 @@ public final class ProjectManagementLists extends CFSModule {
       }
       Task thisTask = new Task(db, Integer.parseInt(taskId));
       context.getRequest().setAttribute("Task", thisTask);
-      if ("true".equals(context.getRequest().getParameter("popup"))) {
+      String popUp = context.getRequest().getParameter("popup");
+      if (popUp != null && !"null".equals(popUp)) {
         return ("PopupOK");
       } else {
         return ("DetailsOK");
@@ -235,7 +231,7 @@ public final class ProjectManagementLists extends CFSModule {
     boolean recordDeleted = false;
     try {
       db = getConnection(context);
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       if (thisProject.getId() == -1) {
         throw new Exception("Invalid access to project");
       }
@@ -280,7 +276,7 @@ public final class ProjectManagementLists extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       if (thisProject.getId() == -1) {
         throw new Exception("Invalid access to project");
       }
@@ -326,7 +322,7 @@ public final class ProjectManagementLists extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       if (thisProject.getId() == -1) {
         throw new Exception("Invalid access to project");
       }
@@ -360,7 +356,7 @@ public final class ProjectManagementLists extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-lists-add")) {
         return "PermissionError";
@@ -394,14 +390,14 @@ public final class ProjectManagementLists extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsertCategory(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
+    boolean isValid = false;
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-lists-add")) {
         return "PermissionError";
@@ -412,29 +408,24 @@ public final class ProjectManagementLists extends CFSModule {
       TaskCategory newCategory = (TaskCategory) context.getFormBean();
       newCategory.setLinkModuleId(Constants.TASK_CATEGORY_PROJECTS);
       newCategory.setLinkItemId(thisProject.getId());
-      recordInserted = newCategory.insert(db);
-      indexAddItem(context, newCategory);
-      if (!recordInserted) {
-        processErrors(context, newCategory.getErrors());
-      } else {
+      isValid = this.validateObject(context, db, newCategory);
+      if (isValid) {
+        recordInserted = newCategory.insert(db);
+        indexAddItem(context, newCategory);
+      }
+      if (recordInserted) {
         context.getRequest().setAttribute("pid", projectId);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("SaveOK");
-      } else {
-        return executeCommandAddCategory(context);
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (recordInserted) {
+      return ("SaveOK");
     }
+    return executeCommandAddCategory(context);
   }
 
 
@@ -445,48 +436,44 @@ public final class ProjectManagementLists extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpdateCategory(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
+    boolean isValid = false;
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-lists-edit")) {
         return "PermissionError";
       }
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", ("lists_categories_add").toLowerCase());
-//Process the task category
+      //Process the task category
       TaskCategory updatedCategory = (TaskCategory) context.getFormBean();
       updatedCategory.setLinkModuleId(Constants.TASK_CATEGORY_PROJECTS);
       updatedCategory.setLinkItemId(thisProject.getId());
-      resultCount = updatedCategory.update(db);
-      indexAddItem(context, updatedCategory);
-      if (resultCount == -1) {
-        processErrors(context, updatedCategory.getErrors());
+      isValid = this.validateObject(context, db, updatedCategory);
+      if (isValid) {
+        resultCount = updatedCategory.update(db);
+        indexAddItem(context, updatedCategory);
       }
       context.getRequest().setAttribute("category", updatedCategory);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        return executeCommandAddCategory(context);
-      } else if (resultCount == 1) {
-        return ("UpdateOK");
-      } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
-      }
+    if (resultCount == 1) {
+      return ("UpdateOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      if (resultCount == -1 || !isValid) {
+        return executeCommandAddCategory(context);
+      }
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
   }
 
@@ -507,7 +494,7 @@ public final class ProjectManagementLists extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       if (thisProject.getId() == -1) {
         throw new Exception("Invalid access to project");
       }
@@ -553,7 +540,7 @@ public final class ProjectManagementLists extends CFSModule {
     try {
       db = this.getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       if (thisProject.getId() == -1) {
         throw new Exception("Invalid access to project");
       }

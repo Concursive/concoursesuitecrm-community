@@ -22,7 +22,7 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-Admin
+<dhv:label name="trails.admin">Admin</dhv:label>
 </td>
 </tr>
 </table>
@@ -30,14 +30,14 @@ Admin
 <table class="note" cellspacing="0">
   <tr>
     <th><img src="images/icons/stock_about-16.gif" border="0" align="absmiddle"/></th>
-    <td>Manage this application by reviewing system usage, configuring specific modules, and configuring system parameters.</td>
+    <td><dhv:label name="admin.manageApplication.text">Manage this application by reviewing system usage, configuring specific modules, and configuring system parameters.</dhv:label></td>
   </tr>
 </table>
 <dhv:permission name="admin-users-view,admin-roles-view">
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th>
-        <strong>Users &amp; Roles</strong>
+        <strong><dhv:label name="admin.usersAndRoles" param="amp=&amp;">Users &amp; Roles</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
@@ -56,13 +56,13 @@ Admin
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th>
-        <strong>Configuration</strong>
+        <strong><dhv:label name="admin.configuration">Configuration</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
       <td>
         <ul>
-          <dhv:permission name="admin-sysconfig-view"><li><a href="Admin.do?command=Config">Configure Modules</a></li></dhv:permission>
+          <dhv:permission name="admin-sysconfig-view"><li><a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a></li></dhv:permission>
         </ul>
       </td>
     </tr>
@@ -74,13 +74,13 @@ Admin
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th>
-        <strong>Global Parameters and Server Configuration</strong>
+        <strong><dhv:label name="admin.globalParameters">Global Parameters and Server Configuration</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
       <td>
         <ul>
-          <li><a href="AdminConfig.do?command=ListGlobalParams">Configure System</a></li>
+          <li><a href="AdminConfig.do?command=ListGlobalParams"><dhv:label name="admin.configureSystem">Configure System</dhv:label></a></li>
         </ul>
       </td>
     </tr>
@@ -92,13 +92,13 @@ Admin
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th>
-        <strong>Usage</strong>
+        <strong><dhv:label name="Usage">Usage</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
       <td>
         <ul>
-          <li><a href="Admin.do?command=Usage">Check system resources</a></li>
+          <li><a href="Admin.do?command=Usage"><dhv:label name="admin.checkSystemResources">Check system resources</dhv:label></a></li>
         </ul>
       </td>
     </tr>

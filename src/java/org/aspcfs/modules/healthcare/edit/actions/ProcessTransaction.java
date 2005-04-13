@@ -50,6 +50,7 @@ public final class ProcessTransaction extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
+    boolean isValid = false;
     XMLUtils xml = null;
     ConnectionElement ce = null;
     SystemStatus thisSystem = null;
@@ -72,10 +73,9 @@ public final class ProcessTransaction extends CFSModule {
       }
 
       //Insert the record
-      recordInserted = thisRecord.insert(db);
-      //The object might have specified some validation errors
-      if (thisRecord.hasErrors()) {
-
+      isValid = this.validateObject(context, db, thisRecord);
+      if (isValid) {
+        recordInserted = thisRecord.insert(db);
       }
     } catch (Exception e) {
       errorMessage = e;

@@ -14,16 +14,18 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
   var thisContactId = -1;
+  var thisOrgId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, contactId, editPermission, deletePermission, clonePermission) {
+  function displayMenu(loc, id, contactId, editPermission, deletePermission, clonePermission, addressRequestPermission, orgId) {
     thisContactId = contactId;
-    updateMenu(editPermission, deletePermission, clonePermission);
+    thisOrgId = orgId;
+    updateMenu(editPermission, deletePermission, clonePermission,addressRequestPermission);
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuContact", "down", 0, 0, 170, getHeight("menuContactTable"));
@@ -32,7 +34,7 @@
   }
   
   //Update menu for this Contact based on permissions
-  function updateMenu(hasEditPermission, hasDeletePermission, hasClonePermission){
+  function updateMenu(hasEditPermission, hasDeletePermission, hasClonePermission, hasAddressRequestPermission){
     if(hasEditPermission == 0){
       hideSpan('menuEdit');
     }else{
@@ -50,6 +52,18 @@
     }else{
       showSpan('menuClone');
     }
+
+    if(hasAddressRequestPermission == 0){
+      hideSpan('menuAddressRequest');
+    }else{
+      showSpan('menuAddressRequest');
+    }
+
+    if (thisOrgId == -1) {
+      hideSpan('menuMove');
+    } else {
+      showSpan('menuMove');
+    }
   }
   
   //Menu link functions
@@ -57,6 +71,10 @@
     window.location.href = 'ExternalContacts.do?command=ContactDetails&id=' + thisContactId + '<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
+  function modify() {
+    window.location.href = 'ExternalContacts.do?command=ModifyContact&id=' + thisContactId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
+  }
+
   function modify() {
     window.location.href = 'ExternalContacts.do?command=ModifyContact&id=' + thisContactId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
@@ -68,6 +86,14 @@
   function deleteContact() {
     popURLReturn('ExternalContacts.do?command=ConfirmDelete&id=' + thisContactId + '&popup=true<%= addLinkParams(request, "popupType|actionId") %>','ExternalContacts.do?command=SearchContacts', 'Delete_contact','330','200','yes','no');
   }
+
+  function moveTheContact() {
+    popURLReturn('ExternalContacts.do?command=MoveToAccount&orgId='+ thisOrgId + '&id='+ thisContactId + '&popup=true','Contacts.do?command=View', 'Move_contact','400','320','yes','no');
+  }
+  
+  function sendMessage() {
+    popURL('MyActionContacts.do?command=PrepareMessage&actionSource=MyActionContacts&orgId=' + thisOrgId + '&contactId=' + thisContactId + '&messageType=addressRequest' + '&popup=true','Message','700','550','yes','yes');
+  }  
   
 </script>
 <div id="menuContactContainer" class="menu">
@@ -79,7 +105,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View Details
+          <dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -88,7 +114,15 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Modify
+          <dhv:label name="global.button.modify">Modify</dhv:label>
+        </td>
+      </tr>
+      <tr id="menuMove" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="moveTheContact()">
+        <th>
+          <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="global.button.move">Move</dhv:label>
         </td>
       </tr>
       <tr id="menuClone" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="clone()">
@@ -96,7 +130,7 @@
           <img src="images/icons/stock_copy-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Clone
+          <dhv:label name="global.button.Clone">Clone</dhv:label>
         </td>
       </tr>
       <tr id="menuDelete" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="deleteContact()">
@@ -104,7 +138,15 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete
+          <dhv:label name="global.button.delete">Delete</dhv:label>
+        </td>
+      </tr>
+      <tr id="menuAddressRequest" onmouseover="cmOver(this)" onmouseout="cmOut(this)" onclick="sendMessage()">
+        <th>
+          <img src="images/icons/stock_mail-16.gif" border="0" align="absmiddle" height="16" width="16"/>
+        </th>
+        <td width="100%">
+          <dhv:label name="global.button.sendAddressRequest">Send Address Request</dhv:label>
         </td>
       </tr>
     </table>

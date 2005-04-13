@@ -18,30 +18,32 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
-<dhv:evaluate exp="<%= !isPopup(request) %>">
+<script type="text/javascript">
+function reopenContact(id) {
+  if (id == '<%= ContactDetails.getId() %>') {
+    scrollReload('ExternalContacts.do?command=SearchContacts');
+    return -1;
+  } else {
+    return '<%= ContactDetails.getId() %>';
+  }
+}
+</script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do">General Contacts</a> > 
-<a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
-<a href="ExternalContacts.do?command=ContactDetails&contactId=<%= request.getParameter("contactId") %>">Contact Details</a> >
-<a href="ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>&id=<%= request.getParameter("id") %>">Activities</a> >
-Forward Activity
+<dhv:label name="module-general-contacts">General Contacts</dhv:label> 
+<a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+<a href="ExternalContacts.do?command=ContactDetails&contactId=<%= request.getParameter("contactId") %>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
+<a href="ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>&id=<%= request.getParameter("id") %>"><dhv:label name="accounts.accounts_calls_list.Activities">Activities</dhv:label></a> >
+<dhv:label name="accounts.accounts_contacts_calls_forward.ForwardActivity">Forward Activity</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<%@ include file="contact_details_header_include.jsp" %>
-<% String param1 = "id=" + ContactDetails.getId(); 
-   String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-<dhv:container name="contacts" selected="calls" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <%-- include the confirmation message --%>
-      <%@ include file="../confirmsend.jsp" %>
-    </td>
-  </tr>
-</table>
+<dhv:container name="contacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <%-- include the confirmation message --%>
+  <%@ include file="../confirmsend.jsp" %>
+</dhv:container>

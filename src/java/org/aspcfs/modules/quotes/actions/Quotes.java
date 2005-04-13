@@ -15,38 +15,38 @@
  */
 package org.aspcfs.modules.quotes.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.communications.base.CampaignList;
-import org.aspcfs.modules.tasks.base.TaskList;
-import org.aspcfs.modules.products.base.*;
-import org.aspcfs.modules.orders.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.webutils.FileDownload;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.login.beans.UserBean;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import java.lang.*;
-import java.text.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.tasks.base.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.actionlist.base.*;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.modules.orders.base.Order;
+import org.aspcfs.modules.pipeline.base.OpportunityHeader;
+import org.aspcfs.modules.products.base.*;
 import org.aspcfs.modules.quotes.base.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.quotes.beans.*;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.utils.JasperReportUtils;
+import org.aspcfs.utils.SMTPMessage;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- *  Description of the Class
+ *  Action Class for handling Quotes
  *
  *@author     ananth
  *@created    April 20, 2004
@@ -55,83 +55,77 @@ import org.aspcfs.modules.quotes.beans.*;
 public final class Quotes extends CFSModule {
 
   /**
-   *  Description of the Method
+   *  Default method
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandDefault(ActionContext context) {
+    if (!(hasPermission(context, "quotes-view"))) {
+      return ("PermissionError");
+    }
     return executeCommandSearchForm(context);
   }
 
 
   /**
-   *  Description of the Method
+   *  This method displays the list of quotes
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
-    /*
-     *  if (!(hasPermission(context, "accounts-accounts-quotes-view"))) {
-     *  return ("PermissionError");
-     *  }
-     */
-    addModuleBean(context, "View Quotes", "View Quote Details");
-    String orgid = context.getRequest().getParameter("orgId");
-    if (orgid == null) {
-      orgid = (String) context.getRequest().getAttribute("orgId");
+    if (!(hasPermission(context, "quotes-view"))) {
+      return ("PermissionError");
     }
+    addModuleBean(context, "View Quotes", "View Quote Details");
 
-    System.out.println("orgid : " + orgid);
     //find record permissions for portal users
     /*
      *  if (!isRecordAccessPermitted(context, Integer.parseInt(orgid))) {
      *  return ("PermissionError");
      *  }
      */
-    PagedListInfo quoteListInfo = this.getPagedListInfo(context, "QuoteListInfo");
-    quoteListInfo.setLink("Quotes.do?command=View&orgId=" + orgid);
+    PagedListInfo quoteListInfo = this.getPagedListInfo(context, "quoteListInfo");
+    quoteListInfo.setLink("Quotes.do?command=View");
     Connection db = null;
     QuoteList quoteList = new QuoteList();
-    Organization thisOrganization = null;
-    this.resetPagedListInfo(context);
     try {
       db = this.getConnection(context);
+
+      //build the quote list
       quoteList.setPagedListInfo(quoteListInfo);
-      quoteList.setOrgId(Integer.parseInt(orgid));
-      //quoteList.setBuildDetails(true);
-      //quoteList.setBuildTypes(false);
-      System.out.println("building quote list");
+      quoteList.setBuildResources(true);
       quoteList.buildList(db);
-      thisOrganization = new Organization(db, Integer.parseInt(orgid));
+
+      //retrieve the lookuplist from the SystemStatus
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      context.getRequest().setAttribute("quoteStatusList", list);
+
     } catch (Exception errorMessage) {
-      errorMessage.printStackTrace();
       context.getRequest().setAttribute("Error", errorMessage);
+      errorMessage.printStackTrace();
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("QuoteList", quoteList);
-    context.getRequest().setAttribute("OrgDetails", thisOrganization);
+    context.getRequest().setAttribute("quoteList", quoteList);
     return ("ListOK");
   }
 
 
 
   /**
-   *  Description of the Method
+   *  This method displays a search form for searching quotes
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandSearchForm(ActionContext context) {
-    /*
-     *  TODO: uncomment this code when the permission is created
-     *  if (!(hasPermission(context, "quotes-quotes-view"))) {
-     *  return ("PermissionError");
-     *  }
-     */
+    if (!(hasPermission(context, "quotes-view"))) {
+      return ("PermissionError");
+    }
     //Bypass search form for portal users
     if (isPortalUser(context)) {
       return (executeCommandSearch(context));
@@ -141,13 +135,23 @@ public final class Quotes extends CFSModule {
     try {
       db = getConnection(context);
       //Account type lookup
-      LookupList typeSelect = new LookupList(db, "lookup_quote_type");
-      typeSelect.addItem(0, "All Types");
-      context.getRequest().setAttribute("typeSelect", typeSelect);
-      //reset the offset and current letter of the paged list in order to make sure we search ALL accounts
-      PagedListInfo quoteListInfo = this.getPagedListInfo(context, "searchQuoteListInfo");
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList statusSelect = systemStatus.getLookupList(db, "lookup_quote_status");
+
+      statusSelect.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("statusSelect", statusSelect);
+      //Category lookup
+      LookupList list = new LookupList(db, "lookup_product_category_type");
+      ProductCategoryList categoryList = new ProductCategoryList();
+      categoryList.buildList(db);
+      HtmlSelect select = categoryList.getHtmlSelect(list.getIdFromValue("Publication"));
+      context.getRequest().setAttribute("categorySelect", select);
+      //reset the offset and current letter of the paged list in order to make sure we search ALL quotes
+      PagedListInfo quoteListInfo = this.getPagedListInfo(context, "quoteListInfo");
       quoteListInfo.setCurrentLetter("");
       quoteListInfo.setCurrentOffset(0);
+
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       e.printStackTrace();
@@ -161,30 +165,41 @@ public final class Quotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  This method displays the list of quotes resulting from the search
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandSearch(ActionContext context) {
-    /*
-     *  if (!hasPermission(context, "quotes-quotes-view")) {
-     *  return ("PermissionError");
-     *  }
-     */
+    if (!(hasPermission(context, "quotes-view"))) {
+      return ("PermissionError");
+    }
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
+    // See if a valid quoteId was specified
+    int quoteId = -1;
+    try {
+      quoteId = Integer.parseInt(context.getRequest().getParameter("searchId"));
+    } catch (Exception e) {
+    }
     String source = (String) context.getRequest().getParameter("source");
     QuoteList quoteList = new QuoteList();
     addModuleBean(context, "View Quotes", "Search Results");
 
     //Prepare pagedListInfo
-    PagedListInfo searchListInfo = this.getPagedListInfo(context, "searchQuoteListInfo");
-    searchListInfo.setLink("Quotes.do?command=Search");
+    PagedListInfo searchListInfo = this.getPagedListInfo(context, "quoteListInfo", "group_id", "desc");
+    searchListInfo.setLink("Quotes.do?command=Search&version=" + ((version != null) ? version : ""));
     //Need to reset any sub PagedListInfos since this is a new acccount
-    //TODO: uncomment this
-    //this.resetPagedListInfo(context);
     Connection db = null;
     try {
       db = this.getConnection(context);
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      list.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("quoteStatusList", list);
 
       //For portal usr set source as 'searchForm' explicitly since
       //the search form is bypassed.
@@ -192,34 +207,31 @@ public final class Quotes extends CFSModule {
       if (isPortalUser(context)) {
         source = "searchForm";
       }
-      //return if no criteria is selected
-      if ((searchListInfo.getListView() == null || "".equals(searchListInfo.getListView())) && !"searchForm".equals(source)) {
-        return "ListOK";
-      }
 
       //Build the quote list
+      if (version != null && !"".equals(version)) {
+        Quote quote = new Quote(db, Integer.parseInt(version));
+        quoteList = new QuoteList();
+        quoteList.setBuildCompleteVersionList(true);
+        quoteList.setId(quote.getRootQuote(db, quote.getParentId()));
+        quoteList.setPagedListInfo(searchListInfo);
+        searchListInfo.setSearchCriteria(quoteList, context);
+        quoteList.buildList(db);
+        context.getRequest().setAttribute("quoteList", quoteList);
+        return ("ListOK");
+      }
+      if (quoteId > -1) {
+        quoteList.setId(quoteId);
+      }
       quoteList.setPagedListInfo(searchListInfo);
-      quoteList.setTypeId(searchListInfo.getFilterKey("listFilter1"));
-      searchListInfo.setSearchCriteria(quoteList, UserUtils.getUserLocale(context.getRequest()));
-      /*
-       *  if ("my".equals(searchListInfo.getListView())) {
-       *  quoteList.setOwnerId(this.getUserId(context));
-       *  }
-       */
-      /*
-       *  if ("disabled".equals(searchListInfo.getListView())) {
-       *  quoteList.setIncludeEnabled(0);
-       *  }
-       *  if ("all".equals(searchListInfo.getListView())) {
-       *  quoteList.setIncludeEnabled(-1);
-       *  }
-       */
+      quoteList.setStatusId(searchListInfo.getFilterKey("listFilter2"));
+      quoteList.setCategoryId(searchListInfo.getFilterKey("listFilter1"));
+      searchListInfo.setSearchCriteria(quoteList, context);
       if (isPortalUser(context)) {
         quoteList.setOrgId(getPortalUserPermittedOrgId(context));
       }
       quoteList.buildList(db);
       context.getRequest().setAttribute("quoteList", quoteList);
-      return ("ListOK");
     } catch (Exception e) {
       //Go through the SystemError process
       e.printStackTrace();
@@ -228,79 +240,131 @@ public final class Quotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
+    return ("ListOK");
   }
 
 
   /**
-   *  Description of the Method
+   *  This method displays the quotes details.
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
-  public String executeCommandList(ActionContext context) {
-    User user = this.getUser(context, this.getUserId(context));
-    int orgId = user.getContact().getOrgId();
-
-    Connection db = null;
-    QuoteList quoteList = new QuoteList();
-    try {
-      db = this.getConnection(context);
-      quoteList.buildList(db);
-      context.getRequest().setAttribute("quoteList", quoteList);
-
-      SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
-      context.getRequest().setAttribute("quoteStatusList", list);
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
-    } finally {
-      this.freeConnection(context, db);
+  public String executeCommandDetails(ActionContext context) {
+    if (!(hasPermission(context, "quotes-view"))) {
+      return ("PermissionError");
     }
-    String module = context.getRequest().getParameter("module");
-    String includePage = context.getRequest().getParameter("include");
-    context.getRequest().setAttribute("IncludePage", includePage);
-    addModuleBean(context, module, module);
-    return "ListOK";
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandDisplay(ActionContext context) {
-    String result = "DisplayOK";
+    String result = "DetailsOK";
     int quoteId = -1;
-    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+
+    String quoteIdString = (String) context.getRequest().getAttribute("quoteId");
+    if (quoteIdString == null || "".equals(quoteIdString)) {
+      quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    }
+    String printQuote = (String) context.getRequest().getParameter("canPrint");
+    if (printQuote != null && !"".equals(printQuote)) {
+      context.getRequest().setAttribute("canPrint", printQuote);
+    }
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
     Quote quote = null;
+    QuoteProductList quoteProducts = null;
+    ProductCatalogList productList = null;
+    ProductOptionList optionList = null;
     Connection db = null;
     try {
       db = this.getConnection(context);
+      //check if the quote id is null
       if (quoteIdString == null || "".equals(quoteIdString)) {
-        quoteId = addQuote(context);
+        try {
+          //check for the product id & ticket id.. is it a request to create a new quote?
+          int productId = Integer.parseInt((String) context.getRequest().getParameter("productId"));
+          int ticketId = Integer.parseInt((String) context.getRequest().getParameter("ticketId"));
+        } catch (Exception e) {
+          //if the product id is null, then the incomplete form was submitted, set error message
+          context.getRequest().setAttribute("actionError",
+              "Invalid criteria, please review and make necessary changes before submitting");
+          return "SearchCriteriaError";
+        }
+        // as product id is not null, create a new quote
+        return executeCommandAddQuote(context);
       } else {
-        quoteId = Integer.parseInt(quoteIdString);
+        try {
+          quoteId = Integer.parseInt(quoteIdString);
+        } catch (Exception e) {
+          //Syntax error in entering the quote id
+          context.getRequest().setAttribute("actionError",
+              "Invalid criteria, please review and make necessary changes before submitting");
+          return "SearchCriteriaError";
+        }
       }
-//      System.out.println("Quote Id in the Display method is -> "+quoteId);
-      quote = new Quote(db, quoteId);
-      quote.buildProducts(db);
-      System.out.println("This is the quote-productList size in Display -> " + quote.getProductList().size());
+      //build the quote
+      quote = new Quote();
+      quote.setBuildProducts(true);
+      quote.queryRecord(db, quoteId);
       quote.retrieveTicket(db);
       context.getRequest().setAttribute("quote", quote);
 
+      //create an empty product list
+      productList = new ProductCatalogList();
+
+      //create the product option list
+      optionList = new ProductOptionList();
+      optionList.setBuildConfigDetails(true);
+      optionList.buildList(db);
+      context.getRequest().setAttribute("optionList", optionList);
+
+      // for each quote product, add the related product to the product list
+      quoteProducts = quote.getProductList();
+      Iterator iterator = quoteProducts.iterator();
+      while (iterator.hasNext()) {
+        QuoteProduct quoteProduct = (QuoteProduct) iterator.next();
+        quoteProduct.setBuildProductOptions(true);
+        quoteProduct.queryRecord(db, quoteProduct.getId());
+        ProductCatalog product = new ProductCatalog();
+        product.setBuildOptions(true);
+        product.queryRecord(db, quoteProduct.getProductId());
+        productList.add(product);
+      }
+
+      int orderId = quote.getOrderId(db);
+      if (orderId != -1) {
+        Order order = new Order(db, orderId);
+        context.getRequest().setAttribute("order", order);
+      }
+
+      int headerId = quote.getHeaderId();
+      if (headerId != -1) {
+        OpportunityHeader opportunity = new OpportunityHeader(db, headerId);
+        context.getRequest().setAttribute("opportunity", opportunity);
+      }
+
+      context.getRequest().setAttribute("quoteProductList", quoteProducts);
+      context.getRequest().setAttribute("productList", productList);
+
+      /*
+       *  Quote quoteBean = new Quote();
+       *  context.getRequest().setAttribute("quoteBean", quoteBean);
+       */
+      //retrieve the lookuplist from the SystemStatus
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
       context.getRequest().setAttribute("quoteStatusList", list);
 
+      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      context.getRequest().setAttribute("quoteDeliveryList", list2);
+			
+			if (quote.getLogoFileId() > 0) {
+				FileItem thisItem = new FileItem(db, quote.getLogoFileId() , Constants.QUOTES, Constants.DOCUMENTS_QUOTE_LOGO);
+				context.getRequest().setAttribute("fileItem", thisItem);
+			}
     } catch (Exception e) {
       e.printStackTrace();
-      context.getRequest().setAttribute("Error", e);
-      return ("SystemError");
+      context.getRequest().setAttribute("actionError",
+          "The specified quote could not be found");
+      return "SearchCriteriaError";
     } finally {
       this.freeConnection(context, db);
     }
@@ -309,30 +373,85 @@ public final class Quotes extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   *  This method is used to display the quote to the customer
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandCustomerDisplay(ActionContext context) {
+    if (!hasPermission(context, "products-view")) {
+      return ("PermissionError");
+    }
     String result = "CustomerDisplayOK";
     int quoteId = -1;
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
     String quoteIdString = (String) context.getRequest().getParameter("quoteId");
     Quote quote = null;
+    QuoteProductList quoteProducts = null;
+    Quote quoteBean = null;
+    ProductCatalogList productList = null;
+    ProductOptionList optionList = null;
     Connection db = null;
     try {
       db = this.getConnection(context);
-      if (quoteIdString == null || "".equals(quoteIdString)) {
-        quoteId = addQuote(context);
-      } else {
-        quoteId = Integer.parseInt(quoteIdString);
-      }
-//      System.out.println("Quote Id in the Display method is -> "+quoteId);
-      quote = new Quote(db, quoteId);
-      quote.buildProducts(db);
-      System.out.println("This is the quote-productList size in Display -> " + quote.getProductList().size());
+
+      quoteId = Integer.parseInt(quoteIdString);
+
+      //retrieve the quote from the database
+      quote = new Quote();
+      quote.setBuildProducts(true);
+      quote.queryRecord(db, quoteId);
       quote.retrieveTicket(db);
       context.getRequest().setAttribute("quote", quote);
+
+      //Check user for permissions to access the quote
+      if (isPortalUser(context)) {
+        User user = getUser(context, getUserId(context));
+        int userOrgId = user.getContact().getOrgId();
+        if (quote.getOrgId() != userOrgId) {
+          Exception error = new Exception("Unauthorized Access");
+          context.getRequest().setAttribute("Error", error);
+          return "SystemError";
+        }
+      }
+
+      //build the quote note list
+      QuoteNoteList noteList = new QuoteNoteList();
+      noteList.setQuoteId(quote.getId());
+      noteList.buildList(db);
+      context.getRequest().setAttribute("quoteNoteList", noteList);
+
+      //create the quote bean and set the notes
+      quoteBean = new Quote();
+      context.getRequest().setAttribute("quoteBean", quoteBean);
+
+      productList = new ProductCatalogList();
+
+      optionList = new ProductOptionList();
+      optionList.buildList(db);
+      context.getRequest().setAttribute("optionList", optionList);
+
+      quoteProducts = quote.getProductList();
+      Iterator iterator = quoteProducts.iterator();
+      while (iterator.hasNext()) {
+        QuoteProduct quoteProduct = (QuoteProduct) iterator.next();
+        quoteProduct.setBuildProductOptions(true);
+        quoteProduct.queryRecord(db, quoteProduct.getId());
+        ProductCatalog product = new ProductCatalog();
+        product.setBuildOptions(true);
+        product.queryRecord(db, quoteProduct.getProductId());
+        productList.add(product);
+      }
+
+      ProductOptionValuesList values = new ProductOptionValuesList();
+      values.buildList(db);
+      context.getRequest().setAttribute("productOptionValuesList", values);
+
+      context.getRequest().setAttribute("quoteProductList", quoteProducts);
+      context.getRequest().setAttribute("productList", productList);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
@@ -356,25 +475,28 @@ public final class Quotes extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandSubmit(ActionContext context) {
-    String result = "ListOK";
+    if (!(hasPermission(context, "quotes-quotes-edit"))) {
+      return ("PermissionError");
+    }
     int quoteId = -1;
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
     String quoteIdString = (String) context.getRequest().getParameter("quoteId");
     Quote quote = null;
     Connection db = null;
     try {
       db = this.getConnection(context);
       quoteId = Integer.parseInt(quoteIdString);
-//      System.out.println("Quote Id in the Display method is -> "+quoteId);
-      quote = new Quote(db, quoteId);
-      quote.buildProducts(db);
-      quote.setModifiedBy(this.getUserId(context));
+      //retrieve the quote from the database
+      quote = new Quote();
+      quote.queryRecord(db, quoteId);
+      context.getRequest().setAttribute("quote", quote);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
-
-      quote.setStatusId(list.getIdFromValue("Pending customer acceptance"));
-      System.out.println("The new status ID is " + list.getIdFromValue("Pending customer acceptance"));
-      quote.update(db);
+      context.getRequest().setAttribute("quoteStatusList", list);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -383,94 +505,77 @@ public final class Quotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return executeCommandList(context);
+    return "SubmitOK";
   }
 
 
   /**
-   *  Description of the Method
+   *  This method saves the quote notes
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
-  /*
-   *  public String executeCommandSaveNotes(ActionContext context) {
-   *  int quoteId = -1;
-   *  String quoteIdString = (String) context.getRequest().getParameter("quoteId");
-   *  String customerString = (String) context.getRequest().getParameter("customer");
-   *  User user = this.getUser(context, this.getUserId(context));
-   *  int orgId = user.getContact().getOrgId();
-   *  Quote quote = null;
-   *  Connection db = null;
-   *  try {
-   *  db = this.getConnection(context);
-   *  quoteId = Integer.parseInt(quoteIdString);
-   *  System.out.println("Quote Id in the SaveNotes method is -> " + quoteId);
-   *  quote = new Quote(db, quoteId);
-   *  quote.buildProducts(db);
-   *  quote.setModifiedBy(this.getUserId(context));
-   *  QuoteNotesBean notes = (QuoteNotesBean) context.getFormBean();
-   *  java.util.Date currentTime = Calendar.getInstance().getTime();
-   *  StringBuffer oldNotes = new StringBuffer("");
-   *  oldNotes.append(quote.getNotes() + "\r\n\r\n");
-   *  oldNotes.append("On ->" + currentTime.toString() + " Modified By ->" + user.getContact().getNameFirstLast() + "\r\n");
-   *  oldNotes.append(notes.getNotes());
-   *  quote.setNotes(oldNotes.toString());
-   *  System.out.println("This is the new quote Notes in the SaveNotes action method \n" + oldNotes.toString());
-   *  quote.update(db);
-   *  if ("yes".equals(customerString)) {
-   *  return executeCommandCustomerDisplay(context);
-   *  }
-   *  } catch (Exception e) {
-   *  e.printStackTrace();
-   *  context.getRequest().setAttribute("Error", e);
-   *  return ("SystemError");
-   *  } finally {
-   *  this.freeConnection(context, db);
-   *  }
-   *  return executeCommandDisplay(context);
-   *  }
-   */
-  /**
-   *  Description of the Method
-   *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
-   */
-  public String executeCommandAddProduct(ActionContext context) {
-    String quoteName = (String) context.getRequest().getParameter("quoteId");
-    String productName = (String) context.getRequest().getParameter("productId");
-    String qtyName = (String) context.getRequest().getParameter("qty");
-//    System.out.println("The quote Id is -> "+quoteName);
-//    System.out.println("The productId is -> "+productName);
-    int quoteId = Integer.parseInt(quoteName);
-    int productId = Integer.parseInt(productName);
-    int qty = Integer.parseInt(qtyName);
-//    System.out.println("The quote Id in AddProduct is -> "+quoteId);
-//    System.out.println("The productId in AddProduct is -> "+productId);
+  public String executeCommandSaveNotes(ActionContext context) {
+    if (!(hasPermission(context, "quotes-view"))) {
+      return ("PermissionError");
+    }
+    int quoteId = -1;
+    boolean isValid = false;
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
+    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    QuoteNote quoteNote = null;
     Quote quote = null;
-    QuoteProduct quoteProduct = null;
-    ProductCatalog product = null;
+    Quote notes = (Quote) context.getFormBean();
     Connection db = null;
     try {
-      db = getConnection(context);
+      db = this.getConnection(context);
+      quoteId = Integer.parseInt(quoteIdString);
 
-      product = new ProductCatalog(db, productId);
-
-      quoteProduct = new QuoteProduct();
-      quoteProduct.setQuoteId(quoteId);
-      quoteProduct.setProductId(productId);
-      quoteProduct.setQuantity(qty);
-      quoteProduct.setPriceAmount(product.getPriceAmount());
-//      quoteProduct.setRecurringAmount(0.0);
-      quoteProduct.setTotalPrice(product.getPriceAmount());
-      quoteProduct.insert(db);
-
+      //retrieve the quote from the database
       quote = new Quote();
       quote.setBuildProducts(true);
       quote.queryRecord(db, quoteId);
-//      System.out.println("This is the size of productList in Add Product -> "+quote.getProductList().size());
-      quote.retrieveTicket(db);
+      context.getRequest().setAttribute("quote", quote);
+
+      //Check to see for any new notes to save them as a new quote note entry
+      if (notes.getNotes() != null) {
+        quoteNote = new QuoteNote();
+        quoteNote.setQuoteId(quote.getId());
+        quoteNote.setEnteredBy(this.getUserId(context));
+        quoteNote.setModifiedBy(this.getUserId(context));
+        quoteNote.setNotes(notes.getNotes());
+        isValid = this.validateObject(context, db, quoteNote);
+        if (isValid) {
+          quoteNote.insert(db);
+        }
+        processInsertHook(context, quoteNote);
+      }
+
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      context.getRequest().setAttribute("quoteStatusList", list);
+      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      context.getRequest().setAttribute("quoteDeliveryList", list2);
+      if (quote.getStatusId() == list.getIdFromValue("Rejected by customer")) {
+        quote.setStatusId(list.getIdFromValue("Pending customer acceptance"));
+        Timestamp currentTimestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+        quote.setIssuedDate(currentTimestamp);
+        quote.setStatusDate(currentTimestamp);
+        //update the quote
+        isValid = this.validateObject(context, db, quote) && isValid;
+        if (isValid) {
+          quote.update(db);
+        }
+      }
+
+      //rebuild the quote notes list to display the updated set of notes to the user
+      QuoteNoteList noteList = new QuoteNoteList();
+      noteList.setQuoteId(quote.getId());
+      noteList.buildList(db);
+      context.getRequest().setAttribute("quoteNoteList", noteList);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -479,40 +584,32 @@ public final class Quotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return executeCommandDisplay(context);
+    return "SaveNotesOK";
   }
 
 
   /**
-   *  Description of the Method
+   *  This method removes the specified quote product from the quote
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandRemoveProduct(ActionContext context) {
-    String quoteName = (String) context.getRequest().getParameter("quoteId");
+    if (!(hasPermission(context, "quotes-quotes-edit"))) {
+      return ("PermissionError");
+    }
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
     String productName = (String) context.getRequest().getParameter("productId");
-    int quoteId = Integer.parseInt(quoteName);
-    int productId = Integer.parseInt(productName);
-//    System.out.println("The quote Id in RemoveProduct is -> "+quoteId);
-//    System.out.println("The productId in RemoveProduct is -> "+productId);
-    Quote quote = null;
+    int productId = Integer.parseInt(productName.trim());
     QuoteProduct quoteProduct = null;
-    ProductCatalog product = null;
     Connection db = null;
     try {
       db = getConnection(context);
-
       quoteProduct = new QuoteProduct(db, productId);
       quoteProduct.delete(db);
-
-      quote = new Quote();
-      quote.setBuildProducts(true);
-      quote.queryRecord(db, quoteId);
-
-//      System.out.println("This is the size of productList in Add Product -> "+quote.getProductList().size());
-      quote.retrieveTicket(db);
-
     } catch (Exception e) {
       e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
@@ -520,26 +617,37 @@ public final class Quotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return executeCommandDisplay(context);
+    return "RemoveProductOK";
   }
 
 
   /**
-   *  Description of the Method
+   *  This method deletes the selected quote
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes-delete"))) {
+      return ("PermissionError");
+    }
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
     int quoteId = Integer.parseInt((String) context.getRequest().getParameter("quoteId"));
     Quote quote = null;
     Connection db = null;
     try {
       db = getConnection(context);
 
-      quote = new Quote(db, quoteId);
-      quote.delete(db);
+      //retrieve the quote from the database
+      quote = new Quote();
+      quote.setBuildProducts(true);
+      quote.queryRecord(db, quoteId);
 
+      //delete the quote
+      quote.delete(db);
     } catch (Exception e) {
       e.printStackTrace();
       context.getRequest().setAttribute("Error", e);
@@ -547,7 +655,308 @@ public final class Quotes extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return executeCommandList(context);
+    context.getRequest().setAttribute("refreshUrl", "Quotes.do?command=Search");
+    return "DeleteOK";
+  }
+
+
+  /**
+   *  This method saves the current entries to a quote
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandSave(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes_edit"))) {
+      return ("PermissionError");
+    }
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
+    int quoteId = Integer.parseInt((String) context.getRequest().getParameter("quoteId"));
+    boolean flag = false;
+    boolean isValid = false;
+    Quote quote = null;
+    Connection db = null;
+    try {
+
+      db = getConnection(context);
+      Quote quoteBean = (Quote) context.getFormBean();
+
+      quote = new Quote();
+      quote.setBuildProducts(true);
+      quote.queryRecord(db, quoteId);
+
+      //check for any new quote notes
+      if (quoteBean.getNotes() != null) {
+        if (!quote.getNotes().equals(quoteBean.getNotes())) {
+          quote.setNotes(quoteBean.getNotes());
+          flag = true;
+        }
+      }
+
+      //check for an expiration date entry
+      if (quoteBean.getExpirationDate() != null) {
+        if (quote.getExpirationDate() != quoteBean.getExpirationDate()) {
+          quote.setExpirationDate(quoteBean.getExpirationDate());
+          flag = true;
+        }
+      }
+
+      //update the quote only if it has been changed
+      if (flag) {
+        isValid = this.validateObject(context, db, quote);
+        if (isValid) {
+          quote.update(db);
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "SetSearchOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandConfirmDelete(ActionContext context) {
+
+    if (!(hasPermission(context, "quotes-quotes-delete"))) {
+      return ("PermissionError");
+    }
+
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
+    Connection db = null;
+    Quote quote = null;
+    HtmlDialog htmlDialog = new HtmlDialog();
+    String quoteId = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    if (context.getRequest().getParameter("quoteId") != null) {
+      quoteId = context.getRequest().getParameter("quoteId");
+    }
+
+    try {
+      db = this.getConnection(context);
+      quote = new Quote();
+      quote.setBuildProducts(true);
+      quote.setBuildTicket(true);
+      quote.queryRecord(db, Integer.parseInt(quoteId));
+      DependencyList dependencies = quote.processDependencies(db);
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      if (quote.getOrderId(db) != -1) {
+        htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
+        htmlDialog.setHeader(systemStatus.getLabel("quotes.deleteRelatedOrdersFirst"));
+        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
+      } else {
+        htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
+        htmlDialog.setHeader(systemStatus.getLabel("quotes.dependencies"));
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='Quotes.do?command=Delete&quoteId=" + quote.getId() + "'");
+        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    context.getSession().setAttribute("Dialog", htmlDialog);
+    return ("ConfirmDeleteOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandModifyForm(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes-edit"))) {
+      return ("PermissionError");
+    }
+    String module = context.getRequest().getParameter("module");
+    String includePage = context.getRequest().getParameter("include");
+    context.getRequest().setAttribute("IncludePage", includePage);
+    addModuleBean(context, module, module);
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
+    String quoteIdString = (String) context.getRequest().getAttribute("quoteId");
+    if (quoteIdString == null || "".equals(quoteIdString)) {
+      quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    }
+    Quote quote = null;
+    Connection db = null;
+
+    try {
+      db = this.getConnection(context);
+
+      //Retrieve the lookup list for the quote status
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      context.getRequest().setAttribute("quoteStatusList", list);
+      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      list2.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("quoteDeliveryList", list2);
+
+      //Create a new instance of Quote
+      quote = new Quote(db, Integer.parseInt(quoteIdString));
+      context.getRequest().setAttribute("quoteBean", quote);
+
+      int headerId = quote.getHeaderId();
+      if (headerId != -1) {
+        OpportunityHeader opportunity = new OpportunityHeader(db, headerId);
+        context.getRequest().setAttribute("opportunity", opportunity);
+      }
+
+      ContactList contactList = new ContactList();
+      if (quote.getOrgId() != -1) {
+        contactList.setOrgId(quote.getOrgId());
+      }
+      contactList.setBuildDetails(false);
+      contactList.setBuildTypes(false);
+      contactList.buildList(db);
+      context.getRequest().setAttribute("contactList", contactList);
+			
+			//Create a list for selection of a logo file
+			FileItemList itemList = new FileItemList();
+			itemList.setLinkModuleId(Constants.DOCUMENTS_QUOTE_LOGO);
+			itemList.setLinkItemId(Constants.QUOTES);
+			itemList.buildList(db);
+			context.getRequest().setAttribute("fileItemList", itemList);
+    } catch (Exception e) {
+      // Go through the SystemError process
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "ModifyFormOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandModify(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
+         || hasPermission(context, "leads-opportunities-edit"))) {
+      return ("PermissionError");
+    }
+    boolean isValid = false;
+    String module = context.getRequest().getParameter("module");
+    String includePage = context.getRequest().getParameter("include");
+    context.getRequest().setAttribute("IncludePage", includePage);
+    addModuleBean(context, module, module);
+    String returnValue = (String) context.getRequest().getParameter("return");
+    String version = (String) context.getRequest().getParameter("versionId");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
+    String orgIdString = (String) context.getRequest().getParameter("orgId");
+    int orgId = -1;
+    if (orgIdString != null && !"".equals(orgIdString)) {
+      orgId = Integer.parseInt(orgIdString);
+    }
+    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    int quoteId = -1;
+    if (quoteIdString != null && !"".equals(quoteIdString)) {
+      quoteId = Integer.parseInt(quoteIdString);
+    }
+    int resultCount = -1;
+    Quote quote = null;
+    Quote quoteBean = (Quote) context.getFormBean();
+    User user = this.getUser(context, this.getUserId(context));
+    String printQuote = (String) context.getRequest().getAttribute("canPrint");
+    if (printQuote != null && !"".equals(printQuote)) {
+      context.getRequest().setAttribute("canPrint", printQuote);
+    } else {
+      printQuote = quoteBean.getCanPrint();
+      context.getRequest().setAttribute("canPrint", printQuote);
+    }
+
+    Connection db = null;
+
+    try {
+      db = this.getConnection(context);
+
+      //Create a new instance of Quote
+      quote = new Quote(db, quoteId);
+
+      //Retrieve the lookup list for the quote status
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      context.getRequest().setAttribute("quoteStatusList", list);
+      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      context.getRequest().setAttribute("quoteDeliveryList", list2);
+
+      if (quoteBean.getOrgId() != -1) {
+        quote.setOrgId(quoteBean.getOrgId());
+      }
+      if (quoteBean.getContactId() != -1) {
+        quote.setContactId(quoteBean.getContactId());
+      }
+      quote.setShortDescription(quoteBean.getShortDescription());
+      quote.setExpirationDate(quoteBean.getExpirationDate());
+      quote.setIssuedDate(quoteBean.getIssuedDate());
+      quote.setNotes(quoteBean.getNotes());
+      quote.setStatusId(quoteBean.getStatusId());
+      quote.setHeaderId(quoteBean.getHeaderId());
+      quote.setDeliveryId(quoteBean.getDeliveryId());
+      quote.setEmailAddress(quoteBean.getEmailAddress());
+      quote.setFaxNumber(quoteBean.getFaxNumber());
+      quote.setPhoneNumber(quoteBean.getPhoneNumber());
+      quote.setAddress(quoteBean.getAddress());
+      quote.setCloseIt(quoteBean.getCloseIt());
+      quote.setClosed(quoteBean.getClosed());
+      quote.setSubmitAction(quoteBean.getSubmitAction());
+      quote.setShowTotal(quoteBean.getShowTotal());
+			quote.setLogoFileId(quoteBean.getLogoFileId());
+      quote.setModifiedBy(user.getId());
+      isValid = this.validateObject(context, db, quoteBean);
+      if (isValid) {
+        resultCount = quote.update(db);
+      }
+    } catch (Exception e) {
+      // Go through the SystemError process
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (resultCount == -1 || !isValid) {
+      if (returnValue == null || "".equals(returnValue.trim())) {
+        return executeCommandModifyForm(context);
+      } else if (returnValue.equals("clone")) {
+        return executeCommandCloneForm(context);
+      } else if (returnValue.equals("submit")) {
+        return executeCommandSubmit(context);
+      } else if (returnValue.equals("close")) {
+        return executeCommandClose(context);
+      } else {
+        return "UserError";
+      }
+    }
+    return getReturn(context, "Modify");
   }
 
 
@@ -557,133 +966,105 @@ public final class Quotes extends CFSModule {
    *@param  context  The feature to be added to the Quote attribute
    *@return          Description of the Return Value
    */
-  public int addQuote(ActionContext context) {
-    int result = -1;
+  public String executeCommandAddQuote(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes-add"))) {
+      return ("PermissionError");
+    }
     String module = context.getRequest().getParameter("module");
     String includePage = context.getRequest().getParameter("include");
     context.getRequest().setAttribute("IncludePage", includePage);
     addModuleBean(context, module, module);
-    StringBuffer quoteDetails = new StringBuffer("");
-    int ticketId = Integer.parseInt((String) context.getRequest().getParameter("ticketId"));
-    int productId = Integer.parseInt((String) context.getRequest().getParameter("productId"));
-    int moduleId = Constants.FOLDERS_TICKETS;
-//    System.out.println("After the id are deciphered -> "+ticketId +" & adId -> "+productId);
-    String categoryName = new String("New Ad Design Request Questionnaire");
+    boolean isValid = false;
+    String ticketIdString = (String) context.getRequest().getParameter("ticketId");
+    int ticketId = -1;
+    String productIdString = (String) context.getRequest().getParameter("productId");
+    int productId = -1;
+
+    if (ticketIdString != null && !"".equals(ticketIdString)) {
+      ticketId = Integer.parseInt(ticketIdString);
+    }
+    if (productIdString != null && !"".equals(productIdString)) {
+      productId = Integer.parseInt(productIdString);
+    }
+
     Quote quote = null;
     Ticket ticket = null;
-    CustomFieldRecord record = null;
-    CustomFieldCategory questionnaire = null;
     User user = this.getUser(context, this.getUserId(context));
-    int orgId = user.getContact().getOrgId();
     Connection db = null;
 
     try {
       db = this.getConnection(context);
-      //Retrieve the ticket
-      ticket = new Ticket(db, ticketId);
-      if (!ticket.getProblem().equals("New Ad Design Request") && ticket.getCustomerProductId() != -1) {
-        CustomerProduct customerProduct = new CustomerProduct(db, ticket.getCustomerProductId());
-        ProductCatalog product = new ProductCatalog(db, productId);
-        quoteDetails.append("Ad ID selected : " + customerProduct.getId() + "\r\n");
-        quoteDetails.append("Ad Description : " + customerProduct.getDescription() + "\r\n");
-        quoteDetails.append("Product ID selected : " + product.getId() + "\r\n");
-        quoteDetails.append("Product Dimensions : " + product.getShortDescription() + "\r\n\r\n");
-        quoteDetails.append(ticket.getProblem() + "\r\n");
-      }
+
+      //Create a new instance of Quote
+      quote = (Quote) context.getFormBean();
+
       //Retrieve the lookup list for the quote status
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      context.getRequest().setAttribute("quoteStatusList", list);
 
-      //Create a new instance of Quote
-      quote = new Quote();
-      quote.setOrgId(ticket.getOrgId());
-      System.out.println("This is the quote Id " + quote.getQuoteId());
-      quote.setContactId(ticket.getContactId());
-      System.out.println("This is the contactId " + quote.getContactId());
-      quote.setEnteredBy(ticket.getEnteredBy());
-      quote.setModifiedBy(user.getId());
+      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      context.getRequest().setAttribute("quoteDeliveryList", list2);
 
-//      System.out.println("After the ticket has been created "+ticket.getId());
-//      context.getRequest().setAttribute("ticket", ticket);
-      // Retrieve the folder data and convert it to a StringBuffer
-      if (ticket.getProblem().equals("New Ad Design Request")) {
-        int categoryId = CustomFieldCategory.getIdFromName(db, moduleId, categoryName);
-        CustomFieldRecordList recordList = new CustomFieldRecordList();
-        recordList.setLinkModuleId(Constants.FOLDERS_TICKETS);
-        recordList.setLinkItemId(ticketId);
-        recordList.setCategoryId(categoryId);
-        recordList.buildList(db);
-        System.out.println("After the record list has been created with size" + recordList.size());
-        if (recordList.size() > 0) {
-          record = (CustomFieldRecord) recordList.get(0);
-          //        System.out.println("Inside the if statement... checking the records..--> record ID ->"+record.getId());
-          // Query the field description and resulting data
-          questionnaire = new CustomFieldCategory(db, categoryId);
-          questionnaire.setLinkModuleId(Constants.FOLDERS_TICKETS);
-          questionnaire.setLinkItemId(ticket.getId());
-          questionnaire.setRecordId(record.getId());
-          questionnaire.setIncludeEnabled(Constants.TRUE);
-          questionnaire.setBuildResources(true);
-          questionnaire.buildResources(db);
-          //System.out.println("The category is "+questionnaire);
-          System.out.println("The questionnaire has been found ..." + questionnaire.getId());
+      //Retrieve the ticket
+      if (ticketId != -1) {
+        ticket = new Ticket(db, ticketId);
+        ProductCatalog product = new ProductCatalog(db, productId);
+        quote.setProductId(product.getId());
+        quote.setShortDescription(product.getName() + ": ");
+        //if the ticket is not for a new ad design, retrieve the customer product from the database
+        if (!ticket.getProblem().equals("New Ad Design Request") && ticket.getCustomerProductId() != -1) {
+          CustomerProduct customerProduct = new CustomerProduct(db, ticket.getCustomerProductId());
+          quote.setCustomerProductId(customerProduct.getId());
         }
-        Iterator groups = questionnaire.iterator();
-        while (groups.hasNext()) {
-          System.out.println("Inside the while loop for groups " + groups.hasNext());
-          CustomFieldGroup thisGroup = (CustomFieldGroup) groups.next();
-          if (!thisGroup.getName().equals("Questionnaire")) {
-            quoteDetails.append("\r\n" + thisGroup.getName() + "\r\n");
-            System.out.println("The questionnaire group " + thisGroup.getId());
-          } else {
-            quoteDetails.append("\r\n");
-          }
-          Iterator fields = thisGroup.iterator();
-          while (fields.hasNext()) {
-            CustomField thisField = (CustomField) fields.next();
-            System.out.println("Inside the while loop for fields.." + thisField.getId());
-            if (thisField.getType() == CustomField.CHECKBOX) {
-              if (thisField.getValueHtml().equals("Yes")) {
-                System.out.println("Name-> " + thisField.getNameHtml() + "\n" + " Value-> " + thisField.getEnteredValue());
-                quoteDetails.append("Your Selection -> " + thisField.getNameHtml() + "\r\n");
-                /*
-                 *  if(!thisField.getAdditionalText().equals("") || thisField.getAdditionalText() != null){
-                 *  System.out.println("The additional text is "+thisField.getAdditionalText());
-                 *  quoteDetails.append(thisField.getAdditionalText()+"\r\n");
-                 *  }
-                 */
-              }
-            } else {
-              if (thisField.getEnteredValue() != null && !"".equals(thisField.getEnteredValue())) {
-                System.out.println("Name-> " + thisField.getNameHtml() + "\n" + " Value-> " + thisField.getEnteredValue());
-                if (thisField.getNameHtml().equals("Headline/Sale/Unique Selling Feature")) {
-                  quote.setName(thisField.getEnteredValue() + "\r\n");
-                  quoteDetails.append(thisField.getEnteredValue() + "\r\n");
-                } else {
-                  quoteDetails.append(thisField.getNameHtml() + "\r\n");
-                  quoteDetails.append(thisField.getEnteredValue() + "\r\n");
-                  if (thisField.getAdditionalText() != null && !"".equals(thisField.getAdditionalText())) {
-                    quoteDetails.append(thisField.getAdditionalText() + "\r\n");
-                  }
-                }
-              }
-            }
-          }
+        quote.setOrgId(ticket.getOrgId());
+        quote.setContactId(ticket.getContactId());
+        quote.setTicketId(ticket.getId());
+      }
+      int contactId = quote.getContactId();
+      if (contactId != -1) {
+        Organization orgDetails = new Organization(db, quote.getOrgId());
+        context.getRequest().setAttribute("OrgDetails", orgDetails);
+      } else {
+        quote.setStatusId(list.getIdFromValue("Incomplete"));
+      }
+      quote.setEnteredBy(user.getId());
+      quote.setModifiedBy(user.getId());
+      quote.setVersion(quote.getNewVersion());
+      isValid = this.validateObject(context, db, quote);
+      if (isValid) {
+        quote.createNewGroup(db);
+        quote.insert(db);
+      }
+      String quoteIdString = null;
+      if (isValid) {
+        quoteIdString = "" + quote.getId();
+        context.getRequest().setAttribute("quoteId", quoteIdString);
+      }
+
+      if (ticketId != -1) {
+        QuoteNote quoteNote = new QuoteNote();
+        quoteNote.setQuoteId(quote.getId());
+        quoteNote.setNotes(ticket.getProblem().trim());
+        quoteNote.setModifiedBy(user.getId());
+        quoteNote.setEnteredBy(user.getId());
+        isValid = isValid && this.validateObject(context, db, quoteNote);
+        if (isValid) {
+          quoteNote.insert(db);
         }
       }
-      System.out.println("This is the final quoteDetails \n" + quoteDetails.toString());
-      quote.setNotes(quoteDetails.toString());
-      quote.setTicketId(ticket.getId());
-      quote.setStatusId(list.getIdFromValue("Incomplete"));
-      quote.insert(db);
-      result = quote.getId();
     } catch (Exception e) {
       // Go through the SystemError process
       e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
-//      this.freeConnection(context, db);
+      this.freeConnection(context, db);
     }
-    return result;
+    if (!isValid) {
+      return executeCommandAddQuoteForm(context);
+    }
+    return "SaveOK";
   }
 
 
@@ -691,13 +1072,786 @@ public final class Quotes extends CFSModule {
    *  Description of the Method
    *
    *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
-  private void resetPagedListInfo(ActionContext context) {
-    this.deletePagedListInfo(context, "ContactListInfo");
-    this.deletePagedListInfo(context, "AccountFolderInfo");
-    this.deletePagedListInfo(context, "AccountTicketInfo");
-    this.deletePagedListInfo(context, "AccountDocumentInfo");
-    this.deletePagedListInfo(context, "OrderListInfo");
+  public String executeCommandAddQuoteForm(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes-add"))) {
+      return ("PermissionError");
+    }
+    String module = context.getRequest().getParameter("module");
+    String includePage = context.getRequest().getParameter("include");
+    context.getRequest().setAttribute("IncludePage", includePage);
+    addModuleBean(context, module, module);
+
+    Quote quote = (Quote) context.getFormBean();
+    User user = this.getUser(context, this.getUserId(context));
+    Connection db = null;
+
+    try {
+      db = this.getConnection(context);
+
+      //Retrieve the lookup list for the quote status
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      context.getRequest().setAttribute("quoteStatusList", list);
+      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      list2.addItem(-1, systemStatus.getLabel("calendar.none.4dashes"));
+      context.getRequest().setAttribute("quoteDeliveryList", list2);
+
+      //Create a new instance of Quote
+	  if (quote == null) {
+      	quote = new Quote();
+	  }
+      quote.setEnteredBy(user.getId());
+      quote.setModifiedBy(user.getId());
+      //quote.setStatusId(list.getIdFromValue("Incomplete"));
+
+			//Create a list for selection of a logo file
+			FileItemList itemList = new FileItemList();
+			itemList.setLinkModuleId(Constants.DOCUMENTS_QUOTE_LOGO);
+			itemList.setLinkItemId(Constants.QUOTES);
+			itemList.buildList(db);
+			context.getRequest().setAttribute("fileItemList", itemList);
+      
+      int headerId = quote.getHeaderId();
+      if (headerId != -1) {
+        OpportunityHeader opportunity = new OpportunityHeader(db, headerId);
+        context.getRequest().setAttribute("opportunity", opportunity);
+      }
+      if (quote.getOrgId() != -1) {
+        Organization orgDetails = new Organization(db, quote.getOrgId());
+        quote.setName(orgDetails.getName());
+        context.getRequest().setAttribute("OrgDetails", orgDetails);
+        //Create the list of contacts
+        ContactList contactList = new ContactList();
+        contactList.setOrgId(quote.getOrgId());
+        contactList.setLeadsOnly(Constants.FALSE);
+        contactList.setEmployeesOnly(Constants.FALSE);
+        contactList.buildList(db);
+        context.getRequest().setAttribute("contactList", contactList);
+      }
+      context.getRequest().setAttribute("quoteBean", quote);
+
+    } catch (Exception e) {
+      // Go through the SystemError process
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "AddQuoteFormOK";
+  }
+
+
+  /**
+   *  This method decides the workflow after the user's decision on the quote
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandCustomerQuoteDecision(ActionContext context) {
+    if (!hasPermission(context, "products-view")) {
+      return ("PermissionError");
+    }
+    QuoteNote quoteNote = null;
+    Connection db = null;
+    boolean isValid = false;
+    String quoteIdString = (String) context.getRequest().getParameter("quoteId");
+    String value = (String) context.getRequest().getParameter("value");
+    User user = getUser(context, getUserId(context));
+    int userOrgId = user.getContact().getOrgId();
+    try {
+      db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+
+      Quote quoteBean = (Quote) context.getFormBean();
+      Timestamp currentTimestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+      Quote quote = new Quote();
+      quote.setBuildProducts(true);
+      quote.queryRecord(db, Integer.parseInt(quoteIdString));
+
+      //check the user for the necessary permissions
+      if (isPortalUser(context)) {
+        if (quote.getOrgId() != userOrgId) {
+          Exception error = new Exception("Unauthorized Access");
+          context.getRequest().setAttribute("Error", error);
+          return "SystemError";
+        }
+      }
+      //check for any new notes from the user
+      if (quoteBean.getNotes() != null && !"".equals(quoteBean.getNotes().trim())) {
+        quoteNote = new QuoteNote();
+        quoteNote.setQuoteId(Integer.parseInt(quoteIdString));
+        quoteNote.setNotes(quoteBean.getNotes());
+        quoteNote.setModifiedBy(user.getId());
+        quoteNote.setEnteredBy(user.getId());
+        isValid = this.validateObject(context, db, quoteNote);
+        if (isValid) {
+          quoteNote.insert(db);
+        }
+      }
+
+      //if the user rejects the quote, set the quote status details
+      if (value.equals("REJECT") || value.equals("NOTES")) {
+        if (value.equals("REJECT")) {
+          quote.setStatusId(list.getIdFromValue("Rejected by customer"));
+        }
+        if (quoteNote != null) {
+          processInsertHook(context, quoteNote);
+        }
+      }
+      quote.setStatusDate(currentTimestamp);
+
+      //update the quote
+      isValid = isValid && this.validateObject(context, db, quote);
+      if (isValid) {
+        quote.update(db);
+      }
+      quote = new Quote();
+      quote.setBuildProducts(true);
+      quote.queryRecord(db, Integer.parseInt(quoteIdString));
+      context.getRequest().setAttribute("quote", quote);
+
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      e.printStackTrace();
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (value.equals("REJECT") || value.equals("NOTES") || !isValid) {
+      return "QuoteRejectedOK";
+    }
+    return "CustomerQuoteDecisionOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandOrganizationJSList(ActionContext context) {
+    Connection db = null;
+    try {
+      String orgId = context.getRequest().getParameter("orgId");
+      db = this.getConnection(context);
+      ContactList contactList = new ContactList();
+      if (orgId != null && !"-1".equals(orgId)) {
+        contactList.setBuildDetails(false);
+        contactList.setBuildTypes(false);
+        contactList.setLeadsOnly(Constants.FALSE);
+        contactList.setEmployeesOnly(Constants.FALSE);
+        contactList.setOrgId(Integer.parseInt(orgId));
+        contactList.buildList(db);
+      }
+      context.getRequest().setAttribute("ContactList", contactList);
+    } catch (Exception errorMessage) {
+
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "OrganizationJSListOK";
+  }
+
+
+  /**
+   *  Build the quote to be cloned and set it to the clone form.
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandCloneForm(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes-add") || hasPermission(context, "accounts-quotes-add")
+         || hasPermission(context, "leads-opportunities-add"))) {
+      return ("PermissionError");
+    }
+    String module = context.getRequest().getParameter("module");
+    String includePage = context.getRequest().getParameter("include");
+    context.getRequest().setAttribute("IncludePage", includePage);
+    addModuleBean(context, module, module);
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
+    String quoteId = (String) context.getRequest().getParameter("quoteId");
+    Quote oldQuote = null;
+    User user = this.getUser(context, this.getUserId(context));
+    ContactList contactList = null;
+    Connection db = null;
+
+    try {
+      db = this.getConnection(context);
+      oldQuote = new Quote();
+      oldQuote.setBuildProducts(true);
+      oldQuote.queryRecord(db, Integer.parseInt(quoteId));
+      context.getRequest().setAttribute("quote", oldQuote);
+
+      //Retrieve the lookup list for the quote status
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      context.getRequest().setAttribute("quoteStatusList", list);
+
+      contactList = new ContactList();
+      if (oldQuote.getOrgId() != -1) {
+        contactList.setOrgId(oldQuote.getOrgId());
+      }
+      contactList.setBuildDetails(false);
+      contactList.setBuildTypes(false);
+      contactList.buildList(db);
+      context.getRequest().setAttribute("contactList", contactList);
+
+    } catch (Exception e) {
+      // Go through the SystemError process
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "CloneFormOK";
+  }
+
+
+  /**
+   *  Clone the quote and return to the requested details page
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandClone(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes-add") || hasPermission(context, "accounts-quotes-add")
+         || hasPermission(context, "leads-opportunities-add"))) {
+      return ("PermissionError");
+    }
+    String module = context.getRequest().getParameter("module");
+    String includePage = context.getRequest().getParameter("include");
+    context.getRequest().setAttribute("IncludePage", includePage);
+    addModuleBean(context, module, module);
+    String version = (String) context.getRequest().getParameter("versionId");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
+    String quoteId = (String) context.getRequest().getParameter("quoteId");
+    String returnValue = (String) context.getRequest().getParameter("return");
+
+    Quote quote = (Quote) context.getFormBean();
+    Quote oldQuote = null;
+    User user = this.getUser(context, this.getUserId(context));
+    Connection db = null;
+
+    try {
+      db = this.getConnection(context);
+      //Build the old quote
+      oldQuote = new Quote();
+      oldQuote.setBuildProducts(true);
+      oldQuote.queryRecord(db, Integer.parseInt(quoteId));
+
+      //Retrieve the lookup list for the quote status
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      context.getRequest().setAttribute("quoteStatusList", list);
+
+      //Clone a new instance of Quote
+      quote.setId(-1);
+      quote.setCanNotCopyExpirationDate(true);
+      quote.setEnteredBy(user.getId());
+      quote.setModifiedBy(user.getId());
+      quote = oldQuote.clone(db, quote);
+      if (returnValue != null && !"".equals(returnValue)) {
+        if (returnValue.equals("clone")) {
+          context.getRequest().setAttribute("id", "" + quote.getId() + "&orgId=" + quote.getOrgId());
+        } else if (returnValue.equals("old")) {
+          context.getRequest().setAttribute("id", "" + oldQuote.getId() + "&version=" + (version != null ? version : "") + "&orgId=" + quote.getOrgId());
+        }
+      }
+    } catch (Exception e) {
+      // Go through the SystemError process
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "CloneOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandAddVersion(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes-add"))) {
+      return ("PermissionError");
+    }
+    String module = context.getRequest().getParameter("module");
+    String includePage = context.getRequest().getParameter("include");
+    context.getRequest().setAttribute("IncludePage", includePage);
+    addModuleBean(context, module, module);
+
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
+    String quoteId = (String) context.getRequest().getParameter("quoteId");
+    Quote quote = null;
+    Quote oldQuote = null;
+    User user = this.getUser(context, this.getUserId(context));
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      if (quoteId != null && !"".equals(quoteId)) {
+        oldQuote = new Quote();
+        oldQuote.setBuildProducts(true);
+        oldQuote.queryRecord(db, Integer.parseInt(quoteId));
+      }
+      //Retrieve the lookup list for the quote status
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      context.getRequest().setAttribute("quoteStatusList", list);
+      //Clone a new instance of Quote
+      quote = new Quote();
+      quote.setStatusId(list.getIdFromValue("Incomplete"));
+      quote = oldQuote.addVersion(db, quote);
+      String quoteIdString = String.valueOf(quote.getId());
+      context.getRequest().setAttribute("quoteId", quoteIdString);
+    } catch (Exception e) {
+      // Go through the SystemError process
+      e.printStackTrace();
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return executeCommandModifyForm(context);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandDetailsByGroup(ActionContext context) {
+    if (!(hasPermission(context, "quotes-view"))) {
+      return ("PermissionError");
+    }
+    int quoteId = -1;
+    int groupId = -1;
+    String groupIdString = (String) context.getRequest().getParameter("quoteId");
+    try {
+      groupId = Integer.parseInt(groupIdString);
+      if (groupId <= 0) {
+        throw new Exception("Invalid number selection");
+      }
+    } catch (Exception e) {
+      //Syntax error in entering the quote id
+      context.getRequest().setAttribute("groupIdError", "Invalid quote ID");
+      context.getRequest().setAttribute("actionError",
+          "Invalid criteria, please review and make necessary changes before submitting");
+      return "SearchCriteriaError";
+    }
+    Quote quote = null;
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      //check if the quote id is null
+      QuoteList quotes = new QuoteList();
+      quotes.setGroupId(groupIdString);
+      quotes.setTopOnly(Constants.TRUE);
+      quotes.buildList(db);
+      if (quotes.size() == 0) {
+        context.getRequest().setAttribute("actionError",
+            "No quotes with the given Id could be found.");
+        return "SearchCriteriaError";
+      } else {
+        quoteId = ((Quote) quotes.get(0)).getId();
+      }
+      String quoteIdString = "" + quoteId;
+      context.getRequest().setAttribute("quoteId", quoteIdString);
+    } catch (Exception e) {
+      e.printStackTrace();
+      context.getRequest().setAttribute("actionError",
+          "The specified quote could not be found");
+      return "SearchCriteriaError";
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "GroupOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandViewHistory(ActionContext context) {
+    if (!(hasPermission(context, "quotes-view"))) {
+      return ("PermissionError");
+    }
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
+    Connection db = null;
+    Quote quote = null;
+    String quoteId = null;
+    try {
+      quoteId = (String) context.getRequest().getParameter("quoteId");
+      db = this.getConnection(context);
+      quote = new Quote();
+      quote.setBuildHistory(true);
+      quote.queryRecord(db, Integer.parseInt(quoteId));
+      context.getRequest().setAttribute("quote", quote);
+      //Retrieve the lookup list for the quote status
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      context.getRequest().setAttribute("quoteStatusList", list);
+
+      LookupList list2 = systemStatus.getLookupList(db, "lookup_quote_delivery");
+      context.getRequest().setAttribute("quoteDeliveryList", list2);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+
+    addModuleBean(context, "View Quotes", "View Quote Details");
+    return ("ViewHistoryOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandClose(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
+         || hasPermission(context, "leads-opportunities-edit"))) {
+      return ("PermissionError");
+    }
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
+    Connection db = null;
+    Quote quote = null;
+    String quoteId = (String) context.getRequest().getParameter("quoteId");
+    try {
+      db = this.getConnection(context);
+      quote = new Quote();
+      quote.queryRecord(db, Integer.parseInt(quoteId));
+      context.getRequest().setAttribute("quote", quote);
+      //Retrieve the lookup list for the quote status
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      context.getRequest().setAttribute("quoteStatusList", list);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "View Quotes", "View Quote Details");
+    return ("CloseFormOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandEmail(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
+         || hasPermission(context, "leads-opportunities-edit"))) {
+      return ("PermissionError");
+    }
+    String version = (String) context.getRequest().getParameter("version");
+    if (version != null && !"".equals(version)) {
+      context.getRequest().setAttribute("version", version);
+    }
+    Connection db = null;
+    Quote quote = null;
+    String quoteId = (String) context.getRequest().getParameter("quoteId");
+    User user = this.getUser(context, this.getUserId(context));
+    Contact userContact = user.getContact();
+    try {
+      db = this.getConnection(context);
+      quote = new Quote();
+      quote.queryRecord(db, Integer.parseInt(quoteId));
+      context.getRequest().setAttribute("quote", quote);
+      //Build the user's contact information
+      userContact.setBuildDetails(true);
+      userContact.queryRecord(db, userContact.getId());
+      context.getRequest().setAttribute("userContact", userContact);
+      //Retrieve the lookup list for the quote status
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      context.getRequest().setAttribute("quoteStatusList", list);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "View Quotes", "View Quote Details");
+    return "EmailFormOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandPrintQuote(ActionContext context) {
+    if (!(hasPermission(context, "quotes-view") || hasPermission(context, "accounts-quotes-view")
+         || hasPermission(context, "leads-opportunities-view"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+		try {
+      db = this.getConnection(context);
+      String id = (String) context.getRequest().getParameter("id");
+      Quote quote = new Quote(db, Integer.parseInt(id));
+			
+			HashMap map = new HashMap();
+      map.put("quote_id", new Integer(id));
+      String reportPath = getWebInfPath(context, "reports");
+      map.put("path", reportPath);
+      String displayTotal = (String) context.getRequest().getParameter("display");
+      map.put("displaytotal", new Boolean(displayTotal));
+      String displaySubTotal = (String) context.getRequest().getParameter("subTotal");
+      map.put("displaysubtotal", new Boolean(displaySubTotal));
+			if (quote.getLogoFileId() > 0) {
+				FileItem thisItem = new FileItem(db, quote.getLogoFileId() , Constants.QUOTES, Constants.DOCUMENTS_QUOTE_LOGO);
+				String logoFilePath = this.getPath(context, "quotes") + getDatePath(thisItem.getModified()) + thisItem.getFilename();
+				map.put("logopath", logoFilePath);
+			}
+      //provide the dictionary as a parameter to the quote report
+      map.put("CENTRIC_DICTIONARY", this.getSystemStatus(context).getApplicationPrefs().getLocalizationPrefs());
+      String filename = "quote.xml";
+      byte[] bytes = JasperReportUtils.getReportAsBytes(reportPath + filename, map, db);
+      if (bytes != null) {
+        FileDownload fileDownload = new FileDownload();
+        fileDownload.setDisplayName("Quote_" + quote.getGroupId() + "v" + quote.getVersionNumber() + ".pdf");
+        fileDownload.sendFile(context, bytes, "application/pdf");
+      } else {
+        return ("SystemError");
+      }
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("--none--");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandSendEmail(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
+         || hasPermission(context, "leads-opportunities-edit"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    HashMap errors = new HashMap();
+    String fromEmailAddress = null;
+    String emailToAddress = null;
+    String subject = null;
+    String emailMeString = null;
+    boolean emailMe = false;
+    String body = null;
+    HashMap sentEmailAddresses = new HashMap();
+    String displayGrandTotal = (String) context.getRequest().getParameter("displayGrandTotal");
+    String quoteId = (String) context.getRequest().getParameter("quoteId");
+    Quote quote = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    emailToAddress = (String) context.getRequest().getParameter("emailToAddress");
+    if (emailToAddress == null || "".equals(emailToAddress.trim())) {
+      errors.put("emailToAddressError", systemStatus.getLabel("object.validation.required"));
+    } else {
+      sentEmailAddresses.put("to", emailToAddress);
+    }
+    fromEmailAddress = (String) context.getRequest().getParameter("fromEmailAddress");
+    if (fromEmailAddress == null || "".equals(fromEmailAddress.trim())) {
+      fromEmailAddress = getPref(context, "EMAILADDRESS");
+      if (fromEmailAddress == null || "".equals(fromEmailAddress.trim())) {
+        errors.put("fromEmailAddressError", systemStatus.getLabel("object.validation.required"));
+      }
+    }
+    subject = context.getRequest().getParameter("subject");
+    if (subject == null || "".equals(subject.trim())) {
+      errors.put("subjectError", systemStatus.getLabel("object.validation.required"));
+    }
+    body = context.getRequest().getParameter("body");
+    if (body == null || "".equals(body.trim())) {
+      errors.put("bodyError", systemStatus.getLabel("object.validation.required"));
+    }
+    emailMeString = context.getRequest().getParameter("emailMe");
+    if (emailMeString != null && !"".equals(emailMeString)) {
+      emailMe = new Boolean(emailMeString).booleanValue();
+      sentEmailAddresses.put("from", fromEmailAddress);
+    }
+    if (sentEmailAddresses.size() > 0) {
+      context.getRequest().setAttribute("sentEmailAddresses", sentEmailAddresses);
+    }
+    User user = this.getUser(context, this.getUserId(context));
+    Contact userContact = user.getContact();
+    try {
+      db = this.getConnection(context);
+      //Build the quote.
+      quote = new Quote();
+      quote.setBuildResources(true);
+      quote.queryRecord(db, Integer.parseInt(quoteId));
+      context.getRequest().setAttribute("quote", quote);
+      //Retrieve the lookup list for the quote status
+      LookupList list = systemStatus.getLookupList(db, "lookup_quote_status");
+      context.getRequest().setAttribute("quoteStatusList", list);
+      //Build the user's contact information
+      userContact.setBuildDetails(true);
+      userContact.queryRecord(db, userContact.getId());
+      context.getRequest().setAttribute("userContact", userContact);
+
+      //Create the file to be emailed.
+      HashMap map = new HashMap();
+      map.put("quote_id", new Integer(quoteId));
+      String reportPath = getWebInfPath(context, "reports");
+      map.put("path", reportPath);
+      if (displayGrandTotal != null && !"".equals(displayGrandTotal)) {
+        map.put("displaytotal", new Boolean(displayGrandTotal));
+      } else {
+        map.put("displaytotal", new Boolean("false"));
+      }
+      String filename = "quote.xml";
+      byte[] attachment = JasperReportUtils.getReportAsBytes(reportPath + filename, map, db);
+      //Send the email
+      if (errors.size() == 0) {
+        SMTPMessage mail = new SMTPMessage();
+        mail.setHost(getPref(context, "MAILSERVER"));
+        mail.setFrom(fromEmailAddress);
+        mail.setTo(emailToAddress);
+        if (emailMe) {
+          mail.setBcc(fromEmailAddress);
+        }
+        mail.setType("text/plain");
+        mail.setSubject(subject);
+        mail.addByteArrayAttachment("Quote_" + quote.getGroupId() + "v" + quote.getVersionNumber() + ".pdf", attachment, "application/pdf");
+        mail.setBody(body + "\r\n");
+        if (mail.send() == 2) {
+          if (System.getProperty("DEBUG") != null) {
+            System.out.println("Quotes-> Send error: " + mail.getErrorMsg() + "<br><br>");
+          }
+          System.err.println(mail.getErrorMsg());
+          errors.put("actionError", systemStatus.getLabel("mail.quoteErrorMessage") + mail.getErrorMsg());
+        }
+      }
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (errors.size() > 0) {
+      processErrors(context, errors);
+      return "EmailFormOK";
+    }
+    return "EmailSentOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandChangeShowTotal(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
+         || hasPermission(context, "leads-opportunities-edit"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Quote quote = null;
+    boolean isValid = false;
+    String quoteId = (String) context.getRequest().getParameter("quoteId");
+    String showTotal = (String) context.getRequest().getParameter("showTotal");
+    try {
+      db = this.getConnection(context);
+      quote = new Quote();
+      quote.queryRecord(db, Integer.parseInt(quoteId));
+      boolean canShowTotal = new Boolean(showTotal).booleanValue();
+      quote.setShowTotal(canShowTotal);
+      isValid = this.validateObject(context, db, quote);
+      if (isValid) {
+        quote.update(db);
+      }
+      context.getRequest().setAttribute("quoteShowTotal", "" + quote.getShowTotal());
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "SetShowTotalOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandChangeShowSubtotal(ActionContext context) {
+    if (!(hasPermission(context, "quotes-quotes-edit") || hasPermission(context, "accounts-quotes-edit")
+         || hasPermission(context, "leads-opportunities-edit"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Quote quote = null;
+    boolean isValid = false;
+    String quoteId = (String) context.getRequest().getParameter("quoteId");
+    String showSubtotal = (String) context.getRequest().getParameter("showSubtotal");
+    try {
+      db = this.getConnection(context);
+      quote = new Quote();
+      quote.queryRecord(db, Integer.parseInt(quoteId));
+      boolean canShowSubtotal = new Boolean(showSubtotal).booleanValue();
+      quote.setShowSubtotal(canShowSubtotal);
+      isValid = this.validateObject(context, db, quote);
+      if (isValid) {
+        quote.update(db);
+      }
+      context.getRequest().setAttribute("quoteShowSubtotal", "" + quote.getShowSubtotal());
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return "SetShowSubtotalOK";
   }
 }
 

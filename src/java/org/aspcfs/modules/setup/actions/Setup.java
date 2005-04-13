@@ -15,40 +15,30 @@
  */
 package org.aspcfs.modules.setup.actions;
 
-import org.aspcfs.modules.actions.CFSModule;
-import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.database.*;
-import org.aspcfs.modules.setup.beans.*;
-import org.aspcfs.utils.HTTPUtils;
-import org.aspcfs.utils.XMLUtils;
-import org.aspcfs.utils.PrivateString;
-import org.aspcfs.utils.ObjectUtils;
-import org.aspcfs.utils.StringUtils;
-import org.aspcfs.utils.FileUtils;
-import org.aspcfs.utils.DatabaseUtils;
-import java.io.*;
-import java.security.*;
-import com.sun.crypto.provider.*;
-import sun.misc.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import java.sql.*;
-import org.aspcfs.modules.setup.utils.Prefs;
-import org.aspcfs.utils.SMTPMessage;
-import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.contacts.base.ContactEmailAddress;
-import org.aspcfs.modules.accounts.base.Organization;
-import java.net.InetAddress;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.ApplicationPrefs;
-import org.aspcfs.jcrontab.datasource.Event;
-import java.util.TimeZone;
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactEmailAddress;
+import org.aspcfs.modules.service.base.TransactionStatus;
+import org.aspcfs.modules.setup.beans.DatabaseBean;
+import org.aspcfs.modules.setup.beans.RegistrationBean;
+import org.aspcfs.modules.setup.beans.ServerBean;
+import org.aspcfs.modules.setup.beans.UserSetupBean;
+import org.aspcfs.modules.setup.utils.Prefs;
+import org.aspcfs.utils.*;
+import org.w3c.dom.Element;
+import sun.misc.BASE64Encoder;
+
+import java.io.File;
+import java.net.InetAddress;
+import java.security.Key;
+import java.sql.*;
+import java.util.HashMap;
 import java.util.Properties;
-import org.aspcfs.modules.service.base.*;
+import java.util.TimeZone;
 
 /**
  *  Actions for setting up Centric CRM the first time
@@ -73,6 +63,25 @@ public class Setup extends CFSModule {
       return "SetupCompleteError";
     }
     addModuleBean(context, null, "Welcome");
+    return "SetupOK";
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandWelcome(ActionContext context) {
+    if (isAlreadySetup(context)) {
+      return "SetupCompleteError";
+    }
+    addModuleBean(context, null, "Welcome");
+    String language = context.getRequest().getParameter("language");
+    ApplicationPrefs prefs = getApplicationPrefs(context);
+    prefs.add("SYSTEM.LANGUAGE", language);
+    prefs.loadLocalizationPrefs(context.getServletContext());
     // BEGIN DHV CODE ONLY
     //Check if key exists, if not force user to use a new key
     String path = getPath(context);
@@ -85,7 +94,7 @@ public class Setup extends CFSModule {
       context.getRequest().setAttribute("found", "true");
     }
     // END DHV CODE ONLY
-    return "SetupOK";
+    return "WelcomeOK";
   }
 
 
@@ -153,8 +162,9 @@ public class Setup extends CFSModule {
         HTTPUtils.getServerName(context.getRequest().getScheme() + "://" +
         HTTPUtils.getServerUrl(context.getRequest())));
     try {
-      if (!bean.isValid()) {
-        processErrors(context, bean.getErrors());
+      boolean isValid = false;
+      isValid = this.validateObject(context, null, bean);
+      if (!isValid) {
         return "SendRegERROR";
       }
       String response = null;
@@ -219,17 +229,17 @@ public class Setup extends CFSModule {
         response = HTTPUtils.sendPacket("http://registration.centriccrm.com/LicenseServer.do?command=SubmitRegistration", bean.toXmlString());
       }
       if (response == null) {
-        context.getRequest().setAttribute("actionError",
-            "Unspecified Error: Centric CRM Server did not respond ");
+        context.getRequest().setAttribute("actionError", prefs.getLabel("object.validation.actionError.unspecifiedErrorNoResponse"));
         return "SendRegERROR";
       }
       XMLUtils responseXML = new XMLUtils(response);
       Element responseNode = responseXML.getFirstChild("response");
       TransactionStatus thisStatus = new TransactionStatus(responseNode);
       if (thisStatus.getStatusCode() != 0) {
+        HashMap map = new HashMap();
+        map.put("${thisStatus.message}", thisStatus.getMessage());
         context.getRequest().setAttribute("actionError",
-            "Unspecified Error: Centric CRM Server rejected registration " +
-            thisStatus.getMessage());
+            getLabel(map, prefs.getLabel("object.validation.actionError.unspecifiedErrorRejectedRegistration")));
         return "SendRegERROR";
       }
     } catch (java.io.IOException errorMessage) {
@@ -260,6 +270,7 @@ public class Setup extends CFSModule {
       return "SetupCompleteError";
     }
     addModuleBean(context, null, "Register");
+    ApplicationPrefs prefs = getApplicationPrefs(context);
     try {
       //Load the key
       String keyFile = context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "init" + fs + "zlib.jar";
@@ -267,8 +278,7 @@ public class Setup extends CFSModule {
       //Check the request
       String license = context.getRequest().getParameter("license");
       if (license == null) {
-        context.getRequest().setAttribute("actionError",
-            "The entered key did not validate, try entering it again.");
+        context.getRequest().setAttribute("actionError", prefs.getLabel("object.validation.actionError.invalidKeyEntered"));
         return "ValidateRETRY";
       }
       //See if <license> and </license> are included
@@ -297,16 +307,17 @@ public class Setup extends CFSModule {
       }
     } catch (Exception e) {
       if (e.getMessage() == null) {
-        context.getRequest().setAttribute("actionError", "An error occurred in processing the license.  " +
-            "The license code does not match the key on this machine.  " +
-            "A new license should be requested");
+        context.getRequest().setAttribute("actionError", prefs.getLabel("object.validation.actionError.invalidLicenseCode"));
       } else {
-        context.getRequest().setAttribute("actionError", "An error occurred in processing the license.  " +
-            "The following error was supplied: " + e.getMessage());
+        HashMap map = new HashMap();
+        map.put("${error.message}", e.getMessage());
+        context.getRequest().setAttribute("actionError",
+            getLabel(map, prefs.getLabel("object.validation.actionError.licenseProcessingError")));
       }
       return "ValidateRETRY";
     }
   }
+
 
   // END DHV CODE ONLY
 
@@ -331,13 +342,13 @@ public class Setup extends CFSModule {
       File instance = new File(context.getServletContext().getRealPath("/"));
       if (os.startsWith("Windows")) {
         //Windows
-        path = "c:\\Centric\\crm\\fileLibrary\\" + instance.getName() + "\\";
+        path = "c:\\CentricCRM\\fileLibrary\\" + instance.getName() + "\\";
       } else if (os.startsWith("Mac")) {
         //Mac OSX
-        path = "/Library/Application Support/Centric/crm/fileLibrary/" + instance.getName() + "/";
+        path = "/Library/Application Support/CentricCRM/fileLibrary/" + instance.getName() + "/";
       } else {
         //Linux, Solaris, SunOS, OS/2, HP-UX, AIX, FreeBSD, etc
-        path = "/var/lib/centric/crm/fileLibrary/" + instance.getName() + "/";
+        path = "/var/lib/centric_crm/fileLibrary/" + instance.getName() + "/";
       }
     }
     context.getRequest().setAttribute("fileLibrary", path);
@@ -356,11 +367,10 @@ public class Setup extends CFSModule {
       return "SetupCompleteError";
     }
     addModuleBean(context, null, "Storage");
+    ApplicationPrefs prefs = getApplicationPrefs(context);
     String fileLibrary = context.getRequest().getParameter("fileLibrary");
     if (fileLibrary == null || fileLibrary.trim().length() == 0) {
-      context.getRequest().setAttribute("actionError",
-          "Target directory is a required field. Make sure to use valid " +
-          "characters for a directory");
+      context.getRequest().setAttribute("actionError", prefs.getLabel("object.validation.incorrectTargetDirectoryName"));
       return "ConfigureDirectoryERROR";
     }
     try {
@@ -373,7 +383,6 @@ public class Setup extends CFSModule {
       File targetDirectory = new File(fileLibrary);
       if (targetDirectory.exists()) {
         //Let's use the target directory
-        ApplicationPrefs prefs = getApplicationPrefs(context);
         prefs.setFilename(fileLibrary + "build.properties");
         prefs.add("FILELIBRARY", fileLibrary);
         prefs.save();
@@ -434,6 +443,7 @@ public class Setup extends CFSModule {
       return "SetupCompleteError";
     }
     addModuleBean(context, null, "Storage");
+    ApplicationPrefs prefs = getApplicationPrefs(context);
     //Verify the path again that the user specified
     String userFileLibrary = getPref(context, "FILELIBRARY");
     if (System.getProperty("DEBUG") != null) {
@@ -441,8 +451,7 @@ public class Setup extends CFSModule {
     }
     File userLibraryPath = new File(userFileLibrary);
     if (userFileLibrary == null || !userLibraryPath.isDirectory()) {
-      context.getRequest().setAttribute("actionError",
-          "The file library path has not been configured");
+      context.getRequest().setAttribute("actionError", prefs.getLabel("object.validation.actionError.fileLibraryPathNotConfigured"));
       return "ConfigureDirectoryERROR";
     }
     //Verify the existing files...
@@ -452,16 +461,14 @@ public class Setup extends CFSModule {
     File inputFile = new File(initPath + "input.txt");
     File inputFileDest = new File(userFileLibrary + "init" + fs + "input.txt");
     if (!inputFile.exists() && !inputFileDest.exists()) {
-      context.getRequest().setAttribute("actionError",
-          "The file library path is missing input.txt");
+      context.getRequest().setAttribute("actionError", prefs.getLabel("object.validation.actionError.fileLibraryPathMissingInputFile"));
       return "ConfigureDirectoryERROR";
     }
     //Verify the source zlib.jar file
     File zlibFile = new File(initPath + "zlib.jar");
     File zlibFileDest = new File(userFileLibrary + "init" + fs + "zlib.jar");
     if (!zlibFile.exists() && !zlibFileDest.exists()) {
-      context.getRequest().setAttribute("actionError",
-          "The file library path is missing zlib.jar");
+      context.getRequest().setAttribute("actionError", prefs.getLabel("object.validation.actionError.fileLibraryPathMissingZLIBFile"));
       return "ConfigureDirectoryERROR";
     }
     // END DHV CODE ONLY
@@ -477,9 +484,7 @@ public class Setup extends CFSModule {
       //Add fileLibrary pref to registry so that this page can be skipped in the future
       Prefs.savePref(context.getServletContext().getRealPath("/"), userFileLibrary);
     } catch (Exception e) {
-      context.getRequest().setAttribute("actionError",
-          "An error occurred while trying to use the directory, " +
-          "please make sure the directory has read/write permissions");
+      context.getRequest().setAttribute("actionError", prefs.getLabel("object.validation.actionError.incorrectDirectoryRWPermissions"));
       return "ConfigureDirectoryERROR";
     }
     return "ConfigureDirectoryCompleteOK";
@@ -537,15 +542,17 @@ public class Setup extends CFSModule {
       return "SetupCompleteError";
     }
     addModuleBean(context, null, "Database");
+    ApplicationPrefs prefs = getApplicationPrefs(context);
     //See if required info is filled in
     DatabaseBean bean = (DatabaseBean) context.getFormBean();
-    if (!bean.isValid()) {
-      processErrors(context, bean.getErrors());
-      return "ConfigureDatabaseERROR";
-    }
     //See if the database connection works
     int timeout = DriverManager.getLoginTimeout();
     try {
+      boolean isValid = false;
+      isValid = this.validateObject(context, null, bean);
+      if (!isValid) {
+        return "ConfigureDatabaseERROR";
+      }
       //Create a connection
       Class.forName(bean.getDriver());
       DriverManager.setLoginTimeout(10);
@@ -553,7 +560,6 @@ public class Setup extends CFSModule {
           bean.getUrl(), bean.getUser(), bean.getPassword());
       //Save the conn info as encrypted text so it can be reloaded later
       String fileLibrary = getPref(context, "FILELIBRARY") + "init" + fs;
-      File dbPref = new File(fileLibrary + "conn.sgml");
       String dbInfo = bean.getConnection();
       Key key = PrivateString.loadKey(fileLibrary + "zlib.jar");
       StringUtils.saveText(fileLibrary + "conn.sgml", PrivateString.encrypt(key, dbInfo));
@@ -566,12 +572,12 @@ public class Setup extends CFSModule {
           context.getServletContext().getRealPath("/") + "WEB-INF" + fs + "setup" + fs;
       FileUtils.copyFile(new File(setupPath + "system.xml"), new File(dbPath + "system.xml"), false);
       FileUtils.copyFile(new File(setupPath + "workflow.xml"), new File(dbPath + "workflow.xml"), false);
+      FileUtils.copyFile(new File(setupPath + "templates.xml"), new File(dbPath + "templates.xml"), false);
       //See if the database has been created
       boolean databaseExists = isDatabaseInstalled(db);
       //Finished testing
       db.close();
       //Append the database prefs to be saved when everything is complete
-      ApplicationPrefs prefs = getApplicationPrefs(context);
       prefs.add("GATEKEEPER.APPCODE", (String) context.getServletContext().getAttribute("SiteCode"));
       prefs.add("GATEKEEPER.DBTYPE", bean.getTypeValue());
       prefs.add("GATEKEEPER.DRIVER", bean.getDriver());
@@ -586,9 +592,10 @@ public class Setup extends CFSModule {
       }
       return "ConfigureDatabaseOK";
     } catch (Exception e) {
+      HashMap map = new HashMap();
+      map.put("${error.message}", e.getMessage());
       context.getRequest().setAttribute("actionError",
-          "An error occurred while trying to connect to the database, the " +
-          "following error was provided by the database driver: " + e.getMessage());
+          getLabel(map, prefs.getLabel("object.validation.actionError.databaseConnectionError")));
       return "ConfigureDatabaseERROR";
     } finally {
       DriverManager.setLoginTimeout(timeout);
@@ -607,6 +614,7 @@ public class Setup extends CFSModule {
       return "SetupCompleteError";
     }
     addModuleBean(context, null, "Database");
+    ApplicationPrefs prefs = getApplicationPrefs(context);
     //See if the database connection works
     Connection db = null;
     try {
@@ -660,9 +668,10 @@ public class Setup extends CFSModule {
         System.out.println(e.getMessage());
         e.printStackTrace(System.out);
       }
+      HashMap map = new HashMap();
+      map.put("${error.message}", e.getMessage());
       context.getRequest().setAttribute("actionError",
-          "An error occurred while trying to create the database schema, the " +
-          "following error was provided: " + e.getMessage());
+          getLabel(map, prefs.getLabel("object.validation.actionError.databaseCreationError")));
       return "ConfigureDatabaseCreateERROR";
     } finally {
       if (db != null) {
@@ -716,6 +725,10 @@ public class Setup extends CFSModule {
       if (bean.getTimeZone() == null) {
         bean.setTimeZone(TimeZone.getDefault().getID());
       }
+      if (bean.getLanguage() == null) {
+        ApplicationPrefs prefs = getApplicationPrefs(context);
+        bean.setLanguage(prefs.get("SYSTEM.LANGUAGE"));
+      }
     }
     return "ConfigureServerCheckOK";
   }
@@ -734,11 +747,13 @@ public class Setup extends CFSModule {
     addModuleBean(context, null, "Servers");
     //See if required info is filled in
     ServerBean bean = (ServerBean) context.getFormBean();
-    if (!bean.isValid()) {
-      processErrors(context, bean.getErrors());
-      return "ConfigureServerERROR";
-    }
+    ApplicationPrefs prefs = getApplicationPrefs(context);
     try {
+      boolean isValid = false;
+      isValid = this.validateObject(context, null, bean);
+      if (!isValid) {
+        return "ConfigureServerERROR";
+      }
       //Save the settings as encrypted text so it can be reloaded later
       String fileLibrary = getPref(context, "FILELIBRARY") + "init" + fs;
       Key key = null;
@@ -763,7 +778,6 @@ public class Setup extends CFSModule {
       context.getRequest().setAttribute("userAddress", userAddress);
       // END DHV CODE ONLY
       //Save the known prefs
-      ApplicationPrefs prefs = getApplicationPrefs(context);
       prefs.add("WEBSERVER.URL", bean.getUrl());
       prefs.add("MAILSERVER", bean.getEmail());
       prefs.add("FAXSERVER", bean.getFax());
@@ -772,12 +786,14 @@ public class Setup extends CFSModule {
       prefs.add("SYSTEM.CURRENCY", bean.getCurrency());
       prefs.add("SYSTEM.LANGUAGE", bean.getLanguage());
       prefs.add("SYSTEM.COUNTRY", bean.getCountry());
+      prefs.loadLocalizationPrefs(context.getServletContext());
       prefs.save();
       return "ConfigureServerOK";
     } catch (Exception e) {
+      HashMap map = new HashMap();
+      map.put("${error.message}", e.getMessage());
       context.getRequest().setAttribute("actionError",
-          "An error occurred while saving the preferences, the " +
-          "following error was provided: " + e.getMessage());
+          getLabel(map, prefs.getLabel("object.validation.actionError.preferencesSaveError")));
       return "ConfigureServerERROR";
     }
   }
@@ -793,12 +809,13 @@ public class Setup extends CFSModule {
     if (isAlreadySetup(context)) {
       return "SetupCompleteError";
     }
+    ApplicationPrefs prefs = getApplicationPrefs(context);
     SMTPMessage message = new SMTPMessage();
     message.setHost(context.getRequest().getParameter("server"));
     message.setFrom(context.getRequest().getParameter("from"));
     message.setTo(context.getRequest().getParameter("to"));
-    message.setSubject("Test message from Centric CRM");
-    message.setBody("Congratulations, mail from Centric CRM is working.");
+    message.setSubject(prefs.getLabel("mail.subject.test"));
+    message.setSubject(prefs.getLabel("mail.body.congratulations"));
     int result = message.send();
     if (result == 0) {
       return "SendMailOK";
@@ -823,6 +840,7 @@ public class Setup extends CFSModule {
     //Check the database to see if an admin user already exists, user id 1
     UserSetupBean bean = (UserSetupBean) context.getFormBean();
     Connection db = null;
+    ApplicationPrefs prefs = getApplicationPrefs(context);
     try {
       //Create a connection
       db = getDbConnection(context);
@@ -849,9 +867,10 @@ public class Setup extends CFSModule {
       // END DHV CODE ONLY
       return "ConfigureUserCheckOK";
     } catch (Exception e) {
+      HashMap map = new HashMap();
+      map.put("${error.message}", e.getMessage());
       context.getRequest().setAttribute("actionError",
-          "An error occurred while trying verify the database schema, the " +
-          "following error was provided: " + e.getMessage());
+          getLabel(map, prefs.getLabel("object.validation.actionError.databaseVerificationError")));
       return "ConfigureUserDatabaseERROR";
     } finally {
       if (db != null) {
@@ -877,15 +896,16 @@ public class Setup extends CFSModule {
     addModuleBean(context, null, "CRMSetup");
     //See if required info is filled in
     UserSetupBean bean = (UserSetupBean) context.getFormBean();
-    if (!bean.isValid()) {
-      processErrors(context, bean.getErrors());
-      return "ConfigureUserERROR";
-    }
     Connection db = null;
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     try {
       //Get a database connection
       db = getDbConnection(context);
+      boolean isValid = false;
+      isValid = this.validateObject(context, db, bean);
+      if (!isValid) {
+        return "ConfigureUserERROR";
+      }
       if (!isDatabaseInstalled(db)) {
         return "ConfigureUserDatabaseERROR";
       }
@@ -895,14 +915,11 @@ public class Setup extends CFSModule {
         //Insert the contact record as an employee
         Contact thisContact = new Contact();
         thisContact.setOrgId(0);
-        thisContact.addType(Contact.EMPLOYEE_TYPE);
         thisContact.setNameFirst(bean.getNameFirst());
         thisContact.setNameLast(bean.getNameLast());
         thisContact.setEmployee(true);
         thisContact.setEnteredBy(0);
         thisContact.setModifiedBy(0);
-        //AccessTypeList accessTypes = this.getSystemStatus(context).getAccessTypeList(db, AccessType.EMPLOYEES);
-        //thisContact.setAccessType(accessTypes.getDefaultItem());
         thisContact.setAccessType(5);
         thisContact.insert(db);
         //Add the email
@@ -938,9 +955,10 @@ public class Setup extends CFSModule {
         } catch (Exception se) {
         }
       }
+      HashMap map = new HashMap();
+      map.put("${error.message}", e.getMessage());
       context.getRequest().setAttribute("actionError",
-          "An error occurred while adding the administrative user, the " +
-          "following error was provided: " + e.getMessage());
+          getLabel(map, prefs.getLabel("object.validation.actionError.adminAddError")));
       return "ConfigureUserERROR";
     } finally {
       if (db != null) {
@@ -959,9 +977,8 @@ public class Setup extends CFSModule {
    *
    *@param  db                Description of the Parameter
    *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
    */
-  private boolean isDatabaseInstalled(Connection db) throws SQLException {
+  private boolean isDatabaseInstalled(Connection db) {
     //See if the database has been created
     boolean databaseExists = false;
     try {
@@ -986,9 +1003,8 @@ public class Setup extends CFSModule {
    *
    *@param  db                Description of the Parameter
    *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
    */
-  private boolean hasAdminUser(Connection db) throws SQLException {
+  private boolean hasAdminUser(Connection db) {
     int count = 0;
     try {
       PreparedStatement pst = db.prepareStatement(
@@ -1083,6 +1099,7 @@ public class Setup extends CFSModule {
       return false;
     }
   }
+
   // END DHV CODE ONLY
 
   /**
@@ -1142,5 +1159,20 @@ public class Setup extends CFSModule {
       System.out.println("Setup-> finalizePrefs - end (" + prefs.getPrefs().size() + ")");
     }
   }
+
+
+  /**
+   *  Gets the label attribute of the Setup object
+   *
+   *@param  map    Description of the Parameter
+   *@param  input  Description of the Parameter
+   *@return        The label value
+   */
+  public String getLabel(HashMap map, String input) {
+    Template template = new Template(input);
+    template.setParseElements(map);
+    return template.getParsedText();
+  }
+
 }
 

@@ -67,7 +67,22 @@ INSERT INTO lookup_delivery_options (description,level) VALUES ('Email then Fax'
 INSERT INTO lookup_delivery_options (description,level) VALUES ('Email then Letter',5);
 INSERT INTO lookup_delivery_options (description,level) VALUES ('Email, Fax, then Letter',6);
 --INSERT INTO lookup_delivery_options (description,level) VALUES ('By Communication Preference',7);
-                                                        
+INSERT INTO lookup_delivery_options (description,level,enabled) VALUES ('Instant Message', 7, @FALSE@);
+INSERT INTO lookup_delivery_options (description,level,enabled) VALUES ('Secure Socket', 8, @FALSE@);
+INSERT INTO lookup_delivery_options (description,level) VALUES ('Broadcast', 9);
+
+INSERT INTO lookup_im_types (description, level) VALUES ('Business',10);
+INSERT INTO lookup_im_types (description, level) VALUES ('Personal',20);
+INSERT INTO lookup_im_types (description, level) VALUES ('Other',30);
+
+INSERT INTO lookup_im_services (description, level) VALUES ('AOL Instant Messenger',10);
+INSERT INTO lookup_im_services (description, level) VALUES ('Jabber Instant Messenger',20);
+INSERT INTO lookup_im_services (description, level) VALUES ('MSN Instant Messenger',30);
+
+INSERT INTO lookup_textmessage_types (description, level) VALUES ('Business',10);
+INSERT INTO lookup_textmessage_types (description, level) VALUES ('Personal',20);
+INSERT INTO lookup_textmessage_types (description, level) VALUES ('Other',30);
+
 INSERT INTO lookup_industry (description) VALUES ('Automotive');
 INSERT INTO lookup_industry (description) VALUES ('Biotechnology');
 INSERT INTO lookup_industry (description) VALUES ('Broadcasting and Cable');
@@ -89,6 +104,23 @@ INSERT INTO lookup_industry (description) VALUES ('Retail');
 INSERT INTO lookup_industry (description) VALUES ('Telecommunications');
 INSERT INTO lookup_industry (description) VALUES ('Transportation');
 
---INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'is a member of', 'member is', 10);
---INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'employee of', 'employer of', 20);
---INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'refers to', 'receives referals from', 30);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Subsidiary of', 'Parent of', 10);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Customer of', 'Supplier to', 20);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Partner of', 'Partner of', 30);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Friend of', 'Friend of', 30);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Competitor of', 'Competitor of', 40);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Employee of', 'Employer of', 50);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Department of', 'Organization made up of', 60);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Group of', 'Organization made up of', 70);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Member of', 'Organization made up of', 80);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Consultant to', 'Client of', 90);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Influencer of', 'Influenced by', 100);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Enemy of', 'Enemy of', 110);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Proponent of', 'Endorsed by', 120);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Ally of', 'Ally of', 130);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Sponsor of', 'Sponsored by', 140);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Relative of', 'Relative of', 150);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Affiliated with', 'Affiliated with', 160);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Teammate of', 'Teammate of', 170);
+INSERT INTO lookup_relationship_types (category_id_maps_from, category_id_maps_to, reciprocal_name_1, reciprocal_name_2, level) VALUES ('42420034','42420034', 'Financier of', 'Financed by', 180);
+

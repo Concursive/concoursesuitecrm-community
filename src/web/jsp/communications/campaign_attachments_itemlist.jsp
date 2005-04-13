@@ -46,9 +46,9 @@
       }
     }
     if (tmpList.length == 0) {
-      alert("Nothing to remove")
+      alert(label("caution.nothingtoremove","Nothing to remove"));
     }	else if (tmpList.selectedIndex == -1) {
-      alert("An item needs to be selected before it can be removed");
+      alert(label("caution.itemneedstobe.selected","An item needs to be selected before it can be removed"));
     } else {
       itemList[tmpList.selectedIndex] = "skip";
       tmpList.options[tmpList.selectedIndex] = null;
@@ -71,7 +71,7 @@
         }
       }
     }
-    document.getElementById("addButton").value  = "Add >";
+    document.getElementById("addButton").value  = label("button.addR","Add >");
     document.getElementById("newitem").value = "";
   }
   function addValues(){
@@ -79,7 +79,7 @@
     var tmpList = document.getElementById("itemSelectId");
     var mode = document.getElementById("addButton").value;
     if(text == ""){
-      alert('Description is required');
+      alert(label("description.required",'Description is required'));
       return;
     }
     if (tmpList.length == 0 || tmpList.options[0].value == "-1"){
@@ -90,25 +90,25 @@
           itemList[count] = tmpList.options[count].value;
         }
       }
-      if(mode  == "Add >"){
+      if(mode  == label("button.addR","Add >")){
         tmpList.options[tmpList.length] = new Option(text);
       }else{
         tmpList.options[tmpList.selectedIndex].text = text;
       }
     }
-    if(mode == "Add >"){
+    if(mode == label("button.addR","Add >")){
       itemList[tmpList.length-1] = text;
     }else{
       itemList[tmpList.selectedIndex] = text;
     }
-    document.getElementById("addButton").value  = "Add >";
+    document.getElementById("addButton").value  = label("button.addR","Add >");
     document.getElementById("newitem").value = "";
     document.getElementById("newitem").focus();
   }
   function editValues(){
    var tmpList = document.getElementById("itemSelectId");
     if(tmpList.options[0].value != "-1"){
-      document.getElementById("addButton").value  = "Update >";
+      document.getElementById("addButton").value  = label("button.updateR","Update >");
       document.getElementById("newitem").value = tmpList.options[tmpList.selectedIndex].text;
     }
   }
@@ -117,7 +117,7 @@
   }
   function clearSelection(){
     document.getElementById("itemSelectId").selectedIndex =  "-1";
-    document.getElementById("addButton").value  = "Add >";
+    document.getElementById("addButton").value  = label("button.addR","Add >");
     document.getElementById("newitem").value = "";
   }
 </SCRIPT>
@@ -125,7 +125,7 @@
 <table cellpadding="4" cellspacing="0" width="100%" id="viewTable" class="details">
 <tr>
   <th colspan="2">
-    <strong>Edit Items</strong>
+    <strong><dhv:label name="project.editItem">Edit Item</dhv:label></strong>
   </th>
 </tr>
 <tr>
@@ -133,7 +133,7 @@
     <table width="100%" border="0" cellpadding="2" cellspacing="0" class="empty">
       <tr>
         <td nowrap>
-          Description&nbsp;
+          <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
         </td>
       </tr>
       <tr>
@@ -143,7 +143,7 @@
           <input type="hidden" name="questionid" value="<%=request.getParameter("questionid")%>">
         </td>
         <td nowrap style="text-align: right;" width="12">
-          <input type="button" value="Add >" onClick="javascript:addValues();" id="addButton">
+          <input type="button" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onClick="javascript:addValues();" id="addButton">
         </td>
      </tr>
     </table>
@@ -168,13 +168,13 @@
         <%= itemListSelect.getHtml("itemSelect") %>
     <%}else{%>
       <select name="itemSelect" id="itemSelectId" size="10">
-        <option value="-1">--------Item List-------</option>
+        <option value="-1"><dhv:label name="admin.itemList">--------Item List-------</dhv:label></option>
         </select>
     <%}%>
     <br>
     <center>
-      <input type="button" value="Remove" onclick="javascript:removeValues()">
-      <input type="button" value="Rename" onclick="javascript:editValues();">
+      <input type="button" value="<dhv:label name="button.remove">Remove</dhv:label>" onclick="javascript:removeValues()">
+      <input type="button" value="<dhv:label name="accounts.Rename">Rename</dhv:label>" onclick="javascript:editValues();">
     </center>
    </td>
   </tr>
@@ -183,8 +183,8 @@
  <table cellpadding="0" cellspacing="0" border="0" width="100%">
   <tr>
     <td colspan="2">
-      <input type="button" value="Save" onclick="javascript:setParentItems();javascript:window.close();">&nbsp;
-      <input type="button" value="Cancel" onclick="javascript:window.close();">
+      <input type="button" value="<dhv:label name="global.button.save">Save</dhv:label>" onclick="javascript:setParentItems();javascript:window.close();">&nbsp;
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();">
     </td>
   </tr>
  </table>

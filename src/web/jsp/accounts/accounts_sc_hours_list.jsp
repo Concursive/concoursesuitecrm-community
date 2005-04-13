@@ -31,13 +31,13 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th width="10%" nowrap>
-      <strong>Adjustment</strong>
+      <strong><dhv:label name="account.sc.adjustment">Adjustment</dhv:label></strong>
     </th>
     <th width="30%" >
-      <strong>Reason</strong>
+      <strong><dhv:label name="account.sc.reason">Reason</dhv:label></strong>
     </th>
     <th width="50%" >
-      <strong>Notes</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label></strong>
     </th>
     <th width="10%" nowrap>
       <b><a href="AccountsServiceContracts.do?command=HoursHistory&id=<%=serviceContractHoursHistory.getContractId()%>&popup=true&popupType=inline&column=modified">Date</a></b>
@@ -75,7 +75,7 @@
     %>
     <tr class="containerBody">
       <td colspan="4">
-        No history of hours
+        <dhv:label name="account.sc.noHistoryOfHours">No history of hours</dhv:label>
       </td>
     </tr>
     <%

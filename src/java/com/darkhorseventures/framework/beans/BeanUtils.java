@@ -114,7 +114,7 @@ public class BeanUtils
    *@param  indexAttribute   Description of the Parameter
    *@param  autoPopulate     Description of the Parameter
    */
-  private static void populateParameter(AutoPopulate autoPopulate, String param, Object value, Object target, String nestedAttribute, String indexAttribute) {
+  public static void populateParameter(AutoPopulate autoPopulate, String param, Object value, Object target, String nestedAttribute, String indexAttribute) {
     if ((param == null) || (param.length() == 0) || (value == null) || (target == null)) {
       return;
     }

@@ -8,15 +8,15 @@ function popLookupSelectMultiple(displayFieldId,highLightedId,table) {
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
   
-  var selectedIds = "";
-  var selectedDisplays ="";
+  var selectedIds = '';
+  var selectedDisplays ='';
   
   for (count=0; count<(document.getElementById(displayFieldId).length); count++) {
           
           if (document.getElementById(displayFieldId).options[count].value > -1) {
                   if (selectedIds.length > 0) {
-                          selectedIds = selectedIds + "|";
-                          selectedDisplays = selectedDisplays + "|";
+                          selectedIds = selectedIds + '|';
+                          selectedDisplays = selectedDisplays + '|';
                   }
                           
                   selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value;
@@ -45,15 +45,15 @@ function popContactTypeSelectMultiple(displayFieldId, category, contactId) {
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
   
-  var selectedIds = "";
-  var selectedDisplays ="";
+  var selectedIds = '';
+  var selectedDisplays ='';
   
   for (count=0; count<(document.getElementById(displayFieldId).length); count++) {
           
           if (document.getElementById(displayFieldId).options[count].value > -1) {
                   if (selectedIds.length > 0) {
-                          selectedIds = selectedIds + "|";
-                          selectedDisplays = selectedDisplays + "|";
+                          selectedIds = selectedIds + '|';
+                          selectedDisplays = selectedDisplays + '|';
                   }
                           
                   selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value;
@@ -82,24 +82,23 @@ function popProductCatalogSelectMultiple(displayFieldId, contractId) {
   var posx = (screen.width - width)/2;
   var posy = (screen.height - height)/2;
   
-  var selectedIds = "";
-  var selectedDisplays ="";
+  var selectedIds = '';
+  var selectedDisplays ='';
   
   for (count=0; count<(document.getElementById(displayFieldId).length); count++) {
           
           if (document.getElementById(displayFieldId).options[count].value > -1) {
                   if (selectedIds.length > 0) {
-                          selectedIds = selectedIds + "|";
-                          selectedDisplays = selectedDisplays + "|";
+                          selectedIds = selectedIds + '|';
+                          selectedDisplays = selectedDisplays + '|';
                   }
                           
                   selectedIds = selectedIds + document.getElementById(displayFieldId).options[count].value;
                   selectedDisplays = selectedDisplays + document.getElementById(displayFieldId).options[count].text;
           }
   }
-  
   var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
-  var newwin=window.open('ProductsCatalog.do?command=PopupSelector&reset=true&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&previousSelectionDisplay=' + selectedDisplays + '&contractId=' + contractId , title, params);
+  var newwin=window.open('ProductsCatalog.do?command=PopupSelector&reset=true&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&previousSelectionDisplay=' + selectedDisplays + '&contractId=' + contractId +'&listType=list' , title, params);
   newwin.focus();
   if (newwin != null) {
     if (newwin.opener == null)
@@ -108,7 +107,55 @@ function popProductCatalogSelectMultiple(displayFieldId, contractId) {
 }
 
 
-  function setParentList(selectedValues,selectedIds,listType,displayFieldId){
+function popQuoteConditionSelectMultiple(displayFieldId,highLightedId,table,quoteId,currentIds,currentValues, type) {
+  title  = '_types';
+  width  =  '500';
+  height =  '450';
+  resize =  'yes';
+  bars   =  'no';
+  
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  
+  var selectedIds = currentIds;
+  var selectedDisplays = currentValues;
+  
+  var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  var newwin=window.open('QuotesConditions.do?command=PopupSelector&quoteId='+quoteId+'&displayFieldId='+displayFieldId+'&previousSelection=' + selectedIds + '&previousSelectionDisplay=' + selectedDisplays + '&table=' + table + '&type='+ type+ '', title, params);
+  newwin.focus();
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
+
+function popLookupSelectSingle(displayFieldId, moduleId, lookupId) {
+  title  = '_types';
+  width  =  '500';
+  height =  '450';
+  resize =  'yes';
+  bars   =  'no';
+  
+  var posx = (screen.width - width)/2;
+  var posy = (screen.height - height)/2;
+  var params = 'WIDTH=' + width + ',HEIGHT=' + height + ',RESIZABLE=' + resize + ',SCROLLBARS=' + bars + ',STATUS=0,LEFT=' + posx + ',TOP=' + posy + 'screenX=' + posx + ',screenY=' + posy;
+  var newwin=window.open('LookupSelector.do?command=PopupSingleSelector&displayFieldId='+displayFieldId+'&lookupId=' + lookupId + '&moduleId=' + moduleId + '', title, params);
+  newwin.focus();
+
+  if (newwin != null) {
+    if (newwin.opener == null)
+      newwin.opener = self;
+  }
+}
+
+
+  function setParentValue(displayFieldId, fieldValue) {
+    opener.document.getElementById(displayFieldId).value = fieldValue;
+    window.close();
+  }
+
+  function setParentList(selectedIds,selectedValues,listType,displayFieldId, hiddenFieldId, browserId){
 	  if(selectedValues.length == 0 && listType == "list"){
       opener.deleteOptions(displayFieldId);
 		  opener.insertOption("None Selected","-1",displayFieldId);
@@ -125,7 +172,6 @@ function popProductCatalogSelectMultiple(displayFieldId, contractId) {
         opener.document.getElementById(hiddenFieldId).value = selectedIds[i];
         opener.changeDivContent(displayFieldId,selectedValues[i]);
     }
-    
   }
 
   function SetChecked(val,chkName,thisForm,browser) {

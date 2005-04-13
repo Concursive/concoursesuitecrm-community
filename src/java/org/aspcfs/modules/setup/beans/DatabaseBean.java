@@ -217,29 +217,6 @@ public class DatabaseBean extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the DatabaseBean object
-   *
-   *@return    The valid value
-   */
-  public boolean isValid() {
-    errors.clear();
-    if (ip == null || "".equals(ip.trim())) {
-      errors.put("ipError", "IP address is a required field");
-    }
-    if (port <= 0) {
-      errors.put("portError", "Database port is a required field");
-    }
-    if (name == null || "".equals(name.trim())) {
-      errors.put("nameError", "Database name is a required field");
-    }
-    if (user == null || "".equals(user.trim())) {
-      errors.put("userError", "Database user name is a required field");
-    }
-    return (!hasErrors());
-  }
-
-
-  /**
    *  Gets the url attribute of the DatabaseBean object
    *
    *@return    The url value

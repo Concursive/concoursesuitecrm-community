@@ -15,115 +15,51 @@
  */
 package org.aspcfs.modules.products.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import com.zeroio.iteam.base.FileItem;
-import com.zeroio.iteam.base.FileItemList;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.tasks.base.TaskList;
-import org.aspcfs.modules.base.Constants;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.actionlist.base.ActionList;
-import org.aspcfs.modules.actionlist.base.ActionItemLog;
-import org.aspcfs.modules.actionlist.base.ActionItemLogList;
-import org.aspcfs.modules.base.CustomFieldRecordList;
+import org.aspcfs.modules.products.configurator.OptionConfigurator;
+import org.aspcfs.utils.DatabaseUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 /**
- *  Option Configurator for an Product Option
+ *  Description of the Class
  *
- *@author     partha
- *@created    March 19, 2004
- *@version    $Id: ProductOptionConfigurator.java,v 1.1.2.2 2004/03/19 20:46:01
- *      partha Exp $
+ *@author     ananth
+ *@created    September 2, 2004
+ *@version    $Id$
  */
 public class ProductOptionConfigurator extends GenericBean {
-
   private int id = -1;
+  private String configuratorName = null;
   private String shortDescription = null;
   private String longDescription = null;
   private String className = null;
   private int resultType = -1;
-  //other supplimentary fields
-  private String optionName = null;
-  private String productName = null;
 
 
   /**
-   *  Gets the id attribute of the ProductOptionConfigurator object
-   *
-   *@return    The id value
-   */
-  public int getId() {
-    return id;
-  }
-
-
-  /**
-   *  Gets the shortDescription attribute of the ProductOptionConfigurator
+   *  Sets the configuratorName attribute of the ProductOptionConfigurator
    *  object
    *
-   *@return    The shortDescription value
+   *@param  tmp  The new configuratorName value
    */
-  public String getShortDescription() {
-    return shortDescription;
+  public void setConfiguratorName(String tmp) {
+    this.configuratorName = tmp;
   }
 
 
   /**
-   *  Gets the longDescription attribute of the ProductOptionConfigurator object
+   *  Gets the configuratorName attribute of the ProductOptionConfigurator
+   *  object
    *
-   *@return    The longDescription value
+   *@return    The configuratorName value
    */
-  public String getLongDescription() {
-    return longDescription;
-  }
-
-
-  /**
-   *  Gets the className attribute of the ProductOptionConfigurator object
-   *
-   *@return    The className value
-   */
-  public String getClassName() {
-    return className;
-  }
-
-
-  /**
-   *  Gets the resultType attribute of the ProductOptionConfigurator object
-   *
-   *@return    The resultType value
-   */
-  public int getResultType() {
-    return resultType;
-  }
-
-
-  /**
-   *  Gets the optionName attribute of the ProductOptionConfigurator object
-   *
-   *@return    The optionName value
-   */
-  public String getOptionName() {
-    return optionName;
-  }
-
-
-  /**
-   *  Gets the productName attribute of the ProductOptionConfigurator object
-   *
-   *@return    The productName value
-   */
-  public String getProductName() {
-    return productName;
+  public String getConfiguratorName() {
+    return configuratorName;
   }
 
 
@@ -199,22 +135,53 @@ public class ProductOptionConfigurator extends GenericBean {
 
 
   /**
-   *  Sets the optionName attribute of the ProductOptionConfigurator object
+   *  Gets the id attribute of the ProductOptionConfigurator object
    *
-   *@param  tmp  The new optionName value
+   *@return    The id value
    */
-  public void setOptionName(String tmp) {
-    this.optionName = tmp;
+  public int getId() {
+    return id;
   }
 
 
   /**
-   *  Sets the productName attribute of the ProductOptionConfigurator object
+   *  Gets the shortDescription attribute of the ProductOptionConfigurator
+   *  object
    *
-   *@param  tmp  The new productName value
+   *@return    The shortDescription value
    */
-  public void setProductName(String tmp) {
-    this.productName = tmp;
+  public String getShortDescription() {
+    return shortDescription;
+  }
+
+
+  /**
+   *  Gets the longDescription attribute of the ProductOptionConfigurator object
+   *
+   *@return    The longDescription value
+   */
+  public String getLongDescription() {
+    return longDescription;
+  }
+
+
+  /**
+   *  Gets the className attribute of the ProductOptionConfigurator object
+   *
+   *@return    The className value
+   */
+  public String getClassName() {
+    return className;
+  }
+
+
+  /**
+   *  Gets the resultType attribute of the ProductOptionConfigurator object
+   *
+   *@return    The resultType value
+   */
+  public int getResultType() {
+    return resultType;
   }
 
 
@@ -256,22 +223,13 @@ public class ProductOptionConfigurator extends GenericBean {
    */
   public void queryRecord(Connection db, int id) throws SQLException {
     if (id == -1) {
-      throw new SQLException("Invalid Product Category Number");
+      throw new SQLException("Invalid Product Option Configurator Id");
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT " +
-        " poptconf.*, " +
-        " popt.short_description AS option_name, " +
-        " pctlg.product_name AS product_name, " +
-        " FROM product_option_configurator AS poptconf" +
-        " LEFT JOIN product_option AS popt " +
-        " ON ( poptconf.configurator_id = popt.configurator_id ) " +
-        " LEFT JOIN product_option_map AS poptmap " +
-        " ON ( popt.option_id = poptmap.option_id ) " +
-        " LEFT JOIN product_catalog AS pctlg " +
-        " ON ( poptmap.product_id = pctlg.product_id ) " +
-        " WHERE pconf.configurator_id = ? "
+        "SELECT conf.* " +
+        "FROM product_option_configurator AS conf " +
+        "WHERE conf.configurator_id = ? "
         );
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -280,8 +238,8 @@ public class ProductOptionConfigurator extends GenericBean {
     }
     rs.close();
     pst.close();
-    if (this.id == -1) {
-      throw new SQLException("Product Category not found");
+    if (this.getId() == -1) {
+      throw new SQLException("Product Option Configurator not found");
     }
   }
 
@@ -299,12 +257,7 @@ public class ProductOptionConfigurator extends GenericBean {
     this.setLongDescription(rs.getString("long_description"));
     this.setClassName(rs.getString("class_name"));
     this.setResultType(DatabaseUtils.getInt(rs, "result_type"));
-
-    // product_option table
-    this.setOptionName(rs.getString("option_name"));
-
-    // product_catalog table
-    this.setProductName(rs.getString("product_name"));
+    this.setConfiguratorName(rs.getString("configurator_name"));
   }
 
 
@@ -321,8 +274,12 @@ public class ProductOptionConfigurator extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Product Category ID not specified.");
     }
+    boolean commit = true;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       /*
        *  /Delete any documents
        *  FileItemList fileList = new FileItemList();
@@ -344,18 +301,25 @@ public class ProductOptionConfigurator extends GenericBean {
       //delete the product_option_configurator s that have configurator_id = id
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
-          " DELETE from product_option_configurator " +
-          " WHERE configurator_id = ? "
+          "DELETE from product_option_configurator " +
+          "WHERE configurator_id = ? "
           );
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
-      db.commit();
+      if(commit) {
+        db.commit();
+      }
       result = true;
     } catch (SQLException e) {
-      db.rollback();
+      if(commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if(commit) {
+        db.setAutoCommit(true);
+      }
     }
     return result;
   }
@@ -371,15 +335,20 @@ public class ProductOptionConfigurator extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
     StringBuffer sql = new StringBuffer();
+    boolean commit = true;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       sql.append(
-          " INSERT INTO product_option_configurator(  " +
-          "  short_description, long_description, class_name, result_type ) "
+          "INSERT INTO product_option_configurator(" +
+          "  configurator_name, short_description, long_description, class_name, result_type ) "
           );
-      sql.append("VALUES ( ?,?,?,? )");
+      sql.append("VALUES (?, ?, ?, ?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
+      pst.setString(++i, this.getConfiguratorName());
       pst.setString(++i, this.getShortDescription());
       pst.setString(++i, this.getLongDescription());
       pst.setString(++i, this.getClassName());
@@ -387,13 +356,19 @@ public class ProductOptionConfigurator extends GenericBean {
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "product_option_configurator_configurator_id_seq");
-      db.commit();
+      if(commit) {
+        db.commit();
+      }
       result = true;
     } catch (SQLException e) {
-      db.rollback();
+      if(commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if(commit) {
+        db.setAutoCommit(true);
+      }
     }
     return result;
   }
@@ -408,43 +383,29 @@ public class ProductOptionConfigurator extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
         " UPDATE product_option_configurator SET " +
-        " short_description = ?, long_description = ?, class_name = ?, " +
+        " configurator_name = ?, short_description = ?, long_description = ?, class_name = ?, " +
         " result_type = ? "
         );
     sql.append(" WHERE configurator_id = ? ");
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
+    pst.setString(++i, this.getConfiguratorName());
     pst.setString(++i, this.getShortDescription());
     pst.setString(++i, this.getLongDescription());
     pst.setString(++i, this.getClassName());
     pst.setInt(++i, this.getResultType());
+    pst.setInt(++i, this.getId());
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;
-  }
-
-
-  /**
-   *  Gets the valid attribute of the ProductOptionConfigurator object
-   *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  public boolean isValid(Connection db) throws SQLException {
-// This method contains additional error catching statements
-    if (id == -1) {
-      return false;
-    }
-    return true;
   }
 
 
@@ -461,7 +422,6 @@ public class ProductOptionConfigurator extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Configurator ID not specified");
     }
-    String sql = null;
     DependencyList dependencyList = new DependencyList();
     PreparedStatement pst = null;
     ResultSet rs = null;
@@ -469,13 +429,13 @@ public class ProductOptionConfigurator extends GenericBean {
     /*
      *  /Check for documents
      *  Dependency docDependency = new Dependency();
-     *  docDependency.setName("Documents");
+     *  docDependency.setName("documents");
      *  docDependency.setCount(FileItemList.retrieveRecordCount(db, Constants.DOCUMENTS_PRODUCT_CATEGORY, this.getId()));
      *  docDependency.setCanDelete(true);
      *  dependencyList.add(docDependency);
      *  /Check for folders
      *  Dependency folderDependency = new Dependency();
-     *  folderDependency.setName("Folders");
+     *  folderDependency.setName("folders");
      *  folderDependency.setCount(CustomFieldRecordList.retrieveRecordCount(db, Constants.FOLDERS_PRODUCT_CATEGORY, this.getId()));
      *  folderDependency.setCanDelete(true);
      *  dependencyList.add(folderDependency);
@@ -494,7 +454,7 @@ public class ProductOptionConfigurator extends GenericBean {
         int categoryCount = rs.getInt("parentcount");
         if (categoryCount != 0) {
           Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of children of this category ");
+          thisDependency.setName("numberOfChildrenOfThisCategory");
           thisDependency.setCount(categoryCount);
           thisDependency.setCanDelete(false);
           dependencyList.add(thisDependency);
@@ -505,6 +465,46 @@ public class ProductOptionConfigurator extends GenericBean {
     } catch (SQLException e) {
     }
     return dependencyList;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                          Description of the Parameter
+   *@param  id                          Description of the Parameter
+   *@return                             Description of the Return Value
+   *@exception  SQLException            Description of the Exception
+   */
+  public static OptionConfigurator getConfigurator(Connection db, int id) throws SQLException {
+    OptionConfigurator configurator = null;
+    try {
+      String className = null;
+      configurator = null;
+      PreparedStatement pst = db.prepareStatement(
+          "SELECT class_name " +
+          "FROM product_option_configurator " +
+          "WHERE configurator_id = ? ");
+      pst.setInt(1, id);
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        className = rs.getString("class_name");
+      }
+      rs.close();
+      pst.close();
+      // Create an instance of the configurator
+      Class cls = Class.forName(className);
+      configurator = (OptionConfigurator) cls.newInstance();
+    } catch (InstantiationException ie) {
+      // Shouldn't happen
+	  // TODO: implement reporting these exceptions to the application
+      ie.printStackTrace(System.out);
+    } catch (ClassNotFoundException cnfe) {
+      cnfe.printStackTrace(System.out);
+    } catch (IllegalAccessException iae) {
+      iae.printStackTrace(System.out);
+    }
+    return configurator;
   }
 }
 

@@ -19,9 +19,12 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.sql.*;
 import java.io.IOException;
 import com.zeroio.utils.ContentUtils;
+import com.darkhorseventures.framework.actions.ActionContext;
 
 /**
  *  Class for working with the Lucene search engine
@@ -42,7 +45,7 @@ public class IssueReplyIndexer implements Indexer {
    *@exception  SQLException  Description of the Exception
    *@exception  IOException   Description of the Exception
    */
-  public static void add(IndexWriter writer, Connection db) throws SQLException, IOException {
+  public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT r.reply_id, r.issue_id, i.project_id, i.category_id, r.subject, r.message, r.modified " +
@@ -59,10 +62,11 @@ public class IssueReplyIndexer implements Indexer {
       issueReply.setProjectId(rs.getInt("project_id"));
       issueReply.setCategoryId(rs.getInt("category_id"));
       issueReply.setSubject(rs.getString("subject"));
-      issueReply.setMessage(rs.getString("message"));
+      issueReply.setBody(rs.getString("message"));
       issueReply.setModified(rs.getTimestamp("modified"));
       // add the document
       IssueReplyIndexer.add(writer, issueReply, false);
+      DatabaseUtils.renewConnection(context, db);
     }
     rs.close();
     pst.close();
@@ -81,7 +85,7 @@ public class IssueReplyIndexer implements Indexer {
   public static void add(IndexWriter writer, IssueReply issueReply, boolean modified) throws IOException {
     // add the document
     Document document = new Document();
-    document.add(Field.Keyword("type", "issueReply"));
+    document.add(Field.Keyword("type", "issuereply"));
     document.add(Field.Keyword("issueReplyId", String.valueOf(issueReply.getId())));
     document.add(Field.Keyword("issueId", String.valueOf(issueReply.getIssueId())));
     document.add(Field.Keyword("issueCategoryId", String.valueOf(issueReply.getCategoryId())));
@@ -89,7 +93,7 @@ public class IssueReplyIndexer implements Indexer {
     document.add(Field.Text("title", issueReply.getSubject()));
     document.add(Field.Text("contents",
         issueReply.getSubject() + " " +
-        ContentUtils.toText(issueReply.getMessage())));
+        ContentUtils.toText(issueReply.getBody())));
     if (modified) {
       document.add(Field.Keyword("modified", String.valueOf(System.currentTimeMillis())));
     } else {
@@ -97,7 +101,7 @@ public class IssueReplyIndexer implements Indexer {
     }
     writer.addDocument(document);
     if (System.getProperty("DEBUG") != null && modified) {
-      System.out.println("IssueReply-> Added: " + issueReply.getId());
+      System.out.println("IssueReplyIndexer-> Added: " + issueReply.getId());
     }
   }
 

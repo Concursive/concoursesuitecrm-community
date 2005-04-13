@@ -24,6 +24,7 @@
 <jsp:useBean id="DepartmentList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="AccessTypeList" class="org.aspcfs.modules.admin.base.AccessTypeList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkPhone.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkEmail.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
@@ -45,20 +46,28 @@
   function checkForm(form) {
     formTest = true;
     message = "";
-    if(document.forms[0].contactcategory[1].checked && document.forms[0].orgId.value == '-1') {
-       message += "- Make sure you select an account.\r\n";
+    if(document.addContact.contactcategory[0] && document.addContact.contactcategory[1].checked && document.addContact.orgId.value == '-1') {
+       message += label("sure.select.account", "- Make sure you select an account.\r\n");
 			 formTest = false;
     }
-    if ((!checkPhone(form.phone1number.value)) || (!checkPhone(form.phone2number.value)) || (!checkPhone(form.phone3number.value)) ) { 
-      message += "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n";
+    if ((!checkPhone(form.phone1number.value)) || (!checkPhone(form.phone2number.value)) || (!checkPhone(form.phone3number.value)) || (checkNullString(form.phone1number.value) && !checkNullString(form.phone1ext.value)) || (checkNullString(form.phone2number.value) && !checkNullString(form.phone2ext.value)) || (checkNullString(form.phone3number.value) && !checkNullString(form.phone3ext.value))) { 
+      message += label("check.phone", "- At least one entered phone number is invalid.  Make sure there are no invalid characters and that you have entered the area code\r\n");
       formTest = false;
     }
-    if ((!checkEmail(form.email1address.value)) || (!checkEmail(form.email2address.value))){
-      message += "- At least one entered email address is invalid.  Make sure there are no invalid characters\r\n";
+    if ((checkNullString(form.phone1ext.value) && form.phone1ext.value != "") || (checkNullString(form.phone2ext.value) && form.phone2ext.value != "") || (checkNullString(form.phone3ext.value) && form.phone3ext.value != "")) {
+      message += label("check.phone.ext","- Please enter a valid phone number extension\r\n");
+      formTest = false;
+    }
+    if ((!checkEmail(form.email1address.value)) || (!checkEmail(form.email2address.value)) || (!checkEmail(form.email3address.value))){
+      message += label("check.email", "- At least one entered email address is invalid.  Make sure there are no invalid characters\r\n");
+      formTest = false;
+    }
+    if ((!checkEmail(form.textmessage1address.value)) || (!checkEmail(form.textmessage1address.value)) || (!checkEmail(form.textmessage1address.value))){
+      message += label("check.textmessage", "- At least one entered text message address is invalid.  Make sure there are no invalid characters\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     } else {
       var test = document.addContact.selectedList;
@@ -80,7 +89,7 @@
   
   function setCategoryPopContactType(selectedId, contactId){
     var category = 'general';
-    if(document.addContact.contactcategory[1].checked){
+    if(document.addContact.contactcategory[0] && document.addContact.contactcategory[1].checked){
       category = 'accounts';
     }
     popContactTypeSelectMultiple(selectedId, category, contactId); 
@@ -88,14 +97,14 @@
   
   function updateCategoryInfo(category){
     if(category == "general"){
-      document.forms[0].orgId.value = '-1';
+      document.addContact.orgId.value = '-1';
       var url = "ExternalContacts.do?command=AccessTypeJSList&category=" + <%= AccessType.GENERAL_CONTACTS %>;
       window.frames['server_commands'].location.href=url;
     }else if(category == "account"){
       var url = "ExternalContacts.do?command=AccessTypeJSList&category=" + <%= AccessType.ACCOUNT_CONTACTS %>;
       window.frames['server_commands'].location.href=url;
     }else if(category == "employee"){
-      document.forms[0].orgId.value = '-1';
+      document.addContact.orgId.value = '-1';
       var url = "ExternalContacts.do?command=AccessTypeJSList&category=" + <%= AccessType.EMPLOYEES %>;
       window.frames['server_commands'].location.href=url;
     }
@@ -107,43 +116,43 @@
    popAccountsListSingle('orgId','changeaccount');
   }
 </script>
-<body onLoad="javascript:document.forms[0].nameFirst.focus();">
+<body onLoad="javascript:document.addContact.nameFirst.focus();">
   <form name="addContact" action="ExternalContacts.do?command=Save&auto-populate=true" onSubmit="return doCheck(this);" method="post">
-<dhv:evaluate exp="<%= !isPopup(request)  || isInLinePopup(request) %>">
+<dhv:evaluate if="<%= !isPopup(request)  || isInLinePopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-  <a href="ExternalContacts.do">Contacts</a> > 
-    Add Contact
+  <a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+  <dhv:label name="accounts.AddContact">Add Contact</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-  <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-  <dhv:evaluate exp="<%= !isPopup(request) %>">
-  <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <dhv:evaluate if="<%= !isPopup(request) %>">
+  <input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
   </dhv:evaluate>
-  <input type="submit" value="Cancel" onClick="<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "javascript:this.form.action='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';" %>">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= isPopup(request) && !isInLinePopup(request) ? "javascript:window.close();" : "window.location.href='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';" %>">
 <br />
 <dhv:formMessage />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Add a Contact</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_list.AddAContact">Add a Contact</dhv:label></strong>
     </th>
   </tr>
     <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Contact Category
+      <dhv:label name="contact.contactCategory">Contact Category</dhv:label>
     </td>
     <td>
       <% if("adduser".equals(request.getParameter("source"))){ %>
       	<input type="radio" name="contactcategory" value="3" onChange="javascript:updateCategoryInfo('employee');" <%= ContactDetails.getOrgId() == -1 ? " checked" : ""%>><dhv:label name="employees.employee">Employee</dhv:label><br>
 	<input type="hidden" name="source" value="<%= request.getParameter("source") %>">
       <% }else{ %>
-        <input type="radio" name="contactcategory" value="1" onChange="javascript:updateCategoryInfo('general');" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>>General Contact<br>
+        <input type="radio" name="contactcategory" value="1" onChange="javascript:updateCategoryInfo('general');" <%= ContactDetails.getOrgId() == -1 ? " checked":""%>><dhv:label name="accounts.accounts_importcontact_details_include.GeneralContact">General Contact</dhv:label><br>
       <% } %>
       <dhv:permission name="accounts-accounts-contacts-add">
       <table cellspacing="0" cellpadding="0" border="0" class="empty">
@@ -152,23 +161,31 @@
               <input type="radio" name="contactcategory" value="2" onChange="javascript:updateCategoryInfo('account');" <%= ContactDetails.getOrgId() > -1 ? " checked":""%>>
             </td>
             <td>
-              Permanently associate with Account: &nbsp;
+              <dhv:label name="contact.permanentlyAssociateWithAccount.colon">Permanently associate with Account:</dhv:label> &nbsp;
             </td>
             <td>
-              <div id="changeaccount"><%= ContactDetails.getOrgId() > -1 ? ContactDetails.getCompany() : "None Selected"%></div>
+              <div id="changeaccount">
+                <% if(ContactDetails.getOrgId() > -1) {%>
+                  <%= toHtml(ContactDetails.getCompany()) %>
+                <%} else {%>
+                  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+                <%}%>
+              </div>
             </td>
             <td>
               <input type="hidden" name="orgId" id="orgId" value="<%= ContactDetails.getOrgId() %>">
-              &nbsp;[<a href="javascript:selectAccount();" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;">Select</a>]&nbsp;
+              &nbsp;[<a href="javascript:selectAccount();" onMouseOver="window.status='Select an Account';return true;" onMouseOut="window.status='';return true;"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]&nbsp;
             </td>
           </tr>
        </table>
-       </dhv:permission>
+       </dhv:permission><dhv:permission name="accounts-accounts-contacts-add" none="true">
+         <input type="hidden" name="orgId" id="orgId" value="-1" />
+      </dhv:permission>
     </td>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Contact Type(s)
+      <dhv:label name="accounts.accounts_contacts_add.ContactTypes">Contact Type(s)</dhv:label>
     </td>
     <td>
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
@@ -183,9 +200,9 @@
           <td valign="top">
             <%-- Check for cloned contact in case of Contacts --%>
             <% if(request.getParameter("id") == null) {%>
-              [<a href="javascript:setCategoryPopContactType('selectedList', <%= ContactDetails.getId() %>);">Select</a>]
+              [<a href="javascript:setCategoryPopContactType('selectedList', <%= ContactDetails.getId() %>);"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
             <%}else{%>
-                [<a href="javascript:setCategoryPopContactType('selectedList', <%= request.getParameter("id") %>);">Select</a>]
+                [<a href="javascript:setCategoryPopContactType('selectedList', <%= request.getParameter("id") %>);"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
             <% } %>
               <%= showAttribute(request, "personalContactError") %>
           </td>
@@ -195,7 +212,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Access Type
+      <dhv:label name="accounts.accounts_contacts_validateimport.AccessType">Access Type</dhv:label>
     </td>
     <td>
       <% 
@@ -208,7 +225,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      First Name
+      <dhv:label name="accounts.accounts_add.FirstName">First Name</dhv:label>
     </td>
     <td>
       <input type="text" size="35" name="nameFirst" value="<%= toHtmlValue(ContactDetails.getNameFirst()) %>">
@@ -216,7 +233,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-    Middle Name
+    <dhv:label name="accounts.accounts_add.MiddleName">Middle Name</dhv:label>
     </td>
     <td>
       <input type="text" size="35" name="nameMiddle" value="<%= toHtmlValue(ContactDetails.getNameMiddle()) %>">
@@ -224,7 +241,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Last Name
+      <dhv:label name="accounts.accounts_add.LastName">Last Name</dhv:label>
     </td>
     <td>
       <input type="text" size="35" name="nameLast" value="<%= toHtmlValue(ContactDetails.getNameLast()) %>">
@@ -234,7 +251,7 @@
   <%-- Check if a user is being added --%>
   <% if("adduser".equals(request.getParameter("source"))){ %>
   <tr>
-      <td class="formLabel" nowrap>Department</td>
+      <td class="formLabel" nowrap><dhv:label name="project.department">Department</dhv:label></td>
       <td>
         <%= DepartmentList.getHtmlSelect("department", ContactDetails.getDepartment()) %>
       </td>
@@ -242,7 +259,7 @@
   <% } %>
     <tr class="containerBody">
       <td class="formLabel" nowrap>
-        Company
+        <dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label>
       </td>
       <td>
         <input type="text" size="35" name="company" value="<%= toHtmlValue(ContactDetails.getCompany()) %>">
@@ -251,7 +268,7 @@
     </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Title
+      <dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label>
     </td>
     <td>
       <input type="text" size="35" name="title" value="<%= toHtmlValue(ContactDetails.getTitle()) %>">
@@ -262,12 +279,12 @@
 <%--  include basic contact form --%>
 <%@ include file="contact_include.jsp" %>
 <br>
-  <input type="submit" value="Save" onClick="this.form.dosubmit.value='true';">
-  <dhv:evaluate exp="<%= !isPopup(request) %>">
-  <input type="submit" value="Save & New" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <dhv:evaluate if="<%= !isPopup(request) %>">
+  <input type="submit" value="<dhv:label name="button.saveAndNew">Save & New</dhv:label>" onClick="this.form.saveAndNew.value='true';this.form.dosubmit.value='true';">
   <input type="hidden" name="dosubmit" value="true">
   </dhv:evaluate>
-  <input type="submit" value="Cancel" onClick="<%= (isPopup(request)  && !isInLinePopup(request)) ? "javascript:window.close();" : "javascript:this.form.action='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';" %>">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="<%= (isPopup(request)  && !isInLinePopup(request)) ? "javascript:window.close();" : "window.location.href='ExternalContacts.do?command=SearchContacts';this.form.dosubmit.value='false';" %>">
   <input type="hidden" name="dosubmit" value="true">
 <input type="hidden" name="source" value="<%= toHtmlValue(request.getParameter("source")) %>">
 <%= addHiddenParams(request, "popup|popupType|actionId") %>

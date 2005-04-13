@@ -3,6 +3,7 @@
     <forward name="PermissionError" resource="/errors/error_permission.jsp" layout="nav"/>
     <forward name="SecurityCheck" resource="/index.jsp"/>
     <forward name="SystemError" resource="/errors/error_system.jsp" layout="nav"/>
+    <forward name="GraphicsError" resource="/errors/error_graphics.jsp" layout="nav"/>
     <forward name="UserError" resource="/errors/error_user.jsp" layout="nav"/>
     <forward name="LicenseError" resource="/errors/error_license.jsp" layout="nav"/>
     <forward name="SetupCompleteError" resource="/setup/setup_complete_error.jsp" layout="dhv"/>

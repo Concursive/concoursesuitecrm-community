@@ -40,28 +40,19 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-Assets
+<dhv:label name="accounts.Assets">Assets</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<dhv:container name="accounts" selected="assets" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<%-- Begin the container contents --%>
-<dhv:permission name="accounts-assets-add">
-<a href="AccountsAssets.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>">Add an Asset</a>
-</dhv:permission>
-<dhv:permission name="accounts-assets-add" none="true"></dhv:permission>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AssetListInfo"/>
-<%@ include file="accounts_asset_list_include.jsp" %>
-<br />
-<dhv:pagedListControl object="AssetListInfo"/>
-</td>
-</tr>
-</table>
-
+<dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="sidetabs">
+  <dhv:permission name="accounts-assets-add">
+    <a href="AccountsAssets.do?command=Add&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.accounts_asset_list.AddAnAsset">Add an Asset</dhv:label></a>
+  </dhv:permission>
+  <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AssetListInfo"/>
+  <%@ include file="accounts_asset_list_include.jsp" %>
+  <br />
+  <dhv:pagedListControl object="AssetListInfo"/>
+</dhv:container>

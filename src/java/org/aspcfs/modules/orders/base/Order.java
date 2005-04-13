@@ -18,10 +18,13 @@ package org.aspcfs.modules.orders.base;
 import com.darkhorseventures.framework.beans.*;
 import java.util.*;
 import java.sql.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.products.base.*;
+import org.aspcfs.modules.quotes.base.*;
 
 /**
  *  An Order comprises of products and product options.
@@ -40,6 +43,7 @@ public class Order extends GenericBean {
   private int billingContactId = -1;
   private int sourceId = -1;
   private double grandTotal = 0;
+  private Timestamp submitted = null;
   private int statusId = -1;
   private Timestamp statusDate = null;
   private Timestamp contractDate = null;
@@ -63,6 +67,88 @@ public class Order extends GenericBean {
   // Resources
   private boolean buildProducts = false;
   private OrderProductList productList = new OrderProductList();
+  private boolean buildAddressList = false;
+  private OrderAddressList addressList = new OrderAddressList();
+
+
+  /**
+   *  Sets the submitted attribute of the Order object
+   *
+   *@param  tmp  The new submitted value
+   */
+  public void setSubmitted(Timestamp tmp) {
+    this.submitted = tmp;
+  }
+
+
+  /**
+   *  Sets the submitted attribute of the Order object
+   *
+   *@param  tmp  The new submitted value
+   */
+  public void setSubmitted(String tmp) {
+    this.submitted = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the addressList attribute of the Order object
+   *
+   *@param  tmp  The new addressList value
+   */
+  public void setAddressList(OrderAddressList tmp) {
+    this.addressList = tmp;
+  }
+
+
+  /**
+   *  Sets the buildAddressList attribute of the Order object
+   *
+   *@param  tmp  The new buildAddressList value
+   */
+  public void setBuildAddressList(boolean tmp) {
+    this.buildAddressList = tmp;
+  }
+
+
+  /**
+   *  Sets the buildAddressList attribute of the Order object
+   *
+   *@param  tmp  The new buildAddressList value
+   */
+  public void setBuildAddressList(String tmp) {
+    this.buildAddressList = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the buildAddressList attribute of the Order object
+   *
+   *@return    The buildAddressList value
+   */
+  public boolean getBuildAddressList() {
+    return buildAddressList;
+  }
+
+
+  /**
+   *  Gets the addressList attribute of the Order object
+   *
+   *@return    The addressList value
+   */
+  public OrderAddressList getAddressList() {
+    return addressList;
+  }
+
+
+  /**
+   *  Gets the submitted attribute of the Order object
+   *
+   *@return    The submitted value
+   */
+  public Timestamp getSubmitted() {
+    return submitted;
+  }
 
 
   /**
@@ -476,6 +562,16 @@ public class Order extends GenericBean {
 
 
   /**
+   *  Sets the requestItems attribute of the Order object
+   *
+   *@param  request  The new requestItems value
+   */
+  public void setRequestItems(HttpServletRequest request) {
+    addressList = new OrderAddressList(request);
+  }
+
+
+  /**
    *  Gets the contractDate attribute of the Order object
    *
    *@return    The contractDate value
@@ -787,12 +883,11 @@ public class Order extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT oe.order_id, oe.parent_id, oe.org_id, oe.quote_id, oe.sales_id, oe.orderedby, oe.billing_contact_id, oe.source_id, " +
-        "        oe.grand_total, oe.status_id, oe.status_date, oe.contract_date, oe.expiration_date, oe.order_terms_id, oe.order_type_id, " +
-        "        oe.description, oe.notes, oe.entered, oe.enteredby, oe.modified, oe.modifiedby, " +
+        " SELECT oe.*, " +
         "				 org.name, ct_billing.namelast, ct_billing.namefirst, ct_billing.namemiddle " +
         " FROM order_entry oe " +
         " LEFT JOIN organization org ON (oe.org_id = org.org_id) " +
+        " LEFT JOIN lookup_order_status los ON ( oe.status_id = los.code ) " +
         " LEFT JOIN contact ct_billing ON (oe.billing_contact_id = ct_billing.contact_id) " +
         " WHERE oe.order_id = ? "
         );
@@ -808,6 +903,9 @@ public class Order extends GenericBean {
     }
     if (buildProducts) {
       this.buildProducts(db);
+    }
+    if (buildAddressList) {
+      this.buildAddressList(db);
     }
   }
 
@@ -847,6 +945,8 @@ public class Order extends GenericBean {
     nameFirst = rs.getString("namefirst");
     nameMiddle = rs.getString("namemiddle");
     nameLast = rs.getString("namelast");
+
+    submitted = rs.getTimestamp("submitted");
   }
 
 
@@ -857,7 +957,6 @@ public class Order extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public void buildProducts(Connection db) throws SQLException {
-    System.out.println("building product list");
     productList.setOrderId(this.getId());
     productList.setBuildResources(true);
     productList.buildList(db);
@@ -867,15 +966,37 @@ public class Order extends GenericBean {
 
   /**
    *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildAddressList(Connection db) throws SQLException {
+    addressList.setOrderId(this.getId());
+    addressList.buildList(db);
+  }
+
+
+  /**
+   *  Gets the address attribute of the Order object
+   *
+   *@param  thisType  Description of the Parameter
+   *@return           The address value
+   */
+  public OrderAddress getAddress(String thisType) {
+    return (OrderAddress) addressList.getAddress(thisType);
+  }
+
+
+  /**
+   *  Description of the Method
    */
   public void determineTotal() {
     // determine the total
-    System.out.println("performing product total");
+    grandTotal = 0.0;
     Iterator i = productList.iterator();
     while (i.hasNext()) {
       OrderProduct thisProduct = (OrderProduct) i.next();
-      grandTotal += thisProduct.getPriceAmount();
-      System.out.println("total : " + grandTotal);
+      grandTotal += thisProduct.getTotalPrice();
     }
   }
 
@@ -889,10 +1010,6 @@ public class Order extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
-    if (!isValid(db)) {
-      return result;
-    }
-
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO order_entry(parent_id, org_id, quote_id, sales_id, orderedby, billing_contact_id, source_id, " +
@@ -905,7 +1022,7 @@ public class Order extends GenericBean {
     if (modified != null) {
       sql.append("modified, ");
     }
-    sql.append("modifiedby) ");
+    sql.append("modifiedby, submitted ) ");
     sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
@@ -914,7 +1031,7 @@ public class Order extends GenericBean {
     if (modified != null) {
       sql.append("?, ");
     }
-    sql.append("? )");
+    sql.append("? , ? )");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     DatabaseUtils.setInt(pst, ++i, this.getParentId());
@@ -941,9 +1058,18 @@ public class Order extends GenericBean {
       pst.setTimestamp(++i, this.getModified());
     }
     pst.setInt(++i, this.getModifiedBy());
+    pst.setTimestamp(++i, this.getSubmitted());
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "order_entry_order_id_seq");
+
+    //Insert the addresses if there are any
+    Iterator iaddress = this.getAddressList().iterator();
+    while (iaddress.hasNext()) {
+      OrderAddress thisAddress = (OrderAddress) iaddress.next();
+      thisAddress.process(db, this.getId(), this.getEnteredBy(), this.getModifiedBy());
+    }
+
     result = true;
     return result;
   }
@@ -960,23 +1086,65 @@ public class Order extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Order ID not specified");
     }
+    boolean commit = true;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+
+      // delete the order address list
+      this.getAddressList().delete(db);
+      addressList = null;
+
+      // delete all the order payments associated with this order
+      OrderPaymentList paymentList = new OrderPaymentList();
+      paymentList.setOrderId(this.getId());
+      paymentList.buildList(db);
+      paymentList.delete(db);
+      paymentList = null;
+
       // delete all the line items associated with this order
       this.buildProducts(db);
       productList.delete(db);
       productList = null;
 
-      // delete the order
-      PreparedStatement pst = db.prepareStatement(" DELETE FROM order_entry WHERE order_id = ? ");
+      // delete the credit card record associated with this order
+      PreparedStatement pst = null;
+      pst = db.prepareStatement("DELETE FROM payment_creditcard WHERE order_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      db.commit();
+
+      // delete the eft record
+      pst = db.prepareStatement("DELETE FROM payment_eft WHERE order_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+
+      // delete the order address record
+      pst = db.prepareStatement("DELETE FROM order_address WHERE order_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+
+      // delete the order
+      pst = db.prepareStatement("DELETE FROM order_entry WHERE order_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      e.printStackTrace();
+      if (commit) {
+        db.rollback();
+      }
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -991,13 +1159,13 @@ public class Order extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
 
-    sql.append(" UPDATE order_entry " +
+    sql.append("UPDATE order_entry " +
         " SET sales_id = ?, " +
         "     orderedby = ?, " +
         "     billing_contact_id = ?, " +
@@ -1011,8 +1179,6 @@ public class Order extends GenericBean {
         "     order_type_id = ?, " +
         "     description = ?, " +
         "     notes = ?, " +
-        "     entered = ?, " +
-        "     enteredby = ?, " +
         "     modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
         "     modifiedby = ? "
         );
@@ -1033,8 +1199,6 @@ public class Order extends GenericBean {
     DatabaseUtils.setInt(pst, ++i, this.getOrderTypeId());
     pst.setString(++i, this.getDescription());
     pst.setString(++i, this.getNotes());
-    pst.setTimestamp(++i, this.getEntered());
-    pst.setInt(++i, this.getEnteredBy());
     pst.setInt(++i, this.getModifiedBy());
     pst.setInt(++i, this.getId());
 
@@ -1075,7 +1239,7 @@ public class Order extends GenericBean {
         int parentCount = rs.getInt("parentcount");
         if (parentCount != 0) {
           Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of children of this Order ");
+          thisDependency.setName("numberOfChildrenOfThisOrder");
           thisDependency.setCount(parentCount);
           thisDependency.setCanDelete(false);
           dependencyList.add(thisDependency);
@@ -1100,7 +1264,7 @@ public class Order extends GenericBean {
         int productCount = rs.getInt("productcount");
         if (productCount != 0) {
           Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of products associated with this order ");
+          thisDependency.setName("numberOfProductsAssociatedWithThisOrder");
           thisDependency.setCount(productCount);
           thisDependency.setCanDelete(false);
           dependencyList.add(thisDependency);
@@ -1116,14 +1280,83 @@ public class Order extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the Order object
+   *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@return                   The valid value
+   *@param  quoteId           Description of the Parameter
+   *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  protected boolean isValid(Connection db) throws SQLException {
-    return true;
+  public boolean createOrderFromQuote(Connection db, int quoteId) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    boolean result = true;
+
+    //Retrieve the quote from the quoteId
+    Quote quote = new Quote(db, quoteId);
+    quote.buildProducts(db);
+    quote.retrieveTicket(db);
+
+    pst = db.prepareStatement(
+        " SELECT code from lookup_order_status " +
+        " WHERE description = ? "
+        );
+    pst.setString(1, "Pending");
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setStatusId(rs.getInt("code"));
+    }
+    rs.close();
+    pst.close();
+
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      //Create the order from the quote
+      this.setQuoteId(quoteId);
+      this.setOrgId(quote.getOrgId());
+      this.setBillingContactId(quote.getContactId());
+      this.setDescription(quote.getShortDescription());
+      this.setNotes(quote.getNotes());
+      this.setGrandTotal(quote.getGrandTotal());
+      this.setEnteredBy(quote.getModifiedBy());
+      this.setModifiedBy(quote.getModifiedBy());
+      this.insert(db);
+
+      //Check the quote products and create the appropriate order products
+      if (quote.getProductList().size() > 0) {
+        Iterator quoteProducts = (Iterator) quote.getProductList().iterator();
+        while (quoteProducts.hasNext()) {
+          QuoteProduct quoteProduct = (QuoteProduct) quoteProducts.next();
+          OrderProduct product = new OrderProduct();
+          product.setEnteredBy(quote.getModifiedBy());
+          product.setModifiedBy(quote.getModifiedBy());
+          product.setOrderId(this.getId());
+          product.setStatusId(this.getStatusId());
+          product.setStatusDate(this.getEntered());
+          if (!product.createProductFromQuoteProduct(db, quoteProduct.getId())) {
+            result = false;
+            break;
+          }
+        }
+      }
+      if (commit) {
+        db.commit();
+      }
+    } catch (Exception e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return result;
   }
 }
 

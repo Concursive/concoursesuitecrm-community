@@ -1,0 +1,123 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  Quotes
+*/
+import org.aspcfs.modules.admin.base.*;
+
+print("Inserting new lookup tables...");
+
+int quoteId = PermissionCategory.lookupId(db, "Quotes");
+
+if (1 == 1) {
+  pst = db.prepareStatement(
+    "INSERT INTO lookup_lists_lookup " +
+    "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+  pst.setInt(1, quoteId);
+  pst.setInt(2, PermissionCategory.PERMISSION_CAT_QUOTES);
+  pst.setInt(3, PermissionCategory.LOOKUP_QUOTE_STATUS);
+  pst.setInt(4, 10);
+  pst.setString(5, "lookup_quote_status");
+  pst.setString(6, "lookupList");
+  pst.setString(7, "Quote Status");
+  pst.executeUpdate();
+  pst.close();
+}
+
+if (1 == 1) {
+  pst = db.prepareStatement(
+    "INSERT INTO lookup_lists_lookup " +
+    "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+  pst.setInt(1, quoteId);
+  pst.setInt(2, PermissionCategory.PERMISSION_CAT_QUOTES);
+  pst.setInt(3, PermissionCategory.LOOKUP_QUOTE_TERMS);
+  pst.setInt(4, 20);
+  pst.setString(5, "lookup_quote_terms");
+  pst.setString(6, "lookupList");
+  pst.setString(7, "Quote Terms");
+  pst.executeUpdate();
+  pst.close();
+}
+
+if (1 == 1) {
+  pst = db.prepareStatement(
+    "INSERT INTO lookup_lists_lookup " +
+    "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+  pst.setInt(1, quoteId);
+  pst.setInt(2, PermissionCategory.PERMISSION_CAT_QUOTES);
+  pst.setInt(3, PermissionCategory.LOOKUP_QUOTE_TYPES);
+  pst.setInt(4, 30);
+  pst.setString(5, "lookup_quote_type");
+  pst.setString(6, "lookupList");
+  pst.setString(7, "Quote Type");
+  pst.executeUpdate();
+  pst.close();
+}
+
+if (1 == 1) {
+  pst = db.prepareStatement(
+    "INSERT INTO lookup_lists_lookup " +
+    "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+  pst.setInt(1, quoteId);
+  pst.setInt(2, PermissionCategory.PERMISSION_CAT_QUOTES);
+  pst.setInt(3, PermissionCategory.LOOKUP_QUOTE_SOURCE);
+  pst.setInt(4, 40);
+  pst.setString(5, "lookup_quote_source");
+  pst.setString(6, "lookupList");
+  pst.setString(7, "Quote Source");
+  pst.executeUpdate();
+  pst.close();
+}
+
+if (1 == 1) {
+  pst = db.prepareStatement(
+    "INSERT INTO lookup_lists_lookup " +
+    "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+  pst.setInt(1, quoteId);
+  pst.setInt(2, PermissionCategory.PERMISSION_CAT_QUOTES);
+  pst.setInt(3, PermissionCategory.LOOKUP_QUOTE_DELIVERY);
+  pst.setInt(4, 50);
+  pst.setString(5, "lookup_quote_delivery");
+  pst.setString(6, "lookupList");
+  pst.setString(7, "Quote Delivery");
+  pst.executeUpdate();
+  pst.close();
+}
+
+if (1 == 1) {
+  pst = db.prepareStatement(
+    "INSERT INTO lookup_lists_lookup " +
+    "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+  pst.setInt(1, quoteId);
+  pst.setInt(2, PermissionCategory.PERMISSION_CAT_QUOTES);
+  pst.setInt(3, PermissionCategory.LOOKUP_QUOTE_CONDITION);
+  pst.setInt(4, 60);
+  pst.setString(5, "lookup_quote_condition");
+  pst.setString(6, "lookupList");
+  pst.setString(7, "Quote Terms & Conditions");
+  pst.executeUpdate();
+  pst.close();
+}
+
+if (1 == 1) {
+  pst = db.prepareStatement(
+    "INSERT INTO lookup_lists_lookup " +
+    "(module_id, category_id, lookup_id, level, table_name, class_name, description) " +
+    "VALUES (?, ?, ?, ?, ?, ?, ?) ");
+  pst.setInt(1, quoteId);
+  pst.setInt(2, PermissionCategory.PERMISSION_CAT_QUOTES);
+  pst.setInt(3, PermissionCategory.LOOKUP_QUOTE_REMARKS);
+  pst.setInt(4, 70);
+  pst.setString(5, "lookup_quote_remarks");
+  pst.setString(6, "lookupList");
+  pst.setString(7, "Quote Remarks");
+  pst.executeUpdate();
+  pst.close();
+}

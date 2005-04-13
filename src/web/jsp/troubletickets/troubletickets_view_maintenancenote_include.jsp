@@ -20,12 +20,12 @@
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="2">
-        <strong>General Maintenance Information</strong>
+        <strong><dhv:label name="tickets.generalMaintenanceInfo">General Maintenance Information</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
       <td valign="top" class="formLabel">
-        Description of Service
+        <dhv:label name="reports.helpdesk.ticket.activity.descOfService">Description of Service</dhv:label>
       </td>
       <td>
         <%= toHtml(maintenanceDetails == null ? "" : maintenanceDetails.getDescriptionOfService()) %>
@@ -36,7 +36,7 @@
   <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
     <tr>
       <th colspan="4">
-        <strong>Replacement Parts</strong>
+        <strong><dhv:label name="reports.helpdesk.ticket.maintenance.replacementParts">Replacement Parts</dhv:label></strong>
       </th>
     </tr>
   <%
@@ -50,13 +50,13 @@
     %>
       <tr class="containerBody">
         <td class="formLabel" nowrap>
-          Part <%= icount %>
+          <dhv:label name="tickets.part" param="<%= "number="+icount %>">Part <%= icount %></dhv:label>
         </td>
         <td>
           <%= toHtml(thisPart.getPartNumber()) %>
         </td>
         <td class="formLabel" nowrap>
-          Description <%= icount %>
+          <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label> <%= icount %>
         </td>
         <td>
           <%= toHtml(thisPart.getPartDescription()) %>
@@ -67,7 +67,7 @@
      }else{ %>
     <tr>
       <td colspan="4" class="containerBody">
-        No replacement parts specified
+        <dhv:label name="tickets.noReplacementPartsSpecified">No replacement parts specified</dhv:label>
       </td>
     </tr>
     <%}

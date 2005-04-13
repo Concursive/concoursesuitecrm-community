@@ -15,15 +15,15 @@
  */
 package org.aspcfs.controller;
 
+import com.darkhorseventures.database.ConnectionPool;
+import org.aspcfs.apps.workFlowManager.WorkflowManager;
+import org.jcrontab.Crontab;
+
 import javax.servlet.ServletContext;
-import javax.servlet.ServletContextAttributeEvent;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.Hashtable;
-import com.darkhorseventures.database.*;
-import org.aspcfs.apps.workFlowManager.*;
-import org.jcrontab.Crontab;
 
 /**
  *  Responsible for initialization and cleanup when the web-app is
@@ -57,7 +57,6 @@ public class ContextListener implements ServletContextListener {
     //in the InitHook
     try {
       ConnectionPool cp = new ConnectionPool();
-      cp.setDebug(true);
       cp.setTestConnections(false);
       cp.setAllowShrinking(true);
       cp.setMaxConnections(10);

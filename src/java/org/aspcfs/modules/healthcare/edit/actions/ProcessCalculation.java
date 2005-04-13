@@ -62,6 +62,7 @@ public final class ProcessCalculation extends CFSModule {
     Exception errorMessage = null;
     Connection db = null;
     HashMap errors = new HashMap();
+    SystemStatus systemStatus = this.getSystemStatus(context);
     int providerRecordsInserted = 0;
     //Staging Server objects: all the transactions from yesterday will be processed
     TransactionRecordList recordList = null;
@@ -412,21 +413,39 @@ public final class ProcessCalculation extends CFSModule {
           }
         }
       }
-      sb.append(recordList.size() + " total record(s) processed<br>");
-      sb.append(providerRecordsInserted + " Provider Transaction Details record(s) inserted<br>");
-      sb.append(errors.size() + " record(s) rejected<br><br>");
+      if (systemStatus != null) {
+        HashMap map = new HashMap();
+        map.put("${recordList.size}", "" + recordList.size());
+        map.put("${providerRecordsInserted}", "" + providerRecordsInserted);
+        map.put("${errors.size}", "" + errors.size());
+        sb.append(getLabel(map, systemStatus.getLabel("mail.body.transactionDataSet1")));
+      } else {
+        sb.append(recordList.size() + " total record(s) processed<br>");
+        sb.append(providerRecordsInserted + " Provider Transaction Details record(s) inserted<br>");
+        sb.append(errors.size() + " record(s) rejected<br><br>");
+      }
       //Prepare the error messages for emailing
       Iterator end = errors.keySet().iterator();
       while (end.hasNext()) {
         Integer k = (Integer) end.next();
         String em = (String) errors.get(k);
         TransactionRecord tempRec = new TransactionRecord(db, k.intValue());
-        sb.append("-------------------------<br><br>");
-        sb.append("Transaction ID : " + tempRec.getTransactionId() + "<br>");
-        sb.append("Provider Tax ID: " + tempRec.getTaxId() + "<br>");
-        sb.append("Provider Last Name: " + tempRec.getNameLast() + "<br>");
-        sb.append("Vendor (Payer) ID: " + tempRec.getPayerId() + "<br><br>");
-        sb.append(em + "<br><br>");
+        if (systemStatus != null) {
+          HashMap map = new HashMap();
+          map.put("${tempRec.transactionId}", tempRec.getTransactionId());
+          map.put("${tempRec.taxId}", "" + tempRec.getTaxId());
+          map.put("${tempRec.nameLast}", tempRec.getNameLast());
+          map.put("${tempRec.payerId}", "" + tempRec.getPayerId());
+          map.put("${em}", em);
+          sb.append(getLabel(map, systemStatus.getLabel("mail.body.transactionDataSet2")));
+        } else {
+          sb.append("-------------------------<br><br>");
+          sb.append("Transaction ID : " + tempRec.getTransactionId() + "<br>");
+          sb.append("Provider Tax ID: " + tempRec.getTaxId() + "<br>");
+          sb.append("Provider Last Name: " + tempRec.getNameLast() + "<br>");
+          sb.append("Vendor (Payer) ID: " + tempRec.getPayerId() + "<br><br>");
+          sb.append(em + "<br><br>");
+        }
       }
       prodDb.close();
     } catch (Exception e) {
@@ -447,11 +466,25 @@ public final class ProcessCalculation extends CFSModule {
       mail.setFrom(getPref(context, "EMAILADDRESS"));
       mail.setType("text/html");
       mail.setTo(this.getValue(context, ce, "ERROR_REPORT_ADDRESS"));
-      mail.setSubject("EDIT transaction data summary: " + month + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
-      if (sb.length() == 0) {
-        mail.setBody("* A PROCESSING ERROR HAS OCCURRED, THE APPLICATION NEEDS TO BE CHECKED");
+      if (systemStatus != null) {
+        HashMap map = new HashMap();
+        map.put("${month}", "" + month);
+        map.put("${dayOfMonth}", "" + cal.get(Calendar.DAY_OF_MONTH));
+        map.put("${year}", "" + cal.get(Calendar.YEAR));
+        String subject = systemStatus.getLabel("mail.subject.transactionDataSummery");
+        mail.setSubject(getLabel(map, subject));
+        if (sb.length() == 0) {
+          mail.setBody(systemStatus.getLabel("mail.body.mailProcessingError"));
+        } else {
+          mail.setBody(sb.toString());
+        }
       } else {
-        mail.setBody(sb.toString());
+        mail.setSubject("EDIT transaction data summary: " + month + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
+        if (sb.length() == 0) {
+          mail.setBody("* A PROCESSING ERROR HAS OCCURRED, THE APPLICATION NEEDS TO BE CHECKED");
+        } else {
+          mail.setBody(sb.toString());
+        }
       }
       if (mail.send() == 2) {
         System.err.println(mail.getErrorMsg());
@@ -487,6 +520,20 @@ public final class ProcessCalculation extends CFSModule {
    */
   private String getValue(ActionContext context, ConnectionElement ce, String param) {
     return this.getSystemStatus(context, ce).getValue("org.aspcfs.modules.healthcare.edit.actions.ProcessCalculation", param);
+  }
+
+
+  /**
+   *  Gets the label attribute of the ProcessCalculation object
+   *
+   *@param  map    Description of the Parameter
+   *@param  input  Description of the Parameter
+   *@return        The label value
+   */
+  public String getLabel(HashMap map, String input) {
+    Template template = new Template(input);
+    template.setParseElements(map);
+    return template.getParsedText();
   }
 }
 

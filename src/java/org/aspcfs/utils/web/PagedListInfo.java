@@ -15,14 +15,22 @@
  */
 package org.aspcfs.utils.web;
 
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.ObjectUtils;
+import org.aspcfs.utils.UserUtils;
+
 import java.io.Serializable;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.HtmlSelect;
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.util.*;
 
 /**
  *  Allows information to be stored in an object for the pagedlist. <p>
@@ -37,39 +45,72 @@ import java.text.DateFormat;
  *      $
  */
 public class PagedListInfo implements Serializable {
-  public final String[] lettersArray = {"0", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+  public String[] lettersArray = {"0", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
   public final static int DEFAULT_ITEMS_PER_PAGE = 10;
-  String link = "";
-  String id = null;
-  String columnToSortBy = null;
-  String sortOrder = null;
-  int itemsPerPage = DEFAULT_ITEMS_PER_PAGE;
-  int maxRecords = 0;
-  String currentLetter = "";
-  int currentOffset = 0;
-  String listView = null;
-  HashMap listFilters = new HashMap();
+  public final static int LIST_VIEW = 1;
+  public final static int DETAILS_VIEW = 2;
+  
+  private int mode = LIST_VIEW;
+  private String link = "";
+  private String id = null;
+  private String columnToSortBy = null;
+  private String sortOrder = null;
+  private int itemsPerPage = DEFAULT_ITEMS_PER_PAGE;
+  private int maxRecords = 0;
+  private String currentLetter = "";
+  private int currentOffset = 0;
+  private int previousOffset = 0;
+  private String listView = null;
+  private HashMap listFilters = new HashMap();
   private int iteration = 0;
-  boolean enableJScript = false;
-  boolean showForm = true;
-  boolean resetList = true;
-  String alternateSort = null;
-  HashMap savedCriteria = new HashMap();
+  private boolean enableJScript = false;
+  private boolean showForm = true;
+  private boolean resetList = true;
+  private String alternateSort = null;
+  private HashMap savedCriteria = new HashMap();
 
   //specifically for modules using the contactsList
-  String parentFieldType = "";
-  String parentFormName = "";
+  private String parentFieldType = "";
+  private String parentFormName = "";
 
-  boolean expandedSelection = false;
-  boolean scrollReload = false;
+  private boolean expandedSelection = false;
+  private boolean scrollReload = false;
+  private boolean isValid = false;
+  private SystemStatus systemStatus = null;
 
-
+  
   /**
    *  Constructor for the PagedListInfo object
    *
    *@since    1.0
    */
   public PagedListInfo() { }
+
+
+  /**
+   *  Gets the mode attribute of the PagedListInfo object
+   *
+   *@return    The mode value
+   */
+  public int getMode() {
+    return mode;
+  }
+
+
+  /**
+   *  Sets the mode attribute of the PagedListInfo object
+   *
+   *@param  tmp  The new mode value
+   */
+  public void setMode(int tmp) {
+    if (mode == LIST_VIEW && tmp == DETAILS_VIEW) {
+      previousOffset = currentOffset;
+    }
+    if (mode == DETAILS_VIEW && tmp == LIST_VIEW) {
+      currentOffset = previousOffset;
+    }
+    this.mode = tmp;
+  }
 
 
   /**
@@ -123,6 +164,76 @@ public class PagedListInfo implements Serializable {
    */
   public void setResetList(boolean resetList) {
     this.resetList = resetList;
+  }
+
+
+  /**
+   *  Sets the isValid attribute of the PagedListInfo object
+   *
+   *@param  tmp  The new isValid value
+   */
+  public void setIsValid(boolean tmp) {
+    this.isValid = tmp;
+  }
+
+
+  /**
+   *  Sets the isValid attribute of the PagedListInfo object
+   *
+   *@param  tmp  The new isValid value
+   */
+  public void setIsValid(String tmp) {
+    this.isValid = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the systemStatus attribute of the PagedListInfo object
+   *
+   *@param  tmp  The new systemStatus value
+   */
+  public void setSystemStatus(SystemStatus tmp) {
+    this.systemStatus = tmp;
+  }
+
+
+  /**
+   *  Sets the lettersArray attribute of the PagedListInfo object
+   *
+   *@param  tmp  The new lettersArray value
+   */
+  public void setLettersArray(String[] tmp) {
+    this.lettersArray = tmp;
+  }
+
+
+  /**
+   *  Gets the lettersArray attribute of the PagedListInfo object
+   *
+   *@return    The lettersArray value
+   */
+  public String[] getLettersArray() {
+    return lettersArray;
+  }
+
+
+  /**
+   *  Gets the systemStatus attribute of the PagedListInfo object
+   *
+   *@return    The systemStatus value
+   */
+  public SystemStatus getSystemStatus() {
+    return systemStatus;
+  }
+
+
+  /**
+   *  Gets the isValid attribute of the PagedListInfo object
+   *
+   *@return    The isValid value
+   */
+  public boolean getIsValid() {
+    return isValid;
   }
 
 
@@ -307,6 +418,9 @@ public class PagedListInfo implements Serializable {
     this.link = tmp;
   }
 
+  public String getLink() {
+    return link;
+  }
 
   /**
    *  Sets the MaxRecords attribute of the PagedListInfo object
@@ -324,7 +438,7 @@ public class PagedListInfo implements Serializable {
     if (maxRecords <= currentOffset && maxRecords > 0) {
       currentOffset = maxRecords;
 
-      while (((currentOffset % itemsPerPage) != 0) && (currentOffset > 0)) {
+      while (((currentOffset % getItemsPerPage()) != 0) && (currentOffset > 0)) {
         --currentOffset;
       }
       if (System.getProperty("DEBUG") != null) {
@@ -333,7 +447,7 @@ public class PagedListInfo implements Serializable {
       //Check to see if the page break has any records to display, otherwise
       //go back a page
       if (currentOffset == maxRecords) {
-        currentOffset = currentOffset - itemsPerPage;
+        currentOffset = currentOffset - getItemsPerPage();
       }
     }
   }
@@ -357,7 +471,6 @@ public class PagedListInfo implements Serializable {
    *@since       1.1
    */
   public void setCurrentOffset(int tmp) {
-
     if (tmp < 0) {
       this.currentOffset = 0;
     } else {
@@ -390,7 +503,6 @@ public class PagedListInfo implements Serializable {
   public void setListView(String tmp) {
     this.listView = tmp;
   }
-
 
 
   /**
@@ -438,6 +550,7 @@ public class PagedListInfo implements Serializable {
       if (tmpColumnToSortBy.indexOf("(") == -1 &&
           tmpColumnToSortBy.indexOf(")") == -1 &&
           tmpColumnToSortBy.indexOf("\"") == -1 &&
+          tmpColumnToSortBy.indexOf(";") == -1 &&
           tmpColumnToSortBy.indexOf("'") == -1 &&
           tmpColumnToSortBy.indexOf(" ") == -1) {
         this.setColumnToSortBy(tmpColumnToSortBy);
@@ -448,7 +561,7 @@ public class PagedListInfo implements Serializable {
     String tmpCurrentPage = context.getRequest().getParameter("page");
     if (tmpCurrentPage != null) {
       try {
-        this.setCurrentOffset((Integer.parseInt(tmpCurrentPage) - 1) * itemsPerPage);
+        this.setCurrentOffset((Integer.parseInt(tmpCurrentPage) - 1) * getItemsPerPage());
       } catch (java.lang.NumberFormatException e) {
         this.setCurrentOffset(0);
       }
@@ -526,19 +639,23 @@ public class PagedListInfo implements Serializable {
    *  Sets the searchCriteria attribute of the PagedListInfo object
    *
    *@param  obj     The new searchCriteria value
-   *@param  locale  The new searchCriteria value
+   *@param  context  The new searchCriteria value
    *@return         Description of the Return Value
    */
-  public boolean setSearchCriteria(Object obj, Locale locale) {
+  public boolean setSearchCriteria(Object obj, ActionContext context) {
+    ConnectionElement ce = null;
+    if (context != null) {
+      ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+    }
+    if (ce != null) {
+      this.setSystemStatus((SystemStatus) ((Hashtable) context.getSession().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl()));
+    }
+    Locale locale = UserUtils.getUserLocale(context.getRequest());
     if (!this.getSavedCriteria().isEmpty()) {
-
       Iterator hashIterator = this.getSavedCriteria().keySet().iterator();
-
       while (hashIterator.hasNext()) {
         String tempKey = (String) hashIterator.next();
-
         if (this.getCriteriaValue(tempKey) != null && !(this.getCriteriaValue(tempKey).trim().equals(""))) {
-
           //its an int
           if (System.getProperty("DEBUG") != null) {
             System.out.println("PagedListInfo-> Setting: " + tempKey + "=" + getCriteriaValue(tempKey));
@@ -552,11 +669,13 @@ public class PagedListInfo implements Serializable {
               java.sql.Date tmpDate = new java.sql.Date(tmpTimestamp.getTime());
               modified = ObjectUtils.setParam(obj, tempKey.substring(10), tmpDate);
               if (!modified && this.getCriteriaValue(tempKey) != null && !"".equals(this.getCriteriaValue(tempKey))) {
-                addError(obj, "getErrors", tempKey);
+                isValid = false;
+                addError(obj, "getErrors", tempKey, context);
               }
             }
             if (tmpTimestamp == null && this.getCriteriaValue(tempKey) != null && !"".equals(this.getCriteriaValue(tempKey))) {
-              addError(obj, "getErrors", tempKey);
+              isValid = false;
+              addError(obj, "getErrors", tempKey, context);
             }
           } else {
             ObjectUtils.setParam(obj, tempKey.substring(6), "%" + this.getCriteriaValue(tempKey) + "%");
@@ -574,11 +693,21 @@ public class PagedListInfo implements Serializable {
    *@param  obj    The feature to be added to the Error attribute
    *@param  param  The feature to be added to the Error attribute
    *@param  field  The feature to be added to the Error attribute
+   *@param  context  The feature to be added to the Error attribute
    */
-  private static void addError(Object obj, String param, String field) {
+  private static void addError(Object obj, String param, String field, ActionContext context) {
     try {
+      ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
+      SystemStatus systemStatus = null;
+      if (ce != null) {
+        systemStatus = (SystemStatus) ((Hashtable) context.getSession().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      }
       Method method = obj.getClass().getMethod(param, null);
+      if (systemStatus == null) {
       ((HashMap) method.invoke(obj, null)).put(field.substring(0, 1).toLowerCase() + field.substring(1) + "Error", "Invalid Date");
+      } else {
+        ((HashMap) method.invoke(obj, null)).put(field.substring(0, 1).toLowerCase() + field.substring(1) + "Error", systemStatus.getLabel("object.validation.incorrectDateFormat"));
+      }
       if (System.getProperty("DEBUG") != null) {
         System.out.println("Adding an error -->" + field + "Error");
       }
@@ -645,6 +774,9 @@ public class PagedListInfo implements Serializable {
    *@since     1.0
    */
   public int getItemsPerPage() {
+    if (mode == DETAILS_VIEW) {
+      return 1;
+    }
     return itemsPerPage;
   }
 
@@ -709,10 +841,10 @@ public class PagedListInfo implements Serializable {
     if (numPages > 1) {
       links.append("[");
       for (int i = 1; i < (numPages + 1); i++) {
-        if ((i - 1) * itemsPerPage == currentOffset) {
+        if ((i - 1) * getItemsPerPage() == currentOffset) {
           links.append(" <b>" + i + "</b> ");
         } else {
-          links.append("<a href=\"" + link + "&offset=" + ((i - 1) * itemsPerPage) + "\"> " + i + " </a>");
+          links.append("<a href=\"" + link + "&offset=" + ((i - 1) * getItemsPerPage()) + "\"> " + i + " </a>");
         }
       }
       links.append("]");
@@ -724,16 +856,15 @@ public class PagedListInfo implements Serializable {
   /**
    *  Gets the listPropertiesHeader attribute of the PagedListInfo object
    *
-   *@param  id  Description of Parameter
+   *@param  formName  Description of Parameter
    *@return     The listPropertiesHeader value
    */
-  public String getListPropertiesHeader(String id) {
+  public String getListPropertiesHeader(String formName) {
     if (showForm) {
       if (expandedSelection) {
         link += "&pagedListSectionId=" + id;
       }
-
-      return ("<form name=\"" + id + "\" action=\"" + link + "\" method=\"post\">");
+      return ("<form name=\"" + formName + "\" action=\"" + link + "\" method=\"post\">");
     } else {
       return "";
     }
@@ -761,8 +892,7 @@ public class PagedListInfo implements Serializable {
    *@return    The numericalPageEntry value
    */
   public String getNumericalPageEntry() {
-    int numPages = this.getNumberOfPages();
-    return ("<input type=\"text\" name=\"page\" value=\"" + ((currentOffset / itemsPerPage) + 1) + "\" size=\"3\">");
+    return ("<input type=\"text\" name=\"page\" value=\"" + ((currentOffset / getItemsPerPage()) + 1) + "\" size=\"3\">");
   }
 
 
@@ -781,8 +911,8 @@ public class PagedListInfo implements Serializable {
     itemSelect.addItem("50");
     itemSelect.addItem("100");
     itemSelect.setJsEvent("onChange='submit();'");
-    return (itemSelect.getHtml("items", itemsPerPage));
-    //return("Items per page <input type=\"text\" name=\"items\" value=\"" + itemsPerPage + "\" size=\"3\">");
+    return (itemSelect.getHtml("items", getItemsPerPage()));
+    //return("Items per page <input type=\"text\" name=\"items\" value=\"" + getItemsPerPage() + "\" size=\"3\">");
   }
 
 
@@ -792,7 +922,7 @@ public class PagedListInfo implements Serializable {
    *@return    The numberOfPages value
    */
   public int getNumberOfPages() {
-    return (int) Math.ceil((double) maxRecords / (double) itemsPerPage);
+    return (int) Math.ceil((double) maxRecords / (double) getItemsPerPage());
   }
 
 
@@ -814,7 +944,6 @@ public class PagedListInfo implements Serializable {
     }
     return links.toString();
   }
-
 
 
   /**
@@ -861,6 +990,9 @@ public class PagedListInfo implements Serializable {
     return getPreviousPageLink(linkInfo, linkInfo);
   }
 
+  public String getPreviousPageLink(String linkOn, String linkOff) {
+    return getPreviousPageLink(linkOn, linkOff, "0");
+  }
 
   /**
    *  Gets the PreviousPageLink attribute of the PagedListInfo object
@@ -870,12 +1002,10 @@ public class PagedListInfo implements Serializable {
    *@return          The PreviousPageLink value
    *@since           1.8
    */
-  public String getPreviousPageLink(String linkOn, String linkOff) {
-
+  public String getPreviousPageLink(String linkOn, String linkOff, String formName) {
     StringBuffer result = new StringBuffer();
-
     if (currentOffset > 0) {
-      int newOffset = currentOffset - itemsPerPage;
+      int newOffset = currentOffset - getItemsPerPage();
       //Handle scroll reload
       String scrollStart = "";
       String scrollEnd = "";
@@ -893,7 +1023,7 @@ public class PagedListInfo implements Serializable {
         return result.toString();
       } else {
         //Use javascript for constructing the link
-        result.append("<a href=\"javascript:offsetsubmit('" + (newOffset > 0 ? newOffset : 0) + "');\">" + linkOn + "</a>");
+        result.append("<a href=\"javascript:offsetsubmit('" + formName + "','" + (newOffset > 0 ? newOffset : 0) + "');\">" + linkOn + "</a>");
         return result.toString();
       }
     } else {
@@ -925,6 +1055,9 @@ public class PagedListInfo implements Serializable {
     return getNextPageLink(linkInfo, linkInfo);
   }
 
+  public String getNextPageLink(String linkOn, String linkOff) {
+    return getNextPageLink(linkOn, linkOff, "0");
+  }
 
   /**
    *  Gets the NextPageLink attribute of the PagedListInfo object
@@ -934,11 +1067,11 @@ public class PagedListInfo implements Serializable {
    *@return          The NextPageLink value
    *@since           1.8
    */
-  public String getNextPageLink(String linkOn, String linkOff) {
+  public String getNextPageLink(String linkOn, String linkOff, String formName) {
 
     StringBuffer result = new StringBuffer();
 
-    if ((currentOffset + itemsPerPage) < maxRecords) {
+    if ((currentOffset + getItemsPerPage()) < maxRecords) {
       //Handle scroll reload
       String scrollStart = "";
       String scrollEnd = "";
@@ -952,11 +1085,11 @@ public class PagedListInfo implements Serializable {
         if (getExpandedSelection()) {
           result.append("&pagedListSectionId=" + this.getId());
         }
-        result.append("&offset=" + (currentOffset + itemsPerPage) + scrollEnd + "\">" + linkOn + "</a>");
+        result.append("&offset=" + (currentOffset + getItemsPerPage()) + scrollEnd + "\">" + linkOn + "</a>");
         return result.toString();
       } else {
         //Use javascript for constructing the link
-        result.append("<a href=\"javascript:offsetsubmit('" + (currentOffset + itemsPerPage) + "');\">" + linkOn + "</a>");
+        result.append("<a href=\"javascript:offsetsubmit('" + formName + "','" + (currentOffset + getItemsPerPage()) + "');\">" + linkOn + "</a>");
         return result.toString();
       }
     } else {
@@ -974,9 +1107,9 @@ public class PagedListInfo implements Serializable {
    *@return               The expandLink value
    */
   public String getExpandLink(String linkOn, String linkOff, String collapseLink) {
-    if ((currentOffset + itemsPerPage) < maxRecords && !expandedSelection) {
+    if ((currentOffset + getItemsPerPage()) < maxRecords && !expandedSelection) {
       return "<a href='" + link + "&pagedListInfoId=" + this.getId() + "&pagedListSectionId=" + this.getId() + "'>" + linkOn + "</a>";
-    } else if ((currentOffset + itemsPerPage) >= maxRecords && !expandedSelection) {
+    } else if ((currentOffset + getItemsPerPage()) >= maxRecords && !expandedSelection) {
       return linkOff;
     } else {
       return "<a href='" + link + "&resetList=true&pagedListInfoId=" + this.getId() + "'>" + collapseLink + "</a>";
@@ -1009,9 +1142,9 @@ public class PagedListInfo implements Serializable {
   public String getSortIcon(String columnName) {
     if (columnName.equals(columnToSortBy)) {
       if (sortOrder != null && sortOrder.indexOf("desc") > -1) {
-        return "<img border=0 src=\"images/down.gif\" align=\"bottom\">";
+        return "<img border=0 src=\"images/layout/sort-dn.gif\" align=\"bottom\" width=\"12\" height=\"10\" />";
       } else {
-        return "<img border=0 src=\"images/up.gif\" align=\"bottom\">";
+        return "<img border=0 src=\"images/layout/sort-up.gif\" align=\"bottom\" width=\"12\" height=\"10\" />";
       }
     } else {
       return "";
@@ -1193,6 +1326,12 @@ public class PagedListInfo implements Serializable {
       if (System.getProperty("DEBUG") != null) {
         System.out.println("PagedListInfo-> Requesting TOP " + x);
       }
+    } else if (DatabaseUtils.getType(db) == DatabaseUtils.FIREBIRD) {
+      sqlStatement.append("SELECT ");
+      if (this.getItemsPerPage() > 0) {
+        sqlStatement.append("FIRST " + this.getItemsPerPage() + " ");
+      }
+      sqlStatement.append("SKIP " + this.getCurrentOffset() + " ");
     } else {
       sqlStatement.append("SELECT ");
     }
@@ -1210,17 +1349,13 @@ public class PagedListInfo implements Serializable {
     //Determine sort order
     //If multiple columns are being sorted, then the sort order applies to all columns
     if (this.getColumnToSortBy().indexOf(",") > -1) {
-      int count = 0;
       StringTokenizer st = new StringTokenizer(this.getColumnToSortBy(), ",");
       while (st.hasMoreTokens()) {
-        ++count;
         String column = st.nextToken();
         sqlStatement.append(column + " ");
-//        if (count == 1) {
         if (this.hasSortOrderConfigured()) {
           sqlStatement.append(this.getSortOrder() + " ");
         }
-//        }
         if (st.hasMoreTokens()) {
           sqlStatement.append(",");
         }
@@ -1272,7 +1407,7 @@ public class PagedListInfo implements Serializable {
     sb.append("Link: " + link + "\r\n");
     sb.append("Sort Column: " + columnToSortBy + "\r\n");
     sb.append("SOrt Order: " + sortOrder + "\r\n");
-    sb.append("Items per page: " + itemsPerPage + "\r\n");
+    sb.append("Items per page: " + getItemsPerPage() + "\r\n");
     sb.append("Total record count: " + maxRecords + "\r\n");
     sb.append("Current offset letter: " + currentLetter + "\r\n");
     sb.append("Current offset record: " + currentOffset + "\r\n");
@@ -1287,6 +1422,7 @@ public class PagedListInfo implements Serializable {
   private void resetList() {
     this.setCurrentLetter("");
     this.setCurrentOffset(0);
+    previousOffset = 0;
   }
 
 
@@ -1296,12 +1432,12 @@ public class PagedListInfo implements Serializable {
    *@return    The pageSize value
    */
   public int getPageSize() {
-    if ((currentOffset + itemsPerPage) < maxRecords) {
+    if ((currentOffset + getItemsPerPage()) < maxRecords) {
       // current = 0
       // items = 10
       // max = 17
       // 0 + 10 < 17
-      return (currentOffset + itemsPerPage);
+      return (currentOffset + getItemsPerPage());
     } else {
       // current = 10
       // items = 10

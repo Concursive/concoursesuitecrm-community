@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -30,8 +30,8 @@
 <%@ include file="accounts_fields_list_menu.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<%-- Preload image rollovers for drop-down menu --%>
 <script language="JavaScript" type="text/javascript">
-  <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
 <form name="details" action="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>" method="post">
@@ -40,48 +40,60 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-List of Folder Records
+<a href="Accounts.do?command=FolderList&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.Folders">Folders</dhv:label></a> >
+<dhv:label name="accounts.accounts_fields.ListOfFolderRecords">List of Folder Records</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-<dhv:container name="accounts" selected="folders" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
+<dhv:container name="accounts" selected="folders" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <table cellspacing="0" cellpadding="0" border="0" width="100%">
+    <tr>
+      <td>
+        <dhv:label name="accounts.accounts_documents_folders_add.Folder.colon">Folder:</dhv:label>
+        <strong><%= toHtml(Category.getName()) %></strong>
+      </td>
+    <% if (CategoryList.size() > 0) { %>
+      <td align="right" nowrap>
+        <img src="images/icons/16_edit_comment.gif" align="absMiddle" border="0">
+        <dhv:label name="accounts.accounts_fields_list.FolderHaveMultipleRecords">This folder can have multiple records</dhv:label>
+      </td>
+    <% } %>
+    </tr>
+  </table>
 <%
-  CategoryList.setJsEvent("ONCHANGE=\"javascript:document.forms[0].submit();\"");
   if (CategoryList.size() > 0) {
 %>
-    Folder: <%= CategoryList.getHtmlSelect("catId", (String)request.getAttribute("catId")) %><%= (Category.getReadOnly()?"&nbsp;<img border='0' valign='absBottom' src='images/lock.gif' alt='Folder is read-only'>":"") %><br>
-    &nbsp;<br>
-    This folder can have multiple records...<br>
-    &nbsp;<br>
-    <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>"><dhv:permission name="accounts-accounts-folders-add"><a href="Accounts.do?command=AddFolderRecord&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= (String)request.getAttribute("catId") %>">Add a record to this folder</a><br>&nbsp;<br></dhv:permission></dhv:evaluate>
-    <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-      <tr>
-        <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
-          <th valign="center">
-            <strong>Action</strong>
-          </th>
-        </dhv:evaluate>
-        <th>
-          <strong>Record</strong>
+  <br />
+  <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
+    <dhv:permission name="accounts-accounts-folders-add">
+      <a href="Accounts.do?command=AddFolderRecord&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= (String)request.getAttribute("catId") %>">
+        <dhv:label name="accounts.accounts_fields_list.AddRecordToFolder">Add a record to this folder</dhv:label></a>
+      <br>&nbsp;<br>
+    </dhv:permission>
+  </dhv:evaluate>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
+        <th valign="center">
+          &nbsp;
         </th>
-        <th>
-          <strong>Entered</strong>
-        </th>
-        <th>
-          <strong>Modified By</strong>
-        </th>
-        <th>
-          <strong>Last Modified</strong>
-        </th>
-      </tr>
+      </dhv:evaluate>
+      <th>
+        <dhv:label name="accounts.accounts_fields_list.Record">Record</dhv:label>
+      </th>
+      <th>
+        <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
+      </th>
+      <th>
+        <dhv:label name="accounts.accounts_fields_list.ModifiedBy">Modified By</dhv:label>
+      </th>
+      <th>
+        <dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label>
+      </th>
+    </tr>
 <%
     if (Records.size() > 0) {
       int rowid = 0;
@@ -92,47 +104,52 @@ List of Folder Records
         rowid = (rowid != 1 ? 1 : 2);
         CustomFieldRecord thisRecord = (CustomFieldRecord)records.next();
 %>    
-      <tr class="containerBody">
-        <td width="8" valign="center" nowrap class="row<%= rowid %>">
-          <dhv:evaluate exp="<%= (!Category.getReadOnly()) %>">
-          <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-          <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-           <a href="javascript:displayMenu('select<%= i %>','menuFolders', '<%= OrgDetails.getOrgId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');"
-           onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuFolders');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
-          </dhv:evaluate>
-        </td>
-        <td align="left" width="100%" nowrap class="row<%= rowid %>">
-          <a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
-        </td>
-        <td nowrap class="row<%= rowid %>">
-        <zeroio:tz timestamp="<%= thisRecord.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
-        </td>
-        <td nowrap class="row<%= rowid %>">
-          <dhv:username id="<%= thisRecord.getModifiedBy() %>" />
-        </td>
-        <td nowrap class="row<%= rowid %>">
-        <zeroio:tz timestamp="<%= thisRecord.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
-        </td>
-      </tr>
-<%    
-      }
-    } else {
-%>
-      <tr class="containerBody">
-        <td colspan="5">
-          <font color="#9E9E9E">No records have been entered.</font>
-        </td>
-      </tr>
-<%  }  %>
-<%} else {%>
-  <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr class="containerBody">
-      <td>
-        No custom folders available.
+      <td width="8" valign="center" nowrap class="row<%= rowid %>">
+        <dhv:evaluate if="<%= (!Category.getReadOnly()) %>">
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+        <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+         <a href="javascript:displayMenu('select<%= i %>','menuFolders', '<%= OrgDetails.getOrgId() %>', '<%= Category.getId() %>', '<%= thisRecord.getId() %>');"
+         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuFolders');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+        </dhv:evaluate>
+      </td>
+      <td align="left" width="100%" nowrap class="row<%= rowid %>">
+        <a href="Accounts.do?command=Fields&orgId=<%= OrgDetails.getOrgId() %>&catId=<%= Category.getId() %>&recId=<%= thisRecord.getId() %>"><%= thisRecord.getFieldData().getValueHtml(false) %></a>
+      </td>
+      <td nowrap class="row<%= rowid %>">
+      <zeroio:tz timestamp="<%= thisRecord.getEntered()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
+      </td>
+      <td nowrap class="row<%= rowid %>">
+        <dhv:username id="<%= thisRecord.getModifiedBy() %>" />
+      </td>
+      <td nowrap class="row<%= rowid %>">
+      <zeroio:tz timestamp="<%= thisRecord.getModified()  %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
       </td>
     </tr>
-<%}%>
+<%    
+      }
+%>
+   </table>
+<%    
+    } else {
+%>
+    <tr class="containerBody">
+        <td colspan="5">
+          <font color="#9E9E9E"><dhv:label name="accounts.accounts_fields_list.NoRecordsEntered">No records have been entered.</dhv:label></font>
+        </td>
+      </tr>
+   </table>
+<%
+    }
+  } else {
+%>
+  <table cellpadding="4" cellspacing="0" width="100%" class="details">
+    <tr class="row2">
+      <td>
+        <dhv:label name="accounts.accounts_fields_list.NoCustomFoldersAvailable">No custom folders available.</dhv:label>
+      </td>
+    </tr>
   </table>
-</td></tr>
-</table>
+<%}%>
+</dhv:container>
 </form>

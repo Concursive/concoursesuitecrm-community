@@ -357,7 +357,7 @@ public class CampaignReport {
     headerCell.setCellStyle(getHeaderStyle());
     headerCell.setCellValue(formatter.format(new java.util.Date()));
 
-    //add dark horse stamp
+    //add stamp
     headerRow = sheet.createRow((short) (sheet.getLastRowNum() + 1));
     headerCell =
         headerRow.createCell((short) 0);
@@ -901,15 +901,15 @@ public class CampaignReport {
     int startIndex = dataRow.getLastCellNum() + 1;
     //email address
     HSSFCell thisCell = dataRow.createCell((short) startIndex);
-    thisCell.setCellValue(thisContact.getEmailAddress("Business"));
+    thisCell.setCellValue(thisContact.getPrimaryEmailAddress());
 
     //address
     thisCell = dataRow.createCell((short) (++startIndex));
-    thisCell.setCellValue(thisContact.getAddress("Business").toString());
+    thisCell.setCellValue(thisContact.getPrimaryAddress().toString());
 
     //phone
     thisCell = dataRow.createCell((short) (++startIndex));
-    thisCell.setCellValue(thisContact.getPhoneNumber("Business"));
+    thisCell.setCellValue(thisContact.getPrimaryPhoneNumber());
 
     //company
     thisCell = dataRow.createCell((short) (++startIndex));

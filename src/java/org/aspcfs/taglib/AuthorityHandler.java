@@ -76,13 +76,17 @@ public class AuthorityHandler extends TagSupport {
   public final int doStartTag() throws JspException {
     try {
       //get system status
-      System.out.println("Getting system status ");
+  	  if (System.getProperty("DEBUG") != null) {
+      	System.out.println("Getting system status ");
+	    }
       UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
       ConnectionElement ce = (ConnectionElement) pageContext.getSession().getAttribute("ConnectionElement");
       SystemStatus systemStatus = null;
       if (ce != null) {
         systemStatus = (SystemStatus) ((Hashtable) pageContext.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
-        System.out.println("Got system status ");
+    	  if (System.getProperty("DEBUG") != null) {
+        	System.out.println("Got system status ");
+		    }
       }
 
       int userId = ((UserBean) pageContext.getSession().getAttribute("User")).getUserId();

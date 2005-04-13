@@ -15,27 +15,29 @@
  */
 package org.aspcfs.modules.actionlist.actions;
 
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.zeroio.webutils.*;
-import com.isavvix.tools.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.base.Constants;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.webutils.FileDownload;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actionlist.base.*;
-import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.communications.base.*;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.modules.contacts.base.ContactTypeList;
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
- *  Represents Action Contacts on a list and possible actions
- *  that can be performed on each action contact
+ *  Represents Action Contacts on a list and possible actions that can be
+ *  performed on each action contact
  *
  *@author     akhi_m
  *@created    April 23, 2003
@@ -69,6 +71,10 @@ public final class MyActionContacts extends CFSModule {
     }
     Exception errorMessage = null;
     String actionId = context.getRequest().getParameter("actionId");
+    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    if (viewUserId == null || "".equals(viewUserId)) {
+      viewUserId = String.valueOf(this.getUserId(context));
+    }
     addModuleBean(context, "My Action Lists", "Action Contacts");
     if ("true".equals(context.getRequest().getParameter("reset"))) {
       context.getSession().removeAttribute("ContactActionListInfo");
@@ -120,6 +126,10 @@ public final class MyActionContacts extends CFSModule {
     }
     Exception errorMessage = null;
     String actionId = (String) context.getRequest().getParameter("actionId");
+    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    if (viewUserId == null || "".equals(viewUserId)) {
+      viewUserId = String.valueOf(this.getUserId(context));
+    }
     ActionList actionList = null;
     addModuleBean(context, "My Action Lists", "Action Contacts");
     Connection db = null;
@@ -191,13 +201,24 @@ public final class MyActionContacts extends CFSModule {
     }
     Exception errorMessage = null;
     SearchCriteriaList thisSCL = null;
+    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    boolean isValid = false;
+    HashMap errors = new HashMap();
+    if (viewUserId == null || "".equals(viewUserId)) {
+      viewUserId = String.valueOf(this.getUserId(context));
+    }
     String criteria = context.getRequest().getParameter("searchCriteriaText");
     String actionId = context.getRequest().getParameter("actionId");
     addModuleBean(context, "My Action Lists", "Action Contacts");
     Connection db = null;
+    //If no criteria is specified, just return
+    //Temporary fix for a larger problem
+    if (criteria == null || "".equals(criteria)) {
+      return "InsertOK";
+    }
     try {
-      //The criteria that makes up the contact list query
-      if (criteria != null){
+      if (criteria != null && !"".equals(criteria)) {
+       //The criteria that makes up the contact list query
         thisSCL = new SearchCriteriaList(criteria);
         thisSCL.setGroupName("Action List");
         thisSCL.setEnteredBy(getUserId(context));
@@ -205,32 +226,36 @@ public final class MyActionContacts extends CFSModule {
         thisSCL.setOwner(getUserId(context));
         db = this.getConnection(context);
         thisSCL.buildRelatedResources(db);
-  
+
         //Build the contactList
         ContactList contacts = new ContactList();
         contacts.setScl(thisSCL, this.getUserId(context), this.getUserRange(context));
         contacts.setBuildDetails(true);
         contacts.setBuildTypes(false);
         contacts.buildList(db);
-  
+
         //save action contacts
         ActionContactsList thisList = new ActionContactsList();
         thisList.setActionId(Integer.parseInt(actionId));
         thisList.setEnteredBy(this.getUserId(context));
         thisList.insert(db, contacts);
         context.getRequest().setAttribute("ActionContacts", thisList);
+        isValid = true;
+      } else {
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        errors.put("criteriaError", systemStatus.getLabel("object.validation.criteriaNotDefined"));
+        processErrors(context, errors);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      return "InsertOK";
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (!isValid) {
+      return (executeCommandPrepare(context));
     }
+    return "InsertOK";
   }
 
 
@@ -245,7 +270,21 @@ public final class MyActionContacts extends CFSModule {
       return ("PermissionError");
     }
     addModuleBean(context, "My Action Lists", "");
+    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    if (viewUserId == null || "".equals(viewUserId)) {
+      viewUserId = String.valueOf(this.getUserId(context));
+    }
     String selectedContacts = context.getRequest().getParameter("selectedContacts");
+    //Checking for errors
+    HashMap errors = new HashMap();
+    if ((selectedContacts == null) || ("".equals(selectedContacts.trim()))){
+      SystemStatus systemStatus = getSystemStatus(context);
+      errors.put("oneContactRequired",systemStatus.getLabel("object.validation.oneContactRequired"));
+    }
+    if (!errors.isEmpty()){
+      processErrors(context,errors);
+      return executeCommandModify(context);
+    }
     String actionId = context.getRequest().getParameter("actionId");
     Exception errorMessage = null;
     Connection db = null;
@@ -272,7 +311,7 @@ public final class MyActionContacts extends CFSModule {
 
 
   /**
-   *   Modify contacts on action list
+   *  Modify contacts on action list
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value
@@ -283,6 +322,10 @@ public final class MyActionContacts extends CFSModule {
     }
     addModuleBean(context, "My Action Lists", "");
     String actionId = context.getRequest().getParameter("actionId");
+    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    if (viewUserId == null || "".equals(viewUserId)) {
+      viewUserId = String.valueOf(this.getUserId(context));
+    }
     boolean buildContacts = true;
     if ("false".equals(context.getRequest().getParameter("doBuild"))) {
       buildContacts = false;
@@ -329,6 +372,10 @@ public final class MyActionContacts extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
+    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    if (viewUserId == null || "".equals(viewUserId)) {
+      viewUserId = String.valueOf(this.getUserId(context));
+    }
     if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
       return ("PermissionError");
     }
@@ -346,6 +393,10 @@ public final class MyActionContacts extends CFSModule {
   public String executeCommandViewHistory(ActionContext context) {
     if (!(hasPermission(context, "myhomepage-action-lists-view"))) {
       return ("PermissionError");
+    }
+    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    if (viewUserId == null || "".equals(viewUserId)) {
+      viewUserId = String.valueOf(this.getUserId(context));
     }
     addModuleBean(context, "My Action Lists", "");
     String itemId = context.getRequest().getParameter("itemId");
@@ -382,7 +433,11 @@ public final class MyActionContacts extends CFSModule {
     if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
+    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    if (viewUserId == null || "".equals(viewUserId)) {
+      viewUserId = String.valueOf(this.getUserId(context));
+    }
+    boolean isValid = false;
     Connection db = null;
     int count = 0;
 
@@ -397,31 +452,32 @@ public final class MyActionContacts extends CFSModule {
       int status = Integer.parseInt(st.nextToken());
       db = this.getConnection(context);
       ActionContact thisContact = new ActionContact(db, contactId);
-
-      if (status == ActionContact.DONE) {
-        thisContact.updateStatus(db, true);
-      } else {
-        thisContact.updateStatus(db, false);
-      }
-      this.freeConnection(context, db);
-      if (count != -1) {
-        String filePath = context.getServletContext().getRealPath("/") + "images" + fs + fileName;
-        FileDownload fileDownload = new FileDownload();
-        fileDownload.setFullPath(filePath);
-        fileDownload.setDisplayName(fileName);
-        if (fileDownload.fileExists()) {
-          fileDownload.sendFile(context, "image/" + imageType);
+      isValid = this.validateObject(context, db, thisContact);
+      if (isValid) {
+        if (status == ActionContact.DONE) {
+          thisContact.updateStatus(db, true);
         } else {
-          System.err.println("Image-> Trying to send a file that does not exist");
+          thisContact.updateStatus(db, false);
         }
-      } else {
-        processErrors(context, thisContact.getErrors());
+        this.freeConnection(context, db);
+        if (count != -1) {
+          String filePath = context.getServletContext().getRealPath("/") + "images" + fs + fileName;
+          FileDownload fileDownload = new FileDownload();
+          fileDownload.setFullPath(filePath);
+          fileDownload.setDisplayName(fileName);
+          if (fileDownload.fileExists()) {
+            fileDownload.sendFile(context, "image/" + imageType);
+          } else {
+            System.err.println("Image-> Trying to send a file that does not exist");
+          }
+        } else {
+          processErrors(context, thisContact.getErrors());
+        }
       }
     } catch (java.net.SocketException se) {
       //User either canceled the download or lost connection
       System.out.println("MyActionContacts -> ProcessImage : Download canceled or connection lost");
     } catch (Exception e) {
-      errorMessage = e;
       this.freeConnection(context, db);
       System.out.println(e.toString());
     }
@@ -436,9 +492,16 @@ public final class MyActionContacts extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandPrepareMessage(ActionContext context) {
-    if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
+    if (!((hasPermission(context, "myhomepage-action-lists-edit")) ||
+         (hasPermission(context, "accounts-accounts-contact-updater-view")) ||
+         (hasPermission(context, "contacts-external-contact-updater-view")))) {
       return ("PermissionError");
     }
+    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    if (viewUserId == null || "".equals(viewUserId)) {
+      viewUserId = String.valueOf(this.getUserId(context));
+    }
+    SystemStatus systemStatus = this.getSystemStatus(context);
     String msgId = context.getRequest().getParameter("messageId");
     String contactId = context.getRequest().getParameter("contactId");
     Message thisMessage = null;
@@ -452,8 +515,14 @@ public final class MyActionContacts extends CFSModule {
         thisMessage = new Message(db, Integer.parseInt(msgId));
         context.getRequest().setAttribute("Message", thisMessage);
       }
-      if ("".equals(recipient.getEmailAddress("Business"))) {
-        context.getRequest().setAttribute("actionError", "This contact does not have a valid email address associated");
+      if ("".equals(recipient.getPrimaryEmailAddress())) {
+        context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.contactNoEmail"));
+      }
+      String messageType = context.getRequest().getParameter("messageType");
+      context.getRequest().setAttribute("messageType", messageType);
+      String orgId = context.getRequest().getParameter("orgId");
+      if (orgId != null) {
+        context.getRequest().setAttribute("orgId", orgId);
       }
     } catch (Exception e) {
       errorMessage = e;
@@ -462,7 +531,7 @@ public final class MyActionContacts extends CFSModule {
     }
 
     if (errorMessage == null) {
-      return this.getReturn(context, "PrepareMessage");
+      return getReturn(context, "PrepareMessage");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -480,32 +549,43 @@ public final class MyActionContacts extends CFSModule {
     if (!(hasPermission(context, "myhomepage-action-lists-edit"))) {
       return ("PermissionError");
     }
+    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    if (viewUserId == null || "".equals(viewUserId)) {
+      viewUserId = String.valueOf(this.getUserId(context));
+    }
     String msgId = context.getRequest().getParameter("id");
     String contactId = context.getRequest().getParameter("contactId");
     String actionId = context.getRequest().getParameter("actionId");
     String actionListId = context.getRequest().getParameter("actionListId");
     boolean messageSent = false;
+    boolean activated = false;
     Message thisMessage = (Message) context.getFormBean();
-    Exception errorMessage = null;
     Connection db = null;
-    
+    Contact recipient = null;
+    boolean isValid = false;
     InstantCampaign actionCampaign = new InstantCampaign();
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = getConnection(context);
+      recipient = new Contact(db, contactId);
       //build the Action List
       ActionList actionList = new ActionList(db, Integer.parseInt(actionListId));
-      
+      thisMessage.setDisableNameValidation(true);
+      isValid = this.validateObject(context, db, thisMessage);
+
+      if ("".equals(recipient.getPrimaryEmailAddress())) {
+        context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.contactNoEmail"));
+        isValid = false;
+      }
       //check if message if valid
-      if (actionCampaign.isValid(thisMessage)) {
+      if (isValid) {
         //insert the message if it is not inserted yet
         if (msgId != null && !"".equals(msgId)) {
           thisMessage.setModifiedBy(this.getUserId(context));
           thisMessage.update(db);
         } else {
-          SystemStatus systemStatus = this.getSystemStatus(context);
           LookupList list = systemStatus.getLookupList(db, "lookup_access_types");
           thisMessage.setAccessType(list.getIdFromValue("Public"));
-          thisMessage.setDisableNameValidation(true);
           thisMessage.setModifiedBy(this.getUserId(context));
           thisMessage.setEnteredBy(this.getUserId(context));
         }
@@ -515,7 +595,10 @@ public final class MyActionContacts extends CFSModule {
         actionCampaign.setModifiedBy(this.getUserId(context));
         actionCampaign.addRecipient(db, Integer.parseInt(contactId));
         actionCampaign.setMessage(thisMessage);
-        boolean activated = actionCampaign.activate(db);
+        isValid = this.validateObject(context, db, actionCampaign);
+        if (isValid) {
+          activated = actionCampaign.activate(db);
+        }
 
         //log the campaign in history
         if (activated) {
@@ -534,21 +617,118 @@ public final class MyActionContacts extends CFSModule {
         }
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (messageSent) {
-        return this.getReturn(context, "SendMessage");
-      }
-      processErrors(context, thisMessage.getErrors());
-      return this.getReturn(context, "PrepareMessage");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (messageSent) {
+      return getReturn(context, "SendMessage");
     }
+    return executeCommandPrepareMessage(context);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandSendAddressRequest(ActionContext context) {
+    String viewUserId = (String) context.getSession().getAttribute("viewUserId");
+    if (viewUserId == null || "".equals(viewUserId)) {
+      viewUserId = String.valueOf(this.getUserId(context));
+    }
+    String msgId = context.getRequest().getParameter("id");
+    String contactId = context.getRequest().getParameter("contactId");
+    boolean messageSent = false;
+    boolean activated = false;
+    Message thisMessage = (Message) context.getFormBean();
+    Connection db = null;
+    boolean isValid = false;
+    InstantCampaign actionCampaign = new InstantCampaign();
+    Contact contact = null;
+    try {
+      db = getConnection(context);
+      
+      //build contact record to determine the required permission
+      contact = new Contact(db,Integer.parseInt(contactId));
+      // if the contact is an account contact
+      if ((contact.getOrgId() != -1) && (!(hasPermission(context, "accounts-accounts-contact-updater-view")))){
+        return ("PermissionError");
+      }
+      //if the contact is a general(external)contact
+      if ((contact.getOrgId() == -1) && (!(hasPermission(context, "contacts-external-contact-updater-view")))){
+        return ("PermissionError");
+      }
+      
+      //build the Action List
+      thisMessage.setDisableNameValidation(true);
+      isValid = this.validateObject(context, db, thisMessage);
+      //check if message if valid
+      if (isValid) {
+        //insert the message if it is not inserted yet
+        if (msgId != null && !"".equals(msgId)) {
+          thisMessage.setModifiedBy(this.getUserId(context));
+          thisMessage.update(db);
+        } else {
+          SystemStatus systemStatus = this.getSystemStatus(context);
+          LookupList list = systemStatus.getLookupList(db, "lookup_access_types");
+          thisMessage.setAccessType(list.getIdFromValue("Public"));
+          thisMessage.setModifiedBy(this.getUserId(context));
+          thisMessage.setEnteredBy(this.getUserId(context));
+        }
+        //create an instant campaign and activate it
+        actionCampaign.setName("Contact Information Update Request");
+        actionCampaign.setEnteredBy(this.getUserId(context));
+        actionCampaign.setModifiedBy(this.getUserId(context));
+        actionCampaign.addRecipient(db, Integer.parseInt(contactId));
+        actionCampaign.setMessage(thisMessage);
+        isValid = this.validateObject(context, db, actionCampaign);
+        if (isValid) {
+          activated = actionCampaign.activate(db);
+        }
+        //log the campaign in history
+        if (activated) {
+          //Add the address request survey to the instant campaign
+          int addressSurveyId = Survey.getAddressSurveyId(db);
+          actionCampaign.setSurveyId(addressSurveyId);
+          actionCampaign.setModifiedBy(this.getUserId(context));
+          actionCampaign.setHasAddressRequest(true);
+          actionCampaign.updateAddressRequest(db);
+
+          Survey thisSurvey = new Survey(db, Survey.getAddressSurveyId(db));
+          ActiveSurvey activeSurvey = new ActiveSurvey(thisSurvey);
+          activeSurvey.setEnteredBy(this.getUserId(context));
+          activeSurvey.setModifiedBy(this.getUserId(context));
+          activeSurvey.setCampaignId(actionCampaign.getId());
+          activeSurvey.insert(db);
+          addressSurveyId = activeSurvey.getId();
+          String serverName = HTTPUtils.getServerUrl(context.getRequest());
+
+          thisMessage.setMessageText(thisMessage.getMessageText() + "<br />" +
+              "${server_name=" + serverName + "}" + "<br />" +
+              "${contact_address=" + addressSurveyId + "}" + "<br />" +
+              "${survey_url_address=" + addressSurveyId + "}");
+          actionCampaign.updateInstantCampaignMessage(db, thisMessage);
+
+          messageSent = true;
+
+          //build the contact for confirming message
+          context.getRequest().setAttribute("Recipient", new Contact(db, Integer.parseInt(contactId)));
+        }
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (messageSent) {
+      return getReturn(context, "SendMessage");
+    }
+    return executeCommandPrepareMessage(context);
   }
 }
 

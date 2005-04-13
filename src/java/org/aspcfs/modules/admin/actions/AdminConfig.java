@@ -15,56 +15,72 @@
  */
 package org.aspcfs.modules.admin.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.database.ConnectionElement;
-import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.controller.SystemStatus;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.service.base.Record;
+import org.aspcfs.modules.service.base.RecordList;
+import org.aspcfs.modules.service.base.TransactionStatus;
 import org.aspcfs.modules.setup.beans.UpdateBean;
-import sun.misc.*;
-import org.w3c.dom.*;
-import org.aspcfs.modules.service.base.*;
+import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.LookupList;
+import sun.misc.BASE64Encoder;
+
+import java.sql.Connection;
+import java.util.Hashtable;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     matt rajkowski
- *@created    September 9, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created September 9, 2003
  */
 public final class AdminConfig extends CFSModule {
 
   /**
-   *  Action that prepares a list of the editable global parameters
+   * Action that prepares a list of the editable global parameters
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandListGlobalParams(ActionContext context) {
     if (!(hasPermission(context, "admin-sysconfig-view"))) {
       return ("PermissionError");
     }
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      // get this company's name, always org_id 0
+      Organization myCompany = new Organization(db, 0);
+      context.getRequest().setAttribute("myCompany", myCompany);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    // get the session timeout
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
+        "ConnectionElement");
+    int sessionTimeout = ((SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
+        "SystemStatus")).get(ce.getUrl())).getSessionTimeout();
+    context.getRequest().setAttribute(
+        "Timeout", String.valueOf(sessionTimeout / 60));
+    // forward to JSP
     addModuleBean(context, "Configuration", "Configuration");
-    //get the session timeout
-    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
-    int sessionTimeout = ((SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl())).getSessionTimeout();
-    context.getRequest().setAttribute("Timeout", String.valueOf(sessionTimeout / 60));
     return ("GlobalParamsOK");
   }
 
 
   /**
-   *  Action that routes to the modify timeout page
+   * Action that routes to the modify timeout page
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyTimeout(ActionContext context) {
     if (!(hasPermission(context, "admin-sysconfig-view"))) {
@@ -76,30 +92,33 @@ public final class AdminConfig extends CFSModule {
 
 
   /**
-   *  Action that updates the global session timeout from form data
+   * Action that updates the global session timeout from form data
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateTimeout(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-view")) {
       return ("PermissionError");
     }
-    int timeout = Integer.parseInt(context.getRequest().getParameter("timeout"));
+    int timeout = Integer.parseInt(
+        context.getRequest().getParameter("timeout"));
     addModuleBean(context, "Configuration", "Configuration");
     //get the session timeout and update
-    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
-    SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute(
+        "ConnectionElement");
+    SystemStatus thisSystem = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute(
+        "SystemStatus")).get(ce.getUrl());
     thisSystem.setSessionTimeout(timeout * 60);
     return "UpdateOK";
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!(hasPermission(context, "admin-sysconfig-view"))) {
@@ -110,6 +129,34 @@ public final class AdminConfig extends CFSModule {
     //Allowable params configured
     if (module == null) {
       return "ModifyError";
+    }
+    if ("COMPANYINFO".equals(module)) {
+      Connection db = null;
+      try {
+        db = this.getConnection(context);
+        SystemStatus systemStatus = this.getSystemStatus(context);
+
+        Organization myOrg = new Organization(db, 0);
+        context.getRequest().setAttribute("OrgDetails", myOrg);
+
+        LookupList phoneTypeList = systemStatus.getLookupList(
+            db, "lookup_orgphone_types");
+        context.getRequest().setAttribute("OrgPhoneTypeList", phoneTypeList);
+
+        LookupList addrTypeList = systemStatus.getLookupList(
+            db, "lookup_orgaddress_types");
+        context.getRequest().setAttribute("OrgAddressTypeList", addrTypeList);
+
+        LookupList emailTypeList = systemStatus.getLookupList(
+            db, "lookup_orgemail_types");
+        context.getRequest().setAttribute("OrgEmailTypeList", emailTypeList);
+      } catch (Exception e) {
+        context.getRequest().setAttribute("Error", e);
+        return ("SystemError");
+      } finally {
+        this.freeConnection(context, db);
+      }
+      return "ModifyCompanyInfoOK";
     }
     if ("MAILSERVER".equals(module)) {
       return "ModifyEmailOK";
@@ -135,25 +182,28 @@ public final class AdminConfig extends CFSModule {
     if ("SYSTEM.COUNTRY".equals(module)) {
       return "ModifyCountryOK";
     }
+    // BEGIN DHV CODE ONLY
     if ("LICENSE".equals(module)) {
       return "ModifyLicenseOK";
     }
+    // END DHV CODE ONLY
     return "ModifyError";
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!(hasPermission(context, "admin-sysconfig-view"))) {
       return ("PermissionError");
     }
     //Prepare to change the prefs
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+        "applicationPrefs");
     if (prefs == null) {
       return "ModifyError";
     }
@@ -200,22 +250,25 @@ public final class AdminConfig extends CFSModule {
     //Save the prefs...
     prefs.save();
     prefs.populateContext(context.getServletContext());
+    prefs.loadLocalizationPrefs(context.getServletContext());
     return "UpdateOK";
   }
 
+
   // BEGIN DHV CODE ONLY
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdateLicense(ActionContext context) {
     if (!hasPermission(context, "admin-sysconfig-view")) {
       return ("PermissionError");
     }
     //Prepare to change the prefs
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute(
+        "applicationPrefs");
     if (prefs == null) {
       return "ModifyError";
     }
@@ -228,8 +281,11 @@ public final class AdminConfig extends CFSModule {
         //Send the current key, email address, profile, and crc
         java.security.Key key = org.aspcfs.utils.PrivateString.loadKey(
             getPref(context, "FILELIBRARY") + "init" + fs + "zlib.jar");
-        XMLUtils xml = new XMLUtils(org.aspcfs.utils.PrivateString.decrypt(key,
-            StringUtils.loadText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
+        XMLUtils xml = new XMLUtils(
+            org.aspcfs.utils.PrivateString.decrypt(
+                key,
+                StringUtils.loadText(
+                    getPref(context, "FILELIBRARY") + "init" + fs + "input.txt")));
         //Encode the license for transmission
         BASE64Encoder encoder = new BASE64Encoder();
         bean.setZlib(encoder.encode(ObjectUtils.toByteArray(key)));
@@ -241,21 +297,25 @@ public final class AdminConfig extends CFSModule {
         String response = null;
         boolean ssl = true;
         if (ssl) {
-          response = HTTPUtils.sendPacket("https://registration.centriccrm.com/LicenseServer.do?command=RequestLicense", bean.toXmlString());
+          response = HTTPUtils.sendPacket(
+              "https://registration.centriccrm.com/LicenseServer.do?command=RequestLicense", bean.toXmlString());
         } else {
-          response = HTTPUtils.sendPacket("http://registration.centriccrm.com/LicenseServer.do?command=RequestLicense", bean.toXmlString());
+          response = HTTPUtils.sendPacket(
+              "http://registration.centriccrm.com/LicenseServer.do?command=RequestLicense", bean.toXmlString());
         }
         if (response == null) {
-          context.getRequest().setAttribute("actionError",
-              "Unspecified Error: Centric CRM Server did not respond ");
+          context.getRequest().setAttribute(
+              "actionError", this.getSystemStatus(context).getLabel(
+                  "object.validation.unspecifiedErrorNoResponse"));
           return "LicenseCheckERROR";
         }
         XMLUtils responseXML = new XMLUtils(response);
-        TransactionStatus thisStatus = new TransactionStatus(responseXML.getFirstChild("response"));
+        TransactionStatus thisStatus = new TransactionStatus(
+            responseXML.getFirstChild("response"));
         if (thisStatus.getStatusCode() != 0) {
-          context.getRequest().setAttribute("actionError",
-              "Unspecified Error: Centric CRM Server rejected request " +
-              thisStatus.getMessage());
+          context.getRequest().setAttribute(
+              "actionError", this.getSystemStatus(context).getLabel(
+                  "object.validation.unspecifiedErrorRequestRejected") + thisStatus.getMessage());
           return "LicenseCheckERROR";
         }
         //Response is good so save the new license
@@ -265,14 +325,20 @@ public final class AdminConfig extends CFSModule {
           if (record != null && record.getAction().equals("update")) {
             String updatedLicense = (String) record.get("license");
             //Validate and save it
-            XMLUtils xml2 = new XMLUtils(PrivateString.decrypt(key, updatedLicense));
-            String entered = XMLUtils.getNodeText(xml2.getFirstChild("entered"));
+            XMLUtils xml2 = new XMLUtils(
+                PrivateString.decrypt(key, updatedLicense));
+            String entered = XMLUtils.getNodeText(
+                xml2.getFirstChild("entered"));
             if (entered == null) {
               return "LicenseCheckERROR";
             }
-            StringUtils.saveText(getPref(context, "FILELIBRARY") + "init" + fs + "input.txt", updatedLicense);
-            context.getServletContext().setAttribute("APP_TEXT", XMLUtils.getNodeText(xml2.getFirstChild("edition")));
-            String text2 = XMLUtils.getNodeText(xml2.getFirstChild("text2")).substring(7);
+            StringUtils.saveText(
+                getPref(context, "FILELIBRARY") + "init" + fs + "input.txt", updatedLicense);
+            context.getServletContext().setAttribute(
+                "APP_TEXT", XMLUtils.getNodeText(
+                    xml2.getFirstChild("edition")));
+            String text2 = XMLUtils.getNodeText(xml2.getFirstChild("text2")).substring(
+                7);
             if ("-1".equals(text2)) {
               context.getServletContext().removeAttribute("APP_SIZE");
             } else {
@@ -293,5 +359,48 @@ public final class AdminConfig extends CFSModule {
     return "LicenseCheckOK";
   }
   // END DHV CODE ONLY
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandUpdateCompanyInfo(ActionContext context) {
+    if (!(hasPermission(context, "admin-sysconfig-view"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    int resultCount = -1;
+    boolean isValid = false;
+    Organization myOrg = (Organization) context.getFormBean();
+    myOrg.setOrgId(0);
+    myOrg.setEnteredBy(getUserId(context));
+    myOrg.setModifiedBy(getUserId(context));
+    try {
+      db = this.getConnection(context);
+      isValid = this.validateObject(context, db, myOrg);
+      if (isValid) {
+        myOrg.setRequestItems(context);
+        resultCount = myOrg.update(db);
+      }
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "View Accounts", "Modify Account");
+    if (resultCount == -1 || !isValid) {
+      return ("ModifyCompanyInfoERROR");
+    } else if (resultCount == 1) {
+      return ("UpdateOK");
+    } else {
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
+    }
+  }
+
 }
 

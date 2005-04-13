@@ -15,13 +15,18 @@
  */
 package com.zeroio.iteam.base;
 
-import org.apache.lucene.index.IndexWriter;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
-import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
+
 import java.io.IOException;
-import com.zeroio.utils.ContentUtils;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *  Class for working with the Lucene search engine
@@ -42,7 +47,7 @@ public class AssignmentIndexer implements Indexer {
    *@exception  SQLException  Description of the Exception
    *@exception  IOException   Description of the Exception
    */
-  public static void add(IndexWriter writer, Connection db) throws SQLException, IOException {
+  public static void add(IndexWriter writer, Connection db, ActionContext context) throws SQLException, IOException {
     int count = 0;
     PreparedStatement pst = db.prepareStatement(
         "SELECT assignment_id, project_id, role, technology, requirement_id, modified " +
@@ -61,6 +66,7 @@ public class AssignmentIndexer implements Indexer {
       assignment.setModified(rs.getTimestamp("modified"));
       // add the document
       AssignmentIndexer.add(writer, assignment, false);
+      DatabaseUtils.renewConnection(context, db);
     }
     rs.close();
     pst.close();
@@ -81,6 +87,7 @@ public class AssignmentIndexer implements Indexer {
     Document document = new Document();
     document.add(Field.Keyword("type", "activity"));
     document.add(Field.Keyword("assignmentId", String.valueOf(assignment.getId())));
+    document.add(Field.Keyword("assignmentKeyId", String.valueOf(assignment.getId())));
     document.add(Field.Keyword("requirementId", String.valueOf(assignment.getRequirementId())));
     document.add(Field.Keyword("projectId", String.valueOf(assignment.getProjectId())));
     document.add(Field.Text("title", assignment.getRole()));
@@ -106,7 +113,7 @@ public class AssignmentIndexer implements Indexer {
    *@return             The searchTerm value
    */
   public static Term getSearchTerm(Assignment assignment) {
-    Term searchTerm = new Term("assignmentId", String.valueOf(assignment.getId()));
+    Term searchTerm = new Term("assignmentKeyId", String.valueOf(assignment.getId()));
     return searchTerm;
   }
 

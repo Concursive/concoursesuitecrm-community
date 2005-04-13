@@ -1,3 +1,4 @@
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Dialog" class="org.aspcfs.utils.web.HtmlDialog" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -33,7 +34,11 @@ else{%>
         <td>
           <center>
            <strong>
-           <%= (Dialog.getHeader() != null && !"".equals(Dialog.getHeader())) ? Dialog.getHeader() : "Are you sure you wish to permanently delete this information?" %>
+            <% if(Dialog.getHeader() != null && !"".equals(Dialog.getHeader())) {%>
+              <%= toHtml(Dialog.getHeader()) %>
+            <%} else {%>
+              <dhv:label name="calendar.dialog.permanentlyDelete.question">Are you sure you wish to permanently delete this information?</dhv:label>
+            <%}%>
           </strong>
          </center>
         </td>
@@ -44,8 +49,8 @@ else{%>
       <tr><td>&nbsp;</td></tr>
       <tr align="center">
         <td>
-          <input type="button" value="Ok" onClick="<%=Dialog.getDeleteUrl()%>">
-          <input type="button" value="Cancel" onClick="javascript:window.close();">
+          <input type="button" value="<dhv:label name="button.ok">OK</dhv:label>" onClick="<%=Dialog.getDeleteUrl()%>">
+          <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
         </td>
       </tr>
      </table>

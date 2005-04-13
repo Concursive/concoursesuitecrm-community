@@ -23,15 +23,15 @@
 <jsp:include page="cfsor2.js" flush="true"/>
 <%@ include file="../initPage.jsp" %>
 <dhv:permission name="myhomepage-miner-add">
-<body onLoad="javascript:document.forms[0].name.focus();">
+<body onLoad="javascript:document.addAccount.name.focus();">
 <form name="addAccount" action="MyCFS.do?command=InsertHeadline" method="post">
 </dhv:permission>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> > 
-Headlines
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> > 
+<dhv:label name="Headlines">Headlines</dhv:label>
 </td>
 </tr>
 </table>
@@ -40,12 +40,12 @@ Headlines
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Monitor a New Company</strong>
+      <strong><dhv:label name="calendar.monitorNewCompany">Monitor a New Company</dhv:label></strong>
     </th>
   </tr>
   <tr>
     <td class="formLabel">
-      Name
+      <dhv:label name="contacts.name">Name</dhv:label>
     </td>
     <td>
       <input type="text" size="40" name="name">
@@ -53,7 +53,7 @@ Headlines
   </tr>
   <tr>
     <td class="formLabel">
-      Ticker Symbol
+      <dhv:label name="accounts.accounts_add.TickerSymbol">Ticker Symbol</dhv:label>
     </td>
     <td>
       <input type="text" size="10" name="stockSymbol">
@@ -61,10 +61,11 @@ Headlines
   </tr>
 </table>
 &nbsp;<br>
-<input type="submit" value="Insert">
+<input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>">
 </form>
 </dhv:permission>
-<center><%= HeadlineListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="HeadlineListInfo"/></center></dhv:include>
 <br>
 <form name="delAccount" action="MyCFS.do?command=DeleteHeadline" method="post">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
@@ -75,13 +76,13 @@ Headlines
       </th>
     </dhv:permission>
     <th>
-      <strong>My Monitored Companies</strong>
+      <strong><dhv:label name="calendar.myMonitoredCompanies">My Monitored Companies</dhv:label></strong>
     </th>
     <th valign=center align=left>
-      <strong>Ticker</strong>
+      <strong><dhv:label name="accounts.accounts_reports_generate.Ticker">Ticker</dhv:label></strong>
     </th>
     <th>
-      <strong>Date Entered</strong>
+      <strong><dhv:label name="calendar.dateEntered">Date Entered</dhv:label></strong>
     </th>
 </tr>
 <%
@@ -112,15 +113,15 @@ Headlines
 <%}%>
 </table>
 <dhv:permission name="myhomepage-miner-delete">
-	&nbsp;<br>
-  <input type="submit" name="action" value="Delete Checked">
+	<br>
+  <input type="submit" name="<dhv:label name="accounts.Action">Action</dhv:label>" value="Delete Checked" />
   <br>
 </dhv:permission>
 <br>
 <dhv:pagedListControl object="HeadlineListInfo" tdClass="row1"/>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="4">No companies found.</td>
+    <td colspan="4"><dhv:label name="calendar.noCompaniesFound">No companies found.</dhv:label></td>
   </tr>
 </table>
 <%}%>

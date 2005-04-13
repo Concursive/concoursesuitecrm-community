@@ -43,33 +43,32 @@
 <%-- End Trails --%>
 <dhv:permission name="contacts-internal_contacts-add"><a href="CompanyDirectory.do?command=Prepare"><dhv:label name="employees.add">Add an Employee</dhv:label></a></dhv:permission>
 <dhv:permission name="contacts-internal_contacts-add" none="true"><br></dhv:permission>
-<center><%= CompanyDirectoryInfo.getAlphabeticalPageLinks() %></center>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="CompanyDirectoryInfo"/></center></dhv:include>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="CompanyDirectoryInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
-    <th>
-      <strong>Action</strong>
-    </th>
+    <th width="8">&nbsp;</th>
     <th nowrap>
       <a href="CompanyDirectory.do?command=ListEmployees&column=c.namelast">
-        <strong>Name</strong>
+        <strong><dhv:label name="contacts.name">Name</dhv:label></strong>
       </a>
       <%= CompanyDirectoryInfo.getSortIcon("c.namelast") %>
     </th>
     <th nowrap>
       <a href="CompanyDirectory.do?command=ListEmployees&column=departmentname,c.namelast">
-        <strong>Department</strong>
+        <strong><dhv:label name="project.department">Department</dhv:label></strong>
       </a>
       <%= CompanyDirectoryInfo.getSortIcon("departmentname,c.namelast") %>
     </th>
     <th nowrap>
       <a href="CompanyDirectory.do?command=ListEmployees&column=c.title,c.namelast">
-        <strong>Title</strong>
+        <strong><dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label></strong>
       </a>
       <%= CompanyDirectoryInfo.getSortIcon("c.title,c.namelast") %>
     </th nowrap>
     <th nowrap>
-      <strong>Business Phone</strong>
+      <strong><dhv:label name="account.phone">Phone</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -89,8 +88,8 @@
       </td>
     <td class="row<%= rowid %>" nowrap>
       <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLastFirst()) %></a>
-      <dhv:evaluate exp="<%=!(thisEmployee.hasEnabledAccount())%>"><font color="red">*</font></dhv:evaluate>          
-        <%= thisEmployee.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "&nbsp;") %>
+      <dhv:evaluate if="<%=!(thisEmployee.hasEnabledAccount())%>"><font color="red">*</font></dhv:evaluate>
+        <%= thisEmployee.getEmailAddressTag("", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "&nbsp;") %>
     </td>
     <td class="row<%= rowid %>">
       <%= toHtml(thisEmployee.getDepartmentName()) %>
@@ -99,7 +98,7 @@
       <%= toHtml(thisEmployee.getTitle()) %>
     </td>
     <td class="row<%= rowid %>">
-      <%= toHtml(thisEmployee.getPhoneNumber("Business")) %>
+      <%= toHtml(thisEmployee.getPrimaryPhoneNumber()) %>
     </td>
   </tr>
 <%      

@@ -26,7 +26,7 @@
     var formTest = true;
     //Check required fields
     if (form.description.value == "") {    
-      alert("Description is required.");
+      alert(label("description.required",'Description is required'));
       formTest = false;
     }
     if (formTest == false) {
@@ -40,12 +40,12 @@
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
 <tr>
   <th colspan="2">
-    <strong>Module Description:<%=helpModule.getRelatedAction()%></strong>
+    <strong><dhv:label name="help.moduleDescription.colon" param="<%= "helpModule.relatedAction="+helpModule.getRelatedAction() %>">Module Description: <%= helpModule.getRelatedAction() %></dhv:label></strong>
   </th>
 </tr>
 <tr class="containerBody">
   <td class="formLabel" valign="top">
-    Brief Description 
+    <dhv:label name="help.briefDescription">Brief Description</dhv:label> 
   </td>
   <td>
     <textarea rows="10" name="briefDescription" cols="80"><%= toString(helpModule.getBriefDescription()) %></textarea>
@@ -53,15 +53,15 @@
 </tr>
 <tr class="containerBody">
   <td class="formLabel" valign="top">
-    Detail Description
+    <dhv:label name="help.detailDescription">Detail Description</dhv:label>
   </td>
   <td>
     <textarea rows="18" name="detailDescription" cols="80"><%= toString(helpModule.getDetailDescription()) %></textarea>
   </td>
 </tr>
 </table><br>
-<input type="submit" value="Update" />
-<input type="submit" value="Cancel" onClick="javascript:window.close();" />
+<input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" />
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();" />
 <input type="hidden" name="id" value="<%= helpModule.getId() %>">
 <input type="hidden" name="linkCategoryId" value="<%= helpModule.getLinkCategoryId() %>">
 <input type="hidden" name="relatedAction" value="<%= helpModule.getRelatedAction() %>">

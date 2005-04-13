@@ -31,7 +31,7 @@
     <td>
       <img src="images/icons/stock_announcement-16.gif" border="0" align="absmiddle">
       <a href="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>"><zeroio:tabLabel name="News" object="Project"/></a> >
-      Article Details
+      <dhv:label name="project.articleDetails">Article Details</dhv:label>
     </td>
   </tr>
 </table>
@@ -41,7 +41,7 @@
   <tr class="pagedList">
     <th width="100%">
       <img alt="" src="images/icons/stock_news-16.gif" align="absmiddle">
-      <font size="2"><strong><%= toHtml(newsArticle.getSubject()) %></strong></font>
+      <font size="2"><%= toHtml(newsArticle.getSubject()) %></font>
     </th>
   </tr>
   <tr class="row1">
@@ -49,10 +49,7 @@
       <table border="0" cellpadding="0" cellspacing="0" width="100%" class="empty">
         <tr>
           <td width="100%">
-            By <dhv:username id="<%= newsArticle.getEnteredBy() %>"/>
-            -
-            Posted on
-            <zeroio:tz timestamp="<%= newsArticle.getStartDate() %>" dateOnly="true" timeZone="<%= newsArticle.getStartDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+            <dhv:label name="project.by.postedOn" param="<%= "username="+getUsername(pageContext,newsArticle.getEnteredBy(),false,false,"&nbsp;")+"|time="+getTime(pageContext,newsArticle.getStartDate(),newsArticle.getStartDateTimeZone(),DateFormat.SHORT,true,false,true,"&nbsp;") %>">By <dhv:username id="<%= newsArticle.getEnteredBy() %>"/> - Posted on <zeroio:tz timestamp="<%= newsArticle.getStartDate() %>" dateOnly="true" timeZone="<%= newsArticle.getStartDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/></dhv:label>
             <% if(!User.getTimeZone().equals(newsArticle.getStartDateTimeZone())){%>
             <br />
             <zeroio:tz timestamp="<%= newsArticle.getStartDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
@@ -62,11 +59,11 @@
             <dhv:evaluate if="<%= !isPopup(request) %>">
             <zeroio:permission name="project-news-edit">
               <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle">
-              <a href="ProjectManagementNews.do?command=Edit&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>">Edit this article</a>
+              <a href="ProjectManagementNews.do?command=Edit&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>"><dhv:label name="project.editThisArticle">Edit this article</dhv:label></a>
             </zeroio:permission>
             <zeroio:permission name="project-news-delete">
               <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle">
-              <a href="javascript:confirmDelete('ProjectManagementNews.do?command=Delete&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>');">Delete this article</a>
+              <a href="javascript:confirmDelete('ProjectManagementNews.do?command=Delete&pid=<%= Project.getId() %>&id=<%= newsArticle.getId() %>');"><dhv:label name="project.deleteThisArticle">Delete this article</dhv:label></a>
             </zeroio:permission>
             </dhv:evaluate>
             &nbsp;
@@ -85,12 +82,12 @@
     <dhv:evaluate if="<%= !isPopup(request) %>">
       <br>
       <img src="images/icons/stock_left-16.gif" border="0" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>">Back to list</a>
+      <a href="ProjectManagement.do?command=ProjectCenter&section=News&pid=<%= Project.getId() %>"><dhv:label name="project.backToList">Back to list</dhv:label></a>
     </dhv:evaluate>
     </td>
   </tr>
 </table>
 <dhv:evaluate if="<%= isPopup(request) %>">
 <br>
-<input type="button" value="Close" onClick="javascript:window.close()"/>
+<input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close()"/>
 </dhv:evaluate>

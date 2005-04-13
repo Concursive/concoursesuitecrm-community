@@ -28,15 +28,15 @@
     var message = "";
     //Check required fields
     if (form.categoryId.value == -1) {    
-      message += "Module is required\n";
+      message += label("check.module","Module is required\n");
       formTest = false;
     }
     if (form.description.value == "") {    
-      message += "Description is required\n";
+      message += label("description.required",'Description is required');
       formTest = false;
     }
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     } else {
       return true;
@@ -47,12 +47,12 @@
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
 <tr>
   <th colspan="2">
-    <strong>Help</strong>
+    <strong><dhv:label name="global.button.Help">Help</dhv:label></strong>
   </th>
 </tr>
 <tr class="containerBody">
   <td class="formLabel" valign="top">
-    Module
+    <dhv:label name="qa.module">Module</dhv:label>
   </td>
   <td>
       <%= permissionCategoryList.getHtmlSelect("categoryId", Help.getCategoryId() ) %>
@@ -60,7 +60,7 @@
 </tr>
 <tr class="containerBody">
   <td class="formLabel" valign="top">
-    Title
+    <dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label>
   </td>
   <td>
     <input type="text" name="title" value="<%= toHtmlValue(Help.getTitle()) %>" />
@@ -68,15 +68,15 @@
 </tr>
 <tr class="containerBody">
   <td class="formLabel" valign="top">
-    Introduction
+    <dhv:label name="qa.introduction">Introduction</dhv:label>
   </td>
   <td>
     <textarea rows="6" name="description" cols="50"><%= toString(Help.getDescription()) %></textarea>
   </td>
 </tr>
 </table><br>
-<input type="submit" value="Update" />
-<input type="submit" value="Cancel" onClick="javascript:window.close();" />
+<input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" />
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();" />
 <dhv:evaluate if="<%= Help.getId() > 0 %>">
   <input type="hidden" name="modified" value="<%= Help.getModified() %>" />
 </dhv:evaluate>

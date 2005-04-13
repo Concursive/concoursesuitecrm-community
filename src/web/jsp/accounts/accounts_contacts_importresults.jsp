@@ -17,7 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*, org.aspcfs.modules.base.PhoneNumber" %>
 <jsp:useBean id="ImportResults" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="ImportDetails" class="org.aspcfs.modules.base.Import" scope="request"/>
 <jsp:useBean id="AccountContactsImportResultsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -37,14 +37,15 @@
 <tr>
   <td>
     <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> >
-    <a href="AccountContactsImports.do?command=View">View Imports</a> >
-    <a href="AccountContactsImports.do?command=Details&importId=<%= ImportDetails.getId() %>">Import Details</a> >
-    View Results
+    <a href="AccountContactsImports.do?command=View"><dhv:label name="accounts.ViewImports">View Imports</dhv:label></a> >
+    <a href="AccountContactsImports.do?command=Details&importId=<%= ImportDetails.getId() %>"><dhv:label name="accounts.ImportDetails">Import Details</dhv:label></a> >
+    <dhv:label name="global.button.ViewResults">View Results</dhv:label>
   </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<center><%= AccountContactsImportResultsInfo.getAlphabeticalPageLinks() %></center>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="AccountContactsImportResultsInfo"/></center></dhv:include>
 <table width="100%" border="0">
   <tr>
     <td>
@@ -55,25 +56,22 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th valign="center">
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th nowrap>
-      <strong><a href="AccountContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>&column=c.namelast">Name</a></strong>
+      <strong><a href="AccountContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>&column=c.namelast"><dhv:label name="contacts.name">Name</dhv:label></a></strong>
       <%= AccountContactsImportResultsInfo.getSortIcon("c.namelast") %>
     </th>
     <th nowrap>
-      <strong><a href="AccountContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>&column=c.company">Company</a></strong>
+      <strong><a href="AccountContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>&column=c.company"><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></a></strong>
       <%= AccountContactsImportResultsInfo.getSortIcon("c.company") %>
     </th>
     <th>
-      <strong>Phone: Business</strong>
-    </th>
-    <th>
-      <strong>Phone: Mobile</strong>
+      <strong><dhv:label name="account.phones.colon">Phone(s):</dhv:label></strong>
     </th>
     <dhv:evaluate if="<%= !"my".equals(AccountContactsImportResultsInfo.getListView()) && !"".equals(AccountContactsImportResultsInfo.getListView()) %>">
       <th>
-        <strong>Owner</strong>
+        <strong><dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label></strong>
       </th>
     </dhv:evaluate>
   </tr>
@@ -118,14 +116,17 @@
             <%= toHtml(thisContact.getOrgName()) %>
           <%}else{%>
             <a href="Contacts.do?command=ContactDetails&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getOrgName()) %></a>
-            <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
+            <%= thisContact.getEmailAddressTag("", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
           <%}%>
         </td>
         <td class="row<%= rowid %>" nowrap>
-          <%= toHtml(thisContact.getPhoneNumber("Business")) %>
-        </td>
-        <td class="row<%= rowid %>" nowrap>
-          <%= toHtml(thisContact.getPhoneNumber("Mobile")) %>
+          <%
+            Iterator phoneItr = thisContact.getPhoneNumberList().iterator();
+            while (phoneItr.hasNext()) {
+              PhoneNumber phoneNumber = (PhoneNumber)phoneItr.next(); %>
+              <%= phoneNumber.getPhoneNumber()%>(<%=phoneNumber.getTypeName()%>)
+              <%=(phoneItr.hasNext()?"<br />":"")%>
+          <%}%>&nbsp;
         </td>
         <dhv:evaluate if="<%= !"my".equals(AccountContactsImportResultsInfo.getListView()) && !"".equals(AccountContactsImportResultsInfo.getListView()) %>">
           <td class="row<%= rowid %>" nowrap>
@@ -138,7 +139,7 @@
   } else {%>  
   <tr>
     <td class="containerBody" colspan="5">
-      No contacts found.
+      <dhv:label name="accounts.accounts_contacts_detailsimport.NoContactsFound">No contacts found.</dhv:label>
     </td>
   </tr>
 <%}%>

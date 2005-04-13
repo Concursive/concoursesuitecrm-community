@@ -42,7 +42,6 @@ iteam/projects_center_home.jsp
 iteam/projects_center_assignments_modify.jsp
 iteam/projects_center_file_upload_version.jsp
 iteam/projects_center_requirements_modify.jsp
-iteam/projects_center_team_invite.jsp
 iteam/projects_personalview.jsp
 
 ## 2004-07-20 updated to new version of HTMLArea
@@ -69,4 +68,27 @@ WEB-INF/lib/lucene-1.4-final.jar
 WEB-INF/lib/PDFBox-0.6.5.jar
 WEB-INF/lib/jtds-0.9-rc2.jar
 
+## 2005-01-18 updated libs (fixes Tomcat restart bug)
+WEB-INF/lib/log4j.jar
 
+## 2005-01-20 updated libs
+WEB-INF/lib/jasperreports-0.5.3.jar
+WEB-INF/lib/jfreechart.jar
+WEB-INF/lib/jcommon.jar
+
+## 2005-02-09 updated libs (new release version)
+WEB-INF/lib/jtds-0.9.jar
+
+## 2005-02-10 updated libs (for PostgreSQL 8, backwards compatible with 7)
+WEB-INF/lib/postgresql.jar
+
+## 2005-03-15 added new template
+templates/template0nav.jsp
+templates/template0style.jsp
+templates/template0styleContainer.jsp
+templates/template0styleNoSession.jsp
+templates/template0dhv.jsp
+templates/template0centric.jsp
+css/template0.css
+css/template0-10pt.css
+css/template0-8pt.css

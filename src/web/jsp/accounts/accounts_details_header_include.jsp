@@ -17,19 +17,16 @@
   - Description: 
   --%>
 <%-- Accounts header --%>
-<table border="0" cellspacing="0" cellpadding="0">
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
   <tr>
-    <td width="100%">
-      <h1><img src="images/icons/stock_account-16.gif" border="0" align="absmiddle">
-      <strong><%= toHtml(OrgDetails.getName()) %></strong></h1>
+    <td nowrap>
+      <div class="tabSelected">
+        <img src="images/icons/stock_account-16.gif" border="0" align="absmiddle">
+        <strong><%= toHtml(OrgDetails.getName()) %></strong>
+      </div>
     </td>
-  </tr>
-  <dhv:evaluate if="<%=hasText(OrgDetails.getTypes().valuesAsString())%>">
-  <tr>
-    <%-- more header info... --%>
-    <td>
+    <td width="100%" class="tabSpace" nowrap>
       <%= toHtml(OrgDetails.getTypes().valuesAsString()) %>
     </td>
   </tr>
-  </dhv:evaluate>
 </table>

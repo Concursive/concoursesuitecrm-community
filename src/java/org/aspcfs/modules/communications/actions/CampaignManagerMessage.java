@@ -15,19 +15,20 @@
  */
 package org.aspcfs.modules.communications.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.communications.base.*;
-import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.admin.base.AccessType;
-import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.admin.base.AccessTypeList;
 import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.communications.base.Message;
+import org.aspcfs.modules.communications.base.MessageList;
+import org.aspcfs.utils.Template;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.util.HashMap;
 
 /**
  *  Actions for dealing with Messages in the Communications Module
@@ -155,6 +156,7 @@ public final class CampaignManagerMessage extends CFSModule {
     }
     addModuleBean(context, "ManageMessages", "Message Details");
     Connection db = null;
+    boolean isValid = false;
     int resultCount = 0;
     String id = (String) context.getRequest().getParameter("id");
     Message newMessage = (Message) context.getFormBean();
@@ -165,9 +167,9 @@ public final class CampaignManagerMessage extends CFSModule {
         return ("PermissionError");
       }
       newMessage.setModifiedBy(getUserId(context));
-      resultCount = newMessage.update(db);
-      if (resultCount == -1) {
-        processErrors(context, newMessage.getErrors());
+      isValid = this.validateObject(context, db, newMessage);
+      if (isValid) {
+        resultCount = newMessage.update(db);
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -175,10 +177,7 @@ public final class CampaignManagerMessage extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    if (resultCount == -1) {
-      context.getRequest().setAttribute("MessageDetails", newMessage);
-      return ("ModifyOK");
-    } else if (resultCount == 1) {
+    if (resultCount == 1) {
       context.getRequest().setAttribute("MessageDetails", newMessage);
       if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
         return (executeCommandView(context));
@@ -186,6 +185,10 @@ public final class CampaignManagerMessage extends CFSModule {
         return ("UpdateOK");
       }
     } else {
+      if (resultCount == -1 || !isValid) {
+        context.getRequest().setAttribute("MessageDetails", newMessage);
+        return ("ModifyOK");
+      }      
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
       return ("UserError");
     }
@@ -261,7 +264,7 @@ public final class CampaignManagerMessage extends CFSModule {
     addModuleBean(context, submenu, "Add Message");
 
     if (errorMessage == null) {
-      return this.getReturn(context, "Add");
+      return getReturn(context, "Add");
     } else {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -283,17 +286,19 @@ public final class CampaignManagerMessage extends CFSModule {
     addModuleBean(context, "BuildNew", "Add New Message");
     Connection db = null;
     boolean recordInserted = false;
+    boolean isValid = false;
     Message newMessage = (Message) context.getFormBean();
     try {
       newMessage.setEnteredBy(getUserId(context));
       newMessage.setModifiedBy(getUserId(context));
       db = this.getConnection(context);
-      recordInserted = newMessage.insert(db);
+      isValid = this.validateObject(context, db, newMessage);
+      if (isValid) {
+        recordInserted = newMessage.insert(db);
+      }
       if (recordInserted) {
         newMessage = new Message(db, newMessage.getId());
         context.getRequest().setAttribute("Message", newMessage);
-      } else {
-        processErrors(context, newMessage.getErrors());
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -303,9 +308,8 @@ public final class CampaignManagerMessage extends CFSModule {
     }
     if (recordInserted) {
       return ("InsertOK");
-    } else {
-      return (executeCommandAdd(context));
     }
+    return (executeCommandAdd(context));
   }
 
 
@@ -321,6 +325,7 @@ public final class CampaignManagerMessage extends CFSModule {
       return ("PermissionError");
     }
     Exception errorMessage = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     boolean recordDeleted = false;
     Message thisMessage = null;
     Connection db = null;
@@ -331,6 +336,17 @@ public final class CampaignManagerMessage extends CFSModule {
         return ("PermissionError");
       }
       recordDeleted = thisMessage.delete(db);
+      if (!recordDeleted) {
+        String inactiveCounter = ""+thisMessage.getInactiveCount();
+        String label = "";
+        HashMap map = new HashMap();
+        map.put("${message.inactiveCount}", inactiveCounter);
+        map.put("${message.campaign}", (thisMessage.getInactiveCount() == 1 ? "campaign is" : "campaigns are"));
+        map.put("${message.use}", (thisMessage.getInactiveCount() == 1 ? "uses" : "use") );
+        Template template = new Template(systemStatus.getLabel("object.validation.actionError.canNotDeleteMessage"));
+        template.setParseElements(map);
+        thisMessage.getErrors().put("actionError", template.getParsedText());
+      }
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -453,23 +469,23 @@ public final class CampaignManagerMessage extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       thisMessage = new Message(db, id);
       if (!hasAuthority(db, context, thisMessage)) {
         return ("PermissionError");
       }
-      htmlDialog.setTitle("Centric CRM: Campaign Manager");
-
       DependencyList dependencies = thisMessage.processDependencies(db);
-      htmlDialog.addMessage(dependencies.getHtmlString());
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
 
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='CampaignManagerMessage.do?command=Delete&id=" + id + "'");
       } else {
-        htmlDialog.setHeader("This message cannot be deleted because at least one campaign is using it.");
-        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.messageCampaignHeader"));
+        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       }
-
     } catch (Exception e) {
       errorMessage = e;
     } finally {

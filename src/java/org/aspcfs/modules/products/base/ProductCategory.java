@@ -15,27 +15,18 @@
  */
 package org.aspcfs.modules.products.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
+import com.darkhorseventures.framework.beans.GenericBean;
 import com.zeroio.iteam.base.FileItem;
 import com.zeroio.iteam.base.FileItemList;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.tasks.base.TaskList;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.actionlist.base.ActionList;
-import org.aspcfs.modules.actionlist.base.ActionItemLog;
-import org.aspcfs.modules.actionlist.base.ActionItemLogList;
-import org.aspcfs.modules.base.CustomFieldRecordList;
-import org.aspcfs.modules.products.base.ProductCategoryList;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Iterator;
 
 /**
  *  This is a generic Product Category that contains Product Catalogs.
@@ -75,6 +66,71 @@ public class ProductCategory extends GenericBean {
   private int buildEnabledProducts = Constants.UNDEFINED;
   private ProductCategoryList childList = new ProductCategoryList();
   private ProductCatalogList productList = new ProductCatalogList();
+  private boolean buildCompleteHierarchy = false;
+  private boolean buildActivePrice = false;
+
+  //hierarchy builder helper
+  private int level = -1;
+
+
+  /**
+   *  Gets the buildActivePrice attribute of the ProductCategory object
+   *
+   *@return    The buildActivePrice value
+   */
+  public boolean getBuildActivePrice() {
+    return buildActivePrice;
+  }
+
+
+  /**
+   *  Sets the buildActivePrice attribute of the ProductCategory object
+   *
+   *@param  tmp  The new buildActivePrice value
+   */
+  public void setBuildActivePrice(boolean tmp) {
+    this.buildActivePrice = tmp;
+  }
+
+
+  /**
+   *  Sets the buildActivePrice attribute of the ProductCategory object
+   *
+   *@param  tmp  The new buildActivePrice value
+   */
+  public void setBuildActivePrice(String tmp) {
+    this.buildActivePrice = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the level attribute of the ProductCategory object
+   *
+   *@return    The level value
+   */
+  public int getLevel() {
+    return level;
+  }
+
+
+  /**
+   *  Sets the level attribute of the ProductCategory object
+   *
+   *@param  tmp  The new level value
+   */
+  public void setLevel(int tmp) {
+    this.level = tmp;
+  }
+
+
+  /**
+   *  Sets the level attribute of the ProductCategory object
+   *
+   *@param  tmp  The new level value
+   */
+  public void setLevel(String tmp) {
+    this.level = Integer.parseInt(tmp);
+  }
 
 
   /**
@@ -114,6 +170,36 @@ public class ProductCategory extends GenericBean {
    */
   public void setBuildProductList(String tmp) {
     this.buildProductList = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the buildCompleteHierarchy attribute of the ProductCategory object
+   *
+   *@param  tmp  The new buildCompleteHierarchy value
+   */
+  public void setBuildCompleteHierarchy(boolean tmp) {
+    this.buildCompleteHierarchy = tmp;
+  }
+
+
+  /**
+   *  Sets the buildCompleteHierarchy attribute of the ProductCategory object
+   *
+   *@param  tmp  The new buildCompleteHierarchy value
+   */
+  public void setBuildCompleteHierarchy(String tmp) {
+    this.buildCompleteHierarchy = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the buildCompleteHierarchy attribute of the ProductCategory object
+   *
+   *@return    The buildCompleteHierarchy value
+   */
+  public boolean getBuildCompleteHierarchy() {
+    return buildCompleteHierarchy;
   }
 
 
@@ -775,7 +861,10 @@ public class ProductCategory extends GenericBean {
   public void buildChildList(Connection db) throws SQLException {
     // gets the child categories of this category
     childList.setParentId(this.getId());
-    childList.setBuildProducts(true);
+    childList.setBuildProducts(buildProductList);
+    childList.setBuildEnabledProducts(buildEnabledProducts);
+    childList.setBuildCompleteHierarchy(buildCompleteHierarchy);
+    childList.setBuildActivePrice(this.getBuildActivePrice());
     childList.buildList(db);
   }
 
@@ -791,6 +880,7 @@ public class ProductCategory extends GenericBean {
     productList.setCategoryId(this.getId());
     productList.setEnabled(buildEnabledProducts);
     productList.setBuildResources(true);
+    productList.setBuildActivePrice(this.getBuildActivePrice());
     productList.buildList(db);
   }
 
@@ -879,6 +969,43 @@ public class ProductCategory extends GenericBean {
 
 
   /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  cat2id            Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean removeCategoryMapping(Connection db, int cat2id) throws SQLException {
+    boolean result = false;
+    int i = 0;
+    if (cat2id == -1 || this.getId() == -1) {
+      throw new SQLException("Invalid category ID ");
+    }
+
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM product_category_map " +
+        "WHERE category1_id = ? " +
+        "AND 	 category2_id = ? ");
+    pst.setInt(++i, this.getId());
+    pst.setInt(++i, cat2id);
+    result = pst.execute();
+    pst.close();
+
+    i = 0;
+    pst = db.prepareStatement(
+        "DELETE FROM product_category_map " +
+        "WHERE category1_id = ? " +
+        "AND 	 category2_id = ? ");
+    pst.setInt(++i, cat2id);
+    pst.setInt(++i, this.getId());
+    result = pst.execute();
+    pst.close();
+    return result;
+  }
+
+
+  /**
    *  Adds a feature to the Catalog attribute of the ProductCategory object
    *
    *@param  db                The feature to be added to the Catalog attribute
@@ -953,18 +1080,15 @@ public class ProductCategory extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Product Category ID not specified.");
     }
+    boolean commit = true;
     int i = 0;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       /*
-       *  /Delete any documents
-       *  FileItemList fileList = new FileItemList();
-       *  fileList.setLinkModuleId(Constants.DOCUMENTS_PRODUCT_CATEGORY);
-       *  fileList.setLinkItemId(this.getId());
-       *  fileList.buildList(db);
-       *  fileList.delete(db, baseFilePath);
-       *  fileList = null;
-       *  /Delete any folder data
+       *  Delete any folder data
        *  CustomFieldRecordList folderList = new CustomFieldRecordList();
        *  folderList.setLinkModuleId(Constants.FOLDERS_PRODUCT_CATEGORY);
        *  folderList.setLinkItemId(this.getId());
@@ -982,6 +1106,15 @@ public class ProductCategory extends GenericBean {
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
+      //delete the product_category_map s that have category2_id = id
+      i = 0;
+      pst = db.prepareStatement(
+          " DELETE from product_category_map " +
+          " WHERE category2_id = ? "
+          );
+      pst.setInt(++i, this.getId());
+      pst.execute();
+      pst.close();
       //delete the product_catalog_category_map that contain the category_id = id
       i = 0;
       pst = db.prepareStatement(
@@ -991,7 +1124,20 @@ public class ProductCategory extends GenericBean {
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
-
+      //delete any associated product_category s with the same parent_id
+      ProductCategoryList list = new ProductCategoryList();
+      list.setParentId(this.getId());
+      list.buildList(db);
+      list.delete(db, baseFilePath);
+      //delete any associated product_category s with the same parent_id
+      // also delete all the mappings associated with the current id
+      //Delete any documents
+      FileItemList fileList = new FileItemList();
+      fileList.setLinkModuleId(Constants.DOCUMENTS_PRODUCT_CATEGORY);
+      fileList.setLinkItemId(this.getId());
+      fileList.buildList(db);
+      fileList.delete(db, baseFilePath);
+      fileList = null;
       //delete the product_category with category_id = id
       i = 0;
       pst = db.prepareStatement(
@@ -1000,14 +1146,19 @@ public class ProductCategory extends GenericBean {
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      //delete any associated product_category s with the same parent_id
-      // also delete all the mappings associated with the current id
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
       result = true;
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return result;
   }
@@ -1036,8 +1187,12 @@ public class ProductCategory extends GenericBean {
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
     StringBuffer sql = new StringBuffer();
+    boolean commit = true;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       sql.append(
           " INSERT INTO product_category( " +
           " parent_id, " +
@@ -1089,13 +1244,19 @@ public class ProductCategory extends GenericBean {
       pst.execute();
       pst.close();
       id = DatabaseUtils.getCurrVal(db, "product_category_category_id_seq");
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
       result = true;
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return result;
   }
@@ -1110,37 +1271,36 @@ public class ProductCategory extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        " UPDATE product_category SET parent_id = ?, abbreviation = ?, " +
-        " short_description = ?, long_description = ?, thumbnail_image_id = ?, " +
-        " small_image_id = ?, large_image_id = ?, list_order = ?, "
-        );
-    sql.append(" modifiedBy = ? , modified = " + DatabaseUtils.getCurrentTimestamp(db));
-    sql.append(" , start_date = ?, expiration_date = ?, enabled = ? ");
-    sql.append(" WHERE category_id = ? ");
-    sql.append(" AND modified = ? ");
+        "UPDATE product_category SET " +
+        "parent_id = ?, category_name = ?, abbreviation = ?, " +
+        "short_description = ?, long_description = ?, type_id = ?, " +
+        "thumbnail_image_id = ?, small_image_id = ?, large_image_id = ?, ");
+    sql.append("modifiedby = ? , modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+    sql.append("start_date = ?, expiration_date = ?, enabled = ? ");
+    sql.append("WHERE category_id = ? ");
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     DatabaseUtils.setInt(pst, ++i, this.getParentId());
+    pst.setString(++i, this.getName());
     pst.setString(++i, this.getAbbreviation());
     pst.setString(++i, this.getShortDescription());
     pst.setString(++i, this.getLongDescription());
+    DatabaseUtils.setInt(pst, ++i, this.getTypeId());
     DatabaseUtils.setInt(pst, ++i, this.getThumbnailImageId());
     DatabaseUtils.setInt(pst, ++i, this.getSmallImageId());
     DatabaseUtils.setInt(pst, ++i, this.getLargeImageId());
-    DatabaseUtils.setInt(pst, ++i, this.getListOrder());
     pst.setInt(++i, this.getModifiedBy());
-    pst.setTimestamp(++i, this.getStartDate());
-    pst.setTimestamp(++i, this.getExpirationDate());
+    DatabaseUtils.setTimestamp(pst, ++i, this.getStartDate());
+    DatabaseUtils.setTimestamp(pst, ++i, this.getExpirationDate());
     pst.setBoolean(++i, this.getEnabled());
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, this.getModified());
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;
@@ -1148,18 +1308,70 @@ public class ProductCategory extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the ProductCategory object
+   *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@return                   The valid value
+   *@param  parentId          Description of the Parameter
+   *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean isValid(Connection db) throws SQLException {
-// This method contains additional error catching statements
+  public int updateParent(Connection db, int parentId) throws SQLException {
     if (this.getId() == -1) {
-      return false;
+      throw new SQLException("Product Category ID not specified");
     }
-    return true;
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE product_category " +
+        "SET parent_id = ? " +
+        "WHERE category_id = ? ");
+    DatabaseUtils.setInt(pst, 1, parentId);
+    pst.setInt(2, this.getId());
+    int resultCount = pst.executeUpdate();
+    pst.close();
+    return resultCount;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  itemId            Description of the Parameter
+   *@param  imageType         Description of the Parameter
+   *@param  path              Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean removeFileItem(Connection db, int itemId, String imageType, String path) throws SQLException {
+    boolean recordDeleted = false;
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      if ("thumbnail".equals(imageType)) {
+        this.setThumbnailImageId(-1);
+      } else if ("small".equals(imageType)) {
+        this.setSmallImageId(-1);
+      } else if ("large".equals(imageType)) {
+        this.setLargeImageId(-1);
+      }
+      this.update(db);
+      FileItem thisItem = new FileItem(db, itemId, this.getId(), Constants.DOCUMENTS_PRODUCT_CATEGORY);
+      recordDeleted = thisItem.delete(db, path);
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace(System.out);
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return recordDeleted;
   }
 
 
@@ -1176,154 +1388,152 @@ public class ProductCategory extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Product Category ID not specified");
     }
-    String sql = null;
     DependencyList dependencyList = new DependencyList();
     PreparedStatement pst = null;
     ResultSet rs = null;
     int i = 0;
+
+    // check for documents
+    Dependency docDependency = new Dependency();
+    docDependency.setName("images");
+    docDependency.setCount(FileItemList.retrieveRecordCount(db, Constants.DOCUMENTS_PRODUCT_CATEGORY, this.getId()));
+    docDependency.setCanDelete(true);
+    dependencyList.add(docDependency);
+
     /*
      *  /Check for documents
      *  Dependency docDependency = new Dependency();
-     *  docDependency.setName("Documents");
+     *  docDependency.setName("documents");
      *  docDependency.setCount(FileItemList.retrieveRecordCount(db, Constants.DOCUMENTS_PRODUCT_CATEGORY, this.getId()));
      *  docDependency.setCanDelete(true);
      *  dependencyList.add(docDependency);
      *  /Check for folders
      *  Dependency folderDependency = new Dependency();
-     *  folderDependency.setName("Folders");
+     *  folderDependency.setName("folders");
      *  folderDependency.setCount(CustomFieldRecordList.retrieveRecordCount(db, Constants.FOLDERS_PRODUCT_CATEGORY, this.getId()));
      *  folderDependency.setCanDelete(true);
      *  dependencyList.add(folderDependency);
      */
     //Check for product_category with parent_id = id
-    try {
-      i = 0;
-      pst = db.prepareStatement(
-          "SELECT count(*) as parentcount " +
-          " FROM product_category " +
-          "WHERE parent_id = ?"
-          );
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int categoryCount = rs.getInt("parentcount");
-        if (categoryCount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of children of this category ");
-          thisDependency.setCount(categoryCount);
-          thisDependency.setCanDelete(false);
-          dependencyList.add(thisDependency);
-        }
+    i = 0;
+    pst = db.prepareStatement(
+        "SELECT count(*) as parentcount " +
+        "FROM product_category " +
+        "WHERE parent_id = ?"
+        );
+    pst.setInt(++i, this.getId());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      int categoryCount = rs.getInt("parentcount");
+      if (categoryCount != 0) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("subcategories");
+        thisDependency.setCount(categoryCount);
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
       }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
     }
+    rs.close();
+    pst.close();
 
     //Check the products that belong ONLY to this category
-    try {
-      i = 0;
-      pst = db.prepareStatement(
-          "SELECT count(*) AS categorycount " +
-          " FROM product_catalog_category_map AS map " +
-          " WHERE map.category_id = ? " +
-          " AND map.product_id NOT IN ( " +
-          " SELECT product_id " +
-          " FROM product_catalog_category_map " +
-          " WHERE category_id <> ? ) "
-          );
-      pst.setInt(++i, this.getId());
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int categoryCount = rs.getInt("categorycount");
-        if (categoryCount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of products belong only to this category ");
-          thisDependency.setCount(categoryCount);
-          thisDependency.setCanDelete(false);
-          dependencyList.add(thisDependency);
-        }
-      }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
-    }
-
+    // TODO: Remove this if not necessary
+    /*
+     *  i = 0;
+     *  pst = db.prepareStatement(
+     *  "SELECT count(*) AS categorycount " +
+     *  "FROM product_catalog_category_map AS map " +
+     *  "WHERE map.category_id = ? " +
+     *  "AND map.product_id NOT IN ( " +
+     *  " SELECT product_id " +
+     *  " FROM product_catalog_category_map " +
+     *  " WHERE category_id <> ? ) "
+     *  );
+     *  pst.setInt(++i, this.getId());
+     *  pst.setInt(++i, this.getId());
+     *  rs = pst.executeQuery();
+     *  if (rs.next()) {
+     *  int categoryCount = rs.getInt("categorycount");
+     *  if (categoryCount != 0) {
+     *  Dependency thisDependency = new Dependency();
+     *  thisDependency.setName("numberOfProductsBelongOnlyToThisCategory");
+     *  thisDependency.setCount(categoryCount);
+     *  thisDependency.setCanDelete(true);
+     *  dependencyList.add(thisDependency);
+     *  }
+     *  }
+     *  rs.close();
+     *  pst.close();
+     */
     //Check for other categories that link to the current category
-    try {
-      i = 0;
-      pst = db.prepareStatement(
-          "SELECT count(*) as categorycount " +
-          " FROM product_category_map " +
-          "WHERE category1_id = ?"
-          );
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int categoryCount = rs.getInt("categorycount");
-        if (categoryCount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of other categories that this category links to ");
-          thisDependency.setCount(categoryCount);
-          thisDependency.setCanDelete(true);
-          dependencyList.add(thisDependency);
-        }
-      }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
-    }
-
+    // TODO: uncomment this in future versions
+    /*
+     *  i = 0;
+     *  pst = db.prepareStatement(
+     *  "SELECT count(*) as categorycount " +
+     *  "FROM product_category_map " +
+     *  "WHERE category1_id = ?"
+     *  );
+     *  pst.setInt(++i, this.getId());
+     *  rs = pst.executeQuery();
+     *  if (rs.next()) {
+     *  int categoryCount = rs.getInt("categorycount");
+     *  if (categoryCount != 0) {
+     *  Dependency thisDependency = new Dependency();
+     *  thisDependency.setName("numberOfOtherCategoriesThatThisCategoryLinksTo");
+     *  thisDependency.setCount(categoryCount);
+     *  thisDependency.setCanDelete(true);
+     *  dependencyList.add(thisDependency);
+     *  }
+     *  }
+     *  rs.close();
+     *  pst.close();
+     */
     //Check for other categories that are linked with the current category
-    try {
-      i = 0;
-      pst = db.prepareStatement(
-          "SELECT count(*) as categorycount " +
-          " FROM product_category_map " +
-          "WHERE category2_id = ?"
-          );
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int categoryCount = rs.getInt("categorycount");
-        if (categoryCount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of categories that have link to this category");
-          thisDependency.setCount(categoryCount);
-          thisDependency.setCanDelete(false);
-          dependencyList.add(thisDependency);
-        }
-      }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
-    }
-
+    // TODO: uncomment this in future versions
+    /*
+     *  i = 0;
+     *  pst = db.prepareStatement(
+     *  "SELECT count(*) as categorycount " +
+     *  " FROM product_category_map " +
+     *  "WHERE category2_id = ?"
+     *  );
+     *  pst.setInt(++i, this.getId());
+     *  rs = pst.executeQuery();
+     *  if (rs.next()) {
+     *  int categoryCount = rs.getInt("categorycount");
+     *  if (categoryCount != 0) {
+     *  Dependency thisDependency = new Dependency();
+     *  thisDependency.setName("numberOfCategoriesThatHaveLinkToThisCategory");
+     *  thisDependency.setCount(categoryCount);
+     *  thisDependency.setCanDelete(false);
+     *  dependencyList.add(thisDependency);
+     *  }
+     *  }
+     *  rs.close();
+     *  pst.close();
+     */
     //Check for product catalogs linked to this category
-    try {
-      i = 0;
-      pst = db.prepareStatement(
-          "SELECT count(*) as categorycount " +
-          " FROM product_catalog_category_map " +
-          "WHERE category_id = ?"
-          );
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int categoryCount = rs.getInt("categorycount");
-        if (categoryCount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of products that are related to this category ");
-          thisDependency.setCount(categoryCount);
-          thisDependency.setCanDelete(true);
-          dependencyList.add(thisDependency);
-        }
+    i = 0;
+    pst = db.prepareStatement(
+        "SELECT count(*) as productcount " +
+        " FROM product_catalog_category_map " +
+        "WHERE category_id = ?"
+        );
+    pst.setInt(++i, this.getId());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      int categoryCount = rs.getInt("productcount");
+      if (categoryCount != 0) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("products");
+        thisDependency.setCount(categoryCount);
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
       }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
     }
+    rs.close();
+    pst.close();
     return dependencyList;
   }
 
@@ -1338,25 +1548,22 @@ public class ProductCategory extends GenericBean {
    */
   public static boolean lookupId(Connection db, String catName) throws SQLException {
     boolean result = false;
-    try {
-      int i = 0;
-      PreparedStatement pst = db.prepareStatement(
-          " SELECT count(*) as counter " +
-          " FROM product_category " +
-          " WHERE category_name = ? "
-          );
-      pst.setString(++i, catName);
-      ResultSet rs = pst.executeQuery();
-      if (rs.next()) {
-        int buffer = rs.getInt("counter");
-        if (buffer != 0) {
-          result = true;
-        }
+    int i = 0;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(*) as counter " +
+        "FROM product_category " +
+        "WHERE category_name = ? "
+        );
+    pst.setString(++i, catName);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      int buffer = rs.getInt("counter");
+      if (buffer != 0) {
+        result = true;
       }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
     }
+    rs.close();
+    pst.close();
     return result;
   }
 
@@ -1371,23 +1578,19 @@ public class ProductCategory extends GenericBean {
    */
   public static String lookupDateConfiguratorClass(Connection db, int categoryId) throws SQLException {
     String className = "";
-    try {
-      PreparedStatement pst = db.prepareStatement(
-          " SELECT class_name " +
-          " FROM product_date_configurator " +
-          " WHERE category_id = ? "
-          );
-      int i = 0;
-      pst.setInt(++i, categoryId);
-      ResultSet rs = pst.executeQuery();
-      if (rs.next()) {
-        className = rs.getString("class_name");
-      }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
-      e.printStackTrace(System.out);
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT class_name " +
+        "FROM product_date_configurator " +
+        "WHERE category_id = ? "
+        );
+    int i = 0;
+    pst.setInt(++i, categoryId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      className = rs.getString("class_name");
     }
+    rs.close();
+    pst.close();
     return className;
   }
 
@@ -1402,19 +1605,122 @@ public class ProductCategory extends GenericBean {
   public boolean checkForProducts(Connection db) throws SQLException {
     this.buildChildList(db);
     this.buildProductList(db);
-
     if (this.getProductList().size() > 0) {
       return true;
     }
-
     if (!this.getChildList().filterProductCategories(db)) {
       return false;
     }
-
     if (this.getChildList().size() <= 0 && this.getProductList().size() <= 0) {
       return false;
     }
     return true;
+  }
+
+
+  /**
+   *  Retrieves the hierarch of ids and category names upto the specified
+   *  currentId The String array can be used to retrieve more details of a
+   *  specific category
+   *
+   *@param  db                Description of the Parameter
+   *@param  hierarchy         Description of the Parameter
+   *@param  currentId         Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void buildHierarchy(Connection db, Map hierarchy, int currentId) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT parent_id, category_name " +
+        "FROM product_category " +
+        "WHERE category_id = ? ");
+    pst.setInt(1, currentId);
+    ResultSet rs = pst.executeQuery();
+    int parentId = 0;
+    String name = null;
+    if (rs.next()) {
+      parentId = DatabaseUtils.getInt(rs, "parent_id");
+      name = rs.getString("category_name");
+    }
+    rs.close();
+    pst.close();
+    hierarchy.put(new Integer(currentId), new String[]{name});
+    if (parentId > -1) {
+      ProductCategory.buildHierarchy(db, hierarchy, parentId);
+    }
+  }
+
+
+  /**
+   *  This method returns the child category with categoryId as the id else it
+   *  returns the child which has a node in the child's sub-tree with category
+   *  id as id
+   *
+   *@param  db                Description of the Parameter
+   *@param  categoryId        Description of the Parameter
+   *@return                   The child value
+   *@exception  SQLException  Description of the Exception
+   */
+  public ProductCategory getChild(Connection db, int categoryId) throws SQLException {
+    this.buildChildList(db);
+    Iterator i = this.getChildList().iterator();
+    while (i.hasNext()) {
+      ProductCategory thisCategory = (ProductCategory) i.next();
+      if (thisCategory.getId() == categoryId) {
+        return thisCategory;
+      }
+    }
+    //For each child populate the sub-tree and determine if the category exists
+    //in the child's sub-tree. If it exists, then return the child
+    Iterator j = this.getChildList().iterator();
+    while (j.hasNext()) {
+      ProductCategory thisChild = (ProductCategory) j.next();
+      thisChild.buildChildList(db);
+      //populate the entire sub tree under this child
+      ProductCategoryList.buildHierarchy(db, thisChild.getChildList());
+      thisChild.getChildList().buildCompleteHierarchy();
+      Iterator k = thisChild.getChildList().iterator();
+      while (k.hasNext()) {
+        ProductCategory node = (ProductCategory) k.next();
+        if (node.getId() == categoryId) {
+          return thisChild;
+        }
+      }
+    }
+    return null;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  contractId        Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean hasServiceContractProducts(Connection db, int contractId) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Product Category ID not specified");
+    }
+    ProductCatalogList productList = new ProductCatalogList();
+    productList.setCategoryId(this.getId());
+    productList.setServiceContractId(contractId);
+    productList.buildList(db);
+    if (productList.size() > 0) {
+      return true;
+    }
+    
+    ProductCategoryList childList = new ProductCategoryList();
+    childList.setParentId(this.getId());
+    childList.buildList(db);
+    Iterator i = childList.iterator();
+    while (i.hasNext()) {
+      ProductCategory thisCategory = (ProductCategory) i.next();
+      if (thisCategory.hasServiceContractProducts(db, contractId)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
 

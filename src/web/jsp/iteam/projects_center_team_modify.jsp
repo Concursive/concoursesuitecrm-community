@@ -30,7 +30,7 @@
 <script language="JavaScript" type="text/javascript" src="javascript/checkEmail.js"></script>
 <%
   currentTeam.setSelectSize(10);
-  currentTeam.setSelectStyle("width: 160px");
+  currentTeam.setSelectStyle("width: 200px");
   currentTeam.setJsEvent("onClick=\"removeList(this.form)\"");
 %>
 <script language="JavaScript">
@@ -43,8 +43,8 @@
   <tr class="subtab">
     <td>
       <img src="images/icons/stock_new-bcard-16.gif" border="0" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>">Team</a> >
-      Modify
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>"><dhv:label name="documents.team.long_html">Team</dhv:label></a> >
+      <dhv:label name="global.button.modify">Modify</dhv:label>
     </td>
   </tr>
 </table>
@@ -53,7 +53,7 @@
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th>
-        <strong>Modify Team Members</strong>
+        <strong><dhv:label name="documents.team.modifyTeamMembers">Modify Team Members</dhv:label></strong>
       </th>
     </tr>
     <tr bgColor="#EDEDED">
@@ -68,36 +68,35 @@
             </td>
           </tr>
           <tr>
-            <td align="center">Add a contact from:</td>
-            <td align="center"><span id="select1SpanProject" name="select1SpanProject" style="display:none">Select a project:</span><span id="select1SpanDepartment" name="select1SpanDepartment" style="display:none">Select a department:</span></td>
-            <td align="center"><span id="select2Span" name="select2Span" style="display:none">Select a contact:</span></td>
-            <td align="center" class="shade2" valign="top">Team Members</td>
+            <td align="center"><dhv:label name="documents.team.addContact">Add a user from:</dhv:label></td>
+            <td align="center">
+              <span id="select1SpanProject" name="select1SpanProject" style="display:none"><dhv:label name="project.selectAProject.colon">Select a project:</dhv:label></span>
+              <span id="select1SpanDepartment" name="select1SpanDepartment" style="display:none"><dhv:label name="project.selectADepartment.colon">Select a department:</dhv:label></span>
+              <span id="select1SpanAccountType" name="select1SpanAccountType" style="display:none"><dhv:label name="project.selectAnAccountType.colon">Select an account type:</dhv:label></span>
+            </td>
+            <td align="center"><span id="select2Span" name="select2Span" style="display:none"><dhv:label name="project.selectAContact">Select a contact:</dhv:label></span></td>
+            <td align="center" class="shade2" valign="top"><dhv:label name="documents.team.teamMembers">Team Members</dhv:label></td>
           </tr>
           <tr>
             <td align="center" valign="top">
               <select size='10' name='selDirectory' style='width: 160px' onChange="updateCategory();">
-                <option value="my|open">Open projects</option>
-                <option value="my|closed">Closed projects</option>
-                <option value="dept|all">Department list</option>
-                <%--<dhv:evaluate if="<%= "true".equals(applicationPrefs.get("INVITE")) || User.getAccessInvite() %>"><option value="email|one">Email address</option></dhv:evaluate> --%>
+                <option value="my|open"><dhv:label name="project.openProjects">Open projects</dhv:label></option>
+                <option value="my|closed"><dhv:label name="project.closedProjects">Closed projects</dhv:label></option>
+                <option value="dept|all"><dhv:label name="project.departmentList">Department list</dhv:label></option>
+                <option value="acct|all">Accounts</option>
+                 <%--<dhv:evaluate if="<%= "true".equals(applicationPrefs.get("INVITE")) || User.getAccessInvite() %>"><option value="email|one">Email address</option></dhv:evaluate> --%>
                 <%--<option value="groups|all">My custom groups</option>--%>
               </select>
             </td>
             <td align="center" valign="top">
               <span id="emailSpan" name="emailSpan" style="display:none">
                 <%-- Only show if permission to --%>
-                <%--<dhv:evaluate if="<%= "true".equals(applicationPrefs.get("INVITE")) || User.getAccessInvite() %>">---%>
-                Email Address of contact to add:<br>
+                <dhv:label name="project.emailAdderssOfContactToAdd.colon">Email Address of contact to add:</dhv:label><br>
                 <input type="text" name="email" maxlength="255" value="" style="width: 160px" />
-                <input type="button" name="Add >" value ="Add >" onClick="javascript:addEmail(form);" />
-                <br>
-                &nbsp;<br>
-                If the email address is not found in<br>
-                the system when the team is updated,<br>
-                an additional screen will appear<br>
-                with the option to invite the person<br>
-                to the project.
-                <%--</dhv:evaluate>--%>
+                <input type="button" name="Add >" value ="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onClick="javascript:addEmail(form);" />
+                <br />
+                <br />
+                <dhv:label name="project.emailAddressNotFound.text" param="break=<br />">If the email address is not found in<br />the system when the team is updated,<br />an additional screen will appear<br />with the option to invite the person<br />to the project.</dhv:label>
               </span>
               <span id="listSpan" name="listSpan">
                 <select size='10' name='selDepartment' style='width: 160px' onChange="updateItemList();">
@@ -126,7 +125,7 @@
               <%--(click contact to add)--%>
             </td>
             <td align="center" class="shade2">
-              (click contact to remove)
+              <dhv:label name="project.clickContactToRemove">(click contact to remove)</dhv:label>
             </td>
           </tr>
           <tr>
@@ -138,9 +137,8 @@
             <td colspan="4" align="center" height='30'>
               <input type="hidden" name="insertMembers">
               <input type="hidden" name="deleteMembers">
-              <input type="submit" value="Update Team"> &nbsp;
-              <%--<input type="button" value="Revert Changes" onClick="resetValues(this.form)"> &nbsp;--%>
-              <input type="button" value="Cancel Changes" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>'">
+              <input type="submit" value="<dhv:label name="documents.team.user.updateTeam">Update Team</dhv:label>"> &nbsp;
+              <input type="button" value="<dhv:label name="documents.team.user.cancelChanges">Cancel Changes</dhv:label>" onClick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>'">
             </td>
           </tr>
         </table>

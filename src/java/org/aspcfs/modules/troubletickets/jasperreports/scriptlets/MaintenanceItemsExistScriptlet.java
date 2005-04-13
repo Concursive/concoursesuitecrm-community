@@ -15,8 +15,13 @@
  */
 package org.aspcfs.modules.troubletickets.jasperreports.scriptlets;
 
-import dori.jasper.engine.*;
-import java.sql.*;
+import net.sf.jasperreports.engine.JRDefaultScriptlet;
+import net.sf.jasperreports.engine.JRScriptletException;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *  Description of the Class

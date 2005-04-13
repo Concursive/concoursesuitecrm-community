@@ -31,32 +31,24 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=ticketDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
 <a href="Accounts.do?command=ViewTickets&orgId=<%=ticketDetails.getOrgId()%>"><dhv:label name="accounts.tickets.tickets">Tickets</dhv:label></a> >
 <a href="AccountTickets.do?command=TicketDetails&id=<%=ticketDetails.getId()%>"><dhv:label name="accounts.tickets.details">Ticket Details</dhv:label></a> >
-Forms
+<dhv:label name="ticket.forms">Forms</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<dhv:container name="accounts" selected="tickets" param="<%= "orgId=" + ticketDetails.getOrgId() %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-  <%@ include file="accounts_ticket_header_include.jsp" %>
-  <% String param2 = "id=" + ticketDetails.getId(); %>
-  [ <dhv:container name="accountstickets" selected="forms" param="<%= param2 %>"/> ]
-  <br />
-  <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <br />
-  <tr align="left">
-    <th >
-	    <b>You do not have permissions to view this form</b>
-	  </th>
-  </tr>
-  </table>
- </td>
- </tr>
-</table>
+<dhv:container name="accounts" selected="tickets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:container name="accountstickets" selected="forms" object="ticketDetails" param="<%= "id=" + ticketDetails.getId() %>">
+    <%@ include file="accounts_ticket_header_include.jsp" %>
+    <table cellpadding="4" cellspacing="0" border="0" width="100%">
+      <tr>
+        <th >
+          <b><dhv:label name="ticket.noPermissionForForm.text">You do not have permissions to view this form</dhv:label></b>
+        </th>
+      </tr>
+    </table>
+  </dhv:container>
+</dhv:container>

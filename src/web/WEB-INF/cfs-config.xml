@@ -14,7 +14,7 @@
   <action name="ProcessImage" class="org.aspcfs.modules.communications.actions.ProcessImage">
     <forward name="SystemError" resource="/errors/error_system.jsp"/>
   </action>
-  
+
   <action name="ProcessFileItemImage" class="org.aspcfs.modules.communications.actions.ProcessFileItemImage">
     <forward name="SystemError" resource="/errors/error_system.jsp"/>
   </action>
@@ -54,6 +54,7 @@
     <bean name="statusBean" class="org.aspcfs.modules.orders.beans.StatusBean" scope="request"/>
     <forward name="ModifyStatusOK" resource="/orders/orders_modify_status.jsp" layout="style"/>
     <forward name="SaveStatusOK" resource="/products/product_set_opener.jsp" layout="style"/>
+	<!-- <forward name="DeleteOK" resource="/Accounts.do?command=Search"/> -->
     <forward name="ListOK" resource="/accounts/accounts_orders_list.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/accounts/accounts_orders_details.jsp" layout="nav"/>
   </action>  
@@ -72,6 +73,7 @@
     <bean name="statusBean" class="org.aspcfs.modules.orders.beans.StatusBean" scope="request"/>
     <forward name="DetailsOK" resource="/accounts/accounts_orders_products_payments.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/orders/orders_products_payments_modify.jsp" layout="style"/>
+    <forward name="SearchCriteriaError" resource="/AccountOrdersPayments.do?command=Details"/>
     <forward name="SaveOK" resource="/products/product_set_opener.jsp" layout="style"/>
   </action>
 
@@ -80,9 +82,25 @@
     <bean name="quoteBean" class="org.aspcfs.modules.quotes.base.Quote" scope="request"/>
     <forward name="ListOK" resource="/accounts/accounts_quotes_list.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/accounts/accounts_quotes_details.jsp" layout="nav"/>
-    <forward name="AddProductOK" resource="/AccountQuotes.do?command=Details" layout="nav"/>
-    <forward name="CreateQuoteOK" resource="/AccountQuotes.do?command=View" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="SetSearchOK" resource="/AccountQuotes.do?command=View" />
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="RemoveProductOK" resource="/AccountQuotes.do?command=Details" />
+    <forward name="SaveOK" resource="/AccountQuotes.do?command=Details" />
+    <forward name="VersionOK" resource="/AccountQuotes.do?command=Details" />
+    <forward name="SubmitOK" resource="/quotes/quotes_submit_form.jsp" layout="style"/>
+    <forward name="GroupOK" resource="/AccountQuotes.do?command=Details" />
+    <forward name="VersionOK" resource="/AccountQuotes.do?command=Details"/>
+    <forward name="ModifyOK" resource="/AccountQuotes.do?command=Details"/>
+    <forward name="ModifyPopupOK" resource="/products/product_set_opener.jsp" layout="style"/>
+    <forward name="AddProductOK" resource="/AccountQuotes.do?command=Details" />
+    <forward name="CloseFormOK" resource="/quotes/quotes_close_form.jsp" layout="style"/>
+    <forward name="AddQuoteOK" resource="/AccountQuotes.do?command=Details" />
+    <forward name="ModifyFormOK" resource="/accounts/accounts_quotes_modify.jsp" layout="nav"/>
+    <forward name="AddQuoteFormOK" resource="/accounts/accounts_quotes_add.jsp" layout="nav"/>
+    <forward name="CreateQuoteOK" resource="/AccountQuotes.do?command=View" />
     <forward name="SaveNotesOK" resource="/accounts/accounts_quotes_notes.jsp" layout="nav"/>
+    <forward name="ViewHistoryOK" resource="/accounts/accounts_quotes_history.jsp" layout="nav"/>
   </action>
 
   <!-- Accounts Products -->
@@ -97,6 +115,7 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="DeleteError" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ViewProductOK" resource="/media/adsjet/view_customer_product.jsp" layout="style"/>
+    <forward name="OnlineToolOK" resource="/accounts/accounts_product_online_tool.jsp" layout="nav"/>
   </action>  
 
   <!-- Quotes -->
@@ -108,10 +127,62 @@
     <forward name="SaveNotesOK" resource="/quotes/quotes_notes.jsp" layout="nav"/>
     <forward name="SearchCriteriaError" resource="/Quotes.do?command=SearchForm"/>
     <forward name="DetailsOK" resource="/quotes/quotes_details.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="RemoveProductOK" resource="/Quotes.do?command=Details"/>
+    <forward name="SaveOK" resource="/Quotes.do?command=Details"/>
+    <forward name="CloseFormOK" resource="/quotes/quotes_close_form.jsp" layout="style"/>
+    <forward name="CloneFormOK" resource="/quotes/quotes_clone_form.jsp" layout="style"/>
+    <forward name="CloneOK" resource="/reopen_opener_id.jsp" layout="style"/>
+    <forward name="GroupOK" resource="/Quotes.do?command=Details"/>
+    <forward name="VersionOK" resource="/Quotes.do?command=Details"/>
+    <forward name="ModifyOK" resource="/Quotes.do?command=Details"/>
+    <forward name="ModifyPopupOK" resource="/quotes/quotes_open_and_print.jsp" layout="style"/>
+    <forward name="PrintedOK" resource="/products/product_set_opener.jsp" layout="style"/>
+    <forward name="OrganizationJSListOK" resource="/quotes/quotes_js_contactlist.jsp" layout="style"/>
+    <forward name="SetShowTotalOK" resource="/quotes/quotes_update_showtotal.jsp"/>
+    <forward name="SetShowSubtotalOK" resource="/quotes/quotes_update_show_subtotal.jsp"/>
     <forward name="CreateQuoteFromTicketOK" resource="/Quotes.do?command=AddQuote" />
+    <forward name="SubmitOK" resource="/quotes/quotes_submit_form.jsp" layout="style"/>
+    <forward name="EmailFormOK" resource="/quotes/quotes_email_form.jsp" layout="style"/>
+    <forward name="EmailSentOK" resource="/quotes/quotes_email_confirmation.jsp" layout="style"/>
+    <forward name="SetSearchOK" resource="/Quotes.do?command=Search"/>
     <forward name="CustomerQuoteDecisionOK" resource="/Publish.do?command=Billing"/>
     <forward name="QuoteRejectedOK" resource="/products/product_set_parent_of_opener.jsp" layout="style"/>
     <forward name="CustomerDisplayOK" resource="/quotes/quotes_modify.jsp" layout="style"/>
+    <forward name="AddQuoteOK" resource="/Quotes.do?command=Details" />
+    <forward name="ModifyFormOK" resource="/quotes/quotes_modify.jsp" layout="nav"/>
+    <forward name="AddQuoteFormOK" resource="/quotes/quotes_add.jsp" layout="nav"/>
+    <forward name="ViewHistoryOK" resource="/quotes/quotes_history.jsp" layout="nav"/>
+    <forward name="ReloadOK" resource="/products/product_set_opener.jsp" layout="style"/>
+  </action>
+
+  <!-- QuotesProducts -->
+  <action name="QuotesProducts" class="org.aspcfs.modules.quotes.actions.QuotesProducts">
+    <bean name="quoteProductBean" class="org.aspcfs.modules.quotes.base.QuoteProductBean" scope="request"/>
+    <forward name="SaveOK" resource="/products/product_set_opener.jsp" layout="style"/>
+    <forward name="ModifyOK" resource="/quotes/quotes_products_modify.jsp" layout="style"/>
+    <forward name="CreateFormOK" resource="/quotes/quotes_products_create_popup.jsp" layout="style"/>
+    <forward name="CreateOK" resource="/products/product_set_opener.jsp" layout="style"/>
+  </action>
+
+  <!-- QuotesConditions -->
+  <action name="QuotesConditions" class="org.aspcfs.modules.quotes.actions.QuotesConditions">
+    <forward name="PopLookupOK" resource="/quotes/quotes_conditions_selector.jsp" layout="style"/>
+    <forward name="SaveOK" resource="/products/product_set_opener.jsp" layout="style"/>
+    <forward name="AddOK" resource="/quotes/quotes_conditions_add.jsp" layout="style"/>
+    <forward name="AddRemarkOK" resource="/quotes/quotes_remarks_add.jsp" layout="style"/>
+    <forward name="RemoveConditionOK" resource="/Quotes.do?command=Details"/>
+    <forward name="RemoveConditionOrgOK" resource="/AccountQuotes.do?command=Details"/>
+    <forward name="RemoveConditionOppOK" resource="/LeadsQuotes.do?command=Details"/>
+    <forward name="RemoveRemarkOK" resource="/Quotes.do?command=Details"/>
+    <forward name="RemoveRemarkOrgOK" resource="/AccountQuotes.do?command=Details"/>
+    <forward name="RemoveRemarkOppOK" resource="/LeadsQuotes.do?command=Details"/>
+  </action>
+  
+  <!-- Opportunity Selector -->
+  <action name="OpportunitySelector" class="org.aspcfs.modules.actions.OpportunitySelector">
+    <forward name="ListOK" resource="/quotes/quotes_opportunity_selector.jsp" layout="style"/>
   </action>
   
   <!-- Products Catalog Dialog -->
@@ -135,6 +206,124 @@
     <forward name="PopupProductListOK" resource="/products/products_all_products_popup.jsp" layout="style"/>
   </action>
   
+  <action name="ProductCatalogEditor" class="org.aspcfs.modules.products.actions.ProductCatalogEditor">
+    <forward name="OptionsOK" resource="/products/product_catalog_editor.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/products/products_categories_list.jsp" layout="nav"/>
+    <forward name="CategoryListOK" resource="/ProductCategories.do?command=List"/>
+  </action>
+	
+  <action name="ProductCategories" class="org.aspcfs.modules.products.actions.ProductCategories">
+    <bean name="ProductCategory" class="org.aspcfs.modules.products.base.ProductCategory" scope="request"/>
+    <forward name="SearchOK" resource="/products/product_categories_search.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/products/product_category_list.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/products/product_category_add.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/ProductCatalogEditor.do?command=List"/>
+    <forward name="UpdateOK" resource="/ProductCatalogEditor.do?command=List"/>
+    <forward name="DetailsOK" resource="/products/product_category_details.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/products/product_category_modify.jsp" layout="nav"/>
+    <forward name="ImageListOK" resource="/products/product_category_image_list.jsp" layout="nav"/>
+    <forward name="MappingListOK" resource="/products/product_category_mapping_list.jsp" layout="nav"/>
+    <forward name="AddMappingOK" resource="/products/product_category_mapping_add.jsp" layout="nav"/>
+    <forward name="SubCategoryListOK" resource="/products/product_category_sub_list.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="MoveOK" resource="/products/product_category_hierarchy.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
+  </action>
+	
+  <action name="ProductCategoryProducts" class="org.aspcfs.modules.products.actions.ProductCategoryProducts">
+    <bean name="ProductCatalog" class="org.aspcfs.modules.products.base.ProductCatalog" scope="request"/>
+    <forward name="ListOK" resource="/products/product_category_product_list.jsp" layout="nav" />
+    <forward name="AddOK" resource="/products/product_category_product_choice.jsp" layout="nav"/>
+    <forward name="AddProductOK" resource="/products/product_category_product_add.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/products/product_category_product_details.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/products/product_category_product_details.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/products/product_category_product_modify.jsp" layout="nav"/>
+    <forward name="ProductListOK" resource="/products/product_category_product_list_all.jsp" layout="nav"/>
+  </action>
+	
+  <action name="ProductCatalogs" class="org.aspcfs.modules.products.actions.ProductCatalogs">
+    <bean name="ProductCatalog" class="org.aspcfs.modules.products.base.ProductCatalog" scope="request"/>
+    <forward name="SearchOK" resource="/products/product_catalogs_search.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/products/product_catalog_list.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/products/product_catalog_add.jsp" layout="nav"/>
+    <forward name="CloneOK" resource="/products/product_catalog_add.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/products/product_catalog_details.jsp" layout="nav"/>
+    <forward name="SaveCloneOK" resource="/products/product_catalog_details.jsp" layout="nav"/>
+    <forward name="UpdateOK" resource="/ProductCatalogEditor.do?command=List" />
+    <forward name="DetailsOK" resource="/products/product_catalog_details.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/products/product_catalog_modify.jsp" layout="nav"/>
+    <forward name="CategoryListOK" resource="/products/product_catalog_category_list.jsp" layout="nav"/>
+    <forward name="ImageListOK" resource="/products/product_catalog_image_list.jsp" layout="nav"/>
+    <forward name="MappingListOK" resource="/products/product_catalog_mapping_list.jsp" layout="nav"/>
+    <forward name="AddMappingOK" resource="/products/product_catalog_mapping_add.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="MoveOK" resource="/products/product_category_hierarchy.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
+  </action>
+	
+  <action name="ProductCatalogOptions" class="org.aspcfs.modules.products.actions.ProductCatalogOptions">
+    <bean name="ProductOption" class="org.aspcfs.modules.products.base.ProductOption" scope="request"/>
+    <forward name="ListOK" resource="/products/product_catalog_option_list.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/products/product_catalog_option_add.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/products/product_catalog_option_details.jsp" layout="nav"/>
+    <forward name="OptionListOK" resource="/products/product_catalog_option_list_all.jsp" layout="nav"/>
+    <forward name="LoadConfiguratorOK" resource="/products/product_catalog_option_configurator_field_list.jsp" layout="nav"/>
+    <forward name="InsertOptionOK" resource="/products/product_catalog_option_details.jsp" layout="nav"/>
+    <forward name="UpdateOptionOK" resource="/products/product_catalog_option_details.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
+
+  <action name="ProductCatalogOptionPricings" class="org.aspcfs.modules.products.actions.ProductCatalogOptions">
+    <bean name="ProductOptionValues" class="org.aspcfs.modules.products.base.ProductOptionValues" scope="request"/>
+    <forward name="PricingListOK" resource="/products/product_catalog_option_pricing_list.jsp" layout="nav"/>
+    <forward name="AddPricingOK" resource="/products/product_catalog_option_pricing_add.jsp" layout="nav"/>
+    <forward name="AddMappingOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
+	
+  <action name="ProductCatalogPricings" class="org.aspcfs.modules.products.actions.ProductCatalogs">
+    <bean name="ProductCatalogPricing" class="org.aspcfs.modules.products.base.ProductCatalogPricing" scope="request"/>
+    <forward name="PricingListOK" resource="/products/product_catalog_pricing_list.jsp" layout="nav"/>
+    <forward name="AddPricingOK" resource="/products/product_catalog_pricing_add.jsp" layout="nav"/>
+    <forward name="PricingDetailsOK" resource="/products/product_catalog_pricing_details.jsp" layout="nav"/>
+    <forward name="PricingModifyOK" resource="/products/product_catalog_pricing_modify.jsp" layout="nav"/>
+  </action>
+	
+  <action name="ProductOptions" class="org.aspcfs.modules.products.actions.ProductOptions">
+    <bean name="ProductOption" class="org.aspcfs.modules.products.base.ProductOption" scope="request"/>
+    <forward name="SearchOK" resource="/products/product_options_search.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/products/product_option_list.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/products/product_option_add.jsp" layout="nav"/>
+    <forward name="LoadConfiguratorOK" resource="/products/product_option_configurator_field_list.jsp" layout="nav"/>
+    <forward name="InsertOK" resource="/products/product_option_details.jsp" layout="nav"/>
+    <!-- <forward name="InsertOptionOK" resource="/products/product_option_details.jsp" layout="nav"/> -->
+    <forward name="DetailsOK" resource="/products/product_option_details.jsp" layout="nav"/>
+    <forward name="EnableOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ConfirmEnableOK" resource="/dialog.jsp"/>
+    <forward name="ModifyOK" resource="/products/product_option_modify.jsp" layout="nav"/>
+    <!-- Duplicate actions for option popup with layout style -->
+    <forward name="AddPopupOK" resource="/products/product_option_configurator_list.jsp" layout="style"/>
+    <forward name="LoadConfiguratorPopupOK" resource="/products/product_option_configurator_field_list.jsp" layout="style"/>
+    <forward name="InsertOptionPopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
+	
+  <action name="ProductOptionPricings" class="org.aspcfs.modules.products.actions.ProductOptionPricings">
+    <bean name="ProductOptionValues" class="org.aspcfs.modules.products.base.ProductOptionValues" scope="request"/>
+    <forward name="ListOK" resource="/products/product_option_pricing_list.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/products/product_option_pricing_add.jsp" layout="nav"/>
+  </action>
+
+  <!-- Products Module -->
+  <action name="Products" class="org.aspcfs.modules.products.actions.Products">
+    <forward name="ViewOK" resource="/products/product_full_view.jsp" layout="nav"/>
+    <forward name="SearchFormOK" resource="/products/product_search.jsp" layout="nav"/>
+    <forward name="SearchOK" resource="/products/product_search_results.jsp" layout="nav"/>
+    <forward name="SearchCriteriaError" resource="/Products.do?command=SearchForm"/>
+    <forward name="PromotionOK" resource="/products/product_promotions.jsp" layout="nav"/>
+    <forward name="AdminOK" resource="/products/product_admin.jsp" layout="nav"/>
+  </action>
   
   <!-- Actions for E.D.I.T. transaction processing -->
   <action name="ProcessEditData" class="org.aspcfs.modules.healthcare.edit.actions.ProcessEditData">
@@ -144,7 +333,7 @@
   <action name="ProcessCalculation" class="org.aspcfs.modules.healthcare.edit.actions.ProcessCalculation">
     <forward name="CalculationOK" resource="/errors/error_system.jsp"/>
     <forward name="SystemError" resource="/errors/error_system.jsp"/>
-  </action>  
+  </action>
   <action name="ProcessTransaction" class="org.aspcfs.modules.healthcare.edit.actions.ProcessTransaction">
     <bean name="Transaction" class="org.aspcfs.modules.healthcare.edit.base.TransactionRecord" scope="request"/>
     <forward name="PacketOK" resource="/service/system_process_packet.jsp"/>
@@ -158,7 +347,17 @@
     <forward name="NotFoundError" resource="/communications/survey_notfound.jsp" layout="styleNoSession"/>
     <forward name="InvalidRequestError" resource="/communications/survey_invalid_request.jsp" layout="style"/>
   </action>
-	
+  <!-- Actions for people updating address -->
+  <action name="ProcessAddressSurvey" class="org.aspcfs.modules.communications.actions.ProcessAddressSurvey">
+    <bean name="Contact" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+    <forward name="SystemError" resource="/errors/error_system.jsp"/>
+    <forward name="PrepareOK" resource="/communications/display_address_form.jsp" layout="styleNoSession"/>
+    <forward name="PrepareAddressCurrentOK" resource="/communications/display_address_current.jsp" layout="styleNoSession"/>
+    <forward name="UpdateOK" resource="/communications/address_update_thanks.jsp" layout="styleNoSession"/>
+    <forward name="NotFoundError" resource="/communications/survey_notfound.jsp" layout="styleNoSession"/>
+    <forward name="InvalidRequestError" resource="/communications/survey_invalid_request.jsp" layout="style"/>
+  </action>
+
   <action name="ProcessMessage" class="org.aspcfs.modules.communications.actions.ProcessMessage">
     <forward name="PreviewOK" resource="/communications/campaign_messages_preview.jsp"/>
   </action>
@@ -181,13 +380,13 @@
   <action name="Login" class="org.aspcfs.modules.login.actions.Login">
     <bean name="LoginBean" class="org.aspcfs.modules.login.beans.LoginBean" scope="request"/>
     <forward name="LoginOK" resource="/MyCFS.do?command=Home"/>
-    <forward name="LoginVerifyOK" resource="/mycfs/mycfs_verify.jsp"/>
+    <forward name="LoginVerifyOK" resource="/mycfs/mycfs_verify.jsp" layout="style"/>
     <forward name="LoginRetry" resource="/index.jsp"/>
-    <forward name="LicenseError" resource="/errors/error_license.jsp" layout="dhv"/>
+    <forward name="LicenseError" resource="/errors/error_license.jsp" layout="centric"/>
     <forward name="CustomerPortalLoginOK" resource="/Accounts.do?command=Search" />
     <forward name="ProductsPortalLoginOK" resource="/MyCFS.do?command=Home" />
     <forward name="PerformUpgradeOK" resource="/Upgrade.do?command=Check" />
- </action>
+  </action>
   
   <!-- MyCFS Module -->
   <action name="MyCFS" class="org.aspcfs.modules.mycfs.actions.MyCFS">
@@ -221,8 +420,8 @@
   <action name="CalendarOpportunities" class="org.aspcfs.modules.pipeline.actions.Leads">
     <bean name="ComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
     <forward name="PrepareOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=LeadsComponents"/>
-    <forward name="PopupModifyOK"  resource="/OpportunityForm.do?command=Prepare&amp;actionSource=CalendarOpportunities"/>
-    <forward name="PrepareModifyOppPopupOK" resource="/pipeline/leads_modifycomponent.jsp" layout="style"/>
+    <forward name="PopupModifyOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=CalendarOpportunities"/>
+    <forward name="PrepareModifyOppPopupOK" resource="/pipeline/leads_modifycomponent_popup.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   <action name="CalendarAccounts" class="org.aspcfs.modules.accounts.actions.Accounts">
@@ -251,35 +450,63 @@
     <forward name="ReassignOK" resource="/mycfs/mycfs_reassign.jsp" layout="nav"/>
     <forward name="DoReassignOK" resource="/Reassignments.do?command=Reassign"/>
   </action>
-  
-	<action name="ContactsList" class="org.aspcfs.modules.actions.ContactsList">
+	
+  <action name="ContactsList" class="org.aspcfs.modules.actions.ContactsList">
     <forward name="CFSContactListOK" resource="/mycfs/mycfs_contactslist.jsp" layout="style"/>
    </action>
   
+   <action name="ContactAddressSelector" class="org.aspcfs.modules.accounts.actions.ContactAddressSelector">
+    <forward name="ListOK" resource="/contacts/contact_address_list.jsp" layout="style"/>
+    <forward name="AddressFormOK" resource="/contacts/contact_address_form.jsp" layout="style"/>
+   </action>
+
+   <action name="ContactEmailAddressSelector" class="org.aspcfs.modules.accounts.actions.ContactEmailAddressSelector">
+    <forward name="ListOK" resource="/contacts/contact_email_address_list.jsp" layout="style"/>
+    <forward name="AddressFormOK" resource="/contacts/contact_email_address_form.jsp" layout="style"/>
+   </action>
+
+   <action name="ContactPhoneNumberSelector" class="org.aspcfs.modules.accounts.actions.ContactPhoneNumberSelector">
+    <forward name="ListOK" resource="/contacts/contact_phone_number_list.jsp" layout="style"/>
+    <forward name="PhoneNumberFormOK" resource="/contacts/contact_phone_number_form.jsp" layout="style"/>
+   </action>
+
   <action name="AccountSelector" class="org.aspcfs.modules.actions.AccountSelector">
     <forward name="ListAccountsOK" resource="/mycfs/mycfs_accounts_selector.jsp" layout="style"/>
-   </action>
-   
+  </action>
+
   <action name="ServiceContractSelector" class="org.aspcfs.modules.actions.ServiceContractSelector">
     <forward name="ListServiceContractsOK" resource="/mycfs/mycfs_servicecontract_selector.jsp" layout="style"/>
-   </action>
+  </action>
 
   <action name="AssetSelector" class="org.aspcfs.modules.actions.AssetSelector">
     <forward name="ListAssetsOK" resource="/mycfs/mycfs_asset_selector.jsp" layout="style"/>
-   </action>
+  </action>
 
   <action name="ServiceContractHoursAdjustor" class="org.aspcfs.modules.actions.ServiceContractHoursAdjustor">
     <forward name="AdjustHoursOK" resource="/mycfs/mycfs_sc_hours_adjustor.jsp" layout="style"/>
-   </action>
+  </action>
 
   <action name="ProductSelector" class="org.aspcfs.modules.actions.ProductSelector">
     <forward name="ListProductsOK" resource="/mycfs/mycfs_product_selector.jsp" layout="style"/>
-   </action>
+  </action>
+
+  <action name="ProductCategorySelector" class="org.aspcfs.modules.actions.ProductCategorySelector">
+    <forward name="ListCategoriesOK" resource="/mycfs/mycfs_product_category_selector.jsp" layout="style"/>
+  </action>
+
+  <action name="ProductCatalogSelector" class="org.aspcfs.modules.actions.ProductCatalogSelector">
+    <forward name="ListProductsOK" resource="/mycfs/mycfs_product_catalog_selector.jsp" layout="style"/>
+  </action>
+
+  <action name="ProductOptionSelector" class="org.aspcfs.modules.actions.ProductOptionSelector">
+    <forward name="ListOptionsOK" resource="/mycfs/mycfs_product_option_selector.jsp" layout="style"/>
+  </action>
 
   <action name="LookupSelector" class="org.aspcfs.modules.actions.LookupSelector">
     <forward name="PopLookupOK" resource="/lookup_selector.jsp" layout="style"/>
-   </action>
-  
+    <forward name="PopLookupSingleOK" resource="/lookup_single_selector.jsp" layout="style"/>
+  </action>
+
   <action name="MyTasks" class="org.aspcfs.modules.tasks.actions.MyTasks">
     <bean name="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request" />
     <forward name="TaskListOK" resource="/tasks/mytasks_list.jsp" layout="nav"/>
@@ -289,28 +516,34 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="NewTaskPopupOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=MyTasks"/>
+    <forward name="SetStatusOK" resource="/tasks/set_parent_status.jsp" layout="style"/>
     <forward name="PrepareTaskPopupOK" resource="/tasks/mytasks_new.jsp" layout="style"/>
     <forward name="TaskDetailsPopupOK" resource="/tasks/mytasks_details.jsp" layout="style"/>
     <forward name="TaskDetailsOK" resource="/TaskForm.do?command=Prepare&amp;actionSource=MyTasks&amp;returnAction=TaskDetailsForm"/>
     <forward name="TaskDetailsFormOK" resource="/tasks/mytasks_details.jsp" layout="nav"/>
     <forward name="InsertTaskPopupOK" resource="/closepopupandreload.jsp"/>
   </action>
-  
+
   <action name="MyTasksForward" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
     <forward name="SendMessageOK" resource="/tasks/mytasks_confirmsend.jsp" layout="nav"/>
     <forward name="ForwardMessageOK" resource="/tasks/mytasks_forward.jsp" layout="nav"/>
   </action>
-  
+
   <action name="TaskForm" class="org.aspcfs.modules.tasks.actions.TaskForm">
     <forward name="PrepareTaskOK" resource="noresource"/>
     <forward name="PrepareTaskPopupOK" resource="noresource"/>
   </action>
-  
+
   <action name="MyCFSPassword" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <bean name="User" class="org.aspcfs.modules.admin.base.User" scope="request" />
     <forward name="PasswordOK" resource="/mycfs/mycfs_password.jsp" layout="nav"/>
     <forward name="UpdatePasswordOK" resource="/MyCFS.do?command=MyProfile"/>
+  </action>
+  <action name="MyCFSWebdav" class="org.aspcfs.modules.mycfs.actions.MyCFS">
+    <bean name="User" class="org.aspcfs.modules.admin.base.User" scope="request" />
+    <forward name="WebdavOK" resource="/mycfs/mycfs_webdav.jsp" layout="nav"/>
+    <forward name="ActivateWebdavOK" resource="/MyCFS.do?command=MyProfile"/>
   </action>
   <action name="MyCFSSettings" class="org.aspcfs.modules.mycfs.actions.MyCFS">
     <forward name="SettingsOK" resource="/mycfs/mycfs_settings.jsp" layout="nav"/>
@@ -332,8 +565,8 @@
     <forward name="ListOK" resource="/actionlist/contact_list.jsp" layout="nav"/>
     <forward name="PrepareOK" resource="/actionlist/action_contacts_add.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/MyActionContacts.do?command=List"/>
-    <forward name="ModifyOK"  resource="/ContactsList.do?command=ContactList&amp;listType=list&amp;reset=true&amp;filters=all|mycontacts|accountcontacts&amp;actionSource=MyActionContacts"/>
-    <forward name="ModifyNoBuildOK" resource="/ContactsList.do?command=ContactList&amp;actionSource=MyActionContacts"/> 
+    <forward name="ModifyOK" resource="/ContactsList.do?command=ContactList&amp;listType=list&amp;reset=true&amp;filters=all|mycontacts|accountcontacts&amp;actionSource=MyActionContacts"/>
+    <forward name="ModifyNoBuildOK" resource="/ContactsList.do?command=ContactList&amp;actionSource=MyActionContacts"/>
     <forward name="CFSContactListOK" resource="/actionlist/action_contacts_modify.jsp" layout="nav"/>
     <forward name="UpdateOK" resource="/MyActionContacts.do?command=List"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
@@ -375,12 +608,33 @@
     <forward name="CloseInsertContactPopup" resource="/contacts/close_insertcontact_popup.jsp"/>
     <forward name="ReloadAddContactPopup" resource="/ExternalContacts.do?command=Prepare"/>
     <forward name="TroubleTicketsCloseInsertPopup" resource="/troubletickets/close_insertcontact_popup.jsp"/>
+    <forward name="FieldsEmptyOK" resource="/contacts/companydirectory_employee_nofields.jsp" layout="nav"/>
+    <forward name="FieldsEmptyPopupOK" resource="/contacts/companydirectory_employee_nofields.jsp" layout="style"/>
+    <forward name="FolderListOK" resource="/contacts/companydirectory_employee_folder_list.jsp" layout="nav"/>
+    <forward name="FolderListPopupOK" resource="/contacts/companydirectory_employee_folder_list.jsp" layout="style"/>
+    <forward name="FieldsOK" resource="/contacts/companydirectory_employee_fields.jsp" layout="nav"/>
+    <forward name="FieldsPopupOK" resource="/contacts/companydirectory_employee_fields.jsp" layout="style"/>
+    <forward name="FieldRecordListOK" resource="/contacts/companydirectory_employee_fields_list.jsp" layout="nav"/>
+    <forward name="FieldRecordListPopupOK" resource="/contacts/companydirectory_employee_fields_list.jsp" layout="style"/>
+    <forward name="AddFolderRecordOK" resource="/contacts/companydirectory_employee_fields_add.jsp" layout="nav"/>
+    <forward name="AddFolderRecordPopupOK" resource="/contacts/companydirectory_employee_fields_add.jsp" layout="style"/>
+    <forward name="ModifyFieldsOK" resource="/contacts/companydirectory_employee_fields_modify.jsp" layout="nav"/>
+    <forward name="ModifyFieldsPopupOK" resource="/contacts/companydirectory_employee_fields_modify.jsp" layout="style"/>
+    <forward name="UpdateFieldsOK" resource="/contacts/companydirectory_employee_fields.jsp" layout="nav"/>
+    <forward name="UpdateFieldsPopupOK" resource="/contacts/companydirectory_employee_fields.jsp" layout="style"/>
+    <forward name="DeleteFieldsOK" resource="/CompanyDirectory.do?command=Fields"/>
   </action>
+  <action name="CompanyDirectoryProjects" class="org.aspcfs.modules.contacts.actions.CompanyDirectoryProjects">
+    <forward name="ListProjectsOK" resource="/contacts/companydirectory_employee_projects_list.jsp" layout="nav"/>
+    <forward name="ListProjectsPopupOK" resource="/contacts/companydirectory_employee_projects_list.jsp" layout="style"/>
+ </action>
   <action name="ExternalContacts" class="org.aspcfs.modules.contacts.actions.ExternalContacts">
     <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
     <forward name="ListContactsOK" resource="/contacts/companydirectory_listcontacts.jsp" layout="nav"/>
     <forward name="ContactDetailsOK" resource="/contacts/companydirectory_contactdetails.jsp" layout="nav"/>
     <forward name="SearchContactsFormOK" resource="/contacts/companydirectory_searchcontacts.jsp" layout="nav"/>
+    <forward name="FolderListOK" resource="/contacts/companydirectory_folder_list.jsp" layout="nav"/>
+    <forward name="FolderListPopupOK" resource="/contacts/companydirectory_folder_list.jsp" layout="style"/>
     <forward name="FieldsEmptyOK" resource="/contacts/companydirectory_nofields.jsp" layout="nav"/>
     <forward name="FieldsOK" resource="/contacts/companydirectory_fields.jsp" layout="nav"/>
     <forward name="FieldRecordListOK" resource="/contacts/companydirectory_fields_list.jsp" layout="nav"/>
@@ -393,6 +647,7 @@
     <forward name="PrepareAddOK" resource="/contacts/companydirectory_contactinsertform.jsp" layout="nav"/>
     <forward name="PrepareModifyOK" resource="/contacts/companydirectory_contactmodifyform.jsp" layout="nav"/>
     <forward name="ContactDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ContactDeletePopupOK" resource="/dialogcloseandreopenOpener.jsp" layout="style"/>
     <forward name="MessageDetailsOK" resource="/contacts/companydirectory_message_details.jsp" layout="nav"/>
     <forward name="ViewMessagesOK" resource="/contacts/companydirectory_view_messages.jsp" layout="nav"/>
     <forward name="ReportsOK" resource="/contacts/companydirectory_reports.jsp" layout="nav"/>
@@ -405,7 +660,10 @@
     <forward name="DefaultError" resource="/CompanyDirectory.do?command=ListEmployees"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="CloseInsertContactPopup" resource="/contacts/close_insertcontact_popup.jsp"/>
+    <forward name="MoveToAccountOK" resource="/accounts/accounts_contacts_moveform.jsp" layout="style"/>
+    <forward name="MoveContactOK" resource="/products/product_set_opener.jsp" layout="style"/>
     <!-- duplicate actions for pop ups with layout="style" -->
+    <forward name="ListContactsPopupOK" resource="/reset_openers_opener.jsp" layout="style"/>
     <forward name="ContactDetailsPopupOK" resource="/contacts/companydirectory_contactdetails.jsp" layout="style"/>
     <forward name="PrepareAddPopupOK" resource="/contacts/companydirectory_contactinsertform.jsp" layout="style"/>
     <forward name="PrepareModifyPopupOK" resource="/contacts/companydirectory_contactmodifyform.jsp" layout="style"/>
@@ -438,7 +696,7 @@
     <forward name="ModifyOppPopupOK" resource="/contacts/companydirectory_modifyopp.jsp" layout="style"/>
     <forward name="DetailsOppPopupOK" resource="/contacts/companydirectory_detailsopp.jsp" layout="style"/>
   </action>
-  
+
   <action name="ExternalContactsOppComponents" class="org.aspcfs.modules.contacts.actions.ExternalContactsOpps">
     <bean name="ComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
     <forward name="PrepareOppOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=ExternalContactsOppComponents&amp;entity=contact"/>
@@ -454,7 +712,7 @@
     <forward name="DetailsOppPopupOK" resource="/contacts/companydirectory_detailsopp.jsp" layout="style"/>
     <forward name="DetailsComponentPopupOK" resource="/contacts/companydirectory_detailsoppcomponent.jsp" layout="style"/>
   </action>
-  
+
   <action name="ExternalContactsCalls" class="org.aspcfs.modules.contacts.actions.ExternalContactsCalls">
     <bean name="CallDetails" class="org.aspcfs.modules.contacts.base.Call" scope="request"/>
     <forward name="ViewOK" resource="/contacts/companydirectory_listcalls.jsp" layout="nav"/>
@@ -476,7 +734,7 @@
     <forward name="InsertPopupOK" resource="/ExternalContactsCalls.do?command=View"/>
     <forward name="InsertRetryPopupOK" resource="/ExternalContactsCalls.do?command=Add"/>
     <forward name="ModifyPopupOK" resource="/contacts/companydirectory_modifycall.jsp" layout="style"/>
-    
+
   </action>
   <action name="ExternalContactsCallsForward" class="org.aspcfs.modules.contacts.actions.ExternalContactsCalls">
     <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
@@ -486,12 +744,12 @@
     <forward name="SendMessagePopupOK" resource="/contacts/companydirectory_confirmsend.jsp" layout="style"/>
     <forward name="ForwardCallOK" resource="/contacts/companydirectory_forwardcall.jsp" layout="nav"/>
     <forward name="ForwardCallPopupOK" resource="/contacts/companydirectory_forwardcall.jsp" layout="style"/>
-   </action>
-   <action name="ExternalContactsPrototype" class="org.aspcfs.modules.prototype.actions.Prototype">
+  </action>
+  <action name="ExternalContactsPrototype" class="org.aspcfs.modules.prototype.actions.Prototype">
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
     <forward name="IncludeStyleContainerOK" resource="/includepage.jsp" layout="styleContainer"/>
   </action>
-  
+
   <action name="ExternalContactsImports" class="org.aspcfs.modules.contacts.actions.ExternalContactsImports">
     <bean name="ImportDetails" class="org.aspcfs.modules.contacts.base.ContactImport" scope="request"/>
     <forward name="ViewOK" resource="/contacts/companydirectory_listimports.jsp" layout="nav"/>
@@ -512,6 +770,46 @@
     <forward name="DeleteContactFailedListOK" resource="/ExternalContactsImports.do?command=ViewResults" layout="nav"/>
     <forward name="DeleteContactFailedDetailsOK" resource="/contacts/companydirectory_importcontact_details.jsp" layout="nav"/>
   </action>
+
+  <!-- Leads / Sales Module -->
+  <action name="Sales" class="org.aspcfs.modules.contacts.actions.Sales">
+    <bean name="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
+    <forward name="DashboardOK" resource="/contacts/sales_dashboard.jsp" layout="nav"/>
+    <forward name="SearchOK" resource="/contacts/sales_search.jsp" layout="nav"/>
+    <forward name="ListOK" resource="/contacts/sales_list.jsp" layout="nav"/>
+    <forward name="PrepareOK" resource="/ContactForm.do?command=Prepare&amp;actionSource=Sales&amp;entity=contact"/>
+    <forward name="PrepareAddOK" resource="/contacts/sales_add.jsp" layout="nav"/>
+    <forward name="SaveOK" resource="/Sales.do?command=Details"/>
+    <forward name="DetailsOK" resource="/contacts/sales_details.jsp" layout="nav"/>
+    <forward name="WorkLeadOK" resource="/ExternalContacts.do?command=ContactDetails" />
+    <forward name="ImportOK" resource="/coming-soon.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp" />
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="ReassignOK" resource="/coming-soon.jsp" layout="nav"/>
+    <forward name="CheckAssignStatusOK" resource="/contacts/sales_reassign_lead.jsp" layout="style"/>
+  </action>
+
+  <action name="SalesImports" class="org.aspcfs.modules.contacts.actions.SalesImports">
+    <bean name="ImportDetails" class="org.aspcfs.modules.contacts.base.ContactImport" scope="request"/>
+    <forward name="ViewOK" resource="/contacts/sales_listimports.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/contacts/sales_detailsimport.jsp" layout="nav"/>
+    <forward name="NewOK" resource="/contacts/sales_newimport.jsp" layout="nav"/>
+    <forward name="SaveOK" resource="/contacts/sales_confirm_importupload.jsp" layout="nav"/>
+    <forward name="InitValidateOK" resource="/contacts/sales_validateimport.jsp" layout="nav"/>
+    <forward name="ValidateOK" resource="/contacts/sales_validateimport.jsp" layout="nav"/>
+    <forward name="ProcessOK" resource="/SalesImports.do?command=View"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp"/>
+    <forward name="CancelOK" resource="/SalesImports.do?command=View"/>
+    <forward name="CancelDetailsOK" resource="/SalesImports.do?command=Details"/>
+    <forward name="ApproveOK" resource="/SalesImports.do?command=Details"/>
+    <forward name="ViewResultsOK" resource="/contacts/sales_importresults.jsp" layout="nav"/>
+    <forward name="ContactDetailsOK" resource="/contacts/sales_importcontact_details.jsp" layout="nav"/>
+    <forward name="DeleteContactOK" resource="/SalesImports.do?command=ViewResults"/>
+    <forward name="DeleteContactFailedListOK" resource="/SalesImports.do?command=ViewResults" layout="nav"/>
+    <forward name="DeleteContactFailedDetailsOK" resource="/contacts/sales_importcontact_details.jsp" layout="nav"/>
+  </action>
+
   <!-- End Contacts & Resources Module -->
   
   <!-- Auto Guide Module -->
@@ -553,6 +851,7 @@
     <forward name="OppListOK" resource="/pipeline/LeadsViewOpp.jsp" layout="nav"/>
     <forward name="OppDetailsOK" resource="/pipeline/LeadsDetailsOpp.jsp" layout="nav"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
+    <forward name="QuoteListOK" resource="/pipeline/leads_opp_quote_list.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="ModifyOppPopupOK" resource="/pipeline/LeadsModify.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
@@ -567,13 +866,13 @@
     <forward name="DetailsComponentOK" resource="/pipeline/leads_detailsoppcomponent.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="OppListOK" resource="/pipeline/LeadsViewOpp.jsp" layout="nav"/>
-    <forward name="PopupModifyOK"  resource="/OpportunityForm.do?command=Prepare&amp;actionSource=LeadsComponents"/>
-    <forward name="PrepareModifyOppPopupOK" resource="/pipeline/leads_modifycomponent.jsp" layout="style"/>
+    <forward name="PopupModifyOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=LeadsComponents"/>
+    <forward name="PrepareModifyOppPopupOK" resource="/pipeline/leads_modifycomponent_popup.jsp" layout="style"/>
     <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ComponentModifyOK" resource="/pipeline/leads_modifycomponent.jsp" layout="nav"/>
     <forward name="ComponentUpdateOK" resource="LeadsComponents.do?command=DetailsComponent"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
-  </action>    
+  </action>
   <action name="OpportunityForm" class="org.aspcfs.modules.pipeline.actions.OpportunityForm">
     <forward name="PrepareAddOK" resource="noresource"/>
     <forward name="PrepareModifyOK" resource="noresource"/>
@@ -593,7 +892,7 @@
     <!-- <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeletePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/> -->
   </action>
-  
+
   <action name="LeadsCallsForward" class="org.aspcfs.modules.pipeline.actions.LeadsCalls">
     <bean name="NoteDetails" class="org.aspcfs.modules.mycfs.base.CFSNote" scope="request"/>
     <forward name="SendCallOK" resource="/MyCFS.do?command=SendMessage&amp;actionSource=LeadsCallsForward"/>
@@ -636,10 +935,36 @@
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
     <forward name="IncludeStyleContainerOK" resource="/includepage.jsp" layout="styleContainer"/>
   </action>
+  <!-- Leads Quotes-->
+  <action name="LeadsQuotes" class="org.aspcfs.modules.pipeline.actions.LeadsQuotes">
+    <bean name="quoteBean" class="org.aspcfs.modules.quotes.base.Quote" scope="request"/>
+    <forward name="QuoteListOK" resource="/pipeline/leads_quotes_list.jsp" layout="nav"/>
+    <forward name="DetailsOK" resource="/pipeline/leads_quotes_details.jsp" layout="nav"/>
+    <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
+    <forward name="SetSearchOK" resource="/LeadsQuotes.do?command=QuoteList" />
+    <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="RemoveProductOK" resource="/LeadsQuotes.do?command=Details" />
+    <forward name="SaveOK" resource="/LeadsQuotes.do?command=Details" />
+    <forward name="VersionOK" resource="/LeadsQuotes.do?command=Details" />
+    <forward name="SubmitOK" resource="/quotes/quotes_submit_form.jsp" layout="style"/>
+    <forward name="GroupOK" resource="/LeadsQuotes.do?command=Details" />
+    <forward name="VersionOK" resource="/LeadsQuotes.do?command=Details"/>
+    <forward name="ModifyOK" resource="/LeadsQuotes.do?command=Details"/>
+    <forward name="ModifyPopupOK" resource="/products/product_set_opener.jsp" layout="style"/>
+    <forward name="AddProductOK" resource="/LeadsQuotes.do?command=Details" />
+    <forward name="CloseFormOK" resource="/quotes/quotes_close_form.jsp" layout="style"/>
+    <forward name="AddQuoteOK" resource="/LeadsQuotes.do?command=Details" />
+    <forward name="ModifyFormOK" resource="/pipeline/leads_quotes_modify.jsp" layout="nav"/>
+    <forward name="AddQuoteFormOK" resource="/pipeline/leads_quotes_add.jsp" layout="nav"/>
+    <forward name="CreateQuoteOK" resource="/LeadsQuotes.do?command=View" />
+    <forward name="SaveNotesOK" resource="/pipeline/leads_quotes_notes.jsp" layout="nav"/>
+    <forward name="ViewHistoryOK" resource="/pipeline/leads_quotes_history.jsp" layout="nav"/>
+  </action>
+
   <!-- End Pipeline Management Module -->
   
   
-  <!-- Accounts Module -->  
+  <!-- Accounts Module -->
   <action name="Accounts" class="org.aspcfs.modules.accounts.actions.Accounts">
     <bean name="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
     <forward name="IncludeOK" resource="/includepage.jsp" layout="nav"/>
@@ -658,6 +983,7 @@
     <forward name="UpdateOK" resource="/Accounts.do?command=Details"/>
     <forward name="InsertOK" resource="/accounts/accounts_details.jsp" layout="nav"/>
     <forward name="InsertAndAddContactOK" resource="/Contacts.do?command=Prepare"/>
+    <forward name="FolderListOK" resource="/accounts/accounts_folder_list.jsp" layout="nav"/>
     <forward name="FieldRecordListOK" resource="/accounts/accounts_fields_list.jsp" layout="nav"/>
     <forward name="AddFolderRecordOK" resource="/accounts/accounts_fields_add.jsp" layout="nav"/>
     <forward name="FieldsEmptyOK" resource="/accounts/accounts_nofields.jsp" layout="nav"/>
@@ -692,13 +1018,15 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="CloseAddPopup" resource="/accounts/accounts_closepopup_addcontact.jsp"/>
-    <forward name="PrepareAddPopupOK" resource="/accounts/accounts_contacts_add.jsp" layout="style"/>
+    <forward name="PrepareAddPopupOK" resource="/accounts/accounts_contacts_add_popup.jsp" layout="style"/>
     <forward name="ViewMessagesOK" resource="/accounts/accounts_contacts_messages_view.jsp" layout="nav"/>
     <forward name="MessageDetailsOK" resource="/accounts/accounts_contacts_messages_details.jsp" layout="nav"/>
     <forward name="AddPortalOK" resource="/ContactsPortal.do?command=Add" />
     <forward name="AddCommunicationsPreferenceOK" resource="/accounts/accounts_contacts_communication_preference_add.jsp" layout="style" />
     <forward name="SaveCommunicationsPreferenceOK" resource="/products/product_set_opener.jsp" layout="style"/>
     <forward name="DeleteCommunicationsPreferenceOK" resource="/Contacts.do?command=ViewMessages" />
+    <forward name="MoveToAccountOK" resource="/accounts/accounts_contacts_moveform.jsp" layout="style"/>
+    <forward name="MoveContactOK" resource="/products/product_set_opener.jsp" layout="style"/>
   </action>
   <action name="ContactForm" class="org.aspcfs.modules.contacts.actions.ContactForm">
     <forward name="PrepareAddOK" resource="noresource"/>
@@ -740,7 +1068,7 @@
     <forward name="DetailsOppOK" resource="/accounts/accounts_contacts_opps_details.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
-  
+
   <action name="AccountContactsOppComponents" class="org.aspcfs.modules.accounts.actions.AccountContactsOpps">
     <bean name="ComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
     <forward name="PrepareOppOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=AccountContactsOppComponents&amp;entity=contact"/>
@@ -750,6 +1078,10 @@
     <forward name="DetailsComponentOK" resource="/accounts/accounts_contacts_oppcomponent_details.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+  </action>
+
+  <action name="AccountsProjects" class="org.aspcfs.modules.accounts.actions.AccountsProjects">
+    <forward name="AccountsProjectsListOK" resource="/accounts/accounts_projects_list.jsp" layout="nav"/>
   </action>
 
   <action name="AccountsServiceContracts" class="org.aspcfs.modules.accounts.actions.AccountsServiceContracts">
@@ -796,7 +1128,7 @@
     <forward name="DeleteContactFailedListOK" resource="/AccountContactsImports.do?command=ViewResults" layout="nav"/>
     <forward name="DeleteContactFailedDetailsOK" resource="/accounts/accounts_importcontact_details.jsp" layout="nav"/>
   </action>
-  
+
   <action name="AccountRelationships" class="org.aspcfs.modules.accounts.actions.AccountRelationships">
     <bean name="Relationship" class="org.aspcfs.modules.relationships.base.Relationship" scope="request"/>
     <forward name="ViewOK" resource="/accounts/accounts_relationships_view.jsp" layout="nav"/>
@@ -806,7 +1138,7 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/AccountRelationships.do?command=View"/>
   </action>
-  
+
   <action name="RevenueManager" class="org.aspcfs.modules.accounts.actions.RevenueManager">
     <bean name="Revenue" class="org.aspcfs.modules.accounts.base.Revenue" scope="request"/>
     <forward name="AddOK" resource="/accounts/accounts_revenue_add.jsp" layout="nav"/>
@@ -829,7 +1161,7 @@
     <forward name="PrepareAddOppOK" resource="/accounts/accounts_opportunities_add.jsp" layout="nav"/>
     <forward name="PrepareModifyOppOK" resource="/accounts/accounts_opportunities_modify.jsp" layout="nav"/>
   </action>
-  
+
   <action name="OpportunitiesComponents" class="org.aspcfs.modules.accounts.actions.Opportunities">
     <bean name="OppComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
     <forward name="PrepareOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=OpportunitiesComponents&amp;entity=account"/>
@@ -840,8 +1172,8 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ComponentUpdateOK" resource="ExternalContactsOppComponents.do?command=DetailsComponent"/>
-  </action>  
-  
+  </action>
+
   <action name="AccountTickets" class="org.aspcfs.modules.accounts.actions.AccountTickets">
     <bean name="TicketDetails" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request"/>
     <forward name="AddTicketOK" resource="/accounts/accounts_tickets_add.jsp" layout="nav"/>
@@ -852,9 +1184,9 @@
     <forward name="TicketDetailsOK" resource="/accounts/accounts_tickets_details.jsp" layout="nav"/>
     <forward name="ModifyTicketOK" resource="/accounts/accounts_tickets_modify.jsp" layout="nav"/>
     <forward name="UpdateTicketOK" resource="/AccountTickets.do?command=TicketDetails"/>
-    <forward name="CategoryJSListOK" resource="/troubletickets/troubletickets_js_categorylist.jsp"/>
-    <forward name="DepartmentJSListOK" resource="/troubletickets/troubletickets_js_departmentlist.jsp"/>
-    <forward name="OrganizationJSListOK" resource="/troubletickets/troubletickets_js_contactlist.jsp"/>
+    <forward name="CategoryJSListOK" resource="/troubletickets/troubletickets_js_categorylist.jsp" layout="style"/>
+    <forward name="DepartmentJSListOK" resource="/troubletickets/troubletickets_js_departmentlist.jsp" layout="style"/>
+    <forward name="OrganizationJSListOK" resource="/troubletickets/troubletickets_js_contactlist.jsp" layout="style"/>
     <forward name="ViewHistoryOK" resource="/accounts/accounts_tickets_history.jsp" layout="nav"/>
   </action>
   <action name="AccountTicketForms" class="org.aspcfs.modules.accounts.actions.AccountTicketForms">
@@ -934,6 +1266,7 @@
     <forward name="PopupCloseOK" resource="/accounts/accounts_tickets_documents_popclose.jsp"/>
   </action>
   <action name="AccountTicketFolders" class="org.aspcfs.modules.accounts.actions.AccountTicketFolders">
+    <forward name="FolderListOK" resource="/accounts/accounts_tickets_folder_list.jsp" layout="nav"/>
     <forward name="FieldRecordListOK" resource="/accounts/accounts_tickets_fields_list.jsp" layout="nav"/>
     <forward name="AddFolderRecordOK" resource="/accounts/accounts_tickets_fields_add.jsp" layout="nav"/>
     <forward name="FieldsEmptyOK" resource="/accounts/accounts_tickets_nofields.jsp" layout="nav"/>
@@ -1017,11 +1350,14 @@
     <forward name="ToggleOK" resource="/communications/toggle_recipient_js.jsp"/>
     <forward name="ToggleERROR" resource="/empty.html"/>
     <forward name="PopupCommentsOK" resource="/communications/campaign_survey_comments.jsp" layout="style"/>
-    <forward name="MessageJSListOK" resource="/communications/campaign_center_js_messagelist.jsp"/>
-    <forward name="SurveyJSListOK" resource="/communications/campaign_center_js_surveylist.jsp"/>
+    <forward name="MessageJSListOK" resource="/communications/campaign_center_js_messagelist.jsp" layout="style"/>
+    <forward name="SurveyJSListOK" resource="/communications/campaign_center_js_surveylist.jsp" layout="style"/>
     <forward name="ResponseOK" resource="/communications/campaign_survey_response_list.jsp" layout="nav"/>
     <forward name="ResponseDetailsOK" resource="/communications/campaign_survey_response_details.jsp" layout="nav"/>
     <forward name="ExportReportOK" resource="/CampaignDocuments.do?command=View"/>
+    <forward name="AddressResponseDetailsOK" resource="/communications/campaign_address_response_details.jsp" layout="style"/>
+    <forward name="BroadcastAuthenticationFormOK" resource="/communications/campaign_broadcast_authenticate.jsp" layout="style"/>
+    <forward name="BroadcastCampaignOK" resource="/communications/campaign_broadcast_authenticate.jsp" layout="style"/>
   </action>
   <action name="CampaignManagerGroup" class="org.aspcfs.modules.communications.actions.CampaignManagerGroup">
     <bean name="SearchForm" class="org.aspcfs.modules.communications.beans.SearchFormBean" scope="request"/>
@@ -1087,49 +1423,58 @@
     <forward name="DefaultOK" resource="/iteam/projects_personalview.jsp" layout="nav"/>
     <forward name="PersonalViewOK" resource="/iteam/projects_personalview.jsp" layout="nav"/>
     <forward name="EnterpriseViewOK" resource="/iteam/projects_enterpriseview.jsp" layout="nav"/>
+    <forward name="ProjectListOK" resource="/iteam/projects_list.jsp" layout="nav"/>
     <forward name="RSVPOK" resource="/iteam/projects_invitations.jsp" layout="nav"/>
     <forward name="OverviewOK" resource="/iteam/projects_overview.jsp" layout="nav"/>
     <forward name="AddProjectOK" resource="/iteam/projects_addproject.jsp" layout="nav"/>
     <forward name="ModifyProjectOK" resource="/iteam/projects_modifyproject.jsp" layout="nav"/>
-    <forward name="UpdateProjectOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Details"/>
+    <forward name="UpdateProjectOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Details"/>
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="DeleteProjectOK" resource="/iteam/ProjectManagement.do?command=EnterpriseView"/>
-    <forward name="DeleteProjectERROR" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Details"/>
-    <forward name="CustomizeProjectOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;command=CustomizeProject" layout="nav"/>
-    <forward name="UpdateFeaturesOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Setup"/>
-    <forward name="UpdatePermissionsOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Setup"/>
-    <forward name="AcceptProjectOK" resource="/iteam/ProjectManagement.do?command=RSVP"/>
-    <forward name="RejectProjectOK" resource="/iteam/ProjectManagement.do?command=RSVP"/>
+    <forward name="ProjectCenterPopupOK" resource="/iteam/projects_center.jsp" layout="style"/>
+    <forward name="DeleteProjectOK" resource="/ProjectManagement.do?command=ProjectList"/>
+    <forward name="DeleteProjectERROR" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Details"/>
+    <forward name="CustomizeProjectOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;command=CustomizeProject"/>
+    <forward name="UpdateFeaturesOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Setup"/>
+    <forward name="UpdatePermissionsOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Setup"/>
+    <forward name="AcceptProjectOK" resource="/ProjectManagement.do?command=RSVP"/>
+    <forward name="RejectProjectOK" resource="/ProjectManagement.do?command=RSVP"/>
     <forward name="ResizeOK" resource="/iteam/projects_center_resize.jsp"/>
   </action>
   <action name="ProjectManagementNews" class="com.zeroio.iteam.actions.ProjectManagementNews">
     <bean name="newsArticle" class="com.zeroio.iteam.base.NewsArticle" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
     <forward name="NewsDetailsPopupOK" resource="/iteam/projects_center_news_details.jsp" layout="style"/>
-    <forward name="SaveOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
-    <forward name="SaveAndAddPageOK" resource="/iteam/ProjectManagementNews.do?command=AddPage"/>
-    <forward name="SavePageOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
-    <forward name="DeletePageOK" resource="/iteam/ProjectManagementNews.do?command=Edit"/>
-    <forward name="SaveDetailsOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
-    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
+    <forward name="NewsEditPopupOK" resource="/iteam/projects_center_news_add.jsp" layout="style"/>
+    <forward name="SaveOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
+    <forward name="SaveAndAddPageOK" resource="/ProjectManagementNews.do?command=AddPage"/>
+    <forward name="SavePageOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
+    <forward name="DeletePageOK" resource="/ProjectManagementNews.do?command=Edit"/>
+    <forward name="SaveDetailsOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
+    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
+    <forward name="EditListPopupOK" resource="/iteam/util_edit_list.jsp" layout="style"/>
+    <forward name="EditListPopupCloseOK" resource="/iteam/util_edit_list_closepopup.jsp" layout="style"/>
+    <forward name="CloneOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
+    <forward name="CloneERROR" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=News"/>
+    <forward name="EmailMeOK" resource="/iteam/projects_center.jsp" layout="nav"/>
+    <forward name="EmailTeamOK" resource="/iteam/projects_center.jsp" layout="nav"/>
   </action>
   <action name="ProjectManagementRequirements" class="com.zeroio.iteam.actions.ProjectManagementRequirements">
     <bean name="Requirement" class="com.zeroio.iteam.base.Requirement" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
     <forward name="PopupOK" resource="/iteam/projects_center_requirements_details.jsp" layout="style"/>
-    <forward name="AddOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
-    <forward name="UpdateOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
-    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
+    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
+    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
+    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Requirements"/>
     <forward name="PrepareImportOK" resource="/iteam/projects_center_requirements_import.jsp" layout="nav"/>
-    <forward name="ImportOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+    <forward name="ImportOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
     <forward name="ImportERROR" resource="/iteam/projects_center_requirements_import.jsp" layout="nav"/>
   </action>
   <action name="ProjectManagementTeam" class="com.zeroio.iteam.actions.ProjectManagementTeam">
     <bean name="TeamMemberList" class="com.zeroio.iteam.base.TeamMemberList" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
     <forward name="MakeUserListOK" resource="/iteam/projects_makeuserlist.jsp"/>
-    <forward name="ModifyOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Team"/>
-    <forward name="ModifyERROR" resource="/iteam/ProjectManagementTeam.do?command=Modify"/>
+    <forward name="ModifyOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Team"/>
+    <forward name="ModifyERROR" resource="/ProjectManagementTeam.do?command=Modify"/>
     <forward name="ChangeRoleOK" resource="/iteam/projects_center_changerole_ok.jsp"/>
     <forward name="ChangeRoleERROR" resource="/iteam/projects_center_changerole_error.jsp"/>
     <forward name="InvitationsOK" resource="/iteam/projects_center.jsp" layout="nav"/>
@@ -1139,80 +1484,80 @@
     <forward name="MakeUserListOK" resource="/iteam/projects_makeuserlist.jsp"/>
     <forward name="MakeTeamMemberListOK" resource="/iteam/projects_maketeamlist.jsp"/>
     <forward name="MakeDepartmentListOK" resource="/iteam/projects_makedepartmentlist.jsp"/>
+    <forward name="MakeAccountTypeListOK" resource="/iteam/projects_makeaccounttypelist.jsp"/>
   </action>
   <action name="ProjectManagementAssignments" class="com.zeroio.iteam.actions.ProjectManagementAssignments">
     <bean name="Assignment" class="com.zeroio.iteam.base.Assignment" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="SaveOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+    <forward name="SaveOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
     <forward name="PopupOK" resource="/iteam/projects_center_assignments_add.jsp" layout="style"/>
     <forward name="PopupDetailsOK" resource="/iteam/projects_center_assignments_details.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/iteam/closepopup.jsp"/>
-    <forward name="DetailsREDIRECT" resource="/iteam/ProjectManagementAssignments.do?command=Details"/>
-    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+    <forward name="DetailsREDIRECT" resource="/ProjectManagementAssignments.do?command=Details"/>
+    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
     <forward name="MoveOK" resource="/iteam/projects_center_hierarchy.jsp" layout="style"/>
-    <forward name="MoveItemOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+    <forward name="MoveItemOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+    <forward name="ShowNotesOK" resource="/iteam/projects_center_assignments_notes.jsp" layout="style"/>
   </action>
   <action name="ProjectManagementAssignmentsFolder" class="com.zeroio.iteam.actions.ProjectManagementAssignments">
     <bean name="assignmentFolder" class="com.zeroio.iteam.base.AssignmentFolder" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="SaveOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+    <forward name="SaveOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
     <forward name="PopupOK" resource="/iteam/projects_center_assignments_folder_add.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/iteam/closepopup.jsp"/>
     <forward name="PopupDetailsOK" resource="/iteam/projects_center_assignments_folder_details.jsp" layout="style"/>
-    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
+    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Assignments"/>
   </action>
   <action name="ProjectManagementIssueCategories" class="com.zeroio.iteam.actions.ProjectManagementIssueCategories">
     <bean name="IssueCategory" class="com.zeroio.iteam.base.IssueCategory" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="SaveOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Issues_Categories"/>
-    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Issues_Categories"/>
+    <forward name="SaveOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Issues_Categories"/>
+    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Issues_Categories"/>
   </action>
   <action name="ProjectManagementIssues" class="com.zeroio.iteam.actions.ProjectManagementIssues">
     <bean name="Issue" class="com.zeroio.iteam.base.Issue" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="SaveOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Issues"/>
+    <forward name="SaveOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Issues"/>
     <forward name="SaveDetailsOK" resource="/iteam/ProjectManagementIssues.do?command=Details"/>
-    <forward name="AddOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Issues"/>
-    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Issues"/>
+    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Issues"/>
     <forward name="PopupOK" resource="/iteam/projects_center_issues_details.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/iteam/closepopup.jsp"/>
   </action>
   <action name="ProjectManagementIssueReply" class="com.zeroio.iteam.actions.ProjectManagementIssues">
     <bean name="IssueReply" class="com.zeroio.iteam.base.IssueReply" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="SaveOK" resource="/iteam/ProjectManagementIssues.do?command=Details"/>
-    <forward name="AddOK" resource="/iteam/ProjectManagementIssues.do?command=Details"/>
-    <forward name="DeleteOK" resource="/iteam/ProjectManagementIssues.do?command=Details"/>
-    <forward name="DownloadOK" resource="/iteam/ProjectManagementIssues.do?command=Details"/>
+    <forward name="SaveOK" resource="/ProjectManagementIssues.do?command=Details"/>
+    <forward name="DeleteOK" resource="/ProjectManagementIssues.do?command=Details"/>
+    <forward name="DownloadOK" resource="/ProjectManagementIssues.do?command=Details"/>
   </action>
   <action name="ProjectManagementFiles" class="com.zeroio.iteam.actions.ProjectManagementFiles">
     <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
-    <forward name="UpdateOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
-    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
-    <forward name="DeleteVersionOK" resource="/iteam/ProjectManagementFiles.do?command=Details"/>
-    <forward name="DeleteERROR" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="DeleteVersionOK" resource="/ProjectManagementFiles.do?command=Details"/>
+    <forward name="DeleteERROR" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
     <forward name="MoveOK" resource="/iteam/projects_center_file_hierarchy.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/iteam/closepopup.jsp"/>
   </action>
   <action name="ProjectManagementFileFolders" class="com.zeroio.iteam.actions.ProjectManagementFileFolders">
     <bean name="fileFolder" class="com.zeroio.iteam.base.FileFolder" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
-    <forward name="InsertOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
-    <forward name="UpdateOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
-    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
-    <forward name="DeleteERROR" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="InsertOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
+    <forward name="DeleteERROR" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=File_Library"/>
     <forward name="MoveOK" resource="/iteam/projects_center_folder_hierarchy.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/iteam/closepopup.jsp"/>
   </action>
   <action name="ProjectManagementLists" class="com.zeroio.iteam.actions.ProjectManagementLists">
     <bean name="Task" class="org.aspcfs.modules.tasks.base.Task" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="AddOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
-    <forward name="UpdateOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
-    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
+    <forward name="AddOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
+    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
+    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists"/>
     <forward name="MoveOK" resource="/iteam/projects_center_lists_hierarchy.jsp" layout="style"/>
     <forward name="DetailsOK" resource="/iteam/projects_center_lists_details.jsp" layout="nav"/>
     <forward name="PopupOK" resource="/iteam/projects_center_lists_details.jsp" layout="style"/>
@@ -1221,25 +1566,47 @@
   <action name="ProjectManagementListsCategory" class="com.zeroio.iteam.actions.ProjectManagementLists">
     <bean name="category" class="org.aspcfs.modules.tasks.base.TaskCategory" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="SaveOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
-    <forward name="UpdateOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
-    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
+    <forward name="SaveOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
+    <forward name="UpdateOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
+    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Lists_Categories"/>
   </action>
   <action name="ProjectManagementTickets" class="com.zeroio.iteam.actions.ProjectManagementTickets">
     <bean name="ticket" class="org.aspcfs.modules.troubletickets.base.Ticket" scope="request" />
     <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
-    <forward name="InsertOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Tickets"/>
-    <forward name="UpdateOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Tickets"/>
-    <forward name="ReopenOK" resource="/iteam/ProjectManagementTickets.do?command=Modify"/>
-    <forward name="DeleteOK" resource="/iteam/ProjectManagement.do?command=ProjectCenter&amp;section=Tickets"/>
+    <forward name="InsertOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Tickets"/>
+    <forward name="UpdateListOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Tickets"/>
+    <forward name="UpdateOK" resource="/ProjectManagementTickets.do?command=Details"/>
+    <forward name="ReopenOK" resource="/ProjectManagementTickets.do?command=Modify"/>
+    <forward name="DeleteOK" resource="/ProjectManagement.do?command=ProjectCenter&amp;section=Tickets"/>
+    <forward name="ProjectTicketsPopupOK" resource="/iteam/projects_center_tickets_add_popup.jsp" layout="style"/>
+    <forward name="UpdatePopupOK" resource="/closepopupandreload.jsp"/>
+    <forward name="UpdateListPopupOK" resource="/closepopupandreload.jsp"/>
+  </action>
+  <action name="Timesheet" class="com.zeroio.iteam.actions.Timesheet">
+    <forward name="TimesheetOK" resource="/iteam/projects_timesheet.jsp" layout="nav"/>
+    <forward name="SliderOK" resource="/iteam/projects_timesheet_slider.jsp" layout="style"/>
+    <forward name="WeekOK" resource="/iteam/projects_timesheet_week.jsp" layout="style"/>
+    <forward name="SaveOK" resource="/iteam/projects_timesheet_refresh.jsp" layout="style"/>
+  </action>
+  <action name="Resources" class="com.zeroio.iteam.actions.Resources">
+    <forward name="UsersOK" resource="/iteam/projects_resources_users.jsp" layout="nav"/>
+    <forward name="UsersProjectsOK" resource="/iteam/projects_resources_users_projects.jsp" layout="style"/>
+    <forward name="ProjectsOK" resource="/iteam/projects_resources_projects.jsp" layout="style"/>
+    <forward name="ProjectsUsersOK" resource="/iteam/projects_resources_projects_users.jsp" layout="style"/>
   </action>
   <action name="ProjectManagementSearch" class="com.zeroio.iteam.actions.Search">
-    <bean name="searchBean" class="com.zeroio.iteam.beans.SearchBean" scope="session" />
+    <bean name="searchBean" class="com.zeroio.iteam.beans.IteamSearchBean" scope="session" />
     <forward name="SearchFormOK" resource="/iteam/search_form.jsp" layout="nav"/>
     <forward name="IndexOK" resource="/iteam/search_index_ok.jsp" layout="nav"/>
     <forward name="SearchResultsOK" resource="/iteam/search_results.jsp" layout="nav"/>
     <forward name="SearchResultsERROR" resource="/iteam/search_results_error.jsp" layout="nav"/>
     <forward name="TipsOK" resource="/iteam/search_tips.jsp" layout="style"/>
+  </action>
+  <action name="ProjectManagementAccounts" class="com.zeroio.iteam.actions.ProjectManagementAccounts">
+    <forward name="ProjectCenterOK" resource="/iteam/projects_center.jsp" layout="nav"/>
+    <forward name="ProjectCenterPopupOK" resource="/iteam/projects_center.jsp" layout="style"/>
+    <forward name="ProjectAccountAddOK" resource="/iteam/projects_refresh_accounts.jsp" layout="style"/>
+    <forward name="ProjectAccountRemoveOK" resource="/ProjectManagementAccounts.do?command=List"/>
   </action>
   <!-- End Project Management Module -->
 
@@ -1259,9 +1626,9 @@
     <forward name="ReopenPopupOK" resource="/closepopupandreload.jsp"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
-    <forward name="CategoryJSListOK" resource="/troubletickets/troubletickets_js_categorylist.jsp"/>
-    <forward name="DepartmentJSListOK" resource="/troubletickets/troubletickets_js_departmentlist.jsp"/>
-    <forward name="OrganizationJSListOK" resource="/troubletickets/troubletickets_js_contactlist.jsp"/>
+    <forward name="CategoryJSListOK" resource="/troubletickets/troubletickets_js_categorylist.jsp" layout="style"/>
+    <forward name="DepartmentJSListOK" resource="/troubletickets/troubletickets_js_departmentlist.jsp" layout="style"/>
+    <forward name="OrganizationJSListOK" resource="/troubletickets/troubletickets_js_contactlist.jsp" layout="style"/>
     <forward name="ReportsOK" resource="/troubletickets/troubletickets_reports.jsp" layout="nav"/>
     <forward name="GenerateFormOK" resource="/troubletickets/troubletickets_reports_generate.jsp" layout="nav"/>
     <forward name="ReportHtmlOK" resource="/reports_show.jsp" layout="style"/>
@@ -1363,6 +1730,7 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
   <action name="TroubleTicketsFolders" class="org.aspcfs.modules.troubletickets.actions.TroubleTicketsFolders">
+    <forward name="FolderListOK" resource="/troubletickets/troubletickets_folder_list.jsp" layout="nav"/>
     <forward name="FieldRecordListOK" resource="/troubletickets/troubletickets_fields_list.jsp" layout="nav"/>
     <forward name="AddFolderRecordOK" resource="/troubletickets/troubletickets_fields_add.jsp" layout="nav"/>
     <forward name="FieldsEmptyOK" resource="/troubletickets/troubletickets_nofields.jsp" layout="nav"/>
@@ -1371,7 +1739,61 @@
     <forward name="UpdateFieldsOK" resource="/troubletickets/troubletickets_fields.jsp" layout="nav"/>
     <forward name="DeleteFieldsOK" resource="/TroubleTicketsFolders.do?command=Fields"/>
   </action>
-  <!-- End Ticket Module -->
+  <!-- Documents Module -->
+  <action name="DocumentManagement" class="org.aspcfs.modules.documents.actions.DocumentManagement">
+    <bean name="DocumentStore" class="org.aspcfs.modules.documents.base.DocumentStore" scope="request"/>
+    <forward name="EnterpriseViewOK" resource="/documents/document_store_enterpriseview.jsp" layout="nav"/>
+    <forward name="AddDocumentStoreOK" resource="/documents/document_store_add_document_store.jsp" layout="nav"/>
+    <forward name="DocumentStoreCenterOK" resource="/documents/document_store_center.jsp" layout="nav"/>
+    <forward name="UpdateDocumentStoreOK" resource="/documents/DocumentManagement.do?command=DocumentStoreCenter&amp;section=Details"/>
+    <forward name="UpdatePermissionsOK" resource="/documents/DocumentManagement.do?command=DocumentStoreCenter&amp;section=Setup"/>
+    <forward name="DeleteDocumentStoreOK" resource="/documents/DocumentManagement.do?" />
+    </action>
+  <action name="DocumentStoreManagementTeam" class="org.aspcfs.modules.documents.actions.DocumentStoreManagementTeam">
+    <bean name="DocumentStoreTeamMemberList" class="org.aspcfs.modules.documents.base.DocumentStoreTeamMemberList" scope="request"/>
+    <forward name="DocumentStoreCenterOK" resource="/documents/document_store_center.jsp" layout="nav"/>
+    <forward name="ModifyOK" resource="/iteam/DocumentManagement.do?command=DocumentStoreCenter&amp;section=Team"/>
+    <forward name="ChangeRoleERROR" resource="/documents/document_store_center_changerole_error.jsp"/>
+  </action>
+  <action name="DocumentStoreManagementTeamList" class="org.aspcfs.modules.documents.actions.DocumentStoreManagementTeamList">
+    <forward name="DocumentStoreListOK" resource="/documents/document_store_makedocumentstorelist.jsp" layout="style"/>
+    <forward name="MakeUserListOK" resource="/documents/document_store_makeuserlist.jsp" layout="style"/>
+    <forward name="MakeTeamMemberListOK" resource="/documents/document_store_maketeamlist.jsp" layout="style"/>
+    <forward name="MakeDepartmentListOK" resource="/documents/document_store_makedepartmentlist.jsp" layout="style"/>
+    <forward name="MakeRoleListOK" resource="/documents/document_store_makerolelist.jsp" layout="style"/>
+    <forward name="MakeAccountTypeListOK" resource="/documents/document_store_makeaccounttypelist.jsp" layout="style"/>
+  </action>
+  <action name="DocumentStoreManagementFileFolders" class="org.aspcfs.modules.documents.actions.DocumentStoreManagementFileFolders">
+    <bean name="fileFolder" class="com.zeroio.iteam.base.FileFolder" scope="request" />
+    <forward name="DocumentStoreCenterOK" resource="/documents/document_store_center.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/documents/DocumentManagement.do?command=DocumentStoreCenter&amp;section=File_Library"/>
+    <forward name="InsertOK" resource="/documents/DocumentManagement.do?command=DocumentStoreCenter&amp;section=File_Library"/>
+    <forward name="UpdateOK" resource="/documents/DocumentManagement.do?command=DocumentStoreCenter&amp;section=File_Library"/>
+    <forward name="DeleteOK" resource="/documents/DocumentManagement.do?command=DocumentStoreCenter&amp;section=File_Library"/>
+    <forward name="DeleteERROR" resource="/documents/DocumentManagement.do?command=DocumentStoreCenter&amp;section=File_Library"/>
+    <forward name="MoveOK" resource="/documents/document_store_center_folder_hierarchy.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/documents/closepopup.jsp"/>
+  </action>
+  <action name="DocumentStoreManagementFiles" class="org.aspcfs.modules.documents.actions.DocumentStoreManagementFiles">
+    <bean name="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request" />
+    <forward name="DocumentStoreCenterOK" resource="/documents/document_store_center.jsp" layout="nav"/>
+    <forward name="AddOK" resource="/documents/DocumentManagement.do?command=DocumentStoreCenter&amp;section=File_Library"/>
+    <forward name="UpdateOK" resource="/documents/DocumentManagement.do?command=DocumentStoreCenter&amp;section=File_Library"/>
+    <forward name="DeleteOK" resource="/documents/DocumentManagement.do?command=DocumentStoreCenter&amp;section=File_Library"/>
+    <forward name="DeleteVersionOK" resource="/documents/DocumentManagement.do?command=Details"/>
+    <forward name="DeleteERROR" resource="/documents/DocumentManagement.do?command=DocumentStoreCenter&amp;section=File_Library"/>
+    <forward name="MoveOK" resource="/documents/document_store_center_file_hierarchy.jsp" layout="style"/>
+    <forward name="PopupCloseOK" resource="/documents/closepopup.jsp"/>
+  </action>
+  <action name="DocumentManagementSearch" class="org.aspcfs.modules.documents.actions.DocumentManagementSearch">
+    <bean name="documentsSearchBean" class="org.aspcfs.modules.documents.beans.DocumentsSearchBean" scope="session" />
+    <forward name="SearchFormOK" resource="/documents/search_form.jsp" layout="nav"/>
+    <forward name="IndexOK" resource="/documents/search_index_ok.jsp" layout="nav"/>
+    <forward name="SearchResultsOK" resource="/documents/search_results.jsp" layout="nav"/>
+    <forward name="SearchResultsERROR" resource="/iteam/search_results_error.jsp" layout="nav"/>
+    <forward name="TipsOK" resource="/iteam/search_tips.jsp" layout="style"/>
+  </action>
+  <!-- End Documents Module -->
   <!-- Reports Module -->
   <action name="Reports" class="org.aspcfs.modules.reports.actions.Reports">
     <forward name="ReportQueueOK" resource="/reports/reports_queue.jsp" layout="nav"/>
@@ -1399,9 +1821,12 @@
     <forward name="WorkflowDetailsOK" resource="/admin/admin_workflow_details.jsp" layout="nav"/>
   </action>
   <action name="AdminConfig" class="org.aspcfs.modules.admin.actions.AdminConfig">
-    <forward name="GlobalParamsOK" resource="/admin/admin_global_params.jsp" layout="nav"/>
+    <bean name="Organization" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
+		<forward name="GlobalParamsOK" resource="/admin/admin_global_params.jsp" layout="nav"/>
     <forward name="ModifyError" resource="/AdminConfig.do?command=ListGlobalParams"/>
     <forward name="UpdateOK" resource="/AdminConfig.do?command=ListGlobalParams"/>
+		<forward name="ModifyCompanyInfoOK" resource="/admin/admin_modify_companyinfo.jsp" layout="nav"/>
+		<forward name="ModifyCompanyInfoERROR" resource="/AdminConfig.do?command=Modify&amp;param=COMPANYINFO"/>
     <forward name="ModifyTimeoutOK" resource="/admin/admin_modify_timeout.jsp" layout="nav"/>
     <forward name="ModifyEmailOK" resource="/admin/admin_modify_email.jsp" layout="nav"/>
     <forward name="ModifyEmailAddressOK" resource="/admin/admin_modify_emailaddress.jsp" layout="nav"/>
@@ -1416,6 +1841,12 @@
     <forward name="LicenseCheckOK" resource="/admin/admin_modify_license_ok.jsp" layout="nav"/>
     <forward name="LicenseCheckERROR" resource="/admin/admin_modify_license_error.jsp" layout="nav"/>
   </action>
+	<action name="AdminLogos" class="org.aspcfs.modules.admin.actions.AdminLogos">
+		<forward name="ViewOK" resource="/admin/admin_logos_list.jsp" layout="nav"/>
+		<forward name="AddLogoOK" resource="/admin/admin_logos_add.jsp" layout="nav"/>
+		<forward name="DeleteOK" resource="/AdminLogos.do?command=View"/>
+		<forward name="DeleteERROR" resource="/AdminLogos.do?command=View"/>
+	</action>
   <action name="AdminQA" class="org.aspcfs.modules.admin.actions.AdminQA">
     <forward name="QAReportOK" resource="/admin/admin_qa_report.jsp" layout="style"/>
   </action>
@@ -1461,13 +1892,16 @@
     <forward name="ShowOK" resource="/admin/admin_showcategories.jsp" layout="nav"/>
     <forward name="ViewOK" resource="/admin/admin_viewcategories.jsp" layout="nav"/>
     <forward name="ViewActiveOK" resource="/admin/admin_view_activecategories.jsp" layout="nav"/>
-    <forward name="CategoryJSListOK" resource="/admin/admin_js_categorylist.jsp"/>
-    <forward name="ActiveCategoryJSListOK" resource="/admin/admin_js_activecategorylist.jsp"/>
+    <forward name="CategoryJSListOK" resource="/admin/admin_js_categorylist.jsp" layout="style"/>
+    <forward name="ActiveCategoryJSListOK" resource="/admin/admin_js_activecategorylist.jsp" layout="style"/>
     <forward name="ModifyOK" resource="/admin/admin_modifycategory.jsp" layout="style"/>
     <forward name="SaveOK" resource="/admin/admin_savecategory.jsp"/>
     <forward name="ConfirmSaveOK" resource="/dialog.jsp"/>
     <forward name="ResetOK" resource="/AdminCategories.do?command=View"/>
     <forward name="ActivateOK" resource="/AdminCategories.do?command=ViewActive"/>
+  </action>
+  <action name="UsersList" class="org.aspcfs.modules.admin.actions.UsersList">
+    <forward name="ListUserHierarchyOK" resource="/admin/user_hierarchy.jsp" layout="style"/>
   </action>
   <action name="Users" class="org.aspcfs.modules.admin.actions.Users">
     <bean name="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request" />
@@ -1482,9 +1916,8 @@
     <forward name="DoReassignOK" resource="/Users.do?command=Reassign"/>
     <forward name="NewAccountFirstOK" resource="/admin/admin_newusercontact.jsp" layout="nav"/>
     <forward name="UserDetailsModifyOK" resource="/admin/admin_userdetails.jsp" layout="nav"/>
-    <forward name="ContactJSListOK" resource="/admin/admin_jsuser_contactlist.jsp"/>
     <forward name="ViewLogOK" resource="/admin/admin_userlog.jsp" layout="nav"/>
-  </action>  
+  </action>
   <action name="Roles" class="org.aspcfs.modules.admin.actions.Roles">
     <bean name="Role" class="org.aspcfs.modules.admin.base.Role" scope="request" />
     <forward name="ListRolesOK" resource="/admin/admin_listroles.jsp" layout="nav"/>
@@ -1507,7 +1940,7 @@
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
   </action>
-  
+
   <action name="AdminObjectEvents" class="org.aspcfs.modules.admin.actions.AdminObjectEvents">
     <forward name="ListOK" resource="/admin/admin_object_events_list.jsp" layout="nav"/>
     <forward name="DetailsOK" resource="/AdminWorkflow.do?actionSource=AdminObjectEvents"/>
@@ -1518,10 +1951,9 @@
     <forward name="DetailsOK" resource="/AdminWorkflow.do?actionSource=AdminScheduledEvents"/>
     <forward name="WorkflowOK" resource="/admin/admin_workflow_details.jsp" layout="nav"/>
   </action>
-  <action name="AdminWorkflow" class="org.aspcfs.modules.admin.actions.AdminWorkflow">
-  </action>
+  <action name="AdminWorkflow" class="org.aspcfs.modules.admin.actions.AdminWorkflow"></action>
   <!-- End Setup Module -->
-  
+
   <action name="Help" class="org.aspcfs.modules.help.actions.Help">
     <bean name="helpModule" class="org.aspcfs.modules.help.base.HelpModule" scope="request" />
     <forward name="HelpOK" resource="/help/help.jsp"/>
@@ -1544,7 +1976,7 @@
     <forward name="ModifyIntroPopupOK" resource="/qa/qa_intro_form.jsp" layout="style"/>
     <forward name="SaveIntroPopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
-  
+
   <action name="HelpFeatures" class="org.aspcfs.modules.help.actions.QA">
     <bean name="Feature" class="org.aspcfs.modules.help.base.HelpFeature" scope="request" />
     <forward name="FeaturePreparePopupOK" resource="/qa/qa_feature_form.jsp" layout="style"/>
@@ -1554,7 +1986,7 @@
     <forward name="FeatureReInsertPopupOK" resource="/redirectpopupandreload.jsp" layout="style"/>
     <forward name="FeatureUpdatePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
-  
+
   <action name="HelpRules" class="org.aspcfs.modules.help.actions.QA">
     <bean name="Rule" class="org.aspcfs.modules.help.base.HelpBusinessRule" scope="request" />
     <forward name="RulePreparePopupOK" resource="/qa/qa_rule_form.jsp" layout="style"/>
@@ -1564,7 +1996,7 @@
     <forward name="RuleReInsertPopupOK" resource="/redirectpopupandreload.jsp" layout="style"/>
     <forward name="RuleUpdatePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
-  
+
   <action name="HelpNotes" class="org.aspcfs.modules.help.actions.QA">
     <bean name="Note" class="org.aspcfs.modules.help.base.HelpNote" scope="request" />
     <forward name="NotePreparePopupOK" resource="/qa/qa_note_form.jsp" layout="style"/>
@@ -1574,7 +2006,7 @@
     <forward name="NoteReInsertPopupOK" resource="/redirectpopupandreload.jsp" layout="style"/>
     <forward name="NoteUpdatePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
-  
+
   <action name="HelpTips" class="org.aspcfs.modules.help.actions.QA">
     <bean name="Tip" class="org.aspcfs.modules.help.base.HelpTip" scope="request" />
     <forward name="TipPreparePopupOK" resource="/qa/qa_tip_form.jsp" layout="style"/>
@@ -1584,11 +2016,11 @@
     <forward name="TipReInsertPopupOK" resource="/redirectpopupandreload.jsp" layout="style"/>
     <forward name="TipUpdatePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
   </action>
-  
+
   <action name="Search" class="org.aspcfs.modules.search.actions.Search">
     <forward name="SearchOK" resource="/search/search_results.jsp" layout="nav"/>
   </action>
-  
+
   <action name="GlobalItem">
     <forward name="AddTicketOK" resource="/global/global_addticket.jsp" layout="style"/>
     <forward name="InsertTicketOK" resource="/closepopup.jsp"/>
@@ -1597,7 +2029,7 @@
     <forward name="InsertTaskPopupOK" resource="/closepopup.jsp"/>
     <forward name="PopupCloseOK" resource="/closepopup.jsp"/>
   </action>
-  
+
   <action name="ReportGenerator" class="org.aspcfs.modules.reports.actions.ReportGenerator">
     <forward name="DefaultOK" resource="/admin/system_process_ok.jsp" layout="nav"/>
   </action>
@@ -1608,56 +2040,60 @@
   </action>
   <action name="Setup" class="org.aspcfs.modules.setup.actions.Setup">
     <bean name="registration" class="org.aspcfs.modules.setup.beans.RegistrationBean" scope="request" />
-    <forward name="SetupOK" resource="/setup/welcome.jsp" layout="dhv"/>
-    <forward name="SetupHaveRegOK" resource="/setup/validate.jsp" layout="dhv"/>
-    <forward name="SetupNeedRegOK" resource="/setup/register.jsp" layout="dhv"/>
-    <forward name="SendRegERROR" resource="/setup/register.jsp" layout="dhv"/>
-    <forward name="SubmitRegistrationOK" resource="/setup/submitted.jsp" layout="dhv"/>
+    <forward name="SetupOK" resource="/setup/language.jsp" layout="centric"/>
+    <forward name="WelcomeOK" resource="/setup/welcome.jsp" layout="centric"/>
+    <forward name="SetupHaveRegOK" resource="/setup/validate.jsp" layout="centric"/>
+    <forward name="SetupNeedRegOK" resource="/setup/register.jsp" layout="centric"/>
+    <forward name="SendRegERROR" resource="/setup/register.jsp" layout="centric"/>
+    <forward name="SubmitRegistrationOK" resource="/setup/submitted.jsp" layout="centric"/>
     <forward name="SubmitProcessOK" resource="/service/system_process_packet.jsp"/>
-    <forward name="ValidateRETRY" resource="/setup/validate.jsp" layout="dhv"/>
-    <forward name="ValidateOK" resource="/setup/validate_success.jsp" layout="dhv"/>
+    <forward name="ValidateRETRY" resource="/setup/validate.jsp" layout="centric"/>
+    <forward name="ValidateOK" resource="/setup/validate_success.jsp" layout="centric"/>
     <forward name="SkipRegistrationOK" resource="/SetupDirectory.do?command=ConfigureDirectoryCheck"/>
   </action>
   <action name="SetupDirectory" class="org.aspcfs.modules.setup.actions.Setup">
-    <forward name="ConfigureDirectoryCheckOK" resource="/setup/configure_directory.jsp" layout="dhv"/>
-    <forward name="ConfigureDirectoryERROR" resource="/setup/configure_directory.jsp" layout="dhv"/>
-    <forward name="ConfigureDirectoryConfirmOK" resource="/setup/configure_directory_confirm.jsp" layout="dhv"/>
+    <forward name="ConfigureDirectoryCheckOK" resource="/setup/configure_directory.jsp" layout="centric"/>
+    <forward name="ConfigureDirectoryERROR" resource="/setup/configure_directory.jsp" layout="centric"/>
+    <forward name="ConfigureDirectoryConfirmOK" resource="/setup/configure_directory_confirm.jsp" layout="centric"/>
     <forward name="ConfigureDirectoryOK" resource="/SetupDirectory.do?command=ConfigureDirectoryFinalize"/>
-    <forward name="ConfigureDirectoryCompleteOK" resource="/setup/configure_directory_success.jsp" layout="dhv"/>
+    <forward name="ConfigureDirectoryCompleteOK" resource="/setup/configure_directory_success.jsp" layout="centric"/>
   </action>
   <action name="SetupDatabase" class="org.aspcfs.modules.setup.actions.Setup">
     <bean name="database" class="org.aspcfs.modules.setup.beans.DatabaseBean" scope="request" />
-    <forward name="ConfigureDatabaseCheckOK" resource="/setup/configure_database.jsp" layout="dhv"/>
-    <forward name="ConfigureDatabaseERROR" resource="/setup/configure_database.jsp" layout="dhv"/>
-    <forward name="ConfigureDatabaseConfirmOK" resource="/setup/configure_database_confirm.jsp" layout="dhv"/>
-    <forward name="ConfigureDatabaseOK" resource="/setup/configure_database_success.jsp" layout="dhv"/>
-    <forward name="ConfigureDatabaseCreateOK" resource="/setup/configure_database_create_success.jsp" layout="dhv"/>
+    <forward name="ConfigureDatabaseCheckOK" resource="/setup/configure_database.jsp" layout="centric"/>
+    <forward name="ConfigureDatabaseERROR" resource="/setup/configure_database.jsp" layout="centric"/>
+    <forward name="ConfigureDatabaseConfirmOK" resource="/setup/configure_database_confirm.jsp" layout="centric"/>
+    <forward name="ConfigureDatabaseOK" resource="/setup/configure_database_success.jsp" layout="centric"/>
+    <forward name="ConfigureDatabaseCreateOK" resource="/setup/configure_database_create_success.jsp" layout="centric"/>
     <forward name="ConfigureDatabaseCreateERROR" resource="/SetupDatabase.do?command=ConfigureDatabaseCheck"/>
   </action>
   <action name="SetupServerDetails" class="org.aspcfs.modules.setup.actions.Setup">
     <bean name="server" class="org.aspcfs.modules.setup.beans.ServerBean" scope="request" />
-    <forward name="ConfigureServerCheckOK" resource="/setup/configure_server.jsp" layout="dhv"/>
-    <forward name="ConfigureServerERROR" resource="/setup/configure_server.jsp" layout="dhv"/>
-    <forward name="ConfigureServerConfirmOK" resource="/setup/configure_server_confirm.jsp" layout="dhv"/>
-    <forward name="ConfigureServerOK" resource="/setup/configure_server_success.jsp" layout="dhv"/>
+    <forward name="ConfigureServerCheckOK" resource="/setup/configure_server.jsp" layout="centric"/>
+    <forward name="ConfigureServerERROR" resource="/setup/configure_server.jsp" layout="centric"/>
+    <forward name="ConfigureServerConfirmOK" resource="/setup/configure_server_confirm.jsp" layout="centric"/>
+    <forward name="ConfigureServerOK" resource="/setup/configure_server_success.jsp" layout="centric"/>
     <forward name="SendMailOK" resource="/setup/configure_server_mail_success.jsp" layout="style"/>
     <forward name="SendMailERROR" resource="/setup/configure_server_mail_error.jsp" layout="style"/>
   </action>
   <action name="SetupUser" class="org.aspcfs.modules.setup.actions.Setup">
     <bean name="user" class="org.aspcfs.modules.setup.beans.UserSetupBean" scope="request" />
-    <forward name="ConfigureUserCheckOK" resource="/setup/configure_user.jsp" layout="dhv"/>
-    <forward name="ConfigureUserERROR" resource="/setup/configure_user.jsp" layout="dhv"/>
-    <forward name="ConfigureUserOK" resource="/setup/configure_user_success.jsp" layout="dhv"/>
+    <forward name="ConfigureUserCheckOK" resource="/setup/configure_user.jsp" layout="centric"/>
+    <forward name="ConfigureUserERROR" resource="/setup/configure_user.jsp" layout="centric"/>
+    <forward name="ConfigureUserOK" resource="/setup/configure_user_success.jsp" layout="centric"/>
     <forward name="ConfigureUserDatabaseERROR" resource="/SetupDatabase.do?command=ConfigureDatabaseCheck"/>
   </action>
   <action name="Upgrade" class="org.aspcfs.modules.setup.actions.Upgrade">
-    <forward name="NeedUpgradeOK" resource="/setup/upgrade_needed.jsp" layout="dhv"/>
-    <forward name="CheckOK" resource="/setup/upgrade_check.jsp" layout="dhv"/>
-    <forward name="UpgradeOK" resource="/setup/upgrade_complete.jsp" layout="dhv"/>
-    <forward name="UpgradeERROR" resource="/setup/upgrade_error.jsp" layout="dhv"/>
+    <forward name="NeedUpgradeOK" resource="/setup/upgrade_needed.jsp" layout="centric"/>
+    <forward name="CheckOK" resource="/setup/upgrade_check.jsp" layout="centric"/>
+    <forward name="UpgradeOK" resource="/setup/upgrade_complete.jsp" layout="centric"/>
+    <forward name="UpgradeERROR" resource="/setup/upgrade_error.jsp" layout="centric"/>
   </action>
-  
-  <!-- 
+  <action name="Layout" class="org.aspcfs.modules.mycfs.actions.Layout">
+    <forward name="ResizeGlobalItemsPaneOK" resource="/mycfs/resize_global_items_pane.jsp" layout="style"/>
+  </action>
+
+  <!--
   Handheld default, this is currently unused
   -->
   <action name="LoginHH" class="org.aspcfs.modules.login.actions.Login">

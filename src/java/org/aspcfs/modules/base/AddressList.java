@@ -38,6 +38,7 @@ public class AddressList extends Vector {
   protected int contactId = -1;
   protected int orderId = -1;
 
+
   /**
    *  Sets the PagedListInfo attribute of the AddressList object
    *
@@ -63,7 +64,7 @@ public class AddressList extends Vector {
   /**
    *  Sets the contactId attribute of the AddressList object
    *
-   * @param  tmp  The new contactId value
+   *@param  tmp  The new contactId value
    */
   public void setContactId(int tmp) {
     this.contactId = tmp;
@@ -73,7 +74,7 @@ public class AddressList extends Vector {
   /**
    *  Sets the orderId attribute of the AddressList object
    *
-   * @param  tmp  The new orderId value
+   *@param  tmp  The new orderId value
    */
   public void setOrderId(int tmp) {
     this.orderId = tmp;
@@ -94,8 +95,8 @@ public class AddressList extends Vector {
   /**
    *  Gets the address attribute of the AddressList object
    *
-   * @param  thisType  Description of the Parameter
-   * @return           The address value
+   *@param  thisType  Description of the Parameter
+   *@return           The address value
    */
   public Address getAddress(String thisType) {
     Iterator i = this.iterator();
@@ -110,11 +111,30 @@ public class AddressList extends Vector {
 
 
   /**
+   *  Returns the address that is marked as primary or 
+   * returns the only (or last) address in the list.
+   *
+   *@return    The primaryAddress value
+   */
+  public Address getPrimaryAddress() {
+    Iterator i = this.iterator();
+    Address thisAddress = null;
+    while (i.hasNext()) {
+      thisAddress = (Address) i.next();
+      if (thisAddress.getPrimaryAddress()) {
+        break;
+      }
+    }
+    return thisAddress;
+  }
+
+
+  /**
    *  Builds a base SQL where statement for filtering records to be used by
    *  sqlSelect and sqlCount
    *
-   * @param  sqlFilter  Description of Parameter
-   * @since             1.1
+   *@param  sqlFilter  Description of Parameter
+   *@since             1.1
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -143,10 +163,10 @@ public class AddressList extends Vector {
    *  Sets the parameters for the preparedStatement - these items must
    *  correspond with the createFilter statement
    *
-   * @param  pst               Description of Parameter
-   * @return                   Description of the Returned Value
-   * @exception  SQLException  Description of Exception
-   * @since                    1.1
+   *@param  pst               Description of Parameter
+   *@return                   Description of the Returned Value
+   *@exception  SQLException  Description of Exception
+   *@since                    1.1
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;

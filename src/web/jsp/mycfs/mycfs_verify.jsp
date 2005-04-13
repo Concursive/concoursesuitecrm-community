@@ -23,15 +23,9 @@
 <script type="text/javascript">
   function loginAlert(ipAddress){
     if (confirm(
-        'This application only permits a user to be logged in once\n' +
-        'and it appears that you are already logged in from\n' +
-        'the following internet address: ' + ipAddress + '.\n' +
-        '\n' +
-        'This message could also appear if you did not previously log out\n' +
-        'and you are simply trying to login again from the same browser.\n' +
-        '\n' +
-        'Choose OK to continue logging in.\n' +
-        'Choose CANCEL to return to the login screen.')) {
+        label("check.user.twologins.one","This application only permits a user to be logged in once\n and it appears that you are already logged in from\n the following internet address: ") + 
+        ipAddress + 
+        label("check.user.twologins.two",".\n\n This message could also appear if you did not previously log out\n and you are simply trying to login again from the same browser.\n\n Choose OK to continue logging in.\n Choose CANCEL to return to the login screen."))) {
       window.location.href = 'Login.do?command=LoginConfirm&override=yes';
     }else{
       window.location.href = 'Login.do?command=LoginConfirm&override=no';

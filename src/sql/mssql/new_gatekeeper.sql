@@ -20,6 +20,7 @@ CREATE TABLE sites (
   enabled BIT NOT NULL DEFAULT 0
 );
 
+
 CREATE TABLE events (
   event_id INT IDENTITY PRIMARY KEY,
   second VARCHAR(64) DEFAULT '0',
@@ -36,6 +37,7 @@ CREATE TABLE events (
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+
 CREATE TABLE events_log (
   log_id INT IDENTITY PRIMARY KEY,
   event_id INTEGER NOT NULL REFERENCES events(event_id),
@@ -43,3 +45,4 @@ CREATE TABLE events_log (
   status INT,
   message TEXT
 );
+

@@ -21,14 +21,14 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Centric CRM Mail Test
+      <dhv:label name="setup.centricCRMMailTest">Centric CRM Mail Test</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      Email failed.  The email transport returned the following error:<br>
+      <dhv:label name="setup.emailFailed.text">Email failed.  The email transport returned the following error:</dhv:label><br>
       <dhv:formMessage />
-      <input type="button" value="OK" onClick="javascript:window.close()"/>
+      <input type="button" value="<dhv:label name="button.ok">OK</dhv:label>" onClick="javascript:window.close()"/>
     </td>
   </tr>
 </table>

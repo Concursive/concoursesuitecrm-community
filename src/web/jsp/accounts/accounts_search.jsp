@@ -28,7 +28,7 @@
     document.forms['searchAccount'].searchName.focus();
   }
 </script>
-<body onLoad="javascript:document.forms[0].searchName.focus();">
+<body onLoad="javascript:document.searchAccount.searchName.focus();">
 <form name="searchAccount" action="Accounts.do?command=Search" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -84,8 +84,8 @@
   </tr>
 </table>
 &nbsp;<br>
-<input type="submit" value="Search">
-<input type="button" value="Clear" onClick="javascript:clearForm();">
+<input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">
+<input type="button" value="<dhv:label name="button.clear">Clear</dhv:label>" onClick="javascript:clearForm();">
 <input type="hidden" name="source" value="searchForm">
 </form>
 </body>

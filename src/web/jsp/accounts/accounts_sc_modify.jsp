@@ -34,52 +34,46 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].serviceContractNumber.focus();">
+<body onLoad="javascript:document.addServiceContract.serviceContractNumber.focus();">
 <form name="addServiceContract" action="AccountsServiceContracts.do?command=Update&auto-populate=true&return=<%= request.getParameter("return") %>" onSubmit="return doCheck(this);" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td width="100%">
   <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-  <a href="Accounts.do?command=Search">Search Results</a> >
+  <a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
   <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-  <a href="AccountsServiceContracts.do?command=List&orgId=<%= OrgDetails.getOrgId() %>">Service Contracts</a> >
-  Modify Service Contract
+  <a href="AccountsServiceContracts.do?command=List&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.accounts_sc_add.ServiceContracts">Service Contracts</dhv:label></a> >
+  <dhv:label name="account.sc.modifyServiceContract">Modify Service Contract</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-  <%@ include file="accounts_details_header_include.jsp" %>
-    <dhv:container name="accounts" selected="servicecontracts" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-  <table cellpadding="4" cellspacing="0" border="0" width="100%">
-    <tr>
-      <td class="containerBack">
-      <input type=submit value="Update" onClick="this.form.dosubmit.value='true';" />
-      <%if ("list".equals(request.getParameter("return"))) { %>
-        <input type="button" value="Cancel" onClick="window.location.href='AccountsServiceContracts.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
-      <%}else{ %>
-        <input type="button" value="Cancel" onClick="window.location.href='AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>';this.form.dosubmit.value='false';" />
-      <%}%>
-      <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
-      <input type="hidden" name="id" value="<%= serviceContract.getId() %>" />
-      <input type="hidden" name="return" value="<%= request.getParameter("return") %>" />
-      <br />
-      <dhv:formMessage />
+<dhv:container name="accounts" selected="servicecontracts" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <input type=submit value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+  <%if ("list".equals(request.getParameter("return"))) { %>
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsServiceContracts.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+  <%}else{ %>
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>';this.form.dosubmit.value='false';" />
+  <%}%>
+  <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
+  <input type="hidden" name="id" value="<%= serviceContract.getId() %>" />
+  <input type="hidden" name="return" value="<%= request.getParameter("return") %>" />
+  <br />
+  <dhv:formMessage />
 <%--  include basic service contract form --%>
 <%@ include file="servicecontract_include.jsp" %>
   <br />
-  <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';" />
   <%if ("list".equals(request.getParameter("return"))) { %>
-    <input type="button" value="Cancel" onClick="window.location.href='AccountsServiceContracts.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsServiceContracts.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
   <%}
   else{ %>
-    <input type="button" value="Cancel" onClick="window.location.href='AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>';this.form.dosubmit.value='false';" />
+    <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsServiceContracts.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=serviceContract.getId()%>';this.form.dosubmit.value='false';" />
   <%
   }
   %>
   <input type="hidden" name="dosubmit" value="true" />
-  </td>
-  </tr>
-</table>
+</dhv:container>
 </form>
 </body>

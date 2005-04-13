@@ -15,18 +15,21 @@
  */
 package com.zeroio.iteam.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.Project;
+import com.zeroio.iteam.base.TeamMember;
+import com.zeroio.iteam.base.TeamMemberList;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import com.zeroio.iteam.base.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.troubletickets.base.Ticket;
+import org.aspcfs.modules.troubletickets.base.TicketList;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
  *  Description of the Class
@@ -50,7 +53,7 @@ public final class ProjectManagementTickets extends CFSModule {
     try {
       db = this.getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-tickets-add")) {
         return "PermissionError";
@@ -73,7 +76,8 @@ public final class ProjectManagementTickets extends CFSModule {
       thisTicket.setOrgId(0);
       thisTicket.setContactId(this.getUser(context, this.getUserId(context)).getContactId());
       if (thisTicket.getId() > 0) {
-        thisTicket.buildHistory(db);
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        thisTicket.buildHistory(db, systemStatus);
       }
       buildFormElements(context, db, thisTicket);
     } catch (Exception e) {
@@ -81,6 +85,9 @@ public final class ProjectManagementTickets extends CFSModule {
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
+    }
+    if ("true".equals(context.getRequest().getParameter("popup"))){
+      return ("ProjectTicketsPopupOK");
     }
     return ("ProjectCenterOK");
   }
@@ -96,6 +103,8 @@ public final class ProjectManagementTickets extends CFSModule {
     Connection db = null;
     int resultCount = 0;
     boolean recordInserted = false;
+    boolean isValid = false;
+    String returnTo = context.getRequest().getParameter("return");
     try {
       //Process the ticket
       int projectId = Integer.parseInt((String) context.getRequest().getParameter("pid"));
@@ -108,7 +117,7 @@ public final class ProjectManagementTickets extends CFSModule {
       thisTicket.setModifiedBy(getUserId(context));
       db = this.getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, thisTicket.getProjectId(), getUserRange(context));
+      Project thisProject = loadProject(db, thisTicket.getProjectId(), context);
       thisProject.buildPermissionList(db);
       // Only assign to users of the project
       if (thisTicket.getAssignedTo() > -1 && !TeamMemberList.isOnTeam(db, thisProject.getId(), thisTicket.getAssignedTo())) {
@@ -118,10 +127,14 @@ public final class ProjectManagementTickets extends CFSModule {
         if (!hasProjectAccess(context, db, thisProject, "project-tickets-add")) {
           return "PermissionError";
         }
-        recordInserted = thisTicket.insert(db);
-        indexAddItem(context, thisTicket);
+        isValid = this.validateObject(context, db, thisTicket);
+        if (isValid) {
+          recordInserted = thisTicket.insert(db);
+        }
         if (recordInserted) {
           thisTicket.insertProjectLink(db, projectId);
+          indexAddItem(context, thisTicket);
+          processInsertHook(context, thisTicket);
         }
       } else {
         // allow access to edit if assigned to this user and ticket is not closed
@@ -133,11 +146,21 @@ public final class ProjectManagementTickets extends CFSModule {
         if (thisProject.getId() != thisTicket.getProjectId()) {
           return "PermissionError";
         }
-        resultCount = thisTicket.update(db);
-        indexAddItem(context, thisTicket);
-      }
-      if (!recordInserted && resultCount < 1) {
-        processErrors(context, thisTicket.getErrors());
+        isValid = this.validateObject(context, db, thisTicket);
+        if (isValid) {
+          Ticket previousTicket = new Ticket(db, thisTicket.getId());
+          resultCount = thisTicket.update(db);
+          if (resultCount == 1) {
+            // Since ticket is now closed, return user to the list
+            if (thisTicket.getCloseIt()) {
+              returnTo = "list";
+            }
+            // Reload, index, and process the hook
+            thisTicket.queryRecord(db, thisTicket.getId());
+            indexAddItem(context, thisTicket);
+            processUpdateHook(context, previousTicket, thisTicket);
+          }
+        }
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -148,7 +171,11 @@ public final class ProjectManagementTickets extends CFSModule {
     if (recordInserted) {
       return ("InsertOK");
     } else if (resultCount == 1) {
-      return ("UpdateOK");
+      if ("list".equals(returnTo)) {
+        return getReturn(context, "UpdateList");
+      } else {
+        return getReturn(context, "Update");
+      }
     } else {
       return (executeCommandAdd(context));
     }
@@ -171,7 +198,7 @@ public final class ProjectManagementTickets extends CFSModule {
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
       context.getRequest().setAttribute("ticket", thisTicket);
       //Load the project
-      Project thisProject = new Project(db, thisTicket.getProjectId(), getUserRange(context));
+      Project thisProject = loadProject(db, thisTicket.getProjectId(), context);
       thisProject.buildPermissionList(db);
       // allow access to edit if assigned to this user and ticket is not closed
       if (!hasProjectAccess(context, db, thisProject, "project-tickets-edit") &&
@@ -204,28 +231,57 @@ public final class ProjectManagementTickets extends CFSModule {
     Connection db = null;
     String projectId = context.getRequest().getParameter("pid");
     String ticketId = context.getRequest().getParameter("id");
-    PagedListInfo ticketHistoryInfo = this.getPagedListInfo(context, "TicketHistoryInfo");
-    ticketHistoryInfo.setColumnToSortBy("t.entered");
+    String returnAction = context.getRequest().getParameter("return");
     try {
       db = this.getConnection(context);
+      //Load the project
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-tickets-view")) {
+        return "PermissionError";
+      }
+      context.getRequest().setAttribute("Project", thisProject);
       Ticket thisTicket = null;
-      //Load the ticket
-      if (ticketId != null) {
-        thisTicket = new Ticket(db, Integer.parseInt(ticketId));
-        //Load the project
-        Project thisProject = new Project(db, thisTicket.getProjectId(), getUserRange(context));
-        thisProject.buildPermissionList(db);
-        if (!hasProjectAccess(context, db, thisProject, "project-tickets-view")) {
-          return "PermissionError";
+      if (returnAction == null) {
+        //Determine pagedlist
+        PagedListInfo projectTicketsInfo = this.getPagedListInfo(context, "projectTicketsInfo", "t.entered", null);
+        projectTicketsInfo.setLink("ProjectManagementTickets.do?command=Details&pid=" + thisProject.getId());
+        projectTicketsInfo.setMode(PagedListInfo.DETAILS_VIEW);
+        //Load the ticket based on the offset
+        TicketList tickets = new TicketList();
+        tickets.setProjectId(thisProject.getId());
+        tickets.setPagedListInfo(projectTicketsInfo);
+        if (ticketId != null) {
+          tickets.setId(Integer.parseInt(ticketId));
         }
-        context.getRequest().setAttribute("Project", thisProject);
+        if ("all".equals(projectTicketsInfo.getListView())) {
+
+        } else if ("closed".equals(projectTicketsInfo.getListView())) {
+          tickets.setOnlyClosed(true);
+        } else {
+          tickets.setOnlyOpen(true);
+        }
+        tickets.buildList(db);
+        // Retrieve the ticket
+        if (tickets.size() > 0) {
+          thisTicket = (Ticket) tickets.get(0);
+          context.getRequest().setAttribute("ticket", thisTicket);
+        }
+      }
+      if (thisTicket == null) {
+        thisTicket = new Ticket(db, Integer.parseInt(ticketId));
+        context.getRequest().setAttribute("ticket", thisTicket);
       }
       context.getRequest().setAttribute("IncludeSection", ("tickets_details").toLowerCase());
       if (thisTicket.getAssignedTo() > 0) {
         thisTicket.checkEnabledOwnerAccount(db);
       }
+      // Load the ticket history
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      PagedListInfo ticketHistoryInfo = this.getPagedListInfo(context, "TicketHistoryInfo");
+      ticketHistoryInfo.setColumnToSortBy("t.entered");
       thisTicket.getHistory().setPagedListInfo(ticketHistoryInfo);
-      thisTicket.buildHistory(db);
+      thisTicket.buildHistory(db, systemStatus);
       context.getRequest().setAttribute("ticket", thisTicket);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -252,7 +308,7 @@ public final class ProjectManagementTickets extends CFSModule {
       //Load the ticket and change the status
       thisTicket = new Ticket(db, Integer.parseInt(context.getRequest().getParameter("id")));
       //Load the project
-      Project thisProject = new Project(db, thisTicket.getProjectId(), getUserRange(context));
+      Project thisProject = loadProject(db, thisTicket.getProjectId(), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-tickets-edit")) {
         return "PermissionError";
@@ -279,14 +335,13 @@ public final class ProjectManagementTickets extends CFSModule {
     Connection db = null;
     boolean recordDeleted = false;
     Ticket thisTicket = null;
-    String projectId = context.getRequest().getParameter("pid");
     String ticketId = context.getRequest().getParameter("id");
     try {
       db = this.getConnection(context);
       //Load and delete the ticket
       thisTicket = new Ticket(db, Integer.parseInt(ticketId));
       //Load the project and permissions
-      Project thisProject = new Project(db, thisTicket.getProjectId(), getUserRange(context));
+      Project thisProject = loadProject(db, thisTicket.getProjectId(), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-tickets-delete")) {
         return "PermissionError";

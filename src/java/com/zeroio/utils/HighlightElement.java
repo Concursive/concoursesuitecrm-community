@@ -50,7 +50,7 @@ public class HighlightElement {
     start = s;
     end = e;
     endWord = ew;
-    System.out.println("HighlightElement-> " + bw + "..." + s + "..." + e + "..." + ew);
+    //System.out.println("HighlightElement-> " + bw + "..." + s + "..." + e + "..." + ew);
   }
 
 

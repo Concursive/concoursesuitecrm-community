@@ -15,13 +15,13 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *  Represents a module category that has capabilities (lists, reports, etc.)
@@ -49,6 +49,9 @@ public class PermissionCategory extends GenericBean {
   private boolean objectEvents = false;
   private boolean reports = false;
   private boolean products = false;
+  private boolean webdav = false;
+  private boolean logos = false;
+  private int constant = -1;
 
   //Constants for working with lookup lists
   //NOTE: currently all editable lookup lists need to be defined here
@@ -65,6 +68,7 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_ACCOUNTS_EMAIL = 819041648;
   public final static int LOOKUP_ACCOUNTS_ADDRESS = 819041649;
   public final static int LOOKUP_ACCOUNTS_PHONE = 819041650;
+  public final static int LOOKUP_ACCOUNTS_INDUSTRY = 302051030;
 
   // Service Contracts
   public final static int PERMISSION_CAT_SERVICE_CONTRACTS = 130041100;
@@ -87,6 +91,9 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_CONTACTS_EMAIL = 2;
   public final static int LOOKUP_CONTACTS_ADDRESS = 3;
   public final static int LOOKUP_CONTACTS_PHONE = 4;
+  public final static int LOOKUP_CONTACTS_IMTYPES = 111051308;
+  public final static int LOOKUP_CONTACTS_IMSERVICES = 111051352;
+  public final static int LOOKUP_CONTACTS_TEXT = 111051354;
 
   //Employees
   public final static int PERMISSION_CAT_EMPLOYEES = 1111031131;
@@ -100,6 +107,36 @@ public class PermissionCategory extends GenericBean {
   public final static int LOOKUP_TICKET_FORM = 127041246;
   public final static int MULTIPLE_CATEGORY_TICKET = 202041401;
 
+  //product catalog
+  public final static int PERMISSION_CAT_PRODUCT_CATALOG = 330041409;
+  public final static int LOOKUP_PRODUCT_TYPE = 1017040901;
+  public final static int LOOKUP_PRODUCT_FORMAT = 1017040902;
+  public final static int LOOKUP_PRODUCT_SHIPPING = 1017040903;
+  public final static int LOOKUP_PRODUCT_SHIP_TIME = 1017040904;
+  public final static int LOOKUP_PRODUCT_CATEGORY_TYPE = 1017040905;
+  public final static int LOOKUP_PRODUCT_TAX = 1017040906;
+  public final static int LOOKUP_CURRENCY = 1017040907;
+  public final static int LOOKUP_RECURRING_TYPE = 1017040908;
+  public final static int LOOKUP_MANUFACTURER_TYPE = 1017040909;
+
+  //quotes
+  public final static int PERMISSION_CAT_QUOTES = 420041017;
+  public final static int LOOKUP_QUOTE_STATUS = 1123041000;
+  public final static int LOOKUP_QUOTE_TYPES = 1123041001;
+  public final static int LOOKUP_QUOTE_TERMS = 1123041002;
+  public final static int LOOKUP_QUOTE_SOURCE = 1123041003;
+  public final static int LOOKUP_QUOTE_DELIVERY = 1123041004;
+  public final static int LOOKUP_QUOTE_CONDITION = 1123041005;
+  public final static int LOOKUP_QUOTE_REMARKS = 1123041006;
+
+  //documents module
+  public final static int PERMISSION_CAT_DOCUMENTS = 1202041528;
+
+  //leads
+	public final static int PERMISSION_CAT_SALES = 228051100;
+	public final static int LOOKUP_SALES_STATUS = 228051101;
+	public final static int LOOKUP_CONTACTS_RATING = 228051102;
+	public final static int LOOKUP_CONTACTS_SOURCE = 228051103;
 
   /**
    *  Constructor for the PermissionCategory object
@@ -184,6 +221,125 @@ public class PermissionCategory extends GenericBean {
     rs.close();
     pst.close();
     return i;
+  }
+
+
+  /**
+   *  Returns a permission category id for the specified constant by lookup
+   *  up the value in the database and returning the first id found.
+   *
+   *@param  db                Description of the Parameter
+   *@param  constantId        Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int lookupId(Connection db, int constantId) throws SQLException {
+    if (constantId == -1) {
+      throw new SQLException("Invalid Permission Category Name");
+    }
+    int i = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT category_id " +
+        "FROM permission_category " +
+        "WHERE constant = ? ");
+    pst.setInt(1, constantId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      i = rs.getInt("category_id");
+    }
+    rs.close();
+    pst.close();
+    return i;
+  }
+
+
+  /**
+   *  Sets the webdav attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new webdav value
+   */
+  public void setWebdav(boolean tmp) {
+    this.webdav = tmp;
+  }
+
+
+  /**
+   *  Sets the webdav attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new webdav value
+   */
+  public void setWebdav(String tmp) {
+    this.webdav = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the webdav attribute of the PermissionCategory object
+   *
+   *@return    The webdav value
+   */
+  public boolean getWebdav() {
+    return webdav;
+  }
+
+
+  /**
+   *  Sets the logos attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new logos value
+   */
+  public void setLogos(boolean tmp) {
+    this.logos = tmp;
+  }
+
+
+  /**
+   *  Sets the logos attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new logos value
+   */
+  public void setLogos(String tmp) {
+    this.logos = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the logos attribute of the PermissionCategory object
+   *
+   *@return    The logos value
+   */
+  public boolean getLogos() {
+    return logos;
+  }
+
+
+  /**
+   *  Sets the constant attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new constant value
+   */
+  public void setConstant(int tmp) {
+    this.constant = tmp;
+  }
+
+
+  /**
+   *  Sets the constant attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new constant value
+   */
+  public void setConstant(String tmp) {
+    this.constant = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the constant attribute of the PermissionCategory object
+   *
+   *@return    The constant value
+   */
+  public int getConstant() {
+    return constant;
   }
 
 
@@ -415,10 +571,37 @@ public class PermissionCategory extends GenericBean {
   public boolean getReports() {
     return reports;
   }
-  
-  public boolean getProducts() { return products; }
-  public void setProducts(boolean tmp) { this.products = tmp; }
-  public void setProducts(String tmp) { this.products = DatabaseUtils.parseBoolean(tmp); }
+
+
+  /**
+   *  Gets the products attribute of the PermissionCategory object
+   *
+   *@return    The products value
+   */
+  public boolean getProducts() {
+    return products;
+  }
+
+
+  /**
+   *  Sets the products attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new products value
+   */
+  public void setProducts(boolean tmp) {
+    this.products = tmp;
+  }
+
+
+  /**
+   *  Sets the products attribute of the PermissionCategory object
+   *
+   *@param  tmp  The new products value
+   */
+  public void setProducts(String tmp) {
+    this.products = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
   /**
    *  Gets the scheduledEvents attribute of the PermissionCategory object
@@ -571,8 +754,8 @@ public class PermissionCategory extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "INSERT INTO permission_category (category, description, " +
         "level, enabled, active, lookups, folders, viewpoints, categories, scheduled_events, " +
-        "object_events, reports, products) " +
-        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+        "object_events, reports, products, webdav, logos, constant) " +
+        "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     pst.setString(++i, category);
     pst.setString(++i, description);
@@ -587,6 +770,9 @@ public class PermissionCategory extends GenericBean {
     pst.setBoolean(++i, objectEvents);
     pst.setBoolean(++i, reports);
     pst.setBoolean(++i, products);
+    pst.setBoolean(++i, webdav);
+    pst.setBoolean(++i, logos);
+    pst.setInt(++i, constant);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "permission_cate_category_id_seq");
@@ -615,6 +801,9 @@ public class PermissionCategory extends GenericBean {
     objectEvents = rs.getBoolean("object_events");
     reports = rs.getBoolean("reports");
     products = rs.getBoolean("products");
+    webdav = rs.getBoolean("webdav");
+    logos = rs.getBoolean("logos");
+    constant = rs.getInt("constant");
   }
 
 
@@ -631,6 +820,46 @@ public class PermissionCategory extends GenericBean {
     PreparedStatement pst = db.prepareStatement(
         "UPDATE permission_category " +
         "SET reports = ? " +
+        "WHERE category_id = ? ");
+    pst.setBoolean(1, enabled);
+    pst.setInt(2, categoryId);
+    pst.execute();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  categoryId        Description of the Parameter
+   *@param  enabled           Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void updateWebdavAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE permission_category " +
+        "SET webdav = ? " +
+        "WHERE category_id = ? ");
+    pst.setBoolean(1, enabled);
+    pst.setInt(2, categoryId);
+    pst.execute();
+    pst.close();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  categoryId        Description of the Parameter
+   *@param  enabled           Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void updateLogosAttribute(Connection db, int categoryId, boolean enabled) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "UPDATE permission_category " +
+        "SET logos = ? " +
         "WHERE category_id = ? ");
     pst.setBoolean(1, enabled);
     pst.setInt(2, categoryId);

@@ -29,17 +29,17 @@
     var formTest = true;
     var messageText = "";
     if (form.id<%= InventoryItem.getId() %>.value.length < 5) {
-      messageText += "- File is required\r\n";
+      messageText += label("file.required", "File is required");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("File.not.submitted", "Check form") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
     } else {
-      if (form.upload.value != 'Please Wait...') {
-        form.upload.value='Please Wait...';
+      if (form.upload.value != label("button.pleasewait","Please Wait...")) {
+        form.upload.value=label("button.pleasewait","Please Wait...");
         return true;
       } else {
         return false;
@@ -60,11 +60,11 @@
       <span>
         <img src="<%= (InventoryItem.hasPictureId()?"AutoGuide.do?command=ShowImage&id=" + InventoryItem.getId() + "&fid=" + InventoryItem.getPictureId():"images/vehicle_unavailable.gif") %>" border="0"/><br>
         &nbsp;<br>
-<dhv:evaluate exp="<%= hasText(InventoryItem.getStockNo()) %>">
+<dhv:evaluate if="<%= hasText(InventoryItem.getStockNo()) %>">
         #<%= toHtml(InventoryItem.getStockNo()) %><br>
 </dhv:evaluate>
         <%= InventoryItem.getVehicle().getYear() %> <%= toHtml(InventoryItem.getVehicle().getMake().getName()) %> <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %>
-<dhv:evaluate exp="<%= (InventoryItem.getSellingPrice() > 0) %>">
+<dhv:evaluate if="<%= (InventoryItem.getSellingPrice() > 0) %>">
         <br><%= InventoryItem.getSellingPriceString() %>
 </dhv:evaluate>
         <br>&nbsp;

@@ -337,8 +337,12 @@ public class SurveyQuestion {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db, int surveyId) throws SQLException {
+    boolean doCommit = false;
     try {
-      db.setAutoCommit(false);
+      doCommit = db.getAutoCommit();
+      if (doCommit == true) {
+        db.setAutoCommit(false);
+      }
       int i = 0;
       //calculate the next position for this question
       PreparedStatement pst = db.prepareStatement(
@@ -374,12 +378,18 @@ public class SurveyQuestion {
           thisItem.insert(db, this.getId());
         }
       }
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -409,8 +419,11 @@ public class SurveyQuestion {
    *@exception  SQLException  Description of the Exception
    */
   public void update(Connection db, int thisSurveyId) throws SQLException {
+    boolean doCommit = false;
     try {
-      db.setAutoCommit(false);
+      if ((doCommit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       ItemList.delete(db, this.getId());
       PreparedStatement pst = db.prepareStatement(
           "UPDATE survey_questions " +
@@ -433,12 +446,18 @@ public class SurveyQuestion {
           thisItem.insert(db, this.getId());
         }
       }
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
   }
 

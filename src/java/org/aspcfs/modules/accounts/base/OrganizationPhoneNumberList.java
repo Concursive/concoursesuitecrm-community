@@ -15,18 +15,17 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.base.EmailAddressList;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.accounts.base.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.PhoneNumber;
+import org.aspcfs.modules.base.PhoneNumberList;
+import org.aspcfs.utils.web.HtmlSelect;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
 
 /**
  *  Contains a list of phone numbers... currently used to build the list from
@@ -57,13 +56,20 @@ public class OrganizationPhoneNumberList extends PhoneNumberList {
   /**
    *  Constructor for the OrganizationPhoneNumberList object
    *
-   *@param  request  Description of the Parameter
+   *@param  context  Description of the Parameter
    */
   public OrganizationPhoneNumberList(ActionContext context) {
     int i = 0;
+    int primaryNumber = -1;
+    if (context.getRequest().getParameter("primaryNumber") != null) {
+      primaryNumber = Integer.parseInt((String) context.getRequest().getParameter("primaryNumber"));
+    }
     while (context.getRequest().getParameter("phone" + (++i) + "type") != null) {
       OrganizationPhoneNumber thisPhoneNumber = new OrganizationPhoneNumber();
       thisPhoneNumber.buildRecord(context, i);
+      if (primaryNumber == i) {
+        thisPhoneNumber.setPrimaryNumber(true);
+      }
       if (thisPhoneNumber.isValid()) {
         this.addElement(thisPhoneNumber);
       }

@@ -37,22 +37,22 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> >
-Mailbox
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> >
+<dhv:label name="Mailbox">Mailbox</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<a href="javascript:window.location.href='MyCFSInbox.do?command=NewMessage';">New Message</a><br />
+<a href="javascript:window.location.href='MyCFSInbox.do?command=NewMessage';"><dhv:label name="actionList.newMessage">New Message</dhv:label></a><br />
 <br />
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="MyCFSInbox.do?command=Inbox">
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= InboxInfo.getOptionValue("new") %>>Messages (Inbox)</option>
-        <option <%= InboxInfo.getOptionValue("old") %>>Archive</option>
-        <option <%= InboxInfo.getOptionValue("sent") %>>Sent (Outbox)</option>
+      <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= InboxInfo.getOptionValue("new") %>><dhv:label name="calendar.messages.inbox.brackets">Messages (Inbox)</dhv:label></option>
+        <option <%= InboxInfo.getOptionValue("old") %>><dhv:label name="accounts.accounts_list_menu.Archive">Archive</dhv:label></option>
+        <option <%= InboxInfo.getOptionValue("sent") %>><dhv:label name="calendar.sent.outbox.brackets">Sent (Outbox)</dhv:label></option>
       </select>
     </td>
     <td>
@@ -64,24 +64,24 @@ Mailbox
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <dhv:evaluate if="<%= InboxInfo.getListView().equalsIgnoreCase("new") %>">
       <th>
-        <strong>Status</strong>
+        <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
       </th>
     </dhv:evaluate>
     <th width="40%" nowrap>
-      <strong><a href="MyCFSInbox.do?command=Inbox&column=m.subject">Subject</a></strong>
+      <strong><a href="MyCFSInbox.do?command=Inbox&column=m.subject"><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></a></strong>
       <%= InboxInfo.getSortIcon("m.subject") %>
     </th>
   <% if(!InboxInfo.getListView().equalsIgnoreCase("sent")){%>
     <th width="30%" nowrap>
-      <strong><a href="MyCFSInbox.do?command=Inbox&column=sent_namelast">From</a></strong>
+      <strong><a href="MyCFSInbox.do?command=Inbox&column=sent_namelast"><dhv:label name="campaign.from">From</dhv:label></a></strong>
       <%= InboxInfo.getSortIcon("sent_namelast") %>
     </th>
     <th width="30%" nowrap>
-      <strong><a href="MyCFSInbox.do?command=Inbox&column=m.entered">Received</a></strong>
+      <strong><a href="MyCFSInbox.do?command=Inbox&column=m.entered"><dhv:label name="calendar.received">Received</dhv:label></a></strong>
       <%= InboxInfo.getSortIcon("m.entered") %>
   <%} else {%>
     <th width="30%" nowrap>
@@ -89,7 +89,7 @@ Mailbox
       <%= InboxInfo.getSortIcon("sent_namelast") %>
     </th>
     <th width="30%"  nowrap>
-      <strong><a href="MyCFSInbox.do?command=Inbox&column=m.sent">Sent</a></strong>
+      <strong><a href="MyCFSInbox.do?command=Inbox&column=m.sent"><dhv:label name="calendar.sent">Sent</dhv:label></a></strong>
       <%= InboxInfo.getSortIcon("m.sent") %>
   <%}%>
     </th>
@@ -149,7 +149,7 @@ Mailbox
 <%}%>
 </table>
 <%} else {%>
-  <tr class="containerBody"><td colspan="5" valign=center>No messages found.</td></tr>
+  <tr class="containerBody"><td colspan="5" valign=center><dhv:label name="accounts.accounts_contacts_messages_view.NoMessagesFound">No messages found.</dhv:label></td></tr>
 </table>
 <%}%>
 <br>

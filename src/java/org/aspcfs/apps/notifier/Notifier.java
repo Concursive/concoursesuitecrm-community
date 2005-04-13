@@ -15,32 +15,40 @@
  */
 package org.aspcfs.apps.notifier;
 
-import org.aspcfs.apps.common.*;
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-import java.net.*;
-import java.text.*;
-import org.aspcfs.utils.*;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
+import org.aspcfs.apps.ReportBuilder;
+import org.aspcfs.apps.common.ReportConstants;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.Usage;
-import org.aspcfs.modules.communications.base.*;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.pipeline.base.*;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.system.base.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.actions.*;
-import org.aspcfs.apps.ReportBuilder;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import java.util.*;
-import java.util.zip.*;
-import java.lang.reflect.*;
-import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.modules.base.Constants;
-import com.zeroio.iteam.base.FileItemList;
-import com.zeroio.iteam.base.FileItem;
+import org.aspcfs.modules.base.Notification;
+import org.aspcfs.modules.base.Report;
+import org.aspcfs.modules.communications.base.Campaign;
+import org.aspcfs.modules.communications.base.CampaignList;
+import org.aspcfs.modules.communications.base.Recipient;
+import org.aspcfs.modules.communications.base.RecipientList;
+import org.aspcfs.modules.contacts.base.Call;
+import org.aspcfs.modules.contacts.base.CallList;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactInformationFormatter;
+import org.aspcfs.modules.contacts.base.ContactReport;
+import org.aspcfs.modules.pipeline.base.OpportunityComponent;
+import org.aspcfs.modules.pipeline.base.OpportunityComponentList;
+import org.aspcfs.modules.pipeline.base.OpportunityHeader;
+import org.aspcfs.modules.system.base.Site;
+import org.aspcfs.modules.system.base.SiteList;
+import org.aspcfs.utils.*;
+
+import java.io.*;
+import java.lang.reflect.Constructor;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.zip.ZipOutputStream;
 
 /**
  *  Application that processes various kinds of Alerts in CFS, generating
@@ -136,7 +144,7 @@ public class Notifier extends ReportBuilder {
         yesterday = new java.sql.Timestamp(calYesterday.getTimeInMillis());
 
         if (System.getProperty("DEBUG") != null) {
-          System.out.println("Notifier-> Start Date: " + today.toString() + "\nAlert End Date: " + yesterday.toString());
+          System.out.println("Notifier-> Start Date: " + yesterday.toString() + "\nAlert End Date: " + today.toString());
         }
         //Process each site
         if (System.getProperty("DEBUG") != null) {
@@ -183,8 +191,7 @@ public class Notifier extends ReportBuilder {
         if (System.getProperty("DEBUG") != null) {
           System.out.println(this.output.toString());
         }
-        //this.sendAdminReport(this.output.toString());
-        java.util.Date end = new java.util.Date();
+        //java.util.Date end = new java.util.Date();
       } catch (Exception exc) {
         exc.printStackTrace(System.out);
         System.err.println("Notifier-> BuildReport Error: " + exc.toString());
@@ -369,6 +376,11 @@ public class Notifier extends ReportBuilder {
     f.mkdirs();
     PrivateString thisKey = new PrivateString(filePath + "survey.key");
 
+    //does the server support SSL
+    String schema = "http";
+    if ("true".equals((String) config.get("FORCESSL"))) {
+      schema = "https";
+    }
     //Process each campaign that is active and not processed
     Iterator i = thisList.iterator();
     int notifyCount = 0;
@@ -449,6 +461,36 @@ public class Notifier extends ReportBuilder {
           if (value != null) {
             template.addParseElement("${surveyId=" + value + "}", java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "id=" + value + ",cid=" + thisContact.getId()), "UTF-8"));
           }
+          value = template.getValue("survey_url_address");
+          if (value != null){
+            String serverName = template.getValue("server_name");
+            template.addParseElement("${server_name=" + serverName + "}", "");
+          
+            String addressCurrentURLParameters = java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "addressNoChangeId=" + value + ",cid=" + thisContact.getId() + ",campaignId=" + thisCampaign.getId()), "UTF-8");
+            String addressCurrentURL = "If this information is accurate click <a href=\"" + schema + "://" + serverName + "/ProcessAddressSurvey.do?id=" + addressCurrentURLParameters + "}\">here</a>";
+            
+            String addressUpdateURLParameters = java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "addressSurveyId=" + value + ",cid=" + thisContact.getId() + ",campaignId=" + thisCampaign.getId()), "UTF-8");
+            String addressUpdateURL = ", if you would like to update your contact information click <a href=\"" + schema + "://" + serverName + "/ProcessAddressSurvey.do?id=" + addressUpdateURLParameters + "}\">here</a>.";
+
+            template.addParseElement("${survey_url_address="+ value + "}", "<br />" + addressCurrentURL + addressUpdateURL + "<br />");
+          }
+          value = template.getValue("addressSurveyId");
+          if (value != null){
+            template.addParseElement("${addressSurveyId=" + value + "}", java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "addressSurveyId=" + value + ",cid=" + thisContact.getId() + ",campaignId=" + thisCampaign.getId()), "UTF-8"));
+          }
+          value = template.getValue("addressNoChangeId");
+          if (value != null){
+            template.addParseElement("${addressNoChangeId=" + value + "}", java.net.URLEncoder.encode(PrivateString.encrypt(thisKey.getKey(), "addressNoChangeId=" + value + ",cid=" + thisContact.getId() + ",campaignId=" + thisCampaign.getId()), "UTF-8"));
+          }
+          if (thisCampaign.getHasAddressRequest()) {
+            String templateFilePath = (String) config.get("FILELIBRARY") + fs + dbName + fs + "templates.xml";
+            String contactInformation = ContactInformationFormatter.getContactInformation(
+                  thisContact, templateFilePath);
+            value = template.getValue("contact_address");
+            if (value != null){
+              template.addParseElement("${contact_address=" + value + "}", ((contactInformation != null)?contactInformation:""));
+            }
+          }
           //NOTE: The following items are the same as the ProcessMessage.java items
           template.addParseElement("${name}", StringUtils.toHtml(thisContact.getNameFirstLast()));
           template.addParseElement("${firstname}", StringUtils.toHtml(thisContact.getNameFirst()));
@@ -458,7 +500,7 @@ public class Notifier extends ReportBuilder {
           thisNotification.setMessageToSend(template.getParsedText());
           thisNotification.setType(thisCampaign.getSendMethodId());
           thisNotification.notifyContact(db);
-          if (thisNotification.getType() == Notification.EMAIL) {
+          if (thisNotification.getType() == Notification.EMAIL || thisNotification.getType() == Notification.BROADCAST) {
             Usage emailUsage = new Usage();
             emailUsage.setEnteredBy(thisCampaign.getModifiedBy());
             emailUsage.setAction(Constants.USAGE_COMMUNICATIONS_EMAIL);

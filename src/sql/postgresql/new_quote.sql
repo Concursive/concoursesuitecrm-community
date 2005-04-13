@@ -47,7 +47,7 @@ CREATE TABLE lookup_quote_source (
 CREATE TABLE quote_entry (
   quote_id SERIAL PRIMARY KEY,
   parent_id INT REFERENCES quote_entry(quote_id),
-	org_id INTEGER NOT NULL REFERENCES organization(org_id),
+	org_id INTEGER REFERENCES organization(org_id),
   contact_id INT REFERENCES contact(contact_id),
   source_id INTEGER REFERENCES lookup_quote_source(code),
   grand_total FLOAT,
@@ -69,6 +69,7 @@ CREATE TABLE quote_entry (
 	modifiedby INT NOT NULL REFERENCES access(user_id)
 );
 
+
 -- Each quote can contain multiple products(line items)
 CREATE TABLE quote_product (
   item_id SERIAL PRIMARY KEY,
@@ -86,7 +87,9 @@ CREATE TABLE quote_product (
   estimated_delivery_date TIMESTAMP(3),
   -- quote status
 	status_id INTEGER REFERENCES lookup_quote_status(code),
-  status_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  status_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  estimated_delivery TEXT,
+  comment VARCHAR(300)
 );
 
 -- Each quote_product can have configurable options
@@ -107,25 +110,30 @@ CREATE TABLE quote_product_options (
 
 CREATE TABLE quote_product_option_boolean (
 	quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
-	value BOOLEAN NOT NULL
+	value BOOLEAN NOT NULL,
+  id INTEGER
 );
 
 CREATE TABLE quote_product_option_float (
 	quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
-	value FLOAT NOT NULL
+	value FLOAT NOT NULL,
+  id INTEGER
 );
 
 CREATE TABLE quote_product_option_timestamp (
 	quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
-	value TIMESTAMP NOT NULL
+	value TIMESTAMP(3) NOT NULL,
+  id INTEGER
 );
 
 CREATE TABLE quote_product_option_integer (
 	quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
-	value INTEGER NOT NULL
+	value INTEGER NOT NULL,
+  id INTEGER
 );
 
 CREATE TABLE quote_product_option_text (
 	quote_product_option_id INTEGER REFERENCES quote_product_options(quote_product_option_id),
-	value TEXT NOT NULL
+	value TEXT NOT NULL,
+  id INTEGER
 );

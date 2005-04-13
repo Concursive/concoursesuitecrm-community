@@ -29,88 +29,81 @@
 <td>
 <a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
-  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+  <a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+  <a href="TroubleTickets.do?command=SearchTickets"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%}else{%> 
   <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>"><dhv:label name="tickets.details">Ticket Details</dhv:label></a> >
-<a href="TroubleTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>">Documents</a> >
-Details
+<a href="TroubleTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>"><dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></a> >
+<dhv:label name="accounts.details.long_html">Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + TicketDetails.getId(); %>
-<dhv:container name="tickets" selected="documents" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-		<td class="containerBack">
-<%--TODO::START Document folder trails--%>
-<table border="0" cellpadding="4" cellspacing="0" width="100%">
-  <tr class="subtab">
-    <td>
-      <% String documentLink = "TroubleTicketsDocuments.do?command=View&tId="+TicketDetails.getId(); %>
-      <zeroio:folderHierarchy module="TroubleTickets" link="<%= documentLink %>" showLastLink="true"/> >
-      <%= FileItem.getSubject() %>
-    </td>
-  </tr>
-</table>
-<%--TODO::END Document folder trails--%>
-<br />
-<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
-  <tr>
-    <th colspan="7">
-      <strong>All Versions of this Document</strong>
-    </th>
-  </tr>
-  <tr class="title2">
-    <td width="10" align="center">Action</td>
-    <td>Item</td>
-    <td>Size</td>
-    <td>Version</td>
-    <td>Submitted</td>
-    <td>Sent By</td>
-    <td>D/L</td>
-  </tr>
-<%
-  Iterator versionList = FileItem.getVersionList().iterator();
-  int rowid = 0;
-  while (versionList.hasNext()) {
-    rowid = (rowid != 1?1:2);
-    FileItemVersion thisVersion = (FileItemVersion)versionList.next();
-%>      
-    <tr class="row<%= rowid %>">
-      <td width="10" align="center" rowspan="2" nowrap>
-        <a href="TroubleTicketsDocuments.do?command=Download&tId=<%= TicketDetails.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>">Download</a>
-      </td>
-      <td width="100%">
-        <%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %>
-      </td>
-      <td align="right" nowrap>
-        <%= thisVersion.getRelativeSize() %> k&nbsp;
-      </td>
-      <td align="right" nowrap>
-        <%= thisVersion.getVersion() %>&nbsp;
-      </td>
-      <td nowrap>
-        <zeroio:tz timestamp="<%= thisVersion.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
-      </td>
+<dhv:container name="tickets" selected="documents" object="TicketDetails" param="<%= param1 %>">
+  <%@ include file="ticket_header_include.jsp" %>
+  <table border="0" cellpadding="4" cellspacing="0" width="100%">
+    <tr class="subtab">
       <td>
-        <dhv:username id="<%= thisVersion.getEnteredBy() %>"/>
-      </td>
-      <td align="right">
-        <%= thisVersion.getDownloads() %>
-      </td>
-    </tr>
-    <tr class="row<%= rowid %>">
-      <td colspan="6">
-        <i><%= thisVersion.getSubject() %></i>
+        <% String documentLink = "TroubleTicketsDocuments.do?command=View&tId="+TicketDetails.getId(); %>
+        <zeroio:folderHierarchy module="TroubleTickets" link="<%= documentLink %>" showLastLink="true"/> >
+        <%= FileItem.getSubject() %>
       </td>
     </tr>
-  <%}%>
-</table>
-</td>
-</tr>
-</table>
+  </table>
+  <br />
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+    <tr>
+      <th colspan="7">
+        <strong><dhv:label name="accounts.accounts_documents_details.AllVersionsDocument">All Versions of this Document</dhv:label></strong>
+      </th>
+    </tr>
+    <tr class="title2">
+      <td width="8">&nbsp;</td>
+      <td><dhv:label name="accounts.accounts_documents_details.Item">Item</dhv:label></td>
+      <td><dhv:label name="accounts.accounts_documents_details.Size">Size</dhv:label></td>
+      <td><dhv:label name="accounts.accounts_documents_details.Version">Version</dhv:label></td>
+      <td><dhv:label name="accounts.accounts_documents_details.Submitted">Submitted</dhv:label></td>
+      <td><dhv:label name="accounts.accounts_documents_details.SentBy">Sent By</dhv:label></td>
+      <td><dhv:label name="accounts.accounts_documents_details.DL">D/L</dhv:label></td>
+    </tr>
+  <%
+    Iterator versionList = FileItem.getVersionList().iterator();
+    int rowid = 0;
+    while (versionList.hasNext()) {
+      rowid = (rowid != 1?1:2);
+      FileItemVersion thisVersion = (FileItemVersion)versionList.next();
+  %>
+      <tr class="row<%= rowid %>">
+        <td width="10" align="center" rowspan="2" nowrap>
+          <a href="TroubleTicketsDocuments.do?command=Download&tId=<%= TicketDetails.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>"><dhv:label name="accounts.accounts_documents_details.Download">Download</dhv:label></a>
+        </td>
+        <td width="100%">
+          <%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %>
+        </td>
+        <td align="right" nowrap>
+          <%= thisVersion.getRelativeSize() %> <dhv:label name="admin.oneThousand.abbreviation">k</dhv:label>&nbsp;
+        </td>
+        <td align="right" nowrap>
+          <%= thisVersion.getVersion() %>&nbsp;
+        </td>
+        <td nowrap>
+          <zeroio:tz timestamp="<%= thisVersion.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
+        </td>
+        <td>
+          <dhv:username id="<%= thisVersion.getEnteredBy() %>"/>
+        </td>
+        <td align="right">
+          <%= thisVersion.getDownloads() %>
+        </td>
+      </tr>
+      <tr class="row<%= rowid %>">
+        <td colspan="6">
+          <i><%= thisVersion.getSubject() %></i>
+        </td>
+      </tr>
+    <%}%>
+  </table>
+</dhv:container>

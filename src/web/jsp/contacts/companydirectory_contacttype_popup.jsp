@@ -18,6 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*" %>
+<%@ page import="org.aspcfs.utils.*" %>
 <jsp:useBean id="ContactTypeList" class="org.aspcfs.modules.contacts.base.ContactTypeList" scope="request"/>
 <jsp:useBean id="selectedElements" class="java.util.HashMap" scope="session"/>
 <jsp:useBean id="finalElements" class="java.util.HashMap" scope="session"/>
@@ -36,7 +37,7 @@
 <table width="100%" border="0">
   <tr>
       <td align="right">
-        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactTypeSelectorInfo" showHiddenParams="true" enableJScript="true"/>
+        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactTypeSelectorInfo" showHiddenParams="true" enableJScript="true" form="elementListView"/>
       </td>
   </tr>
 </table>
@@ -46,7 +47,7 @@
       &nbsp;
     </th>
     <th width="100%">
-      Option
+      <dhv:label name="contact.option">Option</dhv:label>
     </th>
   </tr>
 <%
@@ -79,7 +80,7 @@
 %>
       <tr class="containerBody">
         <td colspan="2">
-          No options matched query.
+          <dhv:label name="quotes.noOptionsMatchedQuery">No options matched query.</dhv:label>
         </td>
       </tr>
 <%
@@ -90,10 +91,10 @@
 <input type="hidden" name="rowcount" value="0">
 <input type="hidden" name="displayFieldId" value="<%= DisplayFieldId %>">
 <%= addHiddenParams(request, "contactId|category") %>
-<input type="button" value="Done" onClick="javascript:document.elementListView.finalsubmit.value='true';document.elementListView.submit();">
-<input type="button" value="Cancel" onClick="javascript:window.close()">
-[<a href="javascript:SetChecked(1,'checkelement','elementListView','<%= User.getBrowserId() %>');">Check All</a>]
-[<a href="javascript:SetChecked(0,'checkelement','elementListView','<%= User.getBrowserId() %>');">Clear All</a>]
+<input type="button" value="<dhv:label name="button.done">Done</dhv:label>" onClick="javascript:document.elementListView.finalsubmit.value='true';document.elementListView.submit();">
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
+[<a href="javascript:SetChecked(1,'checkelement','elementListView','<%= User.getBrowserId() %>');"><dhv:label name="quotes.checkAll">Check All</dhv:label></a>]
+[<a href="javascript:SetChecked(0,'checkelement','elementListView','<%= User.getBrowserId() %>');"><dhv:label name="quotes.clearAll">Clear All</dhv:label></a>]
 <br>
 &nbsp;<br>
 </form>
@@ -101,7 +102,7 @@
   } else {
 %>
 <%-- Save the selected items to the parent form, then close the window --%>
-<body OnLoad="javascript:setParentList(selectedValues,selectedIds,'list','<%= DisplayFieldId %>');window.close();">
+<body OnLoad="javascript:setParentList(selectedIds,selectedValues,'list','<%= DisplayFieldId %>');window.close();">
   <script>selectedValues = new Array();selectedIds = new Array();</script>
 <%
     Set s = selectedElements.keySet();
@@ -114,8 +115,8 @@
       String value = st.toString();
 %>
   <script>
-    selectedValues[<%= count %>] = "<%= value %>";
-    selectedIds[<%= count %>] = "<%= id %>";
+    selectedValues[<%= count %>] = '<%= StringUtils.jsStringEscape(value) %>';
+    selectedIds[<%= count %>] = '<%= id %>';
   </script>
 <%
     }

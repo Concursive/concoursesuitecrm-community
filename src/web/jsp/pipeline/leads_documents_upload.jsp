@@ -17,6 +17,7 @@
   - Description: 
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="opportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
@@ -31,21 +32,21 @@
     var formTest = true;
     var messageText = "";
     if (form.subject.value == "") {
-      messageText += "- Subject is required\r\n";
+      messageText += label("Subject.required", "- Subject is required\r\n");
       formTest = false;
     }
     if (form.id<%= opportunityHeader.getId() %>.value.length < 5) {
-      messageText += "- File is required\r\n";
+      messageText += label("file.required", "- File is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("File.not.submitted", "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
     } else {
-      if (form.upload.value != 'Please Wait...') {
-        form.upload.value='Please Wait...';
+      if (form.upload.value != label("button.pleasewait","Please Wait...")) {
+        form.upload.value=label("button.pleasewait","Please Wait...");
         return true;
       } else {
         return false;
@@ -54,73 +55,79 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
+<form method="post" name="inputForm" action="LeadsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> >
+<a href="Leads.do"><dhv:label name="pipeline.pipeline">Pipeline</dhv:label></a> >
 <% if ("dashboard".equals(request.getParameter("viewSource"))){ %>
-	<a href="Leads.do?command=Dashboard">Dashboard</a> >
+	<a href="Leads.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
 <% }else{ %>
-	<a href="Leads.do?command=Search">Search Results</a> >
+	<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <% } %>
-<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Opportunity Details</a> >
-<a href="LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>">Documents</a> > 
-Upload Document
+<a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> >
+<a href="LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %><%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></a> > 
+<dhv:label name="accounts.accounts_documents_upload.UploadDocument">Upload Document</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-  <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
+<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<%@ include file="leads_details_header_include.jsp" %>
-<% String param1 = "id=" + opportunityHeader.getId(); 
+<% String param1 = "id=" + opportunityHeader.getId();
    String param2 = addLinkParams(request, "viewSource");
-%>      
-<dhv:container name="opportunities" selected="documents" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
-<form method="post" name="inputForm" action="LeadsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<dhv:formMessage />
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-  <tr>
-    <th colspan="2">
-      <img border="0" src="images/file.gif" align="absmiddle"><b>Upload a New Document</b>
-    </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Subject
-    </td>
-    <td>
-      <input type="text" name="subject" size="59" maxlength="255" value="<%= toHtmlValue((String)request.getAttribute("subject")) %>"><font color="red">*</font>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      File
-    </td>
-    <td>
-      <input type="file" name="id<%= opportunityHeader.getId() %>" size="45">
-    </td>
-  </tr>
-</table>
+%>
+<dhv:container name="opportunities" selected="documents" object="opportunityHeader" param="<%= param1 %>" appendToUrl="<%= param2 %>">
+  <table border="0" cellpadding="4" cellspacing="0" width="100%">
+    <tr class="subtab">
+      <td>
+  <%
+  String documentFolderList = "LeadsDocuments.do?command=View&headerId="+ opportunityHeader.getId();
+  String documentModule = "Pipeline";
+  %>
+        <zeroio:folderHierarchy module="<%= documentModule %>" link="<%= documentFolderList %>"/>
+      </td>
+    </tr>
+  </table>
+  <dhv:formMessage />
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <th colspan="2">
+        <img border="0" src="images/file.gif" align="absmiddle"><b><dhv:label name="accounts.accounts_documents_upload.UploadNewDocument">Upload a New Document</dhv:label></b>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+    <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
+      </td>
+      <td>
+        <input type="text" name="subject" size="59" maxlength="255" value="<%= toHtmlValue((String)request.getAttribute("subject")) %>"><font color="red">*</font>
+        <%= showAttribute(request, "subjectError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="contacts.companydirectory_confirm_importupload.File">File</dhv:label>
+      </td>
+      <td>
+        <input type="file" name="id<%= opportunityHeader.getId() %>" size="45">
+      </td>
+    </tr>
+  </table>
   <p align="center">
-    * Large files may take a while to upload.<br>
-    Wait for file completion message when upload is complete.
+    * <dhv:label name="accounts.accounts_documents_upload.LargeFilesUpload">Large files may take a while to upload.</dhv:label><br>
+    <dhv:label name="accounts.accounts_documents_upload.WaitForUpload">Wait for file completion message when upload is complete.</dhv:label>
   </p>
-  <input type="submit" value=" Upload " name="upload">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';">
+  <input type="submit" value=" <dhv:label name="global.button.Upload">Upload</dhv:label> " name="upload">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='LeadsDocuments.do?command=View&headerId=<%= opportunityHeader.getId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= opportunityHeader.getId() %>">
   <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
   <input type="hidden" name="folderId" value="<%= request.getAttribute("folderId") %>">
   <%= addHiddenParams(request, "viewSource") %>
-</td>
-</tr>
-</table>
+</dhv:container>
 </form>
 </body>

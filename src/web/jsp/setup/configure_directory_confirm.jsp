@@ -16,27 +16,25 @@
   - Version: $Id$
   - Description:
   --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ include file="../initPage.jsp" %>
 <form name="configure" action="SetupDirectory.do?command=ConfigureDirectoryMake" method="post">
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Centric CRM Configuration (Step 1 of 4)<br>
-      File Library Settings
+      <dhv:label name="setup.centricCRM.step1of4.text">Centric CRM Configuration (Step 1 of 4)<br />File Library Settings</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      Note: The specified target directory does not exist.
-      Press continue to create the directory, or cancel to
-      specify a different directory.<br>
+      <dhv:label name="setup.targetDirectory.note">Note: The specified target directory does not exist. Press continue to create the directory, or cancel to specify a different directory.</dhv:label><br>
       <br>
-      Directory to create:<br>
+      <dhv:label name="setup.directoryToCreate.colon">Directory to create:</dhv:label><br>
       <b><%= toHtml(request.getParameter("fileLibrary")) %></b><br>
       <br>
       <input type="hidden" name="fileLibrary" value="<%= toHtmlValue(request.getParameter("fileLibrary")) %>"/>
-      <input type="button" value="< Cancel" onClick="javascript:window.location.href='SetupDirectory.do?command=ConfigureDirectoryCheck&fileLibrary=<%= toJavaScript(request.getParameter("fileLibrary")) %>'"/>
-      <input type="submit" value="Continue >"/>
+      <input type="button" value="<dhv:label name="button.cancelL">< Cancel</dhv:label>" onClick="javascript:window.location.href='SetupDirectory.do?command=ConfigureDirectoryCheck&fileLibrary=<%= toJavaScript(request.getParameter("fileLibrary")) %>'"/>
+      <input type="submit" value="<dhv:label name="button.continueR">Continue ></dhv:label>"/>
     </td>
   </tr>
 </table>

@@ -16,11 +16,11 @@
   - Version: $Id$
   - Description:
   --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <table border="0" width="100%">
   <tr>
     <td width="100%">
-      Test successful.<br>
-      The URL is properly configured for viewing this web application
+      <dhv:label name="setup.testSuccessful.text">Test successful.<br />The URL is properly configured for viewing this web application</dhv:label>
     </td>
   </tr>
 </table>

@@ -15,19 +15,22 @@
  */
 package org.aspcfs.modules.communications.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.web.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.isavvix.tools.FileInfo;
+import com.isavvix.tools.HttpMultiPartParser;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.iteam.base.FileItemVersion;
+import com.zeroio.webutils.FileDownload;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.communications.base.*;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import com.isavvix.tools.*;
-import java.io.*;
+import org.aspcfs.modules.communications.base.Campaign;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  * Campaign/Document actions
@@ -94,7 +97,6 @@ public final class CampaignDocuments extends CFSModule {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     try {
       db = getConnection(context);
@@ -107,17 +109,13 @@ public final class CampaignDocuments extends CFSModule {
         context.getRequest().setAttribute("folderId", folderId);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "Dashboard", "Upload Document");
-    if (errorMessage == null) {
-      return ("AddOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("AddOK");
   }
 
 
@@ -131,9 +129,9 @@ public final class CampaignDocuments extends CFSModule {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
+    boolean isValid = false;
     try {
       String filePath = this.getPath(context, "campaign");
       //Process the form data
@@ -146,6 +144,12 @@ public final class CampaignDocuments extends CFSModule {
       String id = (String) parts.get("id");
       String subject = (String) parts.get("subject");
       String folderId = (String) parts.get("folderId");
+      if (folderId != null) {
+        context.getRequest().setAttribute("folderId", folderId);
+      }
+      if (subject != null) {
+        context.getRequest().setAttribute("subject", subject);
+      }
       db = getConnection(context);
       Campaign thisCampaign = addCampaign(context, db, id);
       if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
@@ -165,32 +169,27 @@ public final class CampaignDocuments extends CFSModule {
         thisItem.setFilename(newFileInfo.getRealFilename());
         thisItem.setVersion(1.0);
         thisItem.setSize(newFileInfo.getSize());
-        recordInserted = thisItem.insert(db);
-        if (!recordInserted) {
-          processErrors(context, thisItem.getErrors());
+        isValid = this.validateObject(context, db, thisItem);
+        if (isValid) {
+          recordInserted = thisItem.insert(db);
         }
       } else {
         recordInserted = false;
         HashMap errors = new HashMap();
-        errors.put("actionError", "The file could not be sent by your computer, make sure the file exists");
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
         processErrors(context, errors);
-        context.getRequest().setAttribute("subject", subject);
-        context.getRequest().setAttribute("folderId", folderId);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("UploadOK");
-      } else {
-        return (executeCommandAdd(context));
-      }
+    if (recordInserted) {
+      return ("UploadOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return (executeCommandAdd(context));
     }
   }
 
@@ -248,9 +247,9 @@ public final class CampaignDocuments extends CFSModule {
     if (!hasPermission(context, "campaign-campaigns-edit")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     boolean recordInserted = false;
+    boolean isValid = false;
     try {
       String filePath = this.getPath(context, "campaign");
       //Process the form data
@@ -283,32 +282,29 @@ public final class CampaignDocuments extends CFSModule {
         thisItem.setFilename(newFileInfo.getRealFilename());
         thisItem.setVersion(Double.parseDouble(versionId));
         thisItem.setSize(newFileInfo.getSize());
-        recordInserted = thisItem.insertVersion(db);
-        if (!recordInserted) {
-          processErrors(context, thisItem.getErrors());
+        isValid = this.validateObject(context, db, thisItem);
+        if (isValid) {
+          recordInserted = thisItem.insertVersion(db);
         }
       } else {
         recordInserted = false;
         HashMap errors = new HashMap();
-        errors.put("actionError", "The file could not be sent by your computer, make sure the file exists");
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
         processErrors(context, errors);
         context.getRequest().setAttribute("subject", subject);
       }
       context.getRequest().setAttribute("fid", itemId);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("UploadOK");
-      } else {
-        return (executeCommandAddVersion(context));
-      }
+    if (recordInserted) {
+      return ("UploadOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return (executeCommandAddVersion(context));
     }
   }
 
@@ -364,19 +360,15 @@ public final class CampaignDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDownload(ActionContext context) {
-
     if (!(hasPermission(context, "campaign-dashboard-view"))) {
       return ("PermissionError");
     }
-
     Exception errorMessage = null;
-
     String itemId = (String) context.getRequest().getParameter("fid");
     String version = (String) context.getRequest().getParameter("ver");
     FileItem thisItem = null;
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
-    int id = -1;
     try {
       db = getConnection(context);
       Campaign thisCampaign = addCampaign(context, db);
@@ -410,7 +402,7 @@ public final class CampaignDocuments extends CFSModule {
         } else {
           db = null;
           System.err.println("CampaignDocuments-> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandView(context));
         }
       } else {
@@ -428,7 +420,7 @@ public final class CampaignDocuments extends CFSModule {
         } else {
           db = null;
           System.err.println("LeadsDocuments-> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandView(context));
         }
       }
@@ -507,49 +499,36 @@ public final class CampaignDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
-
     if (!(hasPermission(context, "campaign-campaigns-edit"))) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     boolean recordInserted = false;
-
     String itemId = (String) context.getRequest().getParameter("fid");
     String subject = (String) context.getRequest().getParameter("subject");
     String filename = (String) context.getRequest().getParameter("clientFilename");
-
     Connection db = null;
-    int id = -1;
     try {
       db = getConnection(context);
       Campaign thisCampaign = addCampaign(context, db);
       if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
         return "PermissionError";
       }
-
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisCampaign.getId(), Constants.COMMUNICATIONS_DOCUMENTS);
       thisItem.setClientFilename(filename);
       thisItem.setSubject(subject);
       recordInserted = thisItem.update(db);
-
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "Dashboard", "");
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("UpdateOK");
-      } else {
-        context.getRequest().setAttribute("fid", itemId);
-        return (executeCommandModify(context));
-      }
+    if (recordInserted) {
+      return ("UpdateOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("fid", itemId);
+      return (executeCommandModify(context));
     }
   }
 
@@ -561,16 +540,11 @@ public final class CampaignDocuments extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
-
-    if (!(hasPermission(context, "campaign-campaigns-edit"))) {
+    if (!hasPermission(context, "campaign-campaigns-edit")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     boolean recordDeleted = false;
-
     String itemId = (String) context.getRequest().getParameter("fid");
-
     Connection db = null;
     try {
       db = getConnection(context);
@@ -578,27 +552,21 @@ public final class CampaignDocuments extends CFSModule {
       if (!hasAuthority(context, thisCampaign.getEnteredBy())) {
         return "PermissionError";
       }
-
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId), thisCampaign.getId(), Constants.COMMUNICATIONS_DOCUMENTS);
       if (thisItem.getEnteredBy() == this.getUserId(context)) {
         recordDeleted = thisItem.delete(db, this.getPath(context, "campaign"));
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
     addModuleBean(context, "Dashboard", "Delete Document");
-    if (errorMessage == null) {
-      if (recordDeleted) {
-        return ("DeleteOK");
-      } else {
-        return ("DeleteERROR");
-      }
+    if (recordDeleted) {
+      return ("DeleteOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("DeleteERROR");
     }
   }
 

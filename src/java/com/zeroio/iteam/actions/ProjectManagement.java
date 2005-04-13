@@ -15,27 +15,27 @@
  */
 package com.zeroio.iteam.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import com.zeroio.iteam.base.*;
-import java.sql.*;
-import java.util.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import com.zeroio.iteam.base.*;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.utils.web.LookupElement;
-import org.aspcfs.utils.web.HtmlSelect;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.tasks.base.TaskList;
-import org.aspcfs.modules.tasks.base.TaskCategoryList;
-import org.aspcfs.modules.troubletickets.base.TicketList;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.tasks.base.TaskCategoryList;
+import org.aspcfs.modules.tasks.base.TaskList;
+import org.aspcfs.modules.troubletickets.base.TicketList;
 import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.HtmlSelect;
+
+import java.sql.Connection;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *  Project Management module
@@ -80,6 +80,7 @@ public final class ProjectManagement extends CFSModule {
       projects.setGroupId(-1);
       projects.setOpenProjectsOnly(true);
       projects.setProjectsForUser(this.getUserId(context));
+      projects.setIncludeGuestProjects(true);
       //Assignment Info
       projects.setBuildAssignments(true);
       projects.setAssignmentsForUser(this.getUserId(context));
@@ -114,30 +115,34 @@ public final class ProjectManagement extends CFSModule {
       return ("PermissionError");
     }
     Connection db = null;
-    ProjectList projects = new ProjectList();
-    PagedListInfo projectListInfo = this.getPagedListInfo(context, "projectListInfo");
-    projectListInfo.setLink("ProjectManagement.do?command=EnterpriseView");
-    if (projectListInfo.getListView() == null) {
-      projectListInfo.setItemsPerPage(0);
-      //My Open Projects
-      projectListInfo.setListView("open");
-      //Assignments
-      projectListInfo.addFilter(1, "hide");
-      //Topics
-      projectListInfo.addFilter(2, "hide");
-      //News
-      projectListInfo.addFilter(3, "hide");
-    }
-    projects.setPagedListInfo(projectListInfo);
     try {
       db = getConnection(context);
+      ProjectList projects = new ProjectList();
+      PagedListInfo projectListInfo = this.getPagedListInfo(context, "projectEnterpriseInfo");
+      projectListInfo.setLink("ProjectManagement.do?command=EnterpriseView");
+      if (projectListInfo.getListView() == null) {
+        projectListInfo.setItemsPerPage(0);
+        // My open projects
+        projectListInfo.setListView("open");
+        //Assignments
+        projectListInfo.addFilter(1, "hide");
+        //Topics
+        projectListInfo.addFilter(2, "hide");
+        //News
+        projectListInfo.addFilter(3, "hide");
+      }
+      projects.setPagedListInfo(projectListInfo);
       //Project Info
       projects.setGroupId(-1);
       projects.setProjectsForUser(getUserId(context));
+      projects.setIncludeGuestProjects(true);
+      projects.setPortalState(Constants.FALSE);
       if (projectListInfo.getListView().equals("open")) {
         projects.setOpenProjectsOnly(true);
       } else if (projectListInfo.getListView().equals("closed")) {
         projects.setClosedProjectsOnly(true);
+      } else if (projectListInfo.getListView().equals("recent")) {
+        projects.setDaysLastAccessed(7);
       }
 
       //Assignment Info
@@ -173,7 +178,7 @@ public final class ProjectManagement extends CFSModule {
       }
       projects.setInvitationAcceptedOnly(true);
       projects.buildList(db);
-      context.getRequest().setAttribute("ProjectList", projects);
+      context.getRequest().setAttribute("projectList", projects);
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -181,6 +186,71 @@ public final class ProjectManagement extends CFSModule {
       this.freeConnection(context, db);
     }
     return ("EnterpriseViewOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandProjectList(ActionContext context) {
+    if (getUserId(context) < 0) {
+      return "PermissionError";
+    }
+    if (!(hasPermission(context, "projects-enterprise-view"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    try {
+      db = getConnection(context);
+      //PagedList Info
+      ProjectList projects = new ProjectList();
+      PagedListInfo projectListInfo = this.getPagedListInfo(context, "projectListInfo");
+      projectListInfo.setLink("ProjectManagement.do?command=ProjectList");
+      if (projectListInfo.getListView() == null) {
+        projectListInfo.setItemsPerPage(0);
+        // My open projects
+        projectListInfo.setListView("open");
+        // Categories
+        projectListInfo.addFilter(1, "-1");
+      }
+      projects.setPagedListInfo(projectListInfo);
+      //Project Info
+      projects.setGroupId(-1);
+      projects.setProjectsForUser(getUserId(context));
+      projects.setIncludeGuestProjects(true);
+      projects.setPortalState(Constants.FALSE);
+      //projects.setUserRange(this.getUserRange(context));
+      if (projectListInfo.getListView().equals("open")) {
+        projects.setOpenProjectsOnly(true);
+      } else if (projectListInfo.getListView().equals("closed")) {
+        projects.setClosedProjectsOnly(true);
+      } else if (projectListInfo.getListView().equals("recent")) {
+        projects.setDaysLastAccessed(7);
+      }
+      projects.setInvitationAcceptedOnly(true);
+      projects.setBuildOverallProgress(true);
+      //projects.setBuildPermissions(true);
+      projects.setCategoryId(projectListInfo.getFilterValue("listFilter1"));
+      projects.buildList(db);
+      context.getRequest().setAttribute("projectList", projects);
+      // Prepare the list of categories to display, based on categories used
+      ProjectCategoryList categoryList = new ProjectCategoryList();
+      categoryList.setCategoriesForProjectUser(getUserId(context));
+      categoryList.setIncludeId(projectListInfo.getFilterValue("listFilter1"));
+      categoryList.buildList(db);
+      HtmlSelect thisSelect = categoryList.getHtmlSelect();
+      thisSelect.addItem(-1, "All Categories", 0);
+      context.getRequest().setAttribute("projectCategoryList", thisSelect);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("ProjectListOK");
   }
 
 
@@ -200,6 +270,7 @@ public final class ProjectManagement extends CFSModule {
       //Get a list of projects that user has been invited to
       ProjectList invitedProjects = new ProjectList();
       invitedProjects.setProjectsForUser(getUserId(context));
+      invitedProjects.setIncludeGuestProjects(false);
       invitedProjects.setInvitationPendingOnly(true);
       invitedProjects.buildList(db);
       context.getRequest().setAttribute("invitedProjectList", invitedProjects);
@@ -234,10 +305,18 @@ public final class ProjectManagement extends CFSModule {
     PagedListInfo overviewListInfo = this.getPagedListInfo(context, "overviewListInfo");
     overviewListInfo.setLink("ProjectManagement.do?command=Overview");
     if (overviewListInfo.getListView() == null) {
-      overviewListInfo.setListView("7days");
+      overviewListInfo.setListView("48hours");
     }
     Calendar cal = Calendar.getInstance();
-    if (overviewListInfo.getListView().equals("14days")) {
+    if (overviewListInfo.getListView().equals("today")) {
+      cal.set(Calendar.HOUR_OF_DAY, 0);
+      cal.set(Calendar.MINUTE, 0);
+      cal.set(Calendar.SECOND, 0);
+    } else if (overviewListInfo.getListView().equals("24hours")) {
+      cal.add(Calendar.DAY_OF_MONTH, -1);
+    } else if (overviewListInfo.getListView().equals("48hours")) {
+      cal.add(Calendar.DAY_OF_MONTH, -2);
+    } else if (overviewListInfo.getListView().equals("14days")) {
       // 14 Days
       cal.add(Calendar.DAY_OF_MONTH, -14);
     } else if (overviewListInfo.getListView().equals("30days")) {
@@ -271,7 +350,7 @@ public final class ProjectManagement extends CFSModule {
     assignmentList.setPagedListInfo(processPagedListInfo(context, sectionId, "overviewAssignmentListInfo", "a.due_date", null, link, MINIMIZED_ITEMS_PER_PAGE));
     newsList.setPagedListInfo(processPagedListInfo(context, sectionId, "overviewNewsListInfo", "n.start_date", "desc", link, MINIMIZED_ITEMS_PER_PAGE));
     issueList.setPagedListInfo(processPagedListInfo(context, sectionId, "overviewIssueListInfo", "i.last_reply_date", "desc", link, MINIMIZED_ITEMS_PER_PAGE));
-    fileItemList.setPagedListInfo(processPagedListInfo(context, sectionId, "overviewFileItemListListInfo", "f.entered", "desc", link, MINIMIZED_ITEMS_PER_PAGE));
+    fileItemList.setPagedListInfo(processPagedListInfo(context, sectionId, "overviewFileItemListListInfo", "f.modified", "desc", link, MINIMIZED_ITEMS_PER_PAGE));
     ticketList.setPagedListInfo(processPagedListInfo(context, sectionId, "overviewTicketListInfo", "t.entered", "desc", link, MINIMIZED_ITEMS_PER_PAGE));
     //Query the records
     assignmentList.setForProjectUser(getUserId(context));
@@ -421,6 +500,7 @@ public final class ProjectManagement extends CFSModule {
       projectList.setEmptyHtmlSelectRecord("--None--");
       //projectList.setEnteredByUserRange(getUserRange(context));
       projectList.setProjectsForUser(getUserId(context));
+      projectList.setIncludeGuestProjects(true);
       projectList.buildList(db);
       context.getRequest().setAttribute("ProjectList", projectList);
     } catch (Exception errorMessage) {
@@ -447,7 +527,7 @@ public final class ProjectManagement extends CFSModule {
       return ("PermissionError");
     }
     Connection db = null;
-    boolean recordInserted = false;
+    boolean isValid = false;
     try {
       db = getConnection(context);
       Project thisProject = (Project) context.getFormBean();
@@ -458,24 +538,23 @@ public final class ProjectManagement extends CFSModule {
       //if (!getUser(context).getAccessGuestProjects()) {
       thisProject.setAllowGuests(false);
       //}
-      if (thisProject.insert(db, context)) {
-        updateProjectCache(context, thisProject.getId(), thisProject.getTitle());
-        indexAddItem(context, thisProject);
-        //Add the current user to the team TODO: Put in a transaction
-        TeamMember thisMember = new TeamMember();
-        thisMember.setProjectId(thisProject.getId());
-        thisMember.setUserId(this.getUserId(context));
-        thisMember.setUserLevel(getUserLevel(context, db, TeamMember.PROJECT_LEAD));
-        thisMember.setEnteredBy(this.getUserId(context));
-        thisMember.setModifiedBy(this.getUserId(context));
-        thisMember.insert(db);
-        //Go to the project
-        context.getRequest().setAttribute("pid", String.valueOf(thisProject.getId()));
-        return (executeCommandProjectCenter(context));
-      } else {
-        this.processErrors(context, thisProject.getErrors());
-        this.processWarnings(context, thisProject.getWarnings());
-        return (executeCommandAddProject(context));
+      isValid = this.validateObject(context, db, thisProject);
+      if (isValid) {
+        if (thisProject.insert(db, context)) {
+          updateProjectCache(context, thisProject.getId(), thisProject.getTitle());
+          indexAddItem(context, thisProject);
+          //Add the current user to the team TODO: Put in a transaction
+          TeamMember thisMember = new TeamMember();
+          thisMember.setProjectId(thisProject.getId());
+          thisMember.setUserId(this.getUserId(context));
+          thisMember.setUserLevel(getUserLevel(context, db, TeamMember.PROJECT_LEAD));
+          thisMember.setEnteredBy(this.getUserId(context));
+          thisMember.setModifiedBy(this.getUserId(context));
+          thisMember.insert(db);
+          //Go to the project
+          context.getRequest().setAttribute("pid", String.valueOf(thisProject.getId()));
+          return (executeCommandProjectCenter(context));
+        }
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -483,6 +562,7 @@ public final class ProjectManagement extends CFSModule {
     } finally {
       freeConnection(context, db);
     }
+    return (executeCommandAddProject(context));
   }
 
 
@@ -502,7 +582,7 @@ public final class ProjectManagement extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = new Project(db, Integer.parseInt(projectId), this.getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-details-edit")) {
         return "PermissionError";
@@ -535,7 +615,7 @@ public final class ProjectManagement extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = new Project(db, Integer.parseInt(projectId), this.getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-setup-customize")) {
         return "PermissionError";
@@ -564,7 +644,7 @@ public final class ProjectManagement extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = new Project(db, Integer.parseInt(projectId), this.getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-setup-permissions")) {
         return "PermissionError";
@@ -598,7 +678,7 @@ public final class ProjectManagement extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = new Project(db, Integer.parseInt(projectId), this.getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       //Make sure user can modify permissions
       if (!hasProjectAccess(context, db, thisProject, "project-setup-permissions")) {
@@ -630,6 +710,7 @@ public final class ProjectManagement extends CFSModule {
     //thisProject.setRequestItems(context.getRequest());
     Connection db = null;
     int resultCount = 0;
+    boolean isValid = false;
     try {
       db = this.getConnection(context);
       thisProject.buildPermissionList(db);
@@ -637,10 +718,11 @@ public final class ProjectManagement extends CFSModule {
         return "PermissionError";
       }
       thisProject.setModifiedBy(this.getUserId(context));
-      resultCount = thisProject.update(db, context);
+      isValid = this.validateObject(context, db, thisProject);
+      if (isValid) {
+        resultCount = thisProject.update(db, context);
+      }
       if (resultCount == -1) {
-        this.processErrors(context, thisProject.getErrors());
-        this.processWarnings(context, thisProject.getWarnings());
         //Category List
         LookupList categoryList = new LookupList(db, "lookup_project_category");
         categoryList.addItem(-1, "--None--");
@@ -658,10 +740,9 @@ public final class ProjectManagement extends CFSModule {
     //Results
     if (resultCount == -1) {
       context.getRequest().setAttribute("Project", thisProject);
-      context.getRequest().setAttribute("IncludeSection", ("modifyproject").toLowerCase());
-      return ("ProjectCenterOK");
+      return ("ModifyProjectOK");
     } else if (resultCount == 1) {
-      context.getRequest().setAttribute("pid", "" + thisProject.getId());
+      context.getRequest().setAttribute("pid", String.valueOf(thisProject.getId()));
       return ("UpdateProjectOK");
     } else {
       context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
@@ -699,14 +780,14 @@ public final class ProjectManagement extends CFSModule {
         context.getRequest().setAttribute("pid", String.valueOf(thisProject.getId()));
         return ("UpdateFeaturesOK");
       }
-      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-      return ("UserError");
-    } catch (SQLException errorMessage) {
+    } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
+    context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+    return ("UserError");
   }
 
 
@@ -739,16 +820,24 @@ public final class ProjectManagement extends CFSModule {
       deletePagedListInfo(context, "projectIssueCategoryInfo");
       deletePagedListInfo(context, "projectIssuesInfo");
       deletePagedListInfo(context, "projectTicketsInfo");
+      deletePagedListInfo(context, "projectTeamInfo");
+      deletePagedListInfo(context, "projectEmployeeTeamInfo");
+      deletePagedListInfo(context, "projectAccountContactTeamInfo");
       deletePagedListInfo(context, "projectDocumentsGalleryInfo");
+      deletePagedListInfo(context, "projectAccountsInfo");
+      deletePagedListInfo(context, "projectTeamInfo");
+      deletePagedListInfo(context, "projectEmployeeTeamInfo");
+      deletePagedListInfo(context, "projectAccountContactTeamInfo");
     }
     try {
       db = getConnection(context);
-      thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if ("News".equals(section)) {
         if (!hasProjectAccess(context, db, thisProject, "project-news-view")) {
           return "PermissionError";
         }
+        addRecentItem(context, thisProject);
         PagedListInfo newsInfo = this.getPagedListInfo(context, "projectNewsInfo");
         newsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=News&pid=" + thisProject.getId());
         //Load the news
@@ -770,14 +859,30 @@ public final class ProjectManagement extends CFSModule {
             newsList.setCurrentNews(Constants.TRUE);
           }
         }
+        // Determine the list view
+        // Show news by order for projects
+        context.getRequest().setAttribute("IncludeSubSection", "news_by_article");
+        newsInfo.setColumnToSortBy("n.priority_id asc, n.start_date desc");
         newsList.buildList(db);
         context.getRequest().setAttribute("newsList", newsList);
+        // Prepare the list of categories to display
+        NewsArticleCategoryList categoryList = new NewsArticleCategoryList();
+        categoryList.setProjectId(thisProject.getId());
+        categoryList.setEnabled(Constants.TRUE);
+        categoryList.buildList(db);
+        context.getRequest().setAttribute("newsArticleCategoryList", categoryList);
+        // Prepare the list of Lists to display
+        TaskCategoryList taskCategoryList = new TaskCategoryList();
+        taskCategoryList.setProjectId(thisProject.getId());
+        //taskCategoryList.setEnabled(Constants.TRUE);
+        taskCategoryList.buildList(db);
+        context.getRequest().setAttribute("taskCategoryList", taskCategoryList);
       } else if ("Requirements".equals(section)) {
         context.getSession().removeAttribute("projectAssignmentsInfo");
         if (!hasProjectAccess(context, db, thisProject, "project-plan-view")) {
           return "PermissionError";
         }
-        PagedListInfo requirementsInfo = this.getPagedListInfo(context, "projectRequirementsInfo");
+        PagedListInfo requirementsInfo = this.getPagedListInfo(context, "projectRequirementsInfo", 50);
         requirementsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Requirements&pid=" + thisProject.getId());
         thisProject.getRequirements().setPagedListInfo(requirementsInfo);
         thisProject.setBuildRequirementAssignments(false);
@@ -785,15 +890,11 @@ public final class ProjectManagement extends CFSModule {
 
         } else if ("closed".equals(requirementsInfo.getListView())) {
           thisProject.getRequirements().setClosedOnly(true);
-        } else {
+        } else if ("open".equals(requirementsInfo.getListView())) {
           thisProject.getRequirements().setOpenOnly(true);
         }
         thisProject.buildRequirementList(db);
-        Iterator i = thisProject.getRequirements().iterator();
-        while (i.hasNext()) {
-          Requirement thisRequirement = (Requirement) i.next();
-          thisRequirement.buildPlanActivityCount(db);
-        }
+        thisProject.getRequirements().buildPlanActivityCounts(db);
       } else if ("Team".equals(section)) {
         if (!hasProjectAccess(context, db, thisProject, "project-team-view")) {
           return "PermissionError";
@@ -802,10 +903,40 @@ public final class ProjectManagement extends CFSModule {
         PagedListInfo projectTeamInfo = this.getPagedListInfo(context, "projectTeamInfo");
         projectTeamInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + thisProject.getId());
         projectTeamInfo.setItemsPerPage(0);
+
+        PagedListInfo projectEmployeeTeamInfo = this.getPagedListInfo(context, "projectEmployeeTeamInfo");
+        projectEmployeeTeamInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + thisProject.getId());
+        projectEmployeeTeamInfo.setItemsPerPage(0);
+
+        PagedListInfo projectAccountContactTeamInfo = this.getPagedListInfo(context, "projectAccountContactTeamInfo");
+        projectAccountContactTeamInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Team&pid=" + thisProject.getId());
+        projectAccountContactTeamInfo.setItemsPerPage(0);
+
         //Generate the list
         thisProject.getTeam().setPagedListInfo(projectTeamInfo);
+        thisProject.getEmployeeTeam().setPagedListInfo(projectEmployeeTeamInfo);
+        thisProject.getAccountContactTeam().setPagedListInfo(projectAccountContactTeamInfo);
+        
         thisProject.buildTeamMemberList(db);
         Iterator i = thisProject.getTeam().iterator();
+        while (i.hasNext()) {
+          TeamMember thisMember = (TeamMember) i.next();
+          User thisUser = new User();
+          thisUser.setBuildContact(true);
+          thisUser.setBuildContactDetails(true);
+          thisUser.buildRecord(db, thisMember.getUserId());
+          thisMember.setUser(thisUser);
+        }
+        i = thisProject.getEmployeeTeam().iterator();
+        while (i.hasNext()) {
+          TeamMember thisMember = (TeamMember) i.next();
+          User thisUser = new User();
+          thisUser.setBuildContact(true);
+          thisUser.setBuildContactDetails(true);
+          thisUser.buildRecord(db, thisMember.getUserId());
+          thisMember.setUser(thisUser);
+        }
+        i = thisProject.getAccountContactTeam().iterator();
         while (i.hasNext()) {
           TeamMember thisMember = (TeamMember) i.next();
           User thisUser = new User();
@@ -824,7 +955,7 @@ public final class ProjectManagement extends CFSModule {
         projectAssignmentsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Assignments&pid=" + thisProject.getId());
         thisProject.getAssignments().setPagedListInfo(projectAssignmentsInfo);
         //Variables that can be used
-        String folderId = (String) context.getRequest().getParameter("fid");
+        //String folderId = (String) context.getRequest().getParameter("fid");
         String expand = (String) context.getRequest().getParameter("expand");
         String contract = (String) context.getRequest().getParameter("contract");
         String requirementId = (String) context.getRequest().getParameter("rid");
@@ -869,6 +1000,13 @@ public final class ProjectManagement extends CFSModule {
         context.getRequest().setAttribute("assignments", assignments);
         //Filter the maplist
         map.filter(assignments, RequirementMapList.FILTER_PRIORITY, projectAssignmentsInfo.getFilterValue("listFilter1"));
+        if ("open".equals(projectAssignmentsInfo.getListView())) {
+          map.filterAssignments(assignments, "incompleteOnly");
+        } else if ("closed".equals(projectAssignmentsInfo.getListView())) {
+          map.filterAssignments(assignments, "closedOnly");
+        } else {
+          //All
+        }
         //Load the assignment folders
         AssignmentFolderList folders = new AssignmentFolderList();
         folders.setRequirementId(thisRequirement.getId());
@@ -913,20 +1051,6 @@ public final class ProjectManagement extends CFSModule {
         if (folderId == null) {
           folderId = (String) context.getRequest().getAttribute("folderId");
         }
-        //Build the folder list
-        FileFolderList folders = new FileFolderList();
-        if (folderId == null || "-1".equals(folderId) || "0".equals(folderId)) {
-          folders.setTopLevelOnly(true);
-        } else {
-          folders.setParentId(Integer.parseInt(folderId));
-          //Build array of folder trails
-          ProjectManagementFileFolders.buildHierarchy(db, context);
-        }
-        folders.setLinkModuleId(Constants.PROJECTS_FILES);
-        folders.setLinkItemId(thisProject.getId());
-        folders.setBuildItemCount(true);
-        folders.buildList(db);
-        context.getRequest().setAttribute("fileFolderList", folders);
         //Build the file item list
         FileItemList files = new FileItemList();
         if (folderId == null || "-1".equals(folderId) || "0".equals(folderId)) {
@@ -934,6 +1058,13 @@ public final class ProjectManagement extends CFSModule {
           //Reset the pagedListInfo
           deletePagedListInfo(context, "projectDocumentsGalleryInfo");
         } else {
+          //Load the folder to determine the view
+          FileFolder thisFolder = new FileFolder(db, Integer.parseInt(folderId));
+          context.getRequest().setAttribute("currentFolder", thisFolder);
+          if (thisFolder.getDisplay() == FileFolder.VIEW_GALLERY ||
+              thisFolder.getDisplay() == FileFolder.VIEW_SLIDESHOW) {
+            section = "File_Library";
+          }
           files.setFolderId(Integer.parseInt(folderId));
         }
         files.setLinkModuleId(Constants.PROJECTS_FILES);
@@ -951,6 +1082,20 @@ public final class ProjectManagement extends CFSModule {
         }
         files.buildList(db);
         thisProject.setFiles(files);
+        //Build the folder list for both the header, and in the list
+        FileFolderList folders = new FileFolderList();
+        if (folderId == null || "-1".equals(folderId) || "0".equals(folderId)) {
+          folders.setTopLevelOnly(true);
+        } else {
+          folders.setParentId(Integer.parseInt(folderId));
+          //Build array of folder trails
+          ProjectManagementFileFolders.buildHierarchy(db, context);
+        }
+        folders.setLinkModuleId(Constants.PROJECTS_FILES);
+        folders.setLinkItemId(thisProject.getId());
+        folders.setBuildItemCount(true);
+        folders.buildList(db);
+        context.getRequest().setAttribute("fileFolderList", folders);
       } else if ("Lists_Categories".equals(section)) {
         if (!hasProjectAccess(context, db, thisProject, "project-lists-view")) {
           return "PermissionError";
@@ -1001,6 +1146,9 @@ public final class ProjectManagement extends CFSModule {
         }
         PagedListInfo projectTicketsInfo = this.getPagedListInfo(context, "projectTicketsInfo");
         projectTicketsInfo.setLink("ProjectManagement.do?command=ProjectCenter&section=Tickets&pid=" + thisProject.getId());
+        projectTicketsInfo.setMode(PagedListInfo.LIST_VIEW);
+        //projectTicketsInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
+        ////projectTicketsInfo.setExpandedSelection(true);
         TicketList tickets = new TicketList();
         tickets.setProjectId(thisProject.getId());
         tickets.setPagedListInfo(projectTicketsInfo);
@@ -1018,12 +1166,24 @@ public final class ProjectManagement extends CFSModule {
         if (!hasProjectAccess(context, db, thisProject, "project-details-view")) {
           return "PermissionError";
         }
+        // Prepare the list of categories to display
+        ProjectCategoryList categoryList = new ProjectCategoryList();
+        if (thisProject.getCategoryId() > -1) {
+          categoryList.setCategoryId(thisProject.getCategoryId());
+          categoryList.buildList(db);
+        }
+        context.getRequest().setAttribute("projectCategoryList", categoryList);
       }
       context.getRequest().setAttribute("Project", thisProject);
       context.getRequest().setAttribute("IncludeSection", section.toLowerCase());
       //The user has access, so show that they accessed the project
       TeamMember.updateLastAccessed(db, thisProject.getId(), getUserId(context));
-      return ("ProjectCenterOK");
+      String popUp = context.getRequest().getParameter("popup");
+      if (popUp != null && !"null".equals(popUp)) {
+        return ("ProjectCenterPopupOK");
+      } else {
+        return ("ProjectCenterOK");
+      }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       errorMessage.printStackTrace(System.out);
@@ -1046,15 +1206,20 @@ public final class ProjectManagement extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = new Project(db, Integer.parseInt(projectId), this.getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-details-delete")) {
         return "PermissionError";
       }
-      thisProject.delete(db, this.getPath(context, "projects"));
-      updateProjectCache(context, thisProject.getId(), null);
-      indexDeleteItem(context, thisProject);
-      return "DeleteProjectOK";
+      if (!thisProject.delete(db, this.getPath(context, "projects"))) {
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        thisProject.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.projectDeletion"));
+        processErrors(context, thisProject.getErrors());
+      } else {
+        updateProjectCache(context, thisProject.getId(), null);
+        indexDeleteItem(context, thisProject);
+      }
+        return "DeleteProjectOK";
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
@@ -1076,7 +1241,7 @@ public final class ProjectManagement extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = new Project(db, Integer.parseInt(projectId), this.getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.accept(db, this.getUserId(context));
       return "AcceptProjectOK";
     } catch (Exception errorMessage) {
@@ -1100,7 +1265,7 @@ public final class ProjectManagement extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = this.getConnection(context);
-      Project thisProject = new Project(db, Integer.parseInt(projectId), this.getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.reject(db, this.getUserId(context));
       return "AcceptProjectOK";
     } catch (Exception errorMessage) {

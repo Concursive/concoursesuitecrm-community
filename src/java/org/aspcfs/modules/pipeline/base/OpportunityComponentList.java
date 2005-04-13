@@ -28,9 +28,9 @@ import org.aspcfs.modules.base.Constants;
 /**
  *  Container for OpportunityComponent objects.
  *
- *@author     chris
- *@created    January 7, 2003
- *@version    $Id: OpportunityComponentList.java,v 1.5 2003/01/10 16:17:48
+ * @author     chris
+ * @created    January 7, 2003
+ * @version    $Id: OpportunityComponentList.java,v 1.5 2003/01/10 16:17:48
  *      mrajkowski Exp $
  */
 
@@ -65,7 +65,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the pagedListInfo attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param  tmp  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -75,7 +75,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the headerId attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new headerId value
+   * @param  tmp  The new headerId value
    */
   public void setHeaderId(String tmp) {
     this.headerId = Integer.parseInt(tmp);
@@ -85,7 +85,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the headerId attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new headerId value
+   * @param  tmp  The new headerId value
    */
   public void setHeaderId(int tmp) {
     this.headerId = tmp;
@@ -95,7 +95,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the enteredBy attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new enteredBy value
+   * @param  tmp  The new enteredBy value
    */
   public void setEnteredBy(int tmp) {
     this.enteredBy = tmp;
@@ -105,7 +105,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the ownerIdRange attribute of the OpportunityComponentList object
    *
-   *@param  ownerIdRange  The new ownerIdRange value
+   * @param  ownerIdRange  The new ownerIdRange value
    */
   public void setOwnerIdRange(String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
@@ -115,7 +115,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the alertRangeStart attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new alertRangeStart value
+   * @param  tmp  The new alertRangeStart value
    */
   public void setAlertRangeStart(java.sql.Timestamp tmp) {
     this.alertRangeStart = tmp;
@@ -125,7 +125,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the alertRangeStart attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new alertRangeStart value
+   * @param  tmp  The new alertRangeStart value
    */
   public void setAlertRangeStart(String tmp) {
     this.alertRangeStart = java.sql.Timestamp.valueOf(tmp);
@@ -135,7 +135,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the alertRangeEnd attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new alertRangeEnd value
+   * @param  tmp  The new alertRangeEnd value
    */
   public void setAlertRangeEnd(java.sql.Timestamp tmp) {
     this.alertRangeEnd = tmp;
@@ -145,7 +145,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the alertRangeEnd attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new alertRangeEnd value
+   * @param  tmp  The new alertRangeEnd value
    */
   public void setAlertRangeEnd(String tmp) {
     this.alertRangeEnd = java.sql.Timestamp.valueOf(tmp);
@@ -155,7 +155,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Gets the alertRangeStart attribute of the OpportunityComponentList object
    *
-   *@return    The alertRangeStart value
+   * @return    The alertRangeStart value
    */
   public java.sql.Timestamp getAlertRangeStart() {
     return alertRangeStart;
@@ -165,7 +165,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Gets the alertRangeEnd attribute of the OpportunityComponentList object
    *
-   *@return    The alertRangeEnd value
+   * @return    The alertRangeEnd value
    */
   public java.sql.Timestamp getAlertRangeEnd() {
     return alertRangeEnd;
@@ -175,7 +175,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the hasAlertDate attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new hasAlertDate value
+   * @param  tmp  The new hasAlertDate value
    */
   public void setHasAlertDate(boolean tmp) {
     this.hasAlertDate = tmp;
@@ -185,7 +185,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the alertDate attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new alertDate value
+   * @param  tmp  The new alertDate value
    */
   public void setAlertDate(java.sql.Timestamp tmp) {
     this.alertDate = tmp;
@@ -195,7 +195,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Gets the tableName attribute of the OpportunityComponentList object
    *
-   *@return    The tableName value
+   * @return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -205,7 +205,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Gets the uniqueField attribute of the OpportunityComponentList object
    *
-   *@return    The uniqueField value
+   * @return    The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -215,7 +215,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Gets the closeDateStart attribute of the OpportunityComponentList object
    *
-   *@return    The closeDateStart value
+   * @return    The closeDateStart value
    */
   public java.sql.Timestamp getCloseDateStart() {
     return closeDateStart;
@@ -225,7 +225,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Gets the closeDateEnd attribute of the OpportunityComponentList object
    *
-   *@return    The closeDateEnd value
+   * @return    The closeDateEnd value
    */
   public java.sql.Timestamp getCloseDateEnd() {
     return closeDateEnd;
@@ -235,7 +235,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the closeDateStart attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new closeDateStart value
+   * @param  tmp  The new closeDateStart value
    */
   public void setCloseDateStart(java.sql.Timestamp tmp) {
     this.closeDateStart = tmp;
@@ -245,7 +245,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the closeDateStart attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new closeDateStart value
+   * @param  tmp  The new closeDateStart value
    */
   public void setCloseDateStart(String tmp) {
     try {
@@ -261,7 +261,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the closeDateEnd attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new closeDateEnd value
+   * @param  tmp  The new closeDateEnd value
    */
   public void setCloseDateEnd(java.sql.Timestamp tmp) {
     this.closeDateEnd = tmp;
@@ -271,7 +271,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the closeDateEnd attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new closeDateEnd value
+   * @param  tmp  The new closeDateEnd value
    */
   public void setCloseDateEnd(String tmp) {
     try {
@@ -287,7 +287,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the owner attribute of the OpportunityComponentList object
    *
-   *@param  tmp  The new owner value
+   * @param  tmp  The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -297,7 +297,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Gets the ownerIdRange attribute of the OpportunityComponentList object
    *
-   *@return    The ownerIdRange value
+   * @return    The ownerIdRange value
    */
   public String getOwnerIdRange() {
     return ownerIdRange;
@@ -307,7 +307,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Gets the queryOpenOnly attribute of the OpportunityComponentList object
    *
-   *@return    The queryOpenOnly value
+   * @return    The queryOpenOnly value
    */
   public boolean getQueryOpenOnly() {
     return queryOpenOnly;
@@ -317,7 +317,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Sets the queryOpenOnly attribute of the OpportunityComponentList object
    *
-   *@param  queryOpenOnly  The new queryOpenOnly value
+   * @param  queryOpenOnly  The new queryOpenOnly value
    */
   public void setQueryOpenOnly(boolean queryOpenOnly) {
     this.queryOpenOnly = queryOpenOnly;
@@ -327,7 +327,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Gets the listSize attribute of the OpportunityComponentList object
    *
-   *@return    The listSize value
+   * @return    The listSize value
    */
   public int getListSize() {
     return this.size();
@@ -337,7 +337,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Gets the enteredBy attribute of the OpportunityComponentList object
    *
-   *@return    The enteredBy value
+   * @return    The enteredBy value
    */
   public int getEnteredBy() {
     return enteredBy;
@@ -347,7 +347,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Gets the hasAlertDate attribute of the OpportunityComponentList object
    *
-   *@return    The hasAlertDate value
+   * @return    The hasAlertDate value
    */
   public boolean getHasAlertDate() {
     return hasAlertDate;
@@ -357,10 +357,10 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  timeZone          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  timeZone          Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public HashMap queryRecordCount(Connection db, TimeZone timeZone) throws SQLException {
     PreparedStatement pst = null;
@@ -394,8 +394,8 @@ public class OpportunityComponentList extends ArrayList {
    *  Builds a subset of attributes of the Opprtunity primarily for the
    *  Calendar.
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void buildShortList(Connection db) throws SQLException {
     StringBuffer sqlSelect = new StringBuffer();
@@ -431,9 +431,9 @@ public class OpportunityComponentList extends ArrayList {
    *  set after this object is constructed, then the buildList method is called
    *  to generate the list.
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param  db                Description of Parameter
+   * @exception  SQLException  Description of Exception
+   * @since                    1.1
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -529,7 +529,7 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param  sqlFilter  Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -574,10 +574,10 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  newOwner          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  newOwner          Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner) throws SQLException {
     int total = 0;
@@ -593,13 +593,36 @@ public class OpportunityComponentList extends ArrayList {
 
 
   /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @param  newOwner          Description of the Parameter
+   * @param  userId            Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public int reassignElements(Connection db, int newOwner, int userId) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      OpportunityComponent thisOpp = (OpportunityComponent) i.next();
+      thisOpp.setModifiedBy(userId);
+      if (thisOpp.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+
+  /**
    *  Sets the parameters for the preparedStatement - these items must
    *  correspond with the createFilter statement
    *
-   *@param  pst               Description os.gerameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.3
+   * @param  pst               Description os.gerameter
+   * @return                   Description of the Returned Value
+   * @exception  SQLException  Description of Exception
+   * @since                    1.3
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -634,11 +657,11 @@ public class OpportunityComponentList extends ArrayList {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  moduleId          Description of the Parameter
-   *@param  itemId            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  moduleId          Description of the Parameter
+   * @param  itemId            Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public static int retrieveRecordCount(Connection db, int moduleId, int itemId) throws SQLException {
     int count = 0;

@@ -1,5 +1,6 @@
 function deleteOptions(optionListId){
      var frm = document.getElementById(optionListId);
+     frm.innerHTML="";
      while (frm.options.length>0){
       deleteIndex=frm.options.length-1;
       frm.options[deleteIndex]=null;
@@ -9,7 +10,6 @@ function deleteOptions(optionListId){
     
    function insertOption(text,value,optionListId){
      var frm = document.getElementById(optionListId);
-      
      if (frm.selectedIndex>0){
        insertIndex=frm.selectedIndex;
      }
@@ -18,7 +18,15 @@ function deleteOptions(optionListId){
      }
      frm.options[insertIndex] = new Option(text,value);
     }
-
+    
+    
+    function insertOptionGroup(text, optionListId) {
+      var frm = document.getElementById(optionListId);
+      var optGroup = document.createElement('optgroup');
+      optGroup.label = text;
+      frm.appendChild(optGroup);
+    }
+    
     
     function changeDivContent(divName, divContents) {
 		if(document.layers){

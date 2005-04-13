@@ -15,15 +15,19 @@
  */
 package org.aspcfs.modules.mycfs.beans;
 
-import java.util.*;
-import java.text.*;
-import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.ActionContext;
-import java.sql.*;
-import org.aspcfs.modules.login.beans.UserBean;
-import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.mycfs.base.AlertType;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  *  CalendarBean maintains all the users setting on his home page's calendar
@@ -38,11 +42,11 @@ public class CalendarBean {
 
   private String calendarDetailsView = "all";
   private String calendarView = "";
-  Calendar cal = Calendar.getInstance();
-  private int primaryMonth = cal.get(Calendar.MONTH) + 1;
-  private int monthSelected = cal.get(Calendar.MONTH) + 1;
-  private int primaryYear = cal.get(Calendar.YEAR);
-  private int yearSelected = cal.get(Calendar.YEAR);
+  Calendar cal = null;
+  private int primaryMonth = -1;
+  private int monthSelected = -1;
+  private int primaryYear = -1;
+  private int yearSelected = -1;
   private int daySelected = -1;
   private int startMonthOfWeek = -1;
   private int startDayOfWeek = -1;
@@ -53,11 +57,24 @@ public class CalendarBean {
   private TimeZone timeZone = null;
 
 
+  /**
+   *  Constructor for the CalendarBean object
+   */
+  public CalendarBean() { }
+
 
   /**
-   *  Description of the Method
+   *  Constructor for the CalendarBean object
+   *
+   *@param  locale  Description of the Parameter
    */
-  public void CalendarBean() { }
+  public CalendarBean(Locale locale) {
+    cal = Calendar.getInstance(locale);
+    primaryMonth = cal.get(Calendar.MONTH) + 1;
+    monthSelected = cal.get(Calendar.MONTH) + 1;
+    primaryYear = cal.get(Calendar.YEAR);
+    yearSelected = cal.get(Calendar.YEAR);
+  }
 
 
   /**
@@ -208,15 +225,9 @@ public class CalendarBean {
    *@exception  SQLException  Description of the Exception
    */
   public void setSelectedUserName(Connection db) throws SQLException {
-    Exception errorMessage = null;
-    try {
-      int thisContactId = (new User(db, selectedUserId)).getContactId();
-      Contact thisContact = new Contact(db, thisContactId);
-      this.setSelectedUserName(thisContact.getNameLastFirst());
-    } catch (SQLException e) {
-      errorMessage = e;
-      System.out.println(" *** ERROR *** \t CalendarBean -- > Error retrieving User Record");
-    }
+    int thisContactId = (new User(db, selectedUserId)).getContactId();
+    Contact thisContact = new Contact(db, thisContactId);
+    this.setSelectedUserName(thisContact.getNameLastFirst());
   }
 
 
@@ -382,7 +393,7 @@ public class CalendarBean {
    *@return    The startOfWeekDate value
    */
   public java.util.Date getStartOfWeekDate() {
-    Calendar thisCal = cal.getInstance();
+    Calendar thisCal = Calendar.getInstance();
     thisCal.set(yearSelected, startMonthOfWeek - 1, startDayOfWeek);
     return thisCal.getTime();
   }
@@ -394,7 +405,7 @@ public class CalendarBean {
    *@return    The endOfWeekDate value
    */
   public java.util.Date getEndOfWeekDate() {
-    Calendar thisCal = cal.getInstance();
+    Calendar thisCal = Calendar.getInstance();
     thisCal.set(yearSelected, startMonthOfWeek - 1, startDayOfWeek);
     thisCal.add(java.util.Calendar.DATE, +6);
     return thisCal.getTime();
@@ -417,7 +428,7 @@ public class CalendarBean {
 
     if (tZone != null && (timeZone == null || (timeZone != null && !timeZone.hasSameRules(TimeZone.getTimeZone(tZone))))) {
       if (System.getProperty("DEBUG") != null) {
-        System.out.println("CalendarBean -- > Setting timezone to " + tZone);
+        System.out.println("CalendarBean-> Setting timezone to " + tZone);
       }
       setTimeZone(TimeZone.getTimeZone(tZone));
       cal.setTimeZone(timeZone);

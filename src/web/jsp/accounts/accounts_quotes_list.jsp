@@ -20,8 +20,9 @@
 <%@ page import="java.util.*,java.text.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.quotes.base.*,org.aspcfs.modules.products.base.*" %>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/>
 <jsp:useBean id="quoteList" class="org.aspcfs.modules.quotes.base.QuoteList" scope="request"/>
-<jsp:useBean id="quoteListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="accountQuoteListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="quoteStatusList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
+<jsp:useBean id="version" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
@@ -41,43 +42,95 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-Quotes
+<% if (version != null && !"".equals(version)) { %> 
+<a href="AccountQuotes.do?command=View&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.accounts_quotes_list.Quotes">Quotes</dhv:label></a> > 
+<dhv:label name="quotes.versionList">Version List</dhv:label>
+<% } else { %>
+<dhv:label name="accounts.accounts_quotes_list.Quotes">Quotes</dhv:label>
+<% } %>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<dhv:container name="accounts" selected="quotes" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-<table cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack" colspan="2">
-<%-- Begin the container contents --%>
-<%-- <dhv:permission name="accounts-accounts-quotes-add">
-  <a href="AccountQuotes.do?command=CreateQuote&orgId=<%= OrgDetails.getOrgId() %>">Add a Quote</a>
-</dhv:permission> --%>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="quoteListInfo"/>
+<dhv:container name="accounts" selected="quotes" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+<dhv:permission name="accounts-quotes-add"><a href="AccountQuotes.do?command=AddQuoteForm&orgId=<%= OrgDetails.getOrgId() %>"/><dhv:label name="accounts.accounts_quotes_list.AddAQuote">Add a Quote</dhv:label></a></dhv:permission>
+<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="accountQuoteListInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 <tr>
   <th width="8">
-    <strong>Action</strong>
+    &nbsp;
   </th>
-  <th>
-    <strong><a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.quote_id">Quote<br />Number</a></strong>
-    <%= quoteListInfo.getSortIcon("qe.quote_id") %>
+  <th nowrap>
+    <% if (version == null || "".equals(version)) { %> 
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.group_id&version=<%= version %>">
+    <%}%>
+    <strong><dhv:label name="quotes.number">Number</dhv:label></strong>
+    <% if (version == null || "".equals(version)) { %> 
+      </a>
+      <%= accountQuoteListInfo.getSortIcon("qe.group_id") %>
+    <%}%>
   </th>
-  <th>
-    <strong><a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.issued">Quote Issued</a></strong>
-    <%= quoteListInfo.getSortIcon("qe.issued") %>
+  <th nowrap>
+    <% if (version == null || "".equals(version)) { %> 
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.version&version=<%= version %>">
+    <%}%>
+    <strong><dhv:label name="accounts.accounts_documents_details.Version">Version</dhv:label></strong>
+    <% if (version == null || "".equals(version)) { %> 
+      </a>
+      <%= accountQuoteListInfo.getSortIcon("qe.version") %>
+    <%}%>
   </th>
-  <th>
-    <strong><a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.short_description">Description</a></strong>
-    <%= quoteListInfo.getSortIcon("qe.short_description") %>
+  <th nowrap>
+    <% if (version == null || "".equals(version)) { %> 
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.short_description&version=<%= version %>">
+    <%}%>
+    <strong><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></strong>
+    <% if (version == null || "".equals(version)) { %> 
+      </a>
+      <%= accountQuoteListInfo.getSortIcon("qe.short_description") %>
+    <%}%>
   </th>
-  <th>
-    <strong><a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.status_id">Quote Status</a></strong>
-    <%= quoteListInfo.getSortIcon("qe.status_id") %>
+  <th nowrap>
+    <% if (version == null || "".equals(version)) { %> 
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=statusName&version=<%= version %>">
+    <%}%>
+    <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
+    <% if (version == null || "".equals(version)) { %> 
+      </a>
+      <%= accountQuoteListInfo.getSortIcon("statusName") %>
+    <%}%>
+  </th>
+  <th nowrap>
+    <% if (version == null || "".equals(version)) { %> 
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.entered&version=<%= version %>">
+    <%}%>
+    <strong><dhv:label name="accounts.accounts_calls_list.Entered">Created</dhv:label></strong>
+    <% if (version == null || "".equals(version)) { %> 
+      </a>
+      <%= accountQuoteListInfo.getSortIcon("qe.entered") %>
+    <%}%>
+  </th>
+  <th nowrap>
+    <% if (version == null || "".equals(version)) { %> 
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.issued&version=<%= version %>">
+    <%}%>
+    <strong><dhv:label name="quotes.issued">Issued</dhv:label></strong>
+    <% if (version == null || "".equals(version)) { %> 
+      </a>
+      <%= accountQuoteListInfo.getSortIcon("qe.issued") %>
+    <%}%>
+  </th>
+  <th nowrap>
+    <% if (version == null || "".equals(version)) { %> 
+      <a href="AccountQuotes.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&column=qe.closed&version=<%= version %>">
+    <%}%>
+    <strong><dhv:label name="quotes.closed">Closed</dhv:label></strong>
+    <% if (version == null || "".equals(version)) { %> 
+      </a>
+      <%= accountQuoteListInfo.getSortIcon("qe.closed") %>
+    <%}%>
   </th>
 </tr>
 <%
@@ -89,18 +142,20 @@ Quotes
     i++;
     rowid = (rowid != 1 ? 1 : 2);
     Quote thisQuote = (Quote)j.next();
+    String status = quoteStatusList.getValueFromId(thisQuote.getStatusId());
 %>
 		<tr class="containerBody">
       <td valign="center" nowrap class="row<%= rowid %>">
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('menuQuote', '<%= OrgDetails.getOrgId() %>', '<%= thisQuote.getId() %>');"
-         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>)"><img src="images/select.gif" name="select<%= i %>" align="absmiddle" border="0"></a>
+         <a href="javascript:displayMenu('select<%= i %>','menuQuote','<%= OrgDetails.getOrgId() %>','<%= thisQuote.getId() %>','<%= version %>','<%= (thisQuote.getClosed() == null) ? "true" : "false" %>');"
+         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuQuote');">
+         <img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
       </td>
-      <td valign="center" width="20%" class="row<%= rowid %>">
-        <a href="AccountQuotes.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&quoteId=<%= thisQuote.getId() %>">Quote #<%= thisQuote.getId() %></a>
+      <td valign="center" class="row<%= rowid %>" width="10%">
+        <a href="AccountQuotes.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>&version=<%= version %>&quoteId=<%= thisQuote.getId() %>"><%= thisQuote.getPaddedGroupId() %></a>
       </td>
-      <td valign="center" width="20%" class="row<%= rowid %>">
-        <zeroio:tz timestamp="<%= thisQuote.getIssuedDate() %>" default="not issued"/>
+      <td valign="center" class="row<%= rowid %>">
+        <%= toHtml(thisQuote.getVersion()) %>
       </td>
       <td valign="center" width="50%" class="row<%= rowid %>">
         <%= toHtml(thisQuote.getShortDescription()) %>
@@ -108,18 +163,29 @@ Quotes
       <td valign="center" class="row<%= rowid %>" nowrap>
         <%= toHtml(quoteStatusList.getValueFromId(thisQuote.getStatusId())) %>
       </td>
+      <td valign="center" width="10%" class="row<%= rowid %>">
+        <dhv:tz timestamp="<%= thisQuote.getEntered() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
+      </td>
+      <td valign="center" width="10%" class="row<%= rowid %>">
+    <% if(thisQuote.getIssuedDate() != null){ %>
+        <dhv:tz timestamp="<%= thisQuote.getIssuedDate() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
+    <% }else{ %>&nbsp;<% } %>
+      </td>
+      <td valign="center" width="10%" class="row<%= rowid %>">
+    <% if(thisQuote.getClosed() != null){ %>
+        <dhv:tz timestamp="<%= thisQuote.getClosed() %>" dateOnly="true" dateFormat="<%= DateFormat.SHORT %>"/>
+    <% }else{ %>&nbsp;<% } %>
+      </td>
    </tr>
-<% } %>
-<%} else {%>
+<% }
+  } else {%>
 		<tr class="containerBody">
-      <td colspan="5">
-        No quotes found.
+      <td colspan="8">
+        <dhv:label name="accounts.accounts_quotes_list.NoQuotesFound">No quotes found.</dhv:label>
       </td>
     </tr>
-<%}%>
+<% } %>
 	</table>
 	<br>
-  </td>
-  </tr>
-</table>
-<dhv:pagedListControl object="quoteListInfo"/>
+  <dhv:pagedListControl object="accountQuoteListInfo"/>
+</dhv:container>

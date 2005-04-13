@@ -53,17 +53,17 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Assigned to Me" type="tickets.assigned.to.me" object="AssignedToMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-    <th valign="center" align="left">
-      <strong>Action</strong>
+    <th width="8">
+      &nbsp;
     </th>
     <th valign="center" align="left">
-      <strong>Number</strong>
+      <strong><dhv:label name="quotes.number">Number</dhv:label></strong>
     </th>
-    <th><b>Priority</b></th>
-    <th><b>Est. Resolution Date</b></th>
-    <th><b>Age</b></th>
-    <th><b>Company</b></th>
-	<th><b>Resource Assigned</b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></b></th>
+    <th><b><dhv:label name="ticket.estResolutionDate">Est. Resolution Date</dhv:label></b></th>
+    <th><b><dhv:label name="ticket.age">Age</dhv:label></b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></b></th>
+	<th><b><dhv:label name="project.resourceAssigned">Resource Assigned</dhv:label></b></th>
   </tr>
 <%
 	Iterator k = AssignedToMeList.iterator();
@@ -99,10 +99,10 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 			<%= assignedTic.getAgeOf() %>
 		</td>
 		<td width="45%" valign="top">
-			<%= toHtml(assignedTic.getCompanyName()) %><dhv:evaluate exp="<%= !(assignedTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
+			<%= toHtml(assignedTic.getCompanyName()) %><dhv:evaluate if="<%= !(assignedTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 		<td width="20%" nowrap valign="top">
-			<dhv:username id="<%= assignedTic.getAssignedTo() %>" default="-- unassigned --"/><dhv:evaluate exp="<%= !(assignedTic.getHasEnabledOwnerAccount()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
+			<dhv:username id="<%= assignedTic.getAssignedTo() %>" default="ticket.unassigned.text"/><dhv:evaluate if="<%= !(assignedTic.getHasEnabledOwnerAccount()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 	</tr>
   <tr class="row<%= rowid %>">
@@ -122,9 +122,9 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 %>
       <%= toHtml(assignedTic.getProblemHeader()) %>&nbsp;
       <% if (assignedTic.getClosed() == null) { %>
-        [<font color="green">open</font>]
+        [<font color="green"><dhv:label name="project.open.lowercase">open</dhv:label></font>]
       <%} else {%>
-        [<font color="red">closed</font>]
+        [<font color="red"><dhv:label name="project.closed.lowercase">closed</dhv:label></font>]
       <%}%>
     </td>
   </tr>
@@ -148,17 +148,17 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Other Tickets in My Department" type="tickets.other" object="OpenInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-		<th valign="center" align="left">
-      <strong>Action</strong>
+		<th width="8">
+      &nbsp;
     </th>
     <th valign="center" align="left">
-      <strong>Number</strong>
+      <strong><dhv:label name="quotes.number">Number</dhv:label></strong>
     </th>
-    <th><b>Priority</b></th>
-    <th><b>Est. Resolution Date</b></th>
-    <th><b>Age</b></th>
-    <th><b>Company</b></th>
-	<th><b>Resource Assigned</b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></b></th>
+    <th><b><dhv:label name="ticket.estResolutionDate">Est. Resolution Date</dhv:label></b></th>
+    <th><b><dhv:label name="ticket.age">Age</dhv:label></b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></b></th>
+	<th><b><dhv:label name="project.resourceAssigned">Resource Assigned</dhv:label></b></th>
   </tr>
 <%
 	Iterator n = OpenList.iterator();
@@ -194,15 +194,15 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 			<%= openTic.getAgeOf() %>
 		</td>
 		<td width="45%" valign="top" class="row<%= rowid %>">
-			<%= toHtml(openTic.getCompanyName()) %><dhv:evaluate exp="<%= !(openTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
+			<%= toHtml(openTic.getCompanyName()) %><dhv:evaluate if="<%= !(openTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 		<td width="20%" nowrap valign="top" class="row<%= rowid %>">
       <dhv:evaluate if="<%= openTic.isAssigned() %>">
-        <dhv:username id="<%= openTic.getAssignedTo() %>" default="-- unassigned --"/>
+        <dhv:username id="<%= openTic.getAssignedTo() %>" default="ticket.unassigned.text"/>
       </dhv:evaluate>
       <dhv:evaluate if="<%= !(openTic.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
       <dhv:evaluate if="<%= (!openTic.isAssigned()) %>">
-        <font color="red"><dhv:username id="<%= openTic.getAssignedTo() %>" default="-- unassigned --"/></font>
+        <font color="red"><dhv:username id="<%= openTic.getAssignedTo() %>" default="ticket.unassigned.text"/></font>
       </dhv:evaluate>
 		</td>
 	</tr>
@@ -223,9 +223,9 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 %>
       <%= toHtml(openTic.getProblemHeader()) %>
       <% if (openTic.getClosed() == null) { %>
-        [<font color="green">open</font>]
+        [<font color="green"><dhv:label name="project.open.lowercase">open</dhv:label></font>]
       <%} else {%>
-        [<font color="red">closed</font>]
+        [<font color="red"><dhv:label name="project.closed.lowercase">closed</dhv:label></font>]
       <%}%>
     </td>
   </tr>
@@ -250,17 +250,17 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="Tickets Created by Me" type="tickets.created.by.me" object="CreatedByMeInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-		<th valign="center" align="left">
-      <strong>Action</strong>
+		<th width="8">
+      &nbsp;
     </th>
     <th valign="center" align="left">
-      <strong>Number</strong>
+      <strong><dhv:label name="quotes.number">Number</dhv:label></strong>
     </th>
-    <th><b>Priority</b></th>
-    <th><b>Est. Resolution Date</b></th>
-    <th><b>Age</b></th>
-    <th><b>Company</b></th>
-	<th><b>Resource Assigned</b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></b></th>
+    <th><b><dhv:label name="ticket.estResolutionDate">Est. Resolution Date</dhv:label></b></th>
+    <th><b><dhv:label name="ticket.age">Age</dhv:label></b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></b></th>
+	<th><b><dhv:label name="project.resourceAssigned">Resource Assigned</dhv:label></b></th>
   </tr>
 <%
 	Iterator j = CreatedByMeList.iterator();
@@ -296,15 +296,15 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 			<%= thisTic.getAgeOf() %>
 		</td>
 		<td width="45%" valign="top">
-			<%= toHtml(thisTic.getCompanyName()) %><dhv:evaluate exp="<%= !(thisTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
+			<%= toHtml(thisTic.getCompanyName()) %><dhv:evaluate if="<%= !(thisTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 		<td width="20%" nowrap valign="top">
-      <dhv:evaluate exp="<%= thisTic.isAssigned() %>">
-        <dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/>
+      <dhv:evaluate if="<%= thisTic.isAssigned() %>">
+        <dhv:username id="<%= thisTic.getAssignedTo() %>" default="ticket.unassigned.text"/>
       </dhv:evaluate>
-      <dhv:evaluate exp="<%= !(thisTic.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
-      <dhv:evaluate exp="<%= (!thisTic.isAssigned()) %>">
-        <font color="red"><dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/></font>
+      <dhv:evaluate if="<%= !(thisTic.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
+      <dhv:evaluate if="<%= (!thisTic.isAssigned()) %>">
+        <font color="red"><dhv:username id="<%= thisTic.getAssignedTo() %>" default="ticket.unassigned.text"/></font>
       </dhv:evaluate>
 		</td>
 	</tr>
@@ -325,9 +325,9 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 %>
       <%= toHtml(thisTic.getProblemHeader()) %>
       <% if (thisTic.getClosed() == null) { %>
-        [<font color="green">open</font>]
+        [<font color="green"><dhv:label name="project.open.lowercase">open</dhv:label></font>]
       <%} else {%>
-        [<font color="red">closed</font>]
+        [<font color="red"><dhv:label name="project.closed.lowercase">closed</dhv:label></font>]
       <%}%>
     </td>
   </tr>
@@ -353,17 +353,17 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 <dhv:pagedListStatus tdClass="pagedListTab" showExpandLink="true" title="All Tickets" type="tickets.all" object="AllTicketsInfo"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-		<th valign="center" align="left">
-      <strong>Action</strong>
+		<th width="8">
+      &nbsp;
     </th>
     <th valign="center" align="left">
-      <strong>Number</strong>
+      <strong><dhv:label name="quotes.number">Number</dhv:label></strong>
     </th>
-    <th><b>Priority</b></th>
-    <th><b>Est. Resolution Date</b></th>
-    <th><b>Age</b></th>
-    <th><b>Company</b></th>
-	<th><b>Resource Assigned</b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></b></th>
+    <th><b><dhv:label name="ticket.estResolutionDate">Est. Resolution Date</dhv:label></b></th>
+    <th><b><dhv:label name="ticket.age">Age</dhv:label></b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></b></th>
+	<th><b><dhv:label name="project.resourceAssigned">Resource Assigned</dhv:label></b></th>
   </tr>
 <%
 	Iterator j = AllTicketsList.iterator();
@@ -399,15 +399,15 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 			<%= thisTic.getAgeOf() %>
 		</td>
 		<td width="45%" valign="top">
-			<%= toHtml(thisTic.getCompanyName()) %><dhv:evaluate exp="<%= !(thisTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
+			<%= toHtml(thisTic.getCompanyName()) %><dhv:evaluate if="<%= !(thisTic.getCompanyEnabled()) %>">&nbsp;<font color="red">*</font></dhv:evaluate>
 		</td>
 		<td width="20%" nowrap valign="top">
-      <dhv:evaluate exp="<%= thisTic.isAssigned() %>">
-        <dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/>
+      <dhv:evaluate if="<%= thisTic.isAssigned() %>">
+        <dhv:username id="<%= thisTic.getAssignedTo() %>" default="ticket.unassigned.text"/>
       </dhv:evaluate>
-      <dhv:evaluate exp="<%= !(thisTic.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
-      <dhv:evaluate exp="<%= (!thisTic.isAssigned()) %>">
-        <font color="red"><dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/></font>
+      <dhv:evaluate if="<%= !(thisTic.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
+      <dhv:evaluate if="<%= (!thisTic.isAssigned()) %>">
+        <font color="red"><dhv:username id="<%= thisTic.getAssignedTo() %>" default="ticket.unassigned.text"/></font>
       </dhv:evaluate>
 		</td>
 	</tr>
@@ -428,9 +428,9 @@ if ((request.getParameter("pagedListSectionId") == null && !(OpenInfo.getExpande
 %>
       <%= toHtml(thisTic.getProblemHeader()) %>
       <% if (thisTic.getClosed() == null) { %>
-        [<font color="green">open</font>]
+        [<font color="green"><dhv:label name="project.open.lowercase">open</dhv:label></font>]
       <%} else {%>
-        [<font color="red">closed</font>]
+        [<font color="red"><dhv:label name="project.closed.lowercase">closed</dhv:label></font>]
       <%}%>
     </td>
   </tr>

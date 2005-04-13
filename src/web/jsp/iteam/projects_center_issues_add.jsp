@@ -33,15 +33,15 @@
     var messageText = "";
     //Check required fields
     if (form.subject.value == "") {    
-      messageText += "- Subject is a required field\r\n";
+      messageText += label("check.subject","- Subject is a required field\r\n");
       formTest = false;
     }
     if (form.body.value == "") {    
-      messageText += "- Message is a required field\r\n";
+      messageText += label("check.message.required","- Message is a required field\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The message could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("check.message","The message could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
@@ -55,37 +55,42 @@
   <tr class="subtab">
     <td>
       <img border="0" src="images/icons/stock_data-explorer-16.gif" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>">Forums</a> >
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Issues_Categories&pid=<%= Project.getId() %>"><dhv:label name="project.forums">Forums</dhv:label></a> >
       <img border="0" src="images/icons/stock_draw-callouts2-16.gif" align="absmiddle">
       <%= toHtml(IssueCategory.getSubject()) %>
     </td>
   </tr>
 </table>
 <br>
-  <input type="submit" value=" Save ">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>';"><br />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>';"><br>
   <dhv:formMessage />
   <input type="hidden" name="categoryId" value="<%= IssueCategory.getId() %>">
+  <input type="hidden" name="projectId" value="<%= Project.getId() %>">
+  <input type="hidden" name="id" value="<%= Issue.getId() %>">
+  <input type="hidden" name="modified" value="<%= Issue.getModified() %>">
+  <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        <strong>Topic</strong>
+        <strong><dhv:label name="project.topic">Topic</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel" valign="top">Subject</td>
+      <td nowrap class="formLabel" valign="top"><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></td>
       <td>
-        <input type="text" name="subject" size="57" maxlength="50" value="<%= toHtmlValue(Issue.getSubject()) %>"><font color=red>*</font>
+        <input type="text" name="subject" size="57" maxlength="50" value="<%= toHtmlValue(Issue.getSubject()) %>"><font color="red">*</font>
         <%= showAttribute(request, "subjectError") %>
       </td>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel" valign="top">Message</td>
+      <td nowrap class="formLabel" valign="top"><dhv:label name="project.message">Message</dhv:label></td>
       <td>
         <table border="0" cellpadding="0" cellspacing="0" class="empty">
           <tr>
             <td>
-              <textarea rows="10" name="body" cols="70"><%= Issue.getBody() %></textarea>
+              <textarea rows="10" name="body" cols="70"><%= toString(Issue.getBody()) %></textarea>
             </td>
             <td valign="top">
               <font color=red>*</font>
@@ -95,14 +100,18 @@
         <%= showAttribute(request, "bodyError") %>
       </td>
     </tr>
+    <dhv:evaluate if="<%= IssueCategory.getAllowFileAttachments() && Issue.getId() == -1 %>">
+    <tr class="containerBody">
+      <td nowrap class="formLabel" valign="top">File attachment</td>
+      <td>
+        <input type="file" name="id<%= Project.getId() %>" size="45">
+        <%= showAttribute(request, "id" + Project.getId() + "Error") %>
+      </td>
+    </tr>
+    </dhv:evaluate>
   </table>
-  <br>
-  <input type="submit" value=" Save ">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>';"><br>
-  <input type="hidden" name="projectId" value="<%= Project.getId() %>">
-  <input type="hidden" name="id" value="<%= Issue.getId() %>">
-  <input type="hidden" name="modified" value="<%= Issue.getModified() %>">
-  <input type="hidden" name="dosubmit" value="true">
-  <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
+  <br />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Issues&pid=<%= Project.getId() %>&cid=<%= IssueCategory.getId() %>';"><br>
 </form>  
 </body>

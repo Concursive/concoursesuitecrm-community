@@ -55,27 +55,31 @@
       <img border="0" src="images/icons/stock_list_enum2-16.gif" align="absmiddle">
       <a href="ProjectManagement.do?command=ProjectCenter&section=Lists_Categories&pid=<%= Project.getId() %>">Lists</a> >
       <a href="ProjectManagement.do?command=ProjectCenter&section=Lists&pid=<%= Project.getId() %>&cid=<%= category.getId() %>"><%= toHtml(category.getDescription()) %></a> >
-      <%= Task.getId() == -1 ? "Add" : "Update" %>
+      <% if (Task.getId() == -1) { %>
+      <dhv:label name="button.add">Add</dhv:label>
+      <%} else {%>
+      <dhv:label name="button.update">Update</dhv:label>
+      <%}%>
     </td>
   </tr>
 </table>
 <br>
-  <input type="submit" value=" Save " onClick="javascript:this.form.donew.value='false'">
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="javascript:this.form.donew.value='false'">
 <dhv:evaluate if="<%= Task.getId() == -1 %>">
   <input type="submit" value="Save & New" onClick="javascript:this.form.donew.value='true'">
 </dhv:evaluate>
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Lists<%= ((category.getId() == -1)?"_Categories":"") %>&pid=<%= Project.getId() %>&cid=<%= category.getId() %>';"><br />
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Lists<%= ((category.getId() == -1)?"_Categories":"") %>&pid=<%= Project.getId() %>&cid=<%= category.getId() %>';"><br />
   <dhv:formMessage />
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        <strong><%= Task.getId()==-1?"Add":"Update" %> Item</strong>
+        <%= Task.getId()==-1?"Add":"Update" %> Item
       </th>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel">Description</td>
+      <td nowrap class="formLabel"><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></td>
       <td>
-        <input type="text" name="description" size="57" maxlength="80" value="<%= toHtmlValue(Task.getDescription()) %>"><font color=red>*</font> <%= showAttribute(request, "descriptionError") %>
+        <input type="text" name="description" size="57" maxlength="255" value="<%= toHtmlValue(Task.getDescription()) %>"><font color=red>*</font> <%= showAttribute(request, "descriptionError") %>
       </td>
     </tr>
     <tr class="containerBody">
@@ -91,18 +95,18 @@
       </td>
     </tr>
     <tr class="containerBody">
-      <td nowrap class="formLabel" valign="top">Notes</td>
+      <td nowrap class="formLabel" valign="top"><dhv:label name="accounts.accounts_add.Notes">Notes</dhv:label></td>
       <td>
         <TEXTAREA NAME="notes" ROWS="8" COLS="55"><%= toString(Task.getNotes()) %></TEXTAREA>
       </td>
     </tr>
   </table>
-  <br>
-  <input type="submit" value=" Save " onClick="javascript:this.form.donew.value='false'">
+  <br />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="javascript:this.form.donew.value='false'">
 <dhv:evaluate if="<%= Task.getId() == -1 %>">
   <input type="submit" value="Save & New" onClick="javascript:this.form.donew.value='true'">
 </dhv:evaluate>
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Lists<%= ((category.getId() == -1)?"_Categories":"") %>&pid=<%= Project.getId() %>&cid=<%= category.getId() %>';">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='ProjectManagement.do?command=ProjectCenter&section=Lists<%= ((category.getId() == -1)?"_Categories":"") %>&pid=<%= Project.getId() %>&cid=<%= category.getId() %>';">
   <input type="hidden" name="pid" value="<%= Project.getId() %>">
   <input type="hidden" name="categoryId" value="<%= category.getId() %>">
   <input type="hidden" name="modified" value="<%= Task.getModified() %>">

@@ -27,7 +27,7 @@
 <jsp:useBean id="adRunTypeList" class="org.aspcfs.utils.web.LookupList" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../../initPage.jsp" %>
-<body onLoad="javascript:document.forms[0].stockNo.focus();">
+<body onLoad="javascript:document.addVehicle.stockNo.focus();">
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
@@ -56,7 +56,7 @@
     }
     if (formTest == false) {
       form.dosubmit.value = "true";
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be submitted. Check the following:") + message);
       return false;
     } else {
       return true;
@@ -112,254 +112,246 @@ Modify Vehicle
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="../../accounts/accounts_details_header_include.jsp" %>
-<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-<dhv:container name="accounts" selected="vehicles" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<input type="submit" value="Update">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
-<input type="hidden" name="id" value="<%= InventoryDetails.getId() %>">
-<input type="hidden" name="modified" value="<%= InventoryDetails.getModified() %>">
-<input type="hidden" name="dosubmit" value="true">
-<br />
-<dhv:formMessage />
-<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
-  <tr>
-    <th colspan="2" valign="center">
-      <strong>Modify Existing Vehicle Record</strong>
-    </th>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Stock No
-    </td>
-    <td width="100%">
-      <input type="text" size="15" name="stockNo" value="<%= toHtmlValue(InventoryDetails.getStockNo()) %>">
-      <font color=red>*</font> <%= showAttribute(request, "stockNoError") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Year
-    </td>
-    <td>
-      <% YearSelect.setJsEvent("onchange=\"updateMakeList();\""); %>
-      <%= YearSelect.getHtml("vehicle_year", InventoryDetails.getVehicle().getYear()) %>
-      <font color=red>*</font> <%= showAttribute(request, "yearError") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Make
-    </td>
-    <td>
-      <% MakeSelect.setJsEvent("onchange=\"updateModelList();\""); %>
-      <%= MakeSelect.getHtml("vehicle_makeId", InventoryDetails.getVehicle().getMakeId()) %>
-      <font color=red>*</font> <%= showAttribute(request, "makeIdError") %>
-      <%= showAttribute(request, "modelError") %>
-      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Model
-    </td>
-    <td>
-      <%= ModelSelect.getHtml("vehicle_modelId", InventoryDetails.getVehicle().getModelId()) %>
-      <font color=red>*</font> <%= showAttribute(request, "modelIdError") %>
-    </td>
-  </tr>
-	<tr class="containerBody">
-    <td nowrap class="formLabel">
-      Style
-    </td>
-    <td>
-      <input type="text" size="10" name="style" value="<%= toHtmlValue(InventoryDetails.getStyle()) %>">
-      <%= showAttribute(request, "styleError") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Mileage
-    </td>
-    <td>
-      <input type="text" size="10" name="mileage" value="<%= InventoryDetails.getMileageString() %>">
-      <%= showAttribute(request, "mileageError") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Vin
-    </td>
-    <td>
-      <input type="text" size="30" name="vin" value="<%= toHtmlValue(InventoryDetails.getVin()) %>">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Selling Price
-    </td>
-    <td>
-      <select size="1" name="sellingPriceType" onChange="togglePrice()">
-        <option value="1"<dhv:evaluate if="<%= !hasText(InventoryDetails.getSellingPriceText()) %>"> selected</dhv:evaluate>>Total</option>
-        <option value="2"<dhv:evaluate if="<%= hasText(InventoryDetails.getSellingPriceText()) %>"> selected</dhv:evaluate>>Custom</option>
-      </select>
-      <span name="spanSelling1" id="spanSelling1"<dhv:evaluate if="<%= hasText(InventoryDetails.getSellingPriceText()) %>"> style="display:none"</dhv:evaluate>>
-        <input type="text" size="10" name="sellingPrice" value="<%= InventoryDetails.getSellingPriceString() %>">
-        <%= showAttribute(request, "sellingPriceError") %>
-      </span>
-      <span name="spanSelling2" id="spanSelling2"<dhv:evaluate if="<%= !hasText(InventoryDetails.getSellingPriceText()) %>"> style="display:none"</dhv:evaluate>>
-        <input type="text" size="20" name="sellingPriceText" value="<%= toHtmlValue(InventoryDetails.getSellingPriceText()) %>">
-        <%= showAttribute(request, "sellingPriceTextError") %>
-      </span>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Exterior Color
-    </td>
-    <td>
-      <input type="text" size="15" name="exteriorColor" value="<%= toHtmlValue(InventoryDetails.getExteriorColor()) %>">
-      <%= showAttribute(request, "exteriorColorError") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Condition
-    </td>
-    <td>
-      <input type="text" size="30" name="condition" value="<%= toHtmlValue(InventoryDetails.getCondition()) %>">
-      <%= showAttribute(request, "conditionError") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Additional Text
-    </td>
-    <td>
-      <input type="text" size="30" name="comments" value="<%= toHtmlValue(InventoryDetails.getComments()) %>">
-      <%= showAttribute(request, "commentsError") %>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td nowrap class="formLabel">
-      Sold
-    </td>
-    <td>
-      <input type="checkbox" name="sold" value="true"<%= (InventoryDetails.getSold()?" checked":"") %>>
-    </td>
-  </tr>
-</table>
-<br>
-&nbsp;
-<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
-  <tr>
-    <th colspan="3" valign="center" align="left">
-      <strong>Select Vehicle Options</strong>
-    </th>
-  </tr>
-<%
-  int rows = (OptionList.size()/3);
-  if ((OptionList.size()%3) > 0) {
-    ++rows;
-  }
-  
-  int itemCount = 0;
-  for (int rowCount = 0; rowCount < rows; rowCount++) { 
-    Option option1 = null;
-    Option option2 = null;
-    Option option3 = null;
-    ++itemCount;
-    option1 = (Option)OptionList.get(rowCount);
-    if (OptionList.size() > rowCount + rows) {
-      option2 = (Option)OptionList.get(rowCount + rows);
+<dhv:container name="accounts" selected="vehicles" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
+  <input type="hidden" name="id" value="<%= InventoryDetails.getId() %>">
+  <input type="hidden" name="modified" value="<%= InventoryDetails.getModified() %>">
+  <input type="hidden" name="dosubmit" value="true">
+  <br />
+  <dhv:formMessage />
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+    <tr>
+      <th colspan="2" valign="center">
+        <strong>Modify Existing Vehicle Record</strong>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        Stock No
+      </td>
+      <td width="100%">
+        <input type="text" size="15" name="stockNo" value="<%= toHtmlValue(InventoryDetails.getStockNo()) %>">
+        <font color=red>*</font> <%= showAttribute(request, "stockNoError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        <dhv:label name="accounts.accounts_revenue_add.Year">Year</dhv:label>
+      </td>
+      <td>
+        <% YearSelect.setJsEvent("onchange=\"updateMakeList();\""); %>
+        <%= YearSelect.getHtml("vehicle_year", InventoryDetails.getVehicle().getYear()) %>
+        <font color=red>*</font> <%= showAttribute(request, "yearError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        Make
+      </td>
+      <td>
+        <% MakeSelect.setJsEvent("onchange=\"updateModelList();\""); %>
+        <%= MakeSelect.getHtml("vehicle_makeId", InventoryDetails.getVehicle().getMakeId()) %>
+        <font color=red>*</font> <%= showAttribute(request, "makeIdError") %>
+        <%= showAttribute(request, "modelError") %>
+        <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        Model
+      </td>
+      <td>
+        <%= ModelSelect.getHtml("vehicle_modelId", InventoryDetails.getVehicle().getModelId()) %>
+        <font color=red>*</font> <%= showAttribute(request, "modelIdError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        Style
+      </td>
+      <td>
+        <input type="text" size="10" name="style" value="<%= toHtmlValue(InventoryDetails.getStyle()) %>">
+        <%= showAttribute(request, "styleError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        Mileage
+      </td>
+      <td>
+        <input type="text" size="10" name="mileage" value="<%= InventoryDetails.getMileageString() %>">
+        <%= showAttribute(request, "mileageError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        Vin
+      </td>
+      <td>
+        <input type="text" size="30" name="vin" value="<%= toHtmlValue(InventoryDetails.getVin()) %>">
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        Selling Price
+      </td>
+      <td>
+        <select size="1" name="sellingPriceType" onChange="togglePrice()">
+          <option value="1"<dhv:evaluate if="<%= !hasText(InventoryDetails.getSellingPriceText()) %>"> selected</dhv:evaluate>>Total</option>
+          <option value="2"<dhv:evaluate if="<%= hasText(InventoryDetails.getSellingPriceText()) %>"> selected</dhv:evaluate>>Custom</option>
+        </select>
+        <span name="spanSelling1" id="spanSelling1"<dhv:evaluate if="<%= hasText(InventoryDetails.getSellingPriceText()) %>"> style="display:none"</dhv:evaluate>>
+          <input type="text" size="10" name="sellingPrice" value="<%= InventoryDetails.getSellingPriceString() %>">
+          <%= showAttribute(request, "sellingPriceError") %>
+        </span>
+        <span name="spanSelling2" id="spanSelling2"<dhv:evaluate if="<%= !hasText(InventoryDetails.getSellingPriceText()) %>"> style="display:none"</dhv:evaluate>>
+          <input type="text" size="20" name="sellingPriceText" value="<%= toHtmlValue(InventoryDetails.getSellingPriceText()) %>">
+          <%= showAttribute(request, "sellingPriceTextError") %>
+        </span>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        Exterior Color
+      </td>
+      <td>
+        <input type="text" size="15" name="exteriorColor" value="<%= toHtmlValue(InventoryDetails.getExteriorColor()) %>">
+        <%= showAttribute(request, "exteriorColorError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        Condition
+      </td>
+      <td>
+        <input type="text" size="30" name="condition" value="<%= toHtmlValue(InventoryDetails.getCondition()) %>">
+        <%= showAttribute(request, "conditionError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        Additional Text
+      </td>
+      <td>
+        <input type="text" size="30" name="comments" value="<%= toHtmlValue(InventoryDetails.getComments()) %>">
+        <%= showAttribute(request, "commentsError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td nowrap class="formLabel">
+        Sold
+      </td>
+      <td>
+        <input type="checkbox" name="sold" value="true"<%= (InventoryDetails.getSold()?" checked":"") %>>
+      </td>
+    </tr>
+  </table>
+  <br>
+  &nbsp;
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+    <tr>
+      <th colspan="3" valign="center" align="left">
+        <strong>Select Vehicle Options</strong>
+      </th>
+    </tr>
+  <%
+    int rows = (OptionList.size()/3);
+    if ((OptionList.size()%3) > 0) {
+      ++rows;
     }
-    if (OptionList.size() > rowCount + (rows*2)) {
-      option3 = (Option)OptionList.get(rowCount + (rows*2));
+
+    int itemCount = 0;
+    for (int rowCount = 0; rowCount < rows; rowCount++) {
+      Option option1 = null;
+      Option option2 = null;
+      Option option3 = null;
+      ++itemCount;
+      option1 = (Option)OptionList.get(rowCount);
+      if (OptionList.size() > rowCount + rows) {
+        option2 = (Option)OptionList.get(rowCount + rows);
+      }
+      if (OptionList.size() > rowCount + (rows*2)) {
+        option3 = (Option)OptionList.get(rowCount + (rows*2));
+      }
+  %>
+    <tr class="containerBody">
+      <td width="34%">
+        <input type="hidden" name="option<%= itemCount %>id" value="<%= option1.getId() %>">
+        <input type="checkbox" name="option<%= option1.getId() %>" value="true"<%= (InventoryDetails.hasOption(option1.getId())?" checked":"") %>><%= option1.getName() %>
+      </td>
+      <td width="33%">
+  <%
+      if (option2 != null) {
+        ++itemCount;
+  %>
+        <input type="hidden" name="option<%= itemCount %>id" value="<%= option2.getId() %>">
+        <input type="checkbox" name="option<%= option2.getId() %>" value="true"<%= (InventoryDetails.hasOption(option2.getId())?" checked":"") %>><%= option2.getName() %>
+  <%  }  %>&nbsp;
+      </td>
+      <td width="33%">
+  <%
+      if (option3 != null) {
+        ++itemCount;
+  %>
+        <input type="hidden" name="option<%= itemCount %>id" value="<%= option3.getId() %>">
+        <input type="checkbox" name="option<%= option3.getId() %>" value="true"<%= (InventoryDetails.hasOption(option3.getId())?" checked":"") %>><%= option3.getName() %>
+  <%  }  %>&nbsp;
+      </td>
+    </tr>
+  <%
     }
-%>
-  <tr class="containerBody">
-    <td width="34%">
-      <input type="hidden" name="option<%= itemCount %>id" value="<%= option1.getId() %>">
-      <input type="checkbox" name="option<%= option1.getId() %>" value="true"<%= (InventoryDetails.hasOption(option1.getId())?" checked":"") %>><%= option1.getName() %>
-    </td>
-    <td width="33%">
-<%
-    if (option2 != null) {
-      ++itemCount;
-%>
-      <input type="hidden" name="option<%= itemCount %>id" value="<%= option2.getId() %>">
-      <input type="checkbox" name="option<%= option2.getId() %>" value="true"<%= (InventoryDetails.hasOption(option2.getId())?" checked":"") %>><%= option2.getName() %>
-<%  }  %>&nbsp;
-    </td>
-    <td width="33%">
-<%
-    if (option3 != null) {
-      ++itemCount;
-%>
-      <input type="hidden" name="option<%= itemCount %>id" value="<%= option3.getId() %>">
-      <input type="checkbox" name="option<%= option3.getId() %>" value="true"<%= (InventoryDetails.hasOption(option3.getId())?" checked":"") %>><%= option3.getName() %>
-<%  }  %>&nbsp;
-    </td>
-  </tr>
-<%
-  }
-%>
-</table>
-<br>
-&nbsp;
-<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
-  <tr>
-    <th valign="center" align="left">
-      <strong>Select Ad Run Dates</strong>
-    </th>
-  </tr>
-<%
-  int runCount = 0;
-  Iterator adRuns = InventoryDetails.getAdRuns().iterator();
-  while (adRuns.hasNext()) {
-    AdRun adRun = (AdRun)adRuns.next();
-    ++runCount;
-%>  
-  <tr class="containerBody">
-    <td nowrap>
-      <input type="hidden" name="adrun<%= runCount %>id" value="<%= adRun.getId() %>">
-      Run Date <input type="text" size="10" name="adrun<%= runCount %>runDate" value="<%= toDateString(adRun.getRunDate()) %>">
-      <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
-      &nbsp;&nbsp;
-      Ad Type <%= adRunTypeList.getHtmlSelect("adrun" + runCount + "adType", adRun.getAdType()) %>
-      &nbsp;&nbsp;
-      <input type="checkbox" name="adrun<%= runCount %>includePhoto" value="true"<%= (adRun.getIncludePhoto()?" checked":"") %>>Include Photo
-      &nbsp;&nbsp;
-      <input type="checkbox" name="adrun<%= runCount %>remove" value="true">remove
-    </td>
-  </tr>
-<%}%>
-<%
-  int runCount2 = ++runCount;
-  for (; runCount < runCount2 + 5; ++runCount) {
-%>  
-  <tr class="containerBody">
-    <td nowrap>
-      <input type="hidden" name="adrun<%= runCount %>id" value="-1">
-      Run Date <input type="text" size="10" name="adrun<%= runCount %>runDate">
-      <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
-      &nbsp;&nbsp;
-      Ad Type <%= adRunTypeList.getHtmlSelect("adrun" + runCount + "adType", -1) %>
-      &nbsp;&nbsp;
-      <input type="checkbox" name="adrun<%= runCount %>includePhoto" value="true">Include Photo
-    </td>
-  </tr>
-<%}%>
-</table>
-&nbsp;
-<br>
-<input type="submit" value="Update" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
-    </td>
-  </tr>
-</table>
+  %>
+  </table>
+  <br>
+  &nbsp;
+  <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
+    <tr>
+      <th valign="center" align="left">
+        <strong>Select Ad Run Dates</strong>
+      </th>
+    </tr>
+  <%
+    int runCount = 0;
+    Iterator adRuns = InventoryDetails.getAdRuns().iterator();
+    while (adRuns.hasNext()) {
+      AdRun adRun = (AdRun)adRuns.next();
+      ++runCount;
+  %>
+    <tr class="containerBody">
+      <td nowrap>
+        <input type="hidden" name="adrun<%= runCount %>id" value="<%= adRun.getId() %>">
+        <dhv:label name="accounts.accounts_contacts_messages_view.RunDate">Run Date</dhv:label> <input type="text" size="10" name="adrun<%= runCount %>runDate" value="<%= toDateString(adRun.getRunDate()) %>">
+        <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+        &nbsp;&nbsp;
+        Ad Type <%= adRunTypeList.getHtmlSelect("adrun" + runCount + "adType", adRun.getAdType()) %>
+        &nbsp;&nbsp;
+        <input type="checkbox" name="adrun<%= runCount %>includePhoto" value="true"<%= (adRun.getIncludePhoto()?" checked":"") %>>Include Photo
+        &nbsp;&nbsp;
+        <input type="checkbox" name="adrun<%= runCount %>remove" value="true">remove
+      </td>
+    </tr>
+  <%}%>
+  <%
+    int runCount2 = ++runCount;
+    for (; runCount < runCount2 + 5; ++runCount) {
+  %>
+    <tr class="containerBody">
+      <td nowrap>
+        <input type="hidden" name="adrun<%= runCount %>id" value="-1">
+        <dhv:label name="accounts.accounts_contacts_messages_view.RunDate">Run Date</dhv:label> <input type="text" size="10" name="adrun<%= runCount %>runDate">
+        <a href="javascript:popCalendar('addVehicle', 'adrun<%= runCount %>runDate', '<%= User.getLocale().getLanguage() %>', '<%= User.getLocale().getCountry() %>');"><img src="images/icons/stock_form-date-field-16.gif" height="16" width="16" border="0" align="absmiddle"></a>
+        &nbsp;&nbsp;
+        Ad Type <%= adRunTypeList.getHtmlSelect("adrun" + runCount + "adType", -1) %>
+        &nbsp;&nbsp;
+        <input type="checkbox" name="adrun<%= runCount %>includePhoto" value="true">Include Photo
+      </td>
+    </tr>
+  <%}%>
+  </table>
+  <br>
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="Save">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AccountsAutoGuide.do?command=AccountList&orgId=<%= OrgDetails.getOrgId() %>';this.form.dosubmit.value='false';">
+</dhv:container>
 </form>
 </body>

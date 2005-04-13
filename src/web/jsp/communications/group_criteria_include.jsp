@@ -17,6 +17,7 @@
   - Description: 
   --%>
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.web.LookupElement" %>
+<%@ page import="org.aspcfs.utils.*" %>
 <jsp:useBean id="SearchFieldList" class="org.aspcfs.modules.communications.base.SearchFieldList" scope="request"/>
 <jsp:useBean id="StringOperatorList" class="org.aspcfs.modules.communications.base.SearchOperatorList" scope="request"/>
 <jsp:useBean id="DateOperatorList" class="org.aspcfs.modules.communications.base.SearchOperatorList" scope="request"/>
@@ -40,12 +41,14 @@ function updateOperators(){
     Iterator x = ContactTypeList.iterator();
     while (x.hasNext()) {
       LookupElement thisContactType = (LookupElement)x.next();
-      if (!thisContactType.isGroup()) {
+      if (thisContactType.isGroup()) {
 %>
-        insertOption("<%= thisContactType.getDescription() %>", "<%= thisContactType.getCode() %>", "idSelect");
-<%
-      } else {
         // option group
+        insertOptionGroup('<%= StringUtils.jsStringEscape(thisContactType.getDescription()) %>',  "idSelect");
+    <%} else {
+        if (thisContactType.getEnabled() || (!thisContactType.getEnabled() && !ContactTypeList.getExcludeDisabledIfUnselected())) {%>
+          insertOption('<%= StringUtils.jsStringEscape(thisContactType.getDescription()) %>', '<%= thisContactType.getCode() %>', "idSelect");
+      <%}
       }
     }
 %>
@@ -74,9 +77,9 @@ function updateOperators(){
     if (z.hasNext()) {
       while (z.hasNext()) {
         LookupElement thisElt = (LookupElement)z.next();
-    %>
-        insertOption("<%=thisElt.getDescription()%>", "<%=thisElt.getCode()%>", "idSelect");
-    <%
+        if (thisElt.getEnabled() || (!thisElt.getEnabled() && !AccountTypeList.getExcludeDisabledIfUnselected())) {%>
+          insertOption('<%= StringUtils.jsStringEscape(thisElt.getDescription()) %>', '<%= thisElt.getCode() %>', "idSelect");
+      <%}
       }
     }
     %>
@@ -120,7 +123,7 @@ searchField = new Array();
 			fieldArrayID ++;
 			SearchField thisSearchField = (SearchField)f.next();
 %> 
-searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>, "<%= thisSearchField.getDescription() %>", <%= thisSearchField.getFieldTypeId() %>);
+searchField[<%= fieldArrayID %>] = new field(<%= thisSearchField.getId() %>, '<%= StringUtils.jsStringEscape(thisSearchField.getDescription()) %>', <%= thisSearchField.getFieldTypeId() %>);
 <% } } %>
 stringOperators = new Array();
 <%
@@ -131,7 +134,7 @@ stringOperators = new Array();
 			stringArrayID ++;
 			SearchOperator thisStringOperator = (SearchOperator)s.next();
 %> 
-stringOperators[<%= stringArrayID %>] = new operator(<%= thisStringOperator.getId() %>, "<%= thisStringOperator.getOperator() %>", "<%= thisStringOperator.getDisplayText() %>");
+stringOperators[<%= stringArrayID %>] = new operator(<%= thisStringOperator.getId() %>, '<%= StringUtils.jsStringEscape(thisStringOperator.getOperator()) %>', '<%= StringUtils.jsStringEscape(thisStringOperator.getDisplayText()) %>');
 <% } } %>
 dateOperators = new Array();
 <%
@@ -142,7 +145,7 @@ dateOperators = new Array();
 		dateArrayID ++;
 		SearchOperator thisDateOperator = (SearchOperator)d.next();
 %> 
-dateOperators[<%= dateArrayID %>] = new operator(<%= thisDateOperator.getId() %>, "<%= thisDateOperator.getOperator() %>", "<%= thisDateOperator.getDisplayText() %>");
+dateOperators[<%= dateArrayID %>] = new operator(<%= thisDateOperator.getId() %>, '<%= StringUtils.jsStringEscape(thisDateOperator.getOperator()) %>', '<%= StringUtils.jsStringEscape(thisDateOperator.getDisplayText()) %>');
 <% } } %>
 numberOperators = new Array();
 <%
@@ -153,18 +156,17 @@ numberOperators = new Array();
 		numberArrayID ++;
 		SearchOperator thisNumberOperator = (SearchOperator)n.next();
 %> 
-numberOperators[<%= numberArrayID %>] = new operator(<%= thisNumberOperator.getId() %>, "<%= thisNumberOperator.getOperator() %>", "<%= thisNumberOperator.getDisplayText() %>");
+numberOperators[<%= numberArrayID %>] = new operator(<%= thisNumberOperator.getId() %>, '<%= StringUtils.jsStringEscape(thisNumberOperator.getOperator()) %>', '<%= StringUtils.jsStringEscape(thisNumberOperator.getDisplayText()) %>');
 <% } } %>
 listOfOperators = new Array()
 listOfOperators[0] = stringOperators
 listOfOperators[1] = dateOperators
 listOfOperators[2] = numberOperators
 </script>
-<%= showAttribute(request, "criteriaError") %>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      Select criteria for this group&nbsp;<font color="red">*</font>
+      <dhv:label name="contact.selectCriteriaForGroup">Select criteria for this group</dhv:label>&nbsp;<font color="red">*</font>
     </th>
   </tr>
 	<tr>
@@ -172,12 +174,12 @@ listOfOperators[2] = numberOperators
       <table width="100%" border="0" cellpadding="2" cellspacing="0" class="empty">
         <tr>
           <td class="row1" colspan="2">
-            Choose specific contacts:
+            <dhv:label name="campaign.chooseSpecificContacts.colon">Choose specific contacts:</dhv:label>
           </td>
         </tr>
         <tr>
           <td colspan="2" style="text-align: center;">
-            [<a href="javascript:popContactsListMultipleCampaign('listViewId','1'<%= request.getParameter("params") != null ?  ",'" + request.getParameter("params") + "'" : ""%>);">Add/Remove Contacts</a>]
+            [<a href="javascript:popContactsListMultipleCampaign('listViewId','1'<%= request.getParameter("params") != null ?  ",'" + request.getParameter("params") + "'" : ""%>);"><dhv:label name="contacts.addRemove">Add/Remove Contacts</dhv:label></a>]
           </td>
         </tr>
         <tr>
@@ -187,12 +189,12 @@ listOfOperators[2] = numberOperators
         </tr>
         <tr>
           <td class="row1" colspan="2">
-            Define criteria to generate a list:
+            <dhv:label name="campaign.defineCriteria.text">Define criteria to generate a list:</dhv:label>
           </td>
         </tr>
         <tr>
           <td style="text-align: right;" nowrap>
-            Field
+            <dhv:label name="accounts.accounts_contacts_validateimport.Field">Field</dhv:label>
           </td>
           <td width="100%" valign="center">
       <script language="JavaScript">
@@ -213,7 +215,7 @@ listOfOperators[2] = numberOperators
         </tr>
         <tr>
           <td style="text-align: right;" nowrap>
-            Operator
+            <dhv:label name="campaign.operator">Operator</dhv:label>
           </td>
           <td width="100%" valign="center">
       <script language="JavaScript">
@@ -235,7 +237,7 @@ listOfOperators[2] = numberOperators
         </tr>
         <tr>
           <td style="text-align: right;" nowrap>
-            <span name="searchText1" ID="searchText1">Search Text</span>
+            <span name="searchText1" ID="searchText1"><dhv:label name="contact.searchText">Search Text</dhv:label></span>
           </td>
           <td width="100%" valign="center">
             <span name="searchText2" ID="searchText2"><input type="text" name="searchValue" value="" size="25"  maxlength="125"></span> 
@@ -253,7 +255,7 @@ listOfOperators[2] = numberOperators
         </tr>
         <tr>
           <td style="text-align: right;" nowrap>
-            <span name="new0a" ID="new0a" style="display:none">Search Text</span>
+            <span name="new0a" ID="new0a" style="display:none"><dhv:label name="contact.searchText">Search Text</dhv:label></span>
           </td>
           <td valign="center">
             <span name="new0" ID="new0" style="display:none"><select id="idSelect" name="idSelect" onChange="javascript:setText(document.searchForm.idSelect);"></select></span>
@@ -261,7 +263,7 @@ listOfOperators[2] = numberOperators
         </tr>
         <tr>
           <td style="text-align: right;" nowrap>
-            From
+            <dhv:label name="campaign.from">From</dhv:label>
           </td>
           <td width="100%" valign="center">
             <%= ContactSource.getHtml("contactSource", -1) %>
@@ -270,7 +272,7 @@ listOfOperators[2] = numberOperators
         <tr>
           <td style="text-align: center;" colspan="2" nowrap>
             <br>
-            <input type="button" value="Add >" onclick="javascript:addValues()">
+            <input type="button" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onclick="javascript:addValues();">
           </td>
         </tr>
       </table>
@@ -279,11 +281,11 @@ listOfOperators[2] = numberOperators
       <table width="100%" border="0" cellpadding="2" cellspacing="0" class="empty">
         <tr>
           <td class="row1">
-            Selected criteria and contacts:
+            <dhv:label name="campaign.selectedCriteriaAndContacts.colon">Selected criteria and contacts:</dhv:label>
           </td>
         </tr>
         <tr>
-          <td>
+          <td><%= showAttribute(request, "criteriaError") %>
             &nbsp;
           </td>
         </tr>
@@ -294,17 +296,17 @@ listOfOperators[2] = numberOperators
 			<%= SCL.getHtmlSelect("searchCriteria") %>
 		<%} else {%>
 			<select name="searchCriteria" id="listViewId" size="10">
-        <option value="-1">----------------Search Criteria----------------</option>
+        <option value="-1"><dhv:label name="campaign.searchCriteria.label">----------------Search Criteria----------------</dhv:label></option>
 			</select>
 		<%}%>
       <br>
       &nbsp;<br>
       <input type="hidden" name="previousSelection" value="">
-      <input type="button" value="Remove" onclick="removeValues()">
+      <input type="button" value="<dhv:label name="button.remove">Remove</dhv:label>" onclick="removeValues()">
           </td>
         </tr>
       </table>
     </td>
 	</tr>
 </table>
-<input type="hidden" name="searchCriteriaText">
+<input type="hidden" name="searchCriteriaText" value="">

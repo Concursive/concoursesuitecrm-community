@@ -15,18 +15,17 @@
  */
 package org.aspcfs.modules.base;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import java.text.DateFormat;
-import javax.servlet.http.HttpServletRequest;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Constants;
 import org.aspcfs.controller.ImportManager;
-import org.aspcfs.modules.contacts.base.ContactImport;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  Represents a list of imports
@@ -42,6 +41,18 @@ public class ImportList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
   private ImportManager manager = null;
   private int type = -1;
+  private SystemStatus systemStatus = null;
+
+
+  /**
+   *  Sets the systemStatus attribute of the ImportList object
+   *
+   *@param  tmp  The new systemStatus value
+   */
+  public void setSystemStatus(SystemStatus tmp) {
+    this.systemStatus = tmp;
+  }
+
 
 
   /**
@@ -280,6 +291,8 @@ public class ImportList extends ArrayList {
       }
       ++count;
       Import thisImport = new Import(rs);
+      //Read only access to systemStatus required for translating Import Status
+      thisImport.setSystemStatus(systemStatus);
       this.add(thisImport);
     }
     rs.close();

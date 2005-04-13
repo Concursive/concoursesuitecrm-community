@@ -39,98 +39,91 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-Opportunities
+<dhv:label name="accounts.accounts_contacts_oppcomponent_add.Opportunities">Opportunities</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<dhv:container name="accounts" selected="opportunities" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <%-- Begin container content --%>
-<dhv:permission name="accounts-accounts-opportunities-add"><a href="Opportunities.do?command=Add&orgId=<%= request.getParameter("orgId") %>">Add an Opportunity</a></dhv:permission>
-<center><%= OpportunityPagedInfo.getAlphabeticalPageLinks() %></center>
-<table width="100%" border="0">
-  <tr>
-    <form name="listView" method="post" action="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">
-    <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= OpportunityPagedInfo.getOptionValue("my") %>>My Open Opportunities </option>
-        <option <%= OpportunityPagedInfo.getOptionValue("all") %>>All Open Opportunities</option>
-        <option <%= OpportunityPagedInfo.getOptionValue("closed") %>>All Closed Opportunities</option>
-      </select>
-    </td>
-    <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OpportunityPagedInfo"/>
-    </td>
-    </form>
-  </tr>
-</table>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-  <tr>
-    <th width="8" nowrap>
-      <strong>Action</strong>
-    </th>
-    <th width="100%" nowrap>
-      <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.description">Opportunity Name</a></strong>
-      <%= OpportunityPagedInfo.getSortIcon("x.description") %>
-    </th>
-    <th nowrap>
-      <strong>Best Guess Total</strong>
-    </th>
-    <th nowrap>
-      <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.modified">Last Modified</a></strong>
-      <%= OpportunityPagedInfo.getSortIcon("x.modified") %>
-    </th>
-  </tr>
-<%
-	Iterator j = OpportunityList.iterator();
-  FileItem thisFile = new FileItem();
-	if ( j.hasNext() ) {
-		int rowid = 0;
-    int i = 0;
-	    while (j.hasNext()) {
-        i++;
-		    rowid = (rowid != 1?1:2);
-        OpportunityHeader oppHeader = (OpportunityHeader)j.next();
-%>      
-  <tr class="containerBody">
-    <td width="8" valign="center" nowrap class="row<%= rowid %>">
-      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-      <%-- To display the menu, pass the actionId, accountId and the contactId--%>
-      <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= OrgDetails.getId() %>','<%= oppHeader.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
-    </td>
-    <td valign="center" class="row<%= rowid %>">
-      <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true">
-      <%= toHtml(oppHeader.getDescription()) %></a>
-      (<%= oppHeader.getComponentCount() %>)
-      <dhv:evaluate if="<%= oppHeader.hasFiles() %>">
-      <%= thisFile.getImageTag("-23") %>
-      </dhv:evaluate>
-    </td>  
-    <td valign="center" align="right" class="row<%= rowid %>" nowrap>
-      <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
-    </td>      
-    <td valign="center" class="row<%= rowid %>" nowrap>
-      <zeroio:tz timestamp="<%= oppHeader.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
-    </td>   
-  </tr>
-<%}%>
-<%} else {%>
-  <tr class="containerBody">
-    <td colspan="5">
-      No opportunities found.
-    </td>
-  </tr>
-<%}%>
-</table>
-<br>
-<dhv:pagedListControl object="OpportunityPagedInfo"/>
-</td>
-</tr>
-</table>
-
+<dhv:container name="accounts" selected="opportunities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:permission name="accounts-accounts-opportunities-add"><a href="Opportunities.do?command=Add&orgId=<%= request.getParameter("orgId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a></dhv:permission>
+  <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+  <center><dhv:pagedListAlphabeticalLinks object="OpportunityPagedInfo"/></center></dhv:include>
+  <table width="100%" border="0">
+    <tr>
+      <form name="listView" method="post" action="Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">
+      <td align="left">
+        <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+          <option <%= OpportunityPagedInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.MyOpenOpportunities">My Open Opportunities</dhv:label> </option>
+          <option <%= OpportunityPagedInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllOpenOpportunities">All Open Opportunities</dhv:label></option>
+          <option <%= OpportunityPagedInfo.getOptionValue("closed") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllClosedOpportunities">All Closed Opportunities</dhv:label></option>
+        </select>
+      </td>
+      <td>
+        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="OpportunityPagedInfo"/>
+      </td>
+      </form>
+    </tr>
+  </table>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <th width="8" nowrap>
+        &nbsp;
+      </th>
+      <th width="100%" nowrap>
+        <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.description"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.OpportunityName">Opportunity Name</dhv:label></a></strong>
+        <%= OpportunityPagedInfo.getSortIcon("x.description") %>
+      </th>
+      <th nowrap>
+        <strong><dhv:label name="accounts.accounts_contacts_oppcomponent_list.BestGuessTotal">Best Guess Total</dhv:label></strong>
+      </th>
+      <th nowrap>
+        <strong><a href="Opportunities.do?command=View&orgId=<%= OrgDetails.getId() %>&column=x.modified"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></a></strong>
+        <%= OpportunityPagedInfo.getSortIcon("x.modified") %>
+      </th>
+    </tr>
+  <%
+    Iterator j = OpportunityList.iterator();
+    FileItem thisFile = new FileItem();
+    if ( j.hasNext() ) {
+      int rowid = 0;
+      int i = 0;
+        while (j.hasNext()) {
+          i++;
+          rowid = (rowid != 1?1:2);
+          OpportunityHeader oppHeader = (OpportunityHeader)j.next();
+  %>
+    <tr class="containerBody">
+      <td width="8" valign="center" nowrap class="row<%= rowid %>">
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+        <%-- To display the menu, pass the actionId, accountId and the contactId--%>
+        <a href="javascript:displayMenu('select<%= i %>','menuOpp','<%= OrgDetails.getId() %>','<%= oppHeader.getId() %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+      </td>
+      <td valign="center" class="row<%= rowid %>">
+        <a href="Opportunities.do?command=Details&headerId=<%= oppHeader.getId() %>&orgId=<%= OrgDetails.getId() %>&reset=true">
+        <%= toHtml(oppHeader.getDescription()) %></a>
+        (<%= oppHeader.getComponentCount() %>)
+        <dhv:evaluate if="<%= oppHeader.hasFiles() %>">
+        <%= thisFile.getImageTag("-23") %>
+        </dhv:evaluate>
+      </td>
+      <td valign="center" align="right" class="row<%= rowid %>" nowrap>
+        <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
+      </td>
+      <td valign="center" class="row<%= rowid %>" nowrap>
+        <zeroio:tz timestamp="<%= oppHeader.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
+      </td>
+    </tr>
+  <%}%>
+  <%} else {%>
+    <tr class="containerBody">
+      <td colspan="5">
+        <dhv:label name="accounts.accounts_contacts_oppcomponent_list.NoOpportunitiesFound">No opportunities found.</dhv:label>
+      </td>
+    </tr>
+  <%}%>
+  </table>
+  <br>
+  <dhv:pagedListControl object="OpportunityPagedInfo"/>
+</dhv:container>

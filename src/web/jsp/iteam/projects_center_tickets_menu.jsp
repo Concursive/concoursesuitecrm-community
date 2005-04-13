@@ -22,8 +22,9 @@
   var thisItemId = -1;
   var menu_init = false;
   //Set the action parameters for clicked item
-  function displayMenu(loc, id, itemId) {
+  function displayMenu(loc, id, itemId, itemOffset) {
     thisItemId = itemId;
+    thisItemOffset = itemOffset;
     if (!menu_init) {
       menu_init = true;
       new ypSlideOutMenu("menuItem", "down", 0, 0, 170, getHeight("menuItemTable"));
@@ -52,7 +53,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View Ticket
+          <dhv:label name="project.ticket.viewTicket">View Ticket</dhv:label>
         </td>
       </tr>
     </zeroio:permission>
@@ -63,7 +64,7 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Edit Ticket
+          <dhv:label name="project.ticket.editTicket">Edit Ticket</dhv:label>
         </td>
       </tr>
     </zeroio:permission>
@@ -74,7 +75,7 @@
           <img src="images/icons/stock_delete-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Delete Ticket
+          <dhv:label name="project.ticket.deleteTicket">Delete Ticket</dhv:label>
         </td>
       </tr>
     </zeroio:permission>

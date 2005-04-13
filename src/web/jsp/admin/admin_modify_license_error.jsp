@@ -22,10 +22,10 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="AdminConfig.do?command=ListGlobalParams">Configure System</a> >
-<a href="AdminConfig.do?command=Modify&param=LICENSE">License</a> >
-Status
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="AdminConfig.do?command=ListGlobalParams"><dhv:label name="admin.configureSystem">Configure System</dhv:label></a> >
+<a href="AdminConfig.do?command=Modify&param=LICENSE"><dhv:label name="admin.license">License</dhv:label></a> >
+<dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
 </td>
 </tr>
 </table>
@@ -33,15 +33,15 @@ Status
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>
-      <strong>Status</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
     </th>
   </tr>
   <tr>
     <td>
-      Transaction could not be completed, the following error was reported:<br />
+      <dhv:label name="admin.license.error">Transaction could not be completed, the following error was reported:</dhv:label><br />
       <dhv:formMessage />
     </td>
   </tr>
 </table>
 <br>
-<input type="button" value="OK" onClick="javascript:window.location.href='AdminConfig.do?command=ListGlobalParams'"/>
+<input type="button" value="<dhv:label name="button.ok">OK</dhv:label>" onClick="javascript:window.location.href='AdminConfig.do?command=ListGlobalParams'"/>

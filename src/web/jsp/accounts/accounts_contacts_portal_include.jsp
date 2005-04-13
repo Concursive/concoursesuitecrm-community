@@ -31,11 +31,11 @@
     message = "";
 
     if (form.roleId.value < 1){ 
-      message += "- Portal Role is required\r\n";
+      message += label("PortalRole.required", "- Portal Role is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     }
   }
@@ -48,13 +48,13 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Details</strong>
+      <strong><dhv:label name="contacts.details">Details</dhv:label></strong>
     </th>
   </tr>
   <dhv:evaluate if="<%= (portalUserDetails.getUsername() != null) %>" >
   <tr class="containerBody">
     <td class="formLabel">
-      Username
+      <dhv:label name="accounts.Username">Username</dhv:label>
     </td>
     <td>
       <%=portalUserDetails.getUsername()%>
@@ -63,7 +63,7 @@
   </dhv:evaluate>
   <tr class="containerBody">
     <td class="formLabel">
-      Portal Role
+      <dhv:label name="accounts.accounts_contacts_portal_include.PortalRole">Portal Role</dhv:label>
     </td>
     <td>
       <%= roleList.getHtmlSelect("roleId", portalUserDetails.getRoleId())%><font color="red">*</font>
@@ -71,7 +71,7 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Expiration Date
+      <dhv:label name="accounts.accountasset_include.ExpirationDate">Expiration Date</dhv:label>
     </td>
     <td>
       <zeroio:dateSelect form="contactPortal" field="expires" timestamp="<%= portalUserDetails.getExpires() %>" />
@@ -81,7 +81,7 @@
   <dhv:evaluate if="<%= (portalUserDetails.getId() != -1) %>" >
   <tr class="containerBody">
     <td class="formLabel" >
-      Generate new password?
+      <dhv:label name="accounts.accounts_contacts_portal_include.GenerateNewPassword">Generate new password</dhv:label>?
     </td>
     <td>
     <input type="checkbox" name="autoGenerate" value="on"  <%=("on".equals(request.getParameter("autoGenerate")) ? " checked" : "")%> ></input>
@@ -91,7 +91,7 @@
   </dhv:evaluate>
   <tr class="containerBody">
     <td class="formLabel">
-      Email
+      <dhv:label name="accounts.accounts_add.Email">Email</dhv:label>
     </td>
     <td>
       <% 
@@ -101,7 +101,7 @@
           emailId = Integer.parseInt(tmpId);
         }
       %>
-      <%= ContactDetails.getEmailAddressList().getHtmlSelect("emailAddressId", emailId)%><font color="red"> Login information would be sent to this email or to the primary email of the contact</font>
+      <%= ContactDetails.getEmailAddressList().getHtmlSelect("emailAddressId", emailId)%><font color="red"> <dhv:label name="accounts.accounts_contacts_portal_include.LoginInformationSent">Login information would be sent to this email or to the primary email of the contact</dhv:label></font>
     </td>
   </tr>
 </table>

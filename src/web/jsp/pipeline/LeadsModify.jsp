@@ -29,58 +29,51 @@
     popUp = true;
   }
 %>
-<dhv:evaluate exp="<%= !popUp %>">
 <%-- Trails --%>
+<dhv:evaluate if="<%= !popUp %>">
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-  <a href="Leads.do">Pipeline</a> >
+  <a href="Leads.do"><dhv:label name="pipeline.pipeline">Pipeline</dhv:label></a> >
   <% if (request.getParameter("return") == null) { %>
-	  <a href="Leads.do?command=Search">Search Results</a> >
-    <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>">Opportunity Details</a> >
+	  <a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+    <a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_add.OpportunityDetails">Opportunity Details</dhv:label></a> >
     <%} else {%>
     <% if (request.getParameter("return").equals("list")) { %>
-		<a href="Leads.do?command=Search">Search Results</a> >
+		<a href="Leads.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
     <%} else if (request.getParameter("return").equals("dashboard")) { %>
-		<a href="Leads.do?command=Dashboard">Dashboard</a> >
+		<a href="Leads.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
     <%}%>
   <%}%>
-  Modify Opportunity
+  <dhv:label name="accounts.accounts_contacts_opps_modify.ModifyOpportunity">Modify Opportunity</dhv:label>
 </td>
 </tr>
 </table>
+</dhv:evaluate>
 <%-- End Trails --%>
-  <dhv:evaluate exp="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
-    <b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b><br>
-    &nbsp;<br>
-  </dhv:evaluate>
+<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>">
+  <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
+  &nbsp;<br>
 </dhv:evaluate>
-<%@ include file="leads_details_header_include.jsp" %>
-<dhv:evaluate exp="<%= !popUp %>">
-  <% String param1 = "id=" + opportunityHeader.getId(); %>      
-  <dhv:container name="opportunities" selected="details" param="<%= param1 %>" style="tabs"/>
-</dhv:evaluate>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<% if (request.getParameter("return") != null) {%>
+<dhv:container name="opportunities" selected="details" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>">
+  <% if (request.getParameter("return") != null) {%>
       <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
-<%}%>
+  <%}%>
       <input type="hidden" name="headerId" value="<%= opportunityHeader.getId() %>">
       <input type="hidden" name="modified" value="<%= opportunityHeader.getModified() %>">
-      <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-<% if (request.getParameter("return") != null) {%>
-  <% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
-	<%}%>
-<%} else {%>
-    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
-<%}%>
-      <dhv:evaluate exp="<%= popUp %>">
-        <input type="button" value="Cancel" onclick="javascript:window.close();"> 
+      <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% if (request.getParameter("return") != null) {%>
+    <% if (request.getParameter("return").equals("list")) {%>
+        <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
+    <%}%>
+  <%} else {%>
+    	<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
+  <%}%>
+      <dhv:evaluate if="<%= popUp %>">
+        <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();"> 
       </dhv:evaluate>
       <br />
-      <dhv:formMessage showSpace="false" />
+      <dhv:formMessage />
       <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
           <th colspan="2">
@@ -89,7 +82,7 @@
         </tr>
         <tr class="containerBody">
           <td nowrap class="formLabel">
-            Description
+            <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
           </td>
           <td>
             <input type="text" size="50" name="description" value="<%= toHtmlValue(opportunityHeader.getDescription()) %>">
@@ -98,17 +91,15 @@
         </tr>
       </table>
       &nbsp;
-      <br>
-      <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';">
-<% if (request.getParameter("return") != null) {%>
-	<% if (request.getParameter("return").equals("list")) {%>
-      <input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
-	<%}%>
-<%} else {%>
-    	<input type="submit" value="Cancel" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
-<%}%>
+      <br />
+      <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <% if (request.getParameter("return") != null) {%>
+	  <% if (request.getParameter("return").equals("list")) {%>
+      <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=Search';this.form.dosubmit.value='false';">
+	  <%}%>
+  <%} else {%>
+    	<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>';this.form.dosubmit.value='false';">
+  <%}%>
       <input type="hidden" name="dosubmit" value="true">
-    </td>
-  </tr>
-</table>
+</dhv:container>
 </form>

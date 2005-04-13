@@ -1,0 +1,67 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  - Adds the permission "admin-sysconfig-logos" to the "Admin" category
+*/
+
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+
+print("Adding logo editor permission under the admin module");
+//determine the employee category id
+int categoryId = -1;
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT category_id " +
+  "FROM permission_category " +
+  "WHERE category = 'Admin'");
+if (rs.next()) {
+  categoryId = rs.getInt("category_id");
+}
+rs.close();
+st.close();
+
+//Check to see if the permission already exists
+st = db.createStatement();
+rs = st.executeQuery(
+  "SELECT count(permission_id) AS recordcount " + 
+  "FROM permission " + 
+  "WHERE permission = 'admin-sysconfig-logos'");
+rs.next();
+hasPermission = (rs.getInt("recordcount") > 0);
+print("Permission Status: admin-sysconfig-logos " + hasPermission);
+rs.close();
+st.close();
+
+
+//Doesn't exist so insert the new permission
+if (!hasPermission) {
+  //Create the next level id
+  st = db.createStatement();
+  rs = st.executeQuery(
+    "SELECT max(level) AS maxlevel " + 
+    "FROM permission " +
+    "WHERE category_id = " + categoryId);
+  rs.next();
+  level = (rs.getInt("maxlevel") + 10);
+  print("New level to insert: " + level);
+  //Insert the new permission
+  permission = new Permission();
+  permission.setCategoryId(categoryId);
+  permission.setName("admin-sysconfig-logos");
+  permission.setDescription("Configure Module Logos");
+  permission.setView(true);
+  permission.setAdd(true);
+  permission.setEdit(true);
+  permission.setDelete(true);
+  permission.setPermissionLevel(level);
+  permission.setEnabled(true);
+  permission.setActive(true);
+  permission.insert(db);
+  print("New permission added");
+
+  rs.close();
+  st.close();
+} 

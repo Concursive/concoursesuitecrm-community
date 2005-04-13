@@ -23,6 +23,7 @@ import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.DateUtils;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.modules.products.base.*;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  This represents a list of quote products
@@ -36,6 +37,7 @@ public class QuoteProductList extends ArrayList {
   private PagedListInfo pagedListInfo = null;
   private int quoteId = -1;
   private int statusId = -1;
+  private String productName = null;
   private boolean buildResources = false;
 
 
@@ -110,6 +112,26 @@ public class QuoteProductList extends ArrayList {
 
 
   /**
+   *  Sets the productName attribute of the QuoteProductList object
+   *
+   *@param  tmp  The new productName value
+   */
+  public void setProductName(String tmp) {
+    this.productName = tmp;
+  }
+
+
+  /**
+   *  Gets the productName attribute of the QuoteProductList object
+   *
+   *@return    The productName value
+   */
+  public String getProductName() {
+    return productName;
+  }
+
+
+  /**
    *  Gets the pagedListInfo attribute of the QuoteProductList object
    *
    *@return    The pagedListInfo value
@@ -173,6 +195,8 @@ public class QuoteProductList extends ArrayList {
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
         "FROM quote_product qp " +
+        "LEFT JOIN product_catalog pctlg " +
+        "ON (qp.product_id = pctlg.product_id) " +
         "WHERE qp.item_id > -1 ");
     createFilter(sqlFilter);
     if (pagedListInfo != null) {
@@ -200,9 +224,10 @@ public class QuoteProductList extends ArrayList {
         pst.close();
       }
       //Determine column to sort by
+      pagedListInfo.setDefaultSort("qp.item_id", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY status_date");
+      sqlOrder.append("ORDER BY qp.item_id ");
     }
     //Build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -211,9 +236,11 @@ public class QuoteProductList extends ArrayList {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        " qp.* " +
-        " FROM quote_product qp " +
-        " WHERE qp.item_id > -1 ");
+        "qp.* " +
+        "FROM quote_product qp " +
+        "LEFT JOIN product_catalog pctlg " +
+        "ON (qp.product_id = pctlg.product_id) " +
+        "WHERE qp.item_id > -1 ");
 
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
@@ -253,13 +280,14 @@ public class QuoteProductList extends ArrayList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
     if (quoteId > -1) {
       sqlFilter.append("AND qp.quote_id = ? ");
     }
-
     if (statusId > -1) {
       sqlFilter.append("AND qp.status_id = ? ");
+    }
+    if (productName != null) {
+      sqlFilter.append("AND pctlg.product_name LIKE ? ");
     }
   }
 
@@ -276,9 +304,11 @@ public class QuoteProductList extends ArrayList {
     if (quoteId > -1) {
       pst.setInt(++i, quoteId);
     }
-
     if (statusId > -1) {
       pst.setInt(++i, statusId);
+    }
+    if (productName != null) {
+      pst.setString(++i, productName);
     }
     return i;
   }
@@ -350,12 +380,14 @@ public class QuoteProductList extends ArrayList {
       if (productIdString != null && !"".equals(productIdString)) {
         if (quantityString != null && !"".equals(quantityString)) {
           ProductCatalog product = new ProductCatalog(db, Integer.parseInt(productIdString));
-          product.setBuildProductOptions(true);
-          product.buildProductOptions(db);
+          product.setBuildActiveOptions(Constants.TRUE);
+          product.buildOptions(db);
+          product.buildActivePrice(db);
           QuoteProduct quoteProduct = new QuoteProduct();
           quoteProduct.setProductCatalog(product);
           quoteProduct.setProductId(product.getId());
           quoteProduct.setQuantity(Integer.parseInt(quantityString));
+          quoteProduct.buildPricing(db);
           this.add(quoteProduct);
         }
       } else {

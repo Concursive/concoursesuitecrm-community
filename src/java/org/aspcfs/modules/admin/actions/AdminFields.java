@@ -15,16 +15,23 @@
  */
 package org.aspcfs.modules.admin.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.admin.base.*;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+import org.aspcfs.modules.base.CustomField;
+import org.aspcfs.modules.base.CustomFieldCategory;
+import org.aspcfs.modules.base.CustomFieldCategoryList;
+import org.aspcfs.modules.base.CustomFieldGroup;
+import org.aspcfs.utils.web.LookupElement;
+import org.aspcfs.utils.web.LookupList;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
 /**
  *  Description of the Class
@@ -96,7 +103,7 @@ public final class AdminFields extends CFSModule {
     int constantId = -1;
     try {
       db = this.getConnection(context);
-      constantId = this.queryConstantId(db, Integer.parseInt(moduleId));
+      constantId = queryConstantId(db, Integer.parseInt(moduleId));
       permCat = new PermissionCategory(db, Integer.parseInt(moduleId));
     } catch (Exception e) {
       errorMessage = e;
@@ -127,30 +134,26 @@ public final class AdminFields extends CFSModule {
     if (!(hasPermission(context, "admin-sysconfig-folders-add"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
-    boolean result = true;
+    boolean result = false;
+    boolean isValid = false;
     try {
       db = this.getConnection(context);
       CustomFieldCategory thisCategory = (CustomFieldCategory) context.getFormBean();
-      result = thisCategory.insertCategory(db);
-      if (!result) {
-        this.processErrors(context, thisCategory.getErrors());
+      isValid = this.validateObject(context, db, thisCategory);
+      if (isValid) {
+        result = thisCategory.insertCategory(db);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (result) {
-        return ("InsertFolderOK");
-      } else {
-        return ("InsertFolderERROR");
-      }
+    if (result) {
+      return ("InsertFolderOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("InsertFolderERROR");
     }
   }
 
@@ -196,29 +199,27 @@ public final class AdminFields extends CFSModule {
     if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     boolean result = false;
+    boolean isValid = false;
     try {
       db = this.getConnection(context);
       CustomFieldCategory thisCategory = (CustomFieldCategory) context.getFormBean();
-      result = thisCategory.updateCategory(db);
-      this.processErrors(context, thisCategory.getErrors());
+      isValid = this.validateObject(context, db,  thisCategory);
+      if (isValid) {
+        result = thisCategory.updateCategory(db);
+      }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "Configuration", "Configuration");
-    if (errorMessage == null) {
-      if (result) {
-        return ("UpdateFolderOK");
-      } else {
-        return ("UpdateFolderERROR");
-      }
+    if (result) {
+      return ("UpdateFolderOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("UpdateFolderERROR");
     }
   }
 
@@ -233,30 +234,25 @@ public final class AdminFields extends CFSModule {
     if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
-    boolean result = true;
+    boolean result = false;
 
     String moduleId = context.getRequest().getParameter("modId");
     String categoryId = context.getRequest().getParameter("catId");
     try {
       db = this.getConnection(context);
-      int constantId = this.queryConstantId(db, Integer.parseInt(moduleId));
+      int constantId = queryConstantId(db, Integer.parseInt(moduleId));
       CustomFieldCategory thisCategory = new CustomFieldCategory(db, Integer.parseInt(categoryId));
       if (constantId == thisCategory.getModuleId()) {
         thisCategory.toggleEnabled(db);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      return ("ToggleOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("ToggleOK");
   }
 
 
@@ -270,10 +266,9 @@ public final class AdminFields extends CFSModule {
     if (!(hasPermission(context, "admin-sysconfig-folders-delete"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
-    boolean result = true;
-
+    boolean result = false;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = this.getConnection(context);
       CustomFieldCategory thisCategory = (CustomFieldCategory) context.getFormBean();
@@ -282,21 +277,17 @@ public final class AdminFields extends CFSModule {
         this.processErrors(context, thisCategory.getErrors());
       }
     } catch (Exception e) {
-      errorMessage = e;
-      context.getRequest().setAttribute("actionError", "Category could not be deleted due to referential integrity.");
+      context.getRequest().setAttribute("actionError", this.getSystemStatus(context).getLabel("object.validation.categoryDeletion"));
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      addModuleBean(context, "Configuration", "Configuration");
-      if (result) {
-        return ("DeleteFolderOK");
-      } else {
-        return ("DeleteFolderERROR");
-      }
+    addModuleBean(context, "Configuration", "Configuration");
+    if (result) {
+      return ("DeleteFolderOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("DeleteFolderERROR");
     }
   }
 
@@ -313,25 +304,19 @@ public final class AdminFields extends CFSModule {
     if (!(hasPermission(context, "admin-sysconfig-folders-view"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
-
     try {
       db = this.getConnection(context);
       this.addCategoryList(context, db);
       this.addCategory(context, db);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      addModuleBean(context, "Configuration", "Configuration");
-      return ("ListGroupsOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    addModuleBean(context, "Configuration", "Configuration");
+    return ("ListGroupsOK");
   }
 
 
@@ -375,30 +360,26 @@ public final class AdminFields extends CFSModule {
     if (!(hasPermission(context, "admin-sysconfig-folders-add"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     boolean result = false;
+    boolean isValid = false;
     try {
       db = this.getConnection(context);
       CustomFieldGroup thisGroup = (CustomFieldGroup) context.getFormBean();
-      result = thisGroup.insertGroup(db);
-      if (!result) {
-        this.processErrors(context, thisGroup.getErrors());
+      isValid = this.validateObject(context, db,  thisGroup);
+      if (isValid) {
+        result = thisGroup.insertGroup(db);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (result) {
-        return ("InsertGroupOK");
-      } else {
-        return ("InsertGroupERROR");
-      }
+    if (result) {
+      return ("InsertGroupOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("InsertGroupERROR");
     }
   }
 
@@ -445,29 +426,27 @@ public final class AdminFields extends CFSModule {
     if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     boolean result = false;
+    boolean isValid = false;
     try {
       db = this.getConnection(context);
       CustomFieldGroup thisGroup = (CustomFieldGroup) context.getFormBean();
-      result = thisGroup.updateGroup(db);
-      this.processErrors(context, thisGroup.getErrors());
+      isValid = this.validateObject(context, db, thisGroup);
+      if (isValid) {
+        result = thisGroup.updateGroup(db);
+      }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      addModuleBean(context, "Configuration", "Configuration");
-      if (result) {
-        return ("UpdateGroupOK");
-      } else {
-        return ("UpdateGroupERROR");
-      }
+    addModuleBean(context, "Configuration", "Configuration");
+    if (result) {
+      return ("UpdateGroupOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("UpdateGroupERROR");
     }
   }
 
@@ -482,9 +461,8 @@ public final class AdminFields extends CFSModule {
     if (!(hasPermission(context, "admin-sysconfig-folders-delete"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
-    boolean result = true;
+    boolean result = false;
     try {
       db = this.getConnection(context);
       CustomFieldGroup thisGroup = (CustomFieldGroup) context.getFormBean();
@@ -493,24 +471,18 @@ public final class AdminFields extends CFSModule {
         this.processErrors(context, thisGroup.getErrors());
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (result) {
-        return ("DeleteGroupOK");
-      } else {
-        return ("DeleteGroupERROR");
-      }
+    if (result) {
+      return ("DeleteGroupOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("DeleteGroupERROR");
     }
   }
 
-
-  //Fields
 
   /**
    *  Description of the Method
@@ -552,31 +524,27 @@ public final class AdminFields extends CFSModule {
     if (!(hasPermission(context, "admin-sysconfig-folders-add"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     boolean result = false;
+    boolean isValid = false;
 
     try {
       db = this.getConnection(context);
       CustomField thisField = (CustomField) context.getFormBean();
-      result = thisField.insertField(db);
-      if (!result) {
-        this.processErrors(context, thisField.getErrors());
+      isValid = this.validateObject(context, db, thisField);
+      if (isValid) {
+        result = thisField.insertField(db);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (result) {
-        return ("InsertFieldOK");
-      } else {
-        return ("InsertFieldERROR");
-      }
+    if (result) {
+      return ("InsertFieldOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("InsertFieldERROR");
     }
   }
 
@@ -591,31 +559,26 @@ public final class AdminFields extends CFSModule {
     if (!(hasPermission(context, "admin-sysconfig-folders-delete"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
-    boolean result = true;
-
+    boolean result = false;
     try {
       db = this.getConnection(context);
       CustomField thisField = (CustomField) context.getFormBean();
       result = thisField.deleteField(db);
       if (!result) {
-        this.processErrors(context, thisField.getErrors());
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        thisField.getErrors().put("actionError", systemStatus.getLabel("object.validation.formDataError"));
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (result) {
-        return ("DeleteFieldOK");
-      } else {
-        return ("DeleteFieldERROR");
-      }
+    if (result) {
+      return ("DeleteFieldOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("DeleteFieldERROR");
     }
   }
 
@@ -630,7 +593,6 @@ public final class AdminFields extends CFSModule {
     if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -639,17 +601,13 @@ public final class AdminFields extends CFSModule {
       this.addGroup(context, db);
       this.addField(context, db);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
     addModuleBean(context, "Configuration", "Configuration");
-    if (errorMessage == null) {
-      return ("ModifyFieldOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return ("ModifyFieldOK");
   }
 
 
@@ -663,10 +621,9 @@ public final class AdminFields extends CFSModule {
     if (!(hasPermission(context, "admin-sysconfig-folders-edit"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     Connection db = null;
     boolean result = false;
-
+    boolean isValid = false;
     try {
       db = this.getConnection(context);
       CustomField thisField = (CustomField) context.getFormBean();
@@ -675,7 +632,6 @@ public final class AdminFields extends CFSModule {
       if (thisField.getLookupListRequired()) {
         String[] params = context.getRequest().getParameterValues("selectedList");
         String[] names = new String[params.length];
-        String tblName = "";
         int j = 0;
 
         StringTokenizer st = new StringTokenizer(context.getRequest().getParameter("selectNames"), "^");
@@ -719,24 +675,21 @@ public final class AdminFields extends CFSModule {
           }
         }
       }
-
-      result = thisField.updateField(db);
-      this.processErrors(context, thisField.getErrors());
+      isValid = this.validateObject(context, db, thisField);
+      if (isValid) {
+        result = thisField.updateField(db);
+      }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      addModuleBean(context, "Configuration", "Configuration");
-      if (result) {
-        return ("UpdateFieldOK");
-      } else {
-        return ("UpdateFieldERROR");
-      }
+    addModuleBean(context, "Configuration", "Configuration");
+    if (result) {
+      return ("UpdateFieldOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("UpdateFieldERROR");
     }
   }
 
@@ -756,7 +709,7 @@ public final class AdminFields extends CFSModule {
     CustomFieldCategoryList categoryList = new CustomFieldCategoryList();
     if (context.getRequest().getParameter("modId") != null) {
       moduleId = Integer.parseInt(context.getRequest().getParameter("modId"));
-      int constantId = this.queryConstantId(db, moduleId);
+      int constantId = queryConstantId(db, moduleId);
       //to get the module name on the jsp
       permCat = new PermissionCategory(db, moduleId);
       categoryList.setLinkModuleId(constantId);
@@ -797,7 +750,7 @@ public final class AdminFields extends CFSModule {
 
       if (categoryId != null) {
         context.getRequest().setAttribute("catId", categoryId);
-        int constantId = this.queryConstantId(db, moduleId);
+        int constantId = queryConstantId(db, moduleId);
         LookupList moduleList = (LookupList) context.getRequest().getAttribute("ModuleList");
         CustomFieldCategoryList categoryList = (CustomFieldCategoryList) context.getRequest().getAttribute("CategoryList");
         CustomFieldCategory thisCategory = categoryList.getCategory(Integer.parseInt(categoryId));

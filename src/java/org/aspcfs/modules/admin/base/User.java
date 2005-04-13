@@ -15,20 +15,22 @@
  */
 package org.aspcfs.modules.admin.base;
 
-import java.sql.*;
-import java.util.*;
-import java.text.DateFormat;
-import java.text.*;
-import com.darkhorseventures.database.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.framework.servlets.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.utils.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
+import com.zeroio.webdav.WebdavServlet;
+import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.controller.ObjectValidator;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.GraphSummaryList;
 import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.actions.*;
+import org.aspcfs.utils.*;
+
+import java.sql.*;
+import java.text.DateFormat;
+import java.util.*;
+
 /**
  *  Represents a user access record <p>
  *
@@ -56,6 +58,7 @@ public class User extends GenericBean {
   protected String password = null;
   protected String password1 = null;
   protected String password2 = null;
+  protected String webdavPassword = null;
   protected int contactId = -1;
   protected int roleId = -1;
   protected String role = null;
@@ -79,6 +82,7 @@ public class User extends GenericBean {
   protected String previousUsername = null;
   private int assistant = -1;
   private int alias = -1;
+  protected boolean hidden = false;
   //Related objects
   protected Contact contact = new Contact();
   protected UserList childUsers = null;
@@ -86,6 +90,7 @@ public class User extends GenericBean {
   protected boolean buildContact = false;
   protected boolean buildContactDetails = false;
   protected boolean buildHierarchy = false;
+  protected boolean hideHiddenChildren = false;
   //check to see if manager user is enabled
   private boolean managerUserEnabled = true;
   //Cached data
@@ -100,7 +105,11 @@ public class User extends GenericBean {
   protected GraphSummaryList cgmr = new GraphSummaryList();
   protected GraphSummaryList cramr = new GraphSummaryList();
   protected GraphSummaryList revenue = new GraphSummaryList();
-
+  //Leads related data
+  protected boolean leadsLock = false;
+  protected double leadsNumber = 0;
+  protected boolean leadsNumberIsValid = false;
+  protected GraphSummaryList lccr = new GraphSummaryList();
 
   /**
    *  Constructor for the User object
@@ -160,6 +169,26 @@ public class User extends GenericBean {
    */
   public User(Connection db, int userId) throws SQLException {
     buildRecord(db, userId);
+  }
+
+
+  /**
+   *  Sets the webdavPassword attribute of the User object
+   *
+   *@param  tmp  The new webdavPassword value
+   */
+  public void setWebdavPassword(String tmp) {
+    this.webdavPassword = tmp;
+  }
+
+
+  /**
+   *  Gets the webdavPassword attribute of the User object
+   *
+   *@return    The webdavPassword value
+   */
+  public String getWebdavPassword() {
+    return webdavPassword;
   }
 
 
@@ -224,6 +253,244 @@ public class User extends GenericBean {
 
 
   /**
+   *  Gets the hidden attribute of the User object
+   *
+   *@return    The hidden value
+   */
+  public boolean getHidden() {
+    return hidden;
+  }
+
+
+  /**
+   *  Sets the hidden attribute of the User object
+   *
+   *@param  tmp  The new hidden value
+   */
+  public void setHidden(boolean tmp) {
+    this.hidden = tmp;
+  }
+
+
+  /**
+   *  Sets the hidden attribute of the User object
+   *
+   *@param  tmp  The new hidden value
+   */
+  public void setHidden(String tmp) {
+    this.hidden = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the hideHiddenChildren attribute of the User object
+   *
+   *@return    The hideHiddenChildren value
+   */
+  public boolean getHideHiddenChildren() {
+    return hideHiddenChildren;
+  }
+
+
+  /**
+   *  Sets the hideHiddenChildren attribute of the User object
+   *
+   *@param  tmp  The new hideHiddenChildren value
+   */
+  public void setHideHiddenChildren(boolean tmp) {
+    this.hideHiddenChildren = tmp;
+  }
+
+
+  /**
+   *  Sets the hideHiddenChildren attribute of the User object
+   *
+   *@param  tmp  The new hideHiddenChildren value
+   */
+  public void setHideHiddenChildren(String tmp) {
+    this.hideHiddenChildren = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the leadsLock attribute of the User object
+   *
+   * @return    The leadsLock value
+   */
+  public boolean getLeadsLock() {
+    return leadsLock;
+  }
+
+
+  /**
+   *  Sets the leadsLock attribute of the User object
+   *
+   * @param  tmp  The new leadsLock value
+   */
+  public void setLeadsLock(boolean tmp) {
+    this.leadsLock = tmp;
+  }
+
+
+  /**
+   *  Sets the leadsLock attribute of the User object
+   *
+   * @param  tmp  The new leadsLock value
+   */
+  public void setLeadsLock(String tmp) {
+    this.leadsLock = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the leadsNumber attribute of the User object
+   *
+   * @return    The leadsNumber value
+   */
+  public double getLeadsNumber() {
+    return leadsNumber;
+  }
+
+
+  /**
+   *  Sets the leadsNumber attribute of the User object
+   *
+   * @param  tmp  The new leadsNumber value
+   */
+  public void setLeadsNumber(double tmp) {
+    this.leadsNumber = tmp;
+  }
+
+
+  /**
+   *  Sets the leadsNumber attribute of the User object
+   *
+   * @param  tmp  The new leadsNumber value
+   */
+  public void setLeadsNumber(String tmp) {
+    this.leadsNumber = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   *  Gets the leadsNumberIsValid attribute of the User object
+   *
+   * @return    The leadsNumberIsValid value
+   */
+  public boolean getLeadsNumberIsValid() {
+    return leadsNumberIsValid;
+  }
+
+
+  /**
+   *  Sets the leadsNumberIsValid attribute of the User object
+   *
+   * @param  tmp  The new leadsNumberIsValid value
+   */
+  public void setLeadsNumberIsValid(boolean tmp) {
+    this.leadsNumberIsValid = tmp;
+  }
+
+
+  /**
+   *  Sets the leadsNumberIsValid attribute of the User object
+   *
+   * @param  tmp  The new leadsNumberIsValid value
+   */
+  public void setLeadsNumberIsValid(String tmp) {
+    this.leadsNumberIsValid = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the lccr attribute of the User object
+   *
+   * @return    The lccr value
+   */
+  public GraphSummaryList getLccr() {
+    return lccr;
+  }
+
+
+  /**
+   *  Sets the lccr attribute of the User object
+   *
+   * @param  tmp  The new lccr value
+   */
+  public void setLccr(GraphSummaryList tmp) {
+    this.lccr = tmp;
+  }
+
+
+  /**
+   *  Sets the graphValuesLeads attribute of the User object
+   *
+   * @param  key    The new graphValuesLeads value
+   * @param  value  The new graphValuesLeads value
+   */
+  public void setGraphValuesLeads(String key, Double value) {
+    this.getLccr().setValue(key, value);
+  }
+
+
+  /**
+   *  Gets the isValidLeads attribute of the User object
+   *
+   * @return    The isValidLeads value
+   */
+  public boolean getIsValidLead() {
+    if (this.lccr.getIsValid() == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   */
+  public void doLeadsLock() {
+    while (leadsLock == true) {
+    }
+    synchronized (this) {
+      while (leadsLock) {
+      }
+      this.leadsLock = true;
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   */
+  public void doLeadsUnlock() {
+    this.leadsLock = false;
+  }
+
+
+  /**
+   *  Sets the isValidLead attribute of the User object
+   *
+   * @param  isValid   The new isValidLead value
+   * @param  dataAlso  The new isValidLead value
+   */
+  public void setIsValidLead(boolean isValid, boolean dataAlso) {
+    if (dataAlso) {
+      this.lccr.setIsValid(isValid);
+    }
+
+    if (!isValid) {
+      this.lccr.setLastFileName(null);
+    }
+
+    if (managerUser != null) {
+      managerUser.setIsValidLead(false, false);
+    }
+  }
+
+
+  /**
    *  Constructor for the User object
    *
    *@param  db                Description of Parameter
@@ -245,6 +512,7 @@ public class User extends GenericBean {
    */
   public void setExpires(java.sql.Timestamp expires) {
     this.expires = expires;
+    checkHidden();
   }
 
 
@@ -255,6 +523,7 @@ public class User extends GenericBean {
    */
   public void setExpires(String tmp) {
     this.expires = DatabaseUtils.parseDateToTimestamp(tmp);
+    checkHidden();
   }
 
 
@@ -283,26 +552,59 @@ public class User extends GenericBean {
       modUser.buildRecord(db, modifiedBy);
 
       targetContact = new Contact(db, this.getContactId());
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(((ConnectionElement) context.getSession().getAttribute("ConnectionElement")).getUrl());
 
       //send email
       SMTPMessage mail = new SMTPMessage();
       mail.setHost(ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
       mail.setFrom(ApplicationPrefs.getPref(context.getServletContext(), "EMAILADDRESS"));
       mail.setType("text/html");
-      mail.setTo(targetContact.getEmailAddress("Business"));
-      mail.setSubject("Centric CRM Account Information");
-      mail.setBody(
-          "This message details information about your Centric CRM account.<br />" +
-          "<br />" +
-          "Your Centric CRM user account password has been reset by " + modUser.getContact().getNameLastFirst() + ".<br />" +
-          "<br />" +
-          "Please login with the following information:<br />" +
-          "<br />" +
-          "User Name: " + this.username + "<br />" +
-          "Password: " + newPassword + "<br />" +
-          "<br />" +
-          "It is recomended that you change your password the next time you login to Centric CRM.<br />" +
-          "<br />");
+      mail.setTo(targetContact.getPrimaryEmailAddress());
+      if (systemStatus != null) {
+        String message = systemStatus.getLabel("mail.subject.accountInformation");
+        if (message != null) {
+          mail.setSubject(message);
+        } else {
+          mail.setSubject("Centric CRM Account Information");
+        }
+        message = systemStatus.getLabel("mail.body.newLoginInformation");
+        if (message != null) {
+          HashMap map = new HashMap();
+          map.put("${username}", this.username);
+          map.put("${password}", newPassword);
+          map.put("${nameLastFirst}", modUser.getContact().getNameLastFirst());
+          Template template = new Template(message);
+          template.setParseElements(map);
+          mail.setBody(template.getParsedText());
+        } else {
+          mail.setBody(
+              "This message details information about your Centric CRM account.<br />" +
+              "<br />" +
+              "Your Centric CRM user account password has been reset by " + modUser.getContact().getNameLastFirst() + ".<br />" +
+              "<br />" +
+              "Please login with the following information:<br />" +
+              "<br />" +
+              "User Name: " + this.username + "<br />" +
+              "Password: " + newPassword + "<br />" +
+              "<br />" +
+              "It is recomended that you change your password the next time you login to Centric CRM.<br />" +
+              "<br />");
+        }
+      } else {
+        mail.setSubject("Centric CRM Account Information");
+        mail.setBody(
+            "This message details information about your Centric CRM account.<br />" +
+            "<br />" +
+            "Your Centric CRM user account password has been reset by " + modUser.getContact().getNameLastFirst() + ".<br />" +
+            "<br />" +
+            "Please login with the following information:<br />" +
+            "<br />" +
+            "User Name: " + this.username + "<br />" +
+            "Password: " + newPassword + "<br />" +
+            "<br />" +
+            "It is recomended that you change your password the next time you login to Centric CRM.<br />" +
+            "<br />");
+      }
       if (mail.send() == 2) {
         System.err.println(mail.getErrorMsg());
       }
@@ -850,6 +1152,7 @@ public class User extends GenericBean {
    */
   public void setEnabled(boolean tmp) {
     this.enabled = tmp;
+    checkHidden();
   }
 
 
@@ -865,6 +1168,7 @@ public class User extends GenericBean {
     } else {
       this.enabled = true;
     }
+    checkHidden();
   }
 
 
@@ -1191,7 +1495,6 @@ public class User extends GenericBean {
   }
 
 
-
   /**
    *  Gets the Id attribute of the User object
    *
@@ -1349,8 +1652,13 @@ public class User extends GenericBean {
   public String getTimeZone() {
     return timeZone;
   }
-  
-  
+
+
+  /**
+   *  Gets the timeZoneActual attribute of the User object
+   *
+   *@return    The timeZoneActual value
+   */
   public TimeZone getTimeZoneActual() {
     TimeZone tZone = Calendar.getInstance().getTimeZone();
     if (timeZone != null && !"".equals(timeZone)) {
@@ -1401,19 +1709,19 @@ public class User extends GenericBean {
       locale = Locale.getDefault();
     } else {
       switch (language.length()) {
-          case 2:
-            locale = new Locale(language.substring(0, 2), "");
-            break;
-          case 5:
-            locale = new Locale(language.substring(0, 2), language.substring(3, 5));
-            break;
-          case 10:
-            // fr_FR_EURO
-            locale = new Locale(language.substring(0, 2), language.substring(3, 5), language.substring(6));
-            break;
-          default:
-            locale = Locale.getDefault();
-            break;
+        case 2:
+          locale = new Locale(language.substring(0, 2), "");
+          break;
+        case 5:
+          locale = new Locale(language.substring(0, 2), language.substring(3, 5));
+          break;
+        case 10:
+          // fr_FR_EURO
+          locale = new Locale(language.substring(0, 2), language.substring(3, 5), language.substring(6));
+          break;
+        default:
+          locale = Locale.getDefault();
+          break;
       }
     }
   }
@@ -1452,6 +1760,7 @@ public class User extends GenericBean {
       Iterator j = inList.iterator();
       while (j.hasNext()) {
         User thisRec = (User) j.next();
+        thisRec.setHideHiddenChildren(this.getHideHiddenChildren());
         currentList.addElement(thisRec);
         UserList countList = thisRec.getShortChildList();
         if (countList != null && countList.getListSize() > 0) {
@@ -1633,15 +1942,56 @@ public class User extends GenericBean {
       if (this.getId() == -1) {
         throw new SQLException("User ID was not specified");
       }
+      checkHidden();
       PreparedStatement pst = null;
       StringBuffer sql = new StringBuffer();
       sql.append(
           "UPDATE access " +
-          "SET password = ? " +
+          "SET password = ?, webdav_password = ?, hidden = ? " +
           "WHERE user_id = ? ");
       int i = 0;
       pst = db.prepareStatement(sql.toString());
       pst.setString(++i, encryptPassword(password1));
+      pst.setString(++i, this.encryptWebdavPassword(username, password1));
+      pst.setBoolean(++i, this.getHidden());
+      pst.setInt(++i, getId());
+      resultCount = pst.executeUpdate();
+      pst.close();
+      return resultCount;
+    }
+  }
+
+
+  /**
+   *  Checks to see if the user entered password is correct.
+   *  If correct, then a webdav encrypted password is generated and stored
+   *
+   *@param  db                Description of the Parameter
+   *@param  username          Description of the Parameter
+   *@param  currPass          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int activateWebdav(Connection db, String username, String currPass) throws SQLException {
+    if (!(this.getEncryptedPassword().equals(currPass)) || password == null || password.trim().equals("")) {
+      errors.put("passwordError", "Incorrect value for current password");
+      return -1;
+    } else {
+      int resultCount = -1;
+      if (this.getId() == -1) {
+        throw new SQLException("User ID was not specified");
+      }
+      checkHidden();
+      PreparedStatement pst = null;
+      StringBuffer sql = new StringBuffer();
+      sql.append(
+          "UPDATE access " +
+          "SET webdav_password = ?, hidden = ? " +
+          "WHERE user_id = ? ");
+      int i = 0;
+      pst = db.prepareStatement(sql.toString());
+      pst.setString(++i, encryptWebdavPassword(username, password));
+      pst.setBoolean(++i, this.getHidden());
       pst.setInt(++i, getId());
       resultCount = pst.executeUpdate();
       pst.close();
@@ -1680,8 +2030,11 @@ public class User extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    boolean doCommit = false;
     try {
-      db.setAutoCommit(false);
+      if ((doCommit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> Beginning insert");
       }
@@ -1700,6 +2053,7 @@ public class User extends GenericBean {
           System.out.println("User-> New Contact ID: " + newContact.getId());
         }
       }
+      checkHidden();
       //Insert the user
       StringBuffer sql = new StringBuffer();
       sql.append(
@@ -1724,7 +2078,7 @@ public class User extends GenericBean {
       if (language != null) {
         sql.append("language, ");
       }
-      sql.append("enteredBy, modifiedBy ) ");
+      sql.append("enteredBy, modifiedBy, webdav_password, hidden ) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
@@ -1744,7 +2098,7 @@ public class User extends GenericBean {
       if (language != null) {
         sql.append("?, ");
       }
-      sql.append("?, ?) ");
+      sql.append("?, ?, ?, ?) ");
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
       pst.setString(++i, getUsername());
@@ -1783,6 +2137,8 @@ public class User extends GenericBean {
       }
       pst.setInt(++i, getEnteredBy());
       pst.setInt(++i, getModifiedBy());
+      pst.setString(++i, encryptWebdavPassword(username, password1));
+      pst.setBoolean(++i, this.getHidden());
       pst.execute();
       pst.close();
       if (System.getProperty("DEBUG") != null) {
@@ -1801,15 +2157,21 @@ public class User extends GenericBean {
       pst.setInt(2, contact.getId());
       pst.executeUpdate();
       pst.close();
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
       if (System.getProperty("DEBUG") != null) {
         System.out.println("User-> User inserted & contact record updated");
       }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -1819,19 +2181,19 @@ public class User extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@param  context           Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
   public int updatePortalUser(Connection db) throws SQLException {
 
     int updated = -1;
-    if (hasErrors()){
+    if (hasErrors()) {
       return updated;
     }
     if (System.getProperty("DEBUG") != null) {
       System.out.println("User-> Beginning update");
     }
+    checkHidden();
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -1842,7 +2204,7 @@ public class User extends GenericBean {
       sql.append("password = ?,");
     }
 
-    sql.append("role_id = ?, " +
+    sql.append("role_id = ?, hidden = ?, " +
         "modifiedBy = ?, " +
         "modified = " + DatabaseUtils.getCurrentTimestamp(db) + " " +
         "WHERE username = ? " +
@@ -1856,6 +2218,7 @@ public class User extends GenericBean {
       pst.setString(++i, encryptPassword(password1));
     }
     pst.setInt(++i, this.roleId);
+    pst.setBoolean(++i, this.getHidden());
     pst.setInt(++i, modifiedBy);
     pst.setString(++i, this.username);
     pst.setTimestamp(++i, this.modified);
@@ -1871,13 +2234,13 @@ public class User extends GenericBean {
   /**
    *  Inserts the current user record into the database
    *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   *@param  db             Description of Parameter
+   *@param  context        Description of Parameter
+   *@return                Description of the Returned Value
+   *@exception  Exception  Description of the Exception
+   *@since                 1.1
    */
-  public boolean insert(Connection db, ActionContext context) throws SQLException {
+  public boolean insert(Connection db, ActionContext context) throws Exception {
     if (!isValid(db, context)) {
       return false;
     }
@@ -1897,19 +2260,20 @@ public class User extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("ID not specified.");
     }
-
+    checkHidden(false);
     int resultCount = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE access " +
-        "SET enabled = ? " +
+        "SET enabled = ?, hidden = ? " +
         "WHERE user_id = ? ");
     pst.setBoolean(1, false);
-    pst.setInt(2, this.getId());
+    pst.setBoolean(2, this.getHidden());
+    pst.setInt(3, this.getId());
     resultCount = pst.executeUpdate();
     pst.close();
 
     if (resultCount == 0) {
-      errors.put("actionError", "User could not be disabled because it no longer exists.");
+//      errors.put("actionError", "User could not be disabled because it no longer exists.");
       return false;
     } else {
       return true;
@@ -1928,19 +2292,19 @@ public class User extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("ID not specified.");
     }
-
+    checkHidden(true);
     int resultCount = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE access " +
-        "SET enabled = ? " +
+        "SET enabled = ? , hidden = ? " +
         "WHERE user_id = ? ");
     pst.setBoolean(1, true);
-    pst.setInt(2, this.getId());
+    pst.setBoolean(2, this.getHidden());
+    pst.setInt(3, this.getId());
     resultCount = pst.executeUpdate();
     pst.close();
 
     if (resultCount == 0) {
-      errors.put("actionError", "User could not be enabled.");
       return false;
     } else {
       return true;
@@ -1980,14 +2344,16 @@ public class User extends GenericBean {
    */
   public void updateLogin(Connection db) throws SQLException {
     if (this.id > -1) {
+      checkHidden();
       String sql =
           "UPDATE access " +
           "SET last_login = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
-          "last_ip = ? " +
+          "last_ip = ?, hidden = ? " +
           "WHERE user_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setString(1, this.ip);
-      pst.setInt(2, this.id);
+      pst.setBoolean(2, this.getHidden());
+      pst.setInt(3, this.id);
       pst.executeUpdate();
       pst.close();
     }
@@ -2018,15 +2384,17 @@ public class User extends GenericBean {
    */
   public void updateSettings(Connection db) throws SQLException {
     if (this.id > -1) {
+      checkHidden();
       String sql =
           "UPDATE access " +
-          "SET timezone = ?, currency = ?, language = ? " +
+          "SET timezone = ?, currency = ?, language = ?, hidden = ? " +
           "WHERE user_id = ? ";
       PreparedStatement pst = db.prepareStatement(sql);
       pst.setString(1, this.timeZone);
       pst.setString(2, this.currency);
       pst.setString(3, this.language);
-      pst.setInt(4, this.id);
+      pst.setBoolean(4, this.getHidden());
+      pst.setInt(5, this.id);
       pst.executeUpdate();
       pst.close();
     }
@@ -2054,7 +2422,7 @@ public class User extends GenericBean {
         "a.enabled as access_enabled, a.assistant, " +
         "a.entered as access_entered, a.enteredby as access_enteredby, " +
         "a.modified as access_modified, a.modifiedby as access_modifiedby, " +
-        "a.currency, a.language, " +
+        "a.currency, a.language, a.webdav_password, a.hidden as hidden, " +
         "r.role, r.role_type, " +
         "m_usr.enabled as mgr_enabled, " +
         "c.* " +
@@ -2177,12 +2545,12 @@ public class User extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("User ID was not specified");
     }
-
+    checkHidden();
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
         "UPDATE access " +
-        "SET password = ? ");
+        "SET password = ?, hidden = ? ");
     if (modifiedBy > -1) {
       sql.append(", modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + " ");
     }
@@ -2190,6 +2558,7 @@ public class User extends GenericBean {
     int i = 0;
     pst = db.prepareStatement(sql.toString());
     pst.setString(++i, encryptPassword(password1));
+    pst.setBoolean(++i, this.getHidden());
     if (modifiedBy > -1) {
       pst.setInt(++i, modifiedBy);
     }
@@ -2204,16 +2573,16 @@ public class User extends GenericBean {
   /**
    *  Gets the Valid attribute of the User object
    *
-   *@param  db                Description of Parameter
-   *@param  context           Description of Parameter
-   *@return                   The Valid value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.12
+   *@param  db             Description of Parameter
+   *@param  context        Description of Parameter
+   *@return                The Valid value
+   *@exception  Exception  Description of the Exception
+   *@since                 1.12
    */
-  protected boolean isValid(Connection db, ActionContext context) throws SQLException {
+  protected boolean isValid(Connection db, ActionContext context) throws Exception {
     isValidNoPass(db, context);
 
-    if (contactId < 1 && (contact == null || !contact.isValid(db))) {
+    if (contactId < 1 && (contact == null || !ObjectValidator.validate(null, db, contact))) {
       errors.put("contactIdError", "Contact needs to be selected or newly created first");
     }
 
@@ -2223,6 +2592,12 @@ public class User extends GenericBean {
 
     if (!password1.equals(password2)) {
       errors.put("password2Error", "Verification password does not match");
+    }
+
+    Timestamp currentTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
+    if (hidden && expires != null && currentTime.before(expires) && enabled) {
+      errors.put("expiresError", "The user cannot be hidden when the user is enabled and has not expired.");
+      errors.put("enabledError", "The user cannot be hidden when the user is enabled and has not expired.");
     }
 
     if (hasErrors()) {
@@ -2290,7 +2665,7 @@ public class User extends GenericBean {
     if (managerId > 0 && id > -1 && alias == -1) {
       if (managerId == id) {
         //Check 1: User cannot report to self
-        errors.put("managerIdError", "User cannot report to itself");
+        errors.put("managerIdError", "User cannot report to self");
       } else {
         //Check 2: User cannot report to someone already beneath them
         ConnectionElement ce = (ConnectionElement) context.getRequest().getSession().getAttribute("ConnectionElement");
@@ -2364,6 +2739,8 @@ public class User extends GenericBean {
     modifiedBy = rs.getInt("access_modifiedby");
     currency = rs.getString("currency");
     language = rs.getString("language");
+    this.setWebdavPassword(rs.getString("webdav_password"));
+    hidden = rs.getBoolean("hidden");
     //role table
     this.setRole(rs.getString("role"));
     roleType = DatabaseUtils.getInt(rs, "role_type");
@@ -2443,7 +2820,14 @@ public class User extends GenericBean {
    *@since                    1.28
    */
   private void buildChildren(Connection db) throws SQLException {
-    childUsers = new UserList(db, this, true);
+    childUsers = new UserList();
+    childUsers.setManagerId(this.getId());
+    childUsers.setManagerUser(this);
+    childUsers.setBuildHierarchy(true);
+    if (hideHiddenChildren) {
+      childUsers.setHidden(Constants.FALSE);
+    }
+    childUsers.buildList(db);
   }
 
 
@@ -2514,7 +2898,7 @@ public class User extends GenericBean {
     if (assistant > -1) {
       sql.append("assistant = ?, ");
     }
-    sql.append("alias = ? ");
+    sql.append("alias = ?, hidden = ? ");
     sql.append("WHERE user_id = ? ");
 
     int i = 0;
@@ -2547,6 +2931,7 @@ public class User extends GenericBean {
       pst.setInt(++i, assistant);
     }
     pst.setInt(++i, alias);
+    pst.setBoolean(++i, hidden);
     pst.setInt(++i, getId());
     resultCount = pst.executeUpdate();
     pst.close();
@@ -2564,8 +2949,19 @@ public class User extends GenericBean {
    *@since       1.1
    */
   private String encryptPassword(String tmp) {
-    PasswordHash passwordHash = new PasswordHash();
-    return passwordHash.encrypt(tmp);
+    return PasswordHash.encrypt(tmp);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  username  Description of the Parameter
+   *@param  password  Description of the Parameter
+   *@return           Description of the Return Value
+   */
+  private String encryptWebdavPassword(String username, String password) {
+    return PasswordHash.encrypt(username + ":" + WebdavServlet.CFS_USER_REALM + ":" + password);
   }
 
 
@@ -2596,7 +2992,6 @@ public class User extends GenericBean {
         "SELECT count(*) as no " +
         "FROM access " +
         "WHERE username LIKE (?)");
-
     int i = 0;
     pst.setString(++i, tmpUsername + "%");
     rs = pst.executeQuery();
@@ -2604,10 +2999,8 @@ public class User extends GenericBean {
     if (rs.next()) {
       no = rs.getInt("no");
     }
-
     rs.close();
     pst.close();
-
     return no;
   }
 
@@ -2649,6 +3042,34 @@ public class User extends GenericBean {
     rs.close();
     pst.close();
     return userId;
+  }
+
+
+  /**
+   *  Description of the Method
+   */
+  private void checkHidden() {
+    Timestamp currentTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
+    if (this.getExpires() != null && currentTime.before(this.getExpires()) && this.getEnabled()) {
+      this.setHidden(false);
+    } else if (this.getExpires() == null && this.getEnabled()) {
+      this.setHidden(false);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  enabledValue  Description of the Parameter
+   */
+  private void checkHidden(boolean enabledValue) {
+    Timestamp currentTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
+    if (this.getExpires() != null && currentTime.before(this.getExpires()) && enabledValue) {
+      this.setHidden(false);
+    } else if (this.getExpires() == null && enabledValue) {
+      this.setHidden(false);
+    }
   }
 }
 

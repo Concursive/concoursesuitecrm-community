@@ -117,15 +117,14 @@ public class MainMenuHook implements ControllerMainMenuHook {
     if (ce != null) {
       systemStatus = (SystemStatus) ((Hashtable) context.getAttribute("SystemStatus")).get(ce.getUrl());
     }
-
     ModuleBean thisModule = (ModuleBean) request.getAttribute("ModuleBean");
     if (thisModule == null) {
       thisModule = new ModuleBean();
       request.setAttribute("ModuleBean", thisModule);
     }
-
     //Build the menus
     int menuWidth = 0;
+    StringBuffer menuTops = new StringBuffer();
     StringBuffer menu = new StringBuffer();
     StringBuffer graphicMenu = new StringBuffer();
     StringBuffer smallMenu = new StringBuffer();
@@ -142,10 +141,9 @@ public class MainMenuHook implements ControllerMainMenuHook {
         String longHtml = null;
         if (systemStatus != null) {
           pageTitle = systemStatus.getMenuProperty(thisMenu.getPageTitle(), "page_title");
-          shortHtml = systemStatus.getMenuProperty(thisMenu.getPageTitle(), "short_html");
-          longHtml = systemStatus.getMenuProperty(thisMenu.getPageTitle(), "long_html");
+          shortHtml = systemStatus.getMenuProperty(thisMenu.getPageTitle(), "menu_title");
+          longHtml = systemStatus.getMenuProperty(thisMenu.getPageTitle(), "page_title");
         }
-
         if ((thisModule.getMenuKey() != null && thisMenu.hasActionName(thisModule.getMenuKey())) ||
             (thisModule.getMenuKey() == null && thisMenu.hasActionName(actionPath))) {
           //The user is on this link/module
@@ -155,12 +153,15 @@ public class MainMenuHook implements ControllerMainMenuHook {
             thisModule.setName(thisMenu.getPageTitle());
           }
           //Set the on state of the menu
-          menu.append("<th nowrap onClick=\"javascript:window.location.href='" + thisMenu.getLink() + "'\">");
+          menuTops.append("<th class=\"mtab-ls\"><img border=\"0\" src=\"images/blank.gif\" /></th><th class=\"mtab-rs\"><img border=\"0\" src=\"images/blank.gif\" /></th>");
+          menu.append("<th colspan=\"2\" class=\"menutabs-th\" nowrap>");
+          menu.append("<a href=\"" + thisMenu.getLink() + "\">");
           if (shortHtml != null) {
             menu.append(shortHtml);
           } else {
             menu.append(thisMenu.getShortHtml());
           }
+          menu.append("</a>");
           menu.append("</th>");
           graphicMenu.append("<a href='" + thisMenu.getLink() + "'><img border='0' src='images/" + thisMenu.getGraphicOn() + "' width='" + thisMenu.getGraphicWidth() + "' height='" + thisMenu.getGraphicHeight() + "'></a>");
           if (longHtml != null) {
@@ -176,23 +177,26 @@ public class MainMenuHook implements ControllerMainMenuHook {
             SubmenuItem newItem = new SubmenuItem(thisItem);
             if (newItem.getName().equals(thisModule.getSubmenuKey())) {
               newItem.setIsActive(true);
-              newItem.setHtmlClass("rs");
+              newItem.setHtmlClass("submenuItemSelected");
             }
             thisModule.addMenuItem(newItem);
           }
         } else {
           //The user is not on this link, set the off state of the menu
-          menu.append("<td nowrap");
+          menuTops.append("<td class=\"mtab-l\"><img border=\"0\" src=\"images/blank.gif\" /></td><td class=\"mtab-r\"><img border=\"0\" src=\"images/blank.gif\" /></td>");
+          menu.append("<td class=\"menutabs-td\" colspan=\"2\" nowrap");
           if (thisMenu.getShortHtmlRollover()) {
             menu.append(" class=\"menutabUnselectedLinkOff\"");
             menu.append(" onmouseover=\"swapClass(this,'menutabUnselectedLinkOn')\" onmouseout=\"swapClass(this,'menutabUnselectedLinkOff')\"");
           }
-          menu.append(" onClick=\"javascript:window.location.href='" + thisMenu.getLink() + "'\">");
+          menu.append(">");
+          menu.append("<a href=\"" + thisMenu.getLink() + "\">");
           if (shortHtml != null) {
             menu.append(shortHtml);
           } else {
             menu.append(thisMenu.getShortHtml());
           }
+          menu.append("</a>");
           menu.append("</td>");
 
           graphicMenu.append("<a href='" + thisMenu.getLink() + "'");
@@ -234,16 +238,18 @@ public class MainMenuHook implements ControllerMainMenuHook {
     }
 
     //Output several types of menus
-    String[] theMenus = new String[4];
-    theMenus[0] = menu.toString() + "<td style=\"width:100%; border: 0px; background-image: none !important; background: #fff; border-bottom: 1px #000 solid; cursor: default\">&nbsp;</td>";
+    String[] theMenus = new String[5];
+    theMenus[0] = menu.toString();// + "<td style=\"width:100%; border: 0px; background-image: none !important; background: #EDEDED; border-bottom: 1px #000 solid; cursor: default\"><img border=\"0\" src=\"images/blank.gif\" /></td>";
     theMenus[1] = "<td width=\"" + menuWidth + "\" nowrap>" + graphicMenu.toString() + "</td>";
     theMenus[2] = smallMenu.toString();
     theMenus[3] = menu.toString();
+    theMenus[4] = menuTops.toString();// + "<td style=\"width:100%; border: 0px; background-image: none !important; background: #FFF; cursor: default\"><img border=\"0\" src=\"images/blank.gif\" /></td>";
     request.setAttribute("MainMenu", theMenus[0]);
     request.setAttribute("MainMenuGraphic", theMenus[1]);
     request.setAttribute("MainMenuWidth", String.valueOf(menuWidth));
     request.setAttribute("MainMenuSmall", theMenus[2]);
     request.setAttribute("MainMenuTableCells", theMenus[3]);
+    request.setAttribute("MainMenuTops", theMenus[4]);
   }
 
 

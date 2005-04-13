@@ -15,20 +15,18 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import java.text.*;
-import java.io.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.contacts.base.CallList;
+import org.aspcfs.modules.contacts.base.CallResultList;
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  *  Actions for the Account Activities
@@ -159,7 +157,7 @@ public final class AccountsCalls extends CFSModule {
     }
     context.getRequest().setAttribute("CallList", callList);
     context.getRequest().setAttribute("CompletedCallList", completedCallList);
-    return this.getReturn(context, "View");
+    return getReturn(context, "View");
   }
 
 

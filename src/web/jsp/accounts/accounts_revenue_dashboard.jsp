@@ -35,7 +35,7 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-Revenue Dashboard
+<dhv:label name="accounts.accounts_revenue_dashboard.RevenueDashboard">Revenue Dashboard</dhv:label>
 </td>
 </tr>
 </table>
@@ -49,13 +49,13 @@ Revenue Dashboard
         <tr>
           <th width="255" valign="center" style="text-align: center;">
 		<% if (((String)request.getSession().getAttribute("revenueoverride")) == null) {%>
-      My Dashboard
+      <dhv:label name="accounts.accounts_revenue_dashboard.MyDashboard">My Dashboard</dhv:label>
 		<%} else {%>
-      Dashboard: <%=toHtml((String)request.getSession().getAttribute("revenueothername"))%>
+      <dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label>: <%=toHtml((String)request.getSession().getAttribute("revenueothername"))%>
 		<%}%>
           </th>
           <th width="20" valign="center" style="text-align: center;">
-            <% YearList.setJsEvent("onChange=\"document.forms[0].submit();\""); %>
+            <% YearList.setJsEvent("onChange=\"document.Dashboard.submit();\""); %>
 <%
       if (request.getParameter("year") != null) {
         YearList.setDefaultValue(request.getParameter("year"));
@@ -74,7 +74,7 @@ Revenue Dashboard
         <tr>
           <td width="275" valign="center" colspan="2" style="text-align: center;">
             <img src="images/icons/stock_chart-reorganize-16.gif" align="absMiddle" alt="" />
-            Type&nbsp;
+            <dhv:label name="accounts.accounts_add.Type">Type</dhv:label>&nbsp;
             <% if (request.getParameter("type") != null) { %>
               <%= RevenueTypeList.getHtmlSelect("type", Integer.parseInt(request.getParameter("type"))) %>&nbsp;
             <%} else if ((String)request.getSession().getAttribute("revenuetype") != null) {%>
@@ -91,8 +91,8 @@ Revenue Dashboard
           <td style="text-align: center;" width="100%">
 	<% if (!(((String)request.getSession().getAttribute("revenueoverride")) == null)) {%>
       <input type="hidden" name="oid" value="<%=((String)request.getSession().getAttribute("revenueoverride"))%>">
-      <a href="RevenueManager.do?command=Dashboard&oid=<%= ((String)request.getSession().getAttribute("revenuepreviousId")) %>">Up One Level</a> |
-      <a href="RevenueManager.do?command=Dashboard&reset=1">Back to My Dashboard</a>
+      <a href="RevenueManager.do?command=Dashboard&oid=<%= ((String)request.getSession().getAttribute("revenuepreviousId")) %>"><dhv:label name="accounts.accounts_revenue_dashboard.UpOneLevel">Up One Level</dhv:label></a> |
+      <a href="RevenueManager.do?command=Dashboard&reset=1"><dhv:label name="accounts.accounts_revenue_dashboard.BackMyDashboard">Back to My Dashboard</dhv:label></a>
 	<%} else {%>
       &nbsp;
   <%}%>
@@ -102,8 +102,8 @@ Revenue Dashboard
       <%-- User List --%>
       <table cellpadding="3" cellspacing="0" width="285" class="details">
         <tr>
-          <th>Reporting Staff</th>
-          <th>YTD</th>
+          <th><dhv:label name="accounts.accounts_revenue_dashboard.ReportingStaff">Reporting Staff</dhv:label></th>
+          <th><dhv:label name="accounts.accounts_revenue_dashboard.YTD">YTD</dhv:label></th>
         </tr>
 <%
 		Iterator x = ShortChildList.iterator();
@@ -120,7 +120,7 @@ Revenue Dashboard
         <tr>
           <td width="100%" class="row<%= rowid %>" valign="center" nowrap>
             <a href="RevenueManager.do?command=Dashboard&oid=<%=thisRec.getId()%>"><%= toHtml(thisRec.getContact().getNameLastFirst()) %></a>
-            <dhv:evaluate exp="<%=!(thisRec.getEnabled())%>"><font color="red">*</font></dhv:evaluate>
+            <dhv:evaluate if="<%=!(thisRec.getEnabled())%>"><font color="red">*</font></dhv:evaluate>
           </td>
           <td width="55" nowrap class="row<%= rowid %>" valign="center">
             <zeroio:currency value="<%= thisRec.getYTD() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
@@ -130,7 +130,7 @@ Revenue Dashboard
     } else {
 %>
         <tr>
-          <td valign="center" colspan="2">No Reporting staff.</td>
+          <td valign="center" colspan="2"><dhv:label name="accounts.accounts_revenue_dashboard.NoReportingStaff">No Reporting staff.</dhv:label></td>
         </tr>
     <%}%>
       </table>
@@ -139,7 +139,7 @@ Revenue Dashboard
       <table cellpadding="3" cellspacing="0" width="100%" class="details">
         <tr>
           <th><dhv:label name="organization.name">Account Name</dhv:label></th>
-          <th>YTD</th>
+          <th><dhv:label name="accounts.accounts_revenue_dashboard.YTD">YTD</dhv:label></th>
         </tr>
 <%
 	Iterator n = MyRevList.iterator();

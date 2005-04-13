@@ -15,17 +15,16 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import java.text.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.troubletickets.base.TicketList;
-import org.aspcfs.modules.tasks.base.TaskCategoryList;
-import org.aspcfs.utils.ObjectUtils;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.actions.*;
-import org.aspcfs.utils.StringUtils;
+import org.aspcfs.modules.tasks.base.TaskCategoryList;
+import org.aspcfs.modules.troubletickets.base.TicketList;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.ObjectUtils;
+
+import java.sql.*;
+import java.text.DateFormat;
 import java.util.ArrayList;
 
 /**
@@ -36,6 +35,13 @@ import java.util.ArrayList;
  *@version    $Id$
  */
 public class Project extends GenericBean {
+
+  public final static int PORTAL_TYPE_ARTICLE = -1;
+  public final static int PORTAL_TYPE_HOMEPAGE = 1;
+  public final static int PORTAL_TYPE_COMMUNITY = 2;
+  public final static int PORTAL_TYPE_ORDER = 3;
+  public final static int PORTAL_TYPE_CONTACT_US = 4;
+  public final static int PORTAL_TYPE_NEWS = 5;
 
   private int id = -1;
   private int groupId = -1;
@@ -76,6 +82,8 @@ public class Project extends GenericBean {
 
   private RequirementList requirements = new RequirementList();
   private TeamMemberList team = new TeamMemberList();
+  private TeamMemberList employeeTeam = new TeamMemberList();
+  private TeamMemberList accountContactTeam = new TeamMemberList();
   private AssignmentList assignments = new AssignmentList();
   private IssueCategoryList issueCategories = new IssueCategoryList();
   private IssueList issues = new IssueList();
@@ -85,22 +93,35 @@ public class Project extends GenericBean {
   private int lastNews = -1;
   private int currentNews = Constants.UNDEFINED;
 
+  // Portal capabilities
   private boolean portal = false;
+  private String portalHeader = null;
+  private String portalFormat = null;
+  private String portalKey = null;
+  private boolean portalBuildNewsBody = false;
+  private boolean portalNewsMenu = false;
+  private int portalPageType = PORTAL_TYPE_ARTICLE;
+
   private boolean allowGuests = false;
   private boolean updateAllowGuests = false;
-
+  private boolean allowsUserObservers = false;
+  
+  private boolean showCalendar = false;
   private boolean showNews = false;
   private boolean showDetails = false;
   private boolean showTeam = false;
+  private boolean showAccounts = false;
   private boolean showPlan = false;
   private boolean showLists = false;
   private boolean showDiscussion = false;
   private boolean showTickets = false;
   private boolean showDocuments = false;
 
+  private String labelCalendar = null;
   private String labelNews = null;
   private String labelDetails = null;
   private String labelTeam = null;
+  private String labelAccounts = null;
   private String labelPlan = null;
   private String labelLists = null;
   private String labelDiscussion = null;
@@ -108,6 +129,8 @@ public class Project extends GenericBean {
   private String labelDocuments = null;
 
   private PermissionList permissions = new PermissionList();
+  // helper
+  private boolean hasAccess = false;
 
 
   /**
@@ -617,6 +640,26 @@ public class Project extends GenericBean {
 
 
   /**
+   *  Sets the employeeTeam attribute of the Project object
+   *
+   *@param  tmp  The new employeeTeam value
+   */
+  public void setEmployeeTeam(TeamMemberList tmp) {
+    this.employeeTeam = tmp;
+  }
+
+
+  /**
+   *  Sets the accountContactTeam attribute of the Project object
+   *
+   *@param  tmp  The new accountContactTeam value
+   */
+  public void setAccountContactTeam(TeamMemberList tmp) {
+    this.accountContactTeam = tmp;
+  }
+
+
+  /**
    *  Sets the Assignments attribute of the Project object
    *
    *@param  tmp  The new Assignments value
@@ -760,6 +803,156 @@ public class Project extends GenericBean {
 
 
   /**
+   *  Gets the portalHeader attribute of the Project object
+   *
+   *@return    The portalHeader value
+   */
+  public String getPortalHeader() {
+    return portalHeader;
+  }
+
+
+  /**
+   *  Sets the portalHeader attribute of the Project object
+   *
+   *@param  tmp  The new portalHeader value
+   */
+  public void setPortalHeader(String tmp) {
+    this.portalHeader = tmp;
+  }
+
+
+  /**
+   *  Gets the portalFormat attribute of the Project object
+   *
+   *@return    The portalFormat value
+   */
+  public String getPortalFormat() {
+    return portalFormat;
+  }
+
+
+  /**
+   *  Sets the portalFormat attribute of the Project object
+   *
+   *@param  tmp  The new portalFormat value
+   */
+  public void setPortalFormat(String tmp) {
+    this.portalFormat = tmp;
+  }
+
+
+  /**
+   *  Gets the portalKey attribute of the Project object
+   *
+   *@return    The portalKey value
+   */
+  public String getPortalKey() {
+    return portalKey;
+  }
+
+
+  /**
+   *  Sets the portalKey attribute of the Project object
+   *
+   *@param  tmp  The new portalKey value
+   */
+  public void setPortalKey(String tmp) {
+    this.portalKey = tmp;
+  }
+
+
+  /**
+   *  Gets the portalBuildNewsBody attribute of the Project object
+   *
+   *@return    The portalBuildNewsBody value
+   */
+  public boolean getPortalBuildNewsBody() {
+    return portalBuildNewsBody;
+  }
+
+
+  /**
+   *  Sets the portalBuildNewsBody attribute of the Project object
+   *
+   *@param  tmp  The new portalBuildNewsBody value
+   */
+  public void setPortalBuildNewsBody(boolean tmp) {
+    this.portalBuildNewsBody = tmp;
+  }
+
+
+  /**
+   *  Sets the portalBuildNewsBody attribute of the Project object
+   *
+   *@param  tmp  The new portalBuildNewsBody value
+   */
+  public void setPortalBuildNewsBody(String tmp) {
+    this.portalBuildNewsBody = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the portalNewsMenu attribute of the Project object
+   *
+   *@return    The portalNewsMenu value
+   */
+  public boolean getPortalNewsMenu() {
+    return portalNewsMenu;
+  }
+
+
+  /**
+   *  Sets the portalNewsMenu attribute of the Project object
+   *
+   *@param  tmp  The new portalNewsMenu value
+   */
+  public void setPortalNewsMenu(boolean tmp) {
+    this.portalNewsMenu = tmp;
+  }
+
+
+  /**
+   *  Sets the portalNewsMenu attribute of the Project object
+   *
+   *@param  tmp  The new portalNewsMenu value
+   */
+  public void setPortalNewsMenu(String tmp) {
+    this.portalNewsMenu = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the portalPageType attribute of the Project object
+   *
+   *@return    The portalPageType value
+   */
+  public int getPortalPageType() {
+    return portalPageType;
+  }
+
+
+  /**
+   *  Sets the portalPageType attribute of the Project object
+   *
+   *@param  tmp  The new portalPageType value
+   */
+  public void setPortalPageType(int tmp) {
+    this.portalPageType = tmp;
+  }
+
+
+  /**
+   *  Sets the portalPageType attribute of the Project object
+   *
+   *@param  tmp  The new portalPageType value
+   */
+  public void setPortalPageType(String tmp) {
+    this.portalPageType = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the allowGuests attribute of the Project object
    *
    *@param  tmp  The new allowGuests value
@@ -786,6 +979,56 @@ public class Project extends GenericBean {
    */
   public void setUpdateAllowGuests(boolean tmp) {
     this.updateAllowGuests = tmp;
+  }
+
+
+  /**
+   *  Gets the allowsUserObservers attribute of the Project object
+   *
+   *@return    The allowsUserObservers value
+   */
+  public boolean getAllowsUserObservers() {
+    return allowsUserObservers;
+  }
+
+
+  /**
+   *  Sets the allowsUserObservers attribute of the Project object
+   *
+   *@param  tmp  The new allowsUserObservers value
+   */
+  public void setAllowsUserObservers(boolean tmp) {
+    this.allowsUserObservers = tmp;
+  }
+
+
+  /**
+   *  Sets the allowsUserObservers attribute of the Project object
+   *
+   *@param  tmp  The new allowsUserObservers value
+   */
+  public void setAllowsUserObservers(String tmp) {
+    this.allowsUserObservers = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the showCalendar attribute of the Project object
+   *
+   *@param  tmp  The new showCalendar value
+   */
+  public void setShowCalendar(boolean tmp) {
+    this.showCalendar = tmp;
+  }
+
+
+  /**
+   *  Sets the showCalendar attribute of the Project object
+   *
+   *@param  tmp  The new showCalendar value
+   */
+  public void setShowCalendar(String tmp) {
+    this.showCalendar = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -848,6 +1091,13 @@ public class Project extends GenericBean {
     this.showTeam = DatabaseUtils.parseBoolean(tmp);
   }
 
+  public void setShowAccounts(boolean showAccounts) {
+    this.showAccounts = showAccounts;
+  }
+
+  public void setShowAccounts(String tmp) {
+    this.showAccounts = DatabaseUtils.parseBoolean(tmp);
+  }
 
   /**
    *  Sets the showPlan attribute of the Project object
@@ -950,6 +1200,16 @@ public class Project extends GenericBean {
 
 
   /**
+   *  Sets the labelCalendar attribute of the Project object
+   *
+   *@param  tmp  The new labelCalendar value
+   */
+  public void setLabelCalendar(String tmp) {
+    this.labelCalendar = tmp;
+  }
+
+
+  /**
    *  Sets the labelNews attribute of the Project object
    *
    *@param  tmp  The new labelNews value
@@ -976,6 +1236,11 @@ public class Project extends GenericBean {
    */
   public void setLabelTeam(String tmp) {
     this.labelTeam = tmp;
+  }
+
+
+  public void setLabelAccounts(String tmp) {
+    this.labelAccounts = tmp;
   }
 
 
@@ -1329,8 +1594,8 @@ public class Project extends GenericBean {
    *
    *@return    The entered value
    */
-  public String getEntered() {
-    return entered.toString();
+  public Timestamp getEntered() {
+    return entered;
   }
 
 
@@ -1394,6 +1659,26 @@ public class Project extends GenericBean {
    */
   public TeamMemberList getTeam() {
     return team;
+  }
+
+
+  /**
+   *  Gets the employeeTeam attribute of the Project object
+   *
+   *@return    The employeeTeam value
+   */
+  public TeamMemberList getEmployeeTeam() {
+    return employeeTeam;
+  }
+
+
+  /**
+   *  Gets the accountContactTeam attribute of the Project object
+   *
+   *@return    The accountContactTeam value
+   */
+  public TeamMemberList getAccountContactTeam() {
+    return accountContactTeam;
   }
 
 
@@ -1527,6 +1812,16 @@ public class Project extends GenericBean {
 
 
   /**
+   *  Gets the showCalendar attribute of the Project object
+   *
+   *@return    The showCalendar value
+   */
+  public boolean getShowCalendar() {
+    return showCalendar;
+  }
+
+
+  /**
    *  Gets the showNews attribute of the Project object
    *
    *@return    The showNews value
@@ -1555,6 +1850,9 @@ public class Project extends GenericBean {
     return showTeam;
   }
 
+  public boolean getShowAccounts() {
+    return showAccounts;
+  }
 
   /**
    *  Gets the showPlan attribute of the Project object
@@ -1635,6 +1933,9 @@ public class Project extends GenericBean {
     return labelTeam;
   }
 
+  public String getLabelAccounts() {
+    return labelAccounts;
+  }
 
   /**
    *  Gets the labelPlan attribute of the Project object
@@ -1685,6 +1986,13 @@ public class Project extends GenericBean {
     return labelDocuments;
   }
 
+  public boolean getHasAccess() {
+    return hasAccess;
+  }
+
+  public void setHasAccess(boolean hasAccess) {
+    this.hasAccess = hasAccess;
+  }
 
   /**
    *  Description of the Method
@@ -1724,16 +2032,16 @@ public class Project extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
-   *@param  categoryId        Description of Parameter
+   *@param  issueCategoryId        Description of Parameter
    *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
-  public int buildIssueList(Connection db, int categoryId) throws SQLException {
+  public int buildIssueList(Connection db, int issueCategoryId) throws SQLException {
     //issues = new IssueList();
     issues.setProject(this);
     issues.setProjectId(this.getId());
     issues.setLastIssues(lastIssues);
-    issues.setCategoryId(categoryId);
+    issues.setCategoryId(issueCategoryId);
     issues.buildList(db);
     return issues.size();
   }
@@ -1790,14 +2098,22 @@ public class Project extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of Parameter
-   *@return                   Description of the Returned Value
    *@exception  SQLException  Description of Exception
    */
-  public int buildTeamMemberList(Connection db) throws SQLException {
+  public void buildTeamMemberList(Connection db) throws SQLException {
     team.setProject(this);
     team.setProjectId(this.getId());
     team.buildList(db);
-    return team.size();
+
+    employeeTeam.setProject(this);
+    employeeTeam.setProjectId(this.getId());
+    employeeTeam.setEmployeesOnly(true);
+    employeeTeam.buildList(db);
+
+    accountContactTeam.setProject(this);
+    accountContactTeam.setProjectId(this.getId());
+    accountContactTeam.setAccountContactsOnly(true);
+    accountContactTeam.buildList(db);
   }
 
 
@@ -1815,6 +2131,9 @@ public class Project extends GenericBean {
     return files.size();
   }
 
+  public boolean hasPermissionList() {
+    return (permissions != null && permissions.size() > 0);
+  }
 
   /**
    *  Description of the Method
@@ -1852,9 +2171,6 @@ public class Project extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     Exception errorMessage = null;
     boolean autoCommit = db.getAutoCommit();
     try {
@@ -1872,10 +2188,10 @@ public class Project extends GenericBean {
         sql.append("modified, ");
       }
       sql.append("title, shortDescription, requestedBy, requestedDept, requestDate, requestDate_timezone, " +
-          "allow_guests, news_enabled, details_enabled, " +
-          "team_enabled, plan_enabled, lists_enabled, discussion_enabled, " +
+          "allow_guests, calendar_enabled, news_enabled, details_enabled, " +
+          "team_enabled, accounts_enabled, plan_enabled, lists_enabled, discussion_enabled, " +
           "tickets_enabled, documents_enabled, " +
-          "approvalDate, closedate, est_closedate, est_closedate_timezone, budget, budget_currency) ");
+          "approvalDate, closeDate, est_closedate, est_closedate_timezone, budget, budget_currency) ");
       sql.append("VALUES (?, ?, ?, ?, ?, ?, ?, ");
       if (entered != null) {
         sql.append("?, ");
@@ -1883,7 +2199,7 @@ public class Project extends GenericBean {
       if (modified != null) {
         sql.append("?, ");
       }
-      sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+      sql.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 
       int i = 0;
       PreparedStatement pst = db.prepareStatement(sql.toString());
@@ -1911,9 +2227,11 @@ public class Project extends GenericBean {
       }
       pst.setString(++i, this.requestDateTimeZone);
       pst.setBoolean(++i, allowGuests);
+      pst.setBoolean(++i, showCalendar);
       pst.setBoolean(++i, showNews);
       pst.setBoolean(++i, showDetails);
       pst.setBoolean(++i, showTeam);
+      pst.setBoolean(++i, showAccounts);
       pst.setBoolean(++i, showPlan);
       pst.setBoolean(++i, showLists);
       pst.setBoolean(++i, showDiscussion);
@@ -1946,6 +2264,7 @@ public class Project extends GenericBean {
       PermissionList.insertDefaultPermissions(db, id);
       TicketList.insertProjectTicketCount(db, id);
       //Add team, requirements and activities from an existing project
+      //TODO: add news categories, etc.
       /*
        *  if (templateId > -1) {
        *  ProjectList projectList = new ProjectList();
@@ -1981,6 +2300,18 @@ public class Project extends GenericBean {
        *  }
        *  }
        */
+      if (portal) {
+        int j = 0;
+        pst = db.prepareStatement(
+            "UPDATE projects " +
+            "SET portal = ?, portal_key = ?, portal_page_type = ? " +
+            "WHERE project_id = ? ");
+        pst.setBoolean(++j, true);
+        pst.setString(++j, portalKey);
+        pst.setInt(++j, portalPageType);
+        pst.setInt(++j, id);
+        pst.execute();
+      }
       if (autoCommit) {
         db.commit();
       }
@@ -2018,12 +2349,14 @@ public class Project extends GenericBean {
       db.setAutoCommit(false);
 
       buildIssueCategoryList(db);
-      issueCategories.delete(db);
+      issueCategories.delete(db, basePath);
+      issueCategories = null;
 
       TicketList tickets = new TicketList();
       tickets.setProjectId(id);
       tickets.buildList(db);
       tickets.delete(db, basePath);
+      tickets = null;
 
       TicketList.deleteProjectTicketCount(db, id);
 
@@ -2031,23 +2364,29 @@ public class Project extends GenericBean {
       taskCategories.setProjectId(id);
       taskCategories.buildList(db);
       taskCategories.delete(db);
+      taskCategories = null;
 
       buildTeamMemberList(db);
       team.delete(db);
+      team = null;
 
       buildRequirementList(db);
       requirements.delete(db);
+      requirements = null;
 
       buildFileItemList(db);
       files.delete(db, basePath);
+      files = null;
 
       FileFolderList folders = new FileFolderList();
       folders.setLinkModuleId(Constants.PROJECTS_FILES);
       folders.setLinkItemId(id);
       folders.buildList(db);
       folders.delete(db);
+      folders = null;
 
       NewsArticleList.delete(db, id);
+      NewsArticleCategoryList.delete(db, id);
       PermissionList.delete(db, id);
 
       //Delete the actual project
@@ -2065,7 +2404,6 @@ public class Project extends GenericBean {
       db.setAutoCommit(true);
     }
     if (recordCount == 0) {
-      errors.put("actionError", "Project could not be deleted because it no longer exists.");
       return false;
     } else {
       return true;
@@ -2098,10 +2436,6 @@ public class Project extends GenericBean {
       throw new SQLException("ID was not specified");
     }
 
-    if (!isValid()) {
-      return -1;
-    }
-
     int resultCount = 0;
     boolean previouslyApproved = false;
     java.sql.Timestamp previousApprovalDate = null;
@@ -2127,7 +2461,7 @@ public class Project extends GenericBean {
         "UPDATE projects " +
         "SET department_id = ?, category_id = ?, title = ?, shortDescription = ?, requestedBy = ?, " +
         "requestedDept = ?, requestDate = ?, requestDate_timezone = ?, " +
-        "approvalDate = ?, closedate = ?, owner = ?, est_closedate = ?, est_closedate_timezone = ?, budget = ?, " +
+        "approvalDate = ?, closeDate = ?, owner = ?, est_closedate = ?, est_closedate_timezone = ?, budget = ?, " +
         "budget_currency = ?, " +
         "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
         "WHERE project_id = ? " +
@@ -2191,10 +2525,10 @@ public class Project extends GenericBean {
       db.setAutoCommit(false);
       PreparedStatement pst = db.prepareStatement(
           "UPDATE projects " +
-          "SET " + (updateAllowGuests ? "allow_guests = ?," : "") + "news_enabled = ?, details_enabled = ?, " +
-          "team_enabled = ?, plan_enabled = ?, lists_enabled = ?, discussion_enabled = ?, " +
+          "SET " + (updateAllowGuests ? "allow_guests = ?," : "") + "calendar_enabled = ?, news_enabled = ?, details_enabled = ?, " +
+          "team_enabled = ?, accounts_enabled = ?, plan_enabled = ?, lists_enabled = ?, discussion_enabled = ?, " +
           "tickets_enabled = ?, documents_enabled = ?, " +
-          "news_label = ?, details_label = ?, team_label = ?, plan_label = ?, lists_label = ?, " +
+          "calendar_label = ?, news_label = ?, details_label = ?, team_label = ?, accounts_label = ?, plan_label = ?, lists_label = ?, " +
           "discussion_label = ?, tickets_label = ?, documents_label = ?, " +
           "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
           "WHERE project_id = ? " +
@@ -2203,17 +2537,21 @@ public class Project extends GenericBean {
       if (updateAllowGuests) {
         pst.setBoolean(++i, allowGuests);
       }
+      pst.setBoolean(++i, showCalendar);
       pst.setBoolean(++i, showNews);
       pst.setBoolean(++i, showDetails);
       pst.setBoolean(++i, showTeam);
+      pst.setBoolean(++i, showAccounts);
       pst.setBoolean(++i, showPlan);
       pst.setBoolean(++i, showLists);
       pst.setBoolean(++i, showDiscussion);
       pst.setBoolean(++i, showTickets);
       pst.setBoolean(++i, showDocuments);
+      pst.setString(++i, labelCalendar);
       pst.setString(++i, labelNews);
       pst.setString(++i, labelDetails);
       pst.setString(++i, labelTeam);
+      pst.setString(++i, labelAccounts);
       pst.setString(++i, labelPlan);
       pst.setString(++i, labelLists);
       pst.setString(++i, labelDiscussion);
@@ -2246,57 +2584,6 @@ public class Project extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the Project object
-   *
-   *@return    The valid value
-   */
-  private boolean isValid() {
-    if (title.equals("")) {
-      errors.put("titleError", "Title is required");
-    }
-    if (shortDescription.equals("")) {
-      errors.put("shortDescriptionError", "Description is required");
-    }
-    if (requestDate == null) {
-      errors.put("requestDate", "Request date is required");
-    }
-    if (hasErrors()) {
-      //Check warnings
-      checkWarnings();
-      onlyWarnings = false;
-      return false;
-    } else {
-      //Do not check for warnings if it was found that only warnings existed
-      // in the previous call to isValid for the same form.
-      if (!onlyWarnings) {
-        //Check for warnings if there are no errors
-        checkWarnings();
-        if (hasWarnings()) {
-          onlyWarnings = true;
-          return false;
-        }
-      }
-      return true;
-    }
-  }
-
-
-  /**
-   *  Generates warnings that need to be reviewed before the form can be
-   *  submitted.
-   */
-  protected void checkWarnings() {
-    if ((errors.get("estimatedCloseDateError") == null) &&
-        (estimatedCloseDate != null) &&
-        (requestDate != null)) {
-      if (estimatedCloseDate.before(requestDate)) {
-        warnings.put("estimatedCloseDateWarning", "Close date is earlier than start date");
-      }
-    }
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  rs                Description of Parameter
@@ -2308,18 +2595,13 @@ public class Project extends GenericBean {
     departmentId = DatabaseUtils.getInt(rs, "department_id");
     //templateId
     title = rs.getString("title");
-    shortDescription = rs.getString("shortdescription");
+    shortDescription = rs.getString("shortDescription");
     requestedBy = rs.getString("requestedBy");
     requestedByDept = rs.getString("requestedDept");
     requestDate = rs.getTimestamp("requestDate");
-    String projectRequestDateString = "--";
-    try {
-      projectRequestDateString = requestDate.toString();
-    } catch (NullPointerException e) {
-    }
-    approvalDate = rs.getTimestamp("approvaldate");
+    approvalDate = rs.getTimestamp("approvalDate");
     approved = (approvalDate != null);
-    closeDate = rs.getTimestamp("closedate");
+    closeDate = rs.getTimestamp("closeDate");
     closed = (closeDate != null);
     owner = DatabaseUtils.getInt(rs, "owner");
     entered = rs.getTimestamp("entered");
@@ -2350,7 +2632,17 @@ public class Project extends GenericBean {
     budgetCurrency = rs.getString("budget_currency");
     this.requestDateTimeZone = rs.getString("requestDate_timezone");
     this.estimatedCloseDateTimeZone = rs.getString("est_closedate_timezone");
-
+    portalHeader = rs.getString("portal_header");
+    portalFormat = rs.getString("portal_format");
+    portalKey = rs.getString("portal_key");
+    portalBuildNewsBody = rs.getBoolean("portal_build_news_body");
+    portalNewsMenu = rs.getBoolean("portal_news_menu");
+    allowsUserObservers = rs.getBoolean("allows_user_observers");
+    portalPageType = DatabaseUtils.getInt(rs, "portal_page_type");
+    showCalendar = rs.getBoolean("calendar_enabled");
+    labelCalendar = rs.getString("calendar_label");
+    showAccounts = rs.getBoolean("accounts_enabled");
+    labelAccounts = rs.getString("accounts_label");
     //Set the related objects
     requirements.setProject(this);
     requirements.setProjectId(this.getId());

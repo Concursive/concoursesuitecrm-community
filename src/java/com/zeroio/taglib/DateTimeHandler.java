@@ -15,14 +15,16 @@
  */
 package com.zeroio.taglib;
 
-import javax.servlet.jsp.*;
-import javax.servlet.jsp.tagext.*;
-import java.sql.Timestamp;
-import java.sql.Date;
-import org.aspcfs.utils.*;
-import java.text.*;
-import java.util.Locale;
 import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  *  This Class formats the specified date/time with the timezone for the current
@@ -44,6 +46,7 @@ public class DateTimeHandler extends TagSupport {
   private String defaultValue = "";
   private String timeZone = null;
   private boolean showTimeZone = false;
+  private boolean userTimeZone = true;
 
 
   /**
@@ -227,6 +230,26 @@ public class DateTimeHandler extends TagSupport {
 
 
   /**
+   *  Sets the userTimeZone attribute of the DateTimeHandler object
+   *
+   *@param  tmp  The new userTimeZone value
+   */
+  public void setUserTimeZone(boolean tmp) {
+    this.userTimeZone = tmp;
+  }
+
+
+  /**
+   *  Sets the userTimeZone attribute of the DateTimeHandler object
+   *
+   *@param  tmp  The new userTimeZone value
+   */
+  public void setUserTimeZone(String tmp) {
+    this.userTimeZone = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
    *  Description of the Method
    *
    *@return                   Description of the Return Value
@@ -239,9 +262,12 @@ public class DateTimeHandler extends TagSupport {
         // Retrieve the user's timezone from their session
         UserBean thisUser = (UserBean) pageContext.getSession().getAttribute("User");
         if (thisUser != null) {
-          if (timeZone == null) {
-            timeZone = thisUser.getUserRecord().getTimeZone();
+          if (userTimeZone) {
+            if (timeZone == null) {
+              timeZone = thisUser.getUserRecord().getTimeZone();
+            }
           }
+          // Still use the user's locale
           locale = thisUser.getUserRecord().getLocale();
         }
         if (locale == null) {

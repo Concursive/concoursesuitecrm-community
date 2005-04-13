@@ -16,21 +16,19 @@
   - Version: $Id$
   - Description:
   --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ include file="../initPage.jsp" %>
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Centric CRM Mail Test
+      <dhv:label name="setup.centricCRMMailTest">Centric CRM Mail Test</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      The email transport returned successfully, this means an email was sent
-      without any errors.<br>
+      <dhv:label name="setup.emailSentSuccessfuly.text">The email transport returned successfully, this means an email was sent without any errors.<br /><br />Check your email to see if the test message was received.</dhv:label><br>
       <br>
-      Check your email to see if the test message was received.<br>
-      <br>
-      <input type="button" value="OK" onClick="javascript:window.close()"/>
+      <input type="button" value="<dhv:label name="button.ok">OK</dhv:label>" onClick="javascript:window.close()"/>
     </td>
   </tr>
 </table>

@@ -21,6 +21,7 @@ import java.text.*;
 import com.darkhorseventures.framework.beans.*;
 import com.darkhorseventures.framework.actions.*;
 import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
 
 /**
  *  Represents an issue in iTeam
@@ -47,8 +48,9 @@ public class Issue extends GenericBean {
   private int replyCount = 0;
   private java.sql.Timestamp replyDate = null;
   private int replyBy = -1;
-
+  //Resources
   private IssueReplyList replyList = new IssueReplyList();
+  private FileItemList files = null;
 
 
   /**
@@ -696,32 +698,13 @@ public class Issue extends GenericBean {
     return replyList;
   }
 
-
-  /**
-   *  Gets the valid attribute of the Issue object
-   *
-   *@return    The valid value
-   */
-  private boolean isValid() {
-    if (projectId == -1) {
-      errors.put("actionError", "Project ID not specified");
-    }
-    if (subject == null || subject.equals("")) {
-      errors.put("subjectError", "Required field");
-    }
-    if (body == null || body.equals("")) {
-      errors.put("bodyError", "Required field");
-    }
-    if (categoryId == -1) {
-      errors.put("categoryIdError", "Required");
-    }
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
+  public FileItemList getFiles() {
+    return files;
   }
 
+  public boolean hasFiles() {
+    return (files != null && files.size() > 0);
+  }
 
   /**
    *  Description of the Method
@@ -731,9 +714,6 @@ public class Issue extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO project_issues " +
@@ -821,9 +801,9 @@ public class Issue extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public synchronized boolean delete(Connection db) throws SQLException {
+  public synchronized boolean delete(Connection db, String filePath) throws SQLException {
     if (id == -1 || projectId == -1 || categoryId == -1) {
-      throw new SQLException("ID was not specified");
+      throw new SQLException("Issue ID was not specified");
     }
     boolean canDelete = false;
     try {
@@ -842,13 +822,17 @@ public class Issue extends GenericBean {
       rs.close();
       pst.close();
       if (canDelete) {
+        buildFiles(db);
         db.setAutoCommit(false);
+        files.delete(db, filePath);
         //Delete the replies
-        pst = db.prepareStatement(
-            "DELETE FROM project_issue_replies " +
-            "WHERE issue_id = ? ");
-        pst.setInt(1, id);
-        int replyCount = pst.executeUpdate();
+        IssueReplyList issueReplyList = new IssueReplyList();
+        issueReplyList.setIssueId(id);
+        issueReplyList.setProjectId(projectId);
+        issueReplyList.setCategoryId(categoryId);
+        issueReplyList.buildList(db);
+        int replyCount = issueReplyList.size();
+        issueReplyList.delete(db, filePath);
         //Update the category count (plus the issue count=1)
         i = 0;
         pst = db.prepareStatement(
@@ -872,7 +856,7 @@ public class Issue extends GenericBean {
       }
     } catch (SQLException e) {
       db.rollback();
-      return false;
+      throw new SQLException(e.getMessage());
     } finally {
       db.setAutoCommit(true);
     }
@@ -904,7 +888,7 @@ public class Issue extends GenericBean {
     if (this.getId() == -1 || this.projectId == -1) {
       throw new SQLException("ID was not specified");
     }
-    if (!isValid()) {
+    if (this.getId() == -1) {
       return -1;
     }
     int resultCount = 0;
@@ -926,6 +910,10 @@ public class Issue extends GenericBean {
     return resultCount;
   }
 
+  public void buildFiles(Connection db) throws SQLException {
+    files = new FileItemList();
+    files.setLinkModuleId(Constants.DISCUSSION_FILES_TOPIC);
+    files.setLinkItemId(this.getId());
+    files.buildList(db);
+  }
 }
-
-

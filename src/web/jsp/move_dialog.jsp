@@ -1,3 +1,4 @@
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="Dialog" class="org.aspcfs.utils.web.HtmlDialog" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <html>
@@ -19,7 +20,7 @@
       <tr><td>&nbsp;</td></tr>
       <tr align="center">
         <td>
-          <input type="button" value=" Ok " onClick="javascript:window.close()">
+          <input type="button" value="<dhv:label name="button.ok">OK</dhv:label>" onClick="javascript:window.close()">
         </td>
       </tr>
      </table>

@@ -28,10 +28,10 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=PermissionCategory.getId()%>"><%= PermissionCategory.getCategory() %></a> >
-Custom Folders
+<dhv:label name="admin.customFolders">Custom Folders</dhv:label>
 </td>
 </tr>
 </table>
@@ -47,17 +47,17 @@ Custom Folders
     <tr>
       <dhv:permission name="admin-sysconfig-folders-edit">
       <th align="center">
-        <strong>Action</strong>
+        &nbsp;
       </th>
       </dhv:permission>
       <th width="100%">
-        <strong>Custom Folders</strong>
+        <strong><dhv:label name="admin.customFolders">Custom Folders</dhv:label></strong>
       </th>
       <th align="center">
-        <strong>Enabled</strong>
+        <strong><dhv:label name="product.enabled">Enabled</dhv:label></strong>
       </th>
       <th align="center" nowrap>
-        <strong>Active Date</strong>
+        <strong><dhv:label name="admin.activeDate">Active Date</dhv:label></strong>
       </th>
     </tr>
 <%
@@ -71,7 +71,7 @@ Custom Folders
     <tr class="row<%= rowId %>">
       <dhv:permission name="admin-sysconfig-folders-edit">
       <td align="center">
-        <a href="AdminFieldsFolder.do?command=ModifyFolder&modId=<%= PermissionCategory.getId() %>&catId=<%= thisCategory.getId() %>">Edit</a>
+        <a href="AdminFieldsFolder.do?command=ModifyFolder&modId=<%= PermissionCategory.getId() %>&catId=<%= thisCategory.getId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Edit">Edit</dhv:label></a>
       </td>
       </dhv:permission>
       <td width="100%">
@@ -80,7 +80,11 @@ Custom Folders
       <td align="center" nowrap>
         <dhv:permission name="admin-sysconfig-folders-edit">
           <a href="AdminFieldsFolder.do?command=ToggleFolder&modId=<%= PermissionCategory.getId() %>&catId=<%= thisCategory.getId() %>"></dhv:permission>
-          <%= (thisCategory.getEnabled()? "Yes" : "No") %>
+<% if(thisCategory.getEnabled()) {%>
+  <dhv:label name="account.yes">Yes</dhv:label>
+<%} else {%>
+  <dhv:label name="account.no">No</dhv:label>
+<%}%>
           <dhv:permission name="admin-sysconfig-folders-edit"></a></dhv:permission>
       </td>
       <td align="center" nowrap>
@@ -93,7 +97,7 @@ Custom Folders
 %>
     <tr class="containerBody">
       <td colspan="4">
-        <font color="#9E9E9E">No folders have been entered.</font>
+        <font color="#9E9E9E"><dhv:label name="admin.noFoldersHaveBeenEntered.text">No folders have been entered.</dhv:label></font>
       </td>
     </tr>
 <%}%>

@@ -20,6 +20,8 @@ import org.jcrontab.log.Log;
 import java.sql.Connection;
 import javax.servlet.ServletContext;
 
+import org.aspcfs.utils.Dictionary;
+
 /**
  *  Manages the creation and execution of all the scheduled tasks of jcrontab.
  *  This class is the core of the jcrontab
@@ -37,6 +39,8 @@ public class Crontab {
   private int iTimeTableGenerationFrec = 3;
   private Object connectionPool = null;
   private ServletContext servletContext = null;
+  private Dictionary dictionary = null;
+  
   /**
    *  The Cron that controls the execution of the tasks
    */
@@ -141,6 +145,19 @@ public class Crontab {
     if (refreshFrequency != null) {
       this.iTimeTableGenerationFrec = Integer.parseInt(refreshFrequency);
     }
+    
+    //Populate the dictionary
+    String fs = System.getProperty("file.separator") ;
+    String languagePath = getProperty("org.jcrontab.path.DefaultFilePath") + ".." + fs +  "languages" + fs; 
+    String systemLanguage = getProperty("org.jcrontab.data.SystemLanguage");
+    dictionary = new Dictionary(languagePath, "en_US");
+    if (systemLanguage != null) {
+      if (!"en_US".equals(systemLanguage)) {
+        //Override the text with a selected language
+        dictionary.load(languagePath, systemLanguage);
+      }
+    }
+        
     // Creates the thread Cron, wich generates the engine events
     cron = new Cron(this, iTimeTableGenerationFrec);
     cron.setName("Cron");
@@ -199,7 +216,6 @@ public class Crontab {
    *  This method sets the Cron to daemon or not
    *
    *@param  daemon      The new daemon value
-   *@throws  Exception
    */
   public void setDaemon(boolean daemon) {
     this.daemon = daemon;
@@ -420,6 +436,7 @@ public class Crontab {
             }
           }
         }
+        newTask.setDictionary(dictionary);
         newTask.setParams(this, iTaskID, strClassName, strMethodName,
             strExtraInfo);
         // Added name to newTask to show a name instead of Threads when

@@ -37,21 +37,22 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> >
-Export Data
+<dhv:label name="accounts.accounts_relationships_view.ExportData">Export Data</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:permission name="accounts-accounts-reports-add"><a href="Accounts.do?command=GenerateForm">Generate new export</a></dhv:permission>
+<dhv:permission name="accounts-accounts-reports-add"><a href="Accounts.do?command=GenerateForm"><dhv:label name="accounts.accounts_reports.GenerateNewExport">Generate new export</dhv:label></a></dhv:permission>
 <dhv:permission name="accounts-accounts-reports-add" none="true"><br></dhv:permission>
-<center><%= RptListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="RptListInfo"/></center></dhv:include>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="Accounts.do?command=Reports">
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= RptListInfo.getOptionValue("my") %>>My Exported Data</option>
-        <option <%= RptListInfo.getOptionValue("all") %>>All Exported Data</option>
+      <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= RptListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_reports.MyExportedData">My Exported Data</dhv:label></option>
+        <option <%= RptListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_reports.AllExportedData">All Exported Data</dhv:label></option>
       </select>
     </td>
     <td>
@@ -63,24 +64,24 @@ Export Data
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th nowrap>
-      <strong><a href="Accounts.do?command=Reports&column=f.subject">Subject</a></strong>
+      <strong><a href="Accounts.do?command=Reports&column=f.subject"><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></a></strong>
       <%= RptListInfo.getSortIcon("f.subject") %>
     </th>
     <th>
-      <strong>Size</strong>
+      <strong><dhv:label name="accounts.accounts_documents_details.Size">Size</dhv:label></strong>
     </th>
     <th nowrap>
-      <strong><a href="Accounts.do?command=Reports&column=f.entered">Create Date</a></strong>
+      <strong><a href="Accounts.do?command=Reports&column=f.entered"><dhv:label name="accounts.accounts_reports.CreateDate">Create Date</dhv:label></a></strong>
       <%= RptListInfo.getSortIcon("f.entered") %>
     </th>
     <th nowrap>
-      <strong>Created By</strong>
+      <strong><dhv:label name="accounts.accounts_reports.CreatedBy">Created By</dhv:label></strong>
     </th>
     <th nowrap>
-      <strong>D/L</strong>
+      <strong><dhv:label name="accounts.accounts_documents_details.DL">D/L</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -96,7 +97,7 @@ Export Data
   <tr>
       <td nowrap class="row<%= rowid %>">
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-         <a href="javascript:displayMenu('select<%= count %>','menuReport','<%= thisItem.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuReport');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
+         <a href="javascript:displayMenu('select<%= count %>','menuReport','<%= thisItem.getId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuReport');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0" /></a>
       </td>
     <td width="100%" class="row<%= rowid %>">
       <a href="javascript:popURL('Accounts.do?command=ShowReportHtml&pid=-1&fid=<%= thisItem.getId() %>&popup=true','Report','600','400','yes','yes');"><%=toHtml(thisItem.getSubject())%></a>
@@ -120,7 +121,7 @@ Export Data
 <dhv:pagedListControl object="RptListInfo"/>
 <%} else {%>
   <tr class="containerBody">
-    <td colspan="6">No exported data found.</td>
+    <td colspan="6"><dhv:label name="accounts.accounts_reports.NoExporteddataFound">No exported data found.</dhv:label></td>
   </tr>
 </table>
 <%}%>

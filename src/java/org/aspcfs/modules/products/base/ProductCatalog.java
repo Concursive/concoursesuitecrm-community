@@ -15,16 +15,17 @@
  */
 package org.aspcfs.modules.products.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
+import com.darkhorseventures.framework.beans.GenericBean;
+import com.zeroio.iteam.base.FileItem;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.modules.base.Constants;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  A generic Product Catalog belongs to a Product Category and contains several
@@ -56,7 +57,7 @@ public class ProductCatalog extends GenericBean {
   private String specialNotes = null;
   private String sku = null;
 
-  private boolean enabled = true;
+  private boolean enabled = false;
   private boolean inStock = true;
   private Timestamp entered = null;
   private Timestamp modified = null;
@@ -66,419 +67,206 @@ public class ProductCatalog extends GenericBean {
   //other supplimentary data
   private int categoryId = -1;
   private String categoryName = null;
-  private double msrpAmount = 0.0;
-  private double priceAmount = 0.0;
-  private double recurringAmount = 0.0;
-  private Timestamp priceStartDate = null;
-  private Timestamp priceEndDate = null;
   private String parentName = null;
   private String typeName = null;
+  private String formatName = null;
+  private String shippingName = null;
+  private String shippingTimeName = null;
 
   // resources
-  private boolean buildProductOptions = true;
-  private ProductOptionList productOptionList = null;
+  private int buildActiveOptions = Constants.UNDEFINED;
+  private boolean buildOptions = false;
+  private boolean buildCategories = false;
+  private ProductOptionList optionList = null;
+  private ProductCategoryList categoryList = null;
+  private ProductCatalogPricingList priceList = null;
+  private ProductCatalogPricing activePrice = null;
 
   // helper properties
   private boolean hasCustomerProduct = false;
+  private boolean buildPriceList = false;
+  private boolean buildActivePrice = false;
 
 
   /**
-   *  Sets the categoryId attribute of the ProductCatalog object
+   *  Gets the buildActiveOptions attribute of the ProductCatalog object
    *
-   *@param  tmp  The new categoryId value
+   *@return    The buildActiveOptions value
    */
-  public void setCategoryId(int tmp) {
-    this.categoryId = tmp;
+  public int getBuildActiveOptions() {
+    return buildActiveOptions;
   }
 
 
   /**
-   *  Sets the categoryId attribute of the ProductCatalog object
+   *  Sets the buildActiveOptions attribute of the ProductCatalog object
    *
-   *@param  tmp  The new categoryId value
+   *@param  tmp  The new buildActiveOptions value
    */
-  public void setCategoryId(String tmp) {
-    this.categoryId = Integer.parseInt(tmp);
+  public void setBuildActiveOptions(int tmp) {
+    this.buildActiveOptions = tmp;
   }
 
 
   /**
-   *  Gets the categoryId attribute of the ProductCatalog object
+   *  Sets the buildActiveOptions attribute of the ProductCatalog object
    *
-   *@return    The categoryId value
+   *@param  tmp  The new buildActiveOptions value
    */
-  public int getCategoryId() {
-    return categoryId;
+  public void setBuildActiveOptions(String tmp) {
+    this.buildActiveOptions = Integer.parseInt(tmp);
   }
 
 
   /**
-   *  Sets the productOptionList attribute of the ProductCatalog object
+   *  Gets the buildActivePrice attribute of the ProductCatalog object
    *
-   *@param  tmp  The new productOptionList value
+   *@return    The buildActivePrice value
    */
-  public void setProductOptionList(ProductOptionList tmp) {
-    this.productOptionList = tmp;
+  public boolean getBuildActivePrice() {
+    return buildActivePrice;
   }
 
 
   /**
-   *  Gets the productOptionList attribute of the ProductCatalog object
+   *  Sets the buildActivePrice attribute of the ProductCatalog object
    *
-   *@return    The productOptionList value
+   *@param  tmp  The new buildActivePrice value
    */
-  public ProductOptionList getProductOptionList() {
-    return productOptionList;
+  public void setBuildActivePrice(boolean tmp) {
+    this.buildActivePrice = tmp;
   }
 
 
   /**
-   *  Sets the buildProductOptions attribute of the ProductCatalog object
+   *  Sets the buildActivePrice attribute of the ProductCatalog object
    *
-   *@param  tmp  The new buildProductOptions value
+   *@param  tmp  The new buildActivePrice value
    */
-  public void setBuildProductOptions(boolean tmp) {
-    this.buildProductOptions = tmp;
+  public void setBuildActivePrice(String tmp) {
+    this.buildActivePrice = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+
+  /**
+   *  Gets the buildPriceList attribute of the ProductCatalog object
+   *
+   *@return    The buildPriceList value
+   */
+  public boolean getBuildPriceList() {
+    return buildPriceList;
   }
 
 
   /**
-   *  Sets the buildProductOptions attribute of the ProductCatalog object
+   *  Sets the buildPriceList attribute of the ProductCatalog object
    *
-   *@param  tmp  The new buildProductOptions value
+   *@param  tmp  The new buildPriceList value
    */
-  public void setBuildProductOptions(String tmp) {
-    this.buildProductOptions = DatabaseUtils.parseBoolean(tmp);
+  public void setBuildPriceList(boolean tmp) {
+    this.buildPriceList = tmp;
   }
 
 
   /**
-   *  Gets the buildProductOptions attribute of the ProductCatalog object
+   *  Sets the buildPriceList attribute of the ProductCatalog object
    *
-   *@return    The buildProductOptions value
+   *@param  tmp  The new buildPriceList value
    */
-  public boolean getBuildProductOptions() {
-    return buildProductOptions;
+  public void setBuildPriceList(String tmp) {
+    this.buildPriceList = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+
+  /**
+   *  Gets the priceList attribute of the ProductCatalog object
+   *
+   *@return    The priceList value
+   */
+  public ProductCatalogPricingList getPriceList() {
+    return priceList;
   }
 
 
   /**
-   *  Gets the id attribute of the ProductCatalog object
+   *  Sets the priceList attribute of the ProductCatalog object
    *
-   *@return    The id value
+   *@param  tmp  The new priceList value
    */
-  public int getId() {
-    return id;
+  public void setPriceList(ProductCatalogPricingList tmp) {
+    this.priceList = tmp;
   }
 
 
   /**
-   *  Gets the parentId attribute of the ProductCatalog object
+   *  Sets the buildCategories attribute of the ProductCatalog object
    *
-   *@return    The parentId value
+   *@param  tmp  The new buildCategories value
    */
-  public int getParentId() {
-    return parentId;
+  public void setBuildCategories(boolean tmp) {
+    this.buildCategories = tmp;
   }
 
 
   /**
-   *  Gets the typeId attribute of the ProductCatalog object
+   *  Sets the buildCategories attribute of the ProductCatalog object
    *
-   *@return    The typeId value
+   *@param  tmp  The new buildCategories value
    */
-  public int getTypeId() {
-    return typeId;
+  public void setBuildCategories(String tmp) {
+    this.buildCategories = DatabaseUtils.parseBoolean(tmp);
   }
 
 
   /**
-   *  Gets the formatId attribute of the ProductCatalog object
+   *  Sets the activePrice attribute of the ProductCatalog object
    *
-   *@return    The formatId value
+   *@param  tmp  The new activePrice value
    */
-  public int getFormatId() {
-    return formatId;
+  public void setActivePrice(ProductCatalogPricing tmp) {
+    this.activePrice = tmp;
   }
 
 
   /**
-   *  Gets the shippingId attribute of the ProductCatalog object
+   *  Gets the activePrice attribute of the ProductCatalog object
    *
-   *@return    The shippingId value
+   *@return    The activePrice value
    */
-  public int getShippingId() {
-    return shippingId;
+  public ProductCatalogPricing getActivePrice() {
+    return activePrice;
   }
 
 
   /**
-   *  Gets the estimatedShipTime attribute of the ProductCatalog object
+   *  Gets the buildCategories attribute of the ProductCatalog object
    *
-   *@return    The estimatedShipTime value
+   *@return    The buildCategories value
    */
-  public int getEstimatedShipTime() {
-    return estimatedShipTime;
+  public boolean getBuildCategories() {
+    return buildCategories;
   }
 
 
   /**
-   *  Gets the thumbnailImageId attribute of the ProductCatalog object
+   *  Sets the categoryList attribute of the ProductCatalog object
    *
-   *@return    The thumbnailImageId value
+   *@param  tmp  The new categoryList value
    */
-  public int getThumbnailImageId() {
-    return thumbnailImageId;
+  public void setCategoryList(ProductCategoryList tmp) {
+    this.categoryList = tmp;
   }
 
 
   /**
-   *  Gets the smallImageId attribute of the ProductCatalog object
+   *  Gets the categoryList attribute of the ProductCatalog object
    *
-   *@return    The smallImageId value
+   *@return    The categoryList value
    */
-  public int getSmallImageId() {
-    return smallImageId;
-  }
-
-
-  /**
-   *  Gets the largeImageId attribute of the ProductCatalog object
-   *
-   *@return    The largeImageId value
-   */
-  public int getLargeImageId() {
-    return largeImageId;
-  }
-
-
-  /**
-   *  Gets the listOrder attribute of the ProductCatalog object
-   *
-   *@return    The listOrder value
-   */
-  public int getListOrder() {
-    return listOrder;
-  }
-
-
-  /**
-   *  Gets the enteredBy attribute of the ProductCatalog object
-   *
-   *@return    The enteredBy value
-   */
-  public int getEnteredBy() {
-    return enteredBy;
-  }
-
-
-  /**
-   *  Gets the modifiedBy attribute of the ProductCatalog object
-   *
-   *@return    The modifiedBy value
-   */
-  public int getModifiedBy() {
-    return modifiedBy;
-  }
-
-
-  /**
-   *  Gets the name attribute of the ProductCatalog object
-   *
-   *@return    The name value
-   */
-  public String getName() {
-    return name;
-  }
-
-
-  /**
-   *  Gets the abbreviation attribute of the ProductCatalog object
-   *
-   *@return    The abbreviation value
-   */
-  public String getAbbreviation() {
-    return abbreviation;
-  }
-
-
-  /**
-   *  Gets the shortDescription attribute of the ProductCatalog object
-   *
-   *@return    The shortDescription value
-   */
-  public String getShortDescription() {
-    return shortDescription;
-  }
-
-
-  /**
-   *  Gets the longDescription attribute of the ProductCatalog object
-   *
-   *@return    The longDescription value
-   */
-  public String getLongDescription() {
-    return longDescription;
-  }
-
-
-  /**
-   *  Gets the specialNotes attribute of the ProductCatalog object
-   *
-   *@return    The specialNotes value
-   */
-  public String getSpecialNotes() {
-    return specialNotes;
-  }
-
-
-  /**
-   *  Gets the sku attribute of the ProductCatalog object
-   *
-   *@return    The sku value
-   */
-  public String getSku() {
-    return sku;
-  }
-
-
-  /**
-   *  Gets the enabled attribute of the ProductCatalog object
-   *
-   *@return    The enabled value
-   */
-  public boolean getEnabled() {
-    return enabled;
-  }
-
-
-  /**
-   *  Gets the inStock attribute of the ProductCatalog object
-   *
-   *@return    The inStock value
-   */
-  public boolean getInStock() {
-    return inStock;
-  }
-
-
-  /**
-   *  Gets the entered attribute of the ProductCatalog object
-   *
-   *@return    The entered value
-   */
-  public Timestamp getEntered() {
-    return entered;
-  }
-
-
-  /**
-   *  Gets the modified attribute of the ProductCatalog object
-   *
-   *@return    The modified value
-   */
-  public Timestamp getModified() {
-    return modified;
-  }
-
-
-  /**
-   *  Gets the startDate attribute of the ProductCatalog object
-   *
-   *@return    The startDate value
-   */
-  public Timestamp getStartDate() {
-    return startDate;
-  }
-
-
-  /**
-   *  Gets the expirationDate attribute of the ProductCatalog object
-   *
-   *@return    The expirationDate value
-   */
-  public Timestamp getExpirationDate() {
-    return expirationDate;
-  }
-
-
-  /**
-   *  Gets the categoryName attribute of the ProductCatalog object
-   *
-   *@return    The categoryName value
-   */
-  public String getCategoryName() {
-    return categoryName;
-  }
-
-
-  /**
-   *  Gets the msrpAmount attribute of the ProductCatalog object
-   *
-   *@return    The msrpAmount value
-   */
-  public double getMsrpAmount() {
-    return msrpAmount;
-  }
-
-
-  /**
-   *  Gets the priceAmount attribute of the ProductCatalog object
-   *
-   *@return    The priceAmount value
-   */
-  public double getPriceAmount() {
-    return priceAmount;
-  }
-
-
-  /**
-   *  Gets the recurringAmount attribute of the ProductCatalog object
-   *
-   *@return    The recurringAmount value
-   */
-  public double getRecurringAmount() {
-    return recurringAmount;
-  }
-
-
-  /**
-   *  Gets the priceStartDate attribute of the ProductCatalog object
-   *
-   *@return    The priceStartDate value
-   */
-  public Timestamp getPriceStartDate() {
-    return priceStartDate;
-  }
-
-
-  /**
-   *  Gets the priceEndDate attribute of the ProductCatalog object
-   *
-   *@return    The priceEndDate value
-   */
-  public Timestamp getPriceEndDate() {
-    return priceEndDate;
-  }
-
-
-  /**
-   *  Gets the parentName attribute of the ProductCatalog object
-   *
-   *@return    The parentName value
-   */
-  public String getParentName() {
-    return parentName;
-  }
-
-
-  /**
-   *  Gets the typeName attribute of the ProductCatalog object
-   *
-   *@return    The typeName value
-   */
-  public String getTypeName() {
-    return typeName;
+  public ProductCategoryList getCategoryList() {
+    return categoryList;
   }
 
 
@@ -838,7 +626,7 @@ public class ProductCatalog extends GenericBean {
    *@param  tmp  The new entered value
    */
   public void setEntered(String tmp) {
-    this.entered = DateUtils.parseTimestampString(tmp);
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
@@ -858,7 +646,7 @@ public class ProductCatalog extends GenericBean {
    *@param  tmp  The new modified value
    */
   public void setModified(String tmp) {
-    this.modified = DateUtils.parseTimestampString(tmp);
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
@@ -878,7 +666,7 @@ public class ProductCatalog extends GenericBean {
    *@param  tmp  The new startDate value
    */
   public void setStartDate(String tmp) {
-    startDate = DatabaseUtils.parseTimestamp(tmp);
+    this.startDate = DatabaseUtils.parseTimestamp(tmp);
   }
 
 
@@ -903,6 +691,26 @@ public class ProductCatalog extends GenericBean {
 
 
   /**
+   *  Sets the categoryId attribute of the ProductCatalog object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(int tmp) {
+    this.categoryId = tmp;
+  }
+
+
+  /**
+   *  Sets the categoryId attribute of the ProductCatalog object
+   *
+   *@param  tmp  The new categoryId value
+   */
+  public void setCategoryId(String tmp) {
+    this.categoryId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the categoryName attribute of the ProductCatalog object
    *
    *@param  tmp  The new categoryName value
@@ -913,92 +721,32 @@ public class ProductCatalog extends GenericBean {
 
 
   /**
-   *  Sets the msrpAmount attribute of the ProductCatalog object
+   *  Sets the buildOptions attribute of the ProductCatalog object
    *
-   *@param  tmp  The new msrpAmount value
+   *@param  tmp  The new buildOptions value
    */
-  public void setMsrpAmount(double tmp) {
-    this.msrpAmount = tmp;
+  public void setBuildOptions(boolean tmp) {
+    this.buildOptions = tmp;
   }
 
 
   /**
-   *  Sets the priceAmount attribute of the ProductCatalog object
+   *  Sets the buildOptions attribute of the ProductCatalog object
    *
-   *@param  tmp  The new priceAmount value
+   *@param  tmp  The new buildOptions value
    */
-  public void setPriceAmount(double tmp) {
-    this.priceAmount = tmp;
+  public void setBuildOptions(String tmp) {
+    this.buildOptions = DatabaseUtils.parseBoolean(tmp);
   }
 
 
   /**
-   *  Sets the recurringAmount attribute of the ProductCatalog object
+   *  Sets the optionList attribute of the ProductCatalog object
    *
-   *@param  tmp  The new recurringAmount value
+   *@param  tmp  The new optionList value
    */
-  public void setRecurringAmount(double tmp) {
-    this.recurringAmount = tmp;
-  }
-
-
-  /**
-   *  Sets the priceStartDate attribute of the ProductCatalog object
-   *
-   *@param  tmp  The new priceStartDate value
-   */
-  public void setPriceStartDate(Timestamp tmp) {
-    this.priceStartDate = tmp;
-  }
-
-
-  /**
-   *  Sets the priceStartDate attribute of the ProductCatalog object
-   *
-   *@param  tmp  The new priceStartDate value
-   */
-  public void setPriceStartDate(String tmp) {
-    this.priceStartDate = DatabaseUtils.parseTimestamp(tmp);
-  }
-
-
-  /**
-   *  Sets the priceEndDate attribute of the ProductCatalog object
-   *
-   *@param  tmp  The new priceEndDate value
-   */
-  public void setPriceEndDate(Timestamp tmp) {
-    this.priceEndDate = tmp;
-  }
-
-
-  /**
-   *  Sets the priceEndDate attribute of the ProductCatalog object
-   *
-   *@param  tmp  The new priceEndDate value
-   */
-  public void setPriceEndDate(String tmp) {
-    this.priceEndDate = DatabaseUtils.parseTimestamp(tmp);
-  }
-
-
-  /**
-   *  Sets the parentName attribute of the ProductCatalog object
-   *
-   *@param  tmp  The new parentName value
-   */
-  public void setParentName(String tmp) {
-    this.parentName = tmp;
-  }
-
-
-  /**
-   *  Sets the typeName attribute of the ProductCatalog object
-   *
-   *@param  tmp  The new typeName value
-   */
-  public void setTypeName(String tmp) {
-    this.typeName = tmp;
+  public void setOptionList(ProductOptionList tmp) {
+    this.optionList = tmp;
   }
 
 
@@ -1023,11 +771,391 @@ public class ProductCatalog extends GenericBean {
 
 
   /**
-   *  Description of the Method
+   *  Sets the parentName attribute of the ProductCatalog object
    *
-   *@return    Description of the Return Value
+   *@param  tmp  The new parentName value
    */
-  public boolean hasCustomerProduct() {
+  public void setParentName(String tmp) {
+    this.parentName = tmp;
+  }
+
+
+  /**
+   *  Sets the typeName attribute of the ProductCatalog object
+   *
+   *@param  tmp  The new typeName value
+   */
+  public void setTypeName(String tmp) {
+    this.typeName = tmp;
+  }
+
+
+  /**
+   *  Sets the formatName attribute of the ProductCatalog object
+   *
+   *@param  tmp  The new formatName value
+   */
+  public void setFormatName(String tmp) {
+    this.formatName = tmp;
+  }
+
+
+  /**
+   *  Sets the shippingName attribute of the ProductCatalog object
+   *
+   *@param  tmp  The new shippingName value
+   */
+  public void setShippingName(String tmp) {
+    this.shippingName = tmp;
+  }
+
+
+  /**
+   *  Sets the shippingTimeName attribute of the ProductCatalog object
+   *
+   *@param  tmp  The new shippingTimeName value
+   */
+  public void setShippingTimeName(String tmp) {
+    this.shippingTimeName = tmp;
+  }
+
+
+  /**
+   *  Gets the typeName attribute of the ProductCatalog object
+   *
+   *@return    The typeName value
+   */
+  public String getTypeName() {
+    return typeName;
+  }
+
+
+  /**
+   *  Gets the formatName attribute of the ProductCatalog object
+   *
+   *@return    The formatName value
+   */
+  public String getFormatName() {
+    return formatName;
+  }
+
+
+  /**
+   *  Gets the shippingName attribute of the ProductCatalog object
+   *
+   *@return    The shippingName value
+   */
+  public String getShippingName() {
+    return shippingName;
+  }
+
+
+  /**
+   *  Gets the shippingTimeName attribute of the ProductCatalog object
+   *
+   *@return    The shippingTimeName value
+   */
+  public String getShippingTimeName() {
+    return shippingTimeName;
+  }
+
+
+  /**
+   *  Gets the parentName attribute of the ProductCatalog object
+   *
+   *@return    The parentName value
+   */
+  public String getParentName() {
+    return parentName;
+  }
+
+
+  /**
+   *  Gets the id attribute of the ProductCatalog object
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the parentId attribute of the ProductCatalog object
+   *
+   *@return    The parentId value
+   */
+  public int getParentId() {
+    return parentId;
+  }
+
+
+  /**
+   *  Gets the typeId attribute of the ProductCatalog object
+   *
+   *@return    The typeId value
+   */
+  public int getTypeId() {
+    return typeId;
+  }
+
+
+  /**
+   *  Gets the formatId attribute of the ProductCatalog object
+   *
+   *@return    The formatId value
+   */
+  public int getFormatId() {
+    return formatId;
+  }
+
+
+  /**
+   *  Gets the shippingId attribute of the ProductCatalog object
+   *
+   *@return    The shippingId value
+   */
+  public int getShippingId() {
+    return shippingId;
+  }
+
+
+  /**
+   *  Gets the estimatedShipTime attribute of the ProductCatalog object
+   *
+   *@return    The estimatedShipTime value
+   */
+  public int getEstimatedShipTime() {
+    return estimatedShipTime;
+  }
+
+
+  /**
+   *  Gets the thumbnailImageId attribute of the ProductCatalog object
+   *
+   *@return    The thumbnailImageId value
+   */
+  public int getThumbnailImageId() {
+    return thumbnailImageId;
+  }
+
+
+  /**
+   *  Gets the smallImageId attribute of the ProductCatalog object
+   *
+   *@return    The smallImageId value
+   */
+  public int getSmallImageId() {
+    return smallImageId;
+  }
+
+
+  /**
+   *  Gets the largeImageId attribute of the ProductCatalog object
+   *
+   *@return    The largeImageId value
+   */
+  public int getLargeImageId() {
+    return largeImageId;
+  }
+
+
+  /**
+   *  Gets the listOrder attribute of the ProductCatalog object
+   *
+   *@return    The listOrder value
+   */
+  public int getListOrder() {
+    return listOrder;
+  }
+
+
+  /**
+   *  Gets the enteredBy attribute of the ProductCatalog object
+   *
+   *@return    The enteredBy value
+   */
+  public int getEnteredBy() {
+    return enteredBy;
+  }
+
+
+  /**
+   *  Gets the modifiedBy attribute of the ProductCatalog object
+   *
+   *@return    The modifiedBy value
+   */
+  public int getModifiedBy() {
+    return modifiedBy;
+  }
+
+
+  /**
+   *  Gets the name attribute of the ProductCatalog object
+   *
+   *@return    The name value
+   */
+  public String getName() {
+    return name;
+  }
+
+
+  /**
+   *  Gets the abbreviation attribute of the ProductCatalog object
+   *
+   *@return    The abbreviation value
+   */
+  public String getAbbreviation() {
+    return abbreviation;
+  }
+
+
+  /**
+   *  Gets the shortDescription attribute of the ProductCatalog object
+   *
+   *@return    The shortDescription value
+   */
+  public String getShortDescription() {
+    return shortDescription;
+  }
+
+
+  /**
+   *  Gets the longDescription attribute of the ProductCatalog object
+   *
+   *@return    The longDescription value
+   */
+  public String getLongDescription() {
+    return longDescription;
+  }
+
+
+  /**
+   *  Gets the specialNotes attribute of the ProductCatalog object
+   *
+   *@return    The specialNotes value
+   */
+  public String getSpecialNotes() {
+    return specialNotes;
+  }
+
+
+  /**
+   *  Gets the sku attribute of the ProductCatalog object
+   *
+   *@return    The sku value
+   */
+  public String getSku() {
+    return sku;
+  }
+
+
+  /**
+   *  Gets the enabled attribute of the ProductCatalog object
+   *
+   *@return    The enabled value
+   */
+  public boolean getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   *  Gets the inStock attribute of the ProductCatalog object
+   *
+   *@return    The inStock value
+   */
+  public boolean getInStock() {
+    return inStock;
+  }
+
+
+  /**
+   *  Gets the entered attribute of the ProductCatalog object
+   *
+   *@return    The entered value
+   */
+  public Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Gets the modified attribute of the ProductCatalog object
+   *
+   *@return    The modified value
+   */
+  public Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Gets the startDate attribute of the ProductCatalog object
+   *
+   *@return    The startDate value
+   */
+  public Timestamp getStartDate() {
+    return startDate;
+  }
+
+
+  /**
+   *  Gets the expirationDate attribute of the ProductCatalog object
+   *
+   *@return    The expirationDate value
+   */
+  public Timestamp getExpirationDate() {
+    return expirationDate;
+  }
+
+
+  /**
+   *  Gets the categoryId attribute of the ProductCatalog object
+   *
+   *@return    The categoryId value
+   */
+  public int getCategoryId() {
+    return categoryId;
+  }
+
+
+  /**
+   *  Gets the categoryName attribute of the ProductCatalog object
+   *
+   *@return    The categoryName value
+   */
+  public String getCategoryName() {
+    return categoryName;
+  }
+
+
+  /**
+   *  Gets the buildOptions attribute of the ProductCatalog object
+   *
+   *@return    The buildOptions value
+   */
+  public boolean getBuildOptions() {
+    return buildOptions;
+  }
+
+
+  /**
+   *  Gets the optionList attribute of the ProductCatalog object
+   *
+   *@return    The optionList value
+   */
+  public ProductOptionList getOptionList() {
+    return optionList;
+  }
+
+
+  /**
+   *  Gets the hasCustomerProduct attribute of the ProductCatalog object
+   *
+   *@return    The hasCustomerProduct value
+   */
+  public boolean getHasCustomerProduct() {
     return hasCustomerProduct;
   }
 
@@ -1074,30 +1202,20 @@ public class ProductCatalog extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT " +
-        " pctlg.*, " +
-        " pctgy.category_id AS category_id, " +
-        " pctgy.category_name AS category_name, " +
-        " pctlgpricing.msrp_amount AS msrp_amount, " +
-        " pctlgpricing.price_amount AS price_amount, " +
-        " pctlgpricing.recurring_amount AS recurring_amount, " +
-        " pctlgpricing.start_date AS price_start_date, " +
-        " pctlgpricing.expiration_date AS price_end_date, " +
-        " pctlg2.product_name AS parent_name, " +
-        " pctlgtype.description AS type_name " +
-        " FROM product_catalog AS pctlg " +
-        " LEFT JOIN product_catalog_category_map AS pccmap " +
-        " ON ( pctlg.product_id = pccmap.product_id ) " +
-        " LEFT JOIN product_category AS pctgy " +
-        " ON ( pccmap.category_id =  pctgy.category_id ) " +
-        " LEFT JOIN product_catalog_pricing AS pctlgpricing " +
-        " ON ( pctlg.product_id = pctlgpricing.product_id ) " +
-        " LEFT JOIN product_catalog AS pctlg2 " +
-        " ON ( pctlg.parent_id = pctlg2.product_id ) " +
-        " LEFT JOIN lookup_product_type AS pctlgtype " +
-        " ON ( pctlg.type_id = pctlgtype.code ) " +
-        " WHERE pctlg.product_id = ? "
-        );
+        "SELECT " +
+        "pctlg.*, " +
+        "pctlg2.product_name AS parent_name, " +
+        "pctlgtype.description AS type_name, " +
+        "pctlgformat.description AS format_name, " +
+        "pctlgshipping.description AS shipping_name, " +
+        "pctlgshiptime.description AS shiptime_name " +
+        "FROM product_catalog AS pctlg " +
+        "LEFT JOIN product_catalog AS pctlg2 ON ( pctlg.parent_id = pctlg2.product_id ) " +
+        "LEFT JOIN lookup_product_type AS pctlgtype ON ( pctlg.type_id = pctlgtype.code ) " +
+        "LEFT JOIN lookup_product_format AS pctlgformat ON ( pctlg.format_id = pctlgformat.code ) " +
+        "LEFT JOIN lookup_product_shipping AS pctlgshipping ON ( pctlg.shipping_id = pctlgshipping.code ) " +
+        "LEFT JOIN lookup_product_ship_time AS pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) " +
+        "WHERE pctlg.product_id = ? ");
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -1109,13 +1227,22 @@ public class ProductCatalog extends GenericBean {
       throw new SQLException("Product Catalog not found");
     }
     // build resources
-    if (buildProductOptions) {
-      this.buildProductOptions(db);
+    if (buildOptions) {
+      this.buildOptions(db);
     }
-
+    if (buildCategories) {
+      this.buildCategories(db);
+    }
+    if (buildPriceList) {
+      this.buildPriceList(db);
+    }
+    if (buildActivePrice) {
+      this.buildActivePrice(db);
+    }
+    //TODO: Remove adsjet specific stuff
     // detemine the products actual category trail since it might
     // exist several levels down the category tree
-    determineActualCategory(db);
+    // determineActualCategory(db);
   }
 
 
@@ -1155,13 +1282,85 @@ public class ProductCatalog extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
+   *@param  itemId            Description of the Parameter
+   *@param  imageType         Description of the Parameter
+   *@param  path              Description of the Parameter
+   *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public void buildProductOptions(Connection db) throws SQLException {
-    productOptionList = new ProductOptionList();
-    productOptionList.setProductId(this.id);
-    productOptionList.setBuildResources(true);
-    productOptionList.buildList(db);
+  public boolean removeFileItem(Connection db, int itemId, String imageType, String path) throws SQLException {
+    boolean recordDeleted = false;
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      if ("thumbnail".equals(imageType)) {
+        this.setThumbnailImageId(-1);
+      } else if ("small".equals(imageType)) {
+        this.setSmallImageId(-1);
+      } else if ("large".equals(imageType)) {
+        this.setLargeImageId(-1);
+      }
+      this.update(db);
+      FileItem thisItem = new FileItem(db, itemId, this.getId(), Constants.DOCUMENTS_PRODUCT_CATALOG);
+      recordDeleted = thisItem.delete(db, path);
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace(System.out);
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+    return recordDeleted;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildOptions(Connection db) throws SQLException {
+    optionList = new ProductOptionList();
+    optionList.setProductId(this.id);
+    optionList.setEnabled(this.getBuildActiveOptions());
+    optionList.setBuildConfigDetails(true);
+    optionList.setBuildResources(true);
+    optionList.buildList(db);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildCategories(Connection db) throws SQLException {
+    categoryList = new ProductCategoryList();
+    categoryList.setProductId(this.id);
+    categoryList.buildList(db);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildPriceList(Connection db) throws SQLException {
+    priceList = new ProductCatalogPricingList();
+    priceList.setProductId(this.getId());
+    priceList.buildList(db);
   }
 
 
@@ -1173,75 +1372,67 @@ public class ProductCatalog extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public int addCategory(Connection db, int categoryId) throws SQLException {
+  public int addCategoryMapping(Connection db, int categoryId) throws SQLException {
     int result = -1;
-    int i = 0;
-    if (categoryId == -1 || this.getId() == -1) {
-      throw new SQLException("Invalid catalog id or category id ");
+    boolean commit = false;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      //TODO: remove this code when specifications change stating products can be
+      //mapped to one or more categories
+      PreparedStatement pst = db.prepareStatement(
+          "DELETE FROM product_catalog_category_map " +
+          "WHERE product_id = ? ");
+      pst.setInt(1, this.getId());
+      result = pst.executeUpdate();
+      pst.close();
+
+      //Insert the new mapping
+      if (categoryId > -1) {
+        int i = 0;
+        pst = db.prepareStatement(
+            "INSERT INTO product_catalog_category_map(product_id, category_id) " +
+            "VALUES (?, ? ) ");
+        pst.setInt(++i, this.getId());
+        pst.setInt(++i, categoryId);
+        result = pst.executeUpdate();
+        pst.close();
+      }
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
+    return result;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  categoryId        Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void removeCategoryMapping(Connection db, int categoryId) throws SQLException {
+    int i = 0;
     PreparedStatement pst = db.prepareStatement(
-        " INSERT INTO product_catalog_category_map( product_id, category_id) " +
-        " VALUES ( ? , ? ); "
-        );
+        " DELETE FROM product_catalog_category_map " +
+        " WHERE product_id = ? AND category_id = ? ");
     pst.setInt(++i, this.getId());
     pst.setInt(++i, categoryId);
-    result = pst.executeUpdate();
+    pst.execute();
     pst.close();
-    return result;
-  }
-
-
-  /**
-   *  Adds a feature to the Option attribute of the ProductCatalog object
-   *
-   *@param  db                The feature to be added to the Option attribute
-   *@param  optionId          The feature to be added to the Option attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
-  public int addOption(Connection db, int optionId) throws SQLException {
-    int result = -1;
-    int i = 0;
-    if (optionId == -1 || this.getId() == -1) {
-      throw new SQLException("Invalid catalog id or option id ");
-    }
-    PreparedStatement pst = db.prepareStatement(
-        " INSERT INTO product_option_map( product_id, option_id , value_id) " +
-        " VALUES ( ? , ? , 0 ); "
-        );
-    pst.setInt(++i, this.getId());
-    pst.setInt(++i, optionId);
-    result = pst.executeUpdate();
-    pst.close();
-    return result;
-  }
-
-
-  /**
-   *  Adds a feature to the Option attribute of the ProductCatalog object
-   *
-   *@param  db                The feature to be added to the Option attribute
-   *@param  optionId          The feature to be added to the Option attribute
-   *@param  valueId           The feature to be added to the Option attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
-  public int addOption(Connection db, int optionId, int valueId) throws SQLException {
-    int result = -1;
-    int i = 0;
-    if (optionId == -1 || this.getId() == -1 || valueId == -1) {
-      throw new SQLException("Invalid catalog id or option id or value_id");
-    }
-    PreparedStatement pst = db.prepareStatement(
-        " INSERT INTO product_option_map( product_id, option_id, value_id ) " +
-        " VALUES ( ? , ? , ? ); "
-        );
-    pst.setInt(++i, this.getId());
-    pst.setInt(++i, optionId);
-    pst.setInt(++i, valueId);
-    result = pst.executeUpdate();
-    pst.close();
-    return result;
   }
 
 
@@ -1278,22 +1469,15 @@ public class ProductCatalog extends GenericBean {
     this.setExpirationDate(rs.getTimestamp("expiration_date"));
     this.setEnabled(rs.getBoolean("enabled"));
 
-    // product_category table
-    this.setCategoryId(DatabaseUtils.getInt(rs, "category_id"));
-    this.setCategoryName(rs.getString("category_name"));
-
-    // product_catalog_pricing table
-    this.setMsrpAmount(rs.getFloat("msrp_amount"));
-    this.setPriceAmount(rs.getFloat("price_amount"));
-    this.setRecurringAmount(rs.getFloat("recurring_amount"));
-    this.setPriceStartDate(rs.getTimestamp("price_start_date"));
-    this.setPriceEndDate(rs.getTimestamp("price_end_date"));
-
     // product_catalog parent table
     this.setParentName(rs.getString("parent_name"));
 
     // product_catalog_type table
     this.setTypeName(rs.getString("type_name"));
+
+    this.setFormatName(rs.getString("format_name"));
+    this.setShippingName(rs.getString("shipping_name"));
+    this.setShippingTimeName(rs.getString("shiptime_name"));
   }
 
 
@@ -1310,17 +1494,21 @@ public class ProductCatalog extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Product Catalog ID not specified.");
     }
+    boolean commit = true;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       /*
-       *  /Delete any documents
+       *  Delete any documents
        *  FileItemList fileList = new FileItemList();
        *  fileList.setLinkModuleId(Constants.DOCUMENTS_PRODUCT_CATEGORY);
        *  fileList.setLinkItemId(this.getId());
        *  fileList.buildList(db);
        *  fileList.delete(db, baseFilePath);
        *  fileList = null;
-       *  /Delete any folder data
+       *  Delete any folder data
        *  CustomFieldRecordList folderList = new CustomFieldRecordList();
        *  folderList.setLinkModuleId(Constants.FOLDERS_PRODUCT_CATEGORY);
        *  folderList.setLinkItemId(this.getId());
@@ -1332,19 +1520,34 @@ public class ProductCatalog extends GenericBean {
       //delete all records that contain product_id in the product_catalog_category_mapping
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
-          " DELETE from product_catalog_category_map " +
-          " WHERE product_id = ? "
-          );
+          "DELETE from product_catalog_category_map " +
+          "WHERE product_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
 
+      //prepare a list of this product's options
+      ProductOptionList optionList = new ProductOptionList();
+      optionList.setProductId(this.getId());
+      optionList.buildList(db);
+
       //delete all the records that contain product_id in the product_catalog_option_map
       i = 0;
       pst = db.prepareStatement(
-          " DELETE from product_option_map " +
-          " WHERE product_id = ? "
-          );
+          "DELETE from product_option_map " +
+          "WHERE product_id = ? ");
+      pst.setInt(++i, this.getId());
+      pst.execute();
+      pst.close();
+
+      //delete all the product options
+      optionList.delete(db);
+
+      //delete all the records that contain product_id in the product_catalog_pricing
+      i = 0;
+      pst = db.prepareStatement(
+          "DELETE from product_catalog_pricing " +
+          "WHERE product_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
@@ -1352,18 +1555,25 @@ public class ProductCatalog extends GenericBean {
       //delete the product from the catalog
       i = 0;
       pst = db.prepareStatement(
-          " DELETE from product_catalog " +
-          " WHERE product_id = ? "
-          );
+          "DELETE from product_catalog " +
+          "WHERE product_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
-      db.commit();
+
+      if (commit) {
+        db.commit();
+      }
       result = true;
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return result;
   }
@@ -1391,64 +1601,139 @@ public class ProductCatalog extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        " INSERT INTO product_catalog( parent_id, " +
-        " product_name, abbreviation, short_description, " +
-        " long_description, type_id, sku, in_stock, format_id, " +
-        " shipping_id, estimated_ship_time , thumbnail_image_id, " +
-        " small_image_id, large_image_id, list_order, " +
-        " enteredby,"
-        );
-    if (entered != null) {
-      sql.append(" entered, ");
-    }
-    sql.append(" modifiedBy, ");
-    if (modified != null) {
-      sql.append(" modified, ");
-    }
-    sql.append(" start_date,expiration_date,enabled)");
-    sql.append("VALUES( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,");
-    if (entered != null) {
+    boolean commit = false;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      StringBuffer sql = new StringBuffer();
+      sql.append(
+          " INSERT INTO product_catalog( parent_id, " +
+          " product_name, abbreviation, short_description, " +
+          " long_description, type_id, special_notes, sku, in_stock, format_id, " +
+          " shipping_id, estimated_ship_time , thumbnail_image_id, " +
+          " small_image_id, large_image_id, list_order, " +
+          " enteredby,"
+          );
+      if (entered != null) {
+        sql.append(" entered, ");
+      }
+      sql.append(" modifiedBy, ");
+      if (modified != null) {
+        sql.append(" modified, ");
+      }
+      sql.append(" start_date,expiration_date,enabled)");
+      sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ");
+      if (entered != null) {
+        sql.append("?, ");
+      }
       sql.append("?, ");
+      if (modified != null) {
+        sql.append(" ?, ");
+      }
+      sql.append("?, ?, ? )");
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql.toString());
+      DatabaseUtils.setInt(pst, ++i, this.getParentId());
+      pst.setString(++i, this.getName());
+      pst.setString(++i, this.getAbbreviation());
+      pst.setString(++i, this.getShortDescription());
+      pst.setString(++i, this.getLongDescription());
+      DatabaseUtils.setInt(pst, ++i, this.getTypeId());
+      pst.setString(++i, this.getSpecialNotes());
+      pst.setString(++i, this.getSku());
+      pst.setBoolean(++i, this.getInStock());
+      DatabaseUtils.setInt(pst, ++i, this.getFormatId());
+      DatabaseUtils.setInt(pst, ++i, this.getShippingId());
+      DatabaseUtils.setInt(pst, ++i, this.getEstimatedShipTime());
+      DatabaseUtils.setInt(pst, ++i, this.getThumbnailImageId());
+      DatabaseUtils.setInt(pst, ++i, this.getSmallImageId());
+      DatabaseUtils.setInt(pst, ++i, this.getLargeImageId());
+      DatabaseUtils.setInt(pst, ++i, this.getListOrder());
+      DatabaseUtils.setInt(pst, ++i, this.getEnteredBy());
+      if (entered != null) {
+        pst.setTimestamp(++i, this.getEntered());
+      }
+      DatabaseUtils.setInt(pst, ++i, this.getModifiedBy());
+      if (modified != null) {
+        pst.setTimestamp(++i, this.getModified());
+      }
+      DatabaseUtils.setTimestamp(pst, ++i, this.getStartDate());
+      DatabaseUtils.setTimestamp(pst, ++i, this.getExpirationDate());
+      pst.setBoolean(++i, this.getEnabled());
+      pst.execute();
+      pst.close();
+      id = DatabaseUtils.getCurrVal(db, "product_catalog_product_id_seq");
+      //Add a category mapping
+      if (this.getCategoryId() > 0) {
+        this.addCategoryMapping(db, this.getCategoryId());
+      }
+      if (commit) {
+        db.commit();
+      }
+      result = true;
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
-    sql.append("?, ");
-    if (modified != null) {
-      sql.append(" ?, ");
+    return result;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  cloneSource       Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean insertClone(Connection db, ProductCatalog cloneSource) throws SQLException {
+    boolean result = false;
+    boolean commit = false;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      //Insert this clone product
+      this.insert(db);
+      //Clone the product prices
+      Iterator i = cloneSource.getPriceList().iterator();
+      while (i.hasNext()) {
+        ProductCatalogPricing thisPrice = (ProductCatalogPricing) i.next();
+        thisPrice.setId(-1);
+        thisPrice.setProductId(this.getId());
+        thisPrice.insert(db);
+      }
+      //Clone the product options
+      Iterator j = cloneSource.getOptionList().iterator();
+      while (j.hasNext()) {
+        ProductOption thisOption = (ProductOption) j.next();
+        thisOption.setProductId(this.getId());
+        thisOption.insertClone(db);
+      }
+      if (commit) {
+        db.commit();
+      }
+      result = true;
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
-    sql.append("?,?,?)");
-    int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql.toString());
-    DatabaseUtils.setInt(pst, ++i, this.getParentId());
-    pst.setString(++i, this.getName());
-    pst.setString(++i, this.getAbbreviation());
-    pst.setString(++i, this.getShortDescription());
-    pst.setString(++i, this.getLongDescription());
-    DatabaseUtils.setInt(pst, ++i, this.getTypeId());
-    pst.setString(++i, this.getSku());
-    pst.setBoolean(++i, this.getInStock());
-    DatabaseUtils.setInt(pst, ++i, this.getFormatId());
-    DatabaseUtils.setInt(pst, ++i, this.getShippingId());
-    DatabaseUtils.setInt(pst, ++i, this.getEstimatedShipTime());
-    DatabaseUtils.setInt(pst, ++i, this.getThumbnailImageId());
-    DatabaseUtils.setInt(pst, ++i, this.getSmallImageId());
-    DatabaseUtils.setInt(pst, ++i, this.getLargeImageId());
-    DatabaseUtils.setInt(pst, ++i, this.getListOrder());
-    DatabaseUtils.setInt(pst, ++i, this.getEnteredBy());
-    if (entered != null) {
-      pst.setTimestamp(++i, this.getEntered());
-    }
-    DatabaseUtils.setInt(pst, ++i, this.getModifiedBy());
-    if (modified != null) {
-      pst.setTimestamp(++i, this.getModified());
-    }
-    DatabaseUtils.setTimestamp(pst, ++i, this.getStartDate());
-    DatabaseUtils.setTimestamp(pst, ++i, this.getExpirationDate());
-    pst.setBoolean(++i, this.getEnabled());
-    pst.execute();
-    pst.close();
-    id = DatabaseUtils.getCurrVal(db, "product_catalog_product_id_seq");
-    result = true;
     return result;
   }
 
@@ -1462,34 +1747,34 @@ public class ProductCatalog extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        " UPDATE product_catalog " +
-        " SET " +
-        " parent_id = ?, " +
-        " product_name = ?, " +
-        " abbreviation = ?, " +
-        " short_description = ?, " +
-        " long_description = ?, " +
-        " special_notes = ?, " +
-        " sku = ?, " +
-        " in_stock = ?, " +
-        " format_id = ?, " +
-        " shipping_id = ?, " +
-        " estimated_ship_time = ?, " +
-        " thumbnail_image_id = ?," +
-        " small_image_id = ?, " +
-        " large_image_id = ?, " +
-        " list_order = ?, "
+        "UPDATE product_catalog " +
+        "SET " +
+        "parent_id = ?, " +
+        "product_name = ?, " +
+        "abbreviation = ?, " +
+        "short_description = ?, " +
+        "long_description = ?, " +
+        "type_id = ?, " +
+        "special_notes = ?, " +
+        "sku = ?, " +
+        "in_stock = ?, " +
+        "format_id = ?, " +
+        "shipping_id = ?, " +
+        "estimated_ship_time = ?, " +
+        "thumbnail_image_id = ?," +
+        "small_image_id = ?, " +
+        "large_image_id = ?, " +
+        "list_order = ?, "
         );
-    sql.append(" modifiedBy = ? , modified = " + DatabaseUtils.getCurrentTimestamp(db));
-    sql.append(" , start_date = ?, expiration_date = ?, enabled = ? ");
-    sql.append(" WHERE product_id = ? ");
-    sql.append(" AND modified = ? ");
+    sql.append("modifiedby = ? , modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", ");
+    sql.append("start_date = ?, expiration_date = ?, enabled = ? ");
+    sql.append("WHERE product_id = ? ");
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -1498,6 +1783,7 @@ public class ProductCatalog extends GenericBean {
     pst.setString(++i, this.getAbbreviation());
     pst.setString(++i, this.getShortDescription());
     pst.setString(++i, this.getLongDescription());
+    DatabaseUtils.setInt(pst, ++i, this.getTypeId());
     pst.setString(++i, this.getSpecialNotes());
     pst.setString(++i, this.getSku());
     pst.setBoolean(++i, this.getInStock());
@@ -1513,7 +1799,6 @@ public class ProductCatalog extends GenericBean {
     DatabaseUtils.setTimestamp(pst, ++i, this.getExpirationDate());
     pst.setBoolean(++i, this.getEnabled());
     pst.setInt(++i, this.getId());
-    pst.setTimestamp(++i, this.getModified());
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;
@@ -1533,173 +1818,99 @@ public class ProductCatalog extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Product Catalog ID not specified");
     }
-    String sql = null;
     DependencyList dependencyList = new DependencyList();
     PreparedStatement pst = null;
     ResultSet rs = null;
     int i = 0;
-    /*
-     *  /Check for documents
-     *  Dependency docDependency = new Dependency();
-     *  docDependency.setName("Documents");
-     *  docDependency.setCount(FileItemList.retrieveRecordCount(db, Constants.DOCUMENTS_PRODUCT_CATALOG, this.getId()));
-     *  docDependency.setCanDelete(true);
-     *  dependencyList.add(docDependency);
-     *  /Check for folders
-     *  Dependency folderDependency = new Dependency();
-     *  folderDependency.setName("Folders");
-     *  folderDependency.setCount(CustomFieldRecordList.retrieveRecordCount(db, Constants.FOLDERS_PRODUCT_CATALOG, this.getId()));
-     *  folderDependency.setCanDelete(true);
-     *  dependencyList.add(folderDependency);
-     */
-    //Check for product_catalog with parent_id = id
-    try {
-      i = 0;
-      pst = db.prepareStatement(
-          "SELECT count(*) as parentcount " +
-          " FROM product_catalog " +
-          "WHERE parent_id = ?"
-          );
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int catalogCount = rs.getInt("parentcount");
-        if (catalogCount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of children of this catalog ");
-          thisDependency.setCount(catalogCount);
-          thisDependency.setCanDelete(false);
-          dependencyList.add(thisDependency);
-        }
-      }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
-    }
 
     //Check for the current product mappings in product_option_map
-    try {
-      i = 0;
-      pst = db.prepareStatement(
-          "SELECT count(*) as catalogcount " +
-          " FROM product_option_map " +
-          "WHERE product_id = ?"
-          );
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int catalogCount = rs.getInt("catalogcount");
-        if (catalogCount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of catalog_option mappings are ");
-          thisDependency.setCount(catalogCount);
-          thisDependency.setCanDelete(false);
-          dependencyList.add(thisDependency);
-        }
+    pst = db.prepareStatement(
+        "SELECT count(*) as optioncount " +
+        "FROM product_option_map " +
+        "WHERE product_id = ? ");
+    pst.setInt(++i, this.getId());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      int catalogCount = rs.getInt("optioncount");
+      if (catalogCount != 0) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("numberOfCatalogOptionMappings");
+        thisDependency.setCount(catalogCount);
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
       }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
     }
-
-    //Check for the current product mappings in product_catalog_category
-    try {
-      i = 0;
-      pst = db.prepareStatement(
-          "SELECT count(*) as catalogcount " +
-          " FROM product_catalog_category_map " +
-          "WHERE product_id = ?"
-          );
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int catalogCount = rs.getInt("catalogcount");
-        if (catalogCount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of Product Categories mapped to the product are ");
-          thisDependency.setCount(catalogCount);
-          // NOTE:set to true for dataline since
-          //      removal of dependencies has not been provided
-          thisDependency.setCanDelete(true);
-          dependencyList.add(thisDependency);
-        }
-      }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
-    }
+    rs.close();
+    pst.close();
 
     //Check for the current product mappings in service_contract_product
-    try {
-      i = 0;
-      pst = db.prepareStatement(
-          "SELECT count(*) as catalogcount " +
-          " FROM service_contract_products " +
-          "WHERE link_product_id = ?"
-          );
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int catalogCount = rs.getInt("catalogcount");
-        if (catalogCount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of Service Contracts mapped to the product are ");
-          thisDependency.setCount(catalogCount);
-          // NOTE:set to true for dataline since
-          //      removal of dependencies has not been provided
-          thisDependency.setCanDelete(false);
-          dependencyList.add(thisDependency);
-        }
+    i = 0;
+    pst = db.prepareStatement(
+        "SELECT count(*) as catalogcount " +
+        "FROM service_contract_products " +
+        "WHERE link_product_id = ? ");
+    pst.setInt(++i, this.getId());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      int catalogCount = rs.getInt("catalogcount");
+      if (catalogCount != 0) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("numberOfServiceContractsMappedToTheProduct");
+        thisDependency.setCount(catalogCount);
+        // NOTE:set to true for dataline since
+        //      removal of dependencies has not been provided
+        thisDependency.setCanDelete(false);
+        dependencyList.add(thisDependency);
       }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
     }
+    rs.close();
+    pst.close();
 
     //Check for the current product mappings in ticket
-    try {
-      i = 0;
-      pst = db.prepareStatement(
-          "SELECT count(*) as catalogcount " +
-          " FROM ticket " +
-          "WHERE product_id = ?"
-          );
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int catalogCount = rs.getInt("catalogcount");
-        if (catalogCount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of Tickets mapped to the product are ");
-          thisDependency.setCount(catalogCount);
-          // NOTE:set to true for dataline since
-          //      removal of dependencies has not been provided
-          thisDependency.setCanDelete(false);
-          dependencyList.add(thisDependency);
-        }
+    i = 0;
+    pst = db.prepareStatement(
+        "SELECT count(*) as catalogcount " +
+        "FROM ticket " +
+        "WHERE product_id = ? ");
+    pst.setInt(++i, this.getId());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      int catalogCount = rs.getInt("catalogcount");
+      if (catalogCount != 0) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("numberOfTicketsMappedToTheProduct");
+        thisDependency.setCount(catalogCount);
+        // NOTE:set to true for dataline since
+        //      removal of dependencies has not been provided
+        thisDependency.setCanDelete(false);
+        dependencyList.add(thisDependency);
       }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
     }
+    rs.close();
+    pst.close();
+
+    //Check for the current quote product links
+    i = 0;
+    pst = db.prepareStatement(
+        "SELECT count(*) as catalogcount " +
+        "FROM quote_product " +
+        "WHERE product_id = ? ");
+    pst.setInt(++i, this.getId());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      int catalogCount = rs.getInt("catalogcount");
+      if (catalogCount != 0) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("numberOfQuoteProductsMappedToTheProduct");
+        thisDependency.setCount(catalogCount);
+        thisDependency.setCanDelete(false);
+        dependencyList.add(thisDependency);
+      }
+    }
+    rs.close();
+    pst.close();
 
     return dependencyList;
-  }
-
-
-  /**
-   *  Gets the valid attribute of the ProductCatalog object
-   *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  public boolean isValid(Connection db) throws SQLException {
-// This method contains additional error catching statements
-    if (this.getId() == -1) {
-      return false;
-    }
-    return true;
   }
 
 
@@ -1710,46 +1921,83 @@ public class ProductCatalog extends GenericBean {
    *@param  dimensions        Description of the Parameter
    *@param  categoryId        Description of the Parameter
    *@param  productName       Description of the Parameter
-   *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public static boolean lookupId(Connection db, String productName, String dimensions, int categoryId) throws SQLException {
-    boolean result = false;
-    try {
-      int i = 0;
-      StringBuffer sql = new StringBuffer(
-          " SELECT count(*) AS counter " +
-          " FROM product_catalog AS pctlg " +
-          " LEFT JOIN product_catalog_category_map AS pctlgmap " +
-          " ON ( pctlg.product_id = pctlgmap.product_id ) " +
-          " LEFT JOIN product_category AS pctgy " +
-          " ON ( pctlgmap.category_id = pctgy.category_id ) " +
-          " WHERE pctgy.category_id = ? "
-          );
-      if (dimensions != null) {
-        sql.append(" AND short_description = ? ");
-      } else {
-        sql.append(" AND pctlg.product_name = ? ");
-      }
-      PreparedStatement pst = db.prepareStatement(sql.toString());
-      pst.setInt(++i, categoryId);
-      if (dimensions != null) {
-        pst.setString(++i, dimensions);
-      } else {
-        pst.setString(++i, productName);
-      }
-      ResultSet rs = pst.executeQuery();
-      if (rs.next()) {
-        int buffer = rs.getInt("counter");
-        if (buffer != 0) {
-          result = true;
-        }
-      }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
+  public void getProductCatalogByName(Connection db, String productName, String dimensions, int categoryId) throws SQLException {
+    int i = 0;
+    StringBuffer sql = new StringBuffer(
+        " SELECT pctlg.product_id as product_id " +
+        " FROM product_catalog AS pctlg " +
+        " LEFT JOIN product_catalog_category_map AS pctlgmap " +
+        " ON ( pctlg.product_id = pctlgmap.product_id ) " +
+        " LEFT JOIN product_category AS pctgy " +
+        " ON ( pctlgmap.category_id = pctgy.category_id ) " +
+        " WHERE pctgy.category_id = ? "
+        );
+    if (dimensions != null && !"".equals(dimensions)) {
+      sql.append(" AND pctlg.short_description = ? ");
+    } else {
+      sql.append(" AND pctlg.product_name = ? ");
     }
-    return result;
+    PreparedStatement pst = db.prepareStatement(sql.toString());
+    pst.setInt(++i, categoryId);
+    if (dimensions != null && !"".equals(dimensions)) {
+      pst.setString(++i, dimensions);
+    } else {
+      pst.setString(++i, productName);
+    }
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      this.setBuildOptions(true);
+      this.queryRecord(db, rs.getInt("product_id"));
+    }
+    rs.close();
+    pst.close();
+  }
+
+
+  /**
+   *  Gets the productCatalogPricing attribute of the ProductCatalog object
+   *
+   *@param  db                Description of the Parameter
+   *@return                   The productCatalogPricing value
+   *@exception  SQLException  Description of the Exception
+   */
+  public ProductCatalogPricing getActivePrice(Connection db) throws SQLException {
+    if (this.getId() < 0) {
+      throw new SQLException("Product ID not specified");
+    }
+    ProductCatalogPricingList priceList = new ProductCatalogPricingList();
+    priceList.setProductId(this.getId());
+    priceList.setEnabled(Constants.TRUE);
+    priceList.setIsValidNow(Constants.TRUE);
+    priceList.buildList(db);
+    if (priceList.size() == 0) {
+      //this.setEnabled(false);
+      //this.update(db);
+      return null;
+    }
+    return (ProductCatalogPricing) priceList.get(0);
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildActivePrice(Connection db) throws SQLException {
+    this.setActivePrice((ProductCatalogPricing) this.getActivePrice(db));
+  }
+
+
+  /**
+   *  Description of the Method
+   */
+  public void resetBaseInfo() {
+    this.name = null;
+    this.id = -1;
   }
 }
 

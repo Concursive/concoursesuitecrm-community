@@ -33,19 +33,20 @@ public class CalendarEventList extends HashMap {
   //anything added to this array should be added at the end
   public final static String[] EVENT_TYPES = {
       "Tasks",
-      "Calls",
+      "Activities",
       "Opportunities",
       "Account Alerts",
       "Account Contract Alerts",
-      "Contact Calls",
-      "Opportunity Calls",
+      "Contact Activities",
+      "Opportunity Activities",
       "Holiday",
       "Assignments",
       "System Alerts",
       "Quotes",
       "Tickets",
       "Ticket Requests",
-      "Pending Calls"};
+      "Pending Activities",
+      "Project Tickets"};
 
 
   /**
@@ -177,10 +178,14 @@ public class CalendarEventList extends HashMap {
       thisList = new TicketEventList();
     } else if (eventType.equals(EVENT_TYPES[12])) {
       thisList = new TicketEventList();
+    } else if (eventType.equals(EVENT_TYPES[14])) {
+      thisList = new TicketEventList();
     } else if (eventType.equals(EVENT_TYPES[7])) {
       thisList = new ArrayList();
     } else if (eventType.equals(EVENT_TYPES[9])) {
       thisList = new ArrayList();
+    } else if (eventType.equals(EVENT_TYPES[8])) {
+      thisList = new ProjectEventList();
     }
     this.put(eventType, thisList);
     return thisList;

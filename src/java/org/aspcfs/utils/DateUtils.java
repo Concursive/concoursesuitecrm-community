@@ -15,29 +15,37 @@
  */
 package org.aspcfs.utils;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.modules.login.beans.UserBean;
+
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
- *  Useful methods for working with dates and date fields
+ * Useful methods for working with dates and date fields
  *
- *@author     matt rajkowski
- *@created    January 13, 2003
- *@version    $Id$
+ * @author matt rajkowski
+ * @version $Id$
+ * @created January 13, 2003
  */
 public class DateUtils {
 
   /**
-   *  Takes a string and tries to convert it to a Date
+   * Takes a string and tries to convert it to a Date
    *
-   *@param  tmp  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param tmp Description of the Parameter
+   * @return Description of the Return Value
    */
   public static java.sql.Date parseDateString(String tmp) {
     java.sql.Date dateValue = null;
     try {
-      java.util.Date tmpDate = DateFormat.getDateInstance(DateFormat.SHORT).parse(tmp);
+      java.util.Date tmpDate = DateFormat.getDateInstance(DateFormat.SHORT).parse(
+          tmp);
       dateValue = new java.sql.Date(new java.util.Date().getTime());
       dateValue.setTime(tmpDate.getTime());
       return dateValue;
@@ -52,15 +60,16 @@ public class DateUtils {
 
 
   /**
-   *  Takes a string and tries to convert it to a Timestamp
+   * Takes a string and tries to convert it to a Timestamp
    *
-   *@param  tmp  Description of the Parameter
-   *@return      Description of the Return Value
+   * @param tmp Description of the Parameter
+   * @return Description of the Return Value
    */
   public static java.sql.Timestamp parseTimestampString(String tmp) {
     java.sql.Timestamp timestampValue = null;
     try {
-      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).parse(tmp);
+      java.util.Date tmpDate = DateFormat.getDateTimeInstance(
+          DateFormat.SHORT, DateFormat.LONG).parse(tmp);
       timestampValue = new java.sql.Timestamp(new java.util.Date().getTime());
       timestampValue.setTime(tmpDate.getTime());
       return timestampValue;
@@ -75,12 +84,12 @@ public class DateUtils {
 
 
   /**
-   *  Takes a string and tries to convert it to a Timestamp based on the
-   *  specified formatting
+   * Takes a string and tries to convert it to a Timestamp based on the
+   * specified formatting
    *
-   *@param  tmp     Description of the Parameter
-   *@param  format  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param tmp    Description of the Parameter
+   * @param format Description of the Parameter
+   * @return Description of the Return Value
    */
   public static java.sql.Timestamp parseTimestampString(String tmp, String format) {
     java.sql.Timestamp timestampValue = null;
@@ -103,12 +112,12 @@ public class DateUtils {
 
 
   /**
-   *  Takes a string and tries to convert it to a Date based on the specified
-   *  formatting
+   * Takes a string and tries to convert it to a Date based on the specified
+   * formatting
    *
-   *@param  tmp     Description of the Parameter
-   *@param  format  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param tmp    Description of the Parameter
+   * @param format Description of the Parameter
+   * @return Description of the Return Value
    */
   public static java.sql.Date parseDateString(String tmp, String format) {
     java.sql.Date dateValue = null;
@@ -130,39 +139,43 @@ public class DateUtils {
 
 
   /**
-   *  Gets the dateString attribute of the DateUtils object
+   * Gets the dateString attribute of the DateUtils object
    *
-   *@param  date        Description of the Parameter
-   *@param  timeZone    Description of the Parameter
-   *@param  dateFormat  Description of the Parameter
-   *@param  timeFormat  Description of the Parameter
-   *@return             The dateString value
+   * @param date       Description of the Parameter
+   * @param timeZone   Description of the Parameter
+   * @param dateFormat Description of the Parameter
+   * @param timeFormat Description of the Parameter
+   * @return The dateString value
    */
   public static String getUserToServerDateTimeString(TimeZone timeZone, int dateFormat, int timeFormat, String date) {
-    return getUserToServerDateTimeString(timeZone, dateFormat, timeFormat, date, Locale.getDefault());
+    return getUserToServerDateTimeString(
+        timeZone, dateFormat, timeFormat, date, Locale.getDefault());
   }
 
 
   /**
-   *  Gets the userToServerDateTimeString attribute of the DateUtils class
+   * Gets the userToServerDateTimeString attribute of the DateUtils class
    *
-   *@param  timeZone    Description of the Parameter
-   *@param  dateFormat  Description of the Parameter
-   *@param  timeFormat  Description of the Parameter
-   *@param  date        Description of the Parameter
-   *@param  locale      Description of the Parameter
-   *@return             The userToServerDateTimeString value
+   * @param timeZone   Description of the Parameter
+   * @param dateFormat Description of the Parameter
+   * @param timeFormat Description of the Parameter
+   * @param date       Description of the Parameter
+   * @param locale     Description of the Parameter
+   * @return The userToServerDateTimeString value
    */
   public static String getUserToServerDateTimeString(TimeZone timeZone, int dateFormat, int timeFormat, String date, Locale locale) {
     String convertedDate = null;
     try {
-      DateFormat localeFormatter = DateFormat.getDateInstance(dateFormat, locale);
+      DateFormat localeFormatter = DateFormat.getDateInstance(
+          dateFormat, locale);
       if (timeZone != null) {
         localeFormatter.setTimeZone(timeZone);
       }
-      DateFormat serverFormatter = DateFormat.getDateTimeInstance(dateFormat, timeFormat);
+      DateFormat serverFormatter = DateFormat.getDateTimeInstance(
+          dateFormat, timeFormat);
       //convertedDate = serverFormatter.format(localeFormatter.parse(date));
-      convertedDate = serverFormatter.format(new java.util.Date(localeFormatter.parse(date).getTime()));
+      convertedDate = serverFormatter.format(
+          new java.util.Date(localeFormatter.parse(date).getTime()));
     } catch (Exception e) {
       System.err.println("EXCEPTION: DateUtils-> Timestamp " + e);
     }
@@ -171,18 +184,19 @@ public class DateUtils {
 
 
   /**
-   *  Gets the userToServerDateTime attribute of the DateUtils class
+   * Gets the userToServerDateTime attribute of the DateUtils class
    *
-   *@param  timeZone    Description of the Parameter
-   *@param  dateFormat  Description of the Parameter
-   *@param  timeFormat  Description of the Parameter
-   *@param  date        Description of the Parameter
-   *@param  locale      Description of the Parameter
-   *@return             The userToServerDateTime value
+   * @param timeZone   Description of the Parameter
+   * @param dateFormat Description of the Parameter
+   * @param timeFormat Description of the Parameter
+   * @param date       Description of the Parameter
+   * @param locale     Description of the Parameter
+   * @return The userToServerDateTime value
    */
   public static Timestamp getUserToServerDateTime(TimeZone timeZone, int dateFormat, int timeFormat, String date, Locale locale) {
     try {
-      DateFormat localeFormatter = DateFormat.getDateInstance(dateFormat, locale);
+      DateFormat localeFormatter = DateFormat.getDateInstance(
+          dateFormat, locale);
       if (timeZone != null) {
         localeFormatter.setTimeZone(timeZone);
       }
@@ -196,12 +210,12 @@ public class DateUtils {
 
 
   /**
-   *  Returns the converted server time based on the current calendar time and
-   *  timezone of the user
+   * Returns the converted server time based on the current calendar time and
+   * timezone of the user
    *
-   *@param  cal       Description of the Parameter
-   *@param  timeZone  Description of the Parameter
-   *@return           The userToServerDateTime value
+   * @param cal      Description of the Parameter
+   * @param timeZone Description of the Parameter
+   * @return The userToServerDateTime value
    */
   public static java.sql.Timestamp getUserToServerDateTime(Calendar cal, TimeZone timeZone) {
     java.sql.Timestamp timestampValue = null;
@@ -211,27 +225,30 @@ public class DateUtils {
       if (timeZone != null) {
         localFormatter.setTimeZone(timeZone);
       }
-      timestampValue = new java.sql.Timestamp(localFormatter.parse(date).getTime());
+      timestampValue = new java.sql.Timestamp(
+          localFormatter.parse(date).getTime());
     } catch (Exception e) {
-      System.out.println("DateUtils-> getUserToServerDateTime Exception" + e.toString());
+      System.out.println(
+          "DateUtils-> getUserToServerDateTime Exception" + e.toString());
     }
     return timestampValue;
   }
 
 
   /**
-   *  Gets the serverToUserDateString attribute of the DateUtils class
+   * Gets the serverToUserDateString attribute of the DateUtils class
    *
-   *@param  timeZone    Description of the Parameter
-   *@param  dateFormat  Description of the Parameter
-   *@param  date        Description of the Parameter
-   *@return             The serverToUserDateString value
+   * @param timeZone   Description of the Parameter
+   * @param dateFormat Description of the Parameter
+   * @param date       Description of the Parameter
+   * @return The serverToUserDateString value
    */
   public static String getServerToUserDateString(TimeZone timeZone, int dateFormat, java.sql.Timestamp date) {
     SimpleDateFormat formatter = null;
     try {
-      //TODO: combine the Locale when User Locale that has been implemented
-      formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(dateFormat);
+      // Used by the Calendar for storing events in an array
+      formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+          dateFormat);
       formatter.applyPattern("M/d/yyyy");
       formatter.setTimeZone(timeZone);
     } catch (Exception e) {
@@ -242,19 +259,20 @@ public class DateUtils {
 
 
   /**
-   *  Gets the serverToUserDateTimeString attribute of the DateUtils class
+   * Gets the serverToUserDateTimeString attribute of the DateUtils class
    *
-   *@param  timeZone    Description of the Parameter
-   *@param  dateFormat  Description of the Parameter
-   *@param  timeFormat  Description of the Parameter
-   *@param  date        Description of the Parameter
-   *@return             The serverToUserDateTimeString value
+   * @param timeZone   Description of the Parameter
+   * @param dateFormat Description of the Parameter
+   * @param timeFormat Description of the Parameter
+   * @param date       Description of the Parameter
+   * @return The serverToUserDateTimeString value
    */
   public static String getServerToUserDateTimeString(TimeZone timeZone, int dateFormat, int timeFormat, java.sql.Timestamp date) {
     SimpleDateFormat formatter = null;
     try {
       //TODO: combine the Locale when User Locale that has been implemented
-      formatter = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance(dateFormat, timeFormat);
+      formatter = (SimpleDateFormat) SimpleDateFormat.getDateTimeInstance(
+          dateFormat, timeFormat);
       if (timeZone != null) {
         formatter.setTimeZone(timeZone);
       }
@@ -266,17 +284,19 @@ public class DateUtils {
 
 
   /**
-   *  Returns the current time from a calendar object
+   * Returns the current time from a calendar object
    *
-   *@param  cal  Description of the Parameter
-   *@return      The date value
+   * @param cal Description of the Parameter
+   * @return The date value
    */
   public static java.util.Date getDate(Calendar cal) {
     java.util.Date convertedDate = null;
     try {
-      SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(DateFormat.SHORT);
+      SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+          DateFormat.SHORT);
       formatter.applyPattern("M/d/yyyy");
-      String tmpDate = (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR);
+      String tmpDate = (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(
+          Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR);
       convertedDate = formatter.parse(tmpDate);
     } catch (Exception e) {
       System.err.println("EXCEPTION: DateUtils -> Timestamp ");
@@ -286,22 +306,23 @@ public class DateUtils {
 
 
   /**
-   *  Returns the current date of the calendar in the m/d/yyyy format as a
-   *  string
+   * Returns the current date of the calendar in the m/d/yyyy format as a
+   * string
    *
-   *@param  cal  Description of the Parameter
-   *@return      The dateString value
+   * @param cal Description of the Parameter
+   * @return The dateString value
    */
   public static String getDateString(Calendar cal) {
-    return (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR);
+    return (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(
+        Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR);
   }
 
 
   /**
-   *  Returns a directory structure based on the date supplied
+   * Returns a directory structure based on the date supplied
    *
-   *@param  fileDate  Description of the Parameter
-   *@return           The datePath value
+   * @param fileDate Description of the Parameter
+   * @return The datePath value
    */
   public static String getDatePath(java.util.Date fileDate) {
     return getDatePath(new java.sql.Timestamp(fileDate.getTime()));
@@ -309,27 +330,27 @@ public class DateUtils {
 
 
   /**
-   *  Returns a directory structure based on the timestamp supplied, used for
-   *  the fileLibrary: yyyy/MMdd/
+   * Returns a directory structure based on the timestamp supplied, used for
+   * the fileLibrary: yyyy/MMdd/
    *
-   *@param  fileDate  Description of Parameter
-   *@return           The DatePath value
-   *@since
+   * @param fileDate Description of Parameter
+   * @return The DatePath value
    */
   public static String getDatePath(java.sql.Timestamp fileDate) {
     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy");
     String datePathToUse1 = formatter1.format(fileDate);
     SimpleDateFormat formatter2 = new SimpleDateFormat("MMdd");
     String datePathToUse2 = formatter2.format(fileDate);
-    return datePathToUse1 + System.getProperty("file.separator") + datePathToUse2 + System.getProperty("file.separator");
+    return datePathToUse1 + System.getProperty("file.separator") + datePathToUse2 + System.getProperty(
+        "file.separator");
   }
 
 
   /**
-   *  Returns a string that is suitable for a filename based on a timestamp
+   * Returns a string that is suitable for a filename based on a timestamp
    *
-   *@param  fileDate  Description of the Parameter
-   *@return           The filename value
+   * @param fileDate Description of the Parameter
+   * @return The filename value
    */
   public static String getFilename(java.sql.Timestamp fileDate) {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -338,10 +359,10 @@ public class DateUtils {
 
 
   /**
-   *  The HTML date/time selector works on 5's so round up to next 5
+   * The HTML date/time selector works on 5's so round up to next 5
    *
-   *@param  millis  Description of the Parameter
-   *@return         Description of the Return Value
+   * @param millis Description of the Parameter
+   * @return Description of the Return Value
    */
   public static Timestamp roundUpToNextFive(long millis) {
     Calendar cal = Calendar.getInstance();
@@ -353,16 +374,16 @@ public class DateUtils {
 
 
   /**
-   *  Calculates the number of days between two calendar days in a manner which
-   *  is independent of the Calendar type used.
+   * Calculates the number of days between two calendar days in a manner which
+   * is independent of the Calendar type used.
    *
-   *@param  d1  The first date.
-   *@param  d2  The second date.
-   *@return     The number of days between the two dates. Zero is returned if
-   *      the dates are the same, one if the dates are adjacent, etc. The order
-   *      of the dates does not matter, the value returned is always >= 0. If
-   *      Calendar types of d1 and d2 are different, the result may not be
-   *      accurate.
+   * @param d1 The first date.
+   * @param d2 The second date.
+   * @return The number of days between the two dates. Zero is returned if
+   *         the dates are the same, one if the dates are adjacent, etc. The order
+   *         of the dates does not matter, the value returned is always >= 0. If
+   *         Calendar types of d1 and d2 are different, the result may not be
+   *         accurate.
    */
   static int getDaysBetween(java.util.Calendar d1, java.util.Calendar d2) {
     if (d1.after(d2)) {
@@ -385,12 +406,31 @@ public class DateUtils {
   }
 
 
-  /**
-   *  Gets the dateAsString attribute of the DateUtils class
+  /** Accesses a valid user to return a date in the user's locale
    *
-   *@param  tmpTimestamp  Description of the Parameter
-   *@param  locale        Description of the Parameter
-   *@return               The dateAsString value
+   * @param context
+   * @param date
+   * @return
+   */
+  public static String getDateAsString(java.sql.Timestamp date, ActionContext context) {
+    Locale locale = null;
+    UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
+    if (thisUser != null) {
+      locale = thisUser.getLocale();
+    }
+    if (locale == null) {
+      locale = Locale.getDefault();
+    }
+    return getDateAsString(date, locale);
+  }
+
+
+  /**
+   * Gets the dateAsString attribute of the DateUtils class
+   *
+   * @param tmpTimestamp Description of the Parameter
+   * @param locale       Description of the Parameter
+   * @return The dateAsString value
    */
   public static String getDateAsString(Timestamp tmpTimestamp, Locale locale) {
     String dateAsString = "";
@@ -406,10 +446,10 @@ public class DateUtils {
 
 
   /**
-   *  Returns a date format with four digit year pattern
+   * Returns a date format with four digit year pattern
    *
-   *@param  tmpDateFormat  Description of the Parameter
-   *@return                Description of the Return Value
+   * @param tmpDateFormat Description of the Parameter
+   * @return Description of the Return Value
    */
   public static String get4DigitYearDateFormat(String tmpDateFormat) {
     if (tmpDateFormat.indexOf("yy") > -1 && tmpDateFormat.indexOf("yyyy") == -1) {
@@ -417,6 +457,11 @@ public class DateUtils {
     } else {
       return tmpDateFormat;
     }
+  }
+
+  public static boolean isWeekend(Calendar cal) {
+    return (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ||
+        cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY);
   }
 }
 

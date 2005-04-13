@@ -15,29 +15,26 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import java.sql.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.HtmlDialog;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
-import org.aspcfs.modules.admin.base.RoleList;
-import org.aspcfs.modules.admin.base.Role;
-import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.CustomFieldRecordList;
+import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.communications.base.Campaign;
 import org.aspcfs.modules.communications.base.CampaignList;
 import org.aspcfs.modules.communications.base.CommunicationsPreference;
-import org.aspcfs.modules.communications.base.CommunicationsPreferenceList;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.utils.web.*;
+import org.aspcfs.modules.communications.base.RecipientList;
+import org.aspcfs.modules.contacts.base.*;
+import org.aspcfs.modules.pipeline.base.OpportunityHeaderList;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
 
 /**
  *  Web actions for the Accounts->Contacts module
@@ -51,8 +48,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandPrepare(ActionContext context) {
     Connection db = null;
@@ -82,11 +79,12 @@ public final class Contacts extends CFSModule {
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
       }
       //prepare contact type list
+      SystemStatus systemStatus = this.getSystemStatus(context);
       ContactTypeList ctl = new ContactTypeList();
       ctl.setIncludeDefinedByUser(this.getUserId(context));
       ctl.setCategory(ContactType.ACCOUNT);
       ctl.buildList(db);
-      ctl.addItem(0, "--None--");
+      ctl.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("ContactTypeList", ctl);
 
     } catch (Exception errorMessage) {
@@ -102,8 +100,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandClone(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-contacts-add"))) {
@@ -131,12 +129,13 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
     boolean recordInserted = false;
     int resultCount = 0;
+    boolean isValid = false;
     String permission = "accounts-accounts-contacts-add";
     Contact thisContact = (Contact) context.getFormBean();
     if (thisContact.getId() > 0) {
@@ -163,15 +162,20 @@ public final class Contacts extends CFSModule {
       if ("true".equals(context.getRequest().getParameter("primaryContact"))) {
         thisContact.setPrimaryContact(true);
       }
+      isValid = validateObject(context, db, thisContact);
       if (newContact) {
         thisContact.setOwner(getUserId(context));
-        recordInserted = thisContact.insert(db);
+        if (isValid) {
+          recordInserted = thisContact.insert(db);
+        }
       } else {
-        resultCount = thisContact.update(db);
+        if (isValid) {
+          resultCount = thisContact.update(db);
+        }
       }
-
+      // see what happened with the insert/update
       if (recordInserted || resultCount == 1) {
-        thisContact = new Contact(db, "" + thisContact.getId());
+        thisContact = new Contact(db, thisContact.getId());
         context.getRequest().setAttribute("ContactDetails", thisContact);
         if (resultCount == 1) {
           thisContact.checkUserAccount(db);
@@ -179,9 +183,6 @@ public final class Contacts extends CFSModule {
         }
         thisOrganization = new Organization(db, thisContact.getOrgId());
         context.getRequest().setAttribute("OrgDetails", thisOrganization);
-      }
-      if (!recordInserted && resultCount < 1) {
-        processErrors(context, thisContact.getErrors());
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -219,8 +220,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Connection db = null;
@@ -239,28 +240,28 @@ public final class Contacts extends CFSModule {
     }
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       thisContact = new Contact(db, id);
       thisContact.checkUserAccount(db);
       DependencyList dependencies = thisContact.processDependencies(db);
-      htmlDialog.addMessage(dependencies.getHtmlString());
-
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       if (!thisContact.hasAccount()) {
-
         if (thisContact.getPrimaryContact()) {
-          htmlDialog.setHeader("This contact cannot be deleted because it is also an individual account.");
-          htmlDialog.addButton("OK", "javascript:parent.window.close()");
+          htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.contactIndividualAccountHeader"));
+          htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
         } else if (dependencies.canDelete()) {
-          htmlDialog.setTitle("Centric CRM: Confirm Delete");
-          htmlDialog.setHeader("The contact you are requesting to delete has the following dependencies within Centric CRM:");
-          htmlDialog.addButton("Delete All", "javascript:window.location.href='Contacts.do?command=Delete&orgId=" + orgId + "&id=" + id + "'");
-          htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+          htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
+          htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
+          htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='Contacts.do?command=Delete&orgId=" + orgId + "&id=" + id + "'");
+          htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
         } else {
-          htmlDialog.setHeader("This contact cannot be deleted because it has the following dependencies within Centric CRM:");
-          htmlDialog.addButton("OK", "javascript:parent.window.close()");
+          htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.unableHeader"));
+          htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
         }
       } else {
-        htmlDialog.setHeader("This contact cannot be deleted because it is associated with a User account.");
-        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.contactUserAccountHeader"));
+        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       }
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -276,9 +277,9 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-view")) {
@@ -313,9 +314,9 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-delete")) {
@@ -328,11 +329,28 @@ public final class Contacts extends CFSModule {
     if (context.getRequest().getParameter("orgId") != null) {
       orgId = context.getRequest().getParameter("orgId");
     }
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    String actionError1 = systemStatus.getLabel("object.validation.actionError.contactDeletionActiveUser");
+    String actionError2 = systemStatus.getLabel("object.validation.actionError.contactDisabledRelatedUser");
+    String actionError3 = systemStatus.getLabel("object.validation.actionError.contactDisabledRelatedMessage");
     Connection db = null;
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, context.getRequest().getParameter("id"));
       recordDeleted = thisContact.delete(db);
+      if (!recordDeleted) {
+        if (thisContact.getHasAccess() && thisContact.getIsEnabled()) {
+          thisContact.getErrors().put("actionError", actionError1);
+        }
+      } else {
+        if ((thisContact.getHasAccess() && !thisContact.getIsEnabled()) || thisContact.hasRelatedRecords(db)) {
+          thisContact.getErrors().put("actionError", actionError2);
+        }
+        if (RecipientList.retrieveRecordCount(db, Constants.CONTACTS, thisContact.getId()) > 0) {
+          thisContact.getErrors().put("actionError", actionError3);
+        }
+      }
+      processErrors(context, thisContact.getErrors());
       thisOrganization = new Organization(db, Integer.parseInt(orgId));
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
     } catch (Exception errorMessage) {
@@ -357,8 +375,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-edit")) {
@@ -385,8 +403,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandMove(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-edit")) {
@@ -396,17 +414,23 @@ public final class Contacts extends CFSModule {
     Contact thisContact = null;
     HtmlDialog htmlDialog = new HtmlDialog();
     int contactId = Integer.parseInt(context.getRequest().getParameter("id"));
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = this.getConnection(context);
       thisContact = new Contact(db, contactId);
+      thisContact.checkUserAccount(db);
       if (thisContact.getPrimaryContact()) {
-        htmlDialog.setHeader("This contact cannot be moved because it is also an individual account.");
-        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+        DependencyList dependencies = thisContact.processDependencies(db);
+        dependencies.setSystemStatus(systemStatus);
+        htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+        htmlDialog.setHeader(systemStatus.getLabel("accounts.contacts.contactIndividualAccountHeader"));
+        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
         context.getSession().setAttribute("Dialog", htmlDialog);
-        return ("MoveERROR");
+        return ("ConfirmDeleteOK");
       } else if (thisContact.getOrgId() > 0) {
         int orgId = Integer.parseInt(context.getRequest().getParameter("neworgId"));
-        Contact.move(db, contactId, orgId);
+        Organization organization = new Organization(db, orgId);
+        Contact.move(db, contactId, orgId, organization.getName(), this.getUserId(context));
       } else {
         return ("PermissionError");
       }
@@ -423,9 +447,9 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of Parameter
-   * @return          Description of the Returned Value
-   * @since
+   *@param  context  Description of Parameter
+   *@return          Description of the Returned Value
+   *@since
    */
 
   public String executeCommandView(ActionContext context) {
@@ -472,8 +496,8 @@ public final class Contacts extends CFSModule {
   /**
    *  View Message Details of an Account Contact
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandMessageDetails(ActionContext context) {
 
@@ -511,15 +535,15 @@ public final class Contacts extends CFSModule {
 
     context.getRequest().setAttribute("ContactDetails", thisContact);
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
-    return this.getReturn(context, "MessageDetails");
+    return getReturn(context, "MessageDetails");
   }
 
 
   /**
    *  View Account Contact Messages
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandViewMessages(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
@@ -557,16 +581,15 @@ public final class Contacts extends CFSModule {
       campaignList.buildList(db);
       context.getRequest().setAttribute("CampaignList", campaignList);
       //TODO: Database not implemented in this version so skip this code
-/*
-      CommunicationsPreferenceList commPrefList = new CommunicationsPreferenceList();
-      commPrefList.setContactId(contactId);
-      commPrefList.buildList(db);
-      context.getRequest().setAttribute("communicationsList", commPrefList);
-
-      SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList list = systemStatus.getLookupList(db, "lookup_communication_type");
-      context.getRequest().setAttribute("typeSelect", list);
-*/
+      /*
+       *  CommunicationsPreferenceList commPrefList = new CommunicationsPreferenceList();
+       *  commPrefList.setContactId(contactId);
+       *  commPrefList.buildList(db);
+       *  context.getRequest().setAttribute("communicationsList", commPrefList);
+       *  SystemStatus systemStatus = this.getSystemStatus(context);
+       *  LookupList list = systemStatus.getLookupList(db, "lookup_communication_type");
+       *  context.getRequest().setAttribute("typeSelect", list);
+       */
       thisOrganization = new Organization(db, thisContact.getOrgId());
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -576,15 +599,15 @@ public final class Contacts extends CFSModule {
     }
     addModuleBean(context, "View Accounts", "View Contact Details");
     context.getRequest().setAttribute("OrgDetails", thisOrganization);
-    return this.getReturn(context, "ViewMessages");
+    return getReturn(context, "ViewMessages");
   }
 
 
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandAddCommunicationsPreference(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
@@ -609,7 +632,6 @@ public final class Contacts extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       LookupList list = systemStatus.getLookupList(db, "lookup_communication_type");
       context.getRequest().setAttribute("typeSelect", list);
-      System.out.println("Contacts::AddCommunicationsPreference the lookup_communication_type is "+ list.valuesAsString());
       context.getRequest().setAttribute("User", this.getUser(context, this.getUserId(context)));
       thisOrganization = new Organization(db, thisContact.getOrgId());
     } catch (Exception e) {
@@ -627,8 +649,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandSaveCommunicationsPreference(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
@@ -651,7 +673,7 @@ public final class Contacts extends CFSModule {
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList list = systemStatus.getLookupList(db, "lookup_communication_type");
+      systemStatus.getLookupList(db, "lookup_communication_type");
 
       thisOrganization = new Organization(db, thisContact.getOrgId());
       CommunicationsPreference commPref = new CommunicationsPreference();
@@ -683,8 +705,8 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
-   * @return          Description of the Return Value
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
    */
   public String executeCommandDeleteCommunicationsPreference(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-contacts-messages-view")) {
@@ -711,7 +733,7 @@ public final class Contacts extends CFSModule {
       context.getRequest().setAttribute("ContactDetails", thisContact);
 
       SystemStatus systemStatus = this.getSystemStatus(context);
-      LookupList list = systemStatus.getLookupList(db, "lookup_communication_type");
+      systemStatus.getLookupList(db, "lookup_communication_type");
 
       thisOrganization = new Organization(db, thisContact.getOrgId());
 
@@ -733,7 +755,7 @@ public final class Contacts extends CFSModule {
   /**
    *  Description of the Method
    *
-   * @param  context  Description of the Parameter
+   *@param  context  Description of the Parameter
    */
   private void resetPagedListInfo(ActionContext context) {
     this.deletePagedListInfo(context, "AccountContactCallsListInfo");
@@ -741,5 +763,117 @@ public final class Contacts extends CFSModule {
     this.deletePagedListInfo(context, "AccountContactMessageListInfo");
     this.deletePagedListInfo(context, "AccountContactCommunicationsListInfo");
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandMoveToAccount(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-contacts-move-view")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Contact thisContact = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    HtmlDialog htmlDialog = new HtmlDialog();
+    int contactId = Integer.parseInt(context.getRequest().getParameter("id"));
+    try {
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      thisContact.checkUserAccount(db);
+      DependencyList dependencies = thisContact.processDependencies(db);
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      if (thisContact.getPrimaryContact()) {
+        htmlDialog.setHeader(systemStatus.getLabel("accounts.contacts.contactIndividualAccount.title"));
+        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
+        context.getSession().setAttribute("Dialog", htmlDialog);
+        return ("ConfirmDeleteOK");
+      } else if (!dependencies.canDelete()) {
+        htmlDialog.setHeader(systemStatus.getLabel("accounts.contacts.unableToMoveHeader"));
+        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
+        context.getSession().setAttribute("Dialog", htmlDialog);
+        return ("ConfirmDeleteOK");
+      } else {
+        //Contact can be moved. Display the jsp to move the contact to a different account
+        context.getRequest().setAttribute("ContactDetails", thisContact);
+        context.getRequest().setAttribute("dependencies", dependencies);
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("MoveToAccountOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandMoveContact(ActionContext context) {
+    if (!hasPermission(context, "accounts-accounts-contacts-move-view")) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Contact thisContact = null;
+    Organization organization = null;
+    int contactId = Integer.parseInt(context.getRequest().getParameter("id"));
+    int moveOpportunities = Integer.parseInt(context.getRequest().getParameter("moveOpportunities"));
+    int moveFolders = Integer.parseInt(context.getRequest().getParameter("moveFolders"));
+    int moveActivities = Integer.parseInt(context.getRequest().getParameter("moveActivities"));
+    int orgId = Integer.parseInt(context.getRequest().getParameter("neworgId"));
+    try {
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      organization = new Organization(db, orgId);
+      OpportunityHeaderList opportunities = new OpportunityHeaderList();
+      opportunities.setContactId(contactId);
+      opportunities.buildList(db);
+      if (opportunities.size() > 0) {
+        if (moveOpportunities == Constants.FALSE) {
+          opportunities.delete(db);
+        } else if (moveOpportunities == Constants.TRUE) {
+          opportunities.moveOpportunitiesToAccount(db, thisContact.getOrgId());
+        }
+      }
+      if (moveFolders == Constants.FALSE) {
+        CustomFieldRecordList folderList = new CustomFieldRecordList();
+        folderList.setLinkModuleId(Constants.CONTACTS);
+        folderList.setLinkItemId(thisContact.getId());
+        folderList.buildList(db);
+        if (folderList.size() > 0) {
+          folderList.delete(db);
+        }
+      }
+      CallList activities = new CallList();
+      activities.setContactId(contactId);
+      activities.buildList(db);
+      if (activities.size() > 0) {
+        if (moveActivities == Constants.TRUE ) {
+          activities.reassignAccount(db, context, orgId);
+        } else if (moveActivities == Constants.FALSE) {
+          activities.delete(db);
+        }
+      }
+      Contact.move(db, contactId, orgId, organization.getName(), this.getUserId(context));
+      thisContact.queryRecord(db, contactId);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("MoveContactOK");
+  }
+
 }
 

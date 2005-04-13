@@ -15,16 +15,21 @@
  */
 package org.aspcfs.modules.reports.base;
 
-import java.util.*;
+import net.sf.jasperreports.engine.JRParameter;
+import net.sf.jasperreports.engine.JasperReport;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.Template;
+import org.aspcfs.utils.UserUtils;
+import org.aspcfs.utils.web.HtmlSelectProbabilityRange;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import javax.servlet.http.HttpServletRequest;
 import java.sql.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.utils.*;
-import dori.jasper.engine.*;
-import javax.servlet.http.*;
-import javax.servlet.*;
-import java.text.*;
-import org.aspcfs.modules.login.beans.*;
-import org.aspcfs.modules.admin.base.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  *  A collection of Parameter objects.
@@ -39,6 +44,7 @@ public class ParameterList extends ArrayList {
   private int criteriaId = -1;
   protected PagedListInfo pagedListInfo = null;
   public HashMap errors = new HashMap();
+  public SystemStatus systemStatus = null;
 
 
   /**
@@ -64,6 +70,26 @@ public class ParameterList extends ArrayList {
    */
   public void setCriteriaId(String tmp) {
     this.criteriaId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the systemStatus attribute of the ParameterList object
+   *
+   *@param  tmp  The new systemStatus value
+   */
+  public void setSystemStatus(SystemStatus tmp) {
+    this.systemStatus = tmp;
+  }
+
+
+  /**
+   *  Gets the systemStatus attribute of the ParameterList object
+   *
+   *@return    The systemStatus value
+   */
+  public SystemStatus getSystemStatus() {
+    return systemStatus;
   }
 
 
@@ -133,6 +159,8 @@ public class ParameterList extends ArrayList {
    *@return          Description of the Return Value
    */
   public boolean setParameters(HttpServletRequest request) {
+    Timestamp startDate = null;
+    Timestamp endDate = null;
     Iterator i = this.iterator();
     while (i.hasNext()) {
       Parameter param = (Parameter) i.next();
@@ -214,13 +242,32 @@ public class ParameterList extends ArrayList {
                 DateFormat.SHORT, Locale.getDefault());
             String date = formatter.format(tmpTimestamp);
             param.setValue(date);
+            if (param.getName().equals("date_start")) {
+              startDate = tmpTimestamp;
+            }
+            if (param.getName().equals("date_end")) {
+              endDate = tmpTimestamp;
+            }
           }
         } catch (Exception e) {
-          errors.put(param.getName() + "Error", "no input or invalid date");
+          if (systemStatus != null) {
+            errors.put(param.getName()+ "Error", systemStatus.getLabel("object.validation.invalidInput"));
+          } else {
+            errors.put(param.getName() + "Error", "no input or invalid date");
+          }
         }
       }
       if (System.getProperty("DEBUG") != null) {
         System.out.println("ParameterList-> " + param.getName() + "=" + param.getValue());
+      }
+    }
+    if (startDate != null && endDate != null) {
+      if (startDate.after(endDate)) {
+        if (systemStatus != null) {
+          errors.put("date_startError", systemStatus.getLabel("object.validation.firstDateNotAfterSecondDate"));
+        } else {
+          errors.put("date_startError", "The first date can not be after second date.");
+        }
       }
     }
     this.addParam("currency", UserUtils.getUserCurrency(request));

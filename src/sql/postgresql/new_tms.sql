@@ -35,13 +35,14 @@ CREATE TABLE lookup_ticketsource (
   ,enabled BOOLEAN DEFAULT true
 );
 
---CREATE TABLE lookup_ticket_status (
---  code serial PRIMARY KEY
---  ,description VARCHAR(300) NOT NULL UNIQUE
---  ,default_item BOOLEAN DEFAULT false
---  ,level INTEGER DEFAULT 0
---  ,enabled BOOLEAN DEFAULT true
---);
+
+CREATE TABLE lookup_ticket_status (
+  code serial PRIMARY KEY
+  ,description VARCHAR(300) NOT NULL UNIQUE
+  ,default_item BOOLEAN DEFAULT false
+  ,level INTEGER DEFAULT 0
+  ,enabled BOOLEAN DEFAULT true
+);
 
 
 CREATE TABLE ticket_priority (
@@ -57,7 +58,7 @@ CREATE TABLE ticket_priority (
 CREATE TABLE ticket_category ( 
   id serial PRIMARY KEY
   ,cat_level int  NOT NULL DEFAULT 0 
-  ,parent_cat_code int  NOT NULL 
+  ,parent_cat_code int NOT NULL DEFAULT 0
   ,description VARCHAR(300) NOT NULL 
   ,full_description text NOT NULL DEFAULT ''
   ,default_item BOOLEAN DEFAULT false
@@ -69,7 +70,7 @@ CREATE TABLE ticket_category_draft (
   id serial PRIMARY KEY,
   link_id INT DEFAULT -1,
   cat_level int  NOT NULL DEFAULT 0,
-  parent_cat_code int  NOT NULL,
+  parent_cat_code int NOT NULL DEFAULT 0,
   description VARCHAR(300) NOT NULL,
   full_description text NOT NULL DEFAULT '',
   default_item BOOLEAN DEFAULT false,

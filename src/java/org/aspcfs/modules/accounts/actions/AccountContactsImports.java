@@ -15,32 +15,45 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import com.darkhorseventures.framework.actions.ActionContext;
 import com.darkhorseventures.database.ConnectionElement;
-import com.darkhorseventures.database.ConnectionPool;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.isavvix.tools.FileInfo;
+import com.isavvix.tools.HttpMultiPartParser;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemVersion;
+import com.zeroio.webutils.FileDownload;
+import org.aspcfs.apps.transfer.reader.mapreader.PropertyMap;
 import org.aspcfs.controller.ImportManager;
 import org.aspcfs.controller.SystemStatus;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import com.isavvix.tools.*;
-import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.AccessType;
-import org.aspcfs.apps.transfer.reader.mapreader.*;
+import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.base.Import;
+import org.aspcfs.modules.base.ImportList;
+import org.aspcfs.modules.communications.base.RecipientList;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactImport;
+import org.aspcfs.modules.contacts.base.ContactImportValidate;
+import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.utils.FileUtils;
+import org.aspcfs.utils.Template;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  *  Web Actions for Accounts -> Imports
  *
  *@author     Mathur
  *@created    June 21, 2004
- *@version    $id:exp$
+ *@version    $Id$
  */
 public final class AccountContactsImports extends CFSModule {
 
@@ -71,9 +84,6 @@ public final class AccountContactsImports extends CFSModule {
     try {
       db = this.getConnection(context);
 
-      //get the database pool
-      ConnectionPool cPool = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
-
       //get mananger
       SystemStatus systemStatus = this.getSystemStatus(context);
       ImportManager manager = systemStatus.getImportManager(context);
@@ -88,6 +98,7 @@ public final class AccountContactsImports extends CFSModule {
         thisList.setEnteredBy(this.getUserId(context));
       }
       thisList.setManager(manager);
+      thisList.setSystemStatus(systemStatus);
       thisList.buildList(db);
 
       //update record counts of running imports
@@ -100,7 +111,7 @@ public final class AccountContactsImports extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "View");
+    return getReturn(context, "View");
   }
 
 
@@ -115,7 +126,7 @@ public final class AccountContactsImports extends CFSModule {
       return ("PermissionError");
     }
 
-    return this.getReturn(context, "New");
+    return getReturn(context, "New");
   }
 
 
@@ -129,11 +140,13 @@ public final class AccountContactsImports extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
       return ("PermissionError");
     }
-
+    HashMap errors = new HashMap();
     Connection db = null;
     boolean contactRecordInserted = false;
+    boolean isValid = false;
     boolean fileRecordInserted = false;
 
+    SystemStatus systemStatus = this.getSystemStatus(context);
     ContactImport thisImport = (ContactImport) context.getFormBean();
     try {
       db = getConnection(context);
@@ -155,43 +168,48 @@ public final class AccountContactsImports extends CFSModule {
       thisImport.setType(Constants.IMPORT_ACCOUNT_CONTACTS);
       thisImport.setName(subject);
       thisImport.setDescription(description);
-      contactRecordInserted = thisImport.insert(db);
-
-      if (contactRecordInserted) {
-        if ((Object) parts.get("id") instanceof FileInfo) {
-          //Update the database with the resulting file
-          FileInfo newFileInfo = (FileInfo) parts.get("id");
-          //Insert a file description record into the database
-          FileItem thisItem = new FileItem();
-          thisItem.setLinkModuleId(Constants.IMPORT_ACCOUNT_CONTACTS);
-          thisItem.setLinkItemId(thisImport.getId());
-          thisItem.setEnteredBy(getUserId(context));
-          thisItem.setModifiedBy(getUserId(context));
-          thisItem.setSubject(subject);
-          thisItem.setClientFilename(newFileInfo.getClientFileName());
-          thisItem.setFilename(newFileInfo.getRealFilename());
-          thisItem.setVersion(Import.IMPORT_FILE_VERSION);
-          thisItem.setSize(newFileInfo.getSize());
-          fileRecordInserted = thisItem.insert(db);
-          if (!fileRecordInserted) {
-            processErrors(context, thisItem.getErrors());
+      if (!((Object) parts.get("id") instanceof FileInfo)) {
+        fileRecordInserted = false;
+        errors.put("actionError", systemStatus.getLabel("object.validation.incorrectFileName"));
+        processErrors(context, errors);
+        isValid = this.validateObject(context, db, thisImport);
+        context.getRequest().setAttribute("name", subject);
+        isValid = false;
+      } else {
+        isValid = this.validateObject(context, db, thisImport);
+        if (isValid) {
+          contactRecordInserted = thisImport.insert(db);
+          if (contactRecordInserted) {
+            if ((Object) parts.get("id") instanceof FileInfo) {
+              //Update the database with the resulting file
+              FileInfo newFileInfo = (FileInfo) parts.get("id");
+              //Insert a file description record into the database
+              FileItem thisItem = new FileItem();
+              thisItem.setLinkModuleId(Constants.IMPORT_ACCOUNT_CONTACTS);
+              thisItem.setLinkItemId(thisImport.getId());
+              thisItem.setEnteredBy(getUserId(context));
+              thisItem.setModifiedBy(getUserId(context));
+              thisItem.setSubject(subject);
+              thisItem.setClientFilename(newFileInfo.getClientFileName());
+              thisItem.setFilename(newFileInfo.getRealFilename());
+              thisItem.setVersion(Import.IMPORT_FILE_VERSION);
+              thisItem.setSize(newFileInfo.getSize());
+              isValid = this.validateObject(context, db, thisItem);
+              if (isValid) {
+                fileRecordInserted = thisItem.insert(db);
+              }
+            }
           }
-        } else {
-          fileRecordInserted = false;
-          HashMap errors = new HashMap();
-          errors.put("actionError", "The file could not be sent by your computer, make sure the file exists");
-          processErrors(context, errors);
-          context.getRequest().setAttribute("name", subject);
         }
       }
       if (contactRecordInserted && fileRecordInserted) {
         thisImport = new ContactImport(db, thisImport.getId());
         thisImport.buildFileDetails(db);
+        thisImport.setSystemStatus(systemStatus);
       } else if (contactRecordInserted) {
         thisImport.delete(db);
         thisImport.setId(-1);
       }
-
       context.getRequest().setAttribute("ImportDetails", thisImport);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -201,9 +219,9 @@ public final class AccountContactsImports extends CFSModule {
     }
 
     if (fileRecordInserted && contactRecordInserted) {
-      return this.getReturn(context, "Save");
+      return getReturn(context, "Save");
     }
-    return this.getReturn(context, "New");
+    return getReturn(context, "New");
   }
 
 
@@ -221,17 +239,14 @@ public final class AccountContactsImports extends CFSModule {
 
     try {
       db = this.getConnection(context);
-
+      SystemStatus systemStatus = this.getSystemStatus(context);
       //build the import
       String importId = context.getRequest().getParameter("importId");
       ContactImport thisImport = new ContactImport(db, Integer.parseInt(importId));
       thisImport.buildFileDetails(db);
-
-      //get the database elements
-      ConnectionPool cPool = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
+      thisImport.setSystemStatus(systemStatus);
 
       //get mananger
-      SystemStatus systemStatus = this.getSystemStatus(context);
       ImportManager manager = systemStatus.getImportManager(context);
       Object activeImport = manager.getImport(thisImport.getId());
 
@@ -248,7 +263,7 @@ public final class AccountContactsImports extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "Details");
+    return getReturn(context, "Details");
   }
 
 
@@ -262,7 +277,7 @@ public final class AccountContactsImports extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
       return ("PermissionError");
     }
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -292,7 +307,7 @@ public final class AccountContactsImports extends CFSModule {
         validator.initialize();
         context.getRequest().setAttribute("ImportValidator", validator);
       } else {
-        context.getRequest().setAttribute("actionError", "Import file does not exist.");
+        context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.importFileDoesNotExist"));
       }
 
       //build form elements
@@ -303,7 +318,7 @@ public final class AccountContactsImports extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "InitValidate");
+    return getReturn(context, "InitValidate");
   }
 
 
@@ -317,7 +332,7 @@ public final class AccountContactsImports extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
       return ("PermissionError");
     }
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     try {
       db = this.getConnection(context);
@@ -351,7 +366,7 @@ public final class AccountContactsImports extends CFSModule {
           return executeCommandProcess(context);
         }
       } else {
-        context.getRequest().setAttribute("actionError", "Import file does not exist.");
+        context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.importFileDoesNotExist"));
       }
 
       buildValidateFormElements(db, context, thisImport);
@@ -361,7 +376,7 @@ public final class AccountContactsImports extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "Validate");
+    return getReturn(context, "Validate");
   }
 
 
@@ -379,7 +394,6 @@ public final class AccountContactsImports extends CFSModule {
       FileItem thisItem = (FileItem) context.getRequest().getAttribute("FileItem");
 
       //get the database elements
-      ConnectionPool cPool = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
       ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
 
       //get manager
@@ -398,13 +412,17 @@ public final class AccountContactsImports extends CFSModule {
         //queue the import
         manager.add(thisImport);
       } else {
-        context.getRequest().setAttribute("actionError", "The import \"" + thisImport.getName() + "\" is already running");
+        HashMap map = new HashMap();
+        map.put("${thisImport.name}", thisImport.getName());
+        Template template = new Template(systemStatus.getLabel("object.validation.actionError.importAlreadyRunning"));
+        template.setParseElements(map);
+        context.getRequest().setAttribute("actionError", template.getParsedText());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     }
-    return this.getReturn(context, "Process");
+    return getReturn(context, "Process");
   }
 
 
@@ -418,28 +436,24 @@ public final class AccountContactsImports extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-add"))) {
       return ("PermissionError");
     }
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     String importId = context.getRequest().getParameter("importId");
     try {
-      //get the pool
-      ConnectionPool cPool = (ConnectionPool) context.getServletContext().getAttribute("ConnectionPool");
-
       //get mananger
-      SystemStatus systemStatus = this.getSystemStatus(context);
       ImportManager manager = systemStatus.getImportManager(context);
 
       //cancel import
       if (!manager.cancel(Integer.parseInt(importId))) {
-        context.getRequest().setAttribute("actionError", "Cancel Failed: Import is no longer running");
+        context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.importNotRunning"));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     }
     if ("list".equals(context.getRequest().getParameter("return"))) {
-      return this.getReturn(context, "Cancel");
+      return getReturn(context, "Cancel");
     }
-    return this.getReturn(context, "CancelDetails");
+    return getReturn(context, "CancelDetails");
   }
 
 
@@ -460,19 +474,19 @@ public final class AccountContactsImports extends CFSModule {
     String importId = context.getRequest().getParameter("importId");
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       ContactImport thisImport = new ContactImport(db, Integer.parseInt(importId));
       DependencyList dependencies = thisImport.processDependencies(db);
-      htmlDialog.addMessage(dependencies.getHtmlString());
-
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (dependencies.size() == 0) {
-        htmlDialog.setTitle("Confirm");
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='AccountContactsImports.do?command=Delete&importId=" + importId + "'");
       } else {
-        htmlDialog.setTitle("Confirm");
-        htmlDialog.setHeader("Are you sure you want to delete this item:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='AccountContactsImports.do?command=Delete&importId=" + importId + "'");
-        htmlDialog.addButton("No", "javascript:parent.window.close()");
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountContactsImports.do?command=Delete&importId=" + importId + "'");
+        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -515,7 +529,7 @@ public final class AccountContactsImports extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("refreshUrl", "AccountContactsImports.do?command=View");
-    return this.getReturn(context, "Delete");
+    return getReturn(context, "Delete");
   }
 
 
@@ -530,7 +544,7 @@ public final class AccountContactsImports extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-view"))) {
       return ("PermissionError");
     }
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Exception errorMessage = null;
 
     String itemId = (String) context.getRequest().getParameter("fid");
@@ -576,10 +590,10 @@ public final class AccountContactsImports extends CFSModule {
         } else {
           db = null;
           System.err.println("AccountContactsImports-> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
           context.getRequest().setAttribute("ImportDetails", thisImport);
           context.getRequest().setAttribute("FileItem", itemToDownload);
-          return this.getReturn(context, "Details");
+          return getReturn(context, "Details");
         }
       } else {
         FileItemVersion itemToDownload = thisItem.getVersion(Double.parseDouble(version));
@@ -596,7 +610,7 @@ public final class AccountContactsImports extends CFSModule {
         } else {
           db = null;
           System.err.println("AccountContactsImports-> Trying to send a file that does not exist");
-          context.getRequest().setAttribute("actionError", "The requested download no longer exists on the system");
+          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.downloadDoesNotExist"));
           return (executeCommandView(context));
         }
       }
@@ -628,7 +642,7 @@ public final class AccountContactsImports extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-edit"))) {
       return ("PermissionError");
     }
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     String importId = context.getRequest().getParameter("importId");
 
@@ -639,7 +653,7 @@ public final class AccountContactsImports extends CFSModule {
       if (thisImport.canApprove()) {
         thisImport.updateStatus(db, Import.PROCESSED_APPROVED);
       } else {
-        context.getRequest().setAttribute("actionError", "Import has not yet been successfully processed");
+        context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.importNotSuccessful"));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -647,7 +661,7 @@ public final class AccountContactsImports extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "Approve");
+    return getReturn(context, "Approve");
   }
 
 
@@ -674,6 +688,7 @@ public final class AccountContactsImports extends CFSModule {
 
       ContactList thisList = new ContactList();
       thisList.setPagedListInfo(pagedListInfo);
+      pagedListInfo.setSearchCriteria(thisList, context);
       thisList.setImportId(Integer.parseInt(importId));
       thisList.setExcludeUnapprovedContacts(false);
       thisList.buildList(db);
@@ -685,7 +700,7 @@ public final class AccountContactsImports extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "ViewResults");
+    return getReturn(context, "ViewResults");
   }
 
 
@@ -716,7 +731,7 @@ public final class AccountContactsImports extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    return this.getReturn(context, "ContactDetails");
+    return getReturn(context, "ContactDetails");
   }
 
 
@@ -730,18 +745,36 @@ public final class AccountContactsImports extends CFSModule {
     if (!(hasPermission(context, "accounts-accounts-contacts-imports-edit"))) {
       return ("PermissionError");
     }
-
     Connection db = null;
     boolean recordDeleted = false;
     String contactId = context.getRequest().getParameter("contactId");
-
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    String actionError1 = "This contact has an active user account and could not be deleted.";
+    String actionError2 = "Contact disabled from view, since it has a related user account";
+    String actionError3 = "Contact disabled from view, since it has related message records";
+    actionError1 = systemStatus.getLabel("object.validation.actionError.contactDeletionActiveUser");
+    actionError2 = systemStatus.getLabel("object.validation.actionError.contactDisabledRelatedUser");
+    actionError3 = systemStatus.getLabel("object.validation.actionError.contactDisabledRelatedMessage");
     try {
       db = this.getConnection(context);
       Contact thisContact = new Contact(db, Integer.parseInt(contactId));
       if (thisContact.getStatusId() != Import.PROCESSED_APPROVED) {
         recordDeleted = thisContact.delete(db);
+        if (!recordDeleted) {
+          if (thisContact.getHasAccess() && thisContact.getIsEnabled()) {
+            thisContact.getErrors().put("actionError", actionError1);
+          }
+        } else {
+          if ((thisContact.getHasAccess() && !thisContact.getIsEnabled()) || thisContact.hasRelatedRecords(db)) {
+            thisContact.getErrors().put("actionError", actionError2);
+          }
+          if (RecipientList.retrieveRecordCount(db, Constants.CONTACTS, thisContact.getId()) > 0) {
+            thisContact.getErrors().put("actionError", actionError3);
+          }
+        }
+        processErrors(context, thisContact.getErrors());
         Organization thisOrg = new Organization(db, thisContact.getOrgId());
-        if(thisOrg.getImportId() > 0 && !thisOrg.hasContacts(db)){
+        if (thisOrg.getImportId() > 0 && !thisOrg.hasContacts(db)) {
           thisOrg.delete(db, this.getPath(context, "accounts"));
         }
         if (!recordDeleted) {
@@ -755,13 +788,13 @@ public final class AccountContactsImports extends CFSModule {
       this.freeConnection(context, db);
     }
     if (recordDeleted) {
-      return this.getReturn(context, "DeleteContact");
+      return getReturn(context, "DeleteContact");
     }
 
     if ("list".equals(context.getRequest().getParameter("return"))) {
-      return this.getReturn(context, "DeleteContactFailedList");
+      return getReturn(context, "DeleteContactFailedList");
     }
-    return this.getReturn(context, "DeleteContactFailedDetails");
+    return getReturn(context, "DeleteContactFailedDetails");
   }
 
 

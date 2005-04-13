@@ -39,42 +39,35 @@
 <tr>
 <td width="100%">
   <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-  <a href="Accounts.do?command=Search">Search Results</a> >
+  <a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
   <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-  <a href="AccountsAssets.do?command=List&orgId=<%= OrgDetails.getOrgId() %>">Assets</a> >
-  Modify Asset
+  <a href="AccountsAssets.do?command=List&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.Assets">Assets</dhv:label></a> >
+  <dhv:label name="accounts.accounts_asset_modify.ModifyAsset">Modify Asset</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-  <%@ include file="accounts_details_header_include.jsp" %>
-    <dhv:container name="accounts" selected="assets" param="<%= "orgId=" + OrgDetails.getOrgId() %>" style="tabs"/>
-  <table cellpadding="4" cellspacing="0" border="0" width="100%">
-    <tr>
-      <td class="containerBack">
-      <input type=submit value="Update" onClick="this.form.dosubmit.value='true';" />
-      <%if ("list".equals(request.getParameter("return"))) { %>
-        <input type="button" value="Cancel" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
-      <%}else{ %>
-        <input type="button" value="Cancel" onClick="window.location.href='AccountsAssets.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>';this.form.dosubmit.value='false';" />
-      <%}%>
-      <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
-      <input type="hidden" name="id" value="<%= asset.getId() %>" />
-      <input type="hidden" name="return" value="<%= request.getParameter("return") %>" />
-<br />
-<dhv:formMessage />
-<iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-<%@ include file="accountasset_include.jsp" %>
-<br>
-  <input type="submit" value="Update" onClick="this.form.dosubmit.value='true';" />
-  <%if ("list".equals(request.getParameter("return"))) { %>
-    <input type="button" value="Cancel" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
-  <%}else{ %>
-    <input type="button" value="Cancel" onClick="window.location.href='AccountsAssets.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>';this.form.dosubmit.value='false';" />
-  <%}%>
-  <input type="hidden" name="dosubmit" value="true" />
-  </td>
-  </tr>
-</table>
+  <dhv:container name="accounts" selected="assets" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+    <input type=submit value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+    <%if ("list".equals(request.getParameter("return"))) { %>
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+    <%}else{ %>
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>';this.form.dosubmit.value='false';" />
+    <%}%>
+    <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>" />
+    <input type="hidden" name="id" value="<%= asset.getId() %>" />
+    <input type="hidden" name="return" value="<%= request.getParameter("return") %>" />
+    <br />
+    <dhv:formMessage />
+    <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+    <%@ include file="accountasset_include.jsp" %>
+    <br>
+    <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';" />
+    <%if ("list".equals(request.getParameter("return"))) { %>
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=List&orgId=<%=OrgDetails.getOrgId()%>';this.form.dosubmit.value='false';" />
+    <%}else{ %>
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='AccountsAssets.do?command=View&orgId=<%=OrgDetails.getOrgId()%>&id=<%=asset.getId()%>';this.form.dosubmit.value='false';" />
+    <%}%>
+    <input type="hidden" name="dosubmit" value="true" />
+  </dhv:container>
 </form>
-

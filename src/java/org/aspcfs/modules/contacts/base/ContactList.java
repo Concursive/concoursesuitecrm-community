@@ -15,28 +15,36 @@
  */
 package org.aspcfs.modules.contacts.base;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
-import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.base.Import;
-import org.aspcfs.modules.communications.base.*;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.Import;
+import org.aspcfs.modules.communications.base.SearchCriteriaElement;
+import org.aspcfs.modules.communications.base.SearchCriteriaGroup;
+import org.aspcfs.modules.communications.base.SearchCriteriaList;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.util.*;
 
 /**
  *  Contains a list of contacts... currently used to build the list from the
  *  database with any of the parameters to limit the results.
  *
- *@author     mrajkowski
- *@created    August 29, 2001
- *@version    $Id: ContactList.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski Exp
- *      $
+ * @author     mrajkowski
+ * @created    August 29, 2001
+ * @version    $Id: ContactList.java,v 1.1.1.1 2002/01/14 19:49:24 mrajkowski
+ *      Exp $
  */
 public class ContactList extends Vector {
 
@@ -75,8 +83,25 @@ public class ContactList extends Vector {
   private String accountOwnerIdRange = null;
   private boolean withAccountsOnly = false;
   private boolean withProjectsOnly = false;
-  private boolean employeesOnly = false;
+  private int employeesOnly = Constants.UNDEFINED;
+  private int leadsOnly = Constants.UNDEFINED;
+  private int leadStatusExists = Constants.UNDEFINED;
   private boolean excludeAccountContacts = false;
+  private int hierarchialUsers = -1;
+  private int leadStatus = -1;
+  private int source = -1;
+  private int rating = -1;
+  private String comments = null;
+  private int readBy = -1;
+  private Timestamp enteredStart = null;
+  private Timestamp enteredEnd = null;
+  private Timestamp conversionDateStart = null;
+  private Timestamp conversionDateEnd = null;
+  private int postalCode = -1;
+  private int hasConversionDate = Constants.UNDEFINED;
+  private String emailAddress = null;
+  private String country = null;
+  private boolean ownerOrReader = false;
   //Combination filters
   private boolean allContacts = false;
   private boolean controlledHierarchyOnly = false;
@@ -101,6 +126,7 @@ public class ContactList extends Vector {
   boolean firstCriteria = true;
   private String contactIdRange = null;
   private SearchCriteriaList scl = null;
+  private int userId = -1;
   //Global search property
   private String searchText = "";
   //access type filters
@@ -109,17 +135,28 @@ public class ContactList extends Vector {
 
   //objects for speed up
   AccessTypeList accessTypes = null;
+  UserList users = new UserList();
 
   //import filters
   private int importId = -1;
   private int statusId = -1;
   private boolean excludeUnapprovedContacts = true;
 
+  //sorting filters
+  private int oldestFirst = Constants.UNDEFINED;
+
+  //errors and warnings
+  private HashMap errors = new HashMap();
+  private HashMap warnings = new HashMap();
+
+  //other variables
+  private String nextValue = null;
+
 
   /**
    *  Constructor for the ContactList object
    *
-   *@since    1.1
+   * @since    1.1
    */
   public ContactList() { }
 
@@ -127,7 +164,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the includeUsersOnly attribute of the ContactList object
    *
-   *@param  includeUsersOnly  The new includeUsersOnly value
+   * @param  includeUsersOnly  The new includeUsersOnly value
    */
   public void setIncludeUsersOnly(boolean includeUsersOnly) {
     this.includeUsersOnly = includeUsersOnly;
@@ -137,7 +174,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the userRoleType attribute of the ContactList object
    *
-   *@return    The userRoleType value
+   * @return    The userRoleType value
    */
   public int getUserRoleType() {
     return userRoleType;
@@ -147,7 +184,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the userRoleType attribute of the ContactList object
    *
-   *@param  tmp  The new userRoleType value
+   * @param  tmp  The new userRoleType value
    */
   public void setUserRoleType(int tmp) {
     this.userRoleType = tmp;
@@ -157,7 +194,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the userRoleType attribute of the ContactList object
    *
-   *@param  tmp  The new userRoleType value
+   * @param  tmp  The new userRoleType value
    */
   public void setUserRoleType(String tmp) {
     this.userRoleType = Integer.parseInt(tmp);
@@ -167,7 +204,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the checkExcludedFromCampaign attribute of the ContactList object
    *
-   *@param  checkExcludedFromCampaign  The new checkExcludedFromCampaign value
+   * @param  checkExcludedFromCampaign  The new checkExcludedFromCampaign value
    */
   public void setCheckExcludedFromCampaign(int checkExcludedFromCampaign) {
     this.checkExcludedFromCampaign = checkExcludedFromCampaign;
@@ -177,27 +214,18 @@ public class ContactList extends Vector {
   /**
    *  Sets the contactIdRange attribute of the ContactList object
    *
-   *@param  contactIdRange  The new contactIdRange value
+   * @param  contactIdRange  The new contactIdRange value
    */
   public void setContactIdRange(String contactIdRange) {
     this.contactIdRange = contactIdRange;
   }
 
 
-  /**
-   *  Sets the employeesOnly attribute of the ContactList object
-   *
-   *@param  employeesOnly  The new employeesOnly value
-   */
-  public void setEmployeesOnly(boolean employeesOnly) {
-    this.employeesOnly = employeesOnly;
-  }
-
 
   /**
    *  Sets the excludeAccountContacts attribute of the ContactList object
    *
-   *@param  excludeAccountContacts  The new excludeAccountContacts value
+   * @param  excludeAccountContacts  The new excludeAccountContacts value
    */
   public void setExcludeAccountContacts(boolean excludeAccountContacts) {
     this.excludeAccountContacts = excludeAccountContacts;
@@ -207,7 +235,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the excludeAccountContacts attribute of the ContactList object
    *
-   *@return    The excludeAccountContacts value
+   * @return    The excludeAccountContacts value
    */
   public boolean getExcludeAccountContacts() {
     return excludeAccountContacts;
@@ -217,17 +245,37 @@ public class ContactList extends Vector {
   /**
    *  Gets the employeesOnly attribute of the ContactList object
    *
-   *@return    The employeesOnly value
+   * @return    The employeesOnly value
    */
-  public boolean getEmployeesOnly() {
+  public int getEmployeesOnly() {
     return employeesOnly;
+  }
+
+
+  /**
+   *  Sets the employeesOnly attribute of the ContactList object
+   *
+   * @param  tmp  The new employeesOnly value
+   */
+  public void setEmployeesOnly(int tmp) {
+    this.employeesOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the employeesOnly attribute of the ContactList object
+   *
+   * @param  tmp  The new employeesOnly value
+   */
+  public void setEmployeesOnly(String tmp) {
+    this.employeesOnly = Integer.parseInt(tmp);
   }
 
 
   /**
    *  Gets the accountTypeIdHash attribute of the ContactList object
    *
-   *@return    The accountTypeIdHash value
+   * @return    The accountTypeIdHash value
    */
   public HashMap getAccountTypeIdHash() {
     return accountTypeIdHash;
@@ -237,7 +285,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the accountTypeIdHash attribute of the ContactList object
    *
-   *@param  accountTypeIdHash  The new accountTypeIdHash value
+   * @param  accountTypeIdHash  The new accountTypeIdHash value
    */
   public void setAccountTypeIdHash(HashMap accountTypeIdHash) {
     this.accountTypeIdHash = accountTypeIdHash;
@@ -247,7 +295,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the includeEnabledUsersOnly attribute of the ContactList object
    *
-   *@param  includeEnabledUsersOnly  The new includeEnabledUsersOnly value
+   * @param  includeEnabledUsersOnly  The new includeEnabledUsersOnly value
    */
   public void setIncludeEnabledUsersOnly(boolean includeEnabledUsersOnly) {
     this.includeEnabledUsersOnly = includeEnabledUsersOnly;
@@ -257,7 +305,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the accessTypes attribute of the ContactList object
    *
-   *@param  accessTypes  The new accessTypes value
+   * @param  accessTypes  The new accessTypes value
    */
   public void setAccessTypes(AccessTypeList accessTypes) {
     this.accessTypes = accessTypes;
@@ -267,7 +315,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the accessTypes attribute of the ContactList object
    *
-   *@return    The accessTypes value
+   * @return    The accessTypes value
    */
   public AccessTypeList getAccessTypes() {
     return accessTypes;
@@ -277,7 +325,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the includeEnabledUsersOnly attribute of the ContactList object
    *
-   *@return    The includeEnabledUsersOnly value
+   * @return    The includeEnabledUsersOnly value
    */
   public boolean getIncludeEnabledUsersOnly() {
     return includeEnabledUsersOnly;
@@ -287,8 +335,8 @@ public class ContactList extends Vector {
   /**
    *  Sets the FirstName attribute of the ContactList object
    *
-   *@param  firstName  The new FirstName value
-   *@since
+   * @param  firstName  The new FirstName value
+   * @since
    */
   public void setFirstName(String firstName) {
     this.firstName = firstName;
@@ -305,7 +353,7 @@ public class ContactList extends Vector {
    *  personalId can be set to IGNORE_PERSONAL<br>
    *  Also set the AccessTypeList for speed up of the query
    *
-   *@param  personalId  The new personalId value
+   * @param  personalId  The new personalId value
    */
   public void setPersonalId(int personalId) {
     this.personalId = personalId;
@@ -323,8 +371,8 @@ public class ContactList extends Vector {
    *  For external applications using ContactList it works without accessTypes
    *  too
    *
-   *@param  personalId   The new personalId value
-   *@param  accessTypes  The new personalId value
+   * @param  personalId   The new personalId value
+   * @param  accessTypes  The new personalId value
    */
   public void setPersonalId(int personalId, AccessTypeList accessTypes) {
     this.personalId = personalId;
@@ -335,7 +383,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the personalId attribute of the ContactList object
    *
-   *@return    The personalId value
+   * @return    The personalId value
    */
   public int getPersonalId() {
     return personalId;
@@ -345,7 +393,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the nameFirstHash attribute of the ContactList object
    *
-   *@return    The nameFirstHash value
+   * @return    The nameFirstHash value
    */
   public HashMap getNameFirstHash() {
     return nameFirstHash;
@@ -355,7 +403,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the nameFirstHash attribute of the ContactList object
    *
-   *@param  nameFirstHash  The new nameFirstHash value
+   * @param  nameFirstHash  The new nameFirstHash value
    */
   public void setNameFirstHash(HashMap nameFirstHash) {
     this.nameFirstHash = nameFirstHash;
@@ -365,7 +413,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the allContacts attribute of the ContactList object
    *
-   *@param  allContacts  The new allContacts value
+   * @param  allContacts  The new allContacts value
    */
   public void setAllContacts(boolean allContacts) {
     this.allContacts = allContacts;
@@ -377,9 +425,9 @@ public class ContactList extends Vector {
    *  arguments can be set seperately but it is highly recommended to use this
    *  method Note: AccessTypeList has to be set for the personalId to work
    *
-   *@param  allContacts   The new allContacts value
-   *@param  ownerIdRange  The new allContacts value
-   *@param  owner         The new allContacts value
+   * @param  allContacts   The new allContacts value
+   * @param  ownerIdRange  The new allContacts value
+   * @param  owner         The new allContacts value
    */
   public void setAllContacts(boolean allContacts, int owner, String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
@@ -391,7 +439,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the allContacts attribute of the ContactList object
    *
-   *@return    The allContacts value
+   * @return    The allContacts value
    */
   public boolean getAllContacts() {
     return allContacts;
@@ -401,7 +449,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the dateHash attribute of the ContactList object
    *
-   *@return    The dateHash value
+   * @return    The dateHash value
    */
   public HashMap getDateHash() {
     return dateHash;
@@ -411,7 +459,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the dateHash attribute of the ContactList object
    *
-   *@param  dateHash  The new dateHash value
+   * @param  dateHash  The new dateHash value
    */
   public void setDateHash(HashMap dateHash) {
     this.dateHash = dateHash;
@@ -421,7 +469,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the zipHash attribute of the ContactList object
    *
-   *@return    The zipHash value
+   * @return    The zipHash value
    */
   public HashMap getZipHash() {
     return zipHash;
@@ -431,7 +479,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the ruleId attribute of the ContactList object
    *
-   *@param  ruleId  The new ruleId value
+   * @param  ruleId  The new ruleId value
    */
   public void setRuleId(int ruleId) {
     this.ruleId = ruleId;
@@ -442,7 +490,7 @@ public class ContactList extends Vector {
    *  Set the rule Id to get only contacts which follow a certain rule e.g
    *  Personal
    *
-   *@return    The ruleId value
+   * @return    The ruleId value
    */
   public int getRuleId() {
     return ruleId;
@@ -452,7 +500,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the zipHash attribute of the ContactList object
    *
-   *@param  zipHash  The new zipHash value
+   * @param  zipHash  The new zipHash value
    */
   public void setZipHash(HashMap zipHash) {
     this.zipHash = zipHash;
@@ -462,7 +510,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the contactIdHash attribute of the ContactList object
    *
-   *@param  contactIdHash  The new contactIdHash value
+   * @param  contactIdHash  The new contactIdHash value
    */
   public void setContactIdHash(HashMap contactIdHash) {
     this.contactIdHash = contactIdHash;
@@ -472,7 +520,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the contactIdHash attribute of the ContactList object
    *
-   *@return    The contactIdHash value
+   * @return    The contactIdHash value
    */
   public HashMap getContactIdHash() {
     return contactIdHash;
@@ -482,8 +530,8 @@ public class ContactList extends Vector {
   /**
    *  Sets the SearchText attribute of the ContactList object
    *
-   *@param  searchText  The new SearchText value
-   *@since
+   * @param  searchText  The new SearchText value
+   * @since
    */
   public void setSearchText(String searchText) {
     this.searchText = searchText;
@@ -493,7 +541,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the controlledHierarchyOnly attribute of the ContactList object
    *
-   *@param  controlledHierarchyOnly  The new controlledHierarchyOnly value
+   * @param  controlledHierarchyOnly  The new controlledHierarchyOnly value
    */
   public void setControlledHierarchyOnly(boolean controlledHierarchyOnly) {
     this.controlledHierarchyOnly = controlledHierarchyOnly;
@@ -506,8 +554,8 @@ public class ContactList extends Vector {
    *  highly recommended for clarity purposes Note: Also set the AccessTypeList
    *  for speed up of the query
    *
-   *@param  controlledHierarchyOnly  The new controlledHierarchyOnly value
-   *@param  ownerIdRange             The new controlledHierarchyOnly value
+   * @param  controlledHierarchyOnly  The new controlledHierarchyOnly value
+   * @param  ownerIdRange             The new controlledHierarchyOnly value
    */
   public void setControlledHierarchyOnly(boolean controlledHierarchyOnly, String ownerIdRange) {
     this.controlledHierarchyOnly = controlledHierarchyOnly;
@@ -518,7 +566,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the controlledHierarchyOnly attribute of the ContactList object
    *
-   *@return    The controlledHierarchyOnly value
+   * @return    The controlledHierarchyOnly value
    */
   public boolean getControlledHierarchyOnly() {
     return controlledHierarchyOnly;
@@ -528,7 +576,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the firstCriteria attribute of the ContactList object
    *
-   *@return    The firstCriteria value
+   * @return    The firstCriteria value
    */
   public boolean getFirstCriteria() {
     return firstCriteria;
@@ -538,7 +586,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the firstCriteria attribute of the ContactList object
    *
-   *@param  firstCriteria  The new firstCriteria value
+   * @param  firstCriteria  The new firstCriteria value
    */
   public void setFirstCriteria(boolean firstCriteria) {
     this.firstCriteria = firstCriteria;
@@ -548,8 +596,8 @@ public class ContactList extends Vector {
   /**
    *  Sets the Company attribute of the ContactList object
    *
-   *@param  company  The new Company value
-   *@since
+   * @param  company  The new Company value
+   * @since
    */
   public void setCompany(String company) {
     this.company = company;
@@ -559,7 +607,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the cityHash attribute of the ContactList object
    *
-   *@return    The cityHash value
+   * @return    The cityHash value
    */
   public HashMap getCityHash() {
     return cityHash;
@@ -569,7 +617,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the cityHash attribute of the ContactList object
    *
-   *@param  cityHash  The new cityHash value
+   * @param  cityHash  The new cityHash value
    */
   public void setCityHash(HashMap cityHash) {
     this.cityHash = cityHash;
@@ -579,8 +627,8 @@ public class ContactList extends Vector {
   /**
    *  Sets the OwnerIdRange attribute of the ContactList object
    *
-   *@param  ownerIdRange  The new OwnerIdRange value
-   *@since
+   * @param  ownerIdRange  The new OwnerIdRange value
+   * @since
    */
   public void setOwnerIdRange(String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
@@ -590,7 +638,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the emptyHtmlSelectRecord attribute of the ContactList object
    *
-   *@return    The emptyHtmlSelectRecord value
+   * @return    The emptyHtmlSelectRecord value
    */
   public String getEmptyHtmlSelectRecord() {
     return emptyHtmlSelectRecord;
@@ -600,7 +648,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the emptyHtmlSelectRecord attribute of the ContactList object
    *
-   *@param  emptyHtmlSelectRecord  The new emptyHtmlSelectRecord value
+   * @param  emptyHtmlSelectRecord  The new emptyHtmlSelectRecord value
    */
   public void setEmptyHtmlSelectRecord(String emptyHtmlSelectRecord) {
     this.emptyHtmlSelectRecord = emptyHtmlSelectRecord;
@@ -610,7 +658,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the accountOwnerIdRange attribute of the ContactList object
    *
-   *@param  tmp  The new accountOwnerIdRange value
+   * @param  tmp  The new accountOwnerIdRange value
    */
   public void setAccountOwnerIdRange(String tmp) {
     this.accountOwnerIdRange = tmp;
@@ -620,7 +668,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the withAccountsOnly attribute of the ContactList object
    *
-   *@param  tmp  The new withAccountsOnly value
+   * @param  tmp  The new withAccountsOnly value
    */
   public void setWithAccountsOnly(boolean tmp) {
     this.withAccountsOnly = tmp;
@@ -630,8 +678,8 @@ public class ContactList extends Vector {
   /**
    *  Sets the Owner attribute of the ContactList object
    *
-   *@param  owner  The new Owner value
-   *@since
+   * @param  owner  The new Owner value
+   * @since
    */
   public void setOwner(int owner) {
     this.owner = owner;
@@ -639,9 +687,19 @@ public class ContactList extends Vector {
 
 
   /**
+   *  Sets the owner attribute of the ContactList object
+   *
+   * @param  owner  The new owner value
+   */
+  public void setOwner(String owner) {
+    this.owner = Integer.parseInt(owner);
+  }
+
+
+  /**
    *  Gets the nameLastHash attribute of the ContactList object
    *
-   *@return    The nameLastHash value
+   * @return    The nameLastHash value
    */
   public HashMap getNameLastHash() {
     return nameLastHash;
@@ -651,7 +709,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the nameLastHash attribute of the ContactList object
    *
-   *@param  nameLastHash  The new nameLastHash value
+   * @param  nameLastHash  The new nameLastHash value
    */
   public void setNameLastHash(HashMap nameLastHash) {
     this.nameLastHash = nameLastHash;
@@ -661,10 +719,10 @@ public class ContactList extends Vector {
   /**
    *  Sets the Scl attribute of the ContactList object
    *
-   *@param  scl            The new Scl value
-   *@param  thisOwnerId    The new scl value
-   *@param  thisUserRange  The new scl value
-   *@since
+   * @param  scl            The new Scl value
+   * @param  thisOwnerId    The new scl value
+   * @param  thisUserRange  The new scl value
+   * @since
    */
   public void setScl(SearchCriteriaList scl, int thisOwnerId, String thisUserRange) {
     this.scl = scl;
@@ -677,7 +735,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the jsEvent attribute of the ContactList object
    *
-   *@return    The jsEvent value
+   * @return    The jsEvent value
    */
   public String getJsEvent() {
     return jsEvent;
@@ -687,7 +745,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the jsEvent attribute of the ContactList object
    *
-   *@param  jsEvent  The new jsEvent value
+   * @param  jsEvent  The new jsEvent value
    */
   public void setJsEvent(String jsEvent) {
     this.jsEvent = jsEvent;
@@ -697,7 +755,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the checkEnabledUserAccess attribute of the ContactList object
    *
-   *@return    The checkEnabledUserAccess value
+   * @return    The checkEnabledUserAccess value
    */
   public boolean getCheckEnabledUserAccess() {
     return checkEnabledUserAccess;
@@ -707,7 +765,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the checkEnabledUserAccess attribute of the ContactList object
    *
-   *@param  checkEnabledUserAccess  The new checkEnabledUserAccess value
+   * @param  checkEnabledUserAccess  The new checkEnabledUserAccess value
    */
   public void setCheckEnabledUserAccess(boolean checkEnabledUserAccess) {
     this.checkEnabledUserAccess = checkEnabledUserAccess;
@@ -717,8 +775,8 @@ public class ContactList extends Vector {
   /**
    *  Sets the MiddleName attribute of the ContactList object
    *
-   *@param  tmp  The new MiddleName value
-   *@since
+   * @param  tmp  The new MiddleName value
+   * @since
    */
   public void setMiddleName(String tmp) {
     this.middleName = tmp;
@@ -728,8 +786,8 @@ public class ContactList extends Vector {
   /**
    *  Sets the LastName attribute of the ContactList object
    *
-   *@param  tmp  The new LastName value
-   *@since
+   * @param  tmp  The new LastName value
+   * @since
    */
   public void setLastName(String tmp) {
     this.lastName = tmp;
@@ -739,7 +797,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the companyHash attribute of the ContactList object
    *
-   *@return    The companyHash value
+   * @return    The companyHash value
    */
   public HashMap getCompanyHash() {
     return companyHash;
@@ -749,7 +807,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the companyHash attribute of the ContactList object
    *
-   *@param  companyHash  The new companyHash value
+   * @param  companyHash  The new companyHash value
    */
   public void setCompanyHash(HashMap companyHash) {
     this.companyHash = companyHash;
@@ -759,7 +817,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the sclOwnerId attribute of the ContactList object
    *
-   *@return    The sclOwnerId value
+   * @return    The sclOwnerId value
    */
   public int getSclOwnerId() {
     return sclOwnerId;
@@ -769,7 +827,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the sclOwnerIdRange attribute of the ContactList object
    *
-   *@return    The sclOwnerIdRange value
+   * @return    The sclOwnerIdRange value
    */
   public String getSclOwnerIdRange() {
     return sclOwnerIdRange;
@@ -779,7 +837,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the sclOwnerId attribute of the ContactList object
    *
-   *@param  tmp  The new sclOwnerId value
+   * @param  tmp  The new sclOwnerId value
    */
   public void setSclOwnerId(int tmp) {
     this.sclOwnerId = tmp;
@@ -789,7 +847,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the sclOwnerIdRange attribute of the ContactList object
    *
-   *@param  tmp  The new sclOwnerIdRange value
+   * @param  tmp  The new sclOwnerIdRange value
    */
   public void setSclOwnerIdRange(String tmp) {
     this.sclOwnerIdRange = tmp;
@@ -799,8 +857,8 @@ public class ContactList extends Vector {
   /**
    *  Sets the PagedListInfo attribute of the ContactList object
    *
-   *@param  tmp  The new PagedListInfo value
-   *@since       1.1
+   * @param  tmp  The new PagedListInfo value
+   * @since       1.1
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -810,8 +868,8 @@ public class ContactList extends Vector {
   /**
    *  Sets the Title attribute of the ContactList object
    *
-   *@param  title  The new Title value
-   *@since
+   * @param  title  The new Title value
+   * @since
    */
   public void setTitle(String title) {
     this.title = title;
@@ -819,10 +877,19 @@ public class ContactList extends Vector {
 
 
   /**
-   *  Sets the OrgId attribute of the ContactList object
+   *  Gets the orgId attribute of the ContactList object
    *
-   *@param  tmp  The new OrgId value
-   *@since       1.1
+   * @return    The orgId value
+   */
+  public int getOrgId() {
+    return orgId;
+  }
+
+
+  /**
+   *  Sets the orgId attribute of the ContactList object
+   *
+   * @param  tmp  The new orgId value
    */
   public void setOrgId(int tmp) {
     this.orgId = tmp;
@@ -830,10 +897,20 @@ public class ContactList extends Vector {
 
 
   /**
+   *  Sets the orgId attribute of the ContactList object
+   *
+   * @param  tmp  The new orgId value
+   */
+  public void setOrgId(String tmp) {
+    this.orgId = Integer.parseInt(tmp);
+  }
+
+
+  /**
    *  Sets the EmailNotNull attribute of the ContactList object
    *
-   *@param  emailNotNull  The new EmailNotNull value
-   *@since
+   * @param  emailNotNull  The new EmailNotNull value
+   * @since
    */
   public void setEmailNotNull(boolean emailNotNull) {
     this.emailNotNull = emailNotNull;
@@ -843,8 +920,8 @@ public class ContactList extends Vector {
   /**
    *  Sets the TypeId attribute of the ContactList object
    *
-   *@param  tmp  The new TypeId value
-   *@since       1.1
+   * @param  tmp  The new TypeId value
+   * @since       1.1
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -854,8 +931,8 @@ public class ContactList extends Vector {
   /**
    *  Sets the CheckUserAccess attribute of the ContactList object
    *
-   *@param  tmp  The new CheckUserAccess value
-   *@since       1.8
+   * @param  tmp  The new CheckUserAccess value
+   * @since       1.8
    */
   public void setCheckUserAccess(boolean tmp) {
     this.checkUserAccess = tmp;
@@ -865,8 +942,8 @@ public class ContactList extends Vector {
   /**
    *  Sets the BuildDetails attribute of the ContactList object
    *
-   *@param  tmp  The new BuildDetails value
-   *@since
+   * @param  tmp  The new BuildDetails value
+   * @since
    */
   public void setBuildDetails(boolean tmp) {
     this.buildDetails = tmp;
@@ -876,7 +953,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the buildTypes attribute of the ContactList object
    *
-   *@param  tmp  The new buildTypes value
+   * @param  tmp  The new buildTypes value
    */
   public void setBuildTypes(boolean tmp) {
     this.buildTypes = tmp;
@@ -886,8 +963,8 @@ public class ContactList extends Vector {
   /**
    *  Sets the SearchValues attribute of the ContactList object
    *
-   *@param  outerHash  The new SearchValues value
-   *@since
+   * @param  outerHash  The new SearchValues value
+   * @since
    */
   public void setSearchValues(HashMap[] outerHash) {
     this.companyHash = outerHash[0];
@@ -907,7 +984,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the departmentId attribute of the ContactList object
    *
-   *@param  departmentId  The new departmentId value
+   * @param  departmentId  The new departmentId value
    */
   public void setDepartmentId(int departmentId) {
     this.departmentId = departmentId;
@@ -917,7 +994,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the withProjectsOnly attribute of the ContactList object
    *
-   *@param  withProjectsOnly  The new withProjectsOnly value
+   * @param  withProjectsOnly  The new withProjectsOnly value
    */
   public void setWithProjectsOnly(boolean withProjectsOnly) {
     this.withProjectsOnly = withProjectsOnly;
@@ -927,7 +1004,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the projectId attribute of the ContactList object
    *
-   *@param  projectId  The new projectId value
+   * @param  projectId  The new projectId value
    */
   public void setProjectId(int projectId) {
     this.projectId = projectId;
@@ -937,7 +1014,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the contactIdRange attribute of the ContactList object
    *
-   *@return    The contactIdRange value
+   * @return    The contactIdRange value
    */
   public String getContactIdRange() {
     return contactIdRange;
@@ -947,7 +1024,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the checkExcludedFromCampaign attribute of the ContactList object
    *
-   *@return    The checkExcludedFromCampaign value
+   * @return    The checkExcludedFromCampaign value
    */
   public int getCheckExcludedFromCampaign() {
     return checkExcludedFromCampaign;
@@ -957,7 +1034,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the pagedListInfo attribute of the ContactList object
    *
-   *@return    The pagedListInfo value
+   * @return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -967,7 +1044,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the typeIdHash attribute of the ContactList object
    *
-   *@return    The typeIdHash value
+   * @return    The typeIdHash value
    */
   public HashMap getTypeIdHash() {
     return typeIdHash;
@@ -977,7 +1054,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the typeIdHash attribute of the ContactList object
    *
-   *@param  typeIdHash  The new typeIdHash value
+   * @param  typeIdHash  The new typeIdHash value
    */
   public void setTypeIdHash(HashMap typeIdHash) {
     this.typeIdHash = typeIdHash;
@@ -987,7 +1064,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the includeEnabled attribute of the ContactList object
    *
-   *@return    The includeEnabled value
+   * @return    The includeEnabled value
    */
   public int getIncludeEnabled() {
     return includeEnabled;
@@ -997,7 +1074,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the includeEnabled attribute of the ContactList object
    *
-   *@param  includeEnabled  The new includeEnabled value
+   * @param  includeEnabled  The new includeEnabled value
    */
   public void setIncludeEnabled(int includeEnabled) {
     this.includeEnabled = includeEnabled;
@@ -1007,7 +1084,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the areaCodeHash attribute of the ContactList object
    *
-   *@return    The areaCodeHash value
+   * @return    The areaCodeHash value
    */
   public HashMap getAreaCodeHash() {
     return areaCodeHash;
@@ -1017,7 +1094,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the areaCodeHash attribute of the ContactList object
    *
-   *@param  areaCodeHash  The new areaCodeHash value
+   * @param  areaCodeHash  The new areaCodeHash value
    */
   public void setAreaCodeHash(HashMap areaCodeHash) {
     this.areaCodeHash = areaCodeHash;
@@ -1027,8 +1104,8 @@ public class ContactList extends Vector {
   /**
    *  Gets the SearchText attribute of the ContactList object
    *
-   *@return    The SearchText value
-   *@since
+   * @return    The SearchText value
+   * @since
    */
   public String getSearchText() {
     return searchText;
@@ -1038,8 +1115,8 @@ public class ContactList extends Vector {
   /**
    *  Gets the OwnerIdRange attribute of the ContactList object
    *
-   *@return    The OwnerIdRange value
-   *@since
+   * @return    The OwnerIdRange value
+   * @since
    */
   public String getOwnerIdRange() {
     return ownerIdRange;
@@ -1049,7 +1126,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the accountOwnerIdRange attribute of the ContactList object
    *
-   *@return    The accountOwnerIdRange value
+   * @return    The accountOwnerIdRange value
    */
   public String getAccountOwnerIdRange() {
     return accountOwnerIdRange;
@@ -1059,7 +1136,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the withAccountsOnly attribute of the ContactList object
    *
-   *@return    The withAccountsOnly value
+   * @return    The withAccountsOnly value
    */
   public boolean getWithAccountsOnly() {
     return withAccountsOnly;
@@ -1069,8 +1146,8 @@ public class ContactList extends Vector {
   /**
    *  Gets the Scl attribute of the ContactList object
    *
-   *@return    The Scl value
-   *@since
+   * @return    The Scl value
+   * @since
    */
   public SearchCriteriaList getScl() {
     return scl;
@@ -1080,7 +1157,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the importId attribute of the ContactList object
    *
-   *@param  tmp  The new importId value
+   * @param  tmp  The new importId value
    */
   public void setImportId(int tmp) {
     this.importId = tmp;
@@ -1090,7 +1167,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the excludeUnapprovedContacts attribute of the ContactList object
    *
-   *@param  tmp  The new excludeUnapprovedContacts value
+   * @param  tmp  The new excludeUnapprovedContacts value
    */
   public void setExcludeUnapprovedContacts(boolean tmp) {
     this.excludeUnapprovedContacts = tmp;
@@ -1100,7 +1177,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the excludeUnapprovedContacts attribute of the ContactList object
    *
-   *@param  tmp  The new excludeUnapprovedContacts value
+   * @param  tmp  The new excludeUnapprovedContacts value
    */
   public void setExcludeUnapprovedContacts(String tmp) {
     this.excludeUnapprovedContacts = DatabaseUtils.parseBoolean(tmp);
@@ -1110,7 +1187,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the excludeUnapprovedContacts attribute of the ContactList object
    *
-   *@return    The excludeUnapprovedContacts value
+   * @return    The excludeUnapprovedContacts value
    */
   public boolean getExcludeUnapprovedContacts() {
     return excludeUnapprovedContacts;
@@ -1120,7 +1197,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the importId attribute of the ContactList object
    *
-   *@param  tmp  The new importId value
+   * @param  tmp  The new importId value
    */
   public void setImportId(String tmp) {
     this.importId = Integer.parseInt(tmp);
@@ -1130,7 +1207,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the statusId attribute of the ContactList object
    *
-   *@param  tmp  The new statusId value
+   * @param  tmp  The new statusId value
    */
   public void setStatusId(int tmp) {
     this.statusId = tmp;
@@ -1140,7 +1217,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the statusId attribute of the ContactList object
    *
-   *@param  tmp  The new statusId value
+   * @param  tmp  The new statusId value
    */
   public void setStatusId(String tmp) {
     this.statusId = Integer.parseInt(tmp);
@@ -1150,7 +1227,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the importId attribute of the ContactList object
    *
-   *@return    The importId value
+   * @return    The importId value
    */
   public int getImportId() {
     return importId;
@@ -1160,7 +1237,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the statusId attribute of the ContactList object
    *
-   *@return    The statusId value
+   * @return    The statusId value
    */
   public int getStatusId() {
     return statusId;
@@ -1170,8 +1247,8 @@ public class ContactList extends Vector {
   /**
    *  Gets the EmailNotNull attribute of the ContactList object
    *
-   *@return    The EmailNotNull value
-   *@since
+   * @return    The EmailNotNull value
+   * @since
    */
   public boolean getEmailNotNull() {
     return emailNotNull;
@@ -1181,8 +1258,8 @@ public class ContactList extends Vector {
   /**
    *  Gets the Owner attribute of the ContactList object
    *
-   *@return    The Owner value
-   *@since
+   * @return    The Owner value
+   * @since
    */
   public int getOwner() {
     return owner;
@@ -1192,8 +1269,8 @@ public class ContactList extends Vector {
   /**
    *  Gets the Company attribute of the ContactList object
    *
-   *@return    The Company value
-   *@since
+   * @return    The Company value
+   * @since
    */
   public String getCompany() {
     return company;
@@ -1203,8 +1280,8 @@ public class ContactList extends Vector {
   /**
    *  Gets the Title attribute of the ContactList object
    *
-   *@return    The Title value
-   *@since
+   * @return    The Title value
+   * @since
    */
   public String getTitle() {
     return title;
@@ -1214,7 +1291,7 @@ public class ContactList extends Vector {
   /**
    *  Gets the includeNonUsersOnly attribute of the ContactList object
    *
-   *@return    The includeNonUsersOnly value
+   * @return    The includeNonUsersOnly value
    */
   public boolean getIncludeNonUsersOnly() {
     return includeNonUsersOnly;
@@ -1224,7 +1301,7 @@ public class ContactList extends Vector {
   /**
    *  Sets the includeNonUsersOnly attribute of the ContactList object
    *
-   *@param  includeNonUsersOnly  The new includeNonUsersOnly value
+   * @param  includeNonUsersOnly  The new includeNonUsersOnly value
    */
   public void setIncludeNonUsersOnly(boolean includeNonUsersOnly) {
     this.includeNonUsersOnly = includeNonUsersOnly;
@@ -1234,8 +1311,8 @@ public class ContactList extends Vector {
   /**
    *  Gets the MiddleName attribute of the ContactList object
    *
-   *@return    The MiddleName value
-   *@since
+   * @return    The MiddleName value
+   * @since
    */
   public String getMiddleName() {
     return middleName;
@@ -1245,8 +1322,8 @@ public class ContactList extends Vector {
   /**
    *  Gets the LastName attribute of the ContactList object
    *
-   *@return    The LastName value
-   *@since
+   * @return    The LastName value
+   * @since
    */
   public String getLastName() {
     return lastName;
@@ -1256,8 +1333,8 @@ public class ContactList extends Vector {
   /**
    *  Gets the FirstName attribute of the ContactList object
    *
-   *@return    The FirstName value
-   *@since
+   * @return    The FirstName value
+   * @since
    */
   public String getFirstName() {
     return firstName;
@@ -1265,11 +1342,61 @@ public class ContactList extends Vector {
 
 
   /**
+   *  Gets the hierarchialUsers attribute of the ContactList object
+   *
+   * @return    The hierarchialUsers value
+   */
+  public int getHierarchialUsers() {
+    return hierarchialUsers;
+  }
+
+
+  /**
+   *  Sets the hierarchialUsers attribute of the ContactList object
+   *
+   * @param  tmp  The new hierarchialUsers value
+   */
+  public void setHierarchialUsers(int tmp) {
+    this.hierarchialUsers = tmp;
+  }
+
+
+  /**
+   *  Sets the hierarchialUsers attribute of the ContactList object
+   *
+   * @param  tmp  The new hierarchialUsers value
+   */
+  public void setHierarchialUsers(String tmp) {
+    this.hierarchialUsers = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the users attribute of the ContactList object
+   *
+   * @return    The users value
+   */
+  public UserList getUsers() {
+    return users;
+  }
+
+
+  /**
+   *  Sets the users attribute of the ContactList object
+   *
+   * @param  tmp  The new users value
+   */
+  public void setUsers(UserList tmp) {
+    this.users = tmp;
+  }
+
+
+  /**
    *  Gets the HtmlSelect attribute of the ContactList object
    *
-   *@param  selectName  Description of Parameter
-   *@return             The HtmlSelect value
-   *@since              1.8
+   * @param  selectName  Description of Parameter
+   * @return             The HtmlSelect value
+   * @since              1.8
    */
   public String getHtmlSelect(String selectName) {
     return getHtmlSelect(selectName, -1);
@@ -1279,9 +1406,9 @@ public class ContactList extends Vector {
   /**
    *  Gets the EmptyHtmlSelect attribute of the ContactList object
    *
-   *@param  selectName  Description of Parameter
-   *@return             The EmptyHtmlSelect value
-   *@since
+   * @param  selectName  Description of Parameter
+   * @return             The EmptyHtmlSelect value
+   * @since
    */
   public String getEmptyHtmlSelect(String selectName) {
     HtmlSelect contactListSelect = new HtmlSelect();
@@ -1291,12 +1418,660 @@ public class ContactList extends Vector {
 
 
   /**
+   *  Gets the leadStatus attribute of the ContactList object
+   *
+   * @return    The leadStatus value
+   */
+  public int getLeadStatus() {
+    return leadStatus;
+  }
+
+
+  /**
+   *  Sets the leadStatus attribute of the ContactList object
+   *
+   * @param  tmp  The new leadStatus value
+   */
+  public void setLeadStatus(int tmp) {
+    this.leadStatus = tmp;
+  }
+
+
+  /**
+   *  Sets the leadStatus attribute of the ContactList object
+   *
+   * @param  tmp  The new leadStatus value
+   */
+  public void setLeadStatus(String tmp) {
+    this.leadStatus = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the source attribute of the ContactList object
+   *
+   * @return    The source value
+   */
+  public int getSource() {
+    return source;
+  }
+
+
+  /**
+   *  Sets the source attribute of the ContactList object
+   *
+   * @param  tmp  The new source value
+   */
+  public void setSource(int tmp) {
+    this.source = tmp;
+  }
+
+
+  /**
+   *  Sets the source attribute of the ContactList object
+   *
+   * @param  tmp  The new source value
+   */
+  public void setSource(String tmp) {
+    this.source = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the rating attribute of the ContactList object
+   *
+   * @return    The rating value
+   */
+  public int getRating() {
+    return rating;
+  }
+
+
+  /**
+   *  Sets the rating attribute of the ContactList object
+   *
+   * @param  tmp  The new rating value
+   */
+  public void setRating(int tmp) {
+    this.rating = tmp;
+  }
+
+
+  /**
+   *  Sets the rating attribute of the ContactList object
+   *
+   * @param  tmp  The new rating value
+   */
+  public void setRating(String tmp) {
+    this.rating = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the comments attribute of the ContactList object
+   *
+   * @return    The comments value
+   */
+  public String getComments() {
+    return comments;
+  }
+
+
+  /**
+   *  Sets the comments attribute of the ContactList object
+   *
+   * @param  tmp  The new comments value
+   */
+  public void setComments(String tmp) {
+    this.comments = tmp;
+  }
+
+
+  /**
+   *  Gets the leadsOnly attribute of the ContactList object
+   *
+   * @return    The leadsOnly value
+   */
+  public int getLeadsOnly() {
+    return leadsOnly;
+  }
+
+
+  /**
+   *  Sets the leadsOnly attribute of the ContactList object
+   *
+   * @param  tmp  The new leadsOnly value
+   */
+  public void setLeadsOnly(int tmp) {
+    this.leadsOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the leadsOnly attribute of the ContactList object
+   *
+   * @param  tmp  The new leadsOnly value
+   */
+  public void setLeadsOnly(String tmp) {
+    this.leadsOnly = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the userId attribute of the ContactList object
+   *
+   * @return    The userId value
+   */
+  public int getUserId() {
+    return userId;
+  }
+
+
+  /**
+   *  Sets the userId attribute of the ContactList object
+   *
+   * @param  tmp  The new userId value
+   */
+  public void setUserId(int tmp) {
+    this.userId = tmp;
+  }
+
+
+  /**
+   *  Sets the userId attribute of the ContactList object
+   *
+   * @param  tmp  The new userId value
+   */
+  public void setUserId(String tmp) {
+    this.userId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the leadStatusExists attribute of the ContactList object
+   *
+   * @return    The leadStatusExists value
+   */
+  public int getLeadStatusExists() {
+    return leadStatusExists;
+  }
+
+
+  /**
+   *  Sets the leadStatusExists attribute of the ContactList object
+   *
+   * @param  tmp  The new leadStatusExists value
+   */
+  public void setLeadStatusExists(int tmp) {
+    this.leadStatusExists = tmp;
+  }
+
+
+  /**
+   *  Sets the leadStatusExists attribute of the ContactList object
+   *
+   * @param  tmp  The new leadStatusExists value
+   */
+  public void setLeadStatusExists(String tmp) {
+    this.leadStatusExists = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the readBy attribute of the ContactList object
+   *
+   * @return    The readBy value
+   */
+  public int getReadBy() {
+    return readBy;
+  }
+
+
+  /**
+   *  Sets the readBy attribute of the ContactList object
+   *
+   * @param  tmp  The new readBy value
+   */
+  public void setReadBy(int tmp) {
+    this.readBy = tmp;
+  }
+
+
+  /**
+   *  Sets the readBy attribute of the ContactList object
+   *
+   * @param  tmp  The new readBy value
+   */
+  public void setReadBy(String tmp) {
+    this.readBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the enteredStart attribute of the ContactList object
+   *
+   * @return    The enteredStart value
+   */
+  public Timestamp getEnteredStart() {
+    return enteredStart;
+  }
+
+
+  /**
+   *  Sets the enteredStart attribute of the ContactList object
+   *
+   * @param  tmp  The new enteredStart value
+   */
+  public void setEnteredStart(Timestamp tmp) {
+    this.enteredStart = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredStart attribute of the ContactList object
+   *
+   * @param  tmp  The new enteredStart value
+   */
+  public void setEnteredStart(java.sql.Date tmp) {
+    try {
+      this.enteredStart = new Timestamp(tmp.getTime());
+    } catch (Exception e) {
+    }
+  }
+
+
+  /**
+   *  Sets the enteredStart attribute of the ContactList object
+   *
+   * @param  tmp  The new enteredStart value
+   */
+  public void setEnteredStart(String tmp) {
+    try {
+      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).parse(tmp);
+      this.enteredStart = new java.sql.Timestamp(new java.util.Date().getTime());
+      this.enteredStart.setTime(tmpDate.getTime());
+    } catch (Exception e) {
+      this.enteredStart = null;
+    }
+//this.enteredStart = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Gets the enteredEnd attribute of the ContactList object
+   *
+   * @return    The enteredEnd value
+   */
+  public Timestamp getEnteredEnd() {
+    return enteredEnd;
+  }
+
+
+  /**
+   *  Sets the enteredEnd attribute of the ContactList object
+   *
+   * @param  tmp  The new enteredEnd value
+   */
+  public void setEnteredEnd(Timestamp tmp) {
+    this.enteredEnd = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredEnd attribute of the ContactList object
+   *
+   * @param  tmp  The new enteredEnd value
+   */
+  public void setEnteredEnd(java.sql.Date tmp) {
+    try {
+      this.enteredEnd = new Timestamp(tmp.getTime());
+    } catch (Exception e) {
+    }
+  }
+
+
+  /**
+   *  Sets the enteredEnd attribute of the ContactList object
+   *
+   * @param  tmp  The new enteredEnd value
+   */
+  public void setEnteredEnd(String tmp) {
+    try {
+      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).parse(tmp);
+      this.enteredEnd = new java.sql.Timestamp(new java.util.Date().getTime());
+      this.enteredEnd.setTime(tmpDate.getTime());
+    } catch (Exception e) {
+      this.enteredEnd = null;
+    }
+//this.enteredEnd = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Gets the conversionDateStart attribute of the ContactList object
+   *
+   * @return    The conversionDateStart value
+   */
+  public Timestamp getConversionDateStart() {
+    return conversionDateStart;
+  }
+
+
+  /**
+   *  Sets the conversionDateStart attribute of the ContactList object
+   *
+   * @param  tmp  The new conversionDateStart value
+   */
+  public void setConversionDateStart(Timestamp tmp) {
+    this.conversionDateStart = tmp;
+  }
+
+
+  /**
+   *  Sets the conversionDateStart attribute of the ContactList object
+   *
+   * @param  tmp  The new conversionDateStart value
+   */
+  public void setConversionDateStart(java.sql.Date tmp) {
+    try {
+      this.conversionDateStart = new Timestamp(tmp.getTime());
+    } catch (Exception e) {
+    }
+  }
+
+
+  /**
+   *  Sets the conversionDateStart attribute of the ContactList object
+   *
+   * @param  tmp  The new conversionDateStart value
+   */
+  public void setConversionDateStart(String tmp) {
+    try {
+      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).parse(tmp);
+      this.conversionDateStart = new java.sql.Timestamp(new java.util.Date().getTime());
+      this.conversionDateStart.setTime(tmpDate.getTime());
+    } catch (Exception e) {
+      this.conversionDateStart = null;
+    }
+  }
+
+
+  /**
+   *  Gets the conversionDateEnd attribute of the ContactList object
+   *
+   * @return    The conversionDateEnd value
+   */
+  public Timestamp getConversionDateEnd() {
+    return conversionDateEnd;
+  }
+
+
+  /**
+   *  Sets the conversionDateEnd attribute of the ContactList object
+   *
+   * @param  tmp  The new conversionDateEnd value
+   */
+  public void setConversionDateEnd(Timestamp tmp) {
+    this.conversionDateEnd = tmp;
+  }
+
+
+  /**
+   *  Sets the conversionDateEnd attribute of the ContactList object
+   *
+   * @param  tmp  The new conversionDateEnd value
+   */
+  public void setConversionDateEnd(java.sql.Date tmp) {
+    try {
+      this.conversionDateEnd = new Timestamp(tmp.getTime());
+    } catch (Exception e) {
+    }
+  }
+
+
+  /**
+   *  Sets the conversionDateEnd attribute of the ContactList object
+   *
+   * @param  tmp  The new conversionDateEnd value
+   */
+  public void setConversionDateEnd(String tmp) {
+    try {
+      java.util.Date tmpDate = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG).parse(tmp);
+      this.conversionDateEnd = new java.sql.Timestamp(new java.util.Date().getTime());
+      this.conversionDateEnd.setTime(tmpDate.getTime());
+    } catch (Exception e) {
+      this.conversionDateEnd = null;
+    }
+  }
+
+
+  /**
+   *  Gets the postalCode attribute of the ContactList object
+   *
+   * @return    The postalCode value
+   */
+  public int getPostalCode() {
+    return postalCode;
+  }
+
+
+  /**
+   *  Sets the postalCode attribute of the ContactList object
+   *
+   * @param  tmp  The new postalCode value
+   */
+  public void setPostalCode(int tmp) {
+    this.postalCode = tmp;
+  }
+
+
+  /**
+   *  Sets the postalCode attribute of the ContactList object
+   *
+   * @param  tmp  The new postalCode value
+   */
+  public void setPostalCode(String tmp) {
+    this.postalCode = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the hasConversionDate attribute of the ContactList object
+   *
+   * @return    The hasConversionDate value
+   */
+  public int getHasConversionDate() {
+    return hasConversionDate;
+  }
+
+
+  /**
+   *  Sets the hasConversionDate attribute of the ContactList object
+   *
+   * @param  tmp  The new hasConversionDate value
+   */
+  public void setHasConversionDate(int tmp) {
+    this.hasConversionDate = tmp;
+  }
+
+
+  /**
+   *  Sets the hasConversionDate attribute of the ContactList object
+   *
+   * @param  tmp  The new hasConversionDate value
+   */
+  public void setHasConversionDate(String tmp) {
+    this.hasConversionDate = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the oldestFirst attribute of the ContactList object
+   *
+   * @return    The oldestFirst value
+   */
+  public int getOldestFirst() {
+    return oldestFirst;
+  }
+
+
+  /**
+   *  Sets the oldestFirst attribute of the ContactList object
+   *
+   * @param  tmp  The new oldestFirst value
+   */
+  public void setOldestFirst(int tmp) {
+    this.oldestFirst = tmp;
+  }
+
+
+  /**
+   *  Sets the oldestFirst attribute of the ContactList object
+   *
+   * @param  tmp  The new oldestFirst value
+   */
+  public void setOldestFirst(String tmp) {
+    this.oldestFirst = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the emailAddress attribute of the ContactList object
+   *
+   * @return    The emailAddress value
+   */
+  public String getEmailAddress() {
+    return emailAddress;
+  }
+
+
+  /**
+   *  Sets the emailAddress attribute of the ContactList object
+   *
+   * @param  tmp  The new emailAddress value
+   */
+  public void setEmailAddress(String tmp) {
+    this.emailAddress = tmp;
+  }
+
+
+  /**
+   *  Gets the country attribute of the ContactList object
+   *
+   * @return    The country value
+   */
+  public String getCountry() {
+    return country;
+  }
+
+
+  /**
+   *  Sets the country attribute of the ContactList object
+   *
+   * @param  tmp  The new country value
+   */
+  public void setCountry(String tmp) {
+    this.country = tmp;
+  }
+
+
+  /**
+   *  Gets the ownerOrReader attribute of the ContactList object
+   *
+   * @return    The ownerOrReader value
+   */
+  public boolean getOwnerOrReader() {
+    return ownerOrReader;
+  }
+
+
+  /**
+   *  Sets the ownerOrReader attribute of the ContactList object
+   *
+   * @param  tmp  The new ownerOrReader value
+   */
+  public void setOwnerOrReader(boolean tmp) {
+    this.ownerOrReader = tmp;
+  }
+
+
+  /**
+   *  Sets the ownerOrReader attribute of the ContactList object
+   *
+   * @param  tmp  The new ownerOrReader value
+   */
+  public void setOwnerOrReader(String tmp) {
+    this.ownerOrReader = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the errors attribute of the ContactList object
+   *
+   * @return    The errors value
+   */
+  public HashMap getErrors() {
+    return errors;
+  }
+
+
+  /**
+   *  Sets the errors attribute of the ContactList object
+   *
+   * @param  tmp  The new errors value
+   */
+  public void setErrors(HashMap tmp) {
+    this.errors = tmp;
+  }
+
+
+  /**
+   *  Gets the warnings attribute of the ContactList object
+   *
+   * @return    The warnings value
+   */
+  public HashMap getWarnings() {
+    return warnings;
+  }
+
+
+  /**
+   *  Sets the warnings attribute of the ContactList object
+   *
+   * @param  tmp  The new warnings value
+   */
+  public void setWarnings(HashMap tmp) {
+    this.warnings = tmp;
+  }
+
+
+  /**
+   *  Gets the nextValue attribute of the ContactList object
+   *
+   * @return    The nextValue value
+   */
+  public String getNextValue() {
+    return nextValue;
+  }
+
+
+  /**
+   *  Sets the nextValue attribute of the ContactList object
+   *
+   * @param  tmp  The new nextValue value
+   */
+  public void setNextValue(String tmp) {
+    this.nextValue = tmp;
+  }
+
+
+  /**
    *  Gets the HtmlSelect attribute of the ContactList object
    *
-   *@param  selectName  Description of Parameter
-   *@param  defaultKey  Description of Parameter
-   *@return             The HtmlSelect value
-   *@since              1.8
+   * @param  selectName  Description of Parameter
+   * @param  defaultKey  Description of Parameter
+   * @return             The HtmlSelect value
+   * @since              1.8
    */
   public String getHtmlSelect(String selectName, int defaultKey) {
     HtmlSelect contactListSelect = new HtmlSelect();
@@ -1322,12 +2097,10 @@ public class ContactList extends Vector {
   /**
    *  Description of the Method
    *
-   *@param  thisOwnerId    Description of the Parameter
-   *@param  thisUserRange  Description of the Parameter
+   * @param  thisOwnerId    Description of the Parameter
+   * @param  thisUserRange  Description of the Parameter
    */
   public void buildQuery(int thisOwnerId, String thisUserRange) {
-
-    String fieldName = "";
     String readyToGo = "";
 
     HashMap[] outerHash = null;
@@ -1344,10 +2117,7 @@ public class ContactList extends Vector {
     HashMap contactId = new HashMap();
     HashMap accountTypeId = new HashMap();
 
-    int count = 0;
-
     //THIS CORRESPONDS TO THE FIELD LIST
-
     outerHash = new HashMap[]{
         company,
         namefirst,
@@ -1360,28 +2130,23 @@ public class ContactList extends Vector {
         contactId,
         accountTypeId
         };
-
     if (System.getProperty("DEBUG") != null) {
       System.out.println("ContactList-> SCL Size: " + this.getScl().size() + " name: " + this.getScl().getGroupName());
     }
     Iterator i = this.getScl().keySet().iterator();
     while (i.hasNext()) {
-      ++count;
       Integer group = (Integer) i.next();
       SearchCriteriaGroup thisGroup = (SearchCriteriaGroup) this.getScl().get(group);
-      fieldName = thisGroup.getGroupField().getFieldName();
 
       Iterator j = thisGroup.iterator();
 
       while (j.hasNext()) {
-
         SearchCriteriaElement thisElement = (SearchCriteriaElement) j.next();
 
         //some alterations
         if (thisElement.getFieldId() == 11) {
           thisElement.setFieldId(10);
         }
-
         readyToGo = replace(thisElement.getText().toLowerCase(), '\'', "\\'");
         //String check = (String) outerHash[(thisElement.getFieldId() - 1)].get(thisElement.getOperator());
         HashMap tempHash = (HashMap) outerHash[(thisElement.getFieldId() - 1)].get(thisElement.getOperator());
@@ -1394,7 +2159,6 @@ public class ContactList extends Vector {
             int year = 0;
 
             StringTokenizer st = new StringTokenizer(readyToGo, "/");
-
             if (st.hasMoreTokens()) {
               month = Integer.parseInt(st.nextToken());
               day = Integer.parseInt(st.nextToken());
@@ -1405,7 +2169,6 @@ public class ContactList extends Vector {
             }
 
             Calendar tmpCal = new GregorianCalendar(year, (month - 1), day);
-
             //fix it if "on or before" or "after" is selected.
             if (thisElement.getOperatorId() == 8 || thisElement.getOperatorId() == 10) {
               tmpCal.add(java.util.Calendar.DATE, +1);
@@ -1427,16 +2190,12 @@ public class ContactList extends Vector {
           }
         } else {
           //check = check + ", '" + readyToGo + "'";
-
           tempHash.put(readyToGo, thisElement.getSourceId() + "");
           outerHash[(thisElement.getFieldId() - 1)].remove(thisElement.getOperator());
           outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), tempHash);
-
           //outerHash[(thisElement.getFieldId() - 1)].put(thisElement.getOperator(), check);
         }
         //end of that
-
-
       }
     }
 
@@ -1448,8 +2207,8 @@ public class ContactList extends Vector {
   /**
    *  Builds a list, a part of the XML API
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void select(Connection db) throws SQLException {
     buildList(db);
@@ -1461,9 +2220,9 @@ public class ContactList extends Vector {
    *  set after this object is constructed, then the buildList method is called
    *  to generate the list.
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.1
+   * @param  db                Description of Parameter
+   * @exception  SQLException  Description of Exception
+   * @since                    1.1
    */
   public void buildList(Connection db) throws SQLException {
 
@@ -1512,12 +2271,23 @@ public class ContactList extends Vector {
         rs.close();
         pst.close();
       }
-
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("c.namelast, c.namefirst, c.company", null);
+      if (this.oldestFirst == Constants.TRUE) {
+        pagedListInfo.setColumnToSortBy("c.entered, c.namelast, c.namefirst, c.company");
+      } else if (this.oldestFirst == Constants.FALSE) {
+        pagedListInfo.setColumnToSortBy("c.entered DESC, c.namelast, c.namefirst, c.company");
+      } else if (this.oldestFirst == Constants.UNDEFINED && (pagedListInfo.getColumnToSortBy() == null || "".equals(pagedListInfo.getColumnToSortBy()))) {
+        pagedListInfo.setColumnToSortBy("c.namelast, c.namefirst, c.company");
+      }
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY c.namelast ");
+      if (this.oldestFirst == Constants.TRUE) {
+        sqlOrder.append("ORDER BY c.entered, c.namelast, c.namefirst, c.company");
+      } else if (this.oldestFirst == Constants.FALSE) {
+        sqlOrder.append("ORDER BY c.entered DESC, c.namelast, c.namefirst, c.company");
+      } else if (this.oldestFirst == Constants.UNDEFINED) {
+        sqlOrder.append("ORDER BY c.namelast, c.namefirst, c.company ");
+      }
     }
 
     //Need to build a base SQL statement for returning records
@@ -1557,8 +2327,8 @@ public class ContactList extends Vector {
   /**
    *  Adds a feature to the IgnoreTypeId attribute of the ContactList object
    *
-   *@param  tmp  The feature to be added to the IgnoreTypeId attribute
-   *@since       1.2
+   * @param  tmp  The feature to be added to the IgnoreTypeId attribute
+   * @since       1.2
    */
   public void addIgnoreTypeId(String tmp) {
     ignoreTypeIdList.addElement(tmp);
@@ -1568,8 +2338,8 @@ public class ContactList extends Vector {
   /**
    *  Adds a feature to the IgnoreTypeId attribute of the ContactList object
    *
-   *@param  tmp  The feature to be added to the IgnoreTypeId attribute
-   *@since       1.2
+   * @param  tmp  The feature to be added to the IgnoreTypeId attribute
+   * @since       1.2
    */
   public void addIgnoreTypeId(int tmp) {
     ignoreTypeIdList.addElement(String.valueOf(tmp));
@@ -1579,8 +2349,8 @@ public class ContactList extends Vector {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param  db                Description of Parameter
+   * @exception  SQLException  Description of Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator contacts = this.iterator();
@@ -1594,11 +2364,11 @@ public class ContactList extends Vector {
   /**
    *  Description of the Method
    *
-   *@param  str      Description of Parameter
-   *@param  oldChar  Description of Parameter
-   *@param  newStr   Description of Parameter
-   *@return          Description of the Returned Value
-   *@since
+   * @param  str      Description of Parameter
+   * @param  oldChar  Description of Parameter
+   * @param  newStr   Description of Parameter
+   * @return          Description of the Returned Value
+   * @since
    */
   String replace(String str, char oldChar, String newStr) {
     String replacedStr = "";
@@ -1617,9 +2387,9 @@ public class ContactList extends Vector {
   /**
    *  Convenience method to get a list of phone numbers for each contact
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
-   *@since                    1.5
+   * @param  db                Description of Parameter
+   * @exception  SQLException  Description of Exception
+   * @since                    1.5
    */
   private void buildResources(Connection db) throws SQLException {
     Iterator i = this.iterator();
@@ -1653,9 +2423,9 @@ public class ContactList extends Vector {
    *  Builds a base SQL where statement for filtering records to be used by
    *  sqlSelect and sqlCount
    *
-   *@param  sqlFilter  Description of Parameter
-   *@param  db         Description of the Parameter
-   *@since             1.3
+   * @param  sqlFilter  Description of Parameter
+   * @param  db         Description of the Parameter
+   * @since             1.3
    */
   private void createFilter(Connection db, StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -1670,8 +2440,10 @@ public class ContactList extends Vector {
       sqlFilter.append("AND c.enabled = ? ");
     }
 
-    if (owner != -1) {
-      sqlFilter.append("AND c.owner = ? ");
+    if (owner != -1 && !ownerOrReader) {
+      sqlFilter.append(
+          "AND c.owner = ? " +
+          "AND ((c.org_id = 0 AND employee = ?) OR c.org_id <> 0 OR c.org_id IS NULL) ");
     }
 
     if (typeId != -1) {
@@ -1761,7 +2533,7 @@ public class ContactList extends Vector {
       sqlFilter.append("AND c.user_id IN (SELECT user_id FROM access) ");
     }
 
-    if (employeesOnly) {
+    if (employeesOnly != Constants.UNDEFINED) {
       sqlFilter.append("AND c.employee = ? ");
     }
     if (accountOwnerIdRange != null) {
@@ -1784,6 +2556,117 @@ public class ContactList extends Vector {
       sqlFilter.append("AND (status_id IS NULL OR status_id = ?) ");
     }
 
+    if (leadsOnly != Constants.UNDEFINED) {
+      sqlFilter.append("AND c.lead = ? ");
+    }
+    if (leadStatus > 0 && employeesOnly == Constants.UNDEFINED) {
+      if (leadStatus == Contact.LEAD_UNPROCESSED || leadStatus == Contact.LEAD_TRASHED || leadStatus == Contact.LEAD_ASSIGNED) {
+        sqlFilter.append("AND c.lead_status = ? ");
+      }
+    } else if (leadsOnly == Constants.TRUE && leadStatus == Contact.LEAD_UNREAD && readBy == -1 && !ownerOrReader && employeesOnly == Constants.UNDEFINED) {
+      sqlFilter.append("AND c.lead_status = ? ");
+      sqlFilter.append(
+          "AND c.contact_id NOT IN ( " +
+          "SELECT clm.contact_id AS contact_id FROM contact_lead_read_map clm WHERE clm.user_id <> ? ) " +
+          "AND c.contact_id NOT IN ( " +
+          "SELECT clsm.contact_id AS contact_id FROM contact_lead_skipped_map clsm WHERE clsm.user_id = ?) " +
+          "");
+    } else if (leadStatus == -1 && readBy == -1 && employeesOnly == Constants.UNDEFINED && leadsOnly == Constants.TRUE) {
+      sqlFilter.append("AND c.lead_status IN (?, ?, ?) ");
+    }
+    if (source > -1) {
+      sqlFilter.append("AND c.source = ? ");
+    }
+
+    if (rating > -1) {
+      sqlFilter.append("AND c.rating = ? ");
+    }
+
+    if (leadsOnly == Constants.TRUE && readBy > -1 && !ownerOrReader) {
+      sqlFilter.append(
+          "AND c.contact_id NOT IN ( " +
+          "SELECT clsm.contact_id AS contact_id FROM contact_lead_skipped_map clsm WHERE clsm.user_id = ?) " +
+          "AND c.contact_id IN ( " +
+          "SELECT clrm.contact_id AS contact_id FROM contact_lead_read_map clrm WHERE clrm.user_id = ? ) ");
+    }
+
+    if (leadStatusExists == Constants.TRUE) {
+      sqlFilter.append("AND c.lead_status IS NOT NULL ");
+    } else if (leadStatusExists == Constants.FALSE) {
+      sqlFilter.append("AND c.lead_status IS NULL ");
+    }
+
+    if (enteredStart != null) {
+      sqlFilter.append("AND c.entered >= ? ");
+    }
+
+    if (enteredEnd != null) {
+      sqlFilter.append("AND c.entered <= ? ");
+    }
+
+    if (conversionDateStart != null) {
+      sqlFilter.append("AND c.conversion_date >= ? ");
+    }
+
+    if (conversionDateEnd != null) {
+      sqlFilter.append("AND c.conversion_date <= ? ");
+    }
+
+    if (emailAddress != null) {
+      sqlFilter.append("AND c.contact_id IN (SELECT cc.contact_id FROM " +
+          "contact cc LEFT JOIN contact_emailaddress ce ON (cc.contact_id = ce.contact_id ) " +
+          "WHERE cc.contact_id = c.contact_id AND ce.email = ? )");
+    }
+
+    if (postalCode != -1) {
+      sqlFilter.append("AND c.contact_id IN (" +
+          "SELECT cc.contact_id FROM contact cc LEFT JOIN contact_address ca " +
+          "ON (cc.contact_id = ca.contact_id) " +
+          "WHERE ca.postalcode = ? ) ");
+    }
+
+    if (hasConversionDate == Constants.TRUE) {
+      sqlFilter.append("AND c.conversion_date IS NOT NULL ");
+    } else if (hasConversionDate == Constants.FALSE) {
+      sqlFilter.append("AND c.conversion_date IS NULL ");
+    }
+
+    if (country != null && !"-1".equals(country)) {
+      sqlFilter.append("AND c.contact_id IN (SELECT cc.contact_id FROM " +
+          "contact cc LEFT JOIN contact_address ca ON (cc.contact_id = ca.contact_id) " +
+          "WHERE ca.country = ? ) ");
+    }
+
+    if (ownerOrReader) {
+      sqlFilter.append(
+          "AND c.contact_id NOT IN ( " +
+          "SELECT clsm.contact_id AS contact_id FROM contact_lead_skipped_map clsm WHERE clsm.user_id = ?) " +
+          "AND (c.owner = ? OR c.contact_id IN (SELECT cr.contact_id AS contact_id " +
+          "FROM contact_lead_read_map cr WHERE cr.user_id = ?)) ");
+    }
+
+    if (this.getHierarchialUsers() != -1) {
+      try {
+        users = new UserList();
+        User thisRec = new User(db, this.getHierarchialUsers());
+        thisRec.setBuildHierarchy(true);
+        thisRec.buildResources(db);
+        UserList shortChildList = thisRec.getShortChildList();
+        UserList newUserList = thisRec.getFullChildList(shortChildList, new UserList());
+        sqlFilter.append("AND c.user_id IN ( ? ");
+        users.add(thisRec);
+        Iterator iterator = (Iterator) newUserList.iterator();
+        while (iterator.hasNext()) {
+          User thisUser = (User) iterator.next();
+          users.add(thisUser);
+          sqlFilter.append(",?");
+        }
+        sqlFilter.append(") ");
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+
     //TODO: Use cached AccessTypeList to get the public codes for Account & General contacts
     if (allContacts) {
       sqlFilter.append(
@@ -1794,22 +2677,22 @@ public class ContactList extends Vector {
 
     //NOTE: Only general contacts can be personal and so AccessTypeList has to be for the General Contacts
     switch (personalId) {
-        case IGNORE_PERSONAL:
-          break;
-        case EXCLUDE_PERSONAL:
-          if (accessTypes == null) {
-            sqlFilter.append("AND c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) ");
-          } else {
-            sqlFilter.append("AND c.access_type NOT IN (" + accessTypes.getCode(AccessType.PERSONAL) + ") ");
-          }
-          break;
-        default:
-          if (accessTypes == null) {
-            sqlFilter.append("AND (c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)  OR (c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) AND c.owner = ?)) ");
-          } else {
-            sqlFilter.append("AND (c.access_type NOT IN (" + accessTypes.getCode(AccessType.PERSONAL) + ")  OR (c.access_type IN (" + accessTypes.getCode(AccessType.PERSONAL) + ") AND c.owner = ?)) ");
-          }
-          break;
+      case IGNORE_PERSONAL:
+        break;
+      case EXCLUDE_PERSONAL:
+        if (accessTypes == null) {
+          sqlFilter.append("AND c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) ");
+        } else {
+          sqlFilter.append("AND c.access_type NOT IN (" + accessTypes.getCode(AccessType.PERSONAL) + ") ");
+        }
+        break;
+      default:
+        if (accessTypes == null) {
+          sqlFilter.append("AND (c.access_type NOT IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type)  OR (c.access_type IN (SELECT code from lookup_access_types WHERE rule_id = ? AND code = c.access_type) AND c.owner = ?)) ");
+        } else {
+          sqlFilter.append("AND (c.access_type NOT IN (" + accessTypes.getCode(AccessType.PERSONAL) + ")  OR (c.access_type IN (" + accessTypes.getCode(AccessType.PERSONAL) + ") AND c.owner = ?)) ");
+        }
+        break;
     }
 
     if (searchText != null && !"".equals(searchText)) {
@@ -1817,7 +2700,15 @@ public class ContactList extends Vector {
     }
 
     if (ignoreTypeIdList.size() > 0) {
-      sqlFilter.append("AND c.employee = ? ");
+      Iterator iterator = ignoreTypeIdList.iterator();
+      while (iterator.hasNext()) {
+        String nextValue = (String) iterator.next();
+        if (nextValue.equals("" + Contact.EMPLOYEE_TYPE)) {
+          sqlFilter.append("AND c.employee = ? ");
+        } else if (nextValue.equals("" + Contact.LEAD_TYPE)) {
+          sqlFilter.append("AND c.lead = ? ");
+        }
+      }
     }
 
     //contactIds
@@ -2267,10 +3158,10 @@ public class ContactList extends Vector {
    *  Sets the parameters for the preparedStatement - these items must
    *  correspond with the createFilter statement
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
-   *@since                    1.3
+   * @param  pst               Description of Parameter
+   * @return                   Description of the Returned Value
+   * @exception  SQLException  Description of Exception
+   * @since                    1.3
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -2285,8 +3176,9 @@ public class ContactList extends Vector {
       pst.setBoolean(++i, false);
     }
 
-    if (owner != -1) {
+    if (owner != -1 && !ownerOrReader) {
       pst.setInt(++i, owner);
+      pst.setBoolean(++i, true);
     }
 
     if (typeId != -1) {
@@ -2334,8 +3226,8 @@ public class ContactList extends Vector {
       }
     }
 
-    if (employeesOnly) {
-      pst.setBoolean(++i, true);
+    if (employeesOnly != Constants.UNDEFINED) {
+      pst.setBoolean(++i, (employeesOnly == Constants.TRUE));
     }
 
     if (importId != -1) {
@@ -2349,6 +3241,73 @@ public class ContactList extends Vector {
     if (excludeUnapprovedContacts) {
       pst.setInt(++i, Import.PROCESSED_APPROVED);
     }
+    if (leadsOnly != Constants.UNDEFINED) {
+      pst.setBoolean(++i, (leadsOnly == Constants.TRUE));
+    }
+    if (leadStatus > 0 && employeesOnly == Constants.UNDEFINED) {
+      if (leadStatus == Contact.LEAD_UNPROCESSED || leadStatus == Contact.LEAD_TRASHED || leadStatus == Contact.LEAD_ASSIGNED) {
+        pst.setInt(++i, leadStatus);
+      }
+    } else if (leadsOnly == Constants.TRUE && leadStatus == Contact.LEAD_UNREAD && readBy == -1 && !ownerOrReader && employeesOnly == Constants.UNDEFINED) {
+      pst.setInt(++i, Contact.LEAD_UNPROCESSED);
+      pst.setInt(++i, userId);
+      pst.setInt(++i, userId);
+    } else if (leadStatus == -1 && readBy == -1 && employeesOnly == Constants.UNDEFINED && leadsOnly == Constants.TRUE) {
+      pst.setInt(++i, Contact.LEAD_TRASHED);
+      pst.setInt(++i, Contact.LEAD_ASSIGNED);
+      pst.setInt(++i, Contact.LEAD_UNPROCESSED);
+    }
+    if (source > -1) {
+      pst.setInt(++i, source);
+    }
+    if (rating > -1) {
+      pst.setInt(++i, rating);
+    }
+    if (leadsOnly == Constants.TRUE && readBy > -1 && !ownerOrReader) {
+      pst.setInt(++i, readBy);
+      pst.setInt(++i, readBy);
+    }
+
+    if (enteredStart != null) {
+      pst.setTimestamp(++i, enteredStart);
+    }
+
+    if (enteredEnd != null) {
+      pst.setTimestamp(++i, enteredEnd);
+    }
+
+    if (conversionDateStart != null) {
+      pst.setTimestamp(++i, conversionDateStart);
+    }
+
+    if (conversionDateEnd != null) {
+      pst.setTimestamp(++i, conversionDateEnd);
+    }
+
+    if (emailAddress != null) {
+      pst.setString(++i, emailAddress);
+    }
+
+    if (postalCode != -1) {
+      pst.setInt(++i, postalCode);
+    }
+
+    if (country != null && !"-1".equals(country)) {
+      pst.setString(++i, country);
+    }
+
+    if (ownerOrReader) {
+      pst.setInt(++i, this.getReadBy());
+      pst.setInt(++i, this.getOwner());
+      pst.setInt(++i, this.getReadBy());
+    }
+    if (this.getHierarchialUsers() != -1) {
+      Iterator iterator = (Iterator) users.iterator();
+      while (iterator.hasNext()) {
+        User thisUser = (User) iterator.next();
+        pst.setInt(++i, thisUser.getId());
+      }
+    }
 
     if (allContacts) {
       pst.setInt(++i, AccessType.PUBLIC);
@@ -2356,20 +3315,20 @@ public class ContactList extends Vector {
     }
 
     switch (personalId) {
-        case IGNORE_PERSONAL:
-          break;
-        case EXCLUDE_PERSONAL:
-          if (accessTypes == null) {
-            pst.setInt(++i, AccessType.PERSONAL);
-          }
-          break;
-        default:
-          if (accessTypes == null) {
-            pst.setInt(++i, AccessType.PERSONAL);
-            pst.setInt(++i, AccessType.PERSONAL);
-          }
-          pst.setInt(++i, personalId);
-          break;
+      case IGNORE_PERSONAL:
+        break;
+      case EXCLUDE_PERSONAL:
+        if (accessTypes == null) {
+          pst.setInt(++i, AccessType.PERSONAL);
+        }
+        break;
+      default:
+        if (accessTypes == null) {
+          pst.setInt(++i, AccessType.PERSONAL);
+          pst.setInt(++i, AccessType.PERSONAL);
+        }
+        pst.setInt(++i, personalId);
+        break;
     }
 
     if (searchText != null && !"".equals(searchText)) {
@@ -2379,7 +3338,11 @@ public class ContactList extends Vector {
     }
 
     if (ignoreTypeIdList.size() > 0) {
-      pst.setBoolean(++i, false);
+      Iterator iterator = ignoreTypeIdList.iterator();
+      while (iterator.hasNext()) {
+        String nextValue = (String) iterator.next();
+        pst.setBoolean(++i, false);
+      }
     }
 
     return i;
@@ -2389,10 +3352,10 @@ public class ContactList extends Vector {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  newOwner          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  newOwner          Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner) throws SQLException {
     int total = 0;
@@ -2410,29 +3373,52 @@ public class ContactList extends Vector {
   /**
    *  Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
-   *@param  type       Description of the Parameter
-   *@param  db         Description of the Parameter
+   * @param  db                Description of the Parameter
+   * @param  newOwner          Description of the Parameter
+   * @param  userId            Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public int reassignElements(Connection db, int newOwner, int userId) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Contact thisContact = (Contact) i.next();
+      thisContact.setModifiedBy(userId);
+      if (thisContact.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  sqlFilter  Description of the Parameter
+   * @param  type       Description of the Parameter
+   * @param  db         Description of the Parameter
    */
   public void processElementType(Connection db, StringBuffer sqlFilter, int type) {
     switch (type) {
-        case SearchCriteriaList.SOURCE_MY_CONTACTS:
-          sqlFilter.append(" AND c.owner = " + sclOwnerId + " ");
-          sqlFilter.append(" AND c.employee = " + DatabaseUtils.getFalse(db) + " ");
-          break;
-        case SearchCriteriaList.SOURCE_ALL_CONTACTS:
-          sqlFilter.append(" AND c.owner in (" + sclOwnerIdRange + ") ");
-          sqlFilter.append(" AND c.employee = " + DatabaseUtils.getFalse(db) + " ");
-          break;
-        case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
-          sqlFilter.append(" AND c.org_id > 0 ");
-          sqlFilter.append(" AND c.employee = " + DatabaseUtils.getFalse(db) + " ");
-          break;
-        case SearchCriteriaList.SOURCE_EMPLOYEES:
-          sqlFilter.append(" AND c.employee = " + DatabaseUtils.getTrue(db) + " ");
-          break;
-        default:
-          break;
+      case SearchCriteriaList.SOURCE_MY_CONTACTS:
+        sqlFilter.append("AND c.owner = " + sclOwnerId + " ");
+        sqlFilter.append("AND c.employee = " + DatabaseUtils.getFalse(db) + " ");
+        break;
+      case SearchCriteriaList.SOURCE_ALL_CONTACTS:
+        sqlFilter.append("AND c.owner in (" + sclOwnerIdRange + ") ");
+        sqlFilter.append("AND c.employee = " + DatabaseUtils.getFalse(db) + " ");
+        break;
+      case SearchCriteriaList.SOURCE_ALL_ACCOUNTS:
+        sqlFilter.append("AND c.org_id > 0 ");
+        sqlFilter.append("AND c.employee = " + DatabaseUtils.getFalse(db) + " ");
+        break;
+      case SearchCriteriaList.SOURCE_EMPLOYEES:
+        sqlFilter.append("AND c.employee = " + DatabaseUtils.getTrue(db) + " ");
+        break;
+      default:
+        break;
     }
   }
 
@@ -2440,10 +3426,10 @@ public class ContactList extends Vector {
   /**
    *  Description of the Method
    *
-   *@param  sqlFilter       Description of the Parameter
-   *@param  newTerm         Description of the Parameter
-   *@param  termsProcessed  Description of the Parameter
-   *@return                 Description of the Return Value
+   * @param  sqlFilter       Description of the Parameter
+   * @param  newTerm         Description of the Parameter
+   * @param  termsProcessed  Description of the Parameter
+   * @return                 Description of the Return Value
    */
   public boolean processElementHeader(StringBuffer sqlFilter, boolean newTerm, int termsProcessed) {
     if (firstCriteria && newTerm) {
@@ -2465,11 +3451,11 @@ public class ContactList extends Vector {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  moduleId          Description of the Parameter
-   *@param  itemId            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  moduleId          Description of the Parameter
+   * @param  itemId            Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public static int retrieveRecordCount(Connection db, int moduleId, int itemId) throws SQLException {
     int count = 0;
@@ -2498,9 +3484,9 @@ public class ContactList extends Vector {
   /**
    *  Updates the organization name of all contacts linked to this organization
    *
-   *@param  db                Description of the Parameter
-   *@param  thisOrg           Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  thisOrg           Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public static void updateOrgName(Connection db, Organization thisOrg) throws SQLException {
     PreparedStatement pst = db.prepareStatement(
@@ -2517,8 +3503,8 @@ public class ContactList extends Vector {
   /**
    *  Gets the contactFromId attribute of the ContactList object
    *
-   *@param  id  Description of the Parameter
-   *@return     The contactFromId value
+   * @param  id  Description of the Parameter
+   * @return     The contactFromId value
    */
   public Contact getContactFromId(int id) {
     Iterator iterator = this.iterator();

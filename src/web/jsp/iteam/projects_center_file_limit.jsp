@@ -22,9 +22,6 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,com.zeroio.iteam.base.*" %>
-<%--
-<jsp:useBean id="User" class="com.zeroio.controller.User" scope="session"/>
---%>
 <jsp:useBean id="Project" class="com.zeroio.iteam.base.Project" scope="request"/>
 <jsp:useBean id="FileItem" class="com.zeroio.iteam.base.FileItem" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -37,26 +34,17 @@
 </table>
 <br />
 <img src="images/error.gif" border="0" align="absmiddle"/>
-<font color="red">This account's file size limit has been exceeded.</a><br />
+<font color="red"><dhv:label name="project.accountFileSizeLimit.text">This account's file size limit has been exceeded.</dhv:label></a><br />
 <br />
-<%--
-<dhv:evaluate if="<%= User.getAccountSize() > -1 %>">
---%>
 <table class="note" cellspacing="0">
 <tr>
   <th>
     <img src="images/icons/stock_about-16.gif" border="0" align="absmiddle" />
   </th>
   <td>
-    Maintain your files by deleting older versions of the same file, and by deleting
-    outdated or unused files.<%--<br />
-    This user account is limited to <%= User.getAccountSize() %> MB.<br />
-    This account is currently using <%= User.getCurrentAccountSizeInMB() %> MB.--%>
+    <dhv:label name="project.maintainFiles.text">Maintain your files by deleting older versions of the same file, and by deleting outdated or unused files.</dhv:label>
   </td>
 </tr>
 </table>
 <br />
-<%--
-</dhv:evaluate>
---%>
-<input type="button" value="OK" onClick="window.location.href='ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>&folderId=<%= request.getParameter("folderId") %>';">
+<input type="button" value="<dhv:label name="button.ok">OK</dhv:label>" onClick="window.location.href='ProjectManagement.do?command=ProjectCenter&section=File_Library&pid=<%= Project.getId() %>&folderId=<%= request.getParameter("folderId") %>';">

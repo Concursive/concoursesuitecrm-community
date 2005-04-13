@@ -57,7 +57,7 @@
     </td>    
     
     <tr><td width="125" nowrap class="formlabel">
-    First Name
+    <dhv:label name="accounts.accounts_add.FirstName">First Name</dhv:label>
     </td>
     <td>
     <%=toHtml(Transaction.getNameFirst())%>
@@ -65,7 +65,7 @@
     </tr>
     
     <tr><td width="125" nowrap class="formlabel">
-    Last Name
+    <dhv:label name="accounts.accounts_add.LastName">Last Name</dhv:label>
     </td>
     <td>
     <%=toHtml(Transaction.getNameLast())%>

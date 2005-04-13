@@ -27,36 +27,31 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
-<a href="CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>">Documents</a> >
-Document Details
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManager.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
+<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>"><dhv:label name="campaign.campaignDetails">Campaign Details</dhv:label></a> >
+<a href="CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>"><dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></a> >
+<dhv:label name="accounts.accounts_documents_details.DocumentDetails">Document Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-<% String param1 = "id=" + Campaign.getId(); %>
-<dhv:container name="communications" selected="documents" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<dhv:formMessage />
+<dhv:container name="communications" selected="documents" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+<dhv:formMessage showSpace="false"/>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th colspan="7">
-      <strong>All Versions of this Document</strong>
+      <strong><dhv:label name="accounts.accounts_documents_details.AllVersionsDocument">All Versions of this Document</dhv:label></strong>
     </th>
   </tr>
   <tr class="title2">
-    <td width="10" align="center">Action</td>
-    <td>Item</td>
-    <td>Size</td>
-    <td>Version</td>
-    <td>Submitted</td>
-    <td>Sent By</td>
-    <td>D/L</td>
+    <td width="8">&nbsp;</td>
+    <td><dhv:label name="accounts.accounts_documents_details.Item">Item</dhv:label></td>
+    <td><dhv:label name="accounts.accounts_documents_details.Size">Size</dhv:label></td>
+    <td><dhv:label name="accounts.accounts_documents_details.Version">Version</dhv:label></td>
+    <td><dhv:label name="accounts.accounts_documents_details.Submitted">Submitted</dhv:label></td>
+    <td><dhv:label name="accounts.accounts_documents_details.SentBy">Sent By</dhv:label></td>
+    <td><dhv:label name="accounts.accounts_documents_details.DL">D/L</dhv:label></td>
   </tr>
 <%
   Iterator versionList = FileItem.getVersionList().iterator();
@@ -68,13 +63,13 @@ Document Details
 %>      
     <tr class="row<%= rowid %>">
       <td width="10" align="center" rowspan="2" nowrap>
-        <a href="CampaignDocuments.do?command=Download&id=<%= Campaign.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>">Download</a>
+        <a href="CampaignDocuments.do?command=Download&id=<%= Campaign.getId() %>&fid=<%= FileItem.getId() %>&ver=<%= thisVersion.getVersion() %>"><dhv:label name="accounts.accounts_documents_details.Download">Download</dhv:label></a>
       </td>
       <td width="100%">
         <%= FileItem.getImageTag() %><%= thisVersion.getClientFilename() %>
       </td>
       <td align="right" nowrap>
-        <%= thisVersion.getRelativeSize() %> k&nbsp;
+        <%= thisVersion.getRelativeSize() %> <dhv:label name="admin.oneThousand.abbreviation">k</dhv:label>&nbsp;
       </td>
       <td align="right" nowrap>
         <%= thisVersion.getVersion() %>&nbsp;
@@ -96,6 +91,4 @@ Document Details
     </tr>
   <%}%>
 </table>
-</td>
-</tr>
-</table>
+</dhv:container>

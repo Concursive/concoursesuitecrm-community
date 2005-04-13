@@ -134,7 +134,7 @@ public class UsernameHandler extends TagSupport {
           }
         } else {
           //NOTE: the default text will already be in the output format
-          this.pageContext.getOut().write(StringUtils.toHtml(defaultText));
+          this.pageContext.getOut().write(StringUtils.toHtml(systemStatus.getLabel(defaultText)));
         }
       }
     } catch (Exception e) {

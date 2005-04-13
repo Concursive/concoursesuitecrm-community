@@ -15,17 +15,23 @@
  */
 package com.zeroio.controller;
 
+import com.darkhorseventures.database.ConnectionElement;
 import com.darkhorseventures.framework.beans.GenericBean;
-import javax.servlet.http.*;
-import org.aspcfs.utils.ObjectUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.login.beans.UserBean;
-import java.util.*;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+import org.aspcfs.utils.ObjectUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Hashtable;
+import java.util.TimeZone;
 
 /**
  *  Enhanced web app capabilities
@@ -160,7 +166,7 @@ public class AutoPopulate {
           }
         }
         if (!modified && value != null && !"".equals(value)) {
-          addError(bean, param, "Date is invalid");
+          addError(bean, param, "object.validation.incorrectDateFormat", request);
         } else {
           return true;
         }
@@ -181,7 +187,7 @@ public class AutoPopulate {
           //e.printStackTrace(System.out);
         }
         if (!modified && value != null && !"".equals(value)) {
-          addError(bean, param, "Number is invalid");
+          addError(bean, param, "object.validation.incorrectNumberFormat", request);
         } else {
           return true;
         }
@@ -197,10 +203,17 @@ public class AutoPopulate {
    *@param  bean     The feature to be added to the Error attribute
    *@param  param    The feature to be added to the Error attribute
    *@param  message  The feature to be added to the Error attribute
+   *@param  request  The feature to be added to the Error attribute
    */
-  private static void addError(Object bean, String param, String message) {
+  private static void addError(Object bean, String param, String message, HttpServletRequest request) {
     try {
-      ((GenericBean) bean).getErrors().put(param + "Error", message);
+      ConnectionElement ce = (ConnectionElement) request.getSession().getAttribute("ConnectionElement");
+      SystemStatus systemStatus = (SystemStatus) ((Hashtable) request.getSession().getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+      if (systemStatus != null) {
+        ((GenericBean) bean).getErrors().put(param + "Error", systemStatus.getLabel(message));
+      } else {
+        ((GenericBean) bean).getErrors().put(param + "Error", message);
+      }
     } catch (Exception e) {
     }
   }

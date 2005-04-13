@@ -26,25 +26,25 @@
   <tr class="subtab">
     <td>
       <img src="images/icons/stock_new-bcard-16.gif" border="0" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>">Team</a> >
-      <a href="ProjectManagementTeam.do?command=Modify&pid=<%= Project.getId() %>">Modify</a> >
-      Status
+      <a href="ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>"><dhv:label name="documents.team.long_html">Team</dhv:label></a> >
+      <a href="ProjectManagementTeam.do?command=Modify&pid=<%= Project.getId() %>"><dhv:label name="button.modify">Modify</dhv:label></a> >
+      <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
     </td>
   </tr>
 </table>
 <br>
-Invitation results
+<dhv:label name="project.invitationResults">Invitation results</dhv:label>
 <br>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
-      Name
+      <dhv:label name="contacts.name">Name</dhv:label>
     </th>
     <th>
-      Email Address
+      <dhv:label name="documents.team.emailAddress">Email Address</dhv:label>
     </th>
     <th>
-      Status
+      <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
     </th>
   </tr>
 <%
@@ -65,12 +65,12 @@ Invitation results
       <%= toHtml(thisInvitation.getEmail()) %>
     </td>
     <td nowrap>
-      <dhv:evaluate if="<%= thisInvitation.getSentMail() %>"><font color="green">Invitation Sent</font></dhv:evaluate>
-      <dhv:evaluate if="<%= !thisInvitation.getSentMail() %>"><font color="red">Email Error</font></dhv:evaluate>
+      <dhv:evaluate if="<%= thisInvitation.getSentMail() %>"><font color="green"><dhv:label name="project.invitationSent">Invitation Sent</dhv:label></font></dhv:evaluate>
+      <dhv:evaluate if="<%= !thisInvitation.getSentMail() %>"><font color="red"><dhv:label name="project.emailError">Email Error</dhv:label></font></dhv:evaluate>
     </td>
   </tr>
 <% } %>
 </table>
 <br>
-<input type="button" value="OK" onclick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>'"/>
+<input type="button" value="<dhv:label name="button.ok">OK</dhv:label>" onclick="javascript:window.location.href='ProjectManagement.do?command=ProjectCenter&section=Team&pid=<%= Project.getId() %>'"/>
 </form>

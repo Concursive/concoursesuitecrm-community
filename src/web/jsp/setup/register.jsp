@@ -28,87 +28,77 @@
     valid = true;
     message = "";
     if (form.profile.value.length == 0) {
-      message += "- Profile is a required field\r\n";
+      message += label("check.profile","- Profile is a required field\r\n");
       valid = false;
     }
     if (form.nameFirst.value.length == 0) {
-      message += "- First name is a required field\r\n";
+      message += label("check.firstname","- First name is a required field\r\n");
       valid = false;
     }
     if (form.nameLast.value.length == 0) {
-      message += "- Last name is a required field\r\n";
+      message += label("check.lastname","- Last name is a required field\r\n");
       valid = false;
     }
     if (form.company.value.length == 0) {
-      message += "- Organization is a required field\r\n";
+      message += label("check.organization","- Organization is a required field\r\n");
       valid = false;
     }
     if (form.email.value.length == 0) {
-      message += "- Email address is a required field\r\n";
+      message += label("check.emailaddress","- Email address is a required field\r\n");
       valid = false;
     }
     if (!checkEmail(form.email.value)) {
-      message += "- Email address is invalid.  Make sure there are no invalid characters\r\n";
+      message += label("check.emailaddress.invalid","- Email address is invalid.  Make sure there are no invalid characters\r\n");
       valid = false;
     }
     if (getSelectedCheckbox(form.proxy).length > 0) {
       if (form.proxyHost.value.length == 0) {
-        message += "- Proxy host is required field when proxy is checked\r\n";
+        message += label("check.proxyhost","- Proxy host is required field when proxy is checked\r\n");
         valid = false;
       }
       if (form.proxyPort.value.length == 0) {
-        message += "- Proxy port is required field when proxy is checked\r\n";
+        message += label("check.proxyhost","- Proxy host is required field when proxy is checked\r\n");
         valid = false;
       }
       if (form.proxyPort.value.length > 0 && !checkNumber(form.proxyPort.value)) {
-        message += "- Proxy port must be a number\r\n";
+        message += label("check.proxyport.number","- Proxy port must be a number\r\n");
         valid = false;
       }
     }
     if (valid == false) {
-      alert("Form could not be submitted, please check the following:\r\n\r\n" + message);
+      alert(label("check.form","Form could not be submitted, please check the following:\r\n\r\n") + message);
       return false;
     }
     return true;
   }
 </script>
-<body onLoad="javascript:document.forms[0].nameFirst.focus();">
+<body onLoad="javascript:document.register.nameFirst.focus();">
 <dhv:formMessage showSpace="false" />
 <form name="register" action="Setup.do?command=SendReg&auto-populate=true" method="post" onSubmit="return checkForm(this)">
 <input type="hidden" name="configured" value="1"/>
 <table border="0" width="100%">
   <tr class="sectionTitle">
-    <th>Information</th>
+    <th><dhv:label name="setup.information">Information</dhv:label></th>
   </tr>
   <tr>
     <td>
-      To request a registration license, fill out the following information.<br>
-      <ul>
-      <li>The information below will be sent to Dark Horse Ventures and processed</li>
-      <li>A license file will be sent by email to the address specified below</li>
-      <li>In good faith, Dark Horse Ventures provides this software and
-      entitles you to use it according to the license agreement</li>
-      <li>Anonymous email addresses will not be accepted
-      when processing registrations</li>
-      <li>Your email address and contact information will not be provided to others without
-      your consent</li>
-      </ul>
-      The Dark Horse Ventures Team
+      <dhv:label name="setup.requestRegistrationLicense.label">To request a registration license, fill out the following information.</dhv:label><br>
+      <dhv:label name="setup.requestRegistrationLicense.text"><ul><li>The information below will be sent to Dark Horse Ventures and processed</li><li>A license file will be sent by email to the address specified below</li><li>In good faith, Dark Horse Ventures provides this software and entitles you to use it according to the license agreement</li><li>Anonymous email addresses will not be accepted when processing registrations</li><li>Your email address and contact information will not be provided to others without your consent</li></ul></dhv:label>
+      <dhv:label name="setup.darkHorseVenturesTeam">The Dark Horse Ventures Team</dhv:label>
       <br>&nbsp;
     </td>
   </tr>
   <tr class="sectionTitle">
-    <th>Registration</th>
+    <th><dhv:label name="setup.registration">Registration</dhv:label></th>
   </tr>
   <tr>
     <td>
-      A profile will allow you to manage this account online and is simply a name
-      that you would like to refer to for this system.<br>
+      <dhv:label name="setup.profile.description">A profile will allow you to manage this account online and is simply a name that you would like to refer to for this system.</dhv:label><br>
       <br>
       <table border="0" class="empty">
         <tr>
           <td class="formLabel">
-            Profile:
+            <dhv:label name="setup.profile.colon">Profile:</dhv:label>
           </td>
           <td>
             <input type="text" size="40" name="profile" value="<%= toHtmlValue(registration.getProfile()) %>"/><font color="red">*</font>
@@ -117,7 +107,7 @@
         </tr>
         <tr>
           <td class="formLabel">
-            First Name:
+            <dhv:label name="accounts.accounts_add.FirstName.colon">First Name:</dhv:label>
           </td>
           <td>
             <input type="text" size="20" name="nameFirst" value="<%= toHtmlValue(registration.getNameFirst()) %>"/><font color="red">*</font>
@@ -126,7 +116,7 @@
         </tr>
         <tr>
           <td class="formLabel">
-            Last Name:
+            <dhv:label name="accounts.accounts_add.LastName.colon">Last Name:</dhv:label>
           </td>
           <td>
             <input type="text" size="20" name="nameLast" value="<%= toHtmlValue(registration.getNameLast()) %>"/><font color="red">*</font>
@@ -135,7 +125,7 @@
         </tr>
         <tr>
           <td class="formLabel">
-            Organization Name:
+            <dhv:label name="setup.organizationName.colon">Organization Name:</dhv:label>
           </td>
           <td>
             <input type="text" size="30" name="company" value="<%= toHtmlValue(registration.getCompany()) %>"/><font color="red">*</font>
@@ -144,7 +134,7 @@
         </tr>
         <tr>
           <td class="formLabel">
-            Email Address:
+            <dhv:label name="documents.team.emailAddress.colon">Email Address:</dhv:label>
           </td>
           <td>
             <input type="text" size="40" maxlength="255" name="email" value="<%= toHtmlValue(registration.getEmail()) %>" /><font color="red">*</font>
@@ -154,7 +144,7 @@
         
         <tr>
           <td class="formLabel">
-            O/S
+            <dhv:label name="setup.operatingSystem.abbreviation">O/S</dhv:label>
           </td>
           <td>
             <%= System.getProperty("os.name") + " " + System.getProperty("os.arch") + " " + System.getProperty("os.version") %>
@@ -162,7 +152,7 @@
         </tr>
         <tr>
           <td class="formLabel">
-            JVM
+            <dhv:label name="setup.jvm">JVM</dhv:label>
           </td>
           <td>
             <%= System.getProperty("java.version") %>
@@ -170,7 +160,7 @@
         </tr>
         <tr>
           <td class="formLabel">
-            Server
+            <dhv:label name="setup.server">Server</dhv:label>
           </td>
           <td>
             <%= toHtml(server) %>
@@ -179,19 +169,19 @@
         <tr>
           <td colspan="2">
             <dhv:checkbox name="ssl" value="true" checked="<%= registration.getSsl() %>"/>
-            Use SSL (port 443) for sending information
+            <dhv:label name="setup.useSSLportForSendingInformation.text">Use SSL (port 443) for sending information</dhv:label>
           </td>
         </tr>
         <%-- Proxy Server config --%>
         <tr>
           <td colspan="2">
             <dhv:checkbox name="proxy" value="true" checked="<%= registration.getProxy() %>" />
-            Use proxy server to make internet connection
+            <dhv:label name="setup.useProxyServer.text">Use proxy server to make internet connection</dhv:label>
           </td>
         </tr>
         <tr>
           <td class="formLabel">
-            Proxy Host
+            <dhv:label name="setup.proxyHost">Proxy Host</dhv:label>
           </td>
           <td>
             <input type="text" size="30" name="proxyHost" value="<%= toHtmlValue(registration.getProxyHost()) %>" />
@@ -199,7 +189,7 @@
         </tr>
         <tr>
           <td class="formLabel">
-            Proxy Port
+            <dhv:label name="setup.proxyPort">Proxy Port</dhv:label>
           </td>
           <td>
             <input type="text" size="5" name="proxyPort" value="<%= toHtmlValue(registration.getProxyPort()) %>" />
@@ -207,8 +197,8 @@
         </tr>
       </table>
       &nbsp;<br>
-      <input type="button" value="< Back" onClick="javascript:window.location.href='index.jsp'"/>
-      <input type="submit" value="Continue >"/>
+      <input type="button" value="<dhv:label name="button.backL">< Back</dhv:label>" onClick="javascript:window.location.href='index.jsp'"/>
+      <input type="submit" value="<dhv:label name="button.continueR">Continue ></dhv:label>"/>
     </td>
   </tr>
 </table>

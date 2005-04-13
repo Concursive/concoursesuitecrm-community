@@ -37,7 +37,8 @@ public class CustomFieldCategory extends ArrayList {
   public final static int TRUE = 1;
   public final static int FALSE = 0;
   protected HashMap errors = new HashMap();
-
+  protected HashMap warnings = new HashMap();
+  protected boolean onlyWarnings = false;
   //Properties of a Category
   private int id = -1;
   private int moduleId = -1;
@@ -62,6 +63,71 @@ public class CustomFieldCategory extends ArrayList {
   private int includeEnabled = -1;
   private int includeScheduled = -1;
   private boolean buildResources = false;
+  private boolean canNotContinue = false;
+
+  //Resources
+  private int numberOfRecords = -1;
+  //Number of Records for a specific linkItem
+
+
+  /**
+   *  Gets the onlyWarnings attribute of the CustomFieldCategory object
+   *
+   *@return    The onlyWarnings value
+   */
+  public boolean getOnlyWarnings() {
+    return onlyWarnings;
+  }
+
+
+  /**
+   *  Sets the onlyWarnings attribute of the CustomFieldCategory object
+   *
+   *@param  tmp  The new onlyWarnings value
+   */
+  public void setOnlyWarnings(boolean tmp) {
+    this.onlyWarnings = tmp;
+  }
+
+
+  /**
+   *  Sets the onlyWarnings attribute of the CustomFieldCategory object
+   *
+   *@param  tmp  The new onlyWarnings value
+   */
+  public void setOnlyWarnings(String tmp) {
+    this.onlyWarnings = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the numberOfRecords attribute of the CustomFieldCategory object
+   *
+   *@param  tmp  The new numberOfRecords value
+   */
+  public void setNumberOfRecords(int tmp) {
+    this.numberOfRecords = tmp;
+  }
+
+
+  /**
+   *  Sets the numberOfRecords attribute of the CustomFieldCategory object
+   *
+   *@param  tmp  The new numberOfRecords value
+   */
+  public void setNumberOfRecords(String tmp) {
+    this.numberOfRecords = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the numberOfRecords attribute of the CustomFieldCategory object
+   *
+   *@return    The numberOfRecords value
+   */
+  public int getNumberOfRecords() {
+    return numberOfRecords;
+  }
 
 
   /**
@@ -465,6 +531,56 @@ public class CustomFieldCategory extends ArrayList {
       CustomFieldGroup thisGroup = (CustomFieldGroup) i.next();
       thisGroup.setParameters(context);
     }
+  }
+
+
+  /**
+   *  Sets the warnings attribute of the CustomFieldCategory object
+   *
+   *@param  tmp  The new warnings value
+   */
+  public void setWarnings(HashMap tmp) {
+    this.warnings = tmp;
+  }
+
+
+  /**
+   *  Sets the canNotContinue attribute of the CustomFieldCategory object
+   *
+   *@param  tmp  The new canNotContinue value
+   */
+  public void setCanNotContinue(boolean tmp) {
+    this.canNotContinue = tmp;
+  }
+
+
+  /**
+   *  Sets the canNotContinue attribute of the CustomFieldCategory object
+   *
+   *@param  tmp  The new canNotContinue value
+   */
+  public void setCanNotContinue(String tmp) {
+    this.canNotContinue = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the canNotContinue attribute of the CustomFieldCategory object
+   *
+   *@return    The canNotContinue value
+   */
+  public boolean getCanNotContinue() {
+    return canNotContinue;
+  }
+
+
+  /**
+   *  Gets the warnings attribute of the CustomFieldCategory object
+   *
+   *@return    The warnings value
+   */
+  public HashMap getWarnings() {
+    return warnings;
   }
 
 
@@ -942,14 +1058,10 @@ public class CustomFieldCategory extends ArrayList {
           "WHERE record_id = " + recordId + " ");
       st.close();
 
-      Iterator i = this.iterator();
-      while (i.hasNext()) {
-        CustomFieldGroup thisGroup = (CustomFieldGroup) i.next();
-        int groupResult = thisGroup.insert(db);
-        if (groupResult != 1) {
-          catResult = groupResult;
-        }
+      if (!this.getCanNotContinue()) {
+        catResult = this.insertGroup(db, -1);
       }
+
       if (catResult == 1) {
         db.commit();
         resultId = 1;
@@ -964,6 +1076,31 @@ public class CustomFieldCategory extends ArrayList {
     }
 
     return resultId;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  recordId          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int insertGroup(Connection db, int recordId) throws SQLException {
+    int catResult = 1;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      CustomFieldGroup thisGroup = (CustomFieldGroup) i.next();
+      if (recordId != -1) {
+        thisGroup.setRecordId(recordId);
+      }
+      int groupResult = thisGroup.insert(db);
+      if (groupResult != 1) {
+        catResult = groupResult;
+      }
+    }
+    return catResult;
   }
 
 
@@ -1017,15 +1154,10 @@ public class CustomFieldCategory extends ArrayList {
       thisRecord.insert(db);
       this.setRecordId(thisRecord.getId());
 
-      Iterator i = this.iterator();
-      while (i.hasNext()) {
-        CustomFieldGroup thisGroup = (CustomFieldGroup) i.next();
-        thisGroup.setRecordId(thisRecord.getId());
-        int groupResult = thisGroup.insert(db);
-        if (groupResult != 1) {
-          catResult = groupResult;
-        }
+      if (!this.getCanNotContinue()) {
+        catResult = this.insertGroup(db, thisRecord.getId());
       }
+
       if (catResult == 1) {
         db.commit();
         resultId = 1;
@@ -1040,6 +1172,7 @@ public class CustomFieldCategory extends ArrayList {
     } finally {
       db.setAutoCommit(true);
     }
+    //if (resultId == -1) {  //QUESTION: what is this?
     if (this.getRecordId() != -1) {
       update(db);
     }
@@ -1056,9 +1189,6 @@ public class CustomFieldCategory extends ArrayList {
    *@since
    */
   public boolean insertCategory(Connection db) throws SQLException {
-    if (!isCategoryValid()) {
-      return false;
-    }
     StringBuffer sql = new StringBuffer();
 
     sql.append("INSERT INTO custom_field_category ");
@@ -1135,10 +1265,9 @@ public class CustomFieldCategory extends ArrayList {
    *@since
    */
   public boolean updateCategory(Connection db) throws SQLException {
-    if (!isCategoryValid() && id > -1) {
+    if (id == -1) {
       return false;
     }
-
     String sql =
         "UPDATE custom_field_category " +
         "SET category_name = ?, description = ?, enabled = ?, " +
@@ -1211,23 +1340,6 @@ public class CustomFieldCategory extends ArrayList {
       db.setAutoCommit(true);
     }
     return true;
-  }
-
-
-  /**
-   *  Gets the CategoryValid attribute of the CustomFieldCategory object
-   *
-   *@return    The CategoryValid value
-   *@since
-   */
-  private boolean isCategoryValid() {
-    if (moduleId == -1) {
-      errors.put("actionError", "Form data is missing");
-    }
-    if (name == null || name.equals("")) {
-      errors.put("nameError", "Name is required");
-    }
-    return (errors.size() == 0);
   }
 
 
@@ -1358,5 +1470,57 @@ public class CustomFieldCategory extends ArrayList {
     return result;
   }
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  linkModuleId      Description of the Parameter
+   *@param  linkItemId        Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void determineNumberOfRecords(Connection db, int linkModuleId, int linkItemId)
+       throws SQLException {
+    CustomFieldRecordList recordList = new CustomFieldRecordList();
+    recordList.setLinkModuleId(linkModuleId);
+    recordList.setLinkItemId(linkItemId);
+    recordList.setCategoryId(this.getId());
+    recordList.buildList(db);
+    numberOfRecords = recordList.size();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean hasMultipleRecords(Connection db) throws SQLException {
+    boolean hasMultiple = false;
+    if (this.getId() == -1) {
+      throw new SQLException("Custom Field Category ID not specified");
+    }
+    if (this.getModuleId() == -1) {
+      throw new SQLException("Module ID not specified");
+    }
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT link_item_id, count (record_id) AS records " +
+        "FROM custom_field_record " +
+        "WHERE link_module_id = ? AND category_id = ? " +
+        "GROUP BY link_item_id ");
+    pst.setInt(1, this.getModuleId());
+    pst.setInt(2, this.getId());
+    ResultSet rs = pst.executeQuery();
+    while (rs.next()) {
+      if (rs.getInt("records") > 1) {
+        hasMultiple = true;
+      }
+    }
+    rs.close();
+    pst.close();
+    return hasMultiple;
+  }
 }
 

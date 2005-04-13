@@ -26,24 +26,24 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Reports.do">Reports</a> >
-<a href="Reports.do">Queue</a> >
-Modules
+<a href="Reports.do"><dhv:label name="qa.reports">Reports</dhv:label></a> >
+<a href="Reports.do"><dhv:label name="reports.queue">Queue</dhv:label></a> >
+<dhv:label name="admin.modules">Modules</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-To add a report to the queue, choose a module to see a list of corresponding reports:<br>
+<dhv:label name="reports.toAddReportToQueue.text">To add a report to the queue, choose a module to see a list of corresponding reports:</dhv:label><br>
 <br>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th width="100%">
-      <strong>Module</strong>
+      <strong><dhv:label name="qa.module">Module</dhv:label></strong>
     </th>
   </tr>
 <dhv:evaluate if="<%= categories.size() == 0 %>">
   <tr>
-    <td>No modules found with reports enabled</td>
+    <td><dhv:label name="reports.noModulesFound.text">No modules found with reports enabled</dhv:label></td>
   </tr>
 </dhv:evaluate>
 <%

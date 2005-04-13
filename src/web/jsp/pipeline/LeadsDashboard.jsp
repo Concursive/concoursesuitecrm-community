@@ -14,11 +14,11 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*, java.sql.*" %>
 <%@ page import="org.aspcfs.modules.pipeline.base.*" %>
 <%@ page import="com.zeroio.iteam.base.*" %>
 <%@ page import="org.aspcfs.modules.admin.base.User" %>
@@ -38,8 +38,8 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Leads.do">Pipeline</a> > 
-Dashboard
+<a href="Leads.do"><dhv:label name="pipeline.pipeline">Pipeline</dhv:label></a> > 
+<dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label>
 </td>
 </tr>
 </table>
@@ -50,20 +50,20 @@ Dashboard
     <td width="275" valign="top">
       <%-- Graphic --%>
       <table width="275" cellpadding="3" cellspacing="0" border="0" class="pagedList">
-        <dhv:evaluate exp="<%= Viewpoints.size() > 1 %>">
+        <dhv:evaluate if="<%= Viewpoints.size() > 1 %>">
         <tr>
           <th valign="top" style="text-align: center;" nowrap<dhv:evaluate if="<%= PipelineViewpointInfo.isVpSelected(User.getUserId()) %>"> class="warning"</dhv:evaluate>>
-            <% Viewpoints.setJsEvent("onChange=\"javascript:document.forms[0].reset.value='true';document.forms[0].submit();\""); %>
-            Viewpoint: <%= Viewpoints.getHtmlSelect("viewpointId", PipelineViewpointInfo.getVpUserId()) %><br>
+            <% Viewpoints.setJsEvent("onChange=\"javascript:document.Dashboard.reset.value='true';document.Dashboard.submit();\""); %>
+            <dhv:label name="pipeline.viewpoint.colon.only">Viewpoint:</dhv:label> <%= Viewpoints.getHtmlSelect("viewpointId", PipelineViewpointInfo.getVpUserId()) %><br>
           </th>
         </tr>
         </dhv:evaluate>
         <tr>
           <th valign="top" style="text-align: center;" nowrap>
           <% if (request.getSession().getAttribute("leadsoverride") != null) { %>
-            Dashboard: <%= toHtml((String)request.getSession().getAttribute("leadsothername")) %>
+            <dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label>: <%= toHtml((String)request.getSession().getAttribute("leadsothername")) %>
           <%} else {%>
-            My Dashboard
+            <dhv:label name="accounts.accounts_revenue_dashboard.MyDashboard">My Dashboard</dhv:label>
           <%}%>
           </th>
         </tr>
@@ -73,7 +73,7 @@ Dashboard
           </td>
         </tr>
         <tr>
-          <td style="text-align: center;">
+          <td style="text-align: center;" nowrap>
             <img src="images/icons/stock_chart-reorganize-16.gif" align="absMiddle" alt="" />
             <%= GraphTypeList.getHtml() %>&nbsp;
           </td>
@@ -87,8 +87,8 @@ Dashboard
               int prevId =  Integer.parseInt((String)request.getSession().getAttribute("leadspreviousId"));
               %>
             <input type="hidden" name="oid" value="<%=((String)request.getSession().getAttribute("leadsoverride"))%>">
-            <a href="Leads.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("leadspreviousId"))%><%= PipelineViewpointInfo.getVpUserId() == prevId || ((String)request.getSession().getAttribute("leadspreviousId")).equals(String.valueOf(User.getUserId())) ? "&reset=true" : ""%>">Up One Level</a> |
-            <a href="Leads.do?command=Dashboard&reset=true">Back to My Dashboard</a>
+            <a href="Leads.do?command=Dashboard&oid=<%=((String)request.getSession().getAttribute("leadspreviousId"))%><%= PipelineViewpointInfo.getVpUserId() == prevId || ((String)request.getSession().getAttribute("leadspreviousId")).equals(String.valueOf(User.getUserId())) ? "&reset=true" : ""%>"><dhv:label name="accounts.accounts_revenue_dashboard.UpOneLevel">Up One Level</dhv:label></a> |
+            <a href="Leads.do?command=Dashboard&reset=true"><dhv:label name="accounts.accounts_revenue_dashboard.BackMyDashboard">Back to My Dashboard</dhv:label></a>
             <% } else {%>
                 &nbsp;
             <%}%>
@@ -99,10 +99,10 @@ Dashboard
       <table width="285" cellpadding="3" cellspacing="0" border="0" class="pagedList">
         <tr>
           <th valign="center" nowrap>
-            Reports (Gr. Pipe.)
+            <dhv:label name="pipeline.reports.grPipe.brackets">Reports (Gr. Pipe.)</dhv:label>
           </th>
           <th width="125" valign="center">
-            Title
+            <dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label>
           </th>
         </tr>
 <%
@@ -124,12 +124,12 @@ Dashboard
               (0K)
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisRec.getGrossPipeline(1000) > 0 && thisRec.getGrossPipeline(1000) < 1 %>">
-              (&lt;1K)
+              (&lt; 1K)
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisRec.getGrossPipeline(1000) >= 1 %>">
               (<zeroio:currency value="<%= thisRec.getGrossPipeline(1000) %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
             </dhv:evaluate>
-            <dhv:evaluate exp="<%=!(thisRec.getEnabled())%>"><font color="red">*</font></dhv:evaluate>
+            <dhv:evaluate if="<%=!thisRec.getEnabled() || (thisRec.getExpires() != null && thisRec.getExpires().before(new Timestamp(Calendar.getInstance().getTimeInMillis())))%>"><font color="red">*</font></dhv:evaluate>
           </td>
           <td width="125" valign="center">
             <%= toHtml(thisRec.getContact().getTitle()) %>
@@ -139,7 +139,7 @@ Dashboard
       } else {
 %>
         <tr>
-          <td valign="center" colspan="3">No Reporting staff.</td>
+          <td valign="center" colspan="3"><dhv:label name="accounts.accounts_revenue_dashboard.NoReportingStaff">No Reporting staff.</dhv:label></td>
         </tr>
       <%}%>
       </table>
@@ -149,8 +149,8 @@ Dashboard
       <%-- Opportunity List --%>
       <table cellpadding="3" cellspacing="0" border="0" width="100%" class="pagedList">
         <tr>
-          <th>Opportunity</th>
-          <th>Amnt</th>
+          <th><dhv:label name="quotes.opportunity">Opportunity</dhv:label></th>
+          <th><dhv:label name="reports.pipeline.amount">Amount</dhv:label></th>
         </tr>
 <%
 	Iterator n = oppList.iterator();
@@ -161,8 +161,8 @@ Dashboard
       rowid = (rowid != 1?1:2);
       OpportunityHeader thisHeader = (OpportunityHeader) n.next();
 %>
-				<tr>
-          <td width="100%" class="row<%= rowid %>" valign="center">
+				<tr class="row<%= rowid %>">
+          <td width="100%" valign="center">
             <a href="Leads.do?command=DetailsOpp&headerId=<%= thisHeader.getId() %>&viewSource=dashboard&reset=true"><%= toHtml(thisHeader.getDisplayName()) %>:
             <%= toHtml(thisHeader.getDescription()) %></a>
             <dhv:evaluate if="<%= thisHeader.getComponentCount() > 1 %>">
@@ -172,15 +172,15 @@ Dashboard
               <%= thisFile.getImageTag("-23") %>
             </dhv:evaluate>
           </td>
-          <td width="55" class="row<%= rowid %>">
+          <td width="55" nowrap align="right">
             <dhv:evaluate if="<%= thisHeader.getTotalValue(1000) == 0.0 %>">
-              (0K)
+              <zeroio:currency value="<%= 0 %>" fractionDigits="false" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisHeader.getTotalValue(1000) > 0 && thisHeader.getTotalValue(1000) < 1 %>">
-              (&lt;1K)
+              &lt; <zeroio:currency value="<%= 1 %>" fractionDigits="false" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K
             </dhv:evaluate>
             <dhv:evaluate if="<%= thisHeader.getTotalValue(1000) >= 1 %>">
-              (<zeroio:currency value="<%= thisHeader.getTotalValue(1000) %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K)
+              <zeroio:currency value="<%= thisHeader.getTotalValue(1000) %>" fractionDigits="false" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>K
             </dhv:evaluate>
           </td>
         </tr>
@@ -189,7 +189,7 @@ Dashboard
 	  } else {
 %>
         <tr>
-          <td valign="center" colspan="7">No opportunities found.</td>
+          <td valign="center" colspan="7"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.NoOpportunitiesFound">No opportunities found.</dhv:label></td>
         </tr>
 <%}%>
       </table>

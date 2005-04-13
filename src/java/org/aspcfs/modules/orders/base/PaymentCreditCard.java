@@ -15,13 +15,12 @@
  */
 package org.aspcfs.modules.orders.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.utils.PrivateString;
+
+import java.security.Key;
+import java.sql.*;
 
 /**
  *  This represents a Payment's Credit Card
@@ -33,8 +32,7 @@ import org.aspcfs.modules.base.DependencyList;
  */
 public class PaymentCreditCard extends GenericBean {
   private int id = -1;
-  private int paymentId = -1;
-
+  private int orderId = -1;
   private int cardType = -1;
   private String cardNumber = null;
   private String cardSecurityCode = null;
@@ -47,7 +45,39 @@ public class PaymentCreditCard extends GenericBean {
   private int enteredBy = -1;
   private Timestamp modified = null;
   private int modifiedBy = -1;
+  // payment encryption
+  private Key publicKey = null;
+  private Key privateKey = null;
 
+
+  /**
+   *  Sets the orderId attribute of the PaymentCreditCard object
+   *
+   *@param  tmp  The new orderId value
+   */
+  public void setOrderId(int tmp) {
+    this.orderId = tmp;
+  }
+
+
+  /**
+   *  Sets the orderId attribute of the PaymentCreditCard object
+   *
+   *@param  tmp  The new orderId value
+   */
+  public void setOrderId(String tmp) {
+    this.orderId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the orderId attribute of the PaymentCreditCard object
+   *
+   *@return    The orderId value
+   */
+  public int getOrderId() {
+    return orderId;
+  }
 
 
   /**
@@ -67,26 +97,6 @@ public class PaymentCreditCard extends GenericBean {
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
-  }
-
-
-  /**
-   *  Sets the paymentId attribute of the PaymentCreditCard object
-   *
-   *@param  tmp  The new paymentId value
-   */
-  public void setPaymentId(int tmp) {
-    this.paymentId = tmp;
-  }
-
-
-  /**
-   *  Sets the paymentId attribute of the PaymentCreditCard object
-   *
-   *@param  tmp  The new paymentId value
-   */
-  public void setPaymentId(String tmp) {
-    this.paymentId = Integer.parseInt(tmp);
   }
 
 
@@ -271,6 +281,46 @@ public class PaymentCreditCard extends GenericBean {
 
 
   /**
+   *  Sets the publicKey attribute of the PaymentCreditCard object
+   *
+   *@param  tmp  The new publicKey value
+   */
+  public void setPublicKey(Key tmp) {
+    this.publicKey = tmp;
+  }
+
+
+  /**
+   *  Gets the publicKey attribute of the PaymentCreditCard object
+   *
+   *@return    The publicKey value
+   */
+  public Key getPublicKey() {
+    return publicKey;
+  }
+
+
+  /**
+   *  Sets the privateKey attribute of the PaymentCreditCard object
+   *
+   *@param  tmp  The new privateKey value
+   */
+  public void setPrivateKey(Key tmp) {
+    this.privateKey = tmp;
+  }
+
+
+  /**
+   *  Gets the privateKey attribute of the PaymentCreditCard object
+   *
+   *@return    The privateKey value
+   */
+  public Key getPrivateKey() {
+    return privateKey;
+  }
+
+
+  /**
    *  Gets the id attribute of the PaymentCreditCard object
    *
    *@return    The id value
@@ -279,15 +329,6 @@ public class PaymentCreditCard extends GenericBean {
     return id;
   }
 
-
-  /**
-   *  Gets the paymentId attribute of the PaymentCreditCard object
-   *
-   *@return    The paymentId value
-   */
-  public int getPaymentId() {
-    return paymentId;
-  }
 
 
   /**
@@ -307,6 +348,16 @@ public class PaymentCreditCard extends GenericBean {
    */
   public String getCardNumber() {
     return cardNumber;
+  }
+
+
+  /**
+   *  Gets the encryptedCardNumber attribute of the PaymentCreditCard object
+   *
+   *@return    The encryptedCardNumber value
+   */
+  public String getEncryptedCardNumber() {
+    return PrivateString.encryptAsymmetric(publicKey, this.getCardNumber());
   }
 
 
@@ -442,9 +493,9 @@ public class PaymentCreditCard extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT pc.creditcard_id, pc.payment_id, pc.card_type, pc.card_number, pc.card_security_code, " +
+        " SELECT pc.creditcard_id, pc.card_type, pc.card_number, pc.card_security_code, " +
         "		     pc.expiration_month, pc.expiration_year, pc.name_on_card, pc.company_name_on_card, " +
-        "	       pc.entered, pc.enteredby, pc.modified, pc.modifiedby " +
+        "	       pc.entered, pc.enteredby, pc.modified, pc.modifiedby, pc.order_id " +
         " FROM payment_creditcard pc " +
         " WHERE pc.creditcard_id = ? "
         );
@@ -470,7 +521,6 @@ public class PaymentCreditCard extends GenericBean {
   private void buildRecord(ResultSet rs) throws SQLException {
     //payment_creditcard table
     this.setId(rs.getInt("creditcard_id"));
-    paymentId = rs.getInt("payment_id");
     cardType = DatabaseUtils.getInt(rs, "card_type");
     cardNumber = rs.getString("card_number");
     cardSecurityCode = rs.getString("card_security_code");
@@ -485,6 +535,8 @@ public class PaymentCreditCard extends GenericBean {
     enteredBy = rs.getInt("enteredby");
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
+
+    orderId = DatabaseUtils.getInt(rs, "order_id");
   }
 
 
@@ -497,24 +549,21 @@ public class PaymentCreditCard extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
-    if (!isValid(db)) {
-      return result;
-    }
 
     StringBuffer sql = new StringBuffer();
     sql.append(
-        " INSERT INTO payment_creditcard(payment_id, card_type, card_number, card_security_code, " +
-        " 	expiration_month, expiration_year, name_on_card, company_name_on_card "
+        " INSERT INTO payment_creditcard(card_type, card_number, card_security_code, " +
+        " 	expiration_month, expiration_year, name_on_card, company_name_on_card, "
         );
     if (entered != null) {
-      sql.append(" entered, ");
+      sql.append("entered, ");
     }
-    sql.append(" enteredby, ");
+    sql.append("enteredby, ");
     if (modified != null) {
-      sql.append(" modified, ");
+      sql.append("modified, ");
     }
-    sql.append(" modifiedby )");
-    sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ");
+    sql.append("modifiedby, order_id )");
+    sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
     }
@@ -522,12 +571,11 @@ public class PaymentCreditCard extends GenericBean {
     if (modified != null) {
       sql.append("?, ");
     }
-    sql.append("? )");
+    sql.append("?, ? )");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, this.getPaymentId());
     DatabaseUtils.setInt(pst, ++i, this.getCardType());
-    pst.setString(++i, this.getCardNumber());
+    pst.setString(++i, this.getEncryptedCardNumber());
     pst.setString(++i, this.getCardSecurityCode());
     DatabaseUtils.setInt(pst, ++i, this.getExpirationMonth());
     DatabaseUtils.setInt(pst, ++i, this.getExpirationYear());
@@ -542,7 +590,7 @@ public class PaymentCreditCard extends GenericBean {
       pst.setTimestamp(++i, this.getModified());
     }
     pst.setInt(++i, this.getModifiedBy());
-
+    DatabaseUtils.setInt(pst, ++i, this.getOrderId());
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "payment_creditcard_creditcard_id_seq");
@@ -562,20 +610,11 @@ public class PaymentCreditCard extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Credit Card ID not specified");
     }
-    try {
-      db.setAutoCommit(false);
-      // delete the credit card info
-
-      PreparedStatement pst = db.prepareStatement(" DELETE FROM payment_creditcard WHERE creditcard_id = ? ");
-      pst.setInt(1, this.getId());
-      pst.execute();
-      pst.close();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-    } finally {
-      db.setAutoCommit(true);
-    }
+    // delete the credit card info
+    PreparedStatement pst = db.prepareStatement("DELETE FROM payment_creditcard WHERE creditcard_id = ? ");
+    pst.setInt(1, this.getId());
+    pst.execute();
+    pst.close();
     return true;
   }
 
@@ -589,14 +628,14 @@ public class PaymentCreditCard extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        " UPDATE order_payment " +
-        " SET card_type = ?, " +
+        "UPDATE order_payment " +
+        "SET card_type = ?, " +
         "     card_number = ?, " +
         "     card_security_code = ?, " +
         "     expiration_month = ?, " +
@@ -607,7 +646,7 @@ public class PaymentCreditCard extends GenericBean {
         "     enteredby = ?, " +
         "     modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
         "     modifiedby = ? , " +
-        " WHERE creditcard_id = ? ");
+        "WHERE creditcard_id = ? ");
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
@@ -628,16 +667,5 @@ public class PaymentCreditCard extends GenericBean {
     return resultCount;
   }
 
-
-  /**
-   *  Gets the valid attribute of the PaymentCreditCard object
-   *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  public boolean isValid(Connection db) throws SQLException {
-    return true;
-  }
 }
 

@@ -34,28 +34,25 @@
 <tr>
   <td>
     <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> >
-    <a href="AccountContactsImports.do?command=View">View Imports</a> >
-    <a href="AccountContactsImports.do?command=Details&importId=<%= ImportDetails.getId() %>">Import Details</a> >
-    <a href="AccountContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>">View Results</a> >
-    Contact Details
+    <a href="AccountContactsImports.do?command=View"><dhv:label name="accounts.ViewImports">View Imports</dhv:label></a> >
+    <a href="AccountContactsImports.do?command=Details&importId=<%= ImportDetails.getId() %>"><dhv:label name="accounts.ImportDetails">Import Details</dhv:label></a> >
+    <a href="AccountContactsImports.do?command=ViewResults&importId=<%= ImportDetails.getId() %>"><dhv:label name="global.button.ViewResults">View Results</dhv:label></a> >
+    <dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label>
   </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="../accounts/accounts_importcontact_details_include.jsp" %>
+<dhv:container name="contacts" selected="details" object="ContactDetails" hideContainer="true">
 <dhv:formMessage showSpace="false" />
 <dhv:permission name="accounts-accounts-contacts-imports-edit">
-<dhv:evaluate if="<%= !ContactDetails.isApproved()  %>">
-<br><input type="button" value="Delete" onClick="javascript:confirmDeleteContact();"><br><br>
-</dhv:evaluate>
+  <dhv:evaluate if="<%= !ContactDetails.isApproved()  %>">
+    <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:confirmDeleteContact();"><br /><br />
+  </dhv:evaluate>
 </dhv:permission>
-<table cellpadding="4" cellspacing="0" border="1" width="100%">
-  <tr>
-    <td class="containerBack">
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Email Addresses</strong>
+	    <strong><dhv:label name="accounts.accounts_add.EmailAddresses">Email Addresses</dhv:label></strong>
 	  </th>
   </tr>
 <%
@@ -78,16 +75,16 @@
 %>
     <tr class="containerBody">
       <td>
-        <font color="#9E9E9E">No email addresses entered.</font>
+        <font color="#9E9E9E"><dhv:label name="contacts.NoEmailAdresses">No email addresses entered.</dhv:label></font>
       </td>
     </tr>
 <%}%>
 </table>
-&nbsp;
+<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Phone Numbers</strong>
+	    <strong><dhv:label name="accounts.accounts_add.PhoneNumbers">Phone Numbers</dhv:label></strong>
 	  </th>
   </tr>
 <%  
@@ -110,16 +107,16 @@
 %>
   <tr class="containerBody">
     <td>
-      <font color="#9E9E9E">No phone numbers entered.</font>
+      <font color="#9E9E9E"><dhv:label name="contacts.NoPhoneNumbers">No phone numbers entered.</dhv:label></font>
     </td>
   </tr>
 <%}%>
 </table>
-&nbsp;
+<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Addresses</strong>
+	    <strong><dhv:label name="accounts.accounts_add.Addresses">Addresses</dhv:label></strong>
 	  </th>
   </tr>
 <%
@@ -142,42 +139,42 @@
 %>
   <tr class="containerBody">
     <td>
-      <font color="#9E9E9E">No addresses entered.</font>
+      <font color="#9E9E9E"><dhv:label name="contacts.NoAddresses">No addresses entered.</dhv:label></font>
     </td>
   </tr>
 <%}%>
 </table>
-&nbsp;
+<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Additional Details</strong>
+	    <strong><dhv:label name="accounts.accounts_add.AdditionalDetails">Additional Details</dhv:label></strong>
 	  </th>
   </tr>
   <tr class="containerBody">
-    <td class="formLabel" nowrap>Notes</td>
+    <td class="formLabel" nowrap><dhv:label name="accounts.accounts_add.Notes">Notes</dhv:label></td>
     <td><%= toHtml(ContactDetails.getNotes()) %></td>
   </tr>
 </table>
-&nbsp;
+<br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Record Information</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_calls_details.RecordInformation">Record Information</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Owner
+      <dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label>
     </td>
     <td>
       <dhv:username id="<%= ContactDetails.getOwner() %>"/>
-      <dhv:evaluate exp="<%=!(ContactDetails.getHasEnabledOwnerAccount())%>"><font color="red">(No longer has access)</font></dhv:evaluate>
+      <dhv:evaluate if="<%=!(ContactDetails.getHasEnabledOwnerAccount())%>"><font color="red"><dhv:label name="accounts.accounts_importcontact_details.NoLongerAccess">(No longer has access)</dhv:label></font></dhv:evaluate>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Entered
+      <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
     </td>
     <td>
       <dhv:username id="<%= ContactDetails.getEnteredBy() %>"/>
@@ -186,20 +183,18 @@
   </tr>
   <tr class="containerBody">
     <td class="formLabel" nowrap>
-      Modified
+      <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>
     </td>
     <td>
       <dhv:username id="<%= ContactDetails.getModifiedBy() %>"/>
       <zeroio:tz timestamp="<%= ContactDetails.getModified()  %>" />
     </td>
-   </tr>
-  </table>
- </td>
-</tr>
-</table><br>
+  </tr>
+</table>
+<br>
 <dhv:permission name="accounts-accounts-contacts-imports-edit">
-<dhv:evaluate if="<%= !ContactDetails.isApproved()  %>">
-<input type="button" value="Delete" onClick="javascript:confirmDeleteContact();">
-</dhv:evaluate>
+  <dhv:evaluate if="<%= !ContactDetails.isApproved()  %>">
+    <input type="button" value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:confirmDeleteContact();" />
+  </dhv:evaluate>
 </dhv:permission>
-
+</dhv:container>

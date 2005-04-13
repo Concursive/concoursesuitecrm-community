@@ -19,41 +19,63 @@
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.actionlist.base.*, org.aspcfs.modules.base.Constants"%>
+<%@ page import="org.aspcfs.modules.admin.base.*" %>
 <jsp:useBean id="ActionLists" class="org.aspcfs.modules.actionlist.base.ActionLists" scope="request"/>
 <jsp:useBean id="ActionListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
+<jsp:useBean id="viewUser" class="java.lang.String" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <%-- Initialize the drop-down menus --%>
 <%@ include file="../initPopupMenu.jsp" %>
 <%@ include file="action_lists_menu.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
 <script language="JavaScript" type="text/javascript">
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
+  function selectUser(form) {
+    popContactsListSingle('viewUserId','changeUser', 'usersOnly=true&hierarchy=<%= User.getUserRecord().getId() %>&reset=true&filters=employees|accountcontacts');
+  }
+  function resetUser(form) {
+    window.location.href='MyActionLists.do?command=List&linkModuleId=2&viewUserId=<%= User.getUserRecord().getId() %>';
+  }
+  function changeDivContent(divName, divContents) {
+    window.location.href='MyActionLists.do?command=List&linkModuleId=2&viewUserId='+document.getElementById('viewUserId').value;
+  }
 </script>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> >
-Action Lists
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> >
+<dhv:label name="myitems.actionLists">Action Lists</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:permission name="myhomepage-action-lists-add">
-<a href="javascript:window.location.href='MyActionLists.do?command=Add&return=list&params=' + escape('filters=all|mycontacts|accountcontacts');">Add an Action List</a><br>
+<a href="javascript:window.location.href='MyActionLists.do?command=Add&return=list&params=' + escape('reset=true&filters=all|mycontacts|accountcontacts');"><dhv:label name="actionList.addAnActionList">Add an Action List</dhv:label></a><br>
 </dhv:permission>
 <br>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>">
-    <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= ActionListInfo.getOptionValue("inprogress") %>>All In Progress Lists</option>
-        <option <%= ActionListInfo.getOptionValue("complete") %>>All Complete Lists</option>
-        <option <%= ActionListInfo.getOptionValue("all") %>>All Lists</option>
+    <td nowrap>
+      <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= ActionListInfo.getOptionValue("inprogress") %>><dhv:label name="actionList.allInProgressLists">All In Progress Lists</dhv:label></option>
+        <option <%= ActionListInfo.getOptionValue("complete") %>><dhv:label name="actionList.allCompleteLists">All Complete Lists</dhv:label></option>
+        <option <%= ActionListInfo.getOptionValue("all") %>><dhv:label name="actionList.allLists">All Lists</dhv:label></option>
       </select>
+      <input type="hidden" name="viewUserId" id="viewUserId" value="<%= (viewUser != null && !"".equals(viewUser)? viewUser:""+User.getUserRecord().getId()) %>" />
+      <% UserList childList = User.getUserRecord().getChildUsers();
+        if (childList != null && childList.size() > 0) { %>
+        <input type="text" disabled="true" size="10" value="<dhv:username id="<%= ActionLists.getOwner() %>" lastFirst="true" />"/>
+        [<a href="javascript:selectUser(this.form);"><dhv:label name="actionList.changeUser">Change User</dhv:label></a>]
+        [<a href="javascript:resetUser(this.form);"><dhv:label name="actionList.resetUser">Reset User</dhv:label></a>]
+        <%--
+        [<a href="javascript:popURL('UsersList.do?command=ListUsers&amp;hidden_0=<%= User.getUserRecord().getId() %>','Users','500','400','yes','yes');">View User Hierarchy</a>]
+        --%>
+      <% } %>
     </td>
     <td>
       <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ActionListInfo"/>
@@ -64,26 +86,26 @@ Action Lists
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th rowspan="2" valign="middle">
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th rowspan="2" valign="middle" width="100%">
-      <strong><a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>&column=al.description">Name</a></strong>
+      <strong><a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>&viewUserId=<%= viewUser %>&column=al.description"><dhv:label name="contacts.name">Name</dhv:label></a></strong>
       <%= ActionListInfo.getSortIcon("al.description") %>
     </th>
     <th colspan="2" align="center">
-      <strong>Progress</strong>
+      <strong><dhv:label name="project.progress">Progress</dhv:label></strong>
     </th>
     <th rowspan="2" valign="middle" nowrap>
-      <strong><a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>&column=al.modified">Last Updated</a></strong>
+      <strong><a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>&viewUserId=<%= viewUser %>&column=al.modified"><dhv:label name="actionList.lastUpdated">Last Updated</dhv:label></a></strong>
       <%= ActionListInfo.getSortIcon("al.modified") %>
     </th>
   </tr>
   <tr>
     <th>
-      <strong>Complete</strong>
+      <strong><dhv:label name="global.button.complete">Complete</dhv:label></strong>
     </th>
     <th>
-      <strong>Total</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_listimports.Total">Total</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -99,10 +121,10 @@ Action Lists
   <tr class="row<%= rowid %>">
     <td nowrap>
      <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-      <a href="javascript:displayMenu('select<%= i %>','menuAction','<%= thisList.getId() %>','<%=  toHtmlValue(request.getParameter("linkModuleId")) %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuAction');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+      <a href="javascript:displayMenu('select<%= i %>','menuAction','<%= thisList.getId() %>','<%=  toHtmlValue(request.getParameter("linkModuleId")) %>', '<%= viewUser %>');" onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>); hideMenu('menuAction');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
     </td>
     <td width="100%">
-      <a href="MyActionContacts.do?command=List&actionId=<%= thisList.getId() %>&reset=true"><%= toHtmlValue(thisList.getDescription()) %></a>
+      <a href="MyActionContacts.do?command=List&actionId=<%= thisList.getId() %>&viewUserId=<%= viewUser %>&reset=true"><%= toHtmlValue(thisList.getDescription()) %></a>
     </td>
     <td nowrap align="center">
       <%= thisList.getTotalComplete() %>
@@ -111,14 +133,14 @@ Action Lists
       <%= thisList.getTotal() %>
     </td>
     <td nowrap align="center">
-      <zeroio:tz timestamp="<%= thisList.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
+      <zeroio:tz timestamp="<%= thisList.getModified() %>" timeZone="<%= User.getUserRecord().getTimeZone() %>" showTimeZone="true" />
     </td>
   </tr>
 <%}
 }else{%>
       <tr>
         <td class="containerBody" colspan="5" valign="center">
-          No Action Lists found in this view.
+          <dhv:label name="actionList.noActionListsFound">No Action Lists found in this view.</dhv:label>
         </td>
       </tr>
 <%}%>

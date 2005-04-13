@@ -16,6 +16,7 @@
   - Version: $Id$
   - Description: 
   --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.modules.contacts.base.Contact,org.aspcfs.modules.contacts.base.ContactList" %>
 <jsp:useBean id="ContactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request"/>
 <jsp:useBean id="CampaignGroupsContactsInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
@@ -24,18 +25,16 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th colspan="3">
-      <strong>List of Contacts</strong>
+      <strong><dhv:label name="campaign.listOfContacts">List of Contacts</dhv:label></strong>
     </th>
   </tr>
   <tr>
-    <th width="8" align="right" nowrap>
-      Action
+    <th width="8">&nbsp;</th>
+    <th width="50%" nowrap>
+      <dhv:label name="contacts.name">Name</dhv:label>
     </th>
     <th width="50%" nowrap>
-      Name
-    </th>
-    <th width="50%" nowrap>
-      Company
+      <dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label>
     </th>
   </tr>
 <%
@@ -51,7 +50,7 @@
 %>      
   <tr>
     <td align="center" nowrap>
-      <a href="javascript:window.opener.addValueFromChild('<%=thisContact.getId()%>', '<%=thisContact.getNameLastFirst()%>');javascript:window.focus();">Add</a>
+      <a href="javascript:window.opener.addValueFromChild('<%=thisContact.getId()%>', '<%=thisContact.getNameLastFirst()%>');javascript:window.focus();"><dhv:label name="button.add">Add</dhv:label></a>
     </td>
     <td nowrap>
       <%= toHtml(thisContact.getNameLastFirst()) %>
@@ -67,11 +66,11 @@
 <%} else {%>
   <tr class="containerBody">
     <td colspan="3">
-      No contacts matched query.
+      <dhv:label name="campaign.noContactsMatchedQuery">No contacts matched query.</dhv:label>
     </td>
   </tr>
 </table>
 <%}%>
 <p>
-<input type="button" value="Close" onClick="javascript:window.close();">
+<input type="button" value="<dhv:label name="button.close">Close</dhv:label>" onClick="javascript:window.close();">
 </form>

@@ -20,26 +20,29 @@
 <%@ page import="java.util.*,org.aspcfs.modules.actionlist.base.*, org.aspcfs.modules.base.Constants"%>
 <jsp:useBean id="ActionList" class="org.aspcfs.modules.actionlist.base.ActionList" scope="request"/>
 <jsp:useBean id="SCL" class="org.aspcfs.modules.communications.base.SearchCriteriaList" scope="request"/>
+<jsp:useBean id="viewUser" class="java.lang.String" scope="session"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<script language="JavaScript" type="text/javascript" src="javascript/checkString.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
 function checkForm(form) {
     formTest = true;
     message = "";
-    if (form.description.value == "") { 
-      message += "- Description is required\r\n";
+    if (checkNullString(form.description.value)) { 
+      message += label("description.required","- Description is required\r\n");
       formTest = false;
     }
    <% if(ActionList.getId() == -1){ %> 
       saveValues();
       if (form.searchCriteriaText.value == "") { 
-        message += "- Criteria is required\r\n";
+        message += label("check.criteria","- Criteria is required\r\n");
         formTest = false;
       }
    <% } %>
     if (formTest == false) {
-      alert("Form could not be saved, please check the following:\r\n\r\n" + message);
+      alert(label("check.form", "Form could not be saved, please check the following:\r\n\r\n") + message);
       return false;
     }
     return true;
@@ -54,37 +57,34 @@ function checkForm(form) {
   }
   cancelURL = cancelURL + "&linkModuleId=" + Constants.ACTIONLISTS_CONTACTS;
 %>
-<body onLoad="javascript:document.forms[0].description.focus()">
+<body onLoad="javascript:document.searchForm.description.focus()">
 <form name="searchForm" method="post" action="MyActionLists.do?command=Save&auto-populate=true" onSubmit="return checkForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> >
-<a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>">Action Lists</a> >
-New Action List
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> >
+<a href="MyActionLists.do?command=List&linkModuleId=<%= Constants.ACTIONLISTS_CONTACTS %>"><dhv:label name="myitems.actionLists">Action Lists</dhv:label></a> >
+<dhv:label name="actionList.newActionList">New Action List</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:formMessage showSpace="false" />
-<input type="submit" value="Save">
-<input type="button" value="Cancel" onClick="javascript:window.location.href='<%= cancelURL %>'">
+<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" />
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='<%= cancelURL %>'" />
 <br />
 <br />
-
 <%-- include the basic form for adding a action list --%>
 <%@ include file="action_lists_include.jsp" %>
-
-&nbsp;<br>
+&nbsp;<br />
 <dhv:evaluate if="<%= ActionList.getId() == -1 %>">
 <%-- include jsp for contact criteria --%>
 <%@ include file="../communications/group_criteria_include.jsp" %>
 <br />
 </dhv:evaluate>
-
-<input type="submit" value="Save">
-<input type="button" value="Cancel" onClick="javascript:window.location.href='<%= cancelURL %>'">
+<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" />
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='<%= cancelURL %>'" />
 <dhv:evaluate if="<%= request.getParameter("return") != null %>">
 <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
 </dhv:evaluate>

@@ -434,22 +434,6 @@ public class TicketMaintenanceNote extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the TicketSunMaintenance object
-   *
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  protected boolean isValid() throws SQLException {
-    errors.clear();
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -458,9 +442,6 @@ public class TicketMaintenanceNote extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
-    if (!isValid()) {
-      return resultCount;
-    }
 
     boolean doCommit = false;
     try {

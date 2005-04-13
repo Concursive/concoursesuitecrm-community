@@ -15,21 +15,25 @@
  */
 package org.aspcfs.modules.quotes.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.products.base.ProductCatalog;
+import org.aspcfs.modules.products.base.ProductCatalogPricing;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Dependency;
-import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.products.base.*;
+import org.aspcfs.modules.products.configurator.OptionConfigurator;
+import org.aspcfs.modules.products.base.ProductOptionConfigurator;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import javax.servlet.http.HttpServletRequest;
+
 /**
  *  This represents a product which is associated with a quote
  *
  *@author     ananth
  *@created    March 24, 2004
- *@version    $Id$
+ *@version    $Id: QuoteProduct.java,v 1.4.12.4 2005/01/03 18:42:26 mrajkowski
+ *      Exp $
  */
 public class QuoteProduct extends GenericBean {
   private int id = -1;
@@ -46,9 +50,12 @@ public class QuoteProduct extends GenericBean {
   private Timestamp estimatedDeliveryDate = null;
   private int statusId = -1;
   private Timestamp statusDate = null;
+  private String estimatedDelivery = null;
+  private String comment = null;
   // resources
   private boolean buildProductOptions = false;
   private QuoteProductOptionList productOptionList = new QuoteProductOptionList();
+  private boolean buildProduct = false;
   private ProductCatalog productCatalog = null;
 
 
@@ -333,6 +340,36 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
+   *  Sets the buildProduct attribute of the QuoteProduct object
+   *
+   *@param  tmp  The new buildProduct value
+   */
+  public void setBuildProduct(boolean tmp) {
+    this.buildProduct = tmp;
+  }
+
+
+  /**
+   *  Sets the buildProduct attribute of the QuoteProduct object
+   *
+   *@param  tmp  The new buildProduct value
+   */
+  public void setBuildProduct(String tmp) {
+    this.buildProduct = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the buildProduct attribute of the QuoteProduct object
+   *
+   *@return    The buildProduct value
+   */
+  public boolean getBuildProduct() {
+    return buildProduct;
+  }
+
+
+  /**
    *  Gets the productCatalog attribute of the QuoteProduct object
    *
    *@return    The productCatalog value
@@ -509,6 +546,46 @@ public class QuoteProduct extends GenericBean {
 
 
   /**
+   *  Gets the estimatedDelivery attribute of the QuoteProduct object
+   *
+   *@return    The estimatedDelivery value
+   */
+  public String getEstimatedDelivery() {
+    return estimatedDelivery;
+  }
+
+
+  /**
+   *  Sets the estimatedDelivery attribute of the QuoteProduct object
+   *
+   *@param  tmp  The new estimatedDelivery value
+   */
+  public void setEstimatedDelivery(String tmp) {
+    this.estimatedDelivery = tmp;
+  }
+
+
+  /**
+   *  Gets the comment attribute of the QuoteProduct object
+   *
+   *@return    The comment value
+   */
+  public String getComment() {
+    return comment;
+  }
+
+
+  /**
+   *  Sets the comment attribute of the QuoteProduct object
+   *
+   *@param  tmp  The new comment value
+   */
+  public void setComment(String tmp) {
+    this.comment = tmp;
+  }
+
+
+  /**
    *  Constructor for the QuoteProduct object
    */
   public QuoteProduct() { }
@@ -550,9 +627,10 @@ public class QuoteProduct extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT qp.* " +
-        " FROM quote_product qp " +
-        " WHERE qp.item_id = ? "
+        "SELECT qp.* " +
+        "FROM quote_product qp " +
+        "LEFT JOIN product_catalog pctlg ON (qp.product_id = pctlg.product_id) " +
+        "WHERE qp.item_id = ? "
         );
     pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
@@ -563,6 +641,9 @@ public class QuoteProduct extends GenericBean {
     pst.close();
     if (this.id == -1) {
       throw new SQLException("Quote Product not found");
+    }
+    if (buildProduct) {
+      this.buildProduct(db);
     }
     if (buildProductOptions) {
       this.buildProductOptions(db);
@@ -592,6 +673,20 @@ public class QuoteProduct extends GenericBean {
     estimatedDeliveryDate = rs.getTimestamp("estimated_delivery_date");
     statusId = DatabaseUtils.getInt(rs, "status_id");
     statusDate = rs.getTimestamp("status_date");
+    estimatedDelivery = rs.getString("estimated_delivery");
+    comment = rs.getString("comment");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildProduct(Connection db) throws SQLException {
+    productCatalog = new ProductCatalog(db, this.getProductId());
+    productCatalog.buildActivePrice(db);
   }
 
 
@@ -604,6 +699,7 @@ public class QuoteProduct extends GenericBean {
   public void buildProductOptions(Connection db) throws SQLException {
     productOptionList = new QuoteProductOptionList();
     productOptionList.setItemId(this.getId());
+    productOptionList.setBuildConfigDetails(true);
     productOptionList.buildList(db);
   }
 
@@ -616,17 +712,14 @@ public class QuoteProduct extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid(db)) {
-      return false;
-    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         " INSERT INTO quote_product(quote_id, product_id, " +
         " quantity, price_currency, price_amount, recurring_currency, " +
         " recurring_amount, recurring_type, extended_price, " +
-        " total_price, estimated_delivery_date, status_id, status_date)");
+        " total_price, estimated_delivery_date, status_id, status_date, estimated_delivery, comment)");
 
-    sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+    sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, this.getQuoteId());
@@ -642,10 +735,60 @@ public class QuoteProduct extends GenericBean {
     DatabaseUtils.setTimestamp(pst, ++i, this.getEstimatedDeliveryDate());
     DatabaseUtils.setInt(pst, ++i, this.getStatusId());
     DatabaseUtils.setTimestamp(pst, ++i, this.getStatusDate());
+    pst.setString(++i, this.getEstimatedDelivery());
+    pst.setString(++i, this.getComment());
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "quote_product_item_id_seq");
     return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  optionList        Description of the Parameter
+   *@param  request           Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean insert(Connection db, QuoteProductOptionList optionList, HttpServletRequest request) throws SQLException {
+    boolean status = false;
+    boolean commit = false;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      //Insert the quote product
+      status = this.insert(db);
+      //Insert the quote product options
+      Iterator iterator = (Iterator) optionList.iterator();
+      while (iterator.hasNext()) {
+        QuoteProductOption option = (QuoteProductOption) iterator.next();
+        option.setItemId(this.getId());
+        status = option.insert(db);
+
+        OptionConfigurator configurator =
+            (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, option.getConfiguratorId());
+        configurator.queryProperties(db, option.getOptionId(), false);
+        configurator.saveQuoteOption(db, option.getId(), request);
+      }
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return status;
   }
 
 
@@ -660,8 +803,12 @@ public class QuoteProduct extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Item ID not specified");
     }
+    boolean commit = true;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
 
       // delete all the quote product options associated with this quote product
       this.setBuildProductOptions(true);
@@ -676,11 +823,18 @@ public class QuoteProduct extends GenericBean {
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -695,55 +849,279 @@ public class QuoteProduct extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
-    PreparedStatement pst = null;
-    StringBuffer sql = new StringBuffer();
-    sql.append(" UPDATE quote_product " +
-        " SET quantity = ? , " +
-        "     price_currency = ?, " +
-        "     price_amount = ?, " +
-        "     recurring_currency = ?, " +
-        "     recurring_amount = ?, " +
-        "     recurring_type = ?, " +
-        "     extended_price = ?, " +
-        "     total_price = ?, " +
-        "     estimated_delivery_date = ?, " +
-        "     status_id = ?, " +
-        "     status_date = ? " +
-        " WHERE item_id = ? ");
+    boolean commit = false;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      PreparedStatement pst = null;
+      StringBuffer sql = new StringBuffer();
+      sql.append(" UPDATE quote_product " +
+          " SET quantity = ? , " +
+          "     price_currency = ?, " +
+          "     price_amount = ?, " +
+          "     recurring_currency = ?, " +
+          "     recurring_amount = ?, " +
+          "     recurring_type = ?, " +
+          "     extended_price = ?, " +
+          "     total_price = ?, " +
+          "     estimated_delivery_date = ?, " +
+          "     status_id = ?, " +
+          "     status_date = ?, " +
+          "     estimated_delivery = ?, " +
+          "     comment = ? " +
+          " WHERE item_id = ? ");
 
-    int i = 0;
-    pst = db.prepareStatement(sql.toString());
-    DatabaseUtils.setInt(pst, ++i, this.getQuantity());
-    DatabaseUtils.setInt(pst, ++i, this.getPriceCurrency());
-    pst.setDouble(++i, this.getPriceAmount());
-    DatabaseUtils.setInt(pst, ++i, this.getRecurringCurrency());
-    pst.setDouble(++i, this.getRecurringAmount());
-    DatabaseUtils.setInt(pst, ++i, this.getRecurringType());
-    pst.setDouble(++i, this.getExtendedPrice());
-    pst.setDouble(++i, this.getTotalPrice());
-    pst.setTimestamp(++i, this.getEstimatedDeliveryDate());
-    DatabaseUtils.setInt(pst, ++i, this.getStatusId());
-    pst.setTimestamp(++i, this.getStatusDate());
-    pst.setInt(++i, this.getId());
-
-    resultCount = pst.executeUpdate();
-    pst.close();
+      int i = 0;
+      pst = db.prepareStatement(sql.toString());
+      DatabaseUtils.setInt(pst, ++i, this.getQuantity());
+      DatabaseUtils.setInt(pst, ++i, this.getPriceCurrency());
+      pst.setDouble(++i, this.getPriceAmount());
+      DatabaseUtils.setInt(pst, ++i, this.getRecurringCurrency());
+      pst.setDouble(++i, this.getRecurringAmount());
+      DatabaseUtils.setInt(pst, ++i, this.getRecurringType());
+      pst.setDouble(++i, this.getExtendedPrice());
+      pst.setDouble(++i, this.getTotalPrice());
+      pst.setTimestamp(++i, this.getEstimatedDeliveryDate());
+      DatabaseUtils.setInt(pst, ++i, this.getStatusId());
+      pst.setTimestamp(++i, this.getStatusDate());
+      pst.setString(++i, this.getEstimatedDelivery());
+      pst.setString(++i, this.getComment());
+      pst.setInt(++i, this.getId());
+      resultCount = pst.executeUpdate();
+      pst.close();
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
     return resultCount;
   }
 
 
   /**
-   *  Gets the valid attribute of the QuoteProduct object
+   *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@return                   The valid value
+   *@param  request           Description of the Parameter
+   *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  protected boolean isValid(Connection db) throws SQLException {
-    return true;
+  public int update(Connection db, HttpServletRequest request) throws SQLException {
+    int resultCount = 0;
+    if (this.getId() == -1) {
+      throw new SQLException("Quote Product Option ID not specified");
+    }
+    boolean commit = false;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      resultCount = this.update(db);
+      //update the quote product options
+      Iterator i = this.getProductOptionList().iterator();
+      while (i.hasNext()) {
+        QuoteProductOption thisOption = (QuoteProductOption) i.next();
+        OptionConfigurator configurator =
+            (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, thisOption.getConfiguratorId());
+
+        configurator.queryProperties(db, thisOption.getOptionId(), false);
+        configurator.queryQuoteProperties(db, thisOption.getId());
+        double priceAdjust = configurator.computePriceAdjust(request);
+        thisOption.setPriceAmount(priceAdjust);
+        thisOption.setTotalPrice(priceAdjust);
+        thisOption.update(db);
+        configurator.updateQuoteOption(db, thisOption.getId(), request);
+      }
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return resultCount;
+  }
+
+
+  /**
+   *  Gets the timeZoneParams attribute of the QuoteProduct class
+   *
+   *@return    The timeZoneParams value
+   */
+  public static ArrayList getTimeZoneParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("estimatedDeliveryDate");
+    thisList.add("statusDate");
+    return thisList;
+  }
+
+
+  /**
+   *  Gets the numberParams attribute of the QuoteProduct class
+   *
+   *@return    The numberParams value
+   */
+  public static ArrayList getNumberParams() {
+    ArrayList thisList = new ArrayList();
+    thisList.add("price_amount");
+    thisList.add("recurring_amount");
+    thisList.add("extended_price");
+    thisList.add("total_price");
+    return thisList;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  quoteId           Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void copyQuoteProduct(Connection db, int quoteId) throws SQLException {
+    boolean commit = false;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      QuoteProduct copyProduct = new QuoteProduct();
+      copyProduct.setBuildProduct(this.getBuildProduct());
+      copyProduct.setBuildProductOptions(this.getBuildProductOptions());
+      copyProduct.setEstimatedDeliveryDate(this.getEstimatedDeliveryDate());
+      copyProduct.setExtendedPrice(this.getExtendedPrice());
+      copyProduct.setPriceAmount(this.getPriceAmount());
+      copyProduct.setPriceCurrency(this.getPriceCurrency());
+      copyProduct.setProductId(this.getProductId());
+      copyProduct.setQuantity(this.getQuantity());
+      copyProduct.setQuoteId(quoteId);
+      copyProduct.setRecurringAmount(this.getRecurringAmount());
+      copyProduct.setRecurringCurrency(this.getRecurringCurrency());
+      copyProduct.setRecurringType(this.getRecurringType());
+      copyProduct.setComment(this.getComment());
+      copyProduct.setEstimatedDelivery(this.getEstimatedDelivery());
+      copyProduct.insert(db);
+      
+      Iterator optionIterator = (Iterator) this.getProductOptionList().iterator();
+      while (optionIterator.hasNext()) {
+        QuoteProductOption option = (QuoteProductOption) optionIterator.next();
+        option.copyQuoteProductOption(db, copyProduct.getId());
+      }
+      
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildPricing(Connection db) throws SQLException {
+    if (this.getProductCatalog() == null && this.getProductId() != -1) {
+      ProductCatalog product = new ProductCatalog(db, this.getProductId());
+      product.buildActivePrice(db);
+      this.setProductCatalog(product);
+    } else if (this.getProductCatalog() == null && this.getProductId() == -1) {
+      throw new SQLException("Product ID not provided");
+    }
+    if (this.getProductCatalog().getActivePrice() == null) {
+      throw new SQLException("The selected product does not have an enabled price");
+    }
+    ProductCatalogPricing price = (ProductCatalogPricing) this.getProductCatalog().getActivePrice();
+    this.setPriceAmount(price.getPriceAmount());
+    this.setPriceCurrency(price.getPriceCurrency());
+    this.setRecurringAmount(price.getRecurringAmount());
+    this.setRecurringCurrency(price.getRecurringCurrency());
+    this.setRecurringType(price.getRecurringType());
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int clone(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Quote Product not populated to be cloned");
+    }
+    boolean status = false;
+    boolean commit = false;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      //Insert the quote product clone
+      status = this.insert(db);
+      //Insert the quote option clones
+      if (this.getProductOptionList() != null && this.getProductOptionList().size() > 0) {
+        Iterator iterator = (Iterator) this.getProductOptionList().iterator();
+        while (iterator.hasNext()) {
+          QuoteProductOption option = (QuoteProductOption) iterator.next();
+          OptionConfigurator configurator =
+              (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, option.getConfiguratorId());
+          option.setItemId(this.getId());
+          configurator.queryProperties(db, option.getOptionId(), false);
+          configurator.queryQuoteProperties(db, option.getId());
+          status = configurator.saveQuoteOption(db, option);
+        }
+      }
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    if (status) {
+      this.buildProductOptions(db);
+      return this.getId();
+    } else {
+      return -1;
+    }
   }
 }
 

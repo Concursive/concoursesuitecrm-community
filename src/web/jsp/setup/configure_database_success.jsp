@@ -16,6 +16,7 @@
   - Version: $Id$
   - Description:
   --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="database" class="org.aspcfs.modules.setup.beans.DatabaseBean" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
@@ -30,28 +31,24 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Centric CRM Configuration (Step 3 of 4)<br>
-      Database Settings &amp; Installation
+      <dhv:label name="setup.configuration.step3to4">Centric CRM Configuration (Step 3 of 4)<br />Database Settings &amp; Installation</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      Database Connection Successful!<br>
+      <dhv:label name="setup.databaseConnectionSuccessful">Database Connection Successful!</dhv:label><br>
       <br>
-      Centric CRM will now create all of the necessary database tables
-      and initial data in the following database:<br>
+      <dhv:label name="setup.createDatabaseTables.text">Centric CRM will now create all of the necessary database tables and initial data in the following database:</dhv:label><br>
       <br>
       <b><%= toHtmlValue(database.getUrl()) %></b><br>
       <br>
-      This can take a few minutes depending on connectivity to the database,
-      select Continue to begin.<br>
+      <dhv:label name="setup.takesFewMinutes.text">This can take a few minutes depending on connectivity to the database, select Continue to begin.</dhv:label><br>
       <br>
       <span id="buttons" name="buttons">
-        <input type="submit" value="Continue >"/>
+        <input type="submit" value="<dhv:label name="button.continueR">Continue ></dhv:label>"/>
       </span>
       <span id="progress" name="progress" style="display:none">
-        <font color="blue"><b>Please Wait... creating the database!</b>
-        This could take up to 5 minutes...</font>
+        <font color="blue"><b><dhv:label name="setup.pleaseWait.creatingDatabase.text">Please Wait... creating the database!</b> This could take up to 5 minutes...</dhv:label></font>
       </span>
     </td>
   </tr>

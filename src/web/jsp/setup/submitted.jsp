@@ -21,29 +21,26 @@
 <%@ include file="../initPage.jsp" %>
 <table border="0" width="100%">
   <tr class="sectionTitle">
-    <th>Registration Sent</th>
+    <th><dhv:label name="setup.registrationSent">Registration Sent</dhv:label></th>
   </tr>
   <tr>
     <td>
-      Your registration information has been submitted to
-      Dark Horse Ventures.<br>
-      <br>
-      A confirmation will be sent by email, as well as the
-      license file for this system.<br>
-      <br>
-      The email will be sent to: <%= toHtml(registration.getEmail()) %>
-      <br>&nbsp;
+      <dhv:label name="setup.registrationInformationSubmitted.text">Your registration information has been submitted to Dark Horse Ventures, LLC.</dhv:label><br />
+      <br />
+      <dhv:label name="setup.confirmationByEmail.text">A confirmation will be sent by email, as well as the license file for this system.</dhv:label><br />
+      <br />
+      <dhv:label name="setup.emailSentTo.colon">The email will be sent to:</dhv:label> <b><%= toHtml(registration.getEmail()) %></b>
+      <br />&nbsp;
     </td>
   </tr>
   <tr class="sectionTitle">
-    <th>Next Action</th>
+    <th><dhv:label name="setup.nextAction">Next Action</dhv:label></th>
   </tr>
   <tr>
     <td>
-      Proceed to the validation step once the
-      license file has been been received by email.
-      <br>&nbsp;<br>
-      <input type="button" value="Continue >" onClick="javascript:window.location.href='Setup.do?command=Register&doReg=have'"/>
+      <dhv:label name="setup.proceedToValidationStep.text">Proceed to the validation step once the license file has been been received by email.</dhv:label>
+      <br />&nbsp;<br />
+      <input type="button" value="<dhv:label name="button.continueR">Continue ></dhv:label>" onClick="javascript:window.location.href='Setup.do?command=Register&doReg=have'" />
     </td>
   </tr>
 </table>

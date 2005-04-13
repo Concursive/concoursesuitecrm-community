@@ -15,11 +15,7 @@
  */
 package org.aspcfs.utils;
 
-import javax.swing.*;
-import javax.swing.text.html.*;
-import javax.swing.text.html.parser.*;
-import javax.swing.text.*;
-import java.io.*;
+
 
 /**
  *  Description of the Class
@@ -41,6 +37,7 @@ public class HTMLUtils {
       return html;
     }
     //Some things that will make the text look similar to the Html
+    html = StringUtils.replace(html, "&nbsp;", " ");
     html = StringUtils.replace(html, "<br>", "\r\n");
     html = StringUtils.replace(html, "<br />", "\r\n");
     //handle paragraphs
@@ -69,7 +66,11 @@ public class HTMLUtils {
         tag = false;
       }
     }
-    return st.toString();
+    String finalHtml = st.toString();
+    finalHtml = StringUtils.replace(finalHtml, "&lt;", "<");
+    finalHtml = StringUtils.replace(finalHtml, "&gt;", ">");
+    finalHtml = StringUtils.replace(finalHtml, "&amp;", "&");
+    return finalHtml;
   }
 }
 

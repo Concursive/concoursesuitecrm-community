@@ -27,6 +27,7 @@ import com.zeroio.webutils.*;
 import com.isavvix.tools.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.orders.base.*;
+import org.aspcfs.modules.quotes.base.*;
 
 /**
  *  Description of the Class
@@ -52,14 +53,129 @@ public class CustomerProduct extends GenericBean {
   private int modifiedBy = -1;
   private boolean enabled = true;
   //resources
+  private int productId = -1;
+  private int quoteProductId = -1;
+  private boolean buildProductCatalog = false;
+  private ProductCatalog product = null;
+
   private boolean buildFileList = false;
   private FileItemList fileItemList = new FileItemList();
+
   private boolean buildHistoryList = false;
   private CustomerProductHistoryList historyList = new CustomerProductHistoryList();
 
   private Timestamp lastOrdered = null;
   private Order lastOrder = null;
 
+
+  /**
+   *  Sets the buildProductCatalog attribute of the CustomerProduct object
+   *
+   *@param  tmp  The new buildProductCatalog value
+   */
+  public void setBuildProductCatalog(boolean tmp) {
+    this.buildProductCatalog = tmp;
+  }
+
+
+  /**
+   *  Sets the buildProductCatalog attribute of the CustomerProduct object
+   *
+   *@param  tmp  The new buildProductCatalog value
+   */
+  public void setBuildProductCatalog(String tmp) {
+    this.buildProductCatalog = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the quoteProductId attribute of the CustomerProduct object
+   *
+   *@param  tmp  The new quoteProductId value
+   */
+  public void setQuoteProductId(int tmp) {
+    this.quoteProductId = tmp;
+  }
+
+
+  /**
+   *  Sets the quoteProductId attribute of the CustomerProduct object
+   *
+   *@param  tmp  The new quoteProductId value
+   */
+  public void setQuoteProductId(String tmp) {
+    this.quoteProductId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the quoteProductId attribute of the CustomerProduct object
+   *
+   *@return    The quoteProductId value
+   */
+  public int getQuoteProductId() {
+    return quoteProductId;
+  }
+
+
+  /**
+   *  Gets the buildProductCatalog attribute of the CustomerProduct object
+   *
+   *@return    The buildProductCatalog value
+   */
+  public boolean getBuildProductCatalog() {
+    return buildProductCatalog;
+  }
+
+
+  /**
+   *  Sets the product attribute of the CustomerProduct object
+   *
+   *@param  tmp  The new product value
+   */
+  public void setProduct(ProductCatalog tmp) {
+    this.product = tmp;
+  }
+
+
+  /**
+   *  Gets the product attribute of the CustomerProduct object
+   *
+   *@return    The product value
+   */
+  public ProductCatalog getProduct() {
+    return product;
+  }
+
+
+  /**
+   *  Sets the productId attribute of the CustomerProduct object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(int tmp) {
+    this.productId = tmp;
+  }
+
+
+  /**
+   *  Sets the productId attribute of the CustomerProduct object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(String tmp) {
+    this.productId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the productId attribute of the CustomerProduct object
+   *
+   *@return    The productId value
+   */
+  public int getProductId() {
+    return productId;
+  }
 
 
   /**
@@ -616,6 +732,19 @@ public class CustomerProduct extends GenericBean {
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
+  public void buildProductCatalog(Connection db) throws SQLException {
+    if (productId > -1) {
+      product = new ProductCatalog(db, productId);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
   public void buildHistoryList(Connection db) throws SQLException {
     historyList.setOrgId(this.getOrgId());
     historyList.setCustomerProductId(this.getId());
@@ -647,8 +776,13 @@ public class CustomerProduct extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT cp.* " +
+        " SELECT cp.*, pc.product_id AS product_id, " +
+        " qe.product_id AS quote_product_id " +
         " FROM customer_product cp " +
+        " LEFT JOIN order_product op ON (cp.order_item_id = op.item_id) " +
+        " LEFT JOIN product_catalog pc ON (op.product_id = pc.product_id) " +
+        " LEFT JOIN order_entry oe ON (cp.order_id = oe.order_id) " +
+        " LEFT JOIN quote_entry qe ON (oe.quote_id = qe.quote_id) " +
         " WHERE cp.customer_product_id = ? "
         );
     pst.setInt(1, id);
@@ -667,7 +801,11 @@ public class CustomerProduct extends GenericBean {
     if (buildHistoryList) {
       this.buildHistoryList(db);
     }
+    if (buildProductCatalog) {
+      this.buildProductCatalog(db);
+    }
   }
+
 
 
   /**
@@ -690,6 +828,14 @@ public class CustomerProduct extends GenericBean {
     modified = rs.getTimestamp("modified");
     modifiedBy = rs.getInt("modifiedby");
     enabled = rs.getBoolean("enabled");
+
+    //others
+    quoteProductId = DatabaseUtils.getInt(rs, "quote_product_id");
+    if (quoteProductId != -1) {
+      productId = quoteProductId;
+    } else {
+      productId = DatabaseUtils.getInt(rs, "product_id");
+    }
   }
 
 
@@ -702,9 +848,6 @@ public class CustomerProduct extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
-    if (!isValid(db)) {
-      return result;
-    }
 
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -760,39 +903,112 @@ public class CustomerProduct extends GenericBean {
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean delete(Connection db) throws SQLException {
+  public boolean delete(Connection db, int itemId, String filePath) throws SQLException {
     if (this.getId() == -1) {
       throw new SQLException("Customer Product ID not specified");
     }
+    boolean commit = true;
     boolean recordDeleted = false;
     try {
-      db.setAutoCommit(false);
-      //TODO: code to delete customer product  history
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      
+      // Delete all the files that are associated with this customer product
+      FileItem thisItem = new FileItem(db, itemId, this.getId(), Constants.DOCUMENTS_CUSTOMER_PRODUCT);
+      thisItem.delete(db, filePath);
+      //System.out.println("CustomerProduct -> Deleted Files : " + thisItem.getId());
+      
+      // Delete all the quotes that were placed for this customer product
+      PreparedStatement pst = db.prepareStatement(
+        "SELECT quote_id FROM order_entry " +
+        "WHERE quote_id > -1 AND order_id IN " + 
+        "(SELECT DISTINCT(order_id) " +
+        " FROM customer_product_history " +
+        " WHERE customer_product_id = ? " + 
+        " AND order_id NOT IN ( SELECT order_id FROM customer_product WHERE " +
+        "                      customer_product_id = ? )) "); 
+      pst.setInt(1, this.getId());
+      pst.setInt(2, this.getId());
+      ResultSet rs = pst.executeQuery();
+      while (rs.next()) {
+        Quote thisQuote = new Quote(db, rs.getInt("quote_id"));
+        //System.out.println("CustomerProduct -> calling delete on a quote : " + thisQuote.getId());
+        thisQuote.delete(db);
+      }
+      rs.close();
+      pst.close();
+      
+      // Delete all the orders that were placed using this customer product
+      pst = db.prepareStatement(
+        "SELECT DISTINCT(order_id) " + 
+        "FROM customer_product_history " +
+        "WHERE customer_product_id = ? " +
+        "AND order_id NOT IN ( SELECT order_id FROM customer_product WHERE " +
+        "                      customer_product_id = ? ) "); 
+      int i = 1;
+      pst.setInt(1, this.getId());
+      pst.setInt(2, this.getId());
+      rs = pst.executeQuery();
+      while (rs.next()) {
+        Order thisOrder = new Order(db, rs.getInt("order_id"));
+        //System.out.println("CustomerProduct -> calling delete on an order : " + thisOrder.getId());
+        thisOrder.delete(db);
+      }
+      rs.close();
+      pst.close();
+      
+      // Delete all the order payments associated with the master order
+      pst = db.prepareStatement(
+        "SELECT payment_id, order_item_id FROM order_payment WHERE order_item_id IN " +
+        " (SELECT order_item_id FROM customer_product_history cph " +
+        "  WHERE customer_product_id = ? ) ");
+      pst.setInt(1, this.getId());
+      rs = pst.executeQuery();
+      while (rs.next()) {
+        OrderPayment thisPayment = new OrderPayment(db, rs.getInt("payment_id"));
+        //System.out.println("CustomerProduct -> calling delete on a payment : " + thisPayment.getId());
+        thisPayment.delete(db);
+      }
+      rs.close();
+      pst.close();
+      
+      // Delete the customer product history
+      
       this.buildHistoryList(db);
-      if (historyList.size() == 1) {
-        // If the history list has just one entry for this customer product
-        // then it can be infered that this customer product has not been used in
-        // any ad run. Hence it is safe to delete this customer product
-
-        // Delete the customer product history
-        historyList.delete(db);
-        // Delete this customer product
-        PreparedStatement pst = db.prepareStatement(" DELETE FROM customer_product WHERE customer_product_id = ? ");
-        pst.setInt(1, this.getId());
-        pst.execute();
-        pst.close();
-        // Delete the dummy order product that maps to this customer product
-        OrderProduct thisProduct = new OrderProduct(db, this.getOrderItemId());
-        thisProduct.delete(db);
-        // Delete the dummy order that maps to this customer product
-        Order thisOrder = new Order(db, this.getOrderId());
-        recordDeleted = thisOrder.delete(db);
+      int size = this.getHistoryList().size();
+      historyList.delete(db);
+      //System.out.println("CustomerProduct -> Deleted history tems.....");
+      
+      // Delete this customer product
+      pst = db.prepareStatement(" DELETE FROM customer_product WHERE customer_product_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      //System.out.println("CustomerProduct -> Deleted Customer Product : " + this.getId());
+      
+      // Delete the master order product mapped with this customer product
+      OrderProduct thisProduct = new OrderProduct(db, this.getOrderItemId());
+      thisProduct.delete(db);
+      //System.out.println("CustomerProduct -> Deleted the order product : " + thisProduct.getId());
+      
+      // Delete the master order mapped with this customer product
+      Order thisOrder = new Order(db, this.getOrderId());
+      recordDeleted = thisOrder.delete(db);
+      //System.out.println("CustomerProduct -> Deleted the order : " + thisOrder.getId());
+      
+      if (commit) {
         db.commit();
       }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return recordDeleted;
   }
@@ -807,9 +1023,6 @@ public class CustomerProduct extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
-      return -1;
-    }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
 
@@ -848,12 +1061,54 @@ public class CustomerProduct extends GenericBean {
    */
   public DependencyList processDependencies(Connection db) throws SQLException {
     DependencyList dependencyList = new DependencyList();
-    if (historyList.size() > 1) {
-      Dependency thisDependency = new Dependency();
-      thisDependency.setName("History Exists");
-      thisDependency.setCount(FileItemList.retrieveRecordCount(db, Constants.DOCUMENTS_CUSTOMER_PRODUCT, this.getId()));
-      thisDependency.setCanDelete(false);
-      dependencyList.add(thisDependency);
+    // Check for orders associated with this customer product
+    try {
+      PreparedStatement pst = db.prepareStatement(
+        "SELECT COUNT(DISTINCT(order_id)) as orderscount " +
+        "FROM customer_product_history " +
+        "WHERE customer_product_id = ? ");
+      pst.setInt(1, this.getId());
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        int orderscount = rs.getInt("orderscount");
+        if (orderscount != 0) {
+          Dependency thisDependency = new Dependency();
+          thisDependency.setName("orders");
+          thisDependency.setCount(orderscount);
+          thisDependency.setCanDelete(true);
+          dependencyList.add(thisDependency);
+        }
+      }
+      rs.close();
+      pst.close();
+    } catch (SQLException e) {
+      throw new SQLException(e.getMessage());
+    }
+    
+    // check for quotes associated with this customer product
+    try {
+      PreparedStatement pst = db.prepareStatement(
+        "SELECT COUNT(*) as quotescount FROM order_entry " +
+        "WHERE quote_id > -1 AND order_id IN " + 
+        "(SELECT DISTINCT(order_id) " +
+        " FROM customer_product_history " +
+        " WHERE customer_product_id = ? )");
+      pst.setInt(1, this.getId());
+      ResultSet rs = pst.executeQuery();
+      if (rs.next()) {
+        int quotescount = rs.getInt("quotescount");
+        if (quotescount != 0) {
+          Dependency thisDependency = new Dependency();
+          thisDependency.setName("quotes");
+          thisDependency.setCount(quotescount);
+          thisDependency.setCanDelete(true);
+          dependencyList.add(thisDependency);
+        }
+      }
+      rs.close();
+      pst.close();
+    } catch (SQLException e) {
+      throw new SQLException(e.getMessage());
     }
     return dependencyList;
   }
@@ -877,18 +1132,6 @@ public class CustomerProduct extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the CustomerProduct object
-   *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  protected boolean isValid(Connection db) throws SQLException {
-    return true;
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -899,12 +1142,15 @@ public class CustomerProduct extends GenericBean {
     if (id == -1) {
       throw new SQLException("Invalid Order Product Number");
     }
-
     PreparedStatement pst = db.prepareStatement(
-        " SELECT cp.* " +
+        " SELECT cp.*, op.product_id AS product_id, " +
+        " qe.product_id AS quote_product_id " +
         " FROM customer_product cp " +
         " LEFT JOIN customer_product_history hist " +
         " ON ( cp.customer_product_id = hist.customer_product_id ) " +
+        " LEFT JOIN order_product op ON (cp.order_item_id = op.item_id) " +
+        " LEFT JOIN order_entry oe ON (cp.order_id = oe.order_id) "+
+        " LEFT JOIN quote_entry qe ON (qe.quote_id = oe.quote_id) "+
         " WHERE hist.order_item_id = ? "
         );
     pst.setInt(1, id);

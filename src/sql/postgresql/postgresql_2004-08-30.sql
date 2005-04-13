@@ -124,7 +124,7 @@ CREATE TABLE lookup_project_category (
 
 
 
-ALTER TABLE projects ADD COLUMN approvalby integer;
+ALTER TABLE projects ADD COLUMN approvalBy integer;
 ALTER TABLE projects ADD COLUMN category_id integer;
 
 ALTER TABLE projects ADD COLUMN portal BOOLEAN;
@@ -615,7 +615,7 @@ ALTER TABLE ONLY lookup_project_category
 
 
 ALTER TABLE ONLY projects
-    ADD CONSTRAINT "$4" FOREIGN KEY (approvalby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+    ADD CONSTRAINT "$4" FOREIGN KEY (approvalBy) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 

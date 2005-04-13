@@ -111,7 +111,7 @@ public class ContentUtils {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         OutputStreamWriter writer = new OutputStreamWriter(out);
         PDFTextStripper stripper = new PDFTextStripper();
-        stripper.writeText(pdfDocument.getDocument(), writer);
+        stripper.writeText(pdfDocument, writer);
         pdfDocument.close();
         writer.close();
         byte[] bytes = out.toByteArray();
@@ -182,7 +182,7 @@ public class ContentUtils {
 
 
   /**
-   *  Description of the Method
+   *  Format the content for search results page
    *
    *@param  content  Description of the Parameter
    *@return          Description of the Return Value

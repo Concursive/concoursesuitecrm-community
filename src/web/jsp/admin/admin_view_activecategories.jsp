@@ -26,11 +26,11 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> > 
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> > 
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
-<a href="AdminCategories.do?command=Show&moduleId=<%= PermissionCategory.getId() %>&constantId=<%= request.getParameter("constantId") %>">Categories</a> >
-Editor
+<a href="AdminCategories.do?command=Show&moduleId=<%= PermissionCategory.getId() %>&constantId=<%= request.getParameter("constantId") %>"><dhv:label name="product.Categories">Categories</dhv:label></a> >
+<dhv:label name="product.editor">Editor</dhv:label>
 </td>
 </tr>
 </table>
@@ -50,37 +50,31 @@ var categoryId = -1;
 <strong>Categories</strong>
 <% String param1 = "moduleId=" + PermissionCategory.getId(); %>
 <% String param2 = "constantId=" + request.getParameter("constantId"); %>
-<dhv:container name="categories" selected="active categories" param="<%= param1 + "|" + param2 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack" align="center">
-      <table border="0" cellpadding="2" cellspacing="0" class="empty">
-        <tr>
-          <td align="center">
-            Level 1<br>
-            <% 
-            categoryList.setSelectSize(10);
-            categoryList.setJsEvent("onChange=\"javascript:loadCategories('0');\"");
-            categoryList.addAttribute("id", "level0");
-            categoryList.addAttribute("style", "width: 150px");
-            %>
-            <%= categoryList.getHtml("level0", -1) %>
-          </td>
+<dhv:container name="categories" selected="active categories" param="<%= param1 + "|" + param2 %>" style="tabs">
+  <table border="0" cellpadding="2" cellspacing="0" class="empty">
+    <tr>
+      <td align="center">
+        <dhv:label name="admin.level1">Level 1</dhv:label><br />
+        <%
+        categoryList.setSelectSize(10);
+        categoryList.setJsEvent("onChange=\"javascript:loadCategories('0');\"");
+        categoryList.addAttribute("id", "level0");
+        categoryList.addAttribute("style", "width: 150px");
+        %>
+        <%= categoryList.getHtml("level0", -1) %>
+      </td>
 <%
   for (int k = 1; k < categoryEditor.getMaxLevels(); k++) {
 %>
-          <td align="center">
-            Level <%= k + 1 %><br>
-            <select name="level<%= k %>" id="level<%= k %>" size="10" onChange="javascript:loadCategories('<%= k %>');" style="width: 150px">
-              <option value="-1">---------None---------</option>
-            </select>
-          </td>
+      <td align="center">
+        Level <%= k + 1 %><br>
+        <select name="level<%= k %>" id="level<%= k %>" size="10" onChange="javascript:loadCategories('<%= k %>');" style="width: 150px">
+          <option value="-1"><dhv:label name="admin.none.label">---------None---------</dhv:label></option>
+        </select>
+      </td>
 <%}%>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
+    </tr>
+  </table>
+</dhv:container>
 <dhv:formMessage />
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-

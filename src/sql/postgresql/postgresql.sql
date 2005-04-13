@@ -1,4 +1,4 @@
--- Script (C) 2004 Dark Horse Ventures LLC, all rights reserved
+-- Script (C) 2005 Dark Horse Ventures LLC, all rights reserved
 
 SET search_path = public, pg_catalog;
 
@@ -85,9 +85,8 @@ SET search_path = public, pg_catalog;
 
 
 CREATE SEQUENCE access_user_id_seq
-    START 0
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
+    INCREMENT BY 1
+    NO MAXVALUE
     MINVALUE 0
     CACHE 1;
 
@@ -103,7 +102,7 @@ CREATE TABLE "access" (
     startofday integer DEFAULT 8,
     endofday integer DEFAULT 18,
     locale character varying(255),
-    timezone character varying(255) DEFAULT 'America/New_York',
+    timezone character varying(255) DEFAULT 'America/New_York'::character varying,
     last_ip character varying(15),
     last_login timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     enteredby integer NOT NULL,
@@ -115,7 +114,9 @@ CREATE TABLE "access" (
     assistant integer DEFAULT -1,
     enabled boolean DEFAULT true NOT NULL,
     currency character varying(5),
-    "language" character varying(20)
+    "language" character varying(20),
+    webdav_password character varying(80),
+    hidden boolean DEFAULT false
 );
 
 
@@ -193,10 +194,9 @@ CREATE TABLE lookup_department (
 
 
 CREATE SEQUENCE lookup_orgaddress_type_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -231,17 +231,73 @@ CREATE TABLE lookup_orgphone_types (
 
 
 
-CREATE SEQUENCE lookup_instantmessenge_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+CREATE TABLE lookup_im_types (
+    code serial NOT NULL,
+    description character varying(50) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true
+);
+
+
+
+CREATE TABLE lookup_im_services (
+    code serial NOT NULL,
+    description character varying(50) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true
+);
+
+
+
+CREATE SEQUENCE lookup_contact_source_code_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
 
-CREATE TABLE lookup_instantmessenger_types (
-    code integer DEFAULT nextval('lookup_instantmessenge_code_seq'::text) NOT NULL,
+CREATE TABLE lookup_contact_source (
+    code integer DEFAULT nextval('lookup_contact_source_code_seq'::text) NOT NULL,
+    description character varying(50) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true
+);
+
+
+
+CREATE SEQUENCE lookup_contact_rating_code_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+
+CREATE TABLE lookup_contact_rating (
+    code integer DEFAULT nextval('lookup_contact_rating_code_seq'::text) NOT NULL,
+    description character varying(50) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true
+);
+
+
+
+CREATE SEQUENCE lookup_textmessage_typ_code_seq
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+
+CREATE TABLE lookup_textmessage_types (
+    code integer DEFAULT nextval('lookup_textmessage_typ_code_seq'::text) NOT NULL,
     description character varying(50) NOT NULL,
     default_item boolean DEFAULT false,
     "level" integer DEFAULT 0,
@@ -251,10 +307,10 @@ CREATE TABLE lookup_instantmessenger_types (
 
 
 CREATE SEQUENCE lookup_employment_type_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -280,10 +336,9 @@ CREATE TABLE lookup_locale (
 
 
 CREATE SEQUENCE lookup_contactaddress__code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -299,10 +354,9 @@ CREATE TABLE lookup_contactaddress_types (
 
 
 CREATE SEQUENCE lookup_contactemail_ty_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -318,10 +372,9 @@ CREATE TABLE lookup_contactemail_types (
 
 
 CREATE SEQUENCE lookup_contactphone_ty_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -349,9 +402,8 @@ CREATE TABLE lookup_access_types (
 
 
 CREATE SEQUENCE organization_org_id_seq
-    START 0
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
+    INCREMENT BY 1
+    NO MAXVALUE
     MINVALUE 0
     CACHE 1;
 
@@ -371,7 +423,7 @@ CREATE TABLE organization (
     taxid character(80),
     lead character varying(40),
     sales_rep integer DEFAULT 0 NOT NULL,
-    miner_only boolean DEFAULT 'f' NOT NULL,
+    miner_only boolean DEFAULT false NOT NULL,
     defaultlocale integer,
     fiscalmonth integer,
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
@@ -438,7 +490,30 @@ CREATE TABLE contact (
     org_name character varying(255),
     access_type integer,
     status_id integer,
-    import_id integer
+    import_id integer,
+    information_update_date timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    lead boolean DEFAULT false,
+    lead_status integer,
+    source integer,
+    rating integer,
+    comments character varying(255),
+    conversion_date TIMESTAMP(3) without time zone
+);
+
+
+
+CREATE TABLE contact_lead_skipped_map (
+    map_id serial NOT NULL,
+    user_id integer NOT NULL,
+    contact_id integer NOT NULL
+);
+
+
+
+CREATE TABLE contact_lead_read_map (
+    map_id serial NOT NULL,
+    user_id integer NOT NULL,
+    contact_id integer NOT NULL
 );
 
 
@@ -446,7 +521,7 @@ CREATE TABLE contact (
 CREATE TABLE role (
     role_id serial NOT NULL,
     role character varying(80) NOT NULL,
-    description character varying(255) DEFAULT '' NOT NULL,
+    description character varying(255) DEFAULT ''::character varying NOT NULL,
     enteredby integer NOT NULL,
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     modifiedby integer NOT NULL,
@@ -458,10 +533,9 @@ CREATE TABLE role (
 
 
 CREATE SEQUENCE permission_cate_category_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -480,7 +554,10 @@ CREATE TABLE permission_category (
     scheduled_events boolean DEFAULT false NOT NULL,
     object_events boolean DEFAULT false NOT NULL,
     reports boolean DEFAULT false NOT NULL,
-    products boolean DEFAULT false NOT NULL
+    products boolean DEFAULT false NOT NULL,
+    webdav boolean DEFAULT false NOT NULL,
+    logos boolean DEFAULT false NOT NULL,
+    constant integer NOT NULL
 );
 
 
@@ -493,7 +570,7 @@ CREATE TABLE permission (
     permission_add boolean DEFAULT false NOT NULL,
     permission_edit boolean DEFAULT false NOT NULL,
     permission_delete boolean DEFAULT false NOT NULL,
-    description character varying(255) DEFAULT '' NOT NULL,
+    description character varying(255) DEFAULT ''::character varying NOT NULL,
     "level" integer DEFAULT 0 NOT NULL,
     enabled boolean DEFAULT true NOT NULL,
     active boolean DEFAULT true NOT NULL,
@@ -526,10 +603,9 @@ CREATE TABLE lookup_stage (
 
 
 CREATE SEQUENCE lookup_delivery_option_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -559,10 +635,10 @@ CREATE TABLE news (
 
 
 CREATE SEQUENCE organization_add_address_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -581,16 +657,17 @@ CREATE TABLE organization_address (
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    modifiedby integer NOT NULL
+    modifiedby integer NOT NULL,
+    primary_address boolean DEFAULT false NOT NULL
 );
 
 
 
 CREATE SEQUENCE organization__emailaddress__seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -603,16 +680,17 @@ CREATE TABLE organization_emailaddress (
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    modifiedby integer NOT NULL
+    modifiedby integer NOT NULL,
+    primary_email boolean DEFAULT false NOT NULL
 );
 
 
 
 CREATE SEQUENCE organization_phone_phone_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -626,7 +704,8 @@ CREATE TABLE organization_phone (
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    modifiedby integer NOT NULL
+    modifiedby integer NOT NULL,
+    primary_number boolean DEFAULT false NOT NULL
 );
 
 
@@ -652,10 +731,10 @@ CREATE TABLE contact_address (
 
 
 CREATE SEQUENCE contact_email_emailaddress__seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -689,11 +768,40 @@ CREATE TABLE contact_phone (
 
 
 
+CREATE TABLE contact_imaddress (
+    address_id serial NOT NULL,
+    contact_id integer,
+    imaddress_type integer,
+    imaddress_service integer,
+    imaddress character varying(256),
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    primary_im boolean DEFAULT false NOT NULL
+);
+
+
+
+CREATE TABLE contact_textmessageaddress (
+    address_id serial NOT NULL,
+    contact_id integer,
+    textmessageaddress_type integer,
+    textmessageaddress character varying(256),
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    primary_textmessage_address boolean DEFAULT false NOT NULL
+);
+
+
+
 CREATE SEQUENCE notification_notification_i_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -725,7 +833,7 @@ CREATE TABLE cfsinbox_message (
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     "type" integer DEFAULT -1 NOT NULL,
     modifiedby integer NOT NULL,
-    delete_flag boolean DEFAULT 'f'
+    delete_flag boolean DEFAULT false
 );
 
 
@@ -735,7 +843,7 @@ CREATE TABLE cfsinbox_messagelink (
     sent_to integer NOT NULL,
     status integer DEFAULT 0 NOT NULL,
     viewed timestamp(3) without time zone,
-    enabled boolean DEFAULT 't' NOT NULL,
+    enabled boolean DEFAULT true NOT NULL,
     sent_from integer NOT NULL
 );
 
@@ -775,6 +883,18 @@ CREATE TABLE lookup_lists_lookup (
 
 
 
+CREATE TABLE webdav (
+    id serial NOT NULL,
+    category_id integer NOT NULL,
+    class_name character varying(300) NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL
+);
+
+
+
 CREATE TABLE category_editor_lookup (
     id serial NOT NULL,
     module_id integer NOT NULL,
@@ -803,10 +923,10 @@ CREATE TABLE viewpoint (
 
 
 CREATE SEQUENCE viewpoint_per_vp_permission_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -888,10 +1008,10 @@ CREATE TABLE report_queue_criteria (
 
 
 CREATE SEQUENCE action_list_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -912,10 +1032,10 @@ CREATE TABLE action_list (
 
 
 CREATE SEQUENCE action_item_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -935,10 +1055,10 @@ CREATE TABLE action_item (
 
 
 CREATE SEQUENCE action_item_log_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -982,6 +1102,34 @@ CREATE TABLE database_version (
     script_filename character varying(255) NOT NULL,
     script_version character varying(255) NOT NULL,
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL
+);
+
+
+
+CREATE TABLE lookup_relationship_types (
+    type_id serial NOT NULL,
+    category_id_maps_from integer NOT NULL,
+    category_id_maps_to integer NOT NULL,
+    reciprocal_name_1 character varying(512),
+    reciprocal_name_2 character varying(512),
+    "level" integer DEFAULT 0,
+    default_item boolean DEFAULT false,
+    enabled boolean DEFAULT true
+);
+
+
+
+CREATE TABLE relationship (
+    relationship_id serial NOT NULL,
+    type_id integer,
+    object_id_maps_from integer NOT NULL,
+    category_id_maps_from integer NOT NULL,
+    object_id_maps_to integer NOT NULL,
+    category_id_maps_to integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL
 );
 
 
@@ -1032,10 +1180,9 @@ CREATE TABLE lookup_call_result (
 
 
 CREATE SEQUENCE lookup_opportunity_typ_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1085,12 +1232,12 @@ CREATE TABLE opportunity_component (
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     modifiedby integer NOT NULL,
-    closed timestamp without time zone,
+    closed timestamp(3) without time zone,
     alert character varying(100),
     enabled boolean DEFAULT true NOT NULL,
     notes text,
     alertdate_timezone character varying(255),
-    closedate_timezone VARCHAR(255)
+    closedate_timezone character varying(255)
 );
 
 
@@ -1134,16 +1281,16 @@ CREATE TABLE call_log (
     status_id integer DEFAULT 1 NOT NULL,
     reminder_value integer,
     reminder_type_id integer,
-    alertdate_timezone character varying(255) DEFAULT 'America/New_York'
+    alertdate_timezone character varying(255)
 );
 
 
 
 CREATE SEQUENCE lookup_project_activit_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1161,10 +1308,9 @@ CREATE TABLE lookup_project_activity (
 
 
 CREATE SEQUENCE lookup_project_priorit_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1219,10 +1365,10 @@ CREATE TABLE lookup_project_role (
 
 
 CREATE SEQUENCE lookup_project_cat_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1238,6 +1384,23 @@ CREATE TABLE lookup_project_category (
 
 
 
+CREATE TABLE lookup_news_template (
+    code serial NOT NULL,
+    description character varying(255) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true,
+    group_id integer DEFAULT 0 NOT NULL,
+    load_article boolean DEFAULT false,
+    load_project_article_list boolean DEFAULT false,
+    load_article_linked_list boolean DEFAULT false,
+    load_public_projects boolean DEFAULT false,
+    load_article_category_list boolean DEFAULT false,
+    mapped_jsp character varying(255) NOT NULL
+);
+
+
+
 CREATE TABLE projects (
     project_id serial NOT NULL,
     group_id integer,
@@ -1249,6 +1412,7 @@ CREATE TABLE projects (
     requesteddept character varying(50),
     requestdate timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
     approvaldate timestamp(3) without time zone,
+    approvalBy integer,
     closedate timestamp(3) without time zone,
     "owner" integer,
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
@@ -1278,17 +1442,31 @@ CREATE TABLE projects (
     est_closedate timestamp(3) without time zone,
     budget double precision,
     budget_currency character varying(5),
-    requestDate_timezone VARCHAR(255),
-    est_closedate_timezone VARCHAR(255)
+    requestdate_timezone character varying(255),
+    est_closedate_timezone character varying(255),
+    portal_default boolean DEFAULT false NOT NULL,
+    portal_header character varying(255),
+    portal_format character varying(255),
+    portal_key character varying(255),
+    portal_build_news_body boolean DEFAULT false NOT NULL,
+    portal_news_menu boolean DEFAULT false NOT NULL,
+    description text,
+    allows_user_observers boolean DEFAULT false NOT NULL,
+    "level" integer DEFAULT 10 NOT NULL,
+    portal_page_type integer,
+    calendar_enabled boolean DEFAULT true NOT NULL,
+    calendar_label character varying(50),
+    accounts_enabled boolean DEFAULT true NOT NULL,
+    accounts_label character varying(50)
 );
 
 
 
 CREATE SEQUENCE project_requi_requirement_i_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1315,18 +1493,18 @@ CREATE TABLE project_requirements (
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     modifiedby integer NOT NULL,
     startdate timestamp(3) without time zone,
-    startdate_timezone VARCHAR(255),
-    deadline_timezone VARCHAR(255),
-    due_date_timezone VARCHAR(255)
+    startdate_timezone character varying(255),
+    deadline_timezone character varying(255),
+    due_date_timezone character varying(255)
 );
 
 
 
 CREATE SEQUENCE project_assignmen_folder_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1346,10 +1524,10 @@ CREATE TABLE project_assignments_folder (
 
 
 CREATE SEQUENCE project_assig_assignment_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1380,16 +1558,16 @@ CREATE TABLE project_assignments (
     modifiedby integer NOT NULL,
     folder_id integer,
     percent_complete integer,
-    due_date_timezone VARCHAR(255)
+    due_date_timezone character varying(255)
 );
 
 
 
 CREATE SEQUENCE project_assignmen_status_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1399,16 +1577,19 @@ CREATE TABLE project_assignments_status (
     assignment_id integer NOT NULL,
     user_id integer NOT NULL,
     description text NOT NULL,
-    status_date timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
+    status_date timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    percent_complete integer,
+    project_status_id integer,
+    user_assign_id integer
 );
 
 
 
 CREATE SEQUENCE project_issue_cate_categ_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1426,7 +1607,8 @@ CREATE TABLE project_issues_categories (
     topics_count integer DEFAULT 0 NOT NULL,
     posts_count integer DEFAULT 0 NOT NULL,
     last_post_date timestamp(3) without time zone,
-    last_post_by integer
+    last_post_by integer,
+    allow_files boolean DEFAULT false NOT NULL
 );
 
 
@@ -1451,10 +1633,10 @@ CREATE TABLE project_issues (
 
 
 CREATE SEQUENCE project_issue_repl_reply_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1463,7 +1645,7 @@ CREATE TABLE project_issue_replies (
     reply_id integer DEFAULT nextval('project_issue_repl_reply_id_seq'::text) NOT NULL,
     issue_id integer NOT NULL,
     reply_to integer DEFAULT 0,
-    subject character varying(50) NOT NULL,
+    subject character varying(255) NOT NULL,
     message text NOT NULL,
     importance integer,
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
@@ -1505,7 +1687,8 @@ CREATE TABLE project_files (
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    modifiedby integer NOT NULL
+    modifiedby integer NOT NULL,
+    default_file boolean DEFAULT false
 );
 
 
@@ -1563,19 +1746,30 @@ CREATE TABLE project_team (
 
 
 
+CREATE TABLE project_news_category (
+    category_id serial NOT NULL,
+    project_id integer NOT NULL,
+    category_name character varying(255),
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    "level" integer DEFAULT 0 NOT NULL,
+    enabled boolean DEFAULT true
+);
+
+
+
 CREATE TABLE project_news (
     news_id serial NOT NULL,
     project_id integer NOT NULL,
     category_id integer,
     subject character varying(255) NOT NULL,
-    intro character varying(2048),
+    intro text,
     message text,
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
     modifiedby integer NOT NULL,
-    start_date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
-    end_date timestamp without time zone,
+    start_date timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    end_date timestamp(3) without time zone,
     allow_replies boolean DEFAULT false,
     allow_rating boolean DEFAULT false,
     rating_count integer DEFAULT 0 NOT NULL,
@@ -1585,8 +1779,10 @@ CREATE TABLE project_news (
     enabled boolean DEFAULT true,
     status integer,
     html boolean DEFAULT true NOT NULL,
-    start_date_timezone VARCHAR(255),
-    end_date_timezone VARCHAR(255)
+    start_date_timezone character varying(255),
+    end_date_timezone character varying(255),
+    classification_id integer NOT NULL,
+    template_id integer
 );
 
 
@@ -1637,6 +1833,15 @@ CREATE TABLE project_permissions (
 
 
 
+CREATE TABLE project_accounts (
+    id serial NOT NULL,
+    project_id integer NOT NULL,
+    org_id integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
+);
+
+
+
 CREATE TABLE lookup_currency (
     code serial NOT NULL,
     description character varying(300) NOT NULL,
@@ -1648,10 +1853,10 @@ CREATE TABLE lookup_currency (
 
 
 CREATE SEQUENCE lookup_product_categor_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1706,6 +1911,16 @@ CREATE TABLE lookup_product_type (
 );
 
 
+CREATE SEQUENCE lookup_product_manufac_code_seq;
+CREATE TABLE lookup_product_manufacturer (
+    code INTEGER DEFAULT nextval('lookup_product_manufac_code_seq') NOT NULL,
+    description character varying(300) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true
+);
+
+
 
 CREATE TABLE lookup_product_format (
     code serial NOT NULL,
@@ -1718,10 +1933,9 @@ CREATE TABLE lookup_product_format (
 
 
 CREATE SEQUENCE lookup_product_shippin_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1737,10 +1951,9 @@ CREATE TABLE lookup_product_shipping (
 
 
 CREATE SEQUENCE lookup_product_ship_ti_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1799,7 +2012,8 @@ CREATE TABLE product_catalog (
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     start_date timestamp(3) without time zone,
     expiration_date timestamp(3) without time zone,
-    enabled boolean DEFAULT true NOT NULL
+    enabled boolean DEFAULT true NOT NULL,
+    manufacturer_id integer
 );
 
 
@@ -1820,7 +2034,10 @@ CREATE TABLE product_catalog_pricing (
     modifiedby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     start_date timestamp(3) without time zone,
-    expiration_date timestamp(3) without time zone
+    expiration_date timestamp(3) without time zone,
+    enabled boolean DEFAULT false,
+    cost_currency integer,
+    cost_amount double precision DEFAULT 0 NOT NULL
 );
 
 
@@ -1875,10 +2092,9 @@ CREATE TABLE product_catalog_category_map (
 
 
 CREATE SEQUENCE lookup_product_conf_re_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -1898,7 +2114,8 @@ CREATE TABLE product_option_configurator (
     short_description text,
     long_description text,
     class_name character varying(255),
-    result_type integer NOT NULL
+    result_type integer NOT NULL,
+    configurator_name character varying(300) NOT NULL
 );
 
 
@@ -1914,7 +2131,10 @@ CREATE TABLE product_option (
     required boolean DEFAULT false NOT NULL,
     start_date timestamp(3) without time zone,
     end_date timestamp(3) without time zone,
-    enabled boolean DEFAULT true
+    enabled boolean DEFAULT false,
+    option_name character varying(300),
+    has_range boolean DEFAULT false,
+    has_multiplier boolean DEFAULT false
 );
 
 
@@ -1930,7 +2150,14 @@ CREATE TABLE product_option_values (
     price_amount double precision DEFAULT 0 NOT NULL,
     recurring_currency integer,
     recurring_amount double precision DEFAULT 0 NOT NULL,
-    recurring_type integer
+    recurring_type integer,
+    enabled boolean DEFAULT true,
+    value double precision DEFAULT 0,
+    multiplier double precision DEFAULT 1,
+    range_min integer DEFAULT 1,
+    range_max integer DEFAULT 1,
+    cost_currency integer,
+    cost_amount double precision DEFAULT 0 NOT NULL
 );
 
 
@@ -1938,43 +2165,47 @@ CREATE TABLE product_option_values (
 CREATE TABLE product_option_map (
     product_option_id serial NOT NULL,
     product_id integer NOT NULL,
-    option_id integer NOT NULL,
-    value_id integer NOT NULL
+    option_id integer NOT NULL
 );
 
 
 
 CREATE TABLE product_option_boolean (
     product_option_id integer NOT NULL,
-    value boolean NOT NULL
+    value boolean NOT NULL,
+    id integer
 );
 
 
 
 CREATE TABLE product_option_float (
     product_option_id integer NOT NULL,
-    value double precision NOT NULL
+    value double precision NOT NULL,
+    id integer
 );
 
 
 
 CREATE TABLE product_option_timestamp (
     product_option_id integer NOT NULL,
-    value timestamp without time zone NOT NULL
+    value timestamp(3) without time zone NOT NULL,
+    id integer
 );
 
 
 
 CREATE TABLE product_option_integer (
     product_option_id integer NOT NULL,
-    value integer NOT NULL
+    value integer NOT NULL,
+    id integer
 );
 
 
 
 CREATE TABLE product_option_text (
     product_option_id integer NOT NULL,
-    value text NOT NULL
+    value text NOT NULL,
+    id integer
 );
 
 
@@ -2100,9 +2331,9 @@ CREATE TABLE service_contract (
     contract_value double precision,
     total_hours_remaining double precision,
     service_model_notes text,
-    initial_start_date_timezone VARCHAR(255),
-    current_start_date_timezone VARCHAR(255),
-    current_end_date_timezone VARCHAR(255)
+    initial_start_date_timezone character varying(255),
+    current_start_date_timezone character varying(255),
+    current_end_date_timezone character varying(255)
 );
 
 
@@ -2132,9 +2363,9 @@ CREATE TABLE service_contract_products (
 CREATE TABLE asset_category (
     id serial NOT NULL,
     cat_level integer DEFAULT 0 NOT NULL,
-    parent_cat_code integer NOT NULL,
+    parent_cat_code integer DEFAULT 0 NOT NULL,
     description character varying(300) NOT NULL,
-    full_description text DEFAULT '' NOT NULL,
+    full_description text DEFAULT ''::text NOT NULL,
     default_item boolean DEFAULT false,
     "level" integer DEFAULT 0,
     enabled boolean DEFAULT true
@@ -2146,9 +2377,9 @@ CREATE TABLE asset_category_draft (
     id serial NOT NULL,
     link_id integer DEFAULT -1,
     cat_level integer DEFAULT 0 NOT NULL,
-    parent_cat_code integer NOT NULL,
+    parent_cat_code integer DEFAULT 0 NOT NULL,
     description character varying(300) NOT NULL,
-    full_description text DEFAULT '' NOT NULL,
+    full_description text DEFAULT ''::text NOT NULL,
     default_item boolean DEFAULT false,
     "level" integer DEFAULT 0,
     enabled boolean DEFAULT true
@@ -2190,9 +2421,9 @@ CREATE TABLE asset (
     modifiedby integer NOT NULL,
     enabled boolean DEFAULT true,
     purchase_cost double precision,
-    date_listed_timezone VARCHAR(255),
-    expiration_date_timezone VARCHAR(255),
-    purchase_date_timezone VARCHAR(255)
+    date_listed_timezone character varying(255),
+    expiration_date_timezone character varying(255),
+    purchase_date_timezone character varying(255)
 );
 
 
@@ -2210,7 +2441,7 @@ CREATE TABLE ticket_level (
 CREATE TABLE ticket_severity (
     code serial NOT NULL,
     description character varying(300) NOT NULL,
-    style text DEFAULT '' NOT NULL,
+    style text DEFAULT ''::text NOT NULL,
     default_item boolean DEFAULT false,
     "level" integer DEFAULT 0,
     enabled boolean DEFAULT true
@@ -2228,10 +2459,20 @@ CREATE TABLE lookup_ticketsource (
 
 
 
+CREATE TABLE lookup_ticket_status (
+    code serial NOT NULL,
+    description character varying(300) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true
+);
+
+
+
 CREATE TABLE ticket_priority (
     code serial NOT NULL,
     description character varying(300) NOT NULL,
-    style text DEFAULT '' NOT NULL,
+    style text DEFAULT ''::text NOT NULL,
     default_item boolean DEFAULT false,
     "level" integer DEFAULT 0,
     enabled boolean DEFAULT true
@@ -2242,9 +2483,9 @@ CREATE TABLE ticket_priority (
 CREATE TABLE ticket_category (
     id serial NOT NULL,
     cat_level integer DEFAULT 0 NOT NULL,
-    parent_cat_code integer NOT NULL,
+    parent_cat_code integer DEFAULT 0 NOT NULL,
     description character varying(300) NOT NULL,
-    full_description text DEFAULT '' NOT NULL,
+    full_description text DEFAULT ''::text NOT NULL,
     default_item boolean DEFAULT false,
     "level" integer DEFAULT 0,
     enabled boolean DEFAULT true
@@ -2256,9 +2497,9 @@ CREATE TABLE ticket_category_draft (
     id serial NOT NULL,
     link_id integer DEFAULT -1,
     cat_level integer DEFAULT 0 NOT NULL,
-    parent_cat_code integer NOT NULL,
+    parent_cat_code integer DEFAULT 0 NOT NULL,
     description character varying(300) NOT NULL,
-    full_description text DEFAULT '' NOT NULL,
+    full_description text DEFAULT ''::text NOT NULL,
     default_item boolean DEFAULT false,
     "level" integer DEFAULT 0,
     enabled boolean DEFAULT true
@@ -2303,8 +2544,9 @@ CREATE TABLE ticket (
     expectation integer,
     key_count integer,
     est_resolution_date_timezone character varying(255),
-    assigned_date_timezone VARCHAR(255),
-    resolution_date_timezone VARCHAR(255)
+    assigned_date_timezone character varying(255),
+    resolution_date_timezone character varying(255),
+    status_id integer
 );
 
 
@@ -2350,7 +2592,7 @@ CREATE TABLE ticket_csstm_form (
     enabled boolean DEFAULT true,
     travel_towards_sc boolean DEFAULT true,
     labor_towards_sc boolean DEFAULT true,
-    alert_date_timezone VARCHAR(255)
+    alert_date_timezone character varying(255)
 );
 
 
@@ -2364,7 +2606,7 @@ CREATE TABLE ticket_activity_item (
     travel_minutes integer,
     labor_hours integer,
     labor_minutes integer,
-    activity_date_timezone VARCHAR(255)
+    activity_date_timezone character varying(255)
 );
 
 
@@ -2441,7 +2683,7 @@ CREATE TABLE lookup_quote_source (
 CREATE TABLE quote_entry (
     quote_id serial NOT NULL,
     parent_id integer,
-    org_id integer NOT NULL,
+    org_id integer,
     contact_id integer,
     source_id integer,
     grand_total double precision,
@@ -2459,7 +2701,20 @@ CREATE TABLE quote_entry (
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     modifiedby integer NOT NULL,
     product_id integer,
-    customer_product_id integer
+    customer_product_id integer,
+    opp_id integer,
+    "version" character varying(255) DEFAULT '0'::character varying NOT NULL,
+    group_id integer NOT NULL,
+    delivery_id integer,
+    email_address text,
+    phone_number text,
+    address text,
+    fax_number text,
+    submit_action integer,
+    closed timestamp(3) without time zone,
+    show_total boolean DEFAULT true,
+    show_subtotal boolean DEFAULT true,
+    logo_file_id integer
 );
 
 
@@ -2478,7 +2733,9 @@ CREATE TABLE quote_product (
     total_price double precision DEFAULT 0 NOT NULL,
     estimated_delivery_date timestamp(3) without time zone,
     status_id integer,
-    status_date timestamp without time zone DEFAULT ('now'::text)::timestamp(6) with time zone
+    status_date timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    estimated_delivery text,
+    "comment" character varying(300)
 );
 
 
@@ -2502,35 +2759,40 @@ CREATE TABLE quote_product_options (
 
 CREATE TABLE quote_product_option_boolean (
     quote_product_option_id integer,
-    value boolean NOT NULL
+    value boolean NOT NULL,
+    id integer
 );
 
 
 
 CREATE TABLE quote_product_option_float (
     quote_product_option_id integer,
-    value double precision NOT NULL
+    value double precision NOT NULL,
+    id integer
 );
 
 
 
 CREATE TABLE quote_product_option_timestamp (
     quote_product_option_id integer,
-    value timestamp without time zone NOT NULL
+    value timestamp(3) without time zone NOT NULL,
+    id integer
 );
 
 
 
 CREATE TABLE quote_product_option_integer (
     quote_product_option_id integer,
-    value integer NOT NULL
+    value integer NOT NULL,
+    id integer
 );
 
 
 
 CREATE TABLE quote_product_option_text (
     quote_product_option_id integer,
-    value text NOT NULL
+    value text NOT NULL,
+    id integer
 );
 
 
@@ -2596,7 +2858,8 @@ CREATE TABLE order_entry (
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    modifiedby integer NOT NULL
+    modifiedby integer NOT NULL,
+    submitted timestamp(3) without time zone
 );
 
 
@@ -2726,10 +2989,9 @@ CREATE TABLE lookup_payment_methods (
 
 
 CREATE SEQUENCE lookup_creditcard_type_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -2744,25 +3006,8 @@ CREATE TABLE lookup_creditcard_types (
 
 
 
-CREATE TABLE order_payment (
-    payment_id serial NOT NULL,
-    order_id integer NOT NULL,
-    payment_method_id integer NOT NULL,
-    payment_amount double precision,
-    authorization_ref_number character varying(30),
-    authorization_code character varying(30),
-    authorization_date timestamp(3) without time zone,
-    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    enteredby integer NOT NULL,
-    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    modifiedby integer NOT NULL
-);
-
-
-
 CREATE TABLE payment_creditcard (
     creditcard_id serial NOT NULL,
-    payment_id integer NOT NULL,
     card_type integer,
     card_number character varying(300),
     card_security_code character varying(300),
@@ -2773,14 +3018,14 @@ CREATE TABLE payment_creditcard (
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    modifiedby integer NOT NULL
+    modifiedby integer NOT NULL,
+    order_id integer
 );
 
 
 
 CREATE TABLE payment_eft (
     bank_id serial NOT NULL,
-    payment_id integer NOT NULL,
     bank_name character varying(300),
     routing_number character varying(300),
     account_number character varying(300),
@@ -2789,7 +3034,8 @@ CREATE TABLE payment_eft (
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
-    modifiedby integer NOT NULL
+    modifiedby integer NOT NULL,
+    order_id integer
 );
 
 
@@ -2815,9 +3061,54 @@ CREATE TABLE customer_product_history (
     history_id serial NOT NULL,
     customer_product_id integer NOT NULL,
     org_id integer NOT NULL,
-    order_id integer,
+    order_id integer NOT NULL,
     product_start_date timestamp(3) without time zone,
     product_end_date timestamp(3) without time zone,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    order_item_id integer NOT NULL
+);
+
+
+
+CREATE TABLE lookup_payment_status (
+    code serial NOT NULL,
+    description character varying(300) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true
+);
+
+
+
+CREATE TABLE order_payment (
+    payment_id serial NOT NULL,
+    order_id integer NOT NULL,
+    payment_method_id integer NOT NULL,
+    payment_amount double precision,
+    authorization_ref_number character varying(30),
+    authorization_code character varying(30),
+    authorization_date timestamp(3) without time zone,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    order_item_id integer,
+    history_id integer,
+    date_to_process timestamp(3) without time zone,
+    creditcard_id integer,
+    bank_id integer,
+    status_id integer
+);
+
+
+
+CREATE TABLE order_payment_status (
+    payment_status_id serial NOT NULL,
+    payment_id integer NOT NULL,
+    status_id integer,
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     enteredby integer NOT NULL,
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
@@ -2827,10 +3118,9 @@ CREATE TABLE customer_product_history (
 
 
 CREATE SEQUENCE module_field_categorylin_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -2847,10 +3137,10 @@ CREATE TABLE module_field_categorylink (
 
 
 CREATE SEQUENCE custom_field_ca_category_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -2862,9 +3152,9 @@ CREATE TABLE custom_field_category (
     "level" integer DEFAULT 0,
     description text,
     start_date timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
-    end_date timestamp without time zone,
+    end_date timestamp(3) without time zone,
     default_item boolean DEFAULT false,
-    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     enabled boolean DEFAULT true,
     multiple_records boolean DEFAULT false,
     read_only boolean DEFAULT false
@@ -2873,10 +3163,10 @@ CREATE TABLE custom_field_category (
 
 
 CREATE SEQUENCE custom_field_group_group_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -2888,8 +3178,8 @@ CREATE TABLE custom_field_group (
     "level" integer DEFAULT 0,
     description text,
     start_date timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
-    end_date timestamp without time zone,
-    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    end_date timestamp(3) without time zone,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     enabled boolean DEFAULT true
 );
 
@@ -2928,10 +3218,10 @@ CREATE TABLE custom_field_lookup (
 
 
 CREATE SEQUENCE custom_field_reco_record_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -2998,7 +3288,7 @@ CREATE TABLE campaign (
     modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     modifiedby integer NOT NULL,
     "type" integer DEFAULT 1,
-    active_date_timezone VARCHAR(255)
+    active_date_timezone character varying(255)
 );
 
 
@@ -3092,10 +3382,10 @@ CREATE TABLE campaign_survey_link (
 
 
 CREATE SEQUENCE survey_question_question_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3121,10 +3411,10 @@ CREATE TABLE survey_items (
 
 
 CREATE SEQUENCE active_survey_active_survey_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3148,10 +3438,10 @@ CREATE TABLE active_survey (
 
 
 CREATE SEQUENCE active_survey_q_question_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3176,10 +3466,10 @@ CREATE TABLE active_survey_questions (
 
 
 CREATE SEQUENCE active_survey_items_item_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3194,10 +3484,10 @@ CREATE TABLE active_survey_items (
 
 
 CREATE SEQUENCE active_survey_r_response_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3208,16 +3498,17 @@ CREATE TABLE active_survey_responses (
     contact_id integer DEFAULT -1 NOT NULL,
     unique_code character varying(255),
     ip_address character varying(15) NOT NULL,
-    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    address_updated integer
 );
 
 
 
 CREATE SEQUENCE active_survey_ans_answer_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3234,10 +3525,10 @@ CREATE TABLE active_survey_answers (
 
 
 CREATE SEQUENCE active_survey_answer_ite_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3252,10 +3543,10 @@ CREATE TABLE active_survey_answer_items (
 
 
 CREATE SEQUENCE active_survey_answer_avg_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3571,10 +3862,10 @@ CREATE TABLE sync_log (
 
 
 CREATE SEQUENCE sync_transact_transaction_i_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3630,10 +3921,10 @@ CREATE TABLE autoguide_model (
 
 
 CREATE SEQUENCE autoguide_vehicl_vehicle_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3652,10 +3943,10 @@ CREATE TABLE autoguide_vehicle (
 
 
 CREATE SEQUENCE autoguide_inve_inventory_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3687,10 +3978,9 @@ CREATE TABLE autoguide_inventory (
 
 
 CREATE SEQUENCE autoguide_options_option_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3731,10 +4021,9 @@ CREATE TABLE autoguide_ad_run (
 
 
 CREATE SEQUENCE autoguide_ad_run_types_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3762,10 +4051,10 @@ CREATE TABLE lookup_revenue_types (
 
 
 CREATE SEQUENCE lookup_revenuedetail_t_code_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3835,7 +4124,7 @@ CREATE TABLE lookup_task_loe (
 
 CREATE TABLE lookup_task_category (
     code serial NOT NULL,
-    description character varying(50) NOT NULL,
+    description character varying(255) NOT NULL,
     default_item boolean DEFAULT false,
     "level" integer DEFAULT 0,
     enabled boolean DEFAULT true
@@ -3848,7 +4137,7 @@ CREATE TABLE task (
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     enteredby integer NOT NULL,
     priority integer NOT NULL,
-    description character varying(80),
+    description character varying(255),
     duedate timestamp(3) without time zone,
     reminderid integer,
     notes text,
@@ -3897,11 +4186,124 @@ CREATE TABLE taskcategory_project (
 
 
 
+CREATE TABLE taskcategorylink_news (
+    news_id integer NOT NULL,
+    category_id integer NOT NULL
+);
+
+
+
+CREATE TABLE lookup_document_store_permission_category (
+    code serial NOT NULL,
+    description character varying(300) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true,
+    group_id integer DEFAULT 0 NOT NULL
+);
+
+
+
+CREATE TABLE lookup_document_store_role (
+    code serial NOT NULL,
+    description character varying(50) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true,
+    group_id integer DEFAULT 0 NOT NULL
+);
+
+
+
+CREATE TABLE lookup_document_store_permission (
+    code serial NOT NULL,
+    category_id integer,
+    permission character varying(300) NOT NULL,
+    description character varying(300) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true,
+    group_id integer DEFAULT 0 NOT NULL,
+    default_role integer
+);
+
+
+
+CREATE TABLE document_store (
+    document_store_id serial NOT NULL,
+    template_id integer,
+    title character varying(100) NOT NULL,
+    shortdescription character varying(200) NOT NULL,
+    requestedby character varying(50),
+    requesteddept character varying(50),
+    requestdate timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    requestdate_timezone character varying(255),
+    approvaldate timestamp(3) without time zone,
+    approvalby integer,
+    closedate timestamp(3) without time zone,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    modifiedby integer NOT NULL
+);
+
+
+
+CREATE TABLE document_store_permissions (
+    id serial NOT NULL,
+    document_store_id integer NOT NULL,
+    permission_id integer NOT NULL,
+    userlevel integer NOT NULL
+);
+
+
+
+CREATE TABLE document_store_user_member (
+    document_store_id integer NOT NULL,
+    item_id integer NOT NULL,
+    userlevel integer NOT NULL,
+    status integer,
+    last_accessed timestamp(3) without time zone,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    modifiedby integer NOT NULL
+);
+
+
+
+CREATE TABLE document_store_role_member (
+    document_store_id integer NOT NULL,
+    item_id integer NOT NULL,
+    userlevel integer NOT NULL,
+    status integer,
+    last_accessed timestamp(3) without time zone,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    modifiedby integer NOT NULL
+);
+
+
+
+CREATE TABLE document_store_department_member (
+    document_store_id integer NOT NULL,
+    item_id integer NOT NULL,
+    userlevel integer NOT NULL,
+    status integer,
+    last_accessed timestamp(3) without time zone,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    enteredby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone,
+    modifiedby integer NOT NULL
+);
+
+
+
 CREATE SEQUENCE business_process_com_lb_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3918,10 +4320,9 @@ CREATE TABLE business_process_component_library (
 
 
 CREATE SEQUENCE business_process_comp_re_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3938,10 +4339,9 @@ CREATE TABLE business_process_component_result_lookup (
 
 
 CREATE SEQUENCE business_process_pa_lib_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3971,10 +4371,9 @@ CREATE TABLE business_process (
 
 
 CREATE SEQUENCE business_process_compone_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -3991,10 +4390,10 @@ CREATE TABLE business_process_component (
 
 
 CREATE SEQUENCE business_process_param_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -4010,10 +4409,9 @@ CREATE TABLE business_process_parameter (
 
 
 CREATE SEQUENCE business_process_comp_pa_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -4029,26 +4427,26 @@ CREATE TABLE business_process_component_parameter (
 
 
 CREATE SEQUENCE business_process_e_event_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
 
 CREATE TABLE business_process_events (
     event_id integer DEFAULT nextval('business_process_e_event_id_seq'::text) NOT NULL,
-    "second" character varying(64) DEFAULT '0',
-    "minute" character varying(64) DEFAULT '*',
-    "hour" character varying(64) DEFAULT '*',
-    dayofmonth character varying(64) DEFAULT '*',
-    "month" character varying(64) DEFAULT '*',
-    dayofweek character varying(64) DEFAULT '*',
-    "year" character varying(64) DEFAULT '*',
+    "second" character varying(64) DEFAULT '0'::character varying,
+    "minute" character varying(64) DEFAULT '*'::character varying,
+    "hour" character varying(64) DEFAULT '*'::character varying,
+    dayofmonth character varying(64) DEFAULT '*'::character varying,
+    "month" character varying(64) DEFAULT '*'::character varying,
+    dayofweek character varying(64) DEFAULT '*'::character varying,
+    "year" character varying(64) DEFAULT '*'::character varying,
     task character varying(255),
     extrainfo character varying(255),
-    businessdays character varying(6) DEFAULT 'true',
+    businessdays character varying(6) DEFAULT 'true'::character varying,
     enabled boolean DEFAULT false,
     entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
     process_id integer NOT NULL
@@ -4064,10 +4462,9 @@ CREATE TABLE business_process_log (
 
 
 CREATE SEQUENCE business_process_hl_hook_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -4082,10 +4479,9 @@ CREATE TABLE business_process_hook_library (
 
 
 CREATE SEQUENCE business_process_ho_trig_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -4100,10 +4496,9 @@ CREATE TABLE business_process_hook_triggers (
 
 
 CREATE SEQUENCE business_process_ho_hook_id_seq
-    START 1
-    INCREMENT 1
-    MAXVALUE 9223372036854775807
-    MINVALUE 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
     CACHE 1;
 
 
@@ -4113,6 +4508,80 @@ CREATE TABLE business_process_hook (
     trigger_id integer NOT NULL,
     process_id integer NOT NULL,
     enabled boolean DEFAULT false
+);
+
+
+
+CREATE TABLE lookup_quote_delivery (
+    code serial NOT NULL,
+    description character varying(300) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true
+);
+
+
+
+CREATE TABLE lookup_quote_condition (
+    code serial NOT NULL,
+    description character varying(300) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true
+);
+
+
+
+CREATE TABLE quote_group (
+    group_id serial NOT NULL,
+    unused character(1)
+);
+
+
+
+CREATE TABLE quote_condition (
+    map_id serial NOT NULL,
+    quote_id integer NOT NULL,
+    condition_id integer NOT NULL
+);
+
+
+
+CREATE TABLE quotelog (
+    id serial NOT NULL,
+    quote_id integer NOT NULL,
+    source_id integer,
+    status_id integer,
+    terms_id integer,
+    type_id integer,
+    delivery_id integer,
+    notes text,
+    grand_total double precision,
+    enteredby integer NOT NULL,
+    entered timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    modifiedby integer NOT NULL,
+    modified timestamp(3) without time zone DEFAULT ('now'::text)::timestamp(6) with time zone NOT NULL,
+    issued_date timestamp(3) without time zone,
+    submit_action integer,
+    closed timestamp(3) without time zone
+);
+
+
+
+CREATE TABLE lookup_quote_remarks (
+    code serial NOT NULL,
+    description character varying(300) NOT NULL,
+    default_item boolean DEFAULT false,
+    "level" integer DEFAULT 0,
+    enabled boolean DEFAULT true
+);
+
+
+
+CREATE TABLE quote_remark (
+    map_id serial NOT NULL,
+    quote_id integer NOT NULL,
+    remark_id integer NOT NULL
 );
 
 
@@ -4129,59 +4598,60 @@ CREATE TABLE quote_notes (
 
 
 
-INSERT INTO "access" VALUES (0, 'dhvadmin', '---', -1, 1, -1, 8, 18, NULL, 'America/New_York', NULL, '2004-08-31 09:15:41.009', 0, '2004-08-31 09:15:41.009', 0, '2004-08-31 09:15:41.009', NULL, -1, -1, true, NULL, NULL);
+INSERT INTO "access" VALUES (0, 'dhvadmin', '---', -1, 1, -1, 8, 18, NULL, 'America/New_York', NULL, '2005-03-16 11:27:26.339', 0, '2005-03-16 11:27:26.339', 0, '2005-03-16 11:27:26.339', NULL, -1, -1, true, NULL, NULL, NULL, false);
 
 
 
-INSERT INTO lookup_industry VALUES (1, NULL, 'Automotive', false, 0, true);
-INSERT INTO lookup_industry VALUES (2, NULL, 'Biotechnology', false, 0, true);
-INSERT INTO lookup_industry VALUES (3, NULL, 'Broadcasting and Cable', false, 0, true);
-INSERT INTO lookup_industry VALUES (4, NULL, 'Computer', false, 0, true);
-INSERT INTO lookup_industry VALUES (5, NULL, 'Consulting', false, 0, true);
-INSERT INTO lookup_industry VALUES (6, NULL, 'Defense', false, 0, true);
-INSERT INTO lookup_industry VALUES (7, NULL, 'Energy', false, 0, true);
-INSERT INTO lookup_industry VALUES (8, NULL, 'Financial Services', false, 0, true);
-INSERT INTO lookup_industry VALUES (9, NULL, 'Food', false, 0, true);
-INSERT INTO lookup_industry VALUES (10, NULL, 'Healthcare', false, 0, true);
-INSERT INTO lookup_industry VALUES (11, NULL, 'Hospitality', false, 0, true);
-INSERT INTO lookup_industry VALUES (12, NULL, 'Insurance', false, 0, true);
-INSERT INTO lookup_industry VALUES (13, NULL, 'Internet', false, 0, true);
-INSERT INTO lookup_industry VALUES (14, NULL, 'Law Firms', false, 0, true);
-INSERT INTO lookup_industry VALUES (15, NULL, 'Media', false, 0, true);
-INSERT INTO lookup_industry VALUES (16, NULL, 'Pharmaceuticals', false, 0, true);
-INSERT INTO lookup_industry VALUES (17, NULL, 'Real Estate', false, 0, true);
-INSERT INTO lookup_industry VALUES (18, NULL, 'Retail', false, 0, true);
-INSERT INTO lookup_industry VALUES (19, NULL, 'Telecommunications', false, 0, true);
-INSERT INTO lookup_industry VALUES (20, NULL, 'Transportation', false, 0, true);
-
-
-
-
-
+INSERT INTO lookup_industry VALUES (1, NULL, 'Automotive', false, 10, true);
+INSERT INTO lookup_industry VALUES (2, NULL, 'Biotechnology', false, 20, true);
+INSERT INTO lookup_industry VALUES (3, NULL, 'Broadcasting and Cable', false, 30, true);
+INSERT INTO lookup_industry VALUES (4, NULL, 'Computer', false, 40, true);
+INSERT INTO lookup_industry VALUES (5, NULL, 'Consulting', false, 50, true);
+INSERT INTO lookup_industry VALUES (6, NULL, 'Defense', false, 60, true);
+INSERT INTO lookup_industry VALUES (21, NULL, 'Education', false, 70, true);
+INSERT INTO lookup_industry VALUES (7, NULL, 'Energy', false, 75, true);
+INSERT INTO lookup_industry VALUES (8, NULL, 'Financial Services', false, 80, true);
+INSERT INTO lookup_industry VALUES (9, NULL, 'Food', false, 90, true);
+INSERT INTO lookup_industry VALUES (10, NULL, 'Healthcare', false, 100, true);
+INSERT INTO lookup_industry VALUES (11, NULL, 'Hospitality', false, 110, true);
+INSERT INTO lookup_industry VALUES (12, NULL, 'Insurance', false, 120, true);
+INSERT INTO lookup_industry VALUES (13, NULL, 'Internet', false, 130, true);
+INSERT INTO lookup_industry VALUES (14, NULL, 'Law Firms', false, 140, true);
+INSERT INTO lookup_industry VALUES (15, NULL, 'Media', false, 150, true);
+INSERT INTO lookup_industry VALUES (16, NULL, 'Pharmaceuticals', false, 160, true);
+INSERT INTO lookup_industry VALUES (17, NULL, 'Real Estate', false, 170, true);
+INSERT INTO lookup_industry VALUES (18, NULL, 'Retail', false, 180, true);
+INSERT INTO lookup_industry VALUES (19, NULL, 'Telecommunications', false, 190, true);
+INSERT INTO lookup_industry VALUES (20, NULL, 'Transportation', false, 200, true);
 
 
 
 
-INSERT INTO lookup_contact_types VALUES (1, 'Acquaintance', false, 0, true, NULL, 0);
-INSERT INTO lookup_contact_types VALUES (2, 'Competitor', false, 0, true, NULL, 0);
-INSERT INTO lookup_contact_types VALUES (3, 'Customer', false, 0, true, NULL, 0);
-INSERT INTO lookup_contact_types VALUES (4, 'Friend', false, 0, true, NULL, 0);
-INSERT INTO lookup_contact_types VALUES (5, 'Prospect', false, 0, true, NULL, 0);
-INSERT INTO lookup_contact_types VALUES (6, 'Shareholder', false, 0, true, NULL, 0);
-INSERT INTO lookup_contact_types VALUES (7, 'Vendor', false, 0, true, NULL, 0);
-INSERT INTO lookup_contact_types VALUES (8, 'Accounting', false, 0, true, NULL, 1);
-INSERT INTO lookup_contact_types VALUES (9, 'Administrative', false, 0, true, NULL, 1);
-INSERT INTO lookup_contact_types VALUES (10, 'Business Development', false, 0, true, NULL, 1);
-INSERT INTO lookup_contact_types VALUES (11, 'Customer Service', false, 0, true, NULL, 1);
-INSERT INTO lookup_contact_types VALUES (12, 'Engineering', false, 0, true, NULL, 1);
-INSERT INTO lookup_contact_types VALUES (13, 'Executive', false, 0, true, NULL, 1);
-INSERT INTO lookup_contact_types VALUES (14, 'Finance', false, 0, true, NULL, 1);
-INSERT INTO lookup_contact_types VALUES (15, 'Marketing', false, 0, true, NULL, 1);
-INSERT INTO lookup_contact_types VALUES (16, 'Operations', false, 0, true, NULL, 1);
-INSERT INTO lookup_contact_types VALUES (17, 'Procurement', false, 0, true, NULL, 1);
-INSERT INTO lookup_contact_types VALUES (18, 'Sales', false, 0, true, NULL, 1);
-INSERT INTO lookup_contact_types VALUES (19, 'Shipping/Receiving', false, 0, true, NULL, 1);
-INSERT INTO lookup_contact_types VALUES (20, 'Technology', false, 0, true, NULL, 1);
+
+
+
+
+
+INSERT INTO lookup_contact_types VALUES (1, 'Acquaintance', false, 10, true, NULL, 0);
+INSERT INTO lookup_contact_types VALUES (2, 'Competitor', false, 20, true, NULL, 0);
+INSERT INTO lookup_contact_types VALUES (3, 'Customer', false, 30, true, NULL, 0);
+INSERT INTO lookup_contact_types VALUES (4, 'Friend', false, 40, true, NULL, 0);
+INSERT INTO lookup_contact_types VALUES (5, 'Prospect', false, 50, true, NULL, 0);
+INSERT INTO lookup_contact_types VALUES (6, 'Shareholder', false, 60, true, NULL, 0);
+INSERT INTO lookup_contact_types VALUES (7, 'Vendor', false, 70, true, NULL, 0);
+INSERT INTO lookup_contact_types VALUES (8, 'Accounting', false, 80, true, NULL, 1);
+INSERT INTO lookup_contact_types VALUES (9, 'Administrative', false, 90, true, NULL, 1);
+INSERT INTO lookup_contact_types VALUES (10, 'Business Development', false, 100, true, NULL, 1);
+INSERT INTO lookup_contact_types VALUES (11, 'Customer Service', false, 110, true, NULL, 1);
+INSERT INTO lookup_contact_types VALUES (12, 'Engineering', false, 120, true, NULL, 1);
+INSERT INTO lookup_contact_types VALUES (13, 'Executive', false, 130, true, NULL, 1);
+INSERT INTO lookup_contact_types VALUES (14, 'Finance', false, 140, true, NULL, 1);
+INSERT INTO lookup_contact_types VALUES (15, 'Marketing', false, 150, true, NULL, 1);
+INSERT INTO lookup_contact_types VALUES (16, 'Operations', false, 160, true, NULL, 1);
+INSERT INTO lookup_contact_types VALUES (17, 'Procurement', false, 170, true, NULL, 1);
+INSERT INTO lookup_contact_types VALUES (18, 'Sales', false, 180, true, NULL, 1);
+INSERT INTO lookup_contact_types VALUES (19, 'Shipping/Receiving', false, 190, true, NULL, 1);
+INSERT INTO lookup_contact_types VALUES (20, 'Technology', false, 200, true, NULL, 1);
 
 
 
@@ -4251,19 +4721,19 @@ INSERT INTO state VALUES ('WY', 'Wyoming');
 
 
 
-INSERT INTO lookup_department VALUES (1, 'Accounting', false, 0, true);
-INSERT INTO lookup_department VALUES (2, 'Administration', false, 0, true);
-INSERT INTO lookup_department VALUES (3, 'Billing', false, 0, true);
-INSERT INTO lookup_department VALUES (4, 'Customer Relations', false, 0, true);
-INSERT INTO lookup_department VALUES (5, 'Engineering', false, 0, true);
-INSERT INTO lookup_department VALUES (6, 'Finance', false, 0, true);
-INSERT INTO lookup_department VALUES (7, 'Human Resources', false, 0, true);
-INSERT INTO lookup_department VALUES (8, 'Legal', false, 0, true);
-INSERT INTO lookup_department VALUES (9, 'Marketing', false, 0, true);
-INSERT INTO lookup_department VALUES (10, 'Operations', false, 0, true);
-INSERT INTO lookup_department VALUES (11, 'Purchasing', false, 0, true);
-INSERT INTO lookup_department VALUES (12, 'Sales', false, 0, true);
-INSERT INTO lookup_department VALUES (13, 'Shipping/Receiving', false, 0, true);
+INSERT INTO lookup_department VALUES (1, 'Accounting', false, 10, true);
+INSERT INTO lookup_department VALUES (2, 'Administration', false, 20, true);
+INSERT INTO lookup_department VALUES (3, 'Billing', false, 30, true);
+INSERT INTO lookup_department VALUES (4, 'Customer Relations', false, 40, true);
+INSERT INTO lookup_department VALUES (5, 'Engineering', false, 50, true);
+INSERT INTO lookup_department VALUES (6, 'Finance', false, 60, true);
+INSERT INTO lookup_department VALUES (7, 'Human Resources', false, 80, true);
+INSERT INTO lookup_department VALUES (8, 'Legal', false, 90, true);
+INSERT INTO lookup_department VALUES (9, 'Marketing', false, 100, true);
+INSERT INTO lookup_department VALUES (10, 'Operations', false, 110, true);
+INSERT INTO lookup_department VALUES (11, 'Purchasing', false, 120, true);
+INSERT INTO lookup_department VALUES (12, 'Sales', false, 130, true);
+INSERT INTO lookup_department VALUES (13, 'Shipping/Receiving', false, 140, true);
 
 
 
@@ -4284,6 +4754,36 @@ INSERT INTO lookup_orgphone_types VALUES (2, 'Fax', false, 20, true);
 
 
 
+INSERT INTO lookup_im_types VALUES (1, 'Business', false, 10, true);
+INSERT INTO lookup_im_types VALUES (2, 'Personal', false, 20, true);
+INSERT INTO lookup_im_types VALUES (3, 'Other', false, 30, true);
+
+
+
+INSERT INTO lookup_im_services VALUES (1, 'AOL Instant Messenger', false, 10, true);
+INSERT INTO lookup_im_services VALUES (2, 'Jabber Instant Messenger', false, 20, true);
+INSERT INTO lookup_im_services VALUES (3, 'MSN Instant Messenger', false, 30, true);
+
+
+
+INSERT INTO lookup_contact_source VALUES (1, 'Advertisement', false, 10, true);
+INSERT INTO lookup_contact_source VALUES (2, 'Employee Referral', false, 20, true);
+INSERT INTO lookup_contact_source VALUES (3, 'External Referral', false, 30, true);
+INSERT INTO lookup_contact_source VALUES (4, 'Partner', false, 40, true);
+INSERT INTO lookup_contact_source VALUES (5, 'Public Relations', false, 50, true);
+INSERT INTO lookup_contact_source VALUES (6, 'Trade Show', false, 60, true);
+INSERT INTO lookup_contact_source VALUES (7, 'Web', false, 70, true);
+INSERT INTO lookup_contact_source VALUES (8, 'Word of Mouth', false, 80, true);
+INSERT INTO lookup_contact_source VALUES (9, 'Other', false, 90, true);
+
+
+
+
+
+
+INSERT INTO lookup_textmessage_types VALUES (1, 'Business', false, 10, true);
+INSERT INTO lookup_textmessage_types VALUES (2, 'Personal', false, 20, true);
+INSERT INTO lookup_textmessage_types VALUES (3, 'Other', false, 30, true);
 
 
 
@@ -4317,59 +4817,67 @@ INSERT INTO lookup_contactphone_types VALUES (9, 'Other', false, 90, true);
 
 
 
-INSERT INTO lookup_access_types VALUES (1, 626030330, 'Controlled-Hierarchy', true, 1, true, 626030335);
-INSERT INTO lookup_access_types VALUES (2, 626030330, 'Public', false, 2, true, 626030334);
-INSERT INTO lookup_access_types VALUES (3, 626030330, 'Personal', false, 3, true, 626030333);
-INSERT INTO lookup_access_types VALUES (4, 626030331, 'Public', true, 1, true, 626030334);
-INSERT INTO lookup_access_types VALUES (5, 626030332, 'Public', true, 1, true, 626030334);
-INSERT INTO lookup_access_types VALUES (6, 707031028, 'Controlled-Hierarchy', true, 1, true, 626030335);
-INSERT INTO lookup_access_types VALUES (7, 707031028, 'Public', false, 2, true, 626030334);
-INSERT INTO lookup_access_types VALUES (8, 707031028, 'Personal', false, 3, true, 626030333);
+INSERT INTO lookup_access_types VALUES (1, 626030330, 'Controlled-Hierarchy', true, 10, true, 626030335);
+INSERT INTO lookup_access_types VALUES (2, 626030330, 'Public', false, 20, true, 626030334);
+INSERT INTO lookup_access_types VALUES (3, 626030330, 'Personal', false, 30, true, 626030333);
+INSERT INTO lookup_access_types VALUES (4, 626030331, 'Public', true, 40, true, 626030334);
+INSERT INTO lookup_access_types VALUES (5, 626030332, 'Public', true, 50, true, 626030334);
+INSERT INTO lookup_access_types VALUES (6, 707031028, 'Controlled-Hierarchy', true, 60, true, 626030335);
+INSERT INTO lookup_access_types VALUES (7, 707031028, 'Public', false, 70, true, 626030334);
+INSERT INTO lookup_access_types VALUES (8, 707031028, 'Personal', false, 80, true, 626030333);
 
 
 
-INSERT INTO organization VALUES (0, 'My Company', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, false, NULL, NULL, '2004-08-31 09:15:41.186', 0, '2004-08-31 09:15:41.186', 0, true, NULL, 0, -1, -1, -1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO organization VALUES (0, 'My Company', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, false, NULL, NULL, '2005-03-16 11:27:26.371', 0, '2005-03-16 11:27:26.371', 0, true, NULL, 0, -1, -1, -1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
 
 
 
 
-INSERT INTO role VALUES (1, 'Administrator', 'Performs system configuration and maintenance', 0, '2004-08-31 09:16:15.132', 0, '2004-08-31 09:16:15.132', true, 0);
-INSERT INTO role VALUES (2, 'Operations Manager', 'Manages operations', 0, '2004-08-31 09:16:15.533', 0, '2004-08-31 09:16:15.533', true, 0);
-INSERT INTO role VALUES (3, 'Sales Manager', 'Manages all accounts and opportunities', 0, '2004-08-31 09:16:15.964', 0, '2004-08-31 09:16:15.964', true, 0);
-INSERT INTO role VALUES (4, 'Salesperson', 'Manages own accounts and opportunities', 0, '2004-08-31 09:16:16.216', 0, '2004-08-31 09:16:16.216', true, 0);
-INSERT INTO role VALUES (5, 'Customer Service Manager', 'Manages all tickets', 0, '2004-08-31 09:16:16.409', 0, '2004-08-31 09:16:16.409', true, 0);
-INSERT INTO role VALUES (6, 'Customer Service Representative', 'Manages own tickets', 0, '2004-08-31 09:16:16.58', 0, '2004-08-31 09:16:16.58', true, 0);
-INSERT INTO role VALUES (7, 'Marketing Manager', 'Manages communications', 0, '2004-08-31 09:16:16.747', 0, '2004-08-31 09:16:16.747', true, 0);
-INSERT INTO role VALUES (8, 'Accounting Manager', 'Reviews revenue and opportunities', 0, '2004-08-31 09:16:16.913', 0, '2004-08-31 09:16:16.913', true, 0);
-INSERT INTO role VALUES (9, 'HR Representative', 'Manages employee information', 0, '2004-08-31 09:16:17.135', 0, '2004-08-31 09:16:17.135', true, 0);
-INSERT INTO role VALUES (10, 'Customer', 'Customer portal user', 0, '2004-08-31 09:16:17.213', 0, '2004-08-31 09:16:17.213', true, 1);
-INSERT INTO role VALUES (11, 'Products and Services Customer', 'Products and Services portal user', 0, '2004-08-31 09:16:17.257', 0, '2004-08-31 09:16:17.257', false, 420041011);
 
 
 
-INSERT INTO permission_category VALUES (1, 'Accounts', NULL, 700, true, true, true, true, false, false, false, false, true, false);
-INSERT INTO permission_category VALUES (2, 'Contacts', NULL, 500, true, true, true, true, false, false, false, false, true, false);
-INSERT INTO permission_category VALUES (3, 'Auto Guide', NULL, 800, false, false, false, false, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (4, 'Pipeline', NULL, 600, true, true, false, true, true, false, false, false, true, false);
-INSERT INTO permission_category VALUES (5, 'Demo', NULL, 2100, false, false, false, false, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (6, 'Communications', NULL, 1200, true, true, false, false, false, false, false, false, true, false);
-INSERT INTO permission_category VALUES (7, 'Projects', NULL, 1300, true, true, false, false, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (8, 'Help Desk', NULL, 1600, true, true, true, true, false, true, true, true, true, false);
-INSERT INTO permission_category VALUES (9, 'Admin', NULL, 1800, true, true, false, false, false, false, false, false, true, false);
-INSERT INTO permission_category VALUES (10, 'Help', NULL, 1900, true, true, false, false, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (11, 'System', NULL, 100, true, true, false, false, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (12, 'My Home Page', NULL, 200, true, true, false, false, false, false, false, false, true, false);
-INSERT INTO permission_category VALUES (13, 'QA', NULL, 2000, false, false, false, false, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (14, 'Reports', NULL, 1700, true, true, false, false, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (15, 'Assets', NULL, 1500, true, true, false, true, false, true, false, false, false, false);
-INSERT INTO permission_category VALUES (16, 'Service Contracts', NULL, 1400, true, true, false, true, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (17, 'Product Catalog', NULL, 1100, true, true, true, false, false, false, false, false, false, true);
-INSERT INTO permission_category VALUES (18, 'Products and Services', NULL, 300, false, false, false, false, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (19, 'Quotes', NULL, 900, false, false, false, false, false, false, false, false, false, false);
-INSERT INTO permission_category VALUES (20, 'Orders', NULL, 1000, false, false, false, false, false, false, false, false, true, false);
-INSERT INTO permission_category VALUES (21, 'Employees', NULL, 400, true, true, false, true, false, false, false, false, true, false);
+
+
+
+INSERT INTO role VALUES (1, 'Administrator', 'Performs system configuration and maintenance', 0, '2005-03-16 11:27:45.762', 0, '2005-03-16 11:27:45.762', true, 0);
+INSERT INTO role VALUES (2, 'Operations Manager', 'Manages operations', 0, '2005-03-16 11:27:47.948', 0, '2005-03-16 11:27:47.948', true, 0);
+INSERT INTO role VALUES (3, 'Sales Manager', 'Manages all accounts and opportunities', 0, '2005-03-16 11:27:49.60', 0, '2005-03-16 11:27:49.60', true, 0);
+INSERT INTO role VALUES (4, 'Salesperson', 'Manages own accounts and opportunities', 0, '2005-03-16 11:27:51.463', 0, '2005-03-16 11:27:51.463', true, 0);
+INSERT INTO role VALUES (5, 'Customer Service Manager', 'Manages all tickets', 0, '2005-03-16 11:27:52.902', 0, '2005-03-16 11:27:52.902', true, 0);
+INSERT INTO role VALUES (6, 'Customer Service Representative', 'Manages own tickets', 0, '2005-03-16 11:27:53.941', 0, '2005-03-16 11:27:53.941', true, 0);
+INSERT INTO role VALUES (7, 'Marketing Manager', 'Manages communications', 0, '2005-03-16 11:27:55.037', 0, '2005-03-16 11:27:55.037', true, 0);
+INSERT INTO role VALUES (8, 'Accounting Manager', 'Reviews revenue and opportunities', 0, '2005-03-16 11:27:56.494', 0, '2005-03-16 11:27:56.494', true, 0);
+INSERT INTO role VALUES (9, 'HR Representative', 'Manages employee information', 0, '2005-03-16 11:27:57.832', 0, '2005-03-16 11:27:57.832', true, 0);
+INSERT INTO role VALUES (10, 'Customer', 'Customer portal user', 0, '2005-03-16 11:27:58.461', 0, '2005-03-16 11:27:58.461', true, 1);
+INSERT INTO role VALUES (11, 'Products and Services Customer', 'Products and Services portal user', 0, '2005-03-16 11:27:58.656', 0, '2005-03-16 11:27:58.656', false, 420041011);
+
+
+
+INSERT INTO permission_category VALUES (1, 'Accounts', NULL, 700, true, true, true, true, false, false, false, false, true, false, true, false, 1);
+INSERT INTO permission_category VALUES (2, 'Contacts', NULL, 500, true, true, true, true, false, false, false, false, true, false, false, false, 2);
+INSERT INTO permission_category VALUES (3, 'Auto Guide', NULL, 800, false, false, false, false, false, false, false, false, false, false, false, false, 3);
+INSERT INTO permission_category VALUES (4, 'Pipeline', NULL, 600, true, true, false, true, true, false, false, false, true, false, false, false, 4);
+INSERT INTO permission_category VALUES (5, 'Demo', NULL, 2300, false, false, false, false, false, false, false, false, false, false, false, false, 5);
+INSERT INTO permission_category VALUES (6, 'Communications', NULL, 1100, true, true, false, false, false, false, false, false, true, false, false, false, 6);
+INSERT INTO permission_category VALUES (7, 'Projects', NULL, 1200, true, true, false, false, false, false, false, false, false, false, true, false, 7);
+INSERT INTO permission_category VALUES (8, 'Help Desk', NULL, 1500, true, true, true, true, false, true, true, true, true, false, false, false, 8);
+INSERT INTO permission_category VALUES (9, 'Admin', NULL, 2000, true, true, false, false, false, false, false, false, true, false, false, false, 9);
+INSERT INTO permission_category VALUES (10, 'Help', NULL, 2100, true, true, false, false, false, false, false, false, false, false, false, false, 10);
+INSERT INTO permission_category VALUES (11, 'System', NULL, 100, true, true, false, false, false, false, false, false, false, false, false, false, 13);
+INSERT INTO permission_category VALUES (12, 'My Home Page', NULL, 200, true, true, false, false, false, false, false, false, true, false, false, false, 14);
+INSERT INTO permission_category VALUES (13, 'QA', NULL, 2200, false, false, false, false, false, false, false, false, false, false, false, false, 15);
+INSERT INTO permission_category VALUES (14, 'Reports', NULL, 1900, true, true, false, false, false, false, false, false, false, false, false, false, 16);
+INSERT INTO permission_category VALUES (15, 'Assets', NULL, 1400, true, true, false, true, false, true, false, false, false, false, false, false, 130041000);
+INSERT INTO permission_category VALUES (16, 'Service Contracts', NULL, 1300, true, true, false, true, false, false, false, false, false, false, false, false, 130041100);
+INSERT INTO permission_category VALUES (17, 'Product Catalog', NULL, 1800, true, true, true, true, false, false, false, false, false, true, false, false, 330041409);
+INSERT INTO permission_category VALUES (18, 'Products and Services', NULL, 300, false, false, false, false, false, false, false, false, false, false, false, false, 420041014);
+INSERT INTO permission_category VALUES (19, 'Quotes', NULL, 900, true, true, false, true, false, false, false, false, false, false, false, true, 420041017);
+INSERT INTO permission_category VALUES (20, 'Orders', NULL, 1000, false, false, false, false, false, false, false, false, true, false, false, false, 420041018);
+INSERT INTO permission_category VALUES (21, 'Employees', NULL, 1700, true, true, true, true, false, false, false, false, true, false, false, false, 1111031131);
+INSERT INTO permission_category VALUES (22, 'Leads', NULL, 400, true, true, false, true, false, false, false, false, false, false, false, false, 228051100);
+INSERT INTO permission_category VALUES (23, 'Documents', NULL, 1600, true, true, false, false, false, false, false, false, false, false, true, false, 1202041528);
 
 
 
@@ -4381,686 +4889,794 @@ INSERT INTO permission VALUES (5, 1, 'accounts-accounts-contacts-opportunities',
 INSERT INTO permission VALUES (6, 1, 'accounts-accounts-contacts-calls', true, true, true, true, 'Contact Activities', 60, true, true, false);
 INSERT INTO permission VALUES (7, 1, 'accounts-accounts-contacts-completed-calls', false, false, true, false, 'Completed Activities', 70, true, true, false);
 INSERT INTO permission VALUES (8, 1, 'accounts-accounts-contacts-messages', true, true, true, true, 'Contact Messages', 80, true, true, false);
-INSERT INTO permission VALUES (9, 1, 'accounts-accounts-opportunities', true, true, true, true, 'Opportunities', 90, true, true, false);
-INSERT INTO permission VALUES (10, 1, 'accounts-accounts-tickets', true, true, true, true, 'Tickets', 100, true, true, false);
-INSERT INTO permission VALUES (11, 1, 'accounts-accounts-tickets-tasks', true, true, true, true, 'Ticket Tasks', 110, true, true, false);
-INSERT INTO permission VALUES (12, 1, 'accounts-accounts-tickets-folders', true, true, true, true, 'Ticket Folders', 120, true, true, false);
-INSERT INTO permission VALUES (13, 1, 'accounts-accounts-tickets-documents', true, true, true, true, 'Ticket Documents', 130, true, true, false);
-INSERT INTO permission VALUES (14, 1, 'accounts-accounts-documents', true, true, true, true, 'Documents', 140, true, true, false);
-INSERT INTO permission VALUES (15, 1, 'accounts-accounts-reports', true, true, false, true, 'Export Account Data', 150, true, true, false);
-INSERT INTO permission VALUES (16, 1, 'accounts-dashboard', true, false, false, false, 'Dashboard', 160, true, true, false);
-INSERT INTO permission VALUES (17, 1, 'accounts-accounts-revenue', true, true, true, true, 'Revenue', 170, false, false, false);
-INSERT INTO permission VALUES (18, 1, 'accounts-autoguide-inventory', true, true, true, true, 'Auto Guide Vehicle Inventory', 180, false, false, false);
-INSERT INTO permission VALUES (19, 1, 'accounts-service-contracts', true, true, true, true, 'Service Contracts', 190, true, true, false);
-INSERT INTO permission VALUES (20, 1, 'accounts-assets', true, true, true, true, 'Assets', 200, true, true, false);
-INSERT INTO permission VALUES (21, 1, 'accounts-accounts-tickets-maintenance-report', true, true, true, true, 'Ticket Maintenance Notes', 210, true, true, false);
-INSERT INTO permission VALUES (22, 1, 'accounts-accounts-tickets-activity-log', true, true, true, true, 'Ticket Activities', 220, true, true, false);
-INSERT INTO permission VALUES (23, 1, 'portal-user', true, true, true, true, 'Customer Portal User', 230, true, true, false);
-INSERT INTO permission VALUES (24, 1, 'accounts-quotes', true, true, true, true, 'Quotes', 240, false, false, false);
-INSERT INTO permission VALUES (25, 1, 'accounts-orders', true, true, true, true, 'Orders', 250, false, false, false);
-INSERT INTO permission VALUES (26, 1, 'accounts-products', true, true, true, true, 'Products and Services', 260, false, false, false);
-INSERT INTO permission VALUES (27, 1, 'accounts-accounts-contacts-imports', true, true, true, true, 'Import Accounts/Contacts', 270, true, true, false);
-INSERT INTO permission VALUES (28, 2, 'contacts', true, false, false, false, 'Access to Contacts module', 10, true, true, false);
-INSERT INTO permission VALUES (29, 2, 'contacts-external_contacts', true, true, true, true, 'General Contact Records', 20, true, true, false);
-INSERT INTO permission VALUES (30, 2, 'contacts-external_contacts-reports', true, true, false, true, 'Export Contact Data', 30, true, true, false);
-INSERT INTO permission VALUES (31, 2, 'contacts-external_contacts-folders', true, true, true, true, 'Folders', 40, true, true, false);
-INSERT INTO permission VALUES (32, 2, 'contacts-external_contacts-calls', true, true, true, true, 'Activities', 50, true, true, false);
-INSERT INTO permission VALUES (33, 2, 'contacts-external_contacts-messages', true, false, false, false, 'Messages', 60, true, true, false);
-INSERT INTO permission VALUES (34, 2, 'contacts-external_contacts-opportunities', true, true, true, true, 'Opportunities', 70, true, true, false);
-INSERT INTO permission VALUES (35, 2, 'contacts-external_contacts-imports', true, true, true, true, 'Imports', 80, true, true, false);
-INSERT INTO permission VALUES (36, 3, 'autoguide', true, false, false, false, 'Access to the Auto Guide module', 10, true, true, false);
-INSERT INTO permission VALUES (37, 3, 'autoguide-adruns', false, false, true, false, 'Ad Run complete status', 20, true, true, false);
-INSERT INTO permission VALUES (38, 4, 'pipeline', true, false, false, false, 'Access to Pipeline module', 10, true, true, true);
-INSERT INTO permission VALUES (39, 4, 'pipeline-opportunities', true, true, true, true, 'Opportunity Records', 20, true, true, false);
-INSERT INTO permission VALUES (40, 4, 'pipeline-dashboard', true, false, false, false, 'Dashboard', 30, true, true, false);
-INSERT INTO permission VALUES (41, 4, 'pipeline-reports', true, true, false, true, 'Export Opportunity Data', 40, true, true, false);
-INSERT INTO permission VALUES (42, 4, 'pipeline-opportunities-calls', true, true, true, true, 'Activities', 50, true, true, false);
-INSERT INTO permission VALUES (43, 4, 'pipeline-opportunities-documents', true, true, true, true, 'Documents', 60, true, true, false);
-INSERT INTO permission VALUES (44, 5, 'demo', true, true, true, true, 'Access to Demo/Non-working features', 10, true, true, false);
-INSERT INTO permission VALUES (45, 6, 'campaign', true, false, false, false, 'Access to Communications module', 10, true, true, false);
-INSERT INTO permission VALUES (46, 6, 'campaign-dashboard', true, false, false, false, 'Dashboard', 20, true, true, false);
-INSERT INTO permission VALUES (47, 6, 'campaign-campaigns', true, true, true, true, 'Campaign Records', 30, true, true, false);
-INSERT INTO permission VALUES (48, 6, 'campaign-campaigns-groups', true, true, true, true, 'Group Records', 40, true, true, false);
-INSERT INTO permission VALUES (49, 6, 'campaign-campaigns-messages', true, true, true, true, 'Message Records', 50, true, true, false);
-INSERT INTO permission VALUES (50, 6, 'campaign-campaigns-surveys', true, true, true, true, 'Survey Records', 60, true, true, false);
-INSERT INTO permission VALUES (51, 7, 'projects', true, false, false, false, 'Access to Project Management module', 10, true, true, false);
-INSERT INTO permission VALUES (52, 7, 'projects-personal', true, false, false, false, 'Personal View', 20, true, true, false);
-INSERT INTO permission VALUES (53, 7, 'projects-enterprise', true, false, false, false, 'Enterprise View', 30, true, true, false);
-INSERT INTO permission VALUES (54, 7, 'projects-projects', true, true, true, true, 'Project Records', 40, true, true, false);
-INSERT INTO permission VALUES (55, 8, 'tickets', true, false, false, false, 'Access to Help Desk module', 10, true, true, false);
-INSERT INTO permission VALUES (56, 8, 'tickets-tickets', true, true, true, true, 'Ticket Records', 20, true, true, false);
-INSERT INTO permission VALUES (57, 8, 'tickets-reports', true, true, true, true, 'Export Ticket Data', 30, true, true, false);
-INSERT INTO permission VALUES (58, 8, 'tickets-tickets-tasks', true, true, true, true, 'Tasks', 40, true, true, false);
-INSERT INTO permission VALUES (59, 8, 'tickets-maintenance-report', true, true, true, true, 'Maintenance Notes', 50, true, true, false);
-INSERT INTO permission VALUES (60, 8, 'tickets-activity-log', true, true, true, true, 'Activities', 60, true, true, false);
-INSERT INTO permission VALUES (61, 9, 'admin', true, false, false, false, 'Access to Admin module', 10, true, true, false);
-INSERT INTO permission VALUES (62, 9, 'admin-users', true, true, true, true, 'Users', 20, true, true, false);
-INSERT INTO permission VALUES (63, 9, 'admin-roles', true, true, true, true, 'Roles', 30, true, true, false);
-INSERT INTO permission VALUES (64, 9, 'admin-usage', true, false, false, false, 'System Usage', 40, true, true, false);
-INSERT INTO permission VALUES (65, 9, 'admin-sysconfig', true, false, true, false, 'System Configuration', 50, true, true, false);
-INSERT INTO permission VALUES (66, 9, 'admin-sysconfig-lists', true, false, true, false, 'Configure Lookup Lists', 60, true, true, false);
-INSERT INTO permission VALUES (67, 9, 'admin-sysconfig-folders', true, true, true, true, 'Configure Custom Folders & Fields', 70, true, true, false);
-INSERT INTO permission VALUES (68, 9, 'admin-object-workflow', true, true, true, true, 'Configure Object Workflow', 80, true, true, false);
-INSERT INTO permission VALUES (69, 9, 'admin-sysconfig-categories', true, true, true, true, 'Categories', 90, true, true, false);
-INSERT INTO permission VALUES (70, 9, 'admin-sysconfig-products', true, true, true, true, 'Labor Category Editor', 100, true, true, false);
-INSERT INTO permission VALUES (71, 10, 'help', true, false, false, false, 'Access to Help System', 10, true, true, false);
-INSERT INTO permission VALUES (72, 11, 'globalitems-search', true, false, false, false, 'Access to Global Search', 10, true, true, false);
-INSERT INTO permission VALUES (73, 11, 'globalitems-myitems', true, false, false, false, 'Access to My Items', 20, true, true, false);
-INSERT INTO permission VALUES (74, 11, 'globalitems-recentitems', true, false, false, false, 'Access to Recent Items', 30, true, true, false);
-INSERT INTO permission VALUES (75, 12, 'myhomepage', true, false, false, false, 'Access to My Home Page module', 10, true, true, false);
-INSERT INTO permission VALUES (76, 12, 'myhomepage-dashboard', true, false, false, false, 'View Performance Dashboard', 20, true, true, false);
-INSERT INTO permission VALUES (77, 12, 'myhomepage-miner', true, true, false, true, 'Industry News records', 30, false, false, false);
-INSERT INTO permission VALUES (78, 12, 'myhomepage-inbox', true, false, false, false, 'Mailbox', 40, true, true, false);
-INSERT INTO permission VALUES (79, 12, 'myhomepage-tasks', true, true, true, true, 'Tasks', 50, true, true, false);
-INSERT INTO permission VALUES (80, 12, 'myhomepage-reassign', true, false, true, false, 'Re-assign Items', 60, true, true, false);
-INSERT INTO permission VALUES (81, 12, 'myhomepage-profile', true, false, false, false, 'Profile', 70, true, true, false);
-INSERT INTO permission VALUES (82, 12, 'myhomepage-profile-personal', true, false, true, false, 'Personal Information', 80, true, true, false);
-INSERT INTO permission VALUES (83, 12, 'myhomepage-profile-settings', true, false, true, false, 'Settings', 90, false, false, false);
-INSERT INTO permission VALUES (84, 12, 'myhomepage-profile-password', false, false, true, false, 'Password', 100, true, true, false);
-INSERT INTO permission VALUES (85, 12, 'myhomepage-action-lists', true, true, true, true, 'Action Lists', 110, true, true, false);
-INSERT INTO permission VALUES (86, 13, 'qa', true, true, true, true, 'Access to QA Tool', 10, true, true, false);
-INSERT INTO permission VALUES (87, 14, 'reports', true, false, false, false, 'Access to Reports module', 10, true, true, false);
-INSERT INTO permission VALUES (88, 17, 'product-catalog', true, false, false, false, 'Access to Product Catalog module', 10, false, false, false);
-INSERT INTO permission VALUES (89, 17, 'product-catalog-product', true, true, true, true, 'Products', 20, false, false, false);
-INSERT INTO permission VALUES (90, 18, 'products', true, false, false, false, 'Access to Products and Services module', 10, true, true, false);
-INSERT INTO permission VALUES (91, 19, 'quotes', true, true, true, true, 'Access to Quotes module', 10, true, true, false);
-INSERT INTO permission VALUES (92, 20, 'orders', true, true, true, true, 'Access to Orders module', 10, true, true, false);
-INSERT INTO permission VALUES (93, 21, 'employees', true, false, false, false, 'Access to Employee module', 10, true, true, false);
-INSERT INTO permission VALUES (94, 21, 'contacts-internal_contacts', true, true, true, true, 'Employees', 20, true, true, false);
+INSERT INTO permission VALUES (9, 1, 'accounts-accounts-contacts-move', true, false, false, false, 'Move contacts to other accounts', 90, true, true, false);
+INSERT INTO permission VALUES (10, 1, 'accounts-accounts-opportunities', true, true, true, true, 'Opportunities', 100, true, true, false);
+INSERT INTO permission VALUES (11, 1, 'accounts-accounts-tickets', true, true, true, true, 'Tickets', 110, true, true, false);
+INSERT INTO permission VALUES (12, 1, 'accounts-accounts-tickets-tasks', true, true, true, true, 'Ticket Tasks', 120, true, true, false);
+INSERT INTO permission VALUES (13, 1, 'accounts-accounts-tickets-folders', true, true, true, true, 'Ticket Folders', 130, true, true, false);
+INSERT INTO permission VALUES (14, 1, 'accounts-accounts-tickets-documents', true, true, true, true, 'Ticket Documents', 140, true, true, false);
+INSERT INTO permission VALUES (15, 1, 'accounts-accounts-documents', true, true, true, true, 'Documents', 150, true, true, false);
+INSERT INTO permission VALUES (16, 1, 'accounts-accounts-reports', true, true, false, true, 'Export Account Data', 160, true, true, false);
+INSERT INTO permission VALUES (17, 1, 'accounts-dashboard', true, false, false, false, 'Dashboard', 170, true, true, false);
+INSERT INTO permission VALUES (18, 1, 'accounts-accounts-revenue', true, true, true, true, 'Revenue', 180, false, false, false);
+INSERT INTO permission VALUES (19, 1, 'accounts-autoguide-inventory', true, true, true, true, 'Auto Guide Vehicle Inventory', 190, false, false, false);
+INSERT INTO permission VALUES (20, 1, 'accounts-service-contracts', true, true, true, true, 'Service Contracts', 200, true, true, false);
+INSERT INTO permission VALUES (21, 1, 'accounts-assets', true, true, true, true, 'Assets', 210, true, true, false);
+INSERT INTO permission VALUES (22, 1, 'accounts-accounts-tickets-maintenance-report', true, true, true, true, 'Ticket Maintenance Notes', 220, true, true, false);
+INSERT INTO permission VALUES (23, 1, 'accounts-accounts-tickets-activity-log', true, true, true, true, 'Ticket Activities', 230, true, true, false);
+INSERT INTO permission VALUES (24, 1, 'portal-user', true, true, true, true, 'Customer Portal User', 240, true, true, false);
+INSERT INTO permission VALUES (25, 1, 'accounts-quotes', true, true, true, true, 'Quotes', 250, true, true, false);
+INSERT INTO permission VALUES (26, 1, 'accounts-orders', true, true, true, true, 'Orders', 260, false, false, false);
+INSERT INTO permission VALUES (27, 1, 'accounts-products', true, true, true, true, 'Products and Services', 270, false, false, false);
+INSERT INTO permission VALUES (28, 1, 'accounts-accounts-contacts-imports', true, true, true, true, 'Import Accounts/Contacts', 280, true, true, false);
+INSERT INTO permission VALUES (29, 1, 'accounts-accounts-relationships', true, true, true, true, 'Relationships', 290, true, true, false);
+INSERT INTO permission VALUES (30, 1, 'accounts-accounts-contact-updater', true, false, false, false, 'Request contact information update', 300, true, true, false);
+INSERT INTO permission VALUES (31, 1, 'accounts-projects', true, false, false, false, 'Projects', 310, true, true, false);
+INSERT INTO permission VALUES (32, 2, 'contacts', true, false, false, false, 'Access to Contacts module', 10, true, true, false);
+INSERT INTO permission VALUES (33, 2, 'contacts-external_contacts', true, true, true, true, 'General Contact Records', 20, true, true, false);
+INSERT INTO permission VALUES (34, 2, 'contacts-external_contacts-reports', true, true, false, true, 'Export Contact Data', 30, true, true, false);
+INSERT INTO permission VALUES (35, 2, 'contacts-external_contacts-folders', true, true, true, true, 'Folders', 40, true, true, false);
+INSERT INTO permission VALUES (36, 2, 'contacts-external_contacts-calls', true, true, true, true, 'Activities', 50, true, true, false);
+INSERT INTO permission VALUES (37, 2, 'contacts-external_contacts-messages', true, false, false, false, 'Messages', 60, true, true, false);
+INSERT INTO permission VALUES (38, 2, 'contacts-external_contacts-opportunities', true, true, true, true, 'Opportunities', 70, true, true, false);
+INSERT INTO permission VALUES (39, 2, 'contacts-external_contacts-imports', true, true, true, true, 'Imports', 80, true, true, false);
+INSERT INTO permission VALUES (40, 2, 'contacts-external-contact-updater', true, false, false, false, 'Request contact information update', 90, true, true, false);
+INSERT INTO permission VALUES (41, 3, 'autoguide', true, false, false, false, 'Access to the Auto Guide module', 10, true, true, false);
+INSERT INTO permission VALUES (42, 3, 'autoguide-adruns', false, false, true, false, 'Ad Run complete status', 20, true, true, false);
+INSERT INTO permission VALUES (43, 4, 'pipeline', true, false, false, false, 'Access to Pipeline module', 10, true, true, true);
+INSERT INTO permission VALUES (44, 4, 'pipeline-opportunities', true, true, true, true, 'Opportunity Records', 20, true, true, false);
+INSERT INTO permission VALUES (45, 4, 'pipeline-dashboard', true, false, false, false, 'Dashboard', 30, true, true, false);
+INSERT INTO permission VALUES (46, 4, 'pipeline-reports', true, true, false, true, 'Export Opportunity Data', 40, true, true, false);
+INSERT INTO permission VALUES (47, 4, 'pipeline-opportunities-calls', true, true, true, true, 'Activities', 50, true, true, false);
+INSERT INTO permission VALUES (48, 4, 'pipeline-opportunities-documents', true, true, true, true, 'Documents', 60, true, true, false);
+INSERT INTO permission VALUES (49, 5, 'demo', true, true, true, true, 'Access to Demo/Non-working features', 10, true, true, false);
+INSERT INTO permission VALUES (50, 6, 'campaign', true, false, false, false, 'Access to Communications module', 10, true, true, false);
+INSERT INTO permission VALUES (51, 6, 'campaign-dashboard', true, false, false, false, 'Dashboard', 20, true, true, false);
+INSERT INTO permission VALUES (52, 6, 'campaign-campaigns', true, true, true, true, 'Campaign Records', 30, true, true, false);
+INSERT INTO permission VALUES (53, 6, 'campaign-campaigns-groups', true, true, true, true, 'Group Records', 40, true, true, false);
+INSERT INTO permission VALUES (54, 6, 'campaign-campaigns-messages', true, true, true, true, 'Message Records', 50, true, true, false);
+INSERT INTO permission VALUES (55, 6, 'campaign-campaigns-surveys', true, true, true, true, 'Survey Records', 60, true, true, false);
+INSERT INTO permission VALUES (56, 6, 'campaign-campaign-contact-updater', true, false, false, false, 'Request contact information update', 70, true, true, false);
+INSERT INTO permission VALUES (57, 7, 'projects', true, false, false, false, 'Access to Project Management module', 10, true, true, false);
+INSERT INTO permission VALUES (58, 7, 'projects-personal', true, false, false, false, 'Personal View', 20, true, true, false);
+INSERT INTO permission VALUES (59, 7, 'projects-enterprise', true, false, false, false, 'Enterprise View', 30, true, true, false);
+INSERT INTO permission VALUES (60, 7, 'projects-projects', true, true, true, true, 'Project Records', 40, true, true, false);
+INSERT INTO permission VALUES (61, 8, 'tickets', true, false, false, false, 'Access to Help Desk module', 10, true, true, false);
+INSERT INTO permission VALUES (62, 8, 'tickets-tickets', true, true, true, true, 'Ticket Records', 20, true, true, false);
+INSERT INTO permission VALUES (63, 8, 'tickets-reports', true, true, true, true, 'Export Ticket Data', 30, true, true, false);
+INSERT INTO permission VALUES (64, 8, 'tickets-tickets-tasks', true, true, true, true, 'Tasks', 40, true, true, false);
+INSERT INTO permission VALUES (65, 8, 'tickets-maintenance-report', true, true, true, true, 'Maintenance Notes', 50, true, true, false);
+INSERT INTO permission VALUES (66, 8, 'tickets-activity-log', true, true, true, true, 'Activities', 60, true, true, false);
+INSERT INTO permission VALUES (67, 9, 'admin', true, false, false, false, 'Access to Admin module', 10, true, true, false);
+INSERT INTO permission VALUES (68, 9, 'admin-users', true, true, true, true, 'Users', 20, true, true, false);
+INSERT INTO permission VALUES (69, 9, 'admin-roles', true, true, true, true, 'Roles', 30, true, true, false);
+INSERT INTO permission VALUES (70, 9, 'admin-usage', true, false, false, false, 'System Usage', 40, true, true, false);
+INSERT INTO permission VALUES (71, 9, 'admin-sysconfig', true, false, true, false, 'System Configuration', 50, true, true, false);
+INSERT INTO permission VALUES (72, 9, 'admin-sysconfig-lists', true, false, true, false, 'Configure Lookup Lists', 60, true, true, false);
+INSERT INTO permission VALUES (73, 9, 'admin-sysconfig-folders', true, true, true, true, 'Configure Custom Folders & Fields', 70, true, true, false);
+INSERT INTO permission VALUES (74, 9, 'admin-object-workflow', true, true, true, true, 'Configure Object Workflow', 80, true, true, false);
+INSERT INTO permission VALUES (75, 9, 'admin-sysconfig-categories', true, true, true, true, 'Configure Module Categories', 90, true, true, false);
+INSERT INTO permission VALUES (76, 9, 'admin-sysconfig-products', true, true, true, true, 'Product Catalog Editor', 100, true, true, false);
+INSERT INTO permission VALUES (77, 9, 'admin-sysconfig-logos', true, true, true, true, 'Configure Module Logos', 110, true, true, false);
+INSERT INTO permission VALUES (78, 10, 'help', true, false, false, false, 'Access to Help System', 10, true, true, false);
+INSERT INTO permission VALUES (79, 11, 'globalitems-search', true, false, false, false, 'Access to Global Search', 10, true, true, false);
+INSERT INTO permission VALUES (80, 11, 'globalitems-myitems', true, false, false, false, 'Access to My Items', 20, true, true, false);
+INSERT INTO permission VALUES (81, 11, 'globalitems-recentitems', true, false, false, false, 'Access to Recent Items', 30, true, true, false);
+INSERT INTO permission VALUES (82, 12, 'myhomepage', true, false, false, false, 'Access to My Home Page module', 10, true, true, false);
+INSERT INTO permission VALUES (83, 12, 'myhomepage-dashboard', true, false, false, false, 'View Performance Dashboard', 20, true, true, false);
+INSERT INTO permission VALUES (84, 12, 'myhomepage-miner', true, true, false, true, 'Industry News records', 30, false, false, false);
+INSERT INTO permission VALUES (85, 12, 'myhomepage-inbox', true, false, false, false, 'Mailbox', 40, true, true, false);
+INSERT INTO permission VALUES (86, 12, 'myhomepage-tasks', true, true, true, true, 'Tasks', 50, true, true, false);
+INSERT INTO permission VALUES (87, 12, 'myhomepage-reassign', true, false, true, false, 'Re-assign Items', 60, true, true, false);
+INSERT INTO permission VALUES (88, 12, 'myhomepage-profile', true, false, false, false, 'Profile', 70, true, true, false);
+INSERT INTO permission VALUES (89, 12, 'myhomepage-profile-personal', true, false, true, false, 'Personal Information', 80, true, true, false);
+INSERT INTO permission VALUES (90, 12, 'myhomepage-profile-settings', true, false, true, false, 'Settings', 90, false, false, false);
+INSERT INTO permission VALUES (91, 12, 'myhomepage-profile-password', false, false, true, false, 'Password', 100, true, true, false);
+INSERT INTO permission VALUES (92, 12, 'myhomepage-action-lists', true, true, true, true, 'Action Lists', 110, true, true, false);
+INSERT INTO permission VALUES (93, 13, 'qa', true, true, true, true, 'Access to QA Tool', 10, true, true, false);
+INSERT INTO permission VALUES (94, 14, 'reports', true, false, false, false, 'Access to Reports module', 10, true, true, false);
+INSERT INTO permission VALUES (95, 22, 'sales', true, false, false, false, 'Access to Leads Module', 10, true, true, false);
+INSERT INTO permission VALUES (109, 22, 'sales-leads', true, true, true, true, 'Lead Records', 20, true, true, false);
+INSERT INTO permission VALUES (110, 22, 'sales-import', true, false, false, false, 'Access to Import Leads', 30, true, true, false);
+INSERT INTO permission VALUES (96, 17, 'product-catalog', true, false, false, false, 'Access to Product Catalog module', 10, false, false, false);
+INSERT INTO permission VALUES (97, 17, 'product-catalog-product', true, true, true, true, 'Products', 20, false, false, false);
+INSERT INTO permission VALUES (98, 18, 'products', true, false, false, false, 'Access to Products and Services module', 10, true, true, false);
+INSERT INTO permission VALUES (99, 19, 'quotes', true, false, false, false, 'Access to Quotes module', 10, true, true, false);
+INSERT INTO permission VALUES (100, 19, 'quotes-quotes', true, true, true, true, 'Quote Records', 20, true, true, false);
+INSERT INTO permission VALUES (101, 20, 'orders', true, false, false, false, 'Access to Orders module', 10, true, true, false);
+INSERT INTO permission VALUES (102, 20, 'orders-orders', true, true, true, true, 'Order Records', 20, true, true, false);
+INSERT INTO permission VALUES (103, 21, 'employees', true, false, false, false, 'Access to Employee module', 10, true, true, false);
+INSERT INTO permission VALUES (104, 21, 'contacts-internal_contacts', true, true, true, true, 'Employees', 20, true, true, false);
+INSERT INTO permission VALUES (105, 21, 'contacts-internal_contacts-folders', true, true, true, true, 'Folders', 30, true, true, false);
+INSERT INTO permission VALUES (106, 21, 'contacts-internal_contacts-projects', true, false, false, false, 'Projects', 40, true, true, false);
+INSERT INTO permission VALUES (107, 23, 'documents', true, false, false, false, 'Access to Documents module', 10, true, true, false);
+INSERT INTO permission VALUES (108, 23, 'documents_documentstore', true, true, true, true, 'Manage Document Stores', 20, true, true, false);
 
 
 
-INSERT INTO role_permission VALUES (1, 1, 75, true, false, false, false);
-INSERT INTO role_permission VALUES (2, 1, 76, true, false, false, false);
-INSERT INTO role_permission VALUES (3, 1, 77, true, true, false, true);
-INSERT INTO role_permission VALUES (4, 1, 78, true, false, false, false);
-INSERT INTO role_permission VALUES (5, 1, 79, true, true, true, true);
-INSERT INTO role_permission VALUES (6, 1, 81, true, false, false, false);
-INSERT INTO role_permission VALUES (7, 1, 82, true, false, true, false);
-INSERT INTO role_permission VALUES (8, 1, 83, true, false, true, false);
-INSERT INTO role_permission VALUES (9, 1, 84, false, false, true, false);
-INSERT INTO role_permission VALUES (10, 1, 85, true, true, true, true);
-INSERT INTO role_permission VALUES (11, 1, 80, true, false, true, false);
-INSERT INTO role_permission VALUES (12, 1, 28, true, false, false, false);
-INSERT INTO role_permission VALUES (13, 1, 29, true, true, true, true);
-INSERT INTO role_permission VALUES (14, 1, 30, true, true, false, true);
-INSERT INTO role_permission VALUES (15, 1, 31, true, true, true, true);
-INSERT INTO role_permission VALUES (16, 1, 32, true, true, true, true);
-INSERT INTO role_permission VALUES (17, 1, 33, true, false, false, false);
-INSERT INTO role_permission VALUES (18, 1, 34, true, true, true, true);
-INSERT INTO role_permission VALUES (19, 1, 35, true, true, true, true);
-INSERT INTO role_permission VALUES (20, 1, 38, true, false, false, false);
+INSERT INTO role_permission VALUES (1, 1, 82, true, false, false, false);
+INSERT INTO role_permission VALUES (2, 1, 83, true, false, false, false);
+INSERT INTO role_permission VALUES (3, 1, 84, true, true, false, true);
+INSERT INTO role_permission VALUES (4, 1, 85, true, false, false, false);
+INSERT INTO role_permission VALUES (5, 1, 86, true, true, true, true);
+INSERT INTO role_permission VALUES (6, 1, 88, true, false, false, false);
+INSERT INTO role_permission VALUES (7, 1, 89, true, false, true, false);
+INSERT INTO role_permission VALUES (8, 1, 90, true, false, true, false);
+INSERT INTO role_permission VALUES (9, 1, 91, false, false, true, false);
+INSERT INTO role_permission VALUES (10, 1, 92, true, true, true, true);
+INSERT INTO role_permission VALUES (11, 1, 87, true, false, true, false);
+INSERT INTO role_permission VALUES (12, 1, 98, true, false, false, false);
+INSERT INTO role_permission VALUES (13, 1, 95, true, true, true, true);
+INSERT INTO role_permission VALUES (14, 1, 32, true, false, false, false);
+INSERT INTO role_permission VALUES (15, 1, 33, true, true, true, true);
+INSERT INTO role_permission VALUES (16, 1, 34, true, true, false, true);
+INSERT INTO role_permission VALUES (17, 1, 35, true, true, true, true);
+INSERT INTO role_permission VALUES (18, 1, 36, true, true, true, true);
+INSERT INTO role_permission VALUES (19, 1, 37, true, false, false, false);
+INSERT INTO role_permission VALUES (20, 1, 38, true, true, true, true);
 INSERT INTO role_permission VALUES (21, 1, 39, true, true, true, true);
 INSERT INTO role_permission VALUES (22, 1, 40, true, false, false, false);
-INSERT INTO role_permission VALUES (23, 1, 41, true, true, false, true);
-INSERT INTO role_permission VALUES (24, 1, 42, true, true, true, true);
-INSERT INTO role_permission VALUES (25, 1, 43, true, true, true, true);
-INSERT INTO role_permission VALUES (26, 1, 1, true, false, false, false);
-INSERT INTO role_permission VALUES (27, 1, 2, true, true, true, true);
-INSERT INTO role_permission VALUES (28, 1, 3, true, true, true, true);
-INSERT INTO role_permission VALUES (29, 1, 4, true, true, true, true);
-INSERT INTO role_permission VALUES (30, 1, 5, true, true, true, true);
-INSERT INTO role_permission VALUES (31, 1, 6, true, true, true, true);
-INSERT INTO role_permission VALUES (32, 1, 8, true, true, true, true);
-INSERT INTO role_permission VALUES (33, 1, 9, true, true, true, true);
-INSERT INTO role_permission VALUES (34, 1, 10, true, true, true, true);
-INSERT INTO role_permission VALUES (35, 1, 11, true, true, true, true);
-INSERT INTO role_permission VALUES (36, 1, 12, true, true, true, true);
-INSERT INTO role_permission VALUES (37, 1, 13, true, true, true, true);
-INSERT INTO role_permission VALUES (38, 1, 14, true, true, true, true);
-INSERT INTO role_permission VALUES (39, 1, 15, true, true, false, true);
-INSERT INTO role_permission VALUES (40, 1, 19, true, true, true, true);
-INSERT INTO role_permission VALUES (41, 1, 20, true, true, true, true);
-INSERT INTO role_permission VALUES (42, 1, 21, true, true, true, true);
-INSERT INTO role_permission VALUES (43, 1, 22, true, true, true, true);
-INSERT INTO role_permission VALUES (44, 1, 23, true, true, true, true);
-INSERT INTO role_permission VALUES (45, 1, 27, true, true, true, true);
-INSERT INTO role_permission VALUES (46, 1, 88, true, false, false, false);
-INSERT INTO role_permission VALUES (47, 1, 89, true, true, true, true);
-INSERT INTO role_permission VALUES (48, 1, 45, true, false, false, false);
-INSERT INTO role_permission VALUES (49, 1, 46, true, false, false, false);
-INSERT INTO role_permission VALUES (50, 1, 47, true, true, true, true);
-INSERT INTO role_permission VALUES (51, 1, 48, true, true, true, true);
-INSERT INTO role_permission VALUES (52, 1, 49, true, true, true, true);
-INSERT INTO role_permission VALUES (53, 1, 50, true, true, true, true);
-INSERT INTO role_permission VALUES (54, 1, 55, true, false, false, false);
-INSERT INTO role_permission VALUES (55, 1, 56, true, true, true, true);
-INSERT INTO role_permission VALUES (56, 1, 57, true, true, true, true);
-INSERT INTO role_permission VALUES (57, 1, 58, true, true, true, true);
-INSERT INTO role_permission VALUES (58, 1, 59, true, true, true, true);
-INSERT INTO role_permission VALUES (59, 1, 60, true, true, true, true);
-INSERT INTO role_permission VALUES (60, 1, 93, true, true, true, false);
-INSERT INTO role_permission VALUES (61, 1, 94, true, true, true, true);
-INSERT INTO role_permission VALUES (62, 1, 87, true, false, false, false);
-INSERT INTO role_permission VALUES (63, 1, 61, true, false, false, false);
-INSERT INTO role_permission VALUES (64, 1, 62, true, true, true, true);
-INSERT INTO role_permission VALUES (65, 1, 63, true, true, true, true);
-INSERT INTO role_permission VALUES (66, 1, 65, true, false, true, false);
-INSERT INTO role_permission VALUES (67, 1, 64, true, false, false, false);
-INSERT INTO role_permission VALUES (68, 1, 66, true, false, true, false);
-INSERT INTO role_permission VALUES (69, 1, 67, true, true, true, true);
-INSERT INTO role_permission VALUES (70, 1, 68, true, true, true, true);
-INSERT INTO role_permission VALUES (71, 1, 69, true, true, true, true);
-INSERT INTO role_permission VALUES (72, 1, 70, true, true, true, true);
-INSERT INTO role_permission VALUES (73, 1, 71, true, false, false, false);
-INSERT INTO role_permission VALUES (74, 1, 72, true, false, false, false);
-INSERT INTO role_permission VALUES (75, 1, 73, true, false, false, false);
-INSERT INTO role_permission VALUES (76, 1, 74, true, false, false, false);
-INSERT INTO role_permission VALUES (77, 1, 51, true, false, false, false);
-INSERT INTO role_permission VALUES (78, 1, 52, true, false, false, false);
-INSERT INTO role_permission VALUES (79, 1, 53, true, false, false, false);
-INSERT INTO role_permission VALUES (80, 1, 54, true, true, true, true);
-INSERT INTO role_permission VALUES (81, 2, 75, true, false, false, false);
-INSERT INTO role_permission VALUES (82, 2, 76, true, false, false, false);
-INSERT INTO role_permission VALUES (83, 2, 78, true, false, false, false);
-INSERT INTO role_permission VALUES (84, 2, 79, true, true, true, true);
-INSERT INTO role_permission VALUES (85, 2, 80, true, false, true, false);
-INSERT INTO role_permission VALUES (86, 2, 81, true, false, false, false);
-INSERT INTO role_permission VALUES (87, 2, 82, true, false, true, false);
-INSERT INTO role_permission VALUES (88, 2, 83, true, false, true, false);
-INSERT INTO role_permission VALUES (89, 2, 84, false, false, true, false);
-INSERT INTO role_permission VALUES (90, 2, 85, true, true, true, true);
-INSERT INTO role_permission VALUES (91, 2, 28, true, false, false, false);
-INSERT INTO role_permission VALUES (92, 2, 29, true, true, true, true);
-INSERT INTO role_permission VALUES (93, 2, 30, true, true, false, true);
-INSERT INTO role_permission VALUES (94, 2, 31, true, true, true, true);
-INSERT INTO role_permission VALUES (95, 2, 32, true, true, true, true);
-INSERT INTO role_permission VALUES (96, 2, 33, true, false, false, false);
-INSERT INTO role_permission VALUES (97, 2, 34, true, true, true, true);
-INSERT INTO role_permission VALUES (98, 2, 35, true, true, true, true);
-INSERT INTO role_permission VALUES (99, 2, 38, true, false, false, false);
-INSERT INTO role_permission VALUES (100, 2, 39, true, true, true, true);
-INSERT INTO role_permission VALUES (101, 2, 40, true, false, false, false);
-INSERT INTO role_permission VALUES (102, 2, 41, true, true, false, true);
-INSERT INTO role_permission VALUES (103, 2, 42, true, true, true, true);
-INSERT INTO role_permission VALUES (104, 2, 43, true, true, true, true);
-INSERT INTO role_permission VALUES (105, 2, 1, true, false, false, false);
-INSERT INTO role_permission VALUES (106, 2, 2, true, true, true, true);
-INSERT INTO role_permission VALUES (107, 2, 3, true, true, true, false);
-INSERT INTO role_permission VALUES (108, 2, 4, true, true, true, true);
-INSERT INTO role_permission VALUES (109, 2, 5, true, true, true, true);
-INSERT INTO role_permission VALUES (110, 2, 6, true, true, true, true);
-INSERT INTO role_permission VALUES (111, 2, 8, true, true, true, true);
-INSERT INTO role_permission VALUES (112, 2, 9, true, true, true, true);
-INSERT INTO role_permission VALUES (113, 2, 10, true, true, true, true);
-INSERT INTO role_permission VALUES (114, 2, 14, true, true, true, true);
-INSERT INTO role_permission VALUES (115, 2, 15, true, true, false, true);
-INSERT INTO role_permission VALUES (116, 2, 17, true, true, true, true);
-INSERT INTO role_permission VALUES (117, 2, 13, true, true, true, true);
-INSERT INTO role_permission VALUES (118, 2, 12, true, true, true, true);
-INSERT INTO role_permission VALUES (119, 2, 11, true, true, true, true);
-INSERT INTO role_permission VALUES (120, 2, 19, true, true, true, true);
-INSERT INTO role_permission VALUES (121, 2, 20, true, true, true, true);
-INSERT INTO role_permission VALUES (122, 2, 21, true, true, true, false);
-INSERT INTO role_permission VALUES (123, 2, 22, true, true, true, false);
-INSERT INTO role_permission VALUES (124, 2, 23, true, true, true, true);
-INSERT INTO role_permission VALUES (125, 2, 27, true, true, true, true);
-INSERT INTO role_permission VALUES (126, 2, 88, true, false, false, false);
-INSERT INTO role_permission VALUES (127, 2, 89, true, false, false, false);
-INSERT INTO role_permission VALUES (128, 2, 45, true, false, false, false);
-INSERT INTO role_permission VALUES (129, 2, 46, true, false, false, false);
-INSERT INTO role_permission VALUES (130, 2, 47, true, true, true, true);
-INSERT INTO role_permission VALUES (131, 2, 48, true, true, true, true);
-INSERT INTO role_permission VALUES (132, 2, 49, true, true, true, true);
-INSERT INTO role_permission VALUES (133, 2, 50, true, true, true, true);
-INSERT INTO role_permission VALUES (134, 2, 55, true, false, false, false);
-INSERT INTO role_permission VALUES (135, 2, 56, true, true, true, false);
-INSERT INTO role_permission VALUES (136, 2, 57, true, true, true, true);
-INSERT INTO role_permission VALUES (137, 2, 58, true, true, true, false);
-INSERT INTO role_permission VALUES (138, 2, 59, true, true, true, false);
-INSERT INTO role_permission VALUES (139, 2, 60, true, true, true, false);
-INSERT INTO role_permission VALUES (140, 2, 93, true, false, false, false);
-INSERT INTO role_permission VALUES (141, 2, 94, true, false, false, false);
-INSERT INTO role_permission VALUES (142, 2, 87, true, false, false, false);
-INSERT INTO role_permission VALUES (143, 2, 71, true, false, false, false);
-INSERT INTO role_permission VALUES (144, 2, 72, true, false, false, false);
-INSERT INTO role_permission VALUES (145, 2, 73, true, false, false, false);
-INSERT INTO role_permission VALUES (146, 2, 74, true, false, false, false);
-INSERT INTO role_permission VALUES (147, 2, 51, true, false, false, false);
-INSERT INTO role_permission VALUES (148, 2, 52, true, false, false, false);
-INSERT INTO role_permission VALUES (149, 2, 53, true, false, false, false);
-INSERT INTO role_permission VALUES (150, 2, 54, true, true, true, true);
-INSERT INTO role_permission VALUES (151, 3, 75, true, false, false, false);
-INSERT INTO role_permission VALUES (152, 3, 76, true, false, false, false);
-INSERT INTO role_permission VALUES (153, 3, 78, true, false, false, false);
-INSERT INTO role_permission VALUES (154, 3, 79, true, true, true, true);
-INSERT INTO role_permission VALUES (155, 3, 80, true, false, true, false);
-INSERT INTO role_permission VALUES (156, 3, 81, true, false, false, false);
-INSERT INTO role_permission VALUES (157, 3, 82, true, false, true, false);
-INSERT INTO role_permission VALUES (158, 3, 83, true, false, true, false);
-INSERT INTO role_permission VALUES (159, 3, 84, false, false, true, false);
-INSERT INTO role_permission VALUES (160, 3, 85, true, true, true, true);
-INSERT INTO role_permission VALUES (161, 3, 28, true, false, false, false);
-INSERT INTO role_permission VALUES (162, 3, 29, true, true, true, true);
-INSERT INTO role_permission VALUES (163, 3, 30, true, true, false, true);
-INSERT INTO role_permission VALUES (164, 3, 31, true, true, true, true);
-INSERT INTO role_permission VALUES (165, 3, 32, true, true, true, true);
-INSERT INTO role_permission VALUES (166, 3, 33, true, false, false, false);
-INSERT INTO role_permission VALUES (167, 3, 34, true, true, true, true);
-INSERT INTO role_permission VALUES (168, 3, 35, true, true, true, true);
-INSERT INTO role_permission VALUES (169, 3, 38, true, false, false, false);
-INSERT INTO role_permission VALUES (170, 3, 39, true, true, true, true);
-INSERT INTO role_permission VALUES (171, 3, 40, true, false, false, false);
-INSERT INTO role_permission VALUES (172, 3, 41, true, true, false, true);
-INSERT INTO role_permission VALUES (173, 3, 42, true, true, true, true);
-INSERT INTO role_permission VALUES (174, 3, 43, true, true, true, true);
-INSERT INTO role_permission VALUES (175, 3, 1, true, false, false, false);
-INSERT INTO role_permission VALUES (176, 3, 2, true, true, true, true);
-INSERT INTO role_permission VALUES (177, 3, 3, true, true, true, false);
-INSERT INTO role_permission VALUES (178, 3, 4, true, true, true, true);
-INSERT INTO role_permission VALUES (179, 3, 5, true, true, true, true);
-INSERT INTO role_permission VALUES (180, 3, 6, true, true, true, true);
-INSERT INTO role_permission VALUES (181, 3, 8, true, true, true, true);
-INSERT INTO role_permission VALUES (182, 3, 9, true, true, true, true);
-INSERT INTO role_permission VALUES (183, 3, 10, true, true, true, false);
-INSERT INTO role_permission VALUES (184, 3, 14, true, true, true, true);
-INSERT INTO role_permission VALUES (185, 3, 15, true, true, false, true);
-INSERT INTO role_permission VALUES (186, 3, 16, true, false, false, false);
-INSERT INTO role_permission VALUES (187, 3, 17, true, true, true, true);
-INSERT INTO role_permission VALUES (188, 3, 13, true, true, true, false);
-INSERT INTO role_permission VALUES (189, 3, 12, true, true, true, false);
-INSERT INTO role_permission VALUES (190, 3, 11, true, true, true, false);
-INSERT INTO role_permission VALUES (191, 3, 19, true, true, true, false);
-INSERT INTO role_permission VALUES (192, 3, 20, true, true, true, false);
-INSERT INTO role_permission VALUES (193, 3, 21, true, false, false, false);
-INSERT INTO role_permission VALUES (194, 3, 22, true, false, false, false);
-INSERT INTO role_permission VALUES (195, 3, 23, true, false, false, false);
-INSERT INTO role_permission VALUES (196, 3, 27, true, true, true, true);
-INSERT INTO role_permission VALUES (197, 3, 88, true, false, false, false);
-INSERT INTO role_permission VALUES (198, 3, 89, true, false, false, false);
-INSERT INTO role_permission VALUES (199, 3, 45, true, false, false, false);
-INSERT INTO role_permission VALUES (200, 3, 46, true, false, false, false);
-INSERT INTO role_permission VALUES (201, 3, 47, true, true, true, true);
-INSERT INTO role_permission VALUES (202, 3, 48, true, true, true, true);
-INSERT INTO role_permission VALUES (203, 3, 49, true, true, true, true);
-INSERT INTO role_permission VALUES (204, 3, 50, true, true, true, true);
-INSERT INTO role_permission VALUES (205, 3, 55, true, false, false, false);
-INSERT INTO role_permission VALUES (206, 3, 56, true, true, true, false);
-INSERT INTO role_permission VALUES (207, 3, 57, true, true, true, true);
-INSERT INTO role_permission VALUES (208, 3, 58, true, true, true, false);
-INSERT INTO role_permission VALUES (209, 3, 59, true, false, false, false);
-INSERT INTO role_permission VALUES (210, 3, 60, true, false, false, false);
-INSERT INTO role_permission VALUES (211, 3, 93, true, false, false, false);
-INSERT INTO role_permission VALUES (212, 3, 94, true, false, false, false);
-INSERT INTO role_permission VALUES (213, 3, 87, true, false, false, false);
-INSERT INTO role_permission VALUES (214, 3, 71, true, false, false, false);
-INSERT INTO role_permission VALUES (215, 3, 72, true, false, false, false);
-INSERT INTO role_permission VALUES (216, 3, 73, true, false, false, false);
-INSERT INTO role_permission VALUES (217, 3, 74, true, false, false, false);
-INSERT INTO role_permission VALUES (218, 3, 51, true, false, false, false);
-INSERT INTO role_permission VALUES (219, 3, 52, true, false, false, false);
-INSERT INTO role_permission VALUES (220, 3, 53, true, false, false, false);
-INSERT INTO role_permission VALUES (221, 3, 54, true, true, true, true);
-INSERT INTO role_permission VALUES (222, 4, 75, true, false, false, false);
-INSERT INTO role_permission VALUES (223, 4, 76, true, false, false, false);
-INSERT INTO role_permission VALUES (224, 4, 78, true, false, false, false);
-INSERT INTO role_permission VALUES (225, 4, 79, true, true, true, true);
-INSERT INTO role_permission VALUES (226, 4, 81, true, false, false, false);
-INSERT INTO role_permission VALUES (227, 4, 82, true, false, true, false);
-INSERT INTO role_permission VALUES (228, 4, 83, true, false, true, false);
-INSERT INTO role_permission VALUES (229, 4, 84, false, false, true, false);
-INSERT INTO role_permission VALUES (230, 4, 85, true, true, true, true);
-INSERT INTO role_permission VALUES (231, 4, 28, true, false, false, false);
-INSERT INTO role_permission VALUES (232, 4, 29, true, true, true, true);
-INSERT INTO role_permission VALUES (233, 4, 30, true, true, false, true);
-INSERT INTO role_permission VALUES (234, 4, 32, true, true, true, true);
-INSERT INTO role_permission VALUES (235, 4, 33, true, true, true, true);
-INSERT INTO role_permission VALUES (236, 4, 34, true, false, false, false);
-INSERT INTO role_permission VALUES (237, 4, 35, true, true, true, true);
-INSERT INTO role_permission VALUES (238, 4, 38, true, false, false, false);
-INSERT INTO role_permission VALUES (239, 4, 39, true, true, true, false);
-INSERT INTO role_permission VALUES (240, 4, 40, true, false, false, false);
-INSERT INTO role_permission VALUES (241, 4, 41, true, true, false, true);
-INSERT INTO role_permission VALUES (242, 4, 42, true, true, true, true);
-INSERT INTO role_permission VALUES (243, 4, 43, true, true, true, true);
-INSERT INTO role_permission VALUES (244, 4, 1, true, false, false, false);
-INSERT INTO role_permission VALUES (245, 4, 2, true, true, true, false);
-INSERT INTO role_permission VALUES (246, 4, 3, true, true, true, false);
-INSERT INTO role_permission VALUES (247, 4, 4, true, true, true, false);
-INSERT INTO role_permission VALUES (248, 4, 5, true, true, true, false);
-INSERT INTO role_permission VALUES (249, 4, 6, true, true, true, false);
-INSERT INTO role_permission VALUES (250, 4, 8, true, true, true, false);
-INSERT INTO role_permission VALUES (251, 4, 9, true, true, true, false);
-INSERT INTO role_permission VALUES (252, 4, 10, true, true, true, false);
-INSERT INTO role_permission VALUES (253, 4, 14, true, true, true, false);
-INSERT INTO role_permission VALUES (254, 4, 15, true, true, false, true);
-INSERT INTO role_permission VALUES (255, 4, 16, true, false, false, false);
-INSERT INTO role_permission VALUES (256, 4, 17, true, true, true, false);
-INSERT INTO role_permission VALUES (257, 4, 13, true, true, true, false);
-INSERT INTO role_permission VALUES (258, 4, 12, true, true, true, false);
-INSERT INTO role_permission VALUES (259, 4, 11, true, true, true, false);
-INSERT INTO role_permission VALUES (260, 4, 19, true, false, false, false);
-INSERT INTO role_permission VALUES (261, 4, 20, true, false, false, false);
-INSERT INTO role_permission VALUES (262, 4, 21, true, false, false, false);
-INSERT INTO role_permission VALUES (263, 4, 22, true, false, false, false);
-INSERT INTO role_permission VALUES (264, 4, 23, true, false, false, false);
-INSERT INTO role_permission VALUES (265, 4, 27, true, true, true, true);
-INSERT INTO role_permission VALUES (266, 4, 88, true, false, false, false);
-INSERT INTO role_permission VALUES (267, 4, 89, true, false, false, false);
-INSERT INTO role_permission VALUES (268, 4, 45, true, false, false, false);
-INSERT INTO role_permission VALUES (269, 4, 46, true, false, false, false);
-INSERT INTO role_permission VALUES (270, 4, 47, true, true, true, true);
-INSERT INTO role_permission VALUES (271, 4, 48, true, true, true, true);
-INSERT INTO role_permission VALUES (272, 4, 49, true, true, true, true);
-INSERT INTO role_permission VALUES (273, 4, 50, true, true, true, true);
-INSERT INTO role_permission VALUES (274, 4, 55, true, false, false, false);
-INSERT INTO role_permission VALUES (275, 4, 56, true, true, true, false);
-INSERT INTO role_permission VALUES (276, 4, 57, true, true, false, true);
-INSERT INTO role_permission VALUES (277, 4, 58, true, true, true, false);
-INSERT INTO role_permission VALUES (278, 4, 59, true, false, false, false);
-INSERT INTO role_permission VALUES (279, 4, 60, true, false, false, false);
-INSERT INTO role_permission VALUES (280, 4, 93, true, false, false, false);
-INSERT INTO role_permission VALUES (281, 4, 94, true, false, false, false);
-INSERT INTO role_permission VALUES (282, 4, 87, true, false, false, false);
-INSERT INTO role_permission VALUES (283, 4, 71, true, false, false, false);
-INSERT INTO role_permission VALUES (284, 4, 72, true, false, false, false);
-INSERT INTO role_permission VALUES (285, 4, 73, true, false, false, false);
-INSERT INTO role_permission VALUES (286, 4, 74, true, false, false, false);
-INSERT INTO role_permission VALUES (287, 4, 51, true, false, false, false);
-INSERT INTO role_permission VALUES (288, 4, 52, true, false, false, false);
-INSERT INTO role_permission VALUES (289, 4, 53, true, false, false, false);
-INSERT INTO role_permission VALUES (290, 4, 54, true, true, true, true);
-INSERT INTO role_permission VALUES (291, 5, 75, true, false, false, false);
-INSERT INTO role_permission VALUES (292, 5, 76, true, false, false, false);
-INSERT INTO role_permission VALUES (293, 5, 78, true, false, false, false);
-INSERT INTO role_permission VALUES (294, 5, 79, true, true, true, true);
-INSERT INTO role_permission VALUES (295, 5, 80, true, false, true, false);
-INSERT INTO role_permission VALUES (296, 5, 81, true, false, false, false);
-INSERT INTO role_permission VALUES (297, 5, 82, true, false, true, false);
-INSERT INTO role_permission VALUES (298, 5, 83, true, false, true, false);
-INSERT INTO role_permission VALUES (299, 5, 84, false, false, true, false);
-INSERT INTO role_permission VALUES (300, 5, 1, true, false, false, false);
-INSERT INTO role_permission VALUES (301, 5, 2, true, true, true, false);
-INSERT INTO role_permission VALUES (302, 5, 3, true, true, true, false);
-INSERT INTO role_permission VALUES (303, 5, 4, true, true, true, false);
-INSERT INTO role_permission VALUES (304, 5, 6, true, true, true, false);
-INSERT INTO role_permission VALUES (305, 5, 8, true, true, true, false);
-INSERT INTO role_permission VALUES (306, 5, 10, true, true, true, true);
-INSERT INTO role_permission VALUES (307, 5, 14, true, true, true, false);
-INSERT INTO role_permission VALUES (308, 5, 15, true, true, false, true);
-INSERT INTO role_permission VALUES (309, 5, 13, true, true, true, true);
-INSERT INTO role_permission VALUES (310, 5, 12, true, true, true, true);
-INSERT INTO role_permission VALUES (311, 5, 11, true, true, true, true);
-INSERT INTO role_permission VALUES (312, 5, 19, true, true, true, true);
-INSERT INTO role_permission VALUES (313, 5, 20, true, true, true, true);
-INSERT INTO role_permission VALUES (314, 5, 21, true, true, true, true);
-INSERT INTO role_permission VALUES (315, 5, 22, true, true, true, true);
-INSERT INTO role_permission VALUES (316, 5, 23, true, true, true, true);
-INSERT INTO role_permission VALUES (317, 5, 27, true, true, true, true);
-INSERT INTO role_permission VALUES (318, 5, 88, true, false, false, false);
-INSERT INTO role_permission VALUES (319, 5, 89, true, false, false, false);
-INSERT INTO role_permission VALUES (320, 5, 45, true, false, false, false);
-INSERT INTO role_permission VALUES (321, 5, 46, true, false, false, false);
-INSERT INTO role_permission VALUES (322, 5, 47, true, true, true, true);
-INSERT INTO role_permission VALUES (323, 5, 48, true, true, true, true);
-INSERT INTO role_permission VALUES (324, 5, 49, true, true, true, true);
-INSERT INTO role_permission VALUES (325, 5, 50, true, true, true, true);
-INSERT INTO role_permission VALUES (326, 5, 55, true, false, false, false);
-INSERT INTO role_permission VALUES (327, 5, 56, true, true, true, true);
-INSERT INTO role_permission VALUES (328, 5, 57, true, true, true, true);
-INSERT INTO role_permission VALUES (329, 5, 58, true, true, true, true);
-INSERT INTO role_permission VALUES (330, 5, 59, true, true, true, true);
-INSERT INTO role_permission VALUES (331, 5, 60, true, true, true, true);
-INSERT INTO role_permission VALUES (332, 5, 93, true, false, false, false);
-INSERT INTO role_permission VALUES (333, 5, 94, true, false, false, false);
-INSERT INTO role_permission VALUES (334, 5, 87, true, false, false, false);
-INSERT INTO role_permission VALUES (335, 5, 71, true, false, false, false);
-INSERT INTO role_permission VALUES (336, 5, 72, true, false, false, false);
-INSERT INTO role_permission VALUES (337, 5, 73, true, false, false, false);
-INSERT INTO role_permission VALUES (338, 5, 74, true, false, false, false);
-INSERT INTO role_permission VALUES (339, 5, 51, true, false, false, false);
-INSERT INTO role_permission VALUES (340, 5, 52, true, false, false, false);
-INSERT INTO role_permission VALUES (341, 5, 53, true, false, false, false);
-INSERT INTO role_permission VALUES (342, 5, 54, true, true, true, true);
-INSERT INTO role_permission VALUES (343, 6, 75, true, false, false, false);
-INSERT INTO role_permission VALUES (344, 6, 76, true, false, false, false);
-INSERT INTO role_permission VALUES (345, 6, 78, true, false, false, false);
-INSERT INTO role_permission VALUES (346, 6, 79, true, true, true, true);
-INSERT INTO role_permission VALUES (347, 6, 80, true, false, true, false);
-INSERT INTO role_permission VALUES (348, 6, 81, true, false, false, false);
-INSERT INTO role_permission VALUES (349, 6, 82, true, false, true, false);
-INSERT INTO role_permission VALUES (350, 6, 83, true, false, true, false);
-INSERT INTO role_permission VALUES (351, 6, 84, false, false, true, false);
-INSERT INTO role_permission VALUES (352, 6, 1, true, false, false, false);
-INSERT INTO role_permission VALUES (353, 6, 2, true, true, true, false);
-INSERT INTO role_permission VALUES (354, 6, 3, true, true, true, false);
-INSERT INTO role_permission VALUES (355, 6, 4, true, true, true, false);
-INSERT INTO role_permission VALUES (356, 6, 6, true, true, true, false);
-INSERT INTO role_permission VALUES (357, 6, 8, true, true, true, false);
-INSERT INTO role_permission VALUES (358, 6, 10, true, true, true, false);
-INSERT INTO role_permission VALUES (359, 6, 14, true, true, true, false);
-INSERT INTO role_permission VALUES (360, 6, 15, true, true, false, true);
-INSERT INTO role_permission VALUES (361, 6, 13, true, true, true, false);
-INSERT INTO role_permission VALUES (362, 6, 12, true, true, true, false);
-INSERT INTO role_permission VALUES (363, 6, 11, true, true, true, false);
-INSERT INTO role_permission VALUES (364, 6, 19, true, true, true, false);
-INSERT INTO role_permission VALUES (365, 6, 20, true, true, true, false);
-INSERT INTO role_permission VALUES (366, 6, 21, true, true, true, false);
-INSERT INTO role_permission VALUES (367, 6, 22, true, true, true, false);
-INSERT INTO role_permission VALUES (368, 6, 23, true, true, true, true);
-INSERT INTO role_permission VALUES (369, 6, 88, true, false, false, false);
-INSERT INTO role_permission VALUES (370, 6, 89, true, false, false, false);
-INSERT INTO role_permission VALUES (371, 6, 45, true, false, false, false);
-INSERT INTO role_permission VALUES (372, 6, 46, true, false, false, false);
-INSERT INTO role_permission VALUES (373, 6, 47, true, true, true, true);
-INSERT INTO role_permission VALUES (374, 6, 48, true, true, true, true);
-INSERT INTO role_permission VALUES (375, 6, 49, true, true, true, true);
-INSERT INTO role_permission VALUES (376, 6, 50, true, true, true, true);
-INSERT INTO role_permission VALUES (377, 6, 55, true, false, false, false);
-INSERT INTO role_permission VALUES (378, 6, 56, true, true, true, false);
-INSERT INTO role_permission VALUES (379, 6, 57, true, true, true, false);
-INSERT INTO role_permission VALUES (380, 6, 58, true, true, true, false);
-INSERT INTO role_permission VALUES (381, 6, 59, true, true, true, false);
-INSERT INTO role_permission VALUES (382, 6, 60, true, true, true, false);
-INSERT INTO role_permission VALUES (383, 6, 93, true, false, false, false);
-INSERT INTO role_permission VALUES (384, 6, 94, true, false, false, false);
-INSERT INTO role_permission VALUES (385, 6, 87, true, false, false, false);
-INSERT INTO role_permission VALUES (386, 6, 71, true, false, false, false);
-INSERT INTO role_permission VALUES (387, 6, 72, true, false, false, false);
-INSERT INTO role_permission VALUES (388, 6, 73, true, false, false, false);
-INSERT INTO role_permission VALUES (389, 6, 74, true, false, false, false);
-INSERT INTO role_permission VALUES (390, 6, 51, true, false, false, false);
-INSERT INTO role_permission VALUES (391, 6, 52, true, false, false, false);
-INSERT INTO role_permission VALUES (392, 6, 53, true, false, false, false);
-INSERT INTO role_permission VALUES (393, 6, 54, true, true, true, true);
-INSERT INTO role_permission VALUES (394, 7, 75, true, false, false, false);
-INSERT INTO role_permission VALUES (395, 7, 76, true, false, false, false);
-INSERT INTO role_permission VALUES (396, 7, 78, true, false, false, false);
-INSERT INTO role_permission VALUES (397, 7, 79, true, true, true, true);
-INSERT INTO role_permission VALUES (398, 7, 80, true, false, true, false);
-INSERT INTO role_permission VALUES (399, 7, 81, true, false, false, false);
-INSERT INTO role_permission VALUES (400, 7, 82, true, false, true, false);
-INSERT INTO role_permission VALUES (401, 7, 83, true, false, true, false);
-INSERT INTO role_permission VALUES (402, 7, 84, false, false, true, false);
-INSERT INTO role_permission VALUES (403, 7, 85, true, true, true, true);
-INSERT INTO role_permission VALUES (404, 7, 28, true, false, false, false);
-INSERT INTO role_permission VALUES (405, 7, 29, true, true, true, true);
-INSERT INTO role_permission VALUES (406, 7, 30, true, true, false, true);
-INSERT INTO role_permission VALUES (407, 7, 31, true, true, true, true);
-INSERT INTO role_permission VALUES (408, 7, 32, true, true, true, true);
-INSERT INTO role_permission VALUES (409, 7, 33, true, false, false, false);
-INSERT INTO role_permission VALUES (410, 7, 34, true, true, true, true);
-INSERT INTO role_permission VALUES (411, 7, 35, true, true, true, true);
-INSERT INTO role_permission VALUES (412, 7, 38, true, false, false, false);
-INSERT INTO role_permission VALUES (413, 7, 39, true, true, true, true);
-INSERT INTO role_permission VALUES (414, 7, 40, true, false, false, false);
-INSERT INTO role_permission VALUES (415, 7, 41, true, true, false, true);
-INSERT INTO role_permission VALUES (416, 7, 42, true, true, true, true);
-INSERT INTO role_permission VALUES (417, 7, 43, true, true, true, true);
-INSERT INTO role_permission VALUES (418, 7, 1, true, false, false, false);
-INSERT INTO role_permission VALUES (419, 7, 2, true, true, true, false);
-INSERT INTO role_permission VALUES (420, 7, 3, true, true, true, false);
-INSERT INTO role_permission VALUES (421, 7, 4, true, true, true, false);
-INSERT INTO role_permission VALUES (422, 7, 5, true, true, true, false);
-INSERT INTO role_permission VALUES (423, 7, 6, true, true, true, false);
-INSERT INTO role_permission VALUES (424, 7, 8, true, true, true, false);
-INSERT INTO role_permission VALUES (425, 7, 9, true, true, true, false);
-INSERT INTO role_permission VALUES (426, 7, 10, true, true, true, false);
-INSERT INTO role_permission VALUES (427, 7, 14, true, true, true, false);
-INSERT INTO role_permission VALUES (428, 7, 15, true, true, false, true);
-INSERT INTO role_permission VALUES (429, 7, 16, true, false, false, false);
-INSERT INTO role_permission VALUES (430, 7, 17, true, true, true, false);
-INSERT INTO role_permission VALUES (431, 7, 13, true, true, true, false);
-INSERT INTO role_permission VALUES (432, 7, 12, true, true, true, false);
-INSERT INTO role_permission VALUES (433, 7, 11, true, true, true, false);
-INSERT INTO role_permission VALUES (434, 7, 19, true, false, false, false);
-INSERT INTO role_permission VALUES (435, 7, 20, true, false, false, false);
-INSERT INTO role_permission VALUES (436, 7, 21, true, false, false, false);
-INSERT INTO role_permission VALUES (437, 7, 22, true, false, false, false);
-INSERT INTO role_permission VALUES (438, 7, 27, true, true, true, true);
-INSERT INTO role_permission VALUES (439, 7, 88, true, false, false, false);
-INSERT INTO role_permission VALUES (440, 7, 89, true, false, false, false);
-INSERT INTO role_permission VALUES (441, 7, 45, true, false, false, false);
-INSERT INTO role_permission VALUES (442, 7, 46, true, false, false, false);
-INSERT INTO role_permission VALUES (443, 7, 47, true, true, true, true);
-INSERT INTO role_permission VALUES (444, 7, 48, true, true, true, true);
-INSERT INTO role_permission VALUES (445, 7, 49, true, true, true, true);
-INSERT INTO role_permission VALUES (446, 7, 50, true, true, true, true);
-INSERT INTO role_permission VALUES (447, 7, 55, true, false, false, false);
-INSERT INTO role_permission VALUES (448, 7, 56, true, true, true, false);
-INSERT INTO role_permission VALUES (449, 7, 57, true, true, true, false);
-INSERT INTO role_permission VALUES (450, 7, 58, true, true, true, false);
-INSERT INTO role_permission VALUES (451, 7, 59, true, false, false, false);
-INSERT INTO role_permission VALUES (452, 7, 60, true, false, false, false);
-INSERT INTO role_permission VALUES (453, 7, 93, true, false, false, false);
-INSERT INTO role_permission VALUES (454, 7, 94, true, false, false, false);
-INSERT INTO role_permission VALUES (455, 7, 87, true, false, false, false);
-INSERT INTO role_permission VALUES (456, 7, 71, true, false, false, false);
-INSERT INTO role_permission VALUES (457, 7, 72, true, false, false, false);
-INSERT INTO role_permission VALUES (458, 7, 73, true, false, false, false);
-INSERT INTO role_permission VALUES (459, 7, 74, true, false, false, false);
-INSERT INTO role_permission VALUES (460, 7, 51, true, false, false, false);
-INSERT INTO role_permission VALUES (461, 7, 52, true, false, false, false);
-INSERT INTO role_permission VALUES (462, 7, 53, true, false, false, false);
-INSERT INTO role_permission VALUES (463, 7, 54, true, true, true, true);
-INSERT INTO role_permission VALUES (464, 8, 75, true, false, false, false);
-INSERT INTO role_permission VALUES (465, 8, 76, true, false, false, false);
-INSERT INTO role_permission VALUES (466, 8, 78, true, false, false, false);
-INSERT INTO role_permission VALUES (467, 8, 79, true, true, true, true);
-INSERT INTO role_permission VALUES (468, 8, 80, true, false, true, false);
-INSERT INTO role_permission VALUES (469, 8, 81, true, false, false, false);
-INSERT INTO role_permission VALUES (470, 8, 82, true, false, true, false);
-INSERT INTO role_permission VALUES (471, 8, 83, true, false, true, false);
-INSERT INTO role_permission VALUES (472, 8, 84, false, false, true, false);
-INSERT INTO role_permission VALUES (473, 8, 28, true, false, false, false);
-INSERT INTO role_permission VALUES (474, 8, 29, true, true, true, true);
-INSERT INTO role_permission VALUES (475, 8, 30, true, true, false, true);
-INSERT INTO role_permission VALUES (476, 8, 31, true, true, true, true);
-INSERT INTO role_permission VALUES (477, 8, 32, true, true, true, true);
-INSERT INTO role_permission VALUES (478, 8, 33, true, false, false, false);
-INSERT INTO role_permission VALUES (479, 8, 34, true, true, true, true);
-INSERT INTO role_permission VALUES (480, 8, 35, true, true, true, true);
-INSERT INTO role_permission VALUES (481, 8, 38, true, false, false, false);
-INSERT INTO role_permission VALUES (482, 8, 39, true, false, false, false);
-INSERT INTO role_permission VALUES (483, 8, 40, true, false, false, false);
-INSERT INTO role_permission VALUES (484, 8, 41, true, true, false, true);
-INSERT INTO role_permission VALUES (485, 8, 42, true, false, false, false);
-INSERT INTO role_permission VALUES (486, 8, 43, true, false, false, false);
-INSERT INTO role_permission VALUES (487, 8, 1, true, false, false, false);
-INSERT INTO role_permission VALUES (488, 8, 2, true, true, true, true);
-INSERT INTO role_permission VALUES (489, 8, 3, true, true, true, false);
-INSERT INTO role_permission VALUES (490, 8, 4, true, true, true, true);
-INSERT INTO role_permission VALUES (491, 8, 6, true, false, false, false);
-INSERT INTO role_permission VALUES (492, 8, 8, true, false, false, false);
-INSERT INTO role_permission VALUES (493, 8, 9, true, false, false, false);
-INSERT INTO role_permission VALUES (494, 8, 10, true, false, false, false);
-INSERT INTO role_permission VALUES (495, 8, 14, true, false, false, false);
-INSERT INTO role_permission VALUES (496, 8, 15, true, true, false, true);
-INSERT INTO role_permission VALUES (497, 8, 17, true, true, true, true);
-INSERT INTO role_permission VALUES (498, 8, 13, true, false, false, false);
-INSERT INTO role_permission VALUES (499, 8, 12, true, false, false, false);
-INSERT INTO role_permission VALUES (500, 8, 11, true, false, false, false);
-INSERT INTO role_permission VALUES (501, 8, 19, true, false, false, false);
-INSERT INTO role_permission VALUES (502, 8, 20, true, false, false, false);
-INSERT INTO role_permission VALUES (503, 8, 21, true, false, false, false);
-INSERT INTO role_permission VALUES (504, 8, 22, true, false, false, false);
-INSERT INTO role_permission VALUES (505, 8, 27, true, true, true, true);
-INSERT INTO role_permission VALUES (506, 8, 88, true, false, false, false);
-INSERT INTO role_permission VALUES (507, 8, 89, true, false, false, false);
-INSERT INTO role_permission VALUES (508, 8, 45, true, false, false, false);
-INSERT INTO role_permission VALUES (509, 8, 46, true, false, false, false);
-INSERT INTO role_permission VALUES (510, 8, 47, true, true, true, true);
-INSERT INTO role_permission VALUES (511, 8, 48, true, true, true, true);
-INSERT INTO role_permission VALUES (512, 8, 49, true, true, true, true);
-INSERT INTO role_permission VALUES (513, 8, 50, true, true, true, true);
-INSERT INTO role_permission VALUES (514, 8, 55, true, false, false, false);
-INSERT INTO role_permission VALUES (515, 8, 56, true, false, false, false);
-INSERT INTO role_permission VALUES (516, 8, 57, true, true, true, true);
-INSERT INTO role_permission VALUES (517, 8, 58, true, false, false, false);
-INSERT INTO role_permission VALUES (518, 8, 59, true, false, false, false);
-INSERT INTO role_permission VALUES (519, 8, 60, true, false, false, false);
-INSERT INTO role_permission VALUES (520, 8, 93, true, false, false, false);
-INSERT INTO role_permission VALUES (521, 8, 94, true, false, false, false);
-INSERT INTO role_permission VALUES (522, 8, 87, true, false, false, false);
-INSERT INTO role_permission VALUES (523, 8, 71, true, false, false, false);
-INSERT INTO role_permission VALUES (524, 8, 72, true, false, false, false);
-INSERT INTO role_permission VALUES (525, 8, 73, true, false, false, false);
-INSERT INTO role_permission VALUES (526, 8, 74, true, false, false, false);
-INSERT INTO role_permission VALUES (527, 8, 51, true, false, false, false);
-INSERT INTO role_permission VALUES (528, 8, 52, true, false, false, false);
-INSERT INTO role_permission VALUES (529, 8, 53, true, false, false, false);
-INSERT INTO role_permission VALUES (530, 8, 54, true, true, true, true);
-INSERT INTO role_permission VALUES (531, 9, 75, true, false, false, false);
-INSERT INTO role_permission VALUES (532, 9, 76, true, false, false, false);
-INSERT INTO role_permission VALUES (533, 9, 78, true, false, false, false);
-INSERT INTO role_permission VALUES (534, 9, 79, true, true, true, true);
-INSERT INTO role_permission VALUES (535, 9, 80, true, false, true, false);
-INSERT INTO role_permission VALUES (536, 9, 81, true, false, false, false);
-INSERT INTO role_permission VALUES (537, 9, 82, true, false, true, false);
-INSERT INTO role_permission VALUES (538, 9, 83, true, false, true, false);
-INSERT INTO role_permission VALUES (539, 9, 84, false, false, true, false);
-INSERT INTO role_permission VALUES (540, 9, 88, true, false, false, false);
-INSERT INTO role_permission VALUES (541, 9, 89, true, false, false, false);
-INSERT INTO role_permission VALUES (542, 9, 45, true, false, false, false);
-INSERT INTO role_permission VALUES (543, 9, 46, true, false, false, false);
-INSERT INTO role_permission VALUES (544, 9, 47, true, true, true, true);
-INSERT INTO role_permission VALUES (545, 9, 48, true, true, true, true);
-INSERT INTO role_permission VALUES (546, 9, 49, true, true, true, true);
-INSERT INTO role_permission VALUES (547, 9, 50, true, true, true, true);
-INSERT INTO role_permission VALUES (548, 9, 93, true, true, true, true);
-INSERT INTO role_permission VALUES (549, 9, 94, true, true, true, true);
-INSERT INTO role_permission VALUES (550, 9, 87, true, false, false, false);
-INSERT INTO role_permission VALUES (551, 9, 71, true, false, false, false);
-INSERT INTO role_permission VALUES (552, 9, 72, true, false, false, false);
-INSERT INTO role_permission VALUES (553, 9, 73, true, false, false, false);
-INSERT INTO role_permission VALUES (554, 9, 74, true, false, false, false);
-INSERT INTO role_permission VALUES (555, 9, 51, true, false, false, false);
-INSERT INTO role_permission VALUES (556, 9, 52, true, false, false, false);
-INSERT INTO role_permission VALUES (557, 9, 53, true, false, false, false);
-INSERT INTO role_permission VALUES (558, 9, 54, true, true, true, true);
-INSERT INTO role_permission VALUES (559, 10, 1, true, false, false, false);
-INSERT INTO role_permission VALUES (560, 10, 2, true, false, false, false);
-INSERT INTO role_permission VALUES (561, 10, 4, true, false, false, false);
-INSERT INTO role_permission VALUES (562, 10, 19, true, false, false, false);
-INSERT INTO role_permission VALUES (563, 10, 20, true, false, false, false);
-INSERT INTO role_permission VALUES (564, 10, 21, true, false, false, false);
-INSERT INTO role_permission VALUES (565, 10, 22, true, false, false, false);
-INSERT INTO role_permission VALUES (566, 10, 4, true, false, false, false);
-INSERT INTO role_permission VALUES (567, 10, 10, true, true, false, false);
-INSERT INTO role_permission VALUES (568, 11, 75, true, false, false, false);
-INSERT INTO role_permission VALUES (569, 11, 76, true, false, false, false);
-INSERT INTO role_permission VALUES (570, 11, 90, true, false, false, false);
+INSERT INTO role_permission VALUES (23, 1, 43, true, false, false, false);
+INSERT INTO role_permission VALUES (24, 1, 44, true, true, true, true);
+INSERT INTO role_permission VALUES (25, 1, 45, true, false, false, false);
+INSERT INTO role_permission VALUES (26, 1, 46, true, true, false, true);
+INSERT INTO role_permission VALUES (27, 1, 47, true, true, true, true);
+INSERT INTO role_permission VALUES (28, 1, 48, true, true, true, true);
+INSERT INTO role_permission VALUES (29, 1, 1, true, false, false, false);
+INSERT INTO role_permission VALUES (30, 1, 2, true, true, true, true);
+INSERT INTO role_permission VALUES (31, 1, 3, true, true, true, true);
+INSERT INTO role_permission VALUES (32, 1, 4, true, true, true, true);
+INSERT INTO role_permission VALUES (33, 1, 5, true, true, true, true);
+INSERT INTO role_permission VALUES (34, 1, 6, true, true, true, true);
+INSERT INTO role_permission VALUES (35, 1, 7, false, false, true, false);
+INSERT INTO role_permission VALUES (36, 1, 8, true, true, true, true);
+INSERT INTO role_permission VALUES (37, 1, 9, true, false, false, false);
+INSERT INTO role_permission VALUES (38, 1, 10, true, true, true, true);
+INSERT INTO role_permission VALUES (39, 1, 11, true, true, true, true);
+INSERT INTO role_permission VALUES (40, 1, 12, true, true, true, true);
+INSERT INTO role_permission VALUES (41, 1, 13, true, true, true, true);
+INSERT INTO role_permission VALUES (42, 1, 14, true, true, true, true);
+INSERT INTO role_permission VALUES (43, 1, 15, true, true, true, true);
+INSERT INTO role_permission VALUES (44, 1, 16, true, true, false, true);
+INSERT INTO role_permission VALUES (45, 1, 20, true, true, true, true);
+INSERT INTO role_permission VALUES (46, 1, 21, true, true, true, true);
+INSERT INTO role_permission VALUES (47, 1, 22, true, true, true, true);
+INSERT INTO role_permission VALUES (48, 1, 23, true, true, true, true);
+INSERT INTO role_permission VALUES (49, 1, 25, true, true, true, true);
+INSERT INTO role_permission VALUES (50, 1, 26, true, true, true, true);
+INSERT INTO role_permission VALUES (51, 1, 28, true, true, true, true);
+INSERT INTO role_permission VALUES (52, 1, 29, true, true, true, true);
+INSERT INTO role_permission VALUES (53, 1, 30, true, false, false, false);
+INSERT INTO role_permission VALUES (54, 1, 31, true, false, false, false);
+INSERT INTO role_permission VALUES (55, 1, 24, true, true, true, true);
+INSERT INTO role_permission VALUES (56, 1, 99, true, false, false, false);
+INSERT INTO role_permission VALUES (57, 1, 100, true, true, true, true);
+INSERT INTO role_permission VALUES (58, 1, 101, true, false, false, false);
+INSERT INTO role_permission VALUES (59, 1, 50, true, false, false, false);
+INSERT INTO role_permission VALUES (60, 1, 51, true, false, false, false);
+INSERT INTO role_permission VALUES (61, 1, 52, true, true, true, true);
+INSERT INTO role_permission VALUES (62, 1, 53, true, true, true, true);
+INSERT INTO role_permission VALUES (63, 1, 54, true, true, true, true);
+INSERT INTO role_permission VALUES (64, 1, 55, true, true, true, true);
+INSERT INTO role_permission VALUES (65, 1, 56, true, false, false, false);
+INSERT INTO role_permission VALUES (66, 1, 61, true, false, false, false);
+INSERT INTO role_permission VALUES (67, 1, 62, true, true, true, true);
+INSERT INTO role_permission VALUES (68, 1, 63, true, true, true, true);
+INSERT INTO role_permission VALUES (69, 1, 64, true, true, true, true);
+INSERT INTO role_permission VALUES (70, 1, 65, true, true, true, true);
+INSERT INTO role_permission VALUES (71, 1, 66, true, true, true, true);
+INSERT INTO role_permission VALUES (72, 1, 103, true, true, true, false);
+INSERT INTO role_permission VALUES (73, 1, 104, true, true, true, true);
+INSERT INTO role_permission VALUES (74, 1, 105, true, true, true, true);
+INSERT INTO role_permission VALUES (75, 1, 106, true, false, false, false);
+INSERT INTO role_permission VALUES (76, 1, 94, true, false, false, false);
+INSERT INTO role_permission VALUES (77, 1, 67, true, false, false, false);
+INSERT INTO role_permission VALUES (78, 1, 68, true, true, true, true);
+INSERT INTO role_permission VALUES (79, 1, 69, true, true, true, true);
+INSERT INTO role_permission VALUES (80, 1, 71, true, false, true, false);
+INSERT INTO role_permission VALUES (81, 1, 70, true, false, false, false);
+INSERT INTO role_permission VALUES (82, 1, 72, true, false, true, false);
+INSERT INTO role_permission VALUES (83, 1, 73, true, true, true, true);
+INSERT INTO role_permission VALUES (84, 1, 74, true, true, true, true);
+INSERT INTO role_permission VALUES (85, 1, 75, true, true, true, true);
+INSERT INTO role_permission VALUES (86, 1, 76, true, true, true, true);
+INSERT INTO role_permission VALUES (87, 1, 77, true, true, true, true);
+INSERT INTO role_permission VALUES (88, 1, 78, true, false, false, false);
+INSERT INTO role_permission VALUES (89, 1, 79, true, false, false, false);
+INSERT INTO role_permission VALUES (90, 1, 80, true, false, false, false);
+INSERT INTO role_permission VALUES (91, 1, 81, true, false, false, false);
+INSERT INTO role_permission VALUES (92, 1, 57, true, false, false, false);
+INSERT INTO role_permission VALUES (93, 1, 58, true, false, false, false);
+INSERT INTO role_permission VALUES (94, 1, 59, true, false, false, false);
+INSERT INTO role_permission VALUES (95, 1, 60, true, true, true, true);
+INSERT INTO role_permission VALUES (96, 1, 107, true, false, false, false);
+INSERT INTO role_permission VALUES (97, 1, 108, true, true, true, true);
+INSERT INTO role_permission VALUES (98, 2, 82, true, false, false, false);
+INSERT INTO role_permission VALUES (99, 2, 83, true, false, false, false);
+INSERT INTO role_permission VALUES (100, 2, 85, true, false, false, false);
+INSERT INTO role_permission VALUES (101, 2, 86, true, true, true, true);
+INSERT INTO role_permission VALUES (102, 2, 87, true, false, true, false);
+INSERT INTO role_permission VALUES (103, 2, 88, true, false, false, false);
+INSERT INTO role_permission VALUES (104, 2, 89, true, false, true, false);
+INSERT INTO role_permission VALUES (105, 2, 90, true, false, true, false);
+INSERT INTO role_permission VALUES (106, 2, 91, false, false, true, false);
+INSERT INTO role_permission VALUES (107, 2, 92, true, true, true, true);
+INSERT INTO role_permission VALUES (108, 2, 32, true, false, false, false);
+INSERT INTO role_permission VALUES (109, 2, 33, true, true, true, true);
+INSERT INTO role_permission VALUES (110, 2, 34, true, true, false, true);
+INSERT INTO role_permission VALUES (111, 2, 35, true, true, true, true);
+INSERT INTO role_permission VALUES (112, 2, 36, true, true, true, true);
+INSERT INTO role_permission VALUES (113, 2, 37, true, false, false, false);
+INSERT INTO role_permission VALUES (114, 2, 38, true, true, true, true);
+INSERT INTO role_permission VALUES (115, 2, 39, true, true, true, true);
+INSERT INTO role_permission VALUES (116, 2, 43, true, false, false, false);
+INSERT INTO role_permission VALUES (117, 2, 44, true, true, true, true);
+INSERT INTO role_permission VALUES (118, 2, 45, true, false, false, false);
+INSERT INTO role_permission VALUES (119, 2, 46, true, true, false, true);
+INSERT INTO role_permission VALUES (120, 2, 47, true, true, true, true);
+INSERT INTO role_permission VALUES (121, 2, 48, true, true, true, true);
+INSERT INTO role_permission VALUES (122, 2, 1, true, false, false, false);
+INSERT INTO role_permission VALUES (123, 2, 2, true, true, true, true);
+INSERT INTO role_permission VALUES (124, 2, 3, true, true, true, false);
+INSERT INTO role_permission VALUES (125, 2, 4, true, true, true, true);
+INSERT INTO role_permission VALUES (126, 2, 5, true, true, true, true);
+INSERT INTO role_permission VALUES (127, 2, 6, true, true, true, true);
+INSERT INTO role_permission VALUES (128, 2, 7, false, false, true, false);
+INSERT INTO role_permission VALUES (129, 2, 8, true, true, true, true);
+INSERT INTO role_permission VALUES (130, 2, 10, true, true, true, true);
+INSERT INTO role_permission VALUES (131, 2, 11, true, true, true, true);
+INSERT INTO role_permission VALUES (132, 2, 15, true, true, true, true);
+INSERT INTO role_permission VALUES (133, 2, 16, true, true, false, true);
+INSERT INTO role_permission VALUES (134, 2, 18, true, true, true, true);
+INSERT INTO role_permission VALUES (135, 2, 14, true, true, true, true);
+INSERT INTO role_permission VALUES (136, 2, 13, true, true, true, true);
+INSERT INTO role_permission VALUES (137, 2, 12, true, true, true, true);
+INSERT INTO role_permission VALUES (138, 2, 20, true, true, true, true);
+INSERT INTO role_permission VALUES (139, 2, 29, true, true, true, true);
+INSERT INTO role_permission VALUES (140, 2, 21, true, true, true, true);
+INSERT INTO role_permission VALUES (141, 2, 22, true, true, true, false);
+INSERT INTO role_permission VALUES (142, 2, 23, true, true, true, false);
+INSERT INTO role_permission VALUES (143, 2, 31, true, false, false, false);
+INSERT INTO role_permission VALUES (144, 2, 24, true, true, true, true);
+INSERT INTO role_permission VALUES (145, 2, 28, true, true, true, true);
+INSERT INTO role_permission VALUES (146, 2, 96, true, false, false, false);
+INSERT INTO role_permission VALUES (147, 2, 97, true, false, false, false);
+INSERT INTO role_permission VALUES (148, 2, 50, true, false, false, false);
+INSERT INTO role_permission VALUES (149, 2, 51, true, false, false, false);
+INSERT INTO role_permission VALUES (150, 2, 52, true, true, true, true);
+INSERT INTO role_permission VALUES (151, 2, 53, true, true, true, true);
+INSERT INTO role_permission VALUES (152, 2, 54, true, true, true, true);
+INSERT INTO role_permission VALUES (153, 2, 55, true, true, true, true);
+INSERT INTO role_permission VALUES (154, 2, 56, true, false, false, false);
+INSERT INTO role_permission VALUES (155, 2, 61, true, false, false, false);
+INSERT INTO role_permission VALUES (156, 2, 62, true, true, true, false);
+INSERT INTO role_permission VALUES (157, 2, 63, true, true, true, true);
+INSERT INTO role_permission VALUES (158, 2, 64, true, true, true, false);
+INSERT INTO role_permission VALUES (159, 2, 65, true, true, true, false);
+INSERT INTO role_permission VALUES (160, 2, 66, true, true, true, false);
+INSERT INTO role_permission VALUES (161, 2, 103, true, false, false, false);
+INSERT INTO role_permission VALUES (162, 2, 104, true, false, false, false);
+INSERT INTO role_permission VALUES (163, 2, 106, true, false, false, false);
+INSERT INTO role_permission VALUES (164, 2, 94, true, false, false, false);
+INSERT INTO role_permission VALUES (165, 2, 78, true, false, false, false);
+INSERT INTO role_permission VALUES (166, 2, 79, true, false, false, false);
+INSERT INTO role_permission VALUES (167, 2, 80, true, false, false, false);
+INSERT INTO role_permission VALUES (168, 2, 81, true, false, false, false);
+INSERT INTO role_permission VALUES (169, 2, 57, true, false, false, false);
+INSERT INTO role_permission VALUES (170, 2, 58, true, false, false, false);
+INSERT INTO role_permission VALUES (171, 2, 59, true, false, false, false);
+INSERT INTO role_permission VALUES (172, 2, 60, true, true, true, true);
+INSERT INTO role_permission VALUES (173, 2, 107, true, false, false, false);
+INSERT INTO role_permission VALUES (174, 2, 108, true, true, true, true);
+INSERT INTO role_permission VALUES (175, 3, 82, true, false, false, false);
+INSERT INTO role_permission VALUES (176, 3, 83, true, false, false, false);
+INSERT INTO role_permission VALUES (177, 3, 85, true, false, false, false);
+INSERT INTO role_permission VALUES (178, 3, 86, true, true, true, true);
+INSERT INTO role_permission VALUES (179, 3, 87, true, false, true, false);
+INSERT INTO role_permission VALUES (180, 3, 88, true, false, false, false);
+INSERT INTO role_permission VALUES (181, 3, 89, true, false, true, false);
+INSERT INTO role_permission VALUES (182, 3, 90, true, false, true, false);
+INSERT INTO role_permission VALUES (183, 3, 91, false, false, true, false);
+INSERT INTO role_permission VALUES (184, 3, 92, true, true, true, true);
+INSERT INTO role_permission VALUES (185, 3, 95, true, true, true, true);
+INSERT INTO role_permission VALUES (186, 3, 32, true, false, false, false);
+INSERT INTO role_permission VALUES (187, 3, 33, true, true, true, true);
+INSERT INTO role_permission VALUES (188, 3, 34, true, true, false, true);
+INSERT INTO role_permission VALUES (189, 3, 35, true, true, true, true);
+INSERT INTO role_permission VALUES (190, 3, 36, true, true, true, true);
+INSERT INTO role_permission VALUES (191, 3, 37, true, false, false, false);
+INSERT INTO role_permission VALUES (192, 3, 38, true, true, true, true);
+INSERT INTO role_permission VALUES (193, 3, 39, true, true, true, true);
+INSERT INTO role_permission VALUES (194, 3, 43, true, false, false, false);
+INSERT INTO role_permission VALUES (195, 3, 44, true, true, true, true);
+INSERT INTO role_permission VALUES (196, 3, 45, true, false, false, false);
+INSERT INTO role_permission VALUES (197, 3, 46, true, true, false, true);
+INSERT INTO role_permission VALUES (198, 3, 47, true, true, true, true);
+INSERT INTO role_permission VALUES (199, 3, 48, true, true, true, true);
+INSERT INTO role_permission VALUES (200, 3, 1, true, false, false, false);
+INSERT INTO role_permission VALUES (201, 3, 2, true, true, true, true);
+INSERT INTO role_permission VALUES (202, 3, 3, true, true, true, false);
+INSERT INTO role_permission VALUES (203, 3, 4, true, true, true, true);
+INSERT INTO role_permission VALUES (204, 3, 5, true, true, true, true);
+INSERT INTO role_permission VALUES (205, 3, 6, true, true, true, true);
+INSERT INTO role_permission VALUES (206, 3, 7, false, false, true, false);
+INSERT INTO role_permission VALUES (207, 3, 8, true, true, true, true);
+INSERT INTO role_permission VALUES (208, 3, 9, true, false, false, false);
+INSERT INTO role_permission VALUES (209, 3, 10, true, true, true, true);
+INSERT INTO role_permission VALUES (210, 3, 11, true, true, true, false);
+INSERT INTO role_permission VALUES (211, 3, 15, true, true, true, true);
+INSERT INTO role_permission VALUES (212, 3, 16, true, true, false, true);
+INSERT INTO role_permission VALUES (213, 3, 17, true, false, false, false);
+INSERT INTO role_permission VALUES (214, 3, 18, true, true, true, true);
+INSERT INTO role_permission VALUES (215, 3, 14, true, true, true, false);
+INSERT INTO role_permission VALUES (216, 3, 13, true, true, true, false);
+INSERT INTO role_permission VALUES (217, 3, 12, true, true, true, false);
+INSERT INTO role_permission VALUES (218, 3, 20, true, true, true, false);
+INSERT INTO role_permission VALUES (219, 3, 21, true, true, true, false);
+INSERT INTO role_permission VALUES (220, 3, 22, true, false, false, false);
+INSERT INTO role_permission VALUES (221, 3, 23, true, false, false, false);
+INSERT INTO role_permission VALUES (222, 3, 29, true, true, true, true);
+INSERT INTO role_permission VALUES (223, 3, 31, true, false, false, false);
+INSERT INTO role_permission VALUES (224, 3, 24, true, false, false, false);
+INSERT INTO role_permission VALUES (225, 3, 28, true, true, true, true);
+INSERT INTO role_permission VALUES (226, 3, 96, true, false, false, false);
+INSERT INTO role_permission VALUES (227, 3, 97, true, false, false, false);
+INSERT INTO role_permission VALUES (228, 3, 50, true, false, false, false);
+INSERT INTO role_permission VALUES (229, 3, 51, true, false, false, false);
+INSERT INTO role_permission VALUES (230, 3, 52, true, true, true, true);
+INSERT INTO role_permission VALUES (231, 3, 53, true, true, true, true);
+INSERT INTO role_permission VALUES (232, 3, 54, true, true, true, true);
+INSERT INTO role_permission VALUES (233, 3, 55, true, true, true, true);
+INSERT INTO role_permission VALUES (234, 3, 56, true, false, false, false);
+INSERT INTO role_permission VALUES (235, 3, 61, true, false, false, false);
+INSERT INTO role_permission VALUES (236, 3, 62, true, true, true, false);
+INSERT INTO role_permission VALUES (237, 3, 63, true, true, true, true);
+INSERT INTO role_permission VALUES (238, 3, 64, true, true, true, false);
+INSERT INTO role_permission VALUES (239, 3, 65, true, false, false, false);
+INSERT INTO role_permission VALUES (240, 3, 66, true, false, false, false);
+INSERT INTO role_permission VALUES (241, 3, 103, true, false, false, false);
+INSERT INTO role_permission VALUES (242, 3, 104, true, false, false, false);
+INSERT INTO role_permission VALUES (243, 3, 106, true, false, false, false);
+INSERT INTO role_permission VALUES (244, 3, 94, true, false, false, false);
+INSERT INTO role_permission VALUES (245, 3, 78, true, false, false, false);
+INSERT INTO role_permission VALUES (246, 3, 79, true, false, false, false);
+INSERT INTO role_permission VALUES (247, 3, 80, true, false, false, false);
+INSERT INTO role_permission VALUES (248, 3, 81, true, false, false, false);
+INSERT INTO role_permission VALUES (249, 3, 57, true, false, false, false);
+INSERT INTO role_permission VALUES (250, 3, 58, true, false, false, false);
+INSERT INTO role_permission VALUES (251, 3, 59, true, false, false, false);
+INSERT INTO role_permission VALUES (252, 3, 60, true, true, true, true);
+INSERT INTO role_permission VALUES (253, 3, 25, true, true, true, true);
+INSERT INTO role_permission VALUES (254, 3, 99, true, false, false, false);
+INSERT INTO role_permission VALUES (255, 3, 100, true, true, true, true);
+INSERT INTO role_permission VALUES (256, 3, 107, true, false, false, false);
+INSERT INTO role_permission VALUES (257, 3, 108, true, true, true, true);
+INSERT INTO role_permission VALUES (258, 3, 40, true, false, false, false);
+INSERT INTO role_permission VALUES (259, 3, 30, true, false, false, false);
+INSERT INTO role_permission VALUES (260, 4, 82, true, false, false, false);
+INSERT INTO role_permission VALUES (261, 4, 83, true, false, false, false);
+INSERT INTO role_permission VALUES (262, 4, 85, true, false, false, false);
+INSERT INTO role_permission VALUES (263, 4, 86, true, true, true, true);
+INSERT INTO role_permission VALUES (264, 4, 88, true, false, false, false);
+INSERT INTO role_permission VALUES (265, 4, 89, true, false, true, false);
+INSERT INTO role_permission VALUES (266, 4, 90, true, false, true, false);
+INSERT INTO role_permission VALUES (267, 4, 91, false, false, true, false);
+INSERT INTO role_permission VALUES (268, 4, 92, true, true, true, true);
+INSERT INTO role_permission VALUES (269, 4, 95, true, true, true, false);
+INSERT INTO role_permission VALUES (270, 4, 32, true, false, false, false);
+INSERT INTO role_permission VALUES (271, 4, 33, true, true, true, true);
+INSERT INTO role_permission VALUES (272, 4, 34, true, true, false, true);
+INSERT INTO role_permission VALUES (273, 4, 36, true, true, true, true);
+INSERT INTO role_permission VALUES (274, 4, 37, true, true, true, true);
+INSERT INTO role_permission VALUES (275, 4, 38, true, false, false, false);
+INSERT INTO role_permission VALUES (276, 4, 39, true, true, true, true);
+INSERT INTO role_permission VALUES (277, 4, 43, true, false, false, false);
+INSERT INTO role_permission VALUES (278, 4, 44, true, true, true, false);
+INSERT INTO role_permission VALUES (279, 4, 45, true, false, false, false);
+INSERT INTO role_permission VALUES (280, 4, 46, true, true, false, true);
+INSERT INTO role_permission VALUES (281, 4, 47, true, true, true, true);
+INSERT INTO role_permission VALUES (282, 4, 48, true, true, true, true);
+INSERT INTO role_permission VALUES (283, 4, 1, true, false, false, false);
+INSERT INTO role_permission VALUES (284, 4, 2, true, true, true, false);
+INSERT INTO role_permission VALUES (285, 4, 3, true, true, true, false);
+INSERT INTO role_permission VALUES (286, 4, 4, true, true, true, false);
+INSERT INTO role_permission VALUES (287, 4, 5, true, true, true, false);
+INSERT INTO role_permission VALUES (288, 4, 6, true, true, true, false);
+INSERT INTO role_permission VALUES (289, 4, 7, false, false, true, false);
+INSERT INTO role_permission VALUES (290, 4, 8, true, true, true, false);
+INSERT INTO role_permission VALUES (291, 4, 10, true, true, true, false);
+INSERT INTO role_permission VALUES (292, 4, 11, true, true, true, false);
+INSERT INTO role_permission VALUES (293, 4, 15, true, true, true, false);
+INSERT INTO role_permission VALUES (294, 4, 16, true, true, false, true);
+INSERT INTO role_permission VALUES (295, 4, 17, true, false, false, false);
+INSERT INTO role_permission VALUES (296, 4, 18, true, true, true, false);
+INSERT INTO role_permission VALUES (297, 4, 14, true, true, true, false);
+INSERT INTO role_permission VALUES (298, 4, 13, true, true, true, false);
+INSERT INTO role_permission VALUES (299, 4, 12, true, true, true, false);
+INSERT INTO role_permission VALUES (300, 4, 20, true, false, false, false);
+INSERT INTO role_permission VALUES (301, 4, 21, true, false, false, false);
+INSERT INTO role_permission VALUES (302, 4, 22, true, false, false, false);
+INSERT INTO role_permission VALUES (303, 4, 23, true, false, false, false);
+INSERT INTO role_permission VALUES (304, 4, 29, true, true, true, false);
+INSERT INTO role_permission VALUES (305, 4, 31, true, false, false, false);
+INSERT INTO role_permission VALUES (306, 4, 24, true, false, false, false);
+INSERT INTO role_permission VALUES (307, 4, 28, true, true, true, true);
+INSERT INTO role_permission VALUES (308, 4, 96, true, false, false, false);
+INSERT INTO role_permission VALUES (309, 4, 97, true, false, false, false);
+INSERT INTO role_permission VALUES (310, 4, 50, true, false, false, false);
+INSERT INTO role_permission VALUES (311, 4, 51, true, false, false, false);
+INSERT INTO role_permission VALUES (312, 4, 52, true, true, true, true);
+INSERT INTO role_permission VALUES (313, 4, 53, true, true, true, true);
+INSERT INTO role_permission VALUES (314, 4, 54, true, true, true, true);
+INSERT INTO role_permission VALUES (315, 4, 55, true, true, true, true);
+INSERT INTO role_permission VALUES (316, 4, 56, true, false, false, false);
+INSERT INTO role_permission VALUES (317, 4, 61, true, false, false, false);
+INSERT INTO role_permission VALUES (318, 4, 62, true, true, true, false);
+INSERT INTO role_permission VALUES (319, 4, 63, true, true, false, true);
+INSERT INTO role_permission VALUES (320, 4, 64, true, true, true, false);
+INSERT INTO role_permission VALUES (321, 4, 65, true, false, false, false);
+INSERT INTO role_permission VALUES (322, 4, 66, true, false, false, false);
+INSERT INTO role_permission VALUES (323, 4, 103, true, false, false, false);
+INSERT INTO role_permission VALUES (324, 4, 104, true, false, false, false);
+INSERT INTO role_permission VALUES (325, 4, 106, true, false, false, false);
+INSERT INTO role_permission VALUES (326, 4, 94, true, false, false, false);
+INSERT INTO role_permission VALUES (327, 4, 78, true, false, false, false);
+INSERT INTO role_permission VALUES (328, 4, 79, true, false, false, false);
+INSERT INTO role_permission VALUES (329, 4, 80, true, false, false, false);
+INSERT INTO role_permission VALUES (330, 4, 81, true, false, false, false);
+INSERT INTO role_permission VALUES (331, 4, 57, true, false, false, false);
+INSERT INTO role_permission VALUES (332, 4, 58, true, false, false, false);
+INSERT INTO role_permission VALUES (333, 4, 59, true, false, false, false);
+INSERT INTO role_permission VALUES (334, 4, 60, true, true, true, true);
+INSERT INTO role_permission VALUES (335, 4, 25, true, true, true, false);
+INSERT INTO role_permission VALUES (336, 4, 99, true, false, false, false);
+INSERT INTO role_permission VALUES (337, 4, 100, true, true, true, false);
+INSERT INTO role_permission VALUES (338, 4, 107, true, false, false, false);
+INSERT INTO role_permission VALUES (339, 4, 108, true, true, true, true);
+INSERT INTO role_permission VALUES (340, 4, 40, true, false, false, false);
+INSERT INTO role_permission VALUES (341, 4, 30, true, false, false, false);
+INSERT INTO role_permission VALUES (342, 5, 82, true, false, false, false);
+INSERT INTO role_permission VALUES (343, 5, 83, true, false, false, false);
+INSERT INTO role_permission VALUES (344, 5, 85, true, false, false, false);
+INSERT INTO role_permission VALUES (345, 5, 86, true, true, true, true);
+INSERT INTO role_permission VALUES (346, 5, 87, true, false, true, false);
+INSERT INTO role_permission VALUES (347, 5, 88, true, false, false, false);
+INSERT INTO role_permission VALUES (348, 5, 89, true, false, true, false);
+INSERT INTO role_permission VALUES (349, 5, 90, true, false, true, false);
+INSERT INTO role_permission VALUES (350, 5, 91, false, false, true, false);
+INSERT INTO role_permission VALUES (351, 5, 1, true, false, false, false);
+INSERT INTO role_permission VALUES (352, 5, 2, true, true, true, false);
+INSERT INTO role_permission VALUES (353, 5, 3, true, true, true, false);
+INSERT INTO role_permission VALUES (354, 5, 4, true, true, true, false);
+INSERT INTO role_permission VALUES (355, 5, 6, true, true, true, false);
+INSERT INTO role_permission VALUES (356, 5, 7, false, false, true, false);
+INSERT INTO role_permission VALUES (357, 5, 8, true, true, true, false);
+INSERT INTO role_permission VALUES (358, 5, 9, true, false, false, false);
+INSERT INTO role_permission VALUES (359, 5, 11, true, true, true, true);
+INSERT INTO role_permission VALUES (360, 5, 15, true, true, true, false);
+INSERT INTO role_permission VALUES (361, 5, 16, true, true, false, true);
+INSERT INTO role_permission VALUES (362, 5, 14, true, true, true, true);
+INSERT INTO role_permission VALUES (363, 5, 13, true, true, true, true);
+INSERT INTO role_permission VALUES (364, 5, 12, true, true, true, true);
+INSERT INTO role_permission VALUES (365, 5, 20, true, true, true, true);
+INSERT INTO role_permission VALUES (366, 5, 21, true, true, true, true);
+INSERT INTO role_permission VALUES (367, 5, 22, true, true, true, true);
+INSERT INTO role_permission VALUES (368, 5, 23, true, true, true, true);
+INSERT INTO role_permission VALUES (369, 5, 29, true, true, true, true);
+INSERT INTO role_permission VALUES (370, 5, 31, true, false, false, false);
+INSERT INTO role_permission VALUES (371, 5, 24, true, true, true, true);
+INSERT INTO role_permission VALUES (372, 5, 28, true, true, true, true);
+INSERT INTO role_permission VALUES (373, 5, 96, true, false, false, false);
+INSERT INTO role_permission VALUES (374, 5, 97, true, false, false, false);
+INSERT INTO role_permission VALUES (375, 5, 50, true, false, false, false);
+INSERT INTO role_permission VALUES (376, 5, 51, true, false, false, false);
+INSERT INTO role_permission VALUES (377, 5, 52, true, true, true, true);
+INSERT INTO role_permission VALUES (378, 5, 53, true, true, true, true);
+INSERT INTO role_permission VALUES (379, 5, 54, true, true, true, true);
+INSERT INTO role_permission VALUES (380, 5, 55, true, true, true, true);
+INSERT INTO role_permission VALUES (381, 5, 56, true, false, false, false);
+INSERT INTO role_permission VALUES (382, 5, 61, true, false, false, false);
+INSERT INTO role_permission VALUES (383, 5, 62, true, true, true, true);
+INSERT INTO role_permission VALUES (384, 5, 63, true, true, true, true);
+INSERT INTO role_permission VALUES (385, 5, 64, true, true, true, true);
+INSERT INTO role_permission VALUES (386, 5, 65, true, true, true, true);
+INSERT INTO role_permission VALUES (387, 5, 66, true, true, true, true);
+INSERT INTO role_permission VALUES (388, 5, 103, true, false, false, false);
+INSERT INTO role_permission VALUES (389, 5, 104, true, false, false, false);
+INSERT INTO role_permission VALUES (390, 5, 106, true, false, false, false);
+INSERT INTO role_permission VALUES (391, 5, 94, true, false, false, false);
+INSERT INTO role_permission VALUES (392, 5, 78, true, false, false, false);
+INSERT INTO role_permission VALUES (393, 5, 79, true, false, false, false);
+INSERT INTO role_permission VALUES (394, 5, 80, true, false, false, false);
+INSERT INTO role_permission VALUES (395, 5, 81, true, false, false, false);
+INSERT INTO role_permission VALUES (396, 5, 57, true, false, false, false);
+INSERT INTO role_permission VALUES (397, 5, 58, true, false, false, false);
+INSERT INTO role_permission VALUES (398, 5, 59, true, false, false, false);
+INSERT INTO role_permission VALUES (399, 5, 60, true, true, true, true);
+INSERT INTO role_permission VALUES (400, 5, 107, true, false, false, false);
+INSERT INTO role_permission VALUES (401, 5, 108, true, true, true, true);
+INSERT INTO role_permission VALUES (402, 6, 82, true, false, false, false);
+INSERT INTO role_permission VALUES (403, 6, 83, true, false, false, false);
+INSERT INTO role_permission VALUES (404, 6, 85, true, false, false, false);
+INSERT INTO role_permission VALUES (405, 6, 86, true, true, true, true);
+INSERT INTO role_permission VALUES (406, 6, 87, true, false, true, false);
+INSERT INTO role_permission VALUES (407, 6, 88, true, false, false, false);
+INSERT INTO role_permission VALUES (408, 6, 89, true, false, true, false);
+INSERT INTO role_permission VALUES (409, 6, 90, true, false, true, false);
+INSERT INTO role_permission VALUES (410, 6, 91, false, false, true, false);
+INSERT INTO role_permission VALUES (411, 6, 1, true, false, false, false);
+INSERT INTO role_permission VALUES (412, 6, 2, true, true, true, false);
+INSERT INTO role_permission VALUES (413, 6, 3, true, true, true, false);
+INSERT INTO role_permission VALUES (414, 6, 4, true, true, true, false);
+INSERT INTO role_permission VALUES (415, 6, 6, true, true, true, false);
+INSERT INTO role_permission VALUES (416, 6, 7, false, false, true, false);
+INSERT INTO role_permission VALUES (417, 6, 8, true, true, true, false);
+INSERT INTO role_permission VALUES (418, 6, 11, true, true, true, false);
+INSERT INTO role_permission VALUES (419, 6, 15, true, true, true, false);
+INSERT INTO role_permission VALUES (420, 6, 16, true, true, false, true);
+INSERT INTO role_permission VALUES (421, 6, 14, true, true, true, false);
+INSERT INTO role_permission VALUES (422, 6, 13, true, true, true, false);
+INSERT INTO role_permission VALUES (423, 6, 12, true, true, true, false);
+INSERT INTO role_permission VALUES (424, 6, 20, true, true, true, false);
+INSERT INTO role_permission VALUES (425, 6, 21, true, true, true, false);
+INSERT INTO role_permission VALUES (426, 6, 22, true, true, true, false);
+INSERT INTO role_permission VALUES (427, 6, 23, true, true, true, false);
+INSERT INTO role_permission VALUES (428, 6, 29, true, true, true, false);
+INSERT INTO role_permission VALUES (429, 6, 31, true, false, false, false);
+INSERT INTO role_permission VALUES (430, 6, 24, true, true, true, true);
+INSERT INTO role_permission VALUES (431, 6, 96, true, false, false, false);
+INSERT INTO role_permission VALUES (432, 6, 97, true, false, false, false);
+INSERT INTO role_permission VALUES (433, 6, 50, true, false, false, false);
+INSERT INTO role_permission VALUES (434, 6, 51, true, false, false, false);
+INSERT INTO role_permission VALUES (435, 6, 52, true, true, true, true);
+INSERT INTO role_permission VALUES (436, 6, 53, true, true, true, true);
+INSERT INTO role_permission VALUES (437, 6, 54, true, true, true, true);
+INSERT INTO role_permission VALUES (438, 6, 55, true, true, true, true);
+INSERT INTO role_permission VALUES (439, 6, 56, true, false, false, false);
+INSERT INTO role_permission VALUES (440, 6, 61, true, false, false, false);
+INSERT INTO role_permission VALUES (441, 6, 62, true, true, true, false);
+INSERT INTO role_permission VALUES (442, 6, 63, true, true, true, false);
+INSERT INTO role_permission VALUES (443, 6, 64, true, true, true, false);
+INSERT INTO role_permission VALUES (444, 6, 65, true, true, true, false);
+INSERT INTO role_permission VALUES (445, 6, 66, true, true, true, false);
+INSERT INTO role_permission VALUES (446, 6, 103, true, false, false, false);
+INSERT INTO role_permission VALUES (447, 6, 104, true, false, false, false);
+INSERT INTO role_permission VALUES (448, 6, 106, true, false, false, false);
+INSERT INTO role_permission VALUES (449, 6, 94, true, false, false, false);
+INSERT INTO role_permission VALUES (450, 6, 78, true, false, false, false);
+INSERT INTO role_permission VALUES (451, 6, 79, true, false, false, false);
+INSERT INTO role_permission VALUES (452, 6, 80, true, false, false, false);
+INSERT INTO role_permission VALUES (453, 6, 81, true, false, false, false);
+INSERT INTO role_permission VALUES (454, 6, 57, true, false, false, false);
+INSERT INTO role_permission VALUES (455, 6, 58, true, false, false, false);
+INSERT INTO role_permission VALUES (456, 6, 59, true, false, false, false);
+INSERT INTO role_permission VALUES (457, 6, 60, true, true, true, true);
+INSERT INTO role_permission VALUES (458, 6, 107, true, false, false, false);
+INSERT INTO role_permission VALUES (459, 6, 108, true, false, false, false);
+INSERT INTO role_permission VALUES (460, 7, 82, true, false, false, false);
+INSERT INTO role_permission VALUES (461, 7, 83, true, false, false, false);
+INSERT INTO role_permission VALUES (462, 7, 85, true, false, false, false);
+INSERT INTO role_permission VALUES (463, 7, 86, true, true, true, true);
+INSERT INTO role_permission VALUES (464, 7, 87, true, false, true, false);
+INSERT INTO role_permission VALUES (465, 7, 88, true, false, false, false);
+INSERT INTO role_permission VALUES (466, 7, 89, true, false, true, false);
+INSERT INTO role_permission VALUES (467, 7, 90, true, false, true, false);
+INSERT INTO role_permission VALUES (468, 7, 91, false, false, true, false);
+INSERT INTO role_permission VALUES (469, 7, 92, true, true, true, true);
+INSERT INTO role_permission VALUES (470, 7, 32, true, false, false, false);
+INSERT INTO role_permission VALUES (471, 7, 33, true, true, true, true);
+INSERT INTO role_permission VALUES (472, 7, 34, true, true, false, true);
+INSERT INTO role_permission VALUES (473, 7, 35, true, true, true, true);
+INSERT INTO role_permission VALUES (474, 7, 36, true, true, true, true);
+INSERT INTO role_permission VALUES (475, 7, 37, true, false, false, false);
+INSERT INTO role_permission VALUES (476, 7, 38, true, true, true, true);
+INSERT INTO role_permission VALUES (477, 7, 39, true, true, true, true);
+INSERT INTO role_permission VALUES (478, 7, 43, true, false, false, false);
+INSERT INTO role_permission VALUES (479, 7, 44, true, true, true, true);
+INSERT INTO role_permission VALUES (480, 7, 45, true, false, false, false);
+INSERT INTO role_permission VALUES (481, 7, 46, true, true, false, true);
+INSERT INTO role_permission VALUES (482, 7, 47, true, true, true, true);
+INSERT INTO role_permission VALUES (483, 7, 48, true, true, true, true);
+INSERT INTO role_permission VALUES (484, 7, 1, true, false, false, false);
+INSERT INTO role_permission VALUES (485, 7, 2, true, true, true, false);
+INSERT INTO role_permission VALUES (486, 7, 3, true, true, true, false);
+INSERT INTO role_permission VALUES (487, 7, 4, true, true, true, false);
+INSERT INTO role_permission VALUES (488, 7, 5, true, true, true, false);
+INSERT INTO role_permission VALUES (489, 7, 6, true, true, true, false);
+INSERT INTO role_permission VALUES (490, 7, 7, false, false, true, false);
+INSERT INTO role_permission VALUES (491, 7, 8, true, true, true, false);
+INSERT INTO role_permission VALUES (492, 7, 10, true, true, true, false);
+INSERT INTO role_permission VALUES (493, 7, 11, true, true, true, false);
+INSERT INTO role_permission VALUES (494, 7, 15, true, true, true, false);
+INSERT INTO role_permission VALUES (495, 7, 16, true, true, false, true);
+INSERT INTO role_permission VALUES (496, 7, 17, true, false, false, false);
+INSERT INTO role_permission VALUES (497, 7, 18, true, true, true, false);
+INSERT INTO role_permission VALUES (498, 7, 14, true, true, true, false);
+INSERT INTO role_permission VALUES (499, 7, 13, true, true, true, false);
+INSERT INTO role_permission VALUES (500, 7, 12, true, true, true, false);
+INSERT INTO role_permission VALUES (501, 7, 20, true, false, false, false);
+INSERT INTO role_permission VALUES (502, 7, 21, true, false, false, false);
+INSERT INTO role_permission VALUES (503, 7, 22, true, false, false, false);
+INSERT INTO role_permission VALUES (504, 7, 23, true, false, false, false);
+INSERT INTO role_permission VALUES (505, 7, 28, true, true, true, true);
+INSERT INTO role_permission VALUES (506, 7, 29, true, true, true, true);
+INSERT INTO role_permission VALUES (507, 7, 31, true, false, false, false);
+INSERT INTO role_permission VALUES (508, 7, 96, true, false, false, false);
+INSERT INTO role_permission VALUES (509, 7, 97, true, false, false, false);
+INSERT INTO role_permission VALUES (510, 7, 50, true, false, false, false);
+INSERT INTO role_permission VALUES (511, 7, 51, true, false, false, false);
+INSERT INTO role_permission VALUES (512, 7, 52, true, true, true, true);
+INSERT INTO role_permission VALUES (513, 7, 53, true, true, true, true);
+INSERT INTO role_permission VALUES (514, 7, 54, true, true, true, true);
+INSERT INTO role_permission VALUES (515, 7, 55, true, true, true, true);
+INSERT INTO role_permission VALUES (516, 7, 56, true, false, false, false);
+INSERT INTO role_permission VALUES (517, 7, 61, true, false, false, false);
+INSERT INTO role_permission VALUES (518, 7, 62, true, true, true, false);
+INSERT INTO role_permission VALUES (519, 7, 63, true, true, true, false);
+INSERT INTO role_permission VALUES (520, 7, 64, true, true, true, false);
+INSERT INTO role_permission VALUES (521, 7, 65, true, false, false, false);
+INSERT INTO role_permission VALUES (522, 7, 66, true, false, false, false);
+INSERT INTO role_permission VALUES (523, 7, 103, true, false, false, false);
+INSERT INTO role_permission VALUES (524, 7, 104, true, false, false, false);
+INSERT INTO role_permission VALUES (525, 7, 106, true, false, false, false);
+INSERT INTO role_permission VALUES (526, 7, 94, true, false, false, false);
+INSERT INTO role_permission VALUES (527, 7, 78, true, false, false, false);
+INSERT INTO role_permission VALUES (528, 7, 79, true, false, false, false);
+INSERT INTO role_permission VALUES (529, 7, 80, true, false, false, false);
+INSERT INTO role_permission VALUES (530, 7, 81, true, false, false, false);
+INSERT INTO role_permission VALUES (531, 7, 57, true, false, false, false);
+INSERT INTO role_permission VALUES (532, 7, 58, true, false, false, false);
+INSERT INTO role_permission VALUES (533, 7, 59, true, false, false, false);
+INSERT INTO role_permission VALUES (534, 7, 60, true, true, true, true);
+INSERT INTO role_permission VALUES (535, 7, 107, true, false, false, false);
+INSERT INTO role_permission VALUES (536, 7, 108, true, true, true, true);
+INSERT INTO role_permission VALUES (537, 8, 82, true, false, false, false);
+INSERT INTO role_permission VALUES (538, 8, 83, true, false, false, false);
+INSERT INTO role_permission VALUES (539, 8, 85, true, false, false, false);
+INSERT INTO role_permission VALUES (540, 8, 86, true, true, true, true);
+INSERT INTO role_permission VALUES (541, 8, 87, true, false, true, false);
+INSERT INTO role_permission VALUES (542, 8, 88, true, false, false, false);
+INSERT INTO role_permission VALUES (543, 8, 89, true, false, true, false);
+INSERT INTO role_permission VALUES (544, 8, 90, true, false, true, false);
+INSERT INTO role_permission VALUES (545, 8, 91, false, false, true, false);
+INSERT INTO role_permission VALUES (546, 8, 32, true, false, false, false);
+INSERT INTO role_permission VALUES (547, 8, 33, true, true, true, true);
+INSERT INTO role_permission VALUES (548, 8, 34, true, true, false, true);
+INSERT INTO role_permission VALUES (549, 8, 35, true, true, true, true);
+INSERT INTO role_permission VALUES (550, 8, 36, true, true, true, true);
+INSERT INTO role_permission VALUES (551, 8, 37, true, false, false, false);
+INSERT INTO role_permission VALUES (552, 8, 38, true, true, true, true);
+INSERT INTO role_permission VALUES (553, 8, 39, true, true, true, true);
+INSERT INTO role_permission VALUES (554, 8, 43, true, false, false, false);
+INSERT INTO role_permission VALUES (555, 8, 44, true, false, false, false);
+INSERT INTO role_permission VALUES (556, 8, 45, true, false, false, false);
+INSERT INTO role_permission VALUES (557, 8, 46, true, true, false, true);
+INSERT INTO role_permission VALUES (558, 8, 47, true, false, false, false);
+INSERT INTO role_permission VALUES (559, 8, 48, true, false, false, false);
+INSERT INTO role_permission VALUES (560, 8, 1, true, false, false, false);
+INSERT INTO role_permission VALUES (561, 8, 2, true, true, true, true);
+INSERT INTO role_permission VALUES (562, 8, 3, true, true, true, false);
+INSERT INTO role_permission VALUES (563, 8, 4, true, true, true, true);
+INSERT INTO role_permission VALUES (564, 8, 6, true, false, false, false);
+INSERT INTO role_permission VALUES (565, 8, 8, true, false, false, false);
+INSERT INTO role_permission VALUES (566, 8, 10, true, false, false, false);
+INSERT INTO role_permission VALUES (567, 8, 11, true, false, false, false);
+INSERT INTO role_permission VALUES (568, 8, 15, true, false, false, false);
+INSERT INTO role_permission VALUES (569, 8, 16, true, true, false, true);
+INSERT INTO role_permission VALUES (570, 8, 18, true, true, true, true);
+INSERT INTO role_permission VALUES (571, 8, 14, true, false, false, false);
+INSERT INTO role_permission VALUES (572, 8, 13, true, false, false, false);
+INSERT INTO role_permission VALUES (573, 8, 12, true, false, false, false);
+INSERT INTO role_permission VALUES (574, 8, 20, true, false, false, false);
+INSERT INTO role_permission VALUES (575, 8, 21, true, false, false, false);
+INSERT INTO role_permission VALUES (576, 8, 22, true, false, false, false);
+INSERT INTO role_permission VALUES (577, 8, 23, true, false, false, false);
+INSERT INTO role_permission VALUES (578, 8, 28, true, true, true, true);
+INSERT INTO role_permission VALUES (579, 8, 29, true, true, true, true);
+INSERT INTO role_permission VALUES (580, 8, 31, true, false, false, false);
+INSERT INTO role_permission VALUES (581, 8, 96, true, false, false, false);
+INSERT INTO role_permission VALUES (582, 8, 97, true, false, false, false);
+INSERT INTO role_permission VALUES (583, 8, 50, true, false, false, false);
+INSERT INTO role_permission VALUES (584, 8, 51, true, false, false, false);
+INSERT INTO role_permission VALUES (585, 8, 52, true, true, true, true);
+INSERT INTO role_permission VALUES (586, 8, 53, true, true, true, true);
+INSERT INTO role_permission VALUES (587, 8, 54, true, true, true, true);
+INSERT INTO role_permission VALUES (588, 8, 55, true, true, true, true);
+INSERT INTO role_permission VALUES (589, 8, 56, true, false, false, false);
+INSERT INTO role_permission VALUES (590, 8, 61, true, false, false, false);
+INSERT INTO role_permission VALUES (591, 8, 62, true, false, false, false);
+INSERT INTO role_permission VALUES (592, 8, 63, true, true, true, true);
+INSERT INTO role_permission VALUES (593, 8, 64, true, false, false, false);
+INSERT INTO role_permission VALUES (594, 8, 65, true, false, false, false);
+INSERT INTO role_permission VALUES (595, 8, 66, true, false, false, false);
+INSERT INTO role_permission VALUES (596, 8, 103, true, false, false, false);
+INSERT INTO role_permission VALUES (597, 8, 104, true, false, false, false);
+INSERT INTO role_permission VALUES (598, 8, 106, true, false, false, false);
+INSERT INTO role_permission VALUES (599, 8, 94, true, false, false, false);
+INSERT INTO role_permission VALUES (600, 8, 78, true, false, false, false);
+INSERT INTO role_permission VALUES (601, 8, 79, true, false, false, false);
+INSERT INTO role_permission VALUES (602, 8, 80, true, false, false, false);
+INSERT INTO role_permission VALUES (603, 8, 81, true, false, false, false);
+INSERT INTO role_permission VALUES (604, 8, 57, true, false, false, false);
+INSERT INTO role_permission VALUES (605, 8, 58, true, false, false, false);
+INSERT INTO role_permission VALUES (606, 8, 59, true, false, false, false);
+INSERT INTO role_permission VALUES (607, 8, 60, true, true, true, true);
+INSERT INTO role_permission VALUES (608, 8, 25, true, false, false, false);
+INSERT INTO role_permission VALUES (609, 8, 99, true, false, false, false);
+INSERT INTO role_permission VALUES (610, 8, 100, true, false, false, false);
+INSERT INTO role_permission VALUES (611, 8, 107, true, false, false, false);
+INSERT INTO role_permission VALUES (612, 8, 108, true, true, true, true);
+INSERT INTO role_permission VALUES (613, 9, 82, true, false, false, false);
+INSERT INTO role_permission VALUES (614, 9, 83, true, false, false, false);
+INSERT INTO role_permission VALUES (615, 9, 85, true, false, false, false);
+INSERT INTO role_permission VALUES (616, 9, 86, true, true, true, true);
+INSERT INTO role_permission VALUES (617, 9, 87, true, false, true, false);
+INSERT INTO role_permission VALUES (618, 9, 88, true, false, false, false);
+INSERT INTO role_permission VALUES (619, 9, 89, true, false, true, false);
+INSERT INTO role_permission VALUES (620, 9, 90, true, false, true, false);
+INSERT INTO role_permission VALUES (621, 9, 91, false, false, true, false);
+INSERT INTO role_permission VALUES (622, 9, 96, true, false, false, false);
+INSERT INTO role_permission VALUES (623, 9, 97, true, false, false, false);
+INSERT INTO role_permission VALUES (624, 9, 50, true, false, false, false);
+INSERT INTO role_permission VALUES (625, 9, 51, true, false, false, false);
+INSERT INTO role_permission VALUES (626, 9, 52, true, true, true, true);
+INSERT INTO role_permission VALUES (627, 9, 53, true, true, true, true);
+INSERT INTO role_permission VALUES (628, 9, 54, true, true, true, true);
+INSERT INTO role_permission VALUES (629, 9, 55, true, true, true, true);
+INSERT INTO role_permission VALUES (630, 9, 103, true, true, true, true);
+INSERT INTO role_permission VALUES (631, 9, 104, true, true, true, true);
+INSERT INTO role_permission VALUES (632, 9, 94, true, false, false, false);
+INSERT INTO role_permission VALUES (633, 9, 78, true, false, false, false);
+INSERT INTO role_permission VALUES (634, 9, 79, true, false, false, false);
+INSERT INTO role_permission VALUES (635, 9, 80, true, false, false, false);
+INSERT INTO role_permission VALUES (636, 9, 81, true, false, false, false);
+INSERT INTO role_permission VALUES (637, 9, 57, true, false, false, false);
+INSERT INTO role_permission VALUES (638, 9, 58, true, false, false, false);
+INSERT INTO role_permission VALUES (639, 9, 59, true, false, false, false);
+INSERT INTO role_permission VALUES (640, 9, 60, true, true, true, true);
+INSERT INTO role_permission VALUES (641, 9, 107, true, false, false, false);
+INSERT INTO role_permission VALUES (642, 9, 108, true, true, true, true);
+INSERT INTO role_permission VALUES (643, 9, 105, true, true, true, true);
+INSERT INTO role_permission VALUES (644, 10, 1, true, false, false, false);
+INSERT INTO role_permission VALUES (645, 10, 2, true, false, false, false);
+INSERT INTO role_permission VALUES (646, 10, 4, true, false, false, false);
+INSERT INTO role_permission VALUES (647, 10, 20, true, false, false, false);
+INSERT INTO role_permission VALUES (648, 10, 21, true, false, false, false);
+INSERT INTO role_permission VALUES (649, 10, 22, true, false, false, false);
+INSERT INTO role_permission VALUES (650, 10, 23, true, false, false, false);
+INSERT INTO role_permission VALUES (651, 10, 4, true, false, false, false);
+INSERT INTO role_permission VALUES (652, 10, 11, true, true, false, false);
+INSERT INTO role_permission VALUES (653, 11, 82, true, false, false, false);
+INSERT INTO role_permission VALUES (654, 11, 83, true, false, false, false);
+INSERT INTO role_permission VALUES (655, 11, 98, true, false, false, false);
+INSERT INTO role_permission VALUES (656, 1, 109, true, true, true, true);
+INSERT INTO role_permission VALUES (657, 3, 109, true, true, true, true);
+INSERT INTO role_permission VALUES (658, 4, 109, true, true, true, true);
+INSERT INTO role_permission VALUES (659, 1, 110, true, false, false, false);
+INSERT INTO role_permission VALUES (660, 3, 110, true, false, false, false);
+
+
+INSERT INTO lookup_stage VALUES (1, NULL, 'Prospecting', false, 10, true);
+INSERT INTO lookup_stage VALUES (2, NULL, 'Qualification', false, 20, true);
+INSERT INTO lookup_stage VALUES (3, NULL, 'Needs Analysis', false, 30, true);
+INSERT INTO lookup_stage VALUES (4, NULL, 'Value Proposition', false, 40, true);
+INSERT INTO lookup_stage VALUES (5, NULL, 'Perception Analysis', false, 50, true);
+INSERT INTO lookup_stage VALUES (6, NULL, 'Proposal/Price Quote', false, 60, true);
+INSERT INTO lookup_stage VALUES (7, NULL, 'Negotiation/Review', false, 70, true);
+INSERT INTO lookup_stage VALUES (8, NULL, 'Closed Won', false, 80, true);
+INSERT INTO lookup_stage VALUES (9, NULL, 'Closed Lost', false, 90, true);
 
 
 
-INSERT INTO lookup_stage VALUES (1, 1, 'Prospecting', false, 1, true);
-INSERT INTO lookup_stage VALUES (2, 2, 'Qualification', false, 2, true);
-INSERT INTO lookup_stage VALUES (3, 3, 'Needs Analysis', false, 3, true);
-INSERT INTO lookup_stage VALUES (4, 4, 'Value Proposition', false, 4, true);
-INSERT INTO lookup_stage VALUES (5, 5, 'Perception Analysis', false, 5, true);
-INSERT INTO lookup_stage VALUES (6, 6, 'Proposal/Price Quote', false, 6, true);
-INSERT INTO lookup_stage VALUES (7, 7, 'Negotiation/Review', false, 7, true);
-INSERT INTO lookup_stage VALUES (8, 8, 'Closed Won', false, 8, true);
-INSERT INTO lookup_stage VALUES (9, 9, 'Closed Lost', false, 9, true);
-
-
-
-INSERT INTO lookup_delivery_options VALUES (1, 'Email only', false, 1, true);
-INSERT INTO lookup_delivery_options VALUES (2, 'Fax only', false, 2, true);
-INSERT INTO lookup_delivery_options VALUES (3, 'Letter only', false, 3, true);
-INSERT INTO lookup_delivery_options VALUES (4, 'Email then Fax', false, 4, true);
-INSERT INTO lookup_delivery_options VALUES (5, 'Email then Letter', false, 5, true);
-INSERT INTO lookup_delivery_options VALUES (6, 'Email, Fax, then Letter', false, 6, true);
+INSERT INTO lookup_delivery_options VALUES (1, 'Email only', false, 10, true);
+INSERT INTO lookup_delivery_options VALUES (2, 'Fax only', false, 20, true);
+INSERT INTO lookup_delivery_options VALUES (3, 'Letter only', false, 30, true);
+INSERT INTO lookup_delivery_options VALUES (4, 'Email then Fax', false, 40, true);
+INSERT INTO lookup_delivery_options VALUES (5, 'Email then Letter', false, 50, true);
+INSERT INTO lookup_delivery_options VALUES (6, 'Email, Fax, then Letter', false, 60, true);
+INSERT INTO lookup_delivery_options VALUES (7, 'Broadcast', false, 70, true);
+INSERT INTO lookup_delivery_options VALUES (8, 'Instant Message', false, 80, false);
+INSERT INTO lookup_delivery_options VALUES (9, 'Secure Socket', false, 90, false);
 
 
 
@@ -5100,74 +5716,106 @@ INSERT INTO lookup_delivery_options VALUES (6, 'Email, Fax, then Letter', false,
 
 
 
-INSERT INTO lookup_lists_lookup VALUES (1, 1, 1, 'lookupList', 'lookup_account_types', 10, 'Account Types', '2004-08-31 09:16:14.441', 1);
-INSERT INTO lookup_lists_lookup VALUES (2, 1, 2, 'lookupList', 'lookup_revenue_types', 20, 'Revenue Types', '2004-08-31 09:16:14.447', 1);
-INSERT INTO lookup_lists_lookup VALUES (3, 1, 3, 'contactType', 'lookup_contact_types', 30, 'Contact Types', '2004-08-31 09:16:14.449', 1);
-INSERT INTO lookup_lists_lookup VALUES (4, 1, 819041648, 'lookupList', 'lookup_orgemail_types', 40, 'Email Types', '2004-08-31 09:16:14.452', 1);
-INSERT INTO lookup_lists_lookup VALUES (5, 1, 819041649, 'lookupList', 'lookup_orgaddress_types', 50, 'Address Types', '2004-08-31 09:16:14.455', 1);
-INSERT INTO lookup_lists_lookup VALUES (6, 1, 819041650, 'lookupList', 'lookup_orgphone_types', 60, 'Phone Types', '2004-08-31 09:16:14.457', 1);
-INSERT INTO lookup_lists_lookup VALUES (7, 2, 1, 'contactType', 'lookup_contact_types', 10, 'Types', '2004-08-31 09:16:14.558', 2);
-INSERT INTO lookup_lists_lookup VALUES (8, 2, 2, 'lookupList', 'lookup_contactemail_types', 20, 'Email Types', '2004-08-31 09:16:14.56', 2);
-INSERT INTO lookup_lists_lookup VALUES (9, 2, 3, 'lookupList', 'lookup_contactaddress_types', 30, 'Address Types', '2004-08-31 09:16:14.563', 2);
-INSERT INTO lookup_lists_lookup VALUES (10, 2, 4, 'lookupList', 'lookup_contactphone_types', 40, 'Phone Types', '2004-08-31 09:16:14.565', 2);
-INSERT INTO lookup_lists_lookup VALUES (11, 4, 1, 'lookupList', 'lookup_stage', 10, 'Stage', '2004-08-31 09:16:14.628', 4);
-INSERT INTO lookup_lists_lookup VALUES (12, 4, 2, 'lookupList', 'lookup_opportunity_types', 20, 'Opportunity Types', '2004-08-31 09:16:14.629', 4);
-INSERT INTO lookup_lists_lookup VALUES (13, 8, 1, 'lookupList', 'lookup_ticketsource', 10, 'Ticket Source', '2004-08-31 09:16:14.768', 8);
-INSERT INTO lookup_lists_lookup VALUES (14, 8, 2, 'lookupList', 'ticket_severity', 20, 'Ticket Severity', '2004-08-31 09:16:14.771', 8);
-INSERT INTO lookup_lists_lookup VALUES (15, 8, 3, 'lookupList', 'ticket_priority', 30, 'Ticket Priority', '2004-08-31 09:16:14.773', 8);
-INSERT INTO lookup_lists_lookup VALUES (16, 15, 130041304, 'lookupList', 'lookup_asset_status', 10, 'Asset Status', '2004-08-31 09:16:14.994', 130041000);
-INSERT INTO lookup_lists_lookup VALUES (17, 16, 130041305, 'lookupList', 'lookup_sc_category', 10, 'Service Contract Category', '2004-08-31 09:16:15.003', 130041100);
-INSERT INTO lookup_lists_lookup VALUES (18, 16, 130041306, 'lookupList', 'lookup_sc_type', 20, 'Service Contract Type', '2004-08-31 09:16:15.005', 130041100);
-INSERT INTO lookup_lists_lookup VALUES (19, 16, 116041409, 'lookupList', 'lookup_response_model', 30, 'Response Time Model', '2004-08-31 09:16:15.008', 130041100);
-INSERT INTO lookup_lists_lookup VALUES (20, 16, 116041410, 'lookupList', 'lookup_phone_model', 40, 'Phone Service Model', '2004-08-31 09:16:15.011', 130041100);
-INSERT INTO lookup_lists_lookup VALUES (21, 16, 116041411, 'lookupList', 'lookup_onsite_model', 50, 'Onsite Service Model', '2004-08-31 09:16:15.013', 130041100);
-INSERT INTO lookup_lists_lookup VALUES (22, 16, 116041412, 'lookupList', 'lookup_email_model', 60, 'Email Service Model', '2004-08-31 09:16:15.016', 130041100);
-INSERT INTO lookup_lists_lookup VALUES (23, 16, 308041546, 'lookupList', 'lookup_hours_reason', 70, 'Contract Hours Adjustment Reason', '2004-08-31 09:16:15.018', 130041100);
-INSERT INTO lookup_lists_lookup VALUES (24, 21, 1111031132, 'lookupList', 'lookup_department', 10, 'Departments', '2004-08-31 09:16:15.099', 1111031131);
-
-
-
-INSERT INTO category_editor_lookup VALUES (1, 8, 202041401, 'ticket_category', 10, 'Ticket Categories', '2004-08-31 09:16:14.821', 8, 4);
-INSERT INTO category_editor_lookup VALUES (2, 15, 202041400, 'asset_category', 10, 'Asset Categories', '2004-08-31 09:16:14.997', 130041000, 3);
 
 
 
 
 
 
+INSERT INTO lookup_lists_lookup VALUES (1, 1, 1, 'lookupList', 'lookup_account_types', 10, 'Account Types', '2005-03-16 11:27:42.252', 1);
+INSERT INTO lookup_lists_lookup VALUES (2, 1, 2, 'lookupList', 'lookup_revenue_types', 20, 'Revenue Types', '2005-03-16 11:27:42.295', 1);
+INSERT INTO lookup_lists_lookup VALUES (3, 1, 3, 'contactType', 'lookup_contact_types', 30, 'Contact Types', '2005-03-16 11:27:42.308', 1);
+INSERT INTO lookup_lists_lookup VALUES (4, 1, 819041648, 'lookupList', 'lookup_orgemail_types', 40, 'Email Types', '2005-03-16 11:27:42.32', 1);
+INSERT INTO lookup_lists_lookup VALUES (5, 1, 819041649, 'lookupList', 'lookup_orgaddress_types', 50, 'Address Types', '2005-03-16 11:27:42.333', 1);
+INSERT INTO lookup_lists_lookup VALUES (6, 1, 819041650, 'lookupList', 'lookup_orgphone_types', 60, 'Phone Types', '2005-03-16 11:27:42.342', 1);
+INSERT INTO lookup_lists_lookup VALUES (7, 2, 1, 'contactType', 'lookup_contact_types', 10, 'Types', '2005-03-16 11:27:42.794', 2);
+INSERT INTO lookup_lists_lookup VALUES (8, 2, 2, 'lookupList', 'lookup_contactemail_types', 20, 'Email Types', '2005-03-16 11:27:42.812', 2);
+INSERT INTO lookup_lists_lookup VALUES (9, 2, 3, 'lookupList', 'lookup_contactaddress_types', 30, 'Address Types', '2005-03-16 11:27:42.823', 2);
+INSERT INTO lookup_lists_lookup VALUES (10, 2, 4, 'lookupList', 'lookup_contactphone_types', 40, 'Phone Types', '2005-03-16 11:27:42.831', 2);
+INSERT INTO lookup_lists_lookup VALUES (11, 4, 1, 'lookupList', 'lookup_stage', 10, 'Stage', '2005-03-16 11:27:43.121', 4);
+INSERT INTO lookup_lists_lookup VALUES (12, 4, 2, 'lookupList', 'lookup_opportunity_types', 20, 'Opportunity Types', '2005-03-16 11:27:43.141', 4);
+INSERT INTO lookup_lists_lookup VALUES (13, 8, 1, 'lookupList', 'lookup_ticketsource', 10, 'Ticket Source', '2005-03-16 11:27:43.704', 8);
+INSERT INTO lookup_lists_lookup VALUES (14, 8, 2, 'lookupList', 'ticket_severity', 20, 'Ticket Severity', '2005-03-16 11:27:43.715', 8);
+INSERT INTO lookup_lists_lookup VALUES (15, 8, 3, 'lookupList', 'ticket_priority', 30, 'Ticket Priority', '2005-03-16 11:27:43.725', 8);
+INSERT INTO lookup_lists_lookup VALUES (16, 15, 130041304, 'lookupList', 'lookup_asset_status', 10, 'Asset Status', '2005-03-16 11:27:44.861', 130041000);
+INSERT INTO lookup_lists_lookup VALUES (17, 16, 130041305, 'lookupList', 'lookup_sc_category', 10, 'Service Contract Category', '2005-03-16 11:27:44.921', 130041100);
+INSERT INTO lookup_lists_lookup VALUES (18, 16, 130041306, 'lookupList', 'lookup_sc_type', 20, 'Service Contract Type', '2005-03-16 11:27:44.937', 130041100);
+INSERT INTO lookup_lists_lookup VALUES (19, 16, 116041409, 'lookupList', 'lookup_response_model', 30, 'Response Time Model', '2005-03-16 11:27:44.945', 130041100);
+INSERT INTO lookup_lists_lookup VALUES (20, 16, 116041410, 'lookupList', 'lookup_phone_model', 40, 'Phone Service Model', '2005-03-16 11:27:44.956', 130041100);
+INSERT INTO lookup_lists_lookup VALUES (21, 16, 116041411, 'lookupList', 'lookup_onsite_model', 50, 'Onsite Service Model', '2005-03-16 11:27:44.963', 130041100);
+INSERT INTO lookup_lists_lookup VALUES (22, 16, 116041412, 'lookupList', 'lookup_email_model', 60, 'Email Service Model', '2005-03-16 11:27:44.972', 130041100);
+INSERT INTO lookup_lists_lookup VALUES (23, 16, 308041546, 'lookupList', 'lookup_hours_reason', 70, 'Contract Hours Adjustment Reason', '2005-03-16 11:27:44.983', 130041100);
+INSERT INTO lookup_lists_lookup VALUES (24, 22, 1111031132, 'lookupList', 'lookup_department', 10, 'Departments', '2005-03-16 11:27:45.597', 1111031131);
+INSERT INTO lookup_lists_lookup VALUES (25, 17, 228051102, 'lookupList', 'lookup_contact_rating', 10, 'Contact Rating', '2005-03-16 11:27:45.046', 228051100);
+INSERT INTO lookup_lists_lookup VALUES (26, 17, 228051103, 'lookupList', 'lookup_contact_source', 20, 'Contact Source', '2005-03-16 11:27:45.056', 228051100);
+INSERT INTO lookup_lists_lookup VALUES (27, 18, 1017040901, 'lookupList', 'lookup_product_type', 10, 'Product Types', '2005-03-16 11:27:45.142', 330041409);
+INSERT INTO lookup_lists_lookup VALUES (28, 18, 1017040902, 'lookupList', 'lookup_product_format', 20, 'Product Format Types', '2005-03-16 11:27:45.15', 330041409);
+INSERT INTO lookup_lists_lookup VALUES (29, 18, 1017040903, 'lookupList', 'lookup_product_shipping', 30, 'Product Shipping Types', '2005-03-16 11:27:45.162', 330041409);
+INSERT INTO lookup_lists_lookup VALUES (30, 18, 1017040904, 'lookupList', 'lookup_product_ship_time', 40, 'Product Shipping Times', '2005-03-16 11:27:45.171', 330041409);
+INSERT INTO lookup_lists_lookup VALUES (31, 18, 1017040905, 'lookupList', 'lookup_product_category_type', 50, 'Product Category Types', '2005-03-16 11:27:45.19', 330041409);
+INSERT INTO lookup_lists_lookup VALUES (32, 18, 1017040906, 'lookupList', 'lookup_product_tax', 60, 'Product Tax Types', '2005-03-16 11:27:45.202', 330041409);
+INSERT INTO lookup_lists_lookup VALUES (33, 18, 1017040907, 'lookupList', 'lookup_currency', 70, 'Currency Types', '2005-03-16 11:27:45.212', 330041409);
+INSERT INTO lookup_lists_lookup VALUES (34, 18, 1017040908, 'lookupList', 'lookup_recurring_type', 80, 'Price Recurring Types', '2005-03-16 11:27:45.223', 330041409);
+INSERT INTO lookup_lists_lookup VALUES (35, 18, 1017040909, 'lookupList', 'lookup_product_manufacturer', 90, 'Product Manufacturer Types', '2005-03-16 11:27:45.237', 330041409);
+INSERT INTO lookup_lists_lookup VALUES (36, 20, 1123041000, 'lookupList', 'lookup_quote_status', 10, 'Quote Status', '2005-03-16 11:27:45.342', 420041017);
+--INSERT INTO lookup_lists_lookup VALUES (37, 20, 1123041001, 'lookupList', 'lookup_quote_type', 20, 'Quote Types', '2005-03-16 11:27:45.352', 420041017);
+--INSERT INTO lookup_lists_lookup VALUES (38, 20, 1123041002, 'lookupList', 'lookup_quote_terms', 30, 'Quote Terms', '2005-03-16 11:27:45.366', 420041017);
+INSERT INTO lookup_lists_lookup VALUES (39, 20, 1123041003, 'lookupList', 'lookup_quote_source', 40, 'Quote Source', '2005-03-16 11:27:45.373', 420041017);
+INSERT INTO lookup_lists_lookup VALUES (40, 20, 1123041004, 'lookupList', 'lookup_quote_delivery', 50, 'Quote Delivery', '2005-03-16 11:27:45.393', 420041017);
+INSERT INTO lookup_lists_lookup VALUES (41, 20, 1123041005, 'lookupList', 'lookup_quote_condition', 60, 'Quote Terms & Conditions', '2005-03-16 11:27:45.408', 420041017);
+INSERT INTO lookup_lists_lookup VALUES (42, 20, 1123041006, 'lookupList', 'lookup_quote_remarks', 70, 'Quote Remarks', '2005-03-16 11:27:45.419', 420041017);
+INSERT INTO lookup_lists_lookup VALUES (43, 1, 302051030, 'lookupList', 'lookup_industry', 70, 'Industry Types', '2005-03-16 11:27:42.354', 1);
+INSERT INTO lookup_lists_lookup VALUES (44, 2, 111051354, 'lookupList', 'lookup_textmessage_types', 50, 'Text Messaging Types', '2005-03-16 11:27:42.354', 2);
 
 
 
-INSERT INTO report VALUES (1, 1, NULL, 'accounts_type.xml', 1, 'Accounts by Type', 'What are my accounts by type?', '2004-08-31 09:16:14.462', 0, '2004-08-31 09:16:14.462', 0, true, false);
-INSERT INTO report VALUES (2, 1, NULL, 'accounts_recent.xml', 1, 'Accounts by Date Added', 'What are my recent accounts?', '2004-08-31 09:16:14.486', 0, '2004-08-31 09:16:14.486', 0, true, false);
-INSERT INTO report VALUES (3, 1, NULL, 'accounts_expire.xml', 1, 'Accounts by Contract End Date', 'Which accounts are expiring?', '2004-08-31 09:16:14.489', 0, '2004-08-31 09:16:14.489', 0, true, false);
-INSERT INTO report VALUES (4, 1, NULL, 'accounts_current.xml', 1, 'Current Accounts', 'What are my current accounts?', '2004-08-31 09:16:14.492', 0, '2004-08-31 09:16:14.492', 0, true, false);
-INSERT INTO report VALUES (5, 1, NULL, 'accounts_contacts.xml', 1, 'Account Contacts', 'Who are the contacts in each account?', '2004-08-31 09:16:14.495', 0, '2004-08-31 09:16:14.495', 0, true, false);
-INSERT INTO report VALUES (6, 1, NULL, 'folder_accounts.xml', 1, 'Account Folders', 'What is the folder data for each account?', '2004-08-31 09:16:14.501', 0, '2004-08-31 09:16:14.501', 0, true, false);
-INSERT INTO report VALUES (7, 2, NULL, 'contacts_user.xml', 1, 'Contacts', 'Who are my contacts?', '2004-08-31 09:16:14.567', 0, '2004-08-31 09:16:14.567', 0, true, false);
-INSERT INTO report VALUES (8, 4, NULL, 'opportunity_pipeline.xml', 1, 'Opportunities by Stage', 'What are my upcoming opportunities by stage?', '2004-08-31 09:16:14.631', 0, '2004-08-31 09:16:14.631', 0, true, false);
-INSERT INTO report VALUES (9, 4, NULL, 'opportunity_account.xml', 1, 'Opportunities by Account', 'What are all the accounts associated with my opportunities?', '2004-08-31 09:16:14.636', 0, '2004-08-31 09:16:14.636', 0, true, false);
-INSERT INTO report VALUES (10, 4, NULL, 'opportunity_owner.xml', 1, 'Opportunities by Owner', 'What are all the opportunities based on ownership?', '2004-08-31 09:16:14.641', 0, '2004-08-31 09:16:14.641', 0, true, false);
-INSERT INTO report VALUES (11, 4, NULL, 'opportunity_contact.xml', 1, 'Opportunity Contacts', 'Who are the contacts of my opportunities?', '2004-08-31 09:16:14.649', 0, '2004-08-31 09:16:14.649', 0, true, false);
-INSERT INTO report VALUES (12, 6, NULL, 'campaign.xml', 1, 'Campaigns by date', 'What are my active campaigns?', '2004-08-31 09:16:14.694', 0, '2004-08-31 09:16:14.694', 0, true, false);
-INSERT INTO report VALUES (13, 8, NULL, 'tickets_department.xml', 1, 'Tickets by Department', 'What tickets are there in each department?', '2004-08-31 09:16:14.781', 0, '2004-08-31 09:16:14.781', 0, true, false);
-INSERT INTO report VALUES (14, 8, NULL, 'ticket_summary_date.xml', 1, 'Ticket counts by Department', 'How many tickets are there in the system on a particular date?', '2004-08-31 09:16:14.785', 0, '2004-08-31 09:16:14.785', 0, true, false);
-INSERT INTO report VALUES (15, 8, NULL, 'ticket_summary_range.xml', 1, 'Ticket activity by Department', 'How many tickets exist within a date range?', '2004-08-31 09:16:14.788', 0, '2004-08-31 09:16:14.788', 0, true, false);
-INSERT INTO report VALUES (16, 8, NULL, 'open_calls_report.xml', 1, 'Open Calls', 'Which tickets are open?', '2004-08-31 09:16:14.79', 0, '2004-08-31 09:16:14.79', 0, true, false);
-INSERT INTO report VALUES (17, 8, NULL, 'contract_review_report.xml', 1, 'Contract Review', 'What is the expiration date for each contract?', '2004-08-31 09:16:14.793', 0, '2004-08-31 09:16:14.793', 0, true, false);
-INSERT INTO report VALUES (18, 8, NULL, 'call_history_report.xml', 1, 'Call History', 'How have tickets been resolved?', '2004-08-31 09:16:14.796', 0, '2004-08-31 09:16:14.796', 0, true, false);
-INSERT INTO report VALUES (19, 8, NULL, 'assets_under_contract_report.xml', 1, 'Assets Under Contract', 'Which assets are covered by contracts?', '2004-08-31 09:16:14.799', 0, '2004-08-31 09:16:14.799', 0, true, false);
-INSERT INTO report VALUES (20, 8, NULL, 'activity_log_report.xml', 1, 'Contract Activity Summary', 'What is the hourly summary for each contract?', '2004-08-31 09:16:14.802', 0, '2004-08-31 09:16:14.802', 0, true, false);
-INSERT INTO report VALUES (21, 8, NULL, 'callvolume_day_assignee.xml', 1, 'Call Volume by Assignee per Day', 'How many tickets are there by assignee per day?', '2004-08-31 09:16:14.804', 0, '2004-08-31 09:16:14.804', 0, true, false);
-INSERT INTO report VALUES (22, 8, NULL, 'callvolume_month_assignee.xml', 1, 'Call Volume by Assignee per Month', 'How many tickets are there by assignee per month?', '2004-08-31 09:16:14.807', 0, '2004-08-31 09:16:14.807', 0, true, false);
-INSERT INTO report VALUES (23, 8, NULL, 'callvolume_day_cat.xml', 1, 'Call Volume by Category per Day', 'How many tickets are there by category per day?', '2004-08-31 09:16:14.81', 0, '2004-08-31 09:16:14.81', 0, true, false);
-INSERT INTO report VALUES (24, 8, NULL, 'callvolume_month_cat.xml', 1, 'Call Volume by Category per Month', 'How many tickets are there by category per month?', '2004-08-31 09:16:14.813', 0, '2004-08-31 09:16:14.813', 0, true, false);
-INSERT INTO report VALUES (25, 8, NULL, 'callvolume_day_enteredby.xml', 1, 'Call Volume by User Entered per Day', 'How many tickets are there by user who entered the ticket per day?', '2004-08-31 09:16:14.815', 0, '2004-08-31 09:16:14.815', 0, true, false);
-INSERT INTO report VALUES (26, 8, NULL, 'callvolume_month_ent.xml', 1, 'Call Volume by User Entered per Month', 'How many tickets are there by user who entered the ticket per month?', '2004-08-31 09:16:14.818', 0, '2004-08-31 09:16:14.818', 0, true, false);
-INSERT INTO report VALUES (27, 9, NULL, 'users.xml', 1, 'System Users', 'Who are all the users of the system?', '2004-08-31 09:16:14.871', 0, '2004-08-31 09:16:14.871', 0, true, false);
-INSERT INTO report VALUES (28, 12, NULL, 'task_date.xml', 1, 'Task list by due date', 'What are the tasks due withing a date range?', '2004-08-31 09:16:14.964', 0, '2004-08-31 09:16:14.964', 0, true, false);
-INSERT INTO report VALUES (29, 12, NULL, 'task_nodate.xml', 1, 'Task list', 'What are all the tasks in the system?', '2004-08-31 09:16:14.967', 0, '2004-08-31 09:16:14.967', 0, true, false);
-INSERT INTO report VALUES (30, 21, NULL, 'employees.xml', 1, 'Employees', 'Who are the employees in my organization?', '2004-08-31 09:16:15.102', 0, '2004-08-31 09:16:15.102', 0, true, false);
+INSERT INTO webdav VALUES (1, 1, 'org.aspcfs.modules.accounts.webdav.AccountsWebdavContext', '2005-03-16 11:27:42.489', 0, '2005-03-16 11:27:42.489', 0);
+INSERT INTO webdav VALUES (2, 7, 'com.zeroio.iteam.webdav.ProjectsWebdavContext', '2005-03-16 11:27:43.541', 0, '2005-03-16 11:27:43.541', 0);
+INSERT INTO webdav VALUES (3, 23, 'org.aspcfs.modules.documents.webdav.DocumentsWebdavContext', '2005-03-16 11:27:45.677', 0, '2005-03-16 11:27:45.677', 0);
+
+
+
+INSERT INTO category_editor_lookup VALUES (1, 8, 202041401, 'ticket_category', 10, 'Ticket Categories', '2005-03-16 11:27:43.918', 8, 4);
+INSERT INTO category_editor_lookup VALUES (2, 15, 202041400, 'asset_category', 10, 'Asset Categories', '2005-03-16 11:27:44.87', 130041000, 3);
+
+
+
+
+
+
+
+
+
+INSERT INTO report VALUES (1, 1, NULL, 'accounts_type.xml', 1, 'Accounts by Type', 'What are my accounts by type?', '2005-03-16 11:27:42.367', 0, '2005-03-16 11:27:42.367', 0, true, false);
+INSERT INTO report VALUES (2, 1, NULL, 'accounts_recent.xml', 1, 'Accounts by Date Added', 'What are my recent accounts?', '2005-03-16 11:27:42.414', 0, '2005-03-16 11:27:42.414', 0, true, false);
+INSERT INTO report VALUES (3, 1, NULL, 'accounts_expire.xml', 1, 'Accounts by Contract End Date', 'Which accounts are expiring?', '2005-03-16 11:27:42.426', 0, '2005-03-16 11:27:42.426', 0, true, false);
+INSERT INTO report VALUES (4, 1, NULL, 'accounts_current.xml', 1, 'Current Accounts', 'What are my current accounts?', '2005-03-16 11:27:42.437', 0, '2005-03-16 11:27:42.437', 0, true, false);
+INSERT INTO report VALUES (5, 1, NULL, 'accounts_contacts.xml', 1, 'Account Contacts', 'Who are the contacts in each account?', '2005-03-16 11:27:42.461', 0, '2005-03-16 11:27:42.461', 0, true, false);
+INSERT INTO report VALUES (6, 1, NULL, 'folder_accounts.xml', 1, 'Account Folders', 'What is the folder data for each account?', '2005-03-16 11:27:42.479', 0, '2005-03-16 11:27:42.479', 0, true, false);
+INSERT INTO report VALUES (7, 2, NULL, 'contacts_user.xml', 1, 'Contacts', 'Who are my contacts?', '2005-03-16 11:27:42.849', 0, '2005-03-16 11:27:42.849', 0, true, false);
+INSERT INTO report VALUES (8, 4, NULL, 'opportunity_pipeline.xml', 1, 'Opportunities by Stage', 'What are my upcoming opportunities by stage?', '2005-03-16 11:27:43.153', 0, '2005-03-16 11:27:43.153', 0, true, false);
+INSERT INTO report VALUES (9, 4, NULL, 'opportunity_account.xml', 1, 'Opportunities by Account', 'What are all the accounts associated with my opportunities?', '2005-03-16 11:27:43.167', 0, '2005-03-16 11:27:43.167', 0, true, false);
+INSERT INTO report VALUES (10, 4, NULL, 'opportunity_owner.xml', 1, 'Opportunities by Owner', 'What are all the opportunities based on ownership?', '2005-03-16 11:27:43.176', 0, '2005-03-16 11:27:43.176', 0, true, false);
+INSERT INTO report VALUES (11, 4, NULL, 'opportunity_contact.xml', 1, 'Opportunity Contacts', 'Who are the contacts of my opportunities?', '2005-03-16 11:27:43.187', 0, '2005-03-16 11:27:43.187', 0, true, false);
+INSERT INTO report VALUES (12, 6, NULL, 'campaign.xml', 1, 'Campaigns by date', 'What are my active campaigns?', '2005-03-16 11:27:43.425', 0, '2005-03-16 11:27:43.425', 0, true, false);
+INSERT INTO report VALUES (13, 8, NULL, 'tickets_department.xml', 1, 'Tickets by Department', 'What tickets are there in each department?', '2005-03-16 11:27:43.737', 0, '2005-03-16 11:27:43.737', 0, true, false);
+INSERT INTO report VALUES (14, 8, NULL, 'ticket_summary_date.xml', 1, 'Ticket counts by Department', 'How many tickets are there in the system on a particular date?', '2005-03-16 11:27:43.749', 0, '2005-03-16 11:27:43.749', 0, true, false);
+INSERT INTO report VALUES (15, 8, NULL, 'ticket_summary_range.xml', 1, 'Ticket activity by Department', 'How many tickets exist within a date range?', '2005-03-16 11:27:43.763', 0, '2005-03-16 11:27:43.763', 0, true, false);
+INSERT INTO report VALUES (16, 8, NULL, 'open_calls_report.xml', 1, 'Open Calls', 'Which tickets are open?', '2005-03-16 11:27:43.774', 0, '2005-03-16 11:27:43.774', 0, true, false);
+INSERT INTO report VALUES (17, 8, NULL, 'contract_review_report.xml', 1, 'Contract Review', 'What is the expiration date for each contract?', '2005-03-16 11:27:43.805', 0, '2005-03-16 11:27:43.805', 0, true, false);
+INSERT INTO report VALUES (18, 8, NULL, 'call_history_report.xml', 1, 'Call History', 'How have tickets been resolved?', '2005-03-16 11:27:43.813', 0, '2005-03-16 11:27:43.813', 0, true, false);
+INSERT INTO report VALUES (19, 8, NULL, 'assets_under_contract_report.xml', 1, 'Assets Under Contract', 'Which assets are covered by contracts?', '2005-03-16 11:27:43.825', 0, '2005-03-16 11:27:43.825', 0, true, false);
+INSERT INTO report VALUES (20, 8, NULL, 'activity_log_report.xml', 1, 'Contract Activity Summary', 'What is the hourly summary for each contract?', '2005-03-16 11:27:43.835', 0, '2005-03-16 11:27:43.835', 0, true, false);
+INSERT INTO report VALUES (21, 8, NULL, 'callvolume_day_assignee.xml', 1, 'Call Volume by Assignee per Day', 'How many tickets are there by assignee per day?', '2005-03-16 11:27:43.846', 0, '2005-03-16 11:27:43.846', 0, true, false);
+INSERT INTO report VALUES (22, 8, NULL, 'callvolume_month_assignee.xml', 1, 'Call Volume by Assignee per Month', 'How many tickets are there by assignee per month?', '2005-03-16 11:27:43.857', 0, '2005-03-16 11:27:43.857', 0, true, false);
+INSERT INTO report VALUES (23, 8, NULL, 'callvolume_day_cat.xml', 1, 'Call Volume by Category per Day', 'How many tickets are there by category per day?', '2005-03-16 11:27:43.865', 0, '2005-03-16 11:27:43.865', 0, true, false);
+INSERT INTO report VALUES (24, 8, NULL, 'callvolume_month_cat.xml', 1, 'Call Volume by Category per Month', 'How many tickets are there by category per month?', '2005-03-16 11:27:43.883', 0, '2005-03-16 11:27:43.883', 0, true, false);
+INSERT INTO report VALUES (25, 8, NULL, 'callvolume_day_enteredby.xml', 1, 'Call Volume by User Entered per Day', 'How many tickets are there by user who entered the ticket per day?', '2005-03-16 11:27:43.894', 0, '2005-03-16 11:27:43.894', 0, true, false);
+INSERT INTO report VALUES (26, 8, NULL, 'callvolume_month_ent.xml', 1, 'Call Volume by User Entered per Month', 'How many tickets are there by user who entered the ticket per month?', '2005-03-16 11:27:43.908', 0, '2005-03-16 11:27:43.908', 0, true, false);
+INSERT INTO report VALUES (27, 9, NULL, 'users.xml', 1, 'System Users', 'Who are all the users of the system?', '2005-03-16 11:27:44.265', 0, '2005-03-16 11:27:44.265', 0, true, false);
+INSERT INTO report VALUES (28, 12, NULL, 'task_date.xml', 1, 'Task list by due date', 'What are the tasks due withing a date range?', '2005-03-16 11:27:44.725', 0, '2005-03-16 11:27:44.725', 0, true, false);
+INSERT INTO report VALUES (29, 12, NULL, 'task_nodate.xml', 1, 'Task list', 'What are all the tasks in the system?', '2005-03-16 11:27:44.742', 0, '2005-03-16 11:27:44.742', 0, true, false);
+INSERT INTO report VALUES (30, 21, NULL, 'employees.xml', 1, 'Employees', 'Who are the employees in my organization?', '2005-03-16 11:27:45.607', 0, '2005-03-16 11:27:45.607', 0, true, false);
 
 
 
@@ -5197,6 +5845,32 @@ INSERT INTO report VALUES (30, 21, NULL, 'employees.xml', 1, 'Employees', 'Who a
 
 INSERT INTO database_version VALUES (1, 'postgresql.sql', '2004-06-15', '2004-06-15 10:11:22.068');
 INSERT INTO database_version VALUES (2, 'postgresql.sql', '2004-08-30', '2004-08-31 09:16:24.07');
+INSERT INTO database_version VALUES (3, 'postgresql.sql', '2005-01-14', '2005-01-14 09:16:24.07');
+INSERT INTO database_version VALUES (4, 'postgresql.sql', '2005-03-30', '2005-03-30 09:16:24.07');
+
+
+
+INSERT INTO lookup_relationship_types VALUES (1, 42420034, 42420034, 'Subsidiary of', 'Parent of', 10, false, true);
+INSERT INTO lookup_relationship_types VALUES (2, 42420034, 42420034, 'Customer of', 'Supplier to', 20, false, true);
+INSERT INTO lookup_relationship_types VALUES (3, 42420034, 42420034, 'Partner of', 'Partner of', 30, false, true);
+INSERT INTO lookup_relationship_types VALUES (4, 42420034, 42420034, 'Competitor of', 'Competitor of', 40, false, true);
+INSERT INTO lookup_relationship_types VALUES (5, 42420034, 42420034, 'Employee of', 'Employer of', 50, false, true);
+INSERT INTO lookup_relationship_types VALUES (6, 42420034, 42420034, 'Department of', 'Organization made up of', 60, false, true);
+INSERT INTO lookup_relationship_types VALUES (7, 42420034, 42420034, 'Group of', 'Organization made up of', 70, false, true);
+INSERT INTO lookup_relationship_types VALUES (8, 42420034, 42420034, 'Member of', 'Organization made up of', 80, false, true);
+INSERT INTO lookup_relationship_types VALUES (9, 42420034, 42420034, 'Consultant to', 'Consultant of', 90, false, true);
+INSERT INTO lookup_relationship_types VALUES (10, 42420034, 42420034, 'Influencer of', 'Influenced by', 100, false, true);
+INSERT INTO lookup_relationship_types VALUES (11, 42420034, 42420034, 'Enemy of', 'Enemy of', 110, false, true);
+INSERT INTO lookup_relationship_types VALUES (12, 42420034, 42420034, 'Proponent of', 'Endorsed by', 120, false, true);
+INSERT INTO lookup_relationship_types VALUES (13, 42420034, 42420034, 'Ally of', 'Ally of', 130, false, true);
+INSERT INTO lookup_relationship_types VALUES (14, 42420034, 42420034, 'Sponsor of', 'Sponsored by', 140, false, true);
+INSERT INTO lookup_relationship_types VALUES (15, 42420034, 42420034, 'Relative of', 'Relative of', 150, false, true);
+INSERT INTO lookup_relationship_types VALUES (16, 42420034, 42420034, 'Affiliated with', 'Affiliated with', 160, false, true);
+INSERT INTO lookup_relationship_types VALUES (17, 42420034, 42420034, 'Teammate of', 'Teammate of', 170, false, true);
+INSERT INTO lookup_relationship_types VALUES (18, 42420034, 42420034, 'Financier of', 'Financed by', 180, false, true);
+
+
+
 
 
 
@@ -5213,43 +5887,39 @@ INSERT INTO lookup_call_types VALUES (10, 'Fax Proactive', false, 100, true);
 
 
 
-INSERT INTO lookup_call_priority VALUES (1, 'Low', true, 1, true, 10);
-INSERT INTO lookup_call_priority VALUES (2, 'Medium', false, 2, true, 20);
-INSERT INTO lookup_call_priority VALUES (3, 'High', false, 3, true, 30);
+INSERT INTO lookup_call_priority VALUES (1, 'Low', true, 10, true, 10);
+INSERT INTO lookup_call_priority VALUES (2, 'Medium', false, 20, true, 20);
+INSERT INTO lookup_call_priority VALUES (3, 'High', false, 30, true, 30);
 
 
 
-INSERT INTO lookup_call_reminder VALUES (1, 'Minute(s)', 60, true, 1, true);
-INSERT INTO lookup_call_reminder VALUES (2, 'Hour(s)', 3600, false, 2, true);
-INSERT INTO lookup_call_reminder VALUES (3, 'Day(s)', 86400, false, 3, true);
-INSERT INTO lookup_call_reminder VALUES (4, 'Week(s)', 604800, false, 4, true);
-INSERT INTO lookup_call_reminder VALUES (5, 'Month(s)', 18144000, false, 5, true);
+INSERT INTO lookup_call_reminder VALUES (1, 'Minute(s)', 60, true, 10, true);
+INSERT INTO lookup_call_reminder VALUES (2, 'Hour(s)', 3600, false, 20, true);
+INSERT INTO lookup_call_reminder VALUES (3, 'Day(s)', 86400, false, 30, true);
+INSERT INTO lookup_call_reminder VALUES (4, 'Week(s)', 604800, false, 40, true);
+INSERT INTO lookup_call_reminder VALUES (5, 'Month(s)', 18144000, false, 50, true);
 
 
 
 INSERT INTO lookup_call_result VALUES (1, 'Yes - Business progressing', 10, true, true, 0, NULL, false);
 INSERT INTO lookup_call_result VALUES (2, 'No - No business at this time', 20, true, false, 0, NULL, false);
 INSERT INTO lookup_call_result VALUES (3, 'Unsure - Unsure or no contact made', 30, true, true, 0, NULL, false);
-INSERT INTO lookup_call_result VALUES (4, 'Lost to competitor', 140, true, false, 0, NULL, true);
-INSERT INTO lookup_call_result VALUES (5, 'No further interest', 150, true, false, 0, NULL, true);
-INSERT INTO lookup_call_result VALUES (6, 'Event postponed/canceled', 160, true, false, 0, NULL, true);
-INSERT INTO lookup_call_result VALUES (7, 'Another pending action', 170, true, false, 0, NULL, true);
-INSERT INTO lookup_call_result VALUES (8, 'Another contact handling event', 180, true, false, 0, NULL, true);
-INSERT INTO lookup_call_result VALUES (9, 'Contact no longer with company', 190, true, false, 0, NULL, true);
-INSERT INTO lookup_call_result VALUES (10, 'Servicing', 120, true, false, 0, NULL, false);
+INSERT INTO lookup_call_result VALUES (4, 'Lost to competitor', 40, true, false, 0, NULL, true);
+INSERT INTO lookup_call_result VALUES (5, 'No further interest', 50, true, false, 0, NULL, true);
+INSERT INTO lookup_call_result VALUES (6, 'Event postponed/canceled ', 60, true, false, 0, NULL, true);
+INSERT INTO lookup_call_result VALUES (7, 'Another pending action', 70, true, false, 0, NULL, true);
+INSERT INTO lookup_call_result VALUES (8, 'Another contact handling event', 80, true, false, 0, NULL, true);
+INSERT INTO lookup_call_result VALUES (9, 'Contact no longer with company', 90, true, false, 0, NULL, true);
+INSERT INTO lookup_call_result VALUES (10, 'Servicing', 100, true, false, 0, NULL, false);
 
 
 
-INSERT INTO lookup_opportunity_types VALUES (1, NULL, 'Annuity', false, 0, true);
-INSERT INTO lookup_opportunity_types VALUES (2, NULL, 'Consultation', false, 1, true);
-INSERT INTO lookup_opportunity_types VALUES (3, NULL, 'Development', false, 2, true);
-INSERT INTO lookup_opportunity_types VALUES (4, NULL, 'Maintenance', false, 3, true);
-INSERT INTO lookup_opportunity_types VALUES (5, NULL, 'Product Sales', false, 4, true);
-INSERT INTO lookup_opportunity_types VALUES (6, NULL, 'Services', false, 5, true);
-
-
-
-
+INSERT INTO lookup_opportunity_types VALUES (1, NULL, 'Annuity', false, 10, true);
+INSERT INTO lookup_opportunity_types VALUES (2, NULL, 'Consultation', false, 20, true);
+INSERT INTO lookup_opportunity_types VALUES (3, NULL, 'Development', false, 30, true);
+INSERT INTO lookup_opportunity_types VALUES (4, NULL, 'Maintenance', false, 40, true);
+INSERT INTO lookup_opportunity_types VALUES (5, NULL, 'Product Sales', false, 50, true);
+INSERT INTO lookup_opportunity_types VALUES (6, NULL, 'Services', false, 60, true);
 
 
 
@@ -5261,39 +5931,33 @@ INSERT INTO lookup_opportunity_types VALUES (6, NULL, 'Services', false, 5, true
 
 
 
-INSERT INTO lookup_project_activity VALUES (1, 'Project Initialization', false, 1, true, 1, 0);
-INSERT INTO lookup_project_activity VALUES (2, 'Analysis/Software Requirements', false, 2, true, 1, 0);
-INSERT INTO lookup_project_activity VALUES (3, 'Functional Specifications', false, 3, true, 1, 0);
-INSERT INTO lookup_project_activity VALUES (4, 'Prototype', false, 4, true, 1, 0);
-INSERT INTO lookup_project_activity VALUES (5, 'System Development', false, 5, true, 1, 0);
-INSERT INTO lookup_project_activity VALUES (6, 'Testing', false, 6, true, 1, 0);
-INSERT INTO lookup_project_activity VALUES (7, 'Training', false, 7, true, 1, 0);
-INSERT INTO lookup_project_activity VALUES (8, 'Documentation', false, 8, true, 1, 0);
-INSERT INTO lookup_project_activity VALUES (9, 'Deployment', false, 9, true, 1, 0);
-INSERT INTO lookup_project_activity VALUES (10, 'Post Implementation Review', false, 10, true, 1, 0);
 
 
 
-INSERT INTO lookup_project_priority VALUES (1, 'Low', false, 1, true, 1, NULL, 10);
-INSERT INTO lookup_project_priority VALUES (2, 'Normal', true, 2, true, 1, NULL, 20);
-INSERT INTO lookup_project_priority VALUES (3, 'High', false, 3, true, 1, NULL, 30);
 
 
 
-INSERT INTO lookup_project_status VALUES (1, 'Not Started', false, 1, true, 1, 'box.gif', 1);
-INSERT INTO lookup_project_status VALUES (2, 'In Progress', false, 2, true, 1, 'box.gif', 2);
-INSERT INTO lookup_project_status VALUES (3, 'On Hold', false, 5, true, 1, 'box-hold.gif', 5);
-INSERT INTO lookup_project_status VALUES (4, 'Waiting on Reqs', false, 6, true, 1, 'box-hold.gif', 5);
-INSERT INTO lookup_project_status VALUES (5, 'Complete', false, 3, true, 1, 'box-checked.gif', 3);
-INSERT INTO lookup_project_status VALUES (6, 'Closed', false, 4, true, 1, 'box-checked.gif', 4);
+
+INSERT INTO lookup_project_priority VALUES (1, 'Low', false, 10, true, 1, NULL, 10);
+INSERT INTO lookup_project_priority VALUES (2, 'Normal', true, 20, true, 1, NULL, 20);
+INSERT INTO lookup_project_priority VALUES (3, 'High', false, 30, true, 1, NULL, 30);
 
 
 
-INSERT INTO lookup_project_loe VALUES (1, 'Minute(s)', 60, false, 1, true, 1);
-INSERT INTO lookup_project_loe VALUES (2, 'Hour(s)', 3600, true, 1, true, 1);
-INSERT INTO lookup_project_loe VALUES (3, 'Day(s)', 86400, false, 1, true, 1);
-INSERT INTO lookup_project_loe VALUES (4, 'Week(s)', 604800, false, 1, true, 1);
-INSERT INTO lookup_project_loe VALUES (5, 'Month(s)', 18144000, false, 1, true, 1);
+INSERT INTO lookup_project_status VALUES (1, 'Not Started', false, 10, true, 1, 'box.gif', 1);
+INSERT INTO lookup_project_status VALUES (2, 'In Progress', false, 20, true, 1, 'box.gif', 2);
+INSERT INTO lookup_project_status VALUES (3, 'Complete', false, 30, true, 1, 'box-checked.gif', 3);
+INSERT INTO lookup_project_status VALUES (4, 'Closed', false, 40, true, 1, 'box-closed.gif', 4);
+INSERT INTO lookup_project_status VALUES (5, 'On Hold', false, 50, true, 1, 'box-hold.gif', 5);
+INSERT INTO lookup_project_status VALUES (6, 'Waiting on Reqs', false, 60, true, 1, 'box-hold.gif', 5);
+
+
+
+INSERT INTO lookup_project_loe VALUES (1, 'Minute(s)', 60, true, 10, true, 0);
+INSERT INTO lookup_project_loe VALUES (2, 'Hour(s)', 3600, false, 20, true, 0);
+INSERT INTO lookup_project_loe VALUES (3, 'Day(s)', 86400, false, 30, true, 0);
+INSERT INTO lookup_project_loe VALUES (4, 'Week(s)', 604800, false, 40, true, 0);
+INSERT INTO lookup_project_loe VALUES (5, 'Month(s)', 18144000, false, 50, true, 0);
 
 
 
@@ -5301,6 +5965,12 @@ INSERT INTO lookup_project_role VALUES (1, 'Project Lead', false, 10, true, 1);
 INSERT INTO lookup_project_role VALUES (2, 'Contributor', false, 20, true, 1);
 INSERT INTO lookup_project_role VALUES (3, 'Observer', false, 30, true, 1);
 INSERT INTO lookup_project_role VALUES (4, 'Guest', false, 100, true, 1);
+
+
+
+
+
+
 
 
 
@@ -5363,61 +6033,64 @@ INSERT INTO lookup_project_permission_category VALUES (5, 'Lists', false, 50, tr
 INSERT INTO lookup_project_permission_category VALUES (6, 'Discussion', false, 60, true, 1);
 INSERT INTO lookup_project_permission_category VALUES (7, 'Tickets', false, 70, true, 1);
 INSERT INTO lookup_project_permission_category VALUES (8, 'Document Library', false, 80, true, 1);
-INSERT INTO lookup_project_permission_category VALUES (9, 'Setup', false, 90, true, 1);
+INSERT INTO lookup_project_permission_category VALUES (9, 'Setup', false, 100, true, 1);
+INSERT INTO lookup_project_permission_category VALUES (10, 'Accounts', false, 90, true, 1);
 
 
 
 INSERT INTO lookup_project_permission VALUES (1, 1, 'project-details-view', 'View project details', false, 10, true, 1, 4);
 INSERT INTO lookup_project_permission VALUES (2, 1, 'project-details-edit', 'Modify project details', false, 20, true, 1, 1);
 INSERT INTO lookup_project_permission VALUES (3, 1, 'project-details-delete', 'Delete project', false, 30, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (4, 2, 'project-team-view', 'View team members', false, 10, true, 1, 4);
-INSERT INTO lookup_project_permission VALUES (5, 2, 'project-team-view-email', 'See team member email addresses', false, 20, true, 1, 3);
-INSERT INTO lookup_project_permission VALUES (6, 2, 'project-team-edit', 'Modify team', false, 30, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (7, 2, 'project-team-edit-role', 'Modify team member role', false, 40, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (8, 3, 'project-news-view', 'View current news', false, 10, true, 1, 4);
-INSERT INTO lookup_project_permission VALUES (9, 3, 'project-news-view-unreleased', 'View unreleased news', false, 20, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (10, 3, 'project-news-view-archived', 'View archived news', false, 30, true, 1, 3);
-INSERT INTO lookup_project_permission VALUES (11, 3, 'project-news-add', 'Add news', false, 40, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (12, 3, 'project-news-edit', 'Edit news', false, 50, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (13, 3, 'project-news-delete', 'Delete news', false, 60, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (14, 4, 'project-plan-view', 'View outlines', false, 10, true, 1, 4);
-INSERT INTO lookup_project_permission VALUES (15, 4, 'project-plan-outline-add', 'Add an outline', false, 20, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (16, 4, 'project-plan-outline-edit', 'Modify details of an existing outline', false, 40, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (17, 4, 'project-plan-outline-delete', 'Delete an outline', false, 50, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (18, 4, 'project-plan-outline-modify', 'Make changes to an outline', false, 60, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (19, 4, 'project-plan-activities-assign', 'Re-assign activities', false, 70, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (20, 5, 'project-lists-view', 'View lists', false, 10, true, 1, 4);
-INSERT INTO lookup_project_permission VALUES (21, 5, 'project-lists-add', 'Add a list', false, 20, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (22, 5, 'project-lists-edit', 'Modify details of an existing list', false, 30, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (23, 5, 'project-lists-delete', 'Delete a list', false, 40, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (24, 5, 'project-lists-modify', 'Make changes to list items', false, 50, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (25, 6, 'project-discussion-forums-view', 'View discussion forums', false, 10, true, 1, 4);
-INSERT INTO lookup_project_permission VALUES (26, 6, 'project-discussion-forums-add', 'Add discussion forum', false, 20, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (27, 6, 'project-discussion-forums-edit', 'Modify discussion forum', false, 30, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (28, 6, 'project-discussion-forums-delete', 'Delete discussion forum', false, 40, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (29, 6, 'project-discussion-topics-view', 'View forum topics', false, 50, true, 1, 4);
-INSERT INTO lookup_project_permission VALUES (30, 6, 'project-discussion-topics-add', 'Add forum topics', false, 60, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (31, 6, 'project-discussion-topics-edit', 'Modify forum topics', false, 70, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (32, 6, 'project-discussion-topics-delete', 'Delete forum topics', false, 80, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (33, 6, 'project-discussion-messages-add', 'Post messages', false, 90, true, 1, 3);
-INSERT INTO lookup_project_permission VALUES (34, 6, 'project-discussion-messages-reply', 'Reply to messages', false, 100, true, 1, 3);
-INSERT INTO lookup_project_permission VALUES (35, 6, 'project-discussion-messages-edit', 'Modify existing messages', false, 110, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (36, 6, 'project-discussion-messages-delete', 'Delete messages', false, 120, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (37, 7, 'project-tickets-view', 'View tickets', false, 10, true, 1, 4);
-INSERT INTO lookup_project_permission VALUES (38, 7, 'project-tickets-add', 'Add a ticket', false, 20, true, 1, 3);
-INSERT INTO lookup_project_permission VALUES (39, 7, 'project-tickets-edit', 'Modify existing ticket', false, 30, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (40, 7, 'project-tickets-delete', 'Delete tickets', false, 40, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (41, 7, 'project-tickets-assign', 'Assign tickets', false, 50, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (42, 8, 'project-documents-view', 'View documents', false, 10, true, 1, 4);
-INSERT INTO lookup_project_permission VALUES (43, 8, 'project-documents-folders-add', 'Create folders', false, 20, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (44, 8, 'project-documents-folders-edit', 'Modify folders', false, 30, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (45, 8, 'project-documents-folders-delete', 'Delete folders', false, 40, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (46, 8, 'project-documents-files-upload', 'Upload files', false, 50, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (47, 8, 'project-documents-files-download', 'Download files', false, 60, true, 1, 4);
-INSERT INTO lookup_project_permission VALUES (48, 8, 'project-documents-files-rename', 'Rename files', false, 70, true, 1, 2);
-INSERT INTO lookup_project_permission VALUES (49, 8, 'project-documents-files-delete', 'Delete files', false, 80, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (50, 9, 'project-setup-customize', 'Customize project features', false, 10, true, 1, 1);
-INSERT INTO lookup_project_permission VALUES (51, 9, 'project-setup-permissions', 'Configure project permissions', false, 20, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (4, 2, 'project-team-view', 'View team members', false, 40, true, 1, 4);
+INSERT INTO lookup_project_permission VALUES (5, 2, 'project-team-view-email', 'See team member email addresses', false, 50, true, 1, 3);
+INSERT INTO lookup_project_permission VALUES (6, 2, 'project-team-edit', 'Modify team', false, 60, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (7, 2, 'project-team-edit-role', 'Modify team member role', false, 70, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (8, 3, 'project-news-view', 'View current news', false, 80, true, 1, 4);
+INSERT INTO lookup_project_permission VALUES (9, 3, 'project-news-view-unreleased', 'View unreleased news', false, 90, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (10, 3, 'project-news-view-archived', 'View archived news', false, 100, true, 1, 3);
+INSERT INTO lookup_project_permission VALUES (11, 3, 'project-news-add', 'Add news', false, 110, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (12, 3, 'project-news-edit', 'Edit news', false, 120, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (13, 3, 'project-news-delete', 'Delete news', false, 130, true, 1, 4);
+INSERT INTO lookup_project_permission VALUES (14, 4, 'project-plan-view', 'View outlines', false, 140, true, 1, 4);
+INSERT INTO lookup_project_permission VALUES (15, 4, 'project-plan-outline-add', 'Add an outline', false, 150, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (16, 4, 'project-plan-outline-edit', 'Modify details of an existing outline', false, 160, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (17, 4, 'project-plan-outline-delete', 'Delete an outline', false, 170, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (18, 4, 'project-plan-outline-modify', 'Make changes to an outline', false, 180, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (19, 4, 'project-plan-activities-assign', 'Re-assign activities', false, 190, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (20, 5, 'project-lists-view', 'View lists', false, 200, true, 1, 4);
+INSERT INTO lookup_project_permission VALUES (21, 5, 'project-lists-add', 'Add a list', false, 210, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (22, 5, 'project-lists-edit', 'Modify details of an existing list', false, 220, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (23, 5, 'project-lists-delete', 'Delete a list', false, 230, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (24, 5, 'project-lists-modify', 'Make changes to list items', false, 240, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (25, 6, 'project-discussion-forums-view', 'View discussion forums', false, 250, true, 1, 4);
+INSERT INTO lookup_project_permission VALUES (26, 6, 'project-discussion-forums-add', 'Add discussion forum', false, 260, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (27, 6, 'project-discussion-forums-edit', 'Modify discussion forum', false, 270, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (28, 6, 'project-discussion-forums-delete', 'Delete discussion forum', false, 280, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (29, 6, 'project-discussion-topics-view', 'View forum topics', false, 290, true, 1, 4);
+INSERT INTO lookup_project_permission VALUES (30, 6, 'project-discussion-topics-add', 'Add forum topics', false, 300, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (31, 6, 'project-discussion-topics-edit', 'Modify forum topics', false, 310, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (32, 6, 'project-discussion-topics-delete', 'Delete forum topics', false, 320, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (33, 6, 'project-discussion-messages-add', 'Post messages', false, 330, true, 1, 3);
+INSERT INTO lookup_project_permission VALUES (34, 6, 'project-discussion-messages-reply', 'Reply to messages', false, 340, true, 1, 3);
+INSERT INTO lookup_project_permission VALUES (35, 6, 'project-discussion-messages-edit', 'Modify existing messages', false, 350, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (36, 6, 'project-discussion-messages-delete', 'Delete messages', false, 360, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (37, 7, 'project-tickets-view', 'View tickets', false, 370, true, 1, 4);
+INSERT INTO lookup_project_permission VALUES (38, 7, 'project-tickets-add', 'Add a ticket', false, 380, true, 1, 3);
+INSERT INTO lookup_project_permission VALUES (39, 7, 'project-tickets-edit', 'Modify existing ticket', false, 390, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (40, 7, 'project-tickets-delete', 'Delete tickets', false, 400, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (41, 7, 'project-tickets-assign', 'Assign tickets', false, 410, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (42, 8, 'project-documents-view', 'View documents', false, 420, true, 1, 4);
+INSERT INTO lookup_project_permission VALUES (43, 8, 'project-documents-folders-add', 'Create folders', false, 430, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (44, 8, 'project-documents-folders-edit', 'Modify folders', false, 440, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (45, 8, 'project-documents-folders-delete', 'Delete folders', false, 450, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (46, 8, 'project-documents-files-upload', 'Upload files', false, 460, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (47, 8, 'project-documents-files-download', 'Download files', false, 470, true, 1, 4);
+INSERT INTO lookup_project_permission VALUES (48, 8, 'project-documents-files-rename', 'Rename files', false, 480, true, 1, 2);
+INSERT INTO lookup_project_permission VALUES (49, 8, 'project-documents-files-delete', 'Delete files', false, 490, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (50, 9, 'project-setup-customize', 'Customize project features', false, 520, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (51, 9, 'project-setup-permissions', 'Configure project permissions', false, 530, true, 1, 1);
+INSERT INTO lookup_project_permission VALUES (52, 10, 'project-accounts-view', 'View account links', false, 500, true, 1, 3);
+INSERT INTO lookup_project_permission VALUES (53, 10, 'project-accounts-manage', 'Manage account links', false, 510, true, 1, 1);
 
 
 
@@ -5430,7 +6103,6 @@ INSERT INTO lookup_project_permission VALUES (51, 9, 'project-setup-permissions'
 
 
 
-INSERT INTO product_category VALUES (1, NULL, 'Labor Categories', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 10, 0, '2004-08-31 09:15:49.105', 0, '2004-08-31 09:15:49.105', NULL, NULL, true);
 
 
 
@@ -5446,18 +6118,32 @@ INSERT INTO product_category VALUES (1, NULL, 'Labor Categories', NULL, NULL, NU
 
 
 
+INSERT INTO lookup_product_format VALUES (1, 'Physical', false, 10, true);
+INSERT INTO lookup_product_format VALUES (2, 'Electronic', false, 20, true);
 
 
 
+INSERT INTO lookup_product_shipping VALUES (1, 'DHL', false, 10, true);
+INSERT INTO lookup_product_shipping VALUES (2, 'FEDEX', false, 20, true);
+INSERT INTO lookup_product_shipping VALUES (3, 'UPS', false, 30, true);
+INSERT INTO lookup_product_shipping VALUES (4, 'USPS', false, 40, true);
 
 
 
+INSERT INTO lookup_product_ship_time VALUES (1, '24 Hours', false, 10, true);
+INSERT INTO lookup_product_ship_time VALUES (2, '2 Days', false, 20, true);
+INSERT INTO lookup_product_ship_time VALUES (3, '1 Week', false, 30, true);
 
 
 
+INSERT INTO lookup_product_tax VALUES (1, 'State Tax', false, 10, true);
+INSERT INTO lookup_product_tax VALUES (2, 'Sales Tax', false, 20, true);
 
 
 
+INSERT INTO lookup_recurring_type VALUES (1, 'Weekly', false, 10, true);
+INSERT INTO lookup_recurring_type VALUES (2, 'Monthly', false, 20, true);
+INSERT INTO lookup_recurring_type VALUES (3, 'Yearly', false, 30, true);
 
 
 
@@ -5476,9 +6162,18 @@ INSERT INTO product_category VALUES (1, NULL, 'Labor Categories', NULL, NULL, NU
 
 
 
+INSERT INTO lookup_product_conf_result VALUES (1, 'integer', false, 10, true);
+INSERT INTO lookup_product_conf_result VALUES (2, 'float', false, 20, true);
+INSERT INTO lookup_product_conf_result VALUES (3, 'boolean', false, 30, true);
+INSERT INTO lookup_product_conf_result VALUES (4, 'timestamp', false, 40, true);
+INSERT INTO lookup_product_conf_result VALUES (5, 'string', false, 50, true);
 
 
 
+INSERT INTO product_option_configurator VALUES (1, 'A text field for free-form additional information', 'String Configurator', 'org.aspcfs.modules.products.configurator.StringConfigurator', 1, 'Text');
+INSERT INTO product_option_configurator VALUES (2, 'A check box for yes/no information', 'Checkbox Configurator', 'org.aspcfs.modules.products.configurator.CheckboxConfigurator', 1, 'Check Box');
+INSERT INTO product_option_configurator VALUES (3, 'A list of available choices that can be selected', 'LookupList Configurator', 'org.aspcfs.modules.products.configurator.LookupListConfigurator', 1, 'Lookup List');
+INSERT INTO product_option_configurator VALUES (4, 'An input field allowing numbers only', 'Numerical Configurator', 'org.aspcfs.modules.products.configurator.NumericalConfigurator', 1, 'Number');
 
 
 
@@ -5506,7 +6201,13 @@ INSERT INTO product_category VALUES (1, NULL, 'Labor Categories', NULL, NULL, NU
 
 
 
-INSERT INTO lookup_asset_status VALUES (1, 'In use', false, 10, true);
+
+
+
+
+
+
+INSERT INTO lookup_asset_status VALUES (1, 'In use', true, 10, true);
 INSERT INTO lookup_asset_status VALUES (2, 'Not in use', false, 20, true);
 INSERT INTO lookup_asset_status VALUES (3, 'Requires maintenance', false, 30, true);
 INSERT INTO lookup_asset_status VALUES (4, 'Retired', false, 40, true);
@@ -5525,42 +6226,43 @@ INSERT INTO lookup_sc_category VALUES (6, 'Warranty', false, 60, true);
 
 
 
-INSERT INTO lookup_response_model VALUES (1, 'M-F 8AM-5PM 8 hours', false, 10, true);
-INSERT INTO lookup_response_model VALUES (2, 'M-F 8AM-5PM 6 hours', false, 20, true);
-INSERT INTO lookup_response_model VALUES (3, 'M-F 8AM-5PM 4 hours', false, 30, true);
-INSERT INTO lookup_response_model VALUES (4, 'M-F 8AM-5PM same day', false, 40, true);
-INSERT INTO lookup_response_model VALUES (5, 'M-F 8AM-5PM next business day', false, 50, true);
-INSERT INTO lookup_response_model VALUES (6, 'M-F 8AM-8PM 4 hours', false, 60, true);
-INSERT INTO lookup_response_model VALUES (7, 'M-F 8AM-8PM 2 hours', false, 70, true);
-INSERT INTO lookup_response_model VALUES (8, '24x7 8 hours', false, 80, true);
-INSERT INTO lookup_response_model VALUES (9, '24x7 4 hours', false, 90, true);
-INSERT INTO lookup_response_model VALUES (10, '24x7 2 hours', false, 100, true);
-INSERT INTO lookup_response_model VALUES (11, 'No response time guaranteed', false, 110, true);
+INSERT INTO lookup_response_model VALUES (1, 'No response time guaranteed', false, 10, true);
+INSERT INTO lookup_response_model VALUES (2, 'M-F 8AM-5PM 8 hours', false, 20, true);
+INSERT INTO lookup_response_model VALUES (3, 'M-F 8AM-5PM 6 hours', false, 30, true);
+INSERT INTO lookup_response_model VALUES (4, 'M-F 8AM-5PM 4 hours', false, 40, true);
+INSERT INTO lookup_response_model VALUES (5, 'M-F 8AM-5PM same day', false, 50, true);
+INSERT INTO lookup_response_model VALUES (6, 'M-F 8AM-5PM next business day', false, 60, true);
+INSERT INTO lookup_response_model VALUES (7, 'M-F 8AM-8PM 4 hours', false, 70, true);
+INSERT INTO lookup_response_model VALUES (8, 'M-F 8AM-8PM 2 hours', false, 80, true);
+INSERT INTO lookup_response_model VALUES (9, '24x7 8 hours', false, 90, true);
+INSERT INTO lookup_response_model VALUES (10, '24x7 4 hours', false, 100, true);
+INSERT INTO lookup_response_model VALUES (11, '24x7 2 hours', false, 110, true);
 
 
 
-INSERT INTO lookup_phone_model VALUES (1, '< 15 minutes', false, 10, true);
-INSERT INTO lookup_phone_model VALUES (2, '< 5 minutes', false, 20, true);
-INSERT INTO lookup_phone_model VALUES (3, 'M-F 7AM-4PM', false, 30, true);
-INSERT INTO lookup_phone_model VALUES (4, 'M-F 8AM-5PM', false, 40, true);
-INSERT INTO lookup_phone_model VALUES (5, 'M-F 8AM-8PM', false, 50, true);
-INSERT INTO lookup_phone_model VALUES (6, '24x7', false, 60, true);
-INSERT INTO lookup_phone_model VALUES (7, 'No phone support', false, 70, true);
+INSERT INTO lookup_phone_model VALUES (1, 'No phone support', false, 10, true);
+INSERT INTO lookup_phone_model VALUES (2, '< 15 minutes', false, 20, true);
+INSERT INTO lookup_phone_model VALUES (3, '< 5 minutes', false, 30, true);
+INSERT INTO lookup_phone_model VALUES (4, 'M-F 7AM-4PM', false, 40, true);
+INSERT INTO lookup_phone_model VALUES (5, 'M-F 8AM-5PM', false, 50, true);
+INSERT INTO lookup_phone_model VALUES (6, 'M-F 8AM-8PM', false, 60, true);
+INSERT INTO lookup_phone_model VALUES (7, '24x7', false, 70, true);
 
 
 
-INSERT INTO lookup_onsite_model VALUES (1, 'M-F 7AM-4PM', false, 10, true);
-INSERT INTO lookup_onsite_model VALUES (2, 'M-F 8AM-5PM', false, 20, true);
-INSERT INTO lookup_onsite_model VALUES (3, 'M-F 8AM-8PM', false, 30, true);
-INSERT INTO lookup_onsite_model VALUES (4, '24x7', false, 40, true);
-INSERT INTO lookup_onsite_model VALUES (5, 'No onsite service', false, 50, true);
+INSERT INTO lookup_onsite_model VALUES (1, 'No onsite service', false, 10, true);
+INSERT INTO lookup_onsite_model VALUES (2, 'M-F 7AM-4PM', false, 20, true);
+INSERT INTO lookup_onsite_model VALUES (3, 'M-F 8AM-5PM', false, 30, true);
+INSERT INTO lookup_onsite_model VALUES (4, 'M-F 8AM-8PM', false, 40, true);
+INSERT INTO lookup_onsite_model VALUES (5, '24x7', false, 50, true);
 
 
 
-INSERT INTO lookup_email_model VALUES (1, '2 hours', false, 10, true);
-INSERT INTO lookup_email_model VALUES (2, '4 hours', false, 20, true);
-INSERT INTO lookup_email_model VALUES (3, 'Same day', false, 30, true);
-INSERT INTO lookup_email_model VALUES (4, 'Next business day', false, 40, true);
+INSERT INTO lookup_email_model VALUES (1, 'No email support', false, 10, true);
+INSERT INTO lookup_email_model VALUES (2, '2 hours', false, 20, true);
+INSERT INTO lookup_email_model VALUES (3, '4 hours', false, 30, true);
+INSERT INTO lookup_email_model VALUES (4, 'Same day', false, 40, true);
+INSERT INTO lookup_email_model VALUES (5, 'Next business day', false, 50, true);
 
 
 
@@ -5582,51 +6284,62 @@ INSERT INTO lookup_hours_reason VALUES (3, 'Correction', false, 30, true);
 
 
 
+INSERT INTO asset_category_draft VALUES (1, -1, 0, 0, 'Software', '', false, 10, true);
+INSERT INTO asset_category_draft VALUES (2, -1, 0, 0, 'Hardware', '', false, 20, true);
+INSERT INTO asset_category_draft VALUES (3, -1, 1, 1, 'Operating Systems', '', false, 30, true);
+INSERT INTO asset_category_draft VALUES (4, -1, 1, 1, 'Application Software', '', false, 40, true);
+INSERT INTO asset_category_draft VALUES (5, -1, 1, 2, 'Desktops', '', false, 50, true);
+INSERT INTO asset_category_draft VALUES (6, -1, 2, 4, 'Mail Server', '', false, 60, true);
+INSERT INTO asset_category_draft VALUES (7, -1, 2, 4, 'CRM', '', false, 70, true);
+INSERT INTO asset_category_draft VALUES (8, -1, 2, 3, 'Linux', '', false, 80, true);
+INSERT INTO asset_category_draft VALUES (9, -1, 2, 3, 'Unix', '', false, 90, true);
+INSERT INTO asset_category_draft VALUES (10, -1, 2, 3, 'Windows 2003', '', false, 100, true);
 
 
 
 
 
 
-INSERT INTO ticket_level VALUES (1, 'Entry level', false, 0, true);
-INSERT INTO ticket_level VALUES (2, 'First level', false, 1, true);
-INSERT INTO ticket_level VALUES (3, 'Second level', false, 2, true);
-INSERT INTO ticket_level VALUES (4, 'Third level', false, 3, true);
-INSERT INTO ticket_level VALUES (5, 'Top level', false, 4, true);
+INSERT INTO ticket_level VALUES (1, 'Entry level', false, 10, true);
+INSERT INTO ticket_level VALUES (2, 'First level', false, 20, true);
+INSERT INTO ticket_level VALUES (3, 'Second level', false, 30, true);
+INSERT INTO ticket_level VALUES (4, 'Third level', false, 40, true);
+INSERT INTO ticket_level VALUES (5, 'Top level', false, 50, true);
 
 
 
-INSERT INTO ticket_severity VALUES (1, 'Normal', 'background-color:lightgreen;color:black;', true, 0, true);
-INSERT INTO ticket_severity VALUES (2, 'Important', 'background-color:yellow;color:black;', false, 1, true);
-INSERT INTO ticket_severity VALUES (3, 'Critical', 'background-color:red;color:black;font-weight:bold;', false, 2, true);
+INSERT INTO ticket_severity VALUES (1, 'Normal', 'background-color:lightgreen;color:black;', false, 10, true);
+INSERT INTO ticket_severity VALUES (2, 'Important', 'background-color:yellow;color:black;', false, 20, true);
+INSERT INTO ticket_severity VALUES (3, 'Critical', 'background-color:red;color:black;font-weight:bold;', false, 30, true);
 
 
 
-INSERT INTO lookup_ticketsource VALUES (1, 'Phone', false, 1, true);
-INSERT INTO lookup_ticketsource VALUES (2, 'Email', false, 2, true);
-INSERT INTO lookup_ticketsource VALUES (3, 'Web', false, 3, true);
-INSERT INTO lookup_ticketsource VALUES (4, 'Letter', false, 4, true);
-INSERT INTO lookup_ticketsource VALUES (5, 'Other', false, 5, true);
+INSERT INTO lookup_ticketsource VALUES (1, 'Phone', false, 10, true);
+INSERT INTO lookup_ticketsource VALUES (2, 'Email', false, 20, true);
+INSERT INTO lookup_ticketsource VALUES (3, 'Web', false, 30, true);
+INSERT INTO lookup_ticketsource VALUES (4, 'Letter', false, 40, true);
+INSERT INTO lookup_ticketsource VALUES (5, 'Other', false, 50, true);
 
 
 
-INSERT INTO ticket_priority VALUES (1, 'As Scheduled', 'background-color:lightgreen;color:black;', true, 0, true);
-INSERT INTO ticket_priority VALUES (2, 'Urgent', 'background-color:yellow;color:black;', false, 1, true);
-INSERT INTO ticket_priority VALUES (3, 'Critical', 'background-color:red;color:black;font-weight:bold;', false, 2, true);
 
 
 
-INSERT INTO ticket_category VALUES (1, 0, 0, 'Sales', '', false, 1, true);
-INSERT INTO ticket_category VALUES (2, 0, 0, 'Billing', '', false, 2, true);
-INSERT INTO ticket_category VALUES (3, 0, 0, 'Technical', '', false, 3, true);
-INSERT INTO ticket_category VALUES (4, 0, 0, 'Order', '', false, 4, true);
-INSERT INTO ticket_category VALUES (5, 0, 0, 'Other', '', false, 5, true);
+INSERT INTO ticket_priority VALUES (1, 'Next', '', false, 10, true);
+INSERT INTO ticket_priority VALUES (2, 'As Scheduled', 'background-color:lightgreen;color:black;', false, 20, true);
+INSERT INTO ticket_priority VALUES (3, 'Urgent', 'background-color:yellow;color:black;', false, 30, true);
+INSERT INTO ticket_priority VALUES (4, 'Critical', 'background-color:red;color:black;font-weight:bold;', false, 40, true);
 
 
 
 
 
 
+INSERT INTO ticket_category_draft VALUES (1, -1, 0, 0, 'Sales', '', false, 10, true);
+INSERT INTO ticket_category_draft VALUES (2, -1, 0, 0, 'Billing', '', false, 20, true);
+INSERT INTO ticket_category_draft VALUES (3, -1, 0, 0, 'Technical', '', false, 30, true);
+INSERT INTO ticket_category_draft VALUES (4, -1, 0, 0, 'Order', '', false, 40, true);
+INSERT INTO ticket_category_draft VALUES (5, -1, 0, 0, 'Other', '', false, 50, true);
 
 
 
@@ -5651,28 +6364,40 @@ INSERT INTO ticket_category VALUES (5, 0, 0, 'Other', '', false, 5, true);
 
 
 
-INSERT INTO lookup_quote_status VALUES (1, 'Incomplete', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (2, 'Pending internal approval', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (3, 'Approved internally', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (4, 'Unapproved internally', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (5, 'Pending customer acceptance', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (6, 'Accepted by customer', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (7, 'Rejected by customer', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (8, 'Changes requested by customer', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (9, 'Cancelled', false, 0, true);
-INSERT INTO lookup_quote_status VALUES (10, 'Complete', false, 0, true);
 
 
 
+INSERT INTO lookup_quote_status VALUES (1, 'Incomplete', false, 10, true);
+INSERT INTO lookup_quote_status VALUES (2, 'Pending internal approval', false, 20, true);
+INSERT INTO lookup_quote_status VALUES (3, 'Approved internally', false, 30, true);
+INSERT INTO lookup_quote_status VALUES (4, 'Unapproved internally', false, 40, true);
+INSERT INTO lookup_quote_status VALUES (5, 'Pending customer acceptance', false, 50, true);
+INSERT INTO lookup_quote_status VALUES (6, 'Accepted by customer', false, 60, true);
+INSERT INTO lookup_quote_status VALUES (7, 'Rejected by customer', false, 70, true);
+INSERT INTO lookup_quote_status VALUES (8, 'Changes requested by customer', false, 80, true);
+INSERT INTO lookup_quote_status VALUES (9, 'Cancelled', false, 90, true);
+INSERT INTO lookup_quote_status VALUES (10, 'Complete', false, 100, true);
 
 
 
+INSERT INTO lookup_quote_type VALUES (1, 'New', false, 10, true);
+INSERT INTO lookup_quote_type VALUES (2, 'Change', false, 20, true);
+INSERT INTO lookup_quote_type VALUES (3, 'Upgrade/Downgrade', false, 30, true);
+INSERT INTO lookup_quote_type VALUES (4, 'Disconnect', false, 40, true);
+INSERT INTO lookup_quote_type VALUES (5, 'Move', false, 50, true);
 
 
 
 
 
 
+INSERT INTO lookup_quote_source VALUES (1, 'Email', false, 10, true);
+INSERT INTO lookup_quote_source VALUES (2, 'Fax', false, 20, true);
+INSERT INTO lookup_quote_source VALUES (3, 'Incoming Phone Call', false, 30, true);
+INSERT INTO lookup_quote_source VALUES (4, 'Outgoing Phone Call', false, 40, true);
+INSERT INTO lookup_quote_source VALUES (5, 'In Person', false, 50, true);
+INSERT INTO lookup_quote_source VALUES (6, 'Mail', false, 60, true);
+INSERT INTO lookup_quote_source VALUES (7, 'Agent Request', false, 70, true);
 
 
 
@@ -5697,27 +6422,27 @@ INSERT INTO lookup_quote_status VALUES (10, 'Complete', false, 0, true);
 
 
 
-INSERT INTO lookup_order_status VALUES (1, 'Pending', false, 0, true);
-INSERT INTO lookup_order_status VALUES (2, 'In Progress', false, 0, true);
-INSERT INTO lookup_order_status VALUES (3, 'Cancelled', false, 0, true);
-INSERT INTO lookup_order_status VALUES (4, 'Rejected', false, 0, true);
-INSERT INTO lookup_order_status VALUES (5, 'Complete', false, 0, true);
-INSERT INTO lookup_order_status VALUES (6, 'Closed', false, 0, true);
 
 
 
-INSERT INTO lookup_order_type VALUES (1, 'New', false, 0, true);
-INSERT INTO lookup_order_type VALUES (2, 'Change', false, 0, true);
-INSERT INTO lookup_order_type VALUES (3, 'Upgrade', false, 0, true);
-INSERT INTO lookup_order_type VALUES (4, 'Downgrade', false, 0, true);
-INSERT INTO lookup_order_type VALUES (5, 'Disconnect', false, 0, true);
-INSERT INTO lookup_order_type VALUES (6, 'Move', false, 0, true);
-INSERT INTO lookup_order_type VALUES (7, 'Return', false, 0, true);
-INSERT INTO lookup_order_type VALUES (8, 'Suspend', false, 0, true);
-INSERT INTO lookup_order_type VALUES (9, 'Unsuspend', false, 0, true);
+INSERT INTO lookup_order_status VALUES (1, 'Pending', false, 10, true);
+INSERT INTO lookup_order_status VALUES (2, 'In Progress', false, 20, true);
+INSERT INTO lookup_order_status VALUES (3, 'Cancelled', false, 30, true);
+INSERT INTO lookup_order_status VALUES (4, 'Rejected', false, 40, true);
+INSERT INTO lookup_order_status VALUES (5, 'Complete', false, 50, true);
+INSERT INTO lookup_order_status VALUES (6, 'Closed', false, 60, true);
 
 
 
+INSERT INTO lookup_order_type VALUES (1, 'New', false, 10, true);
+INSERT INTO lookup_order_type VALUES (2, 'Change', false, 20, true);
+INSERT INTO lookup_order_type VALUES (3, 'Upgrade', false, 30, true);
+INSERT INTO lookup_order_type VALUES (4, 'Downgrade', false, 40, true);
+INSERT INTO lookup_order_type VALUES (5, 'Disconnect', false, 50, true);
+INSERT INTO lookup_order_type VALUES (6, 'Move', false, 60, true);
+INSERT INTO lookup_order_type VALUES (7, 'Return', false, 70, true);
+INSERT INTO lookup_order_type VALUES (8, 'Suspend', false, 80, true);
+INSERT INTO lookup_order_type VALUES (9, 'Unsuspend', false, 90, true);
 
 
 
@@ -5751,29 +6476,29 @@ INSERT INTO lookup_order_type VALUES (9, 'Unsuspend', false, 0, true);
 
 
 
-INSERT INTO lookup_orderaddress_types VALUES (1, 'Billing', false, 0, true);
-INSERT INTO lookup_orderaddress_types VALUES (2, 'Shipping', false, 0, true);
 
 
 
+INSERT INTO lookup_orderaddress_types VALUES (1, 'Billing', false, 10, true);
+INSERT INTO lookup_orderaddress_types VALUES (2, 'Shipping', false, 20, true);
 
 
 
-INSERT INTO lookup_payment_methods VALUES (1, 'Cash', false, 0, true);
-INSERT INTO lookup_payment_methods VALUES (2, 'Credit Card', false, 0, true);
-INSERT INTO lookup_payment_methods VALUES (3, 'Personal Check', false, 0, true);
-INSERT INTO lookup_payment_methods VALUES (4, 'Money Order', false, 0, true);
-INSERT INTO lookup_payment_methods VALUES (5, 'Certified Check', false, 0, true);
 
 
 
-INSERT INTO lookup_creditcard_types VALUES (1, 'Visa', false, 0, true);
-INSERT INTO lookup_creditcard_types VALUES (2, 'Master Card', false, 0, true);
-INSERT INTO lookup_creditcard_types VALUES (3, 'American Express', false, 0, true);
-INSERT INTO lookup_creditcard_types VALUES (4, 'Discover', false, 0, true);
+INSERT INTO lookup_payment_methods VALUES (1, 'Cash', false, 10, true);
+INSERT INTO lookup_payment_methods VALUES (2, 'Credit Card', false, 20, true);
+INSERT INTO lookup_payment_methods VALUES (3, 'Personal Check', false, 30, true);
+INSERT INTO lookup_payment_methods VALUES (4, 'Money Order', false, 40, true);
+INSERT INTO lookup_payment_methods VALUES (5, 'Certified Check', false, 50, true);
 
 
 
+INSERT INTO lookup_creditcard_types VALUES (1, 'Visa', false, 10, true);
+INSERT INTO lookup_creditcard_types VALUES (2, 'Master Card', false, 20, true);
+INSERT INTO lookup_creditcard_types VALUES (3, 'American Express', false, 30, true);
+INSERT INTO lookup_creditcard_types VALUES (4, 'Discover', false, 40, true);
 
 
 
@@ -5789,10 +6514,24 @@ INSERT INTO lookup_creditcard_types VALUES (4, 'Discover', false, 0, true);
 
 
 
-INSERT INTO module_field_categorylink VALUES (1, 1, 1, 10, 'Accounts', '2004-08-31 09:16:14.431');
-INSERT INTO module_field_categorylink VALUES (2, 2, 2, 10, 'Contacts', '2004-08-31 09:16:14.555');
-INSERT INTO module_field_categorylink VALUES (3, 8, 11072003, 10, 'Tickets', '2004-08-31 09:16:14.766');
+INSERT INTO lookup_payment_status VALUES (1, 'Pending', false, 10, true);
+INSERT INTO lookup_payment_status VALUES (2, 'In Progress', false, 20, true);
+INSERT INTO lookup_payment_status VALUES (3, 'Approved', false, 30, true);
+INSERT INTO lookup_payment_status VALUES (4, 'Declined', false, 40, true);
+
+
+
+
+
+
+
+
+
+INSERT INTO module_field_categorylink VALUES (1, 1, 1, 10, 'Accounts', '2005-03-16 11:27:42.235');
+INSERT INTO module_field_categorylink VALUES (2, 2, 2, 10, 'Contacts', '2005-03-16 11:27:42.776');
+INSERT INTO module_field_categorylink VALUES (3, 8, 11072003, 10, 'Tickets', '2005-03-16 11:27:43.693');
 INSERT INTO module_field_categorylink VALUES (4, 17, 200403192, 10, 'Product Catalog Categories', '2004-08-31 09:16:15.033');
+INSERT INTO module_field_categorylink VALUES (5, 21, 120200513, 10, 'Employees', '2004-08-31 09:16:15.500');
 
 
 
@@ -5835,13 +6574,14 @@ INSERT INTO module_field_categorylink VALUES (4, 17, 200403192, 10, 'Product Cat
 
 
 
-INSERT INTO lookup_survey_types VALUES (1, 'Open-Ended', false, 0, true);
-INSERT INTO lookup_survey_types VALUES (2, 'Quantitative (no comments)', false, 0, true);
-INSERT INTO lookup_survey_types VALUES (3, 'Quantitative (with comments)', false, 0, true);
-INSERT INTO lookup_survey_types VALUES (4, 'Item List', false, 0, true);
+INSERT INTO lookup_survey_types VALUES (1, 'Open-Ended', false, 10, true);
+INSERT INTO lookup_survey_types VALUES (2, 'Quantitative (no comments)', false, 20, true);
+INSERT INTO lookup_survey_types VALUES (3, 'Quantitative (with comments)', false, 30, true);
+INSERT INTO lookup_survey_types VALUES (4, 'Item List', false, 40, true);
 
 
 
+INSERT INTO survey VALUES (1, 'Address Update Request', NULL, NULL, NULL, -1, 2, true, -1, '2005-03-16 11:28:10.92', 0, '2005-03-16 11:28:10.92', 0);
 
 
 
@@ -7410,205 +8150,205 @@ INSERT INTO sync_system VALUES (5, 'Test', true);
 
 
 
-INSERT INTO sync_table VALUES (1, 1, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, 'id');
-INSERT INTO sync_table VALUES (2, 2, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, 2, false, NULL);
-INSERT INTO sync_table VALUES (3, 2, 'user', 'org.aspcfs.modules.admin.base.User', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, 4, false, NULL);
-INSERT INTO sync_table VALUES (4, 2, 'account', 'org.aspcfs.modules.accounts.base.Organization', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, 5, false, NULL);
-INSERT INTO sync_table VALUES (5, 2, 'accountInventory', 'org.aspcfs.modules.media.autoguide.base.Inventory', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, 6, false, NULL);
-INSERT INTO sync_table VALUES (6, 2, 'inventoryOption', 'org.aspcfs.modules.media.autoguide.base.InventoryOption', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, 8, false, NULL);
-INSERT INTO sync_table VALUES (7, 2, 'adRun', 'org.aspcfs.modules.media.autoguide.base.AdRun', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, 10, false, NULL);
-INSERT INTO sync_table VALUES (8, 2, 'tableList', 'org.aspcfs.modules.service.base.SyncTableList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, 12, false, NULL);
-INSERT INTO sync_table VALUES (9, 2, 'status_master', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, 14, false, NULL);
-INSERT INTO sync_table VALUES (10, 2, 'system', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, 16, false, NULL);
-INSERT INTO sync_table VALUES (11, 2, 'userList', 'org.aspcfs.modules.admin.base.UserList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE TABLE users ( user_id              int NOT NULL, record_status_id     int NULL, user_name            nvarchar(20) NULL, pin                  nvarchar(20) NULL, modified             datetime NULL, PRIMARY KEY (user_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 50, true, NULL);
-INSERT INTO sync_table VALUES (12, 2, 'XIF18users', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF18users ON users ( record_status_id )', 60, false, NULL);
-INSERT INTO sync_table VALUES (13, 2, 'makeList', 'org.aspcfs.modules.media.autoguide.base.MakeList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE TABLE make ( make_id              int NOT NULL, make_name            nvarchar(20) NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 70, true, NULL);
-INSERT INTO sync_table VALUES (14, 2, 'XIF2make', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF2make ON make ( record_status_id )', 80, false, NULL);
-INSERT INTO sync_table VALUES (15, 2, 'modelList', 'org.aspcfs.modules.media.autoguide.base.ModelList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE TABLE model ( model_id             int NOT NULL, make_id              int NULL, record_status_id     int NULL, model_name           nvarchar(40) NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (model_id), FOREIGN KEY (make_id) REFERENCES make (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 100, true, NULL);
-INSERT INTO sync_table VALUES (16, 2, 'XIF3model', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF3model ON model ( record_status_id )', 110, false, NULL);
-INSERT INTO sync_table VALUES (17, 2, 'XIF5model', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF5model ON model ( make_id )', 120, false, NULL);
-INSERT INTO sync_table VALUES (18, 2, 'vehicleList', 'org.aspcfs.modules.media.autoguide.base.VehicleList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE TABLE vehicle ( year                 nvarchar(4) NOT NULL, vehicle_id           int NOT NULL, model_id             int NULL, make_id              int NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (vehicle_id), FOREIGN KEY (model_id) REFERENCES model (model_id), FOREIGN KEY (make_id) REFERENCES make (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 130, true, NULL);
-INSERT INTO sync_table VALUES (19, 2, 'XIF30vehicle', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF30vehicle ON vehicle ( make_id )', 140, false, NULL);
-INSERT INTO sync_table VALUES (20, 2, 'XIF31vehicle', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF31vehicle ON vehicle ( model_id )', 150, false, NULL);
-INSERT INTO sync_table VALUES (21, 2, 'XIF4vehicle', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF4vehicle ON vehicle ( record_status_id )', 160, false, NULL);
-INSERT INTO sync_table VALUES (22, 2, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE TABLE account ( account_id           int NOT NULL, account_name         nvarchar(80) NULL, record_status_id     int NULL, address              nvarchar(80) NULL, modified             datetime NULL, city                 nvarchar(80) NULL, state                nvarchar(2) NULL, notes                nvarchar(255) NULL, zip                  nvarchar(11) NULL, phone                nvarchar(20) NULL, contact              nvarchar(20) NULL, dmv_number           nvarchar(20) NULL, owner_id             int NULL, entered              datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 170, true, NULL);
-INSERT INTO sync_table VALUES (23, 2, 'XIF16account', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF16account ON account ( record_status_id )', 180, false, NULL);
-INSERT INTO sync_table VALUES (24, 2, 'accountInventoryList', 'org.aspcfs.modules.media.autoguide.base.InventoryList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE TABLE account_inventory ( inventory_id         int NOT NULL, vin                  nvarchar(20) NULL, vehicle_id           int NULL, account_id           int NULL, mileage              nvarchar(20) NULL, enteredby            int NULL, new                  bit, condition            nvarchar(20) NULL, comments             nvarchar(255) NULL, stock_no             nvarchar(20) NULL, ext_color            nvarchar(20) NULL, int_color            nvarchar(20) NULL, style                nvarchar(40) NULL, invoice_price        money NULL, selling_price        money NULL, selling_price_text		nvarchar(100) NULL, modified             datetime NULL, sold                 int NULL, modifiedby           int NULL, record_status_id     int NULL, entered              datetime NULL, PRIMARY KEY (inventory_id), FOREIGN KEY (account_id) REFERENCES account (account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 190, true, NULL);
-INSERT INTO sync_table VALUES (25, 2, 'XIF10account_inventory', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF10account_inventory ON account_inventory ( record_status_id )', 200, false, NULL);
-INSERT INTO sync_table VALUES (26, 2, 'XIF10account_inventory', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF11account_inventory ON account_inventory ( modifiedby )', 210, false, NULL);
-INSERT INTO sync_table VALUES (27, 2, 'XIF19account_inventory', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF19account_inventory ON account_inventory ( account_id )', 220, false, NULL);
-INSERT INTO sync_table VALUES (28, 2, 'XIF35account_inventory', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF35account_inventory ON account_inventory ( vehicle_id )', 230, false, NULL);
-INSERT INTO sync_table VALUES (29, 2, 'optionList', 'org.aspcfs.modules.media.autoguide.base.OptionList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE TABLE options ( option_id            int NOT NULL, option_name          nvarchar(20) NULL, record_status_id     int NULL, record_status_date   datetime NULL, PRIMARY KEY (option_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 330, true, NULL);
-INSERT INTO sync_table VALUES (30, 2, 'XIF24options', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF24options ON options ( record_status_id )', 340, false, NULL);
-INSERT INTO sync_table VALUES (31, 2, 'inventoryOptionList', 'org.aspcfs.modules.media.autoguide.base.InventoryOptionList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE TABLE inventory_options ( inventory_id         int NOT NULL, option_id            int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (option_id, inventory_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (option_id) REFERENCES options (option_id) )', 350, true, NULL);
-INSERT INTO sync_table VALUES (32, 2, 'XIF25inventory_options', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF25inventory_options ON inventory_options ( option_id )', 360, false, NULL);
-INSERT INTO sync_table VALUES (33, 2, 'XIF27inventory_options', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF27inventory_options ON inventory_options ( record_status_id )', 370, false, NULL);
-INSERT INTO sync_table VALUES (34, 2, 'XIF33inventory_options', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF33inventory_options ON inventory_options ( inventory_id )', 380, false, NULL);
-INSERT INTO sync_table VALUES (35, 2, 'adTypeList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE TABLE ad_type ( ad_type_id           int NOT NULL, ad_type_name         nvarchar(20) NULL, PRIMARY KEY (ad_type_id) )', 385, true, NULL);
-INSERT INTO sync_table VALUES (36, 2, 'adRunList', 'org.aspcfs.modules.media.autoguide.base.AdRunList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE TABLE ad_run ( ad_run_id            int NOT NULL, record_status_id     int NULL, inventory_id         int NULL, ad_type_id           int NULL, ad_run_date          datetime NULL, has_picture          int NULL, modified             datetime NULL, entered              datetime NULL, modifiedby           int NULL, enteredby            int NULL, PRIMARY KEY (ad_run_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (ad_type_id) REFERENCES ad_type (ad_type_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 390, true, NULL);
-INSERT INTO sync_table VALUES (37, 2, 'XIF22ad_run', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF22ad_run ON ad_run ( record_status_id )', 400, false, NULL);
-INSERT INTO sync_table VALUES (38, 2, 'XIF36ad_run', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF36ad_run ON ad_run ( ad_type_id )', 402, false, NULL);
-INSERT INTO sync_table VALUES (39, 2, 'XIF37ad_run', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF37ad_run ON ad_run ( inventory_id )', 404, false, NULL);
-INSERT INTO sync_table VALUES (40, 2, 'inventory_picture', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE TABLE inventory_picture ( picture_name         nvarchar(20) NOT NULL, inventory_id         int NOT NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, modifiedby           int NULL, enteredby            int NULL, PRIMARY KEY (picture_name, inventory_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 410, false, NULL);
-INSERT INTO sync_table VALUES (41, 2, 'XIF23inventory_picture', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF23inventory_picture ON inventory_picture ( record_status_id )', 420, false, NULL);
-INSERT INTO sync_table VALUES (42, 2, 'XIF32inventory_picture', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF32inventory_picture ON inventory_picture ( inventory_id )', 430, false, NULL);
-INSERT INTO sync_table VALUES (43, 2, 'preferences', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE TABLE preferences ( user_id              int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (user_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (user_id) REFERENCES users (user_id) )', 440, false, NULL);
-INSERT INTO sync_table VALUES (44, 2, 'XIF29preferences', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF29preferences ON preferences ( record_status_id )', 450, false, NULL);
-INSERT INTO sync_table VALUES (45, 2, 'user_account', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE TABLE user_account ( user_id              int NOT NULL, account_id           int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (user_id, account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (account_id) REFERENCES account (account_id), FOREIGN KEY (user_id) REFERENCES users (user_id) )', 460, false, NULL);
-INSERT INTO sync_table VALUES (46, 2, 'XIF14user_account', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF14user_account ON user_account ( user_id )', 470, false, NULL);
-INSERT INTO sync_table VALUES (47, 2, 'XIF15user_account', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF15user_account ON user_account ( account_id )', 480, false, NULL);
-INSERT INTO sync_table VALUES (48, 2, 'XIF17user_account', NULL, '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', 'CREATE INDEX XIF17user_account ON user_account ( record_status_id )', 490, false, NULL);
-INSERT INTO sync_table VALUES (49, 2, 'deleteInventoryCache', 'org.aspcfs.modules.media.autoguide.actions.DeleteInventoryCache', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, 500, false, NULL);
-INSERT INTO sync_table VALUES (50, 4, 'lookupIndustry', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (51, 4, 'lookupIndustryList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (52, 4, 'systemPrefs', 'org.aspcfs.utils.web.CustomLookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (53, 4, 'systemModules', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (54, 4, 'systemModulesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (55, 4, 'lookupContactTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (56, 4, 'lookupContactTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (57, 4, 'lookupAccountTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (58, 4, 'lookupAccountTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (59, 4, 'lookupDepartment', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (60, 4, 'lookupDepartmentList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (61, 4, 'lookupOrgAddressTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (62, 4, 'lookupOrgAddressTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (63, 4, 'lookupOrgEmailTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (64, 4, 'lookupOrgEmailTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (65, 4, 'lookupOrgPhoneTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (66, 4, 'lookupOrgPhoneTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (67, 4, 'lookupInstantMessengerTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (68, 4, 'lookupInstantMessengerTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (69, 4, 'lookupEmploymentTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (70, 4, 'lookupEmploymentTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (71, 4, 'lookupLocale', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (72, 4, 'lookupLocaleList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (73, 4, 'lookupContactAddressTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (74, 4, 'lookupContactAddressTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (75, 4, 'lookupContactEmailTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (76, 4, 'lookupContactEmailTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (77, 4, 'lookupContactPhoneTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (78, 4, 'lookupContactPhoneTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (79, 4, 'lookupStage', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (80, 4, 'lookupStageList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (81, 4, 'lookupDeliveryOptions', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (82, 4, 'lookupDeliveryOptionsList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (83, 4, 'lookupCallTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (84, 4, 'lookupCallTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (85, 4, 'ticketCategory', 'org.aspcfs.modules.troubletickets.base.TicketCategory', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (86, 4, 'ticketCategoryList', 'org.aspcfs.modules.troubletickets.base.TicketCategoryList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (87, 4, 'ticketSeverity', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (88, 4, 'ticketSeverityList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (89, 4, 'lookupTicketSource', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (90, 4, 'lookupTicketSourceList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (91, 4, 'ticketPriority', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (92, 4, 'ticketPriorityList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (93, 4, 'lookupRevenueTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (94, 4, 'lookupRevenueTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (95, 4, 'lookupRevenueDetailTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (96, 4, 'lookupRevenueDetailTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (97, 4, 'lookupSurveyTypes', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (98, 4, 'lookupSurveyTypesList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (99, 4, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (100, 4, 'user', 'org.aspcfs.modules.admin.base.User', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (101, 4, 'userList', 'org.aspcfs.modules.admin.base.UserList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (102, 4, 'contact', 'org.aspcfs.modules.contacts.base.Contact', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, 'id');
-INSERT INTO sync_table VALUES (103, 4, 'contactList', 'org.aspcfs.modules.contacts.base.ContactList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (104, 4, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, 'id');
-INSERT INTO sync_table VALUES (105, 4, 'ticketList', 'org.aspcfs.modules.troubletickets.base.TicketList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (106, 4, 'account', 'org.aspcfs.modules.accounts.base.Organization', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, 'id');
-INSERT INTO sync_table VALUES (107, 4, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (108, 4, 'role', 'org.aspcfs.modules.admin.base.Role', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (109, 4, 'roleList', 'org.aspcfs.modules.admin.base.RoleList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (110, 4, 'permissionCategory', 'org.aspcfs.modules.admin.base.PermissionCategory', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (111, 4, 'permissionCategoryList', 'org.aspcfs.modules.admin.base.PermissionCategoryList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (112, 4, 'permission', 'org.aspcfs.modules.admin.base.Permission', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (113, 4, 'permissionList', 'org.aspcfs.modules.admin.base.PermissionList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (114, 4, 'rolePermission', 'org.aspcfs.modules.admin.base.RolePermission', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (115, 4, 'rolePermissionList', 'org.aspcfs.modules.admin.base.RolePermissionList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (116, 4, 'opportunity', 'org.aspcfs.modules.pipeline.base.Opportunity', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (117, 4, 'opportunityList', 'org.aspcfs.modules.pipeline.base.OpportunityList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (118, 4, 'call', 'org.aspcfs.modules.contacts.base.Call', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (119, 4, 'callList', 'org.aspcfs.modules.contacts.base.CallList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (120, 4, 'customFieldCategory', 'org.aspcfs.modules.base.CustomFieldCategory', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (121, 4, 'customFieldCategoryList', 'org.aspcfs.modules.base.CustomFieldCategoryList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (122, 4, 'customFieldGroup', 'org.aspcfs.modules.base.CustomFieldGroup', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (123, 4, 'customFieldGroupList', 'org.aspcfs.modules.base.CustomFieldGroupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (124, 4, 'customField', 'org.aspcfs.modules.base.CustomField', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (125, 4, 'customFieldList', 'org.aspcfs.modules.base.CustomFieldList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (126, 4, 'customFieldLookup', 'org.aspcfs.utils.web.LookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (127, 4, 'customFieldLookupList', 'org.aspcfs.utils.web.LookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (128, 4, 'customFieldRecord', 'org.aspcfs.modules.base.CustomFieldRecord', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, 'id');
-INSERT INTO sync_table VALUES (129, 4, 'customFieldRecordList', 'org.aspcfs.modules.base.CustomFieldRecordList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (130, 4, 'contactEmailAddress', 'org.aspcfs.modules.contacts.base.ContactEmailAddress', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (131, 4, 'contactEmailAddressList', 'org.aspcfs.modules.contacts.base.ContactEmailAddressList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (132, 4, 'customFieldData', 'org.aspcfs.modules.base.CustomFieldData', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (133, 4, 'lookupProjectActivity', 'org.aspcfs.utils.web.CustomLookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (134, 4, 'lookupProjectActivityList', 'org.aspcfs.utils.web.CustomLookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (135, 4, 'lookupProjectIssues', 'org.aspcfs.utils.web.CustomLookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (136, 4, 'lookupProjectIssuesList', 'org.aspcfs.utils.web.CustomLookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (137, 4, 'lookupProjectLoe', 'org.aspcfs.utils.web.CustomLookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (138, 4, 'lookupProjectLoeList', 'org.aspcfs.utils.web.CustomLookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (139, 4, 'lookupProjectPriority', 'org.aspcfs.utils.web.CustomLookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (140, 4, 'lookupProjectPriorityList', 'org.aspcfs.utils.web.CustomLookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (141, 4, 'lookupProjectStatus', 'org.aspcfs.utils.web.CustomLookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (142, 4, 'lookupProjectStatusList', 'org.aspcfs.utils.web.CustomLookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (143, 4, 'project', 'com.zeroio.iteam.base.Project', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (144, 4, 'projectList', 'com.zeroio.iteam.base.ProjectList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (145, 4, 'requirement', 'com.zeroio.iteam.base.Requirement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (146, 4, 'requirementList', 'com.zeroio.iteam.base.RequirementList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (147, 4, 'assignment', 'com.zeroio.iteam.base.Assignment', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (148, 4, 'assignmentList', 'com.zeroio.iteam.base.AssignmentList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (149, 4, 'issue', 'com.zeroio.iteam.base.Issue', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (150, 4, 'issueList', 'com.zeroio.iteam.base.IssueList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (151, 4, 'issueReply', 'com.zeroio.iteam.base.IssueReply', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (152, 4, 'issueReplyList', 'com.zeroio.iteam.base.IssueReplyList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (153, 4, 'teamMember', 'com.zeroio.iteam.base.TeamMember', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (154, 4, 'fileItem', 'com.zeroio.iteam.base.FileItem', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (155, 4, 'fileItemList', 'com.zeroio.iteam.base.FileItemList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (156, 4, 'fileItemVersion', 'com.zeroio.iteam.base.FileItemVersion', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (157, 4, 'fileItemVersionList', 'com.zeroio.iteam.base.FileItemVersionList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (158, 4, 'fileDownloadLog', 'com.zeroio.iteam.base.FileDownloadLog', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (159, 4, 'contactAddress', 'org.aspcfs.modules.contacts.base.ContactAddress', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (160, 4, 'contactAddressList', 'org.aspcfs.modules.contacts.base.ContactAddressList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (161, 4, 'contactPhoneNumber', 'org.aspcfs.modules.contacts.base.ContactPhoneNumber', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (162, 4, 'contactPhoneNumberList', 'org.aspcfs.modules.contacts.base.ContactPhoneNumberList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (163, 4, 'organizationPhoneNumber', 'org.aspcfs.modules.accounts.base.OrganizationPhoneNumber', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (164, 4, 'organizationPhoneNumberList', 'org.aspcfs.modules.accounts.base.OrganizationPhoneNumberList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (165, 4, 'organizationEmailAddress', 'org.aspcfs.modules.accounts.base.OrganizationEmailAddress', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (166, 4, 'organizationEmailAddressList', 'org.aspcfs.modules.accounts.base.OrganizationEmailAddressList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (167, 4, 'organizationAddress', 'org.aspcfs.modules.accounts.base.OrganizationAddress', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (168, 4, 'organizationAddressList', 'org.aspcfs.modules.accounts.base.OrganizationAddressList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (169, 4, 'ticketLog', 'org.aspcfs.modules.troubletickets.base.TicketLog', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (170, 4, 'ticketLogList', 'org.aspcfs.modules.troubletickets.base.TicketLogList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (171, 4, 'message', 'org.aspcfs.modules.communications.base.Message', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (172, 4, 'messageList', 'org.aspcfs.modules.communications.base.MessageList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (173, 4, 'searchCriteriaElements', 'org.aspcfs.modules.communications.base.SearchCriteriaList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (174, 4, 'searchCriteriaElementsList', 'org.aspcfs.modules.communications.base.SearchCriteriaListList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (175, 4, 'savedCriteriaElement', 'org.aspcfs.modules.communications.base.SavedCriteriaElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (176, 4, 'searchFieldElement', 'org.aspcfs.utils.web.CustomLookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (177, 4, 'searchFieldElementList', 'org.aspcfs.utils.web.CustomLookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (178, 4, 'revenue', 'org.aspcfs.modules.accounts.base.Revenue', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (179, 4, 'revenueList', 'org.aspcfs.modules.accounts.base.RevenueList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (180, 4, 'campaign', 'org.aspcfs.modules.communications.base.Campaign', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (181, 4, 'campaignList', 'org.aspcfs.modules.communications.base.CampaignList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (182, 4, 'scheduledRecipient', 'org.aspcfs.modules.communications.base.ScheduledRecipient', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (183, 4, 'scheduledRecipientList', 'org.aspcfs.modules.communications.base.ScheduledRecipientList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (184, 4, 'accessLog', 'org.aspcfs.modules.admin.base.AccessLog', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (185, 4, 'accessLogList', 'org.aspcfs.modules.admin.base.AccessLogList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (186, 4, 'accountTypeLevels', 'org.aspcfs.modules.accounts.base.AccountTypeLevel', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (187, 4, 'fieldTypes', 'org.aspcfs.utils.web.CustomLookupElement', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (188, 4, 'fieldTypesList', 'org.aspcfs.utils.web.CustomLookupList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (189, 4, 'excludedRecipient', 'org.aspcfs.modules.communications.base.ExcludedRecipient', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (190, 4, 'campaignRun', 'org.aspcfs.modules.communications.base.CampaignRun', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (191, 4, 'campaignRunList', 'org.aspcfs.modules.communications.base.CampaignRunList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (192, 4, 'campaignListGroups', 'org.aspcfs.modules.communications.base.CampaignListGroup', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (193, 5, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, 'id');
-INSERT INTO sync_table VALUES (194, 5, 'ticketCategory', 'org.aspcfs.modules.troubletickets.base.TicketCategory', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (195, 5, 'ticketCategoryList', 'org.aspcfs.modules.troubletickets.base.TicketCategoryList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (196, 5, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, 2, false, NULL);
-INSERT INTO sync_table VALUES (197, 5, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (198, 5, 'userList', 'org.aspcfs.modules.admin.base.UserList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
-INSERT INTO sync_table VALUES (199, 5, 'contactList', 'org.aspcfs.modules.contacts.base.ContactList', '2004-08-31 09:16:08.328', '2004-08-31 09:16:08.328', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (1, 1, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, 'id');
+INSERT INTO sync_table VALUES (2, 2, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, 2, false, NULL);
+INSERT INTO sync_table VALUES (3, 2, 'user', 'org.aspcfs.modules.admin.base.User', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, 4, false, NULL);
+INSERT INTO sync_table VALUES (4, 2, 'account', 'org.aspcfs.modules.accounts.base.Organization', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, 5, false, NULL);
+INSERT INTO sync_table VALUES (5, 2, 'accountInventory', 'org.aspcfs.modules.media.autoguide.base.Inventory', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, 6, false, NULL);
+INSERT INTO sync_table VALUES (6, 2, 'inventoryOption', 'org.aspcfs.modules.media.autoguide.base.InventoryOption', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, 8, false, NULL);
+INSERT INTO sync_table VALUES (7, 2, 'adRun', 'org.aspcfs.modules.media.autoguide.base.AdRun', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, 10, false, NULL);
+INSERT INTO sync_table VALUES (8, 2, 'tableList', 'org.aspcfs.modules.service.base.SyncTableList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, 12, false, NULL);
+INSERT INTO sync_table VALUES (9, 2, 'status_master', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, 14, false, NULL);
+INSERT INTO sync_table VALUES (10, 2, 'system', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, 16, false, NULL);
+INSERT INTO sync_table VALUES (11, 2, 'userList', 'org.aspcfs.modules.admin.base.UserList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE TABLE users ( user_id              int NOT NULL, record_status_id     int NULL, user_name            nvarchar(20) NULL, pin                  nvarchar(20) NULL, modified             datetime NULL, PRIMARY KEY (user_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 50, true, NULL);
+INSERT INTO sync_table VALUES (12, 2, 'XIF18users', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF18users ON users ( record_status_id )', 60, false, NULL);
+INSERT INTO sync_table VALUES (13, 2, 'makeList', 'org.aspcfs.modules.media.autoguide.base.MakeList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE TABLE make ( make_id              int NOT NULL, make_name            nvarchar(20) NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 70, true, NULL);
+INSERT INTO sync_table VALUES (14, 2, 'XIF2make', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF2make ON make ( record_status_id )', 80, false, NULL);
+INSERT INTO sync_table VALUES (15, 2, 'modelList', 'org.aspcfs.modules.media.autoguide.base.ModelList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE TABLE model ( model_id             int NOT NULL, make_id              int NULL, record_status_id     int NULL, model_name           nvarchar(40) NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (model_id), FOREIGN KEY (make_id) REFERENCES make (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 100, true, NULL);
+INSERT INTO sync_table VALUES (16, 2, 'XIF3model', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF3model ON model ( record_status_id )', 110, false, NULL);
+INSERT INTO sync_table VALUES (17, 2, 'XIF5model', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF5model ON model ( make_id )', 120, false, NULL);
+INSERT INTO sync_table VALUES (18, 2, 'vehicleList', 'org.aspcfs.modules.media.autoguide.base.VehicleList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE TABLE vehicle ( year                 nvarchar(4) NOT NULL, vehicle_id           int NOT NULL, model_id             int NULL, make_id              int NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (vehicle_id), FOREIGN KEY (model_id) REFERENCES model (model_id), FOREIGN KEY (make_id) REFERENCES make (make_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 130, true, NULL);
+INSERT INTO sync_table VALUES (19, 2, 'XIF30vehicle', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF30vehicle ON vehicle ( make_id )', 140, false, NULL);
+INSERT INTO sync_table VALUES (20, 2, 'XIF31vehicle', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF31vehicle ON vehicle ( model_id )', 150, false, NULL);
+INSERT INTO sync_table VALUES (21, 2, 'XIF4vehicle', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF4vehicle ON vehicle ( record_status_id )', 160, false, NULL);
+INSERT INTO sync_table VALUES (22, 2, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE TABLE account ( account_id           int NOT NULL, account_name         nvarchar(80) NULL, record_status_id     int NULL, address              nvarchar(80) NULL, modified             datetime NULL, city                 nvarchar(80) NULL, state                nvarchar(2) NULL, notes                nvarchar(255) NULL, zip                  nvarchar(11) NULL, phone                nvarchar(20) NULL, contact              nvarchar(20) NULL, dmv_number           nvarchar(20) NULL, owner_id             int NULL, entered              datetime NULL, enteredby            int NULL, modifiedby           int NULL, PRIMARY KEY (account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 170, true, NULL);
+INSERT INTO sync_table VALUES (23, 2, 'XIF16account', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF16account ON account ( record_status_id )', 180, false, NULL);
+INSERT INTO sync_table VALUES (24, 2, 'accountInventoryList', 'org.aspcfs.modules.media.autoguide.base.InventoryList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE TABLE account_inventory ( inventory_id         int NOT NULL, vin                  nvarchar(20) NULL, vehicle_id           int NULL, account_id           int NULL, mileage              nvarchar(20) NULL, enteredby            int NULL, new                  bit, condition            nvarchar(20) NULL, comments             nvarchar(255) NULL, stock_no             nvarchar(20) NULL, ext_color            nvarchar(20) NULL, int_color            nvarchar(20) NULL, style                nvarchar(40) NULL, invoice_price        money NULL, selling_price        money NULL, selling_price_text		nvarchar(100) NULL, modified             datetime NULL, sold                 int NULL, modifiedby           int NULL, record_status_id     int NULL, entered              datetime NULL, PRIMARY KEY (inventory_id), FOREIGN KEY (account_id) REFERENCES account (account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 190, true, NULL);
+INSERT INTO sync_table VALUES (25, 2, 'XIF10account_inventory', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF10account_inventory ON account_inventory ( record_status_id )', 200, false, NULL);
+INSERT INTO sync_table VALUES (26, 2, 'XIF10account_inventory', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF11account_inventory ON account_inventory ( modifiedby )', 210, false, NULL);
+INSERT INTO sync_table VALUES (27, 2, 'XIF19account_inventory', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF19account_inventory ON account_inventory ( account_id )', 220, false, NULL);
+INSERT INTO sync_table VALUES (28, 2, 'XIF35account_inventory', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF35account_inventory ON account_inventory ( vehicle_id )', 230, false, NULL);
+INSERT INTO sync_table VALUES (29, 2, 'optionList', 'org.aspcfs.modules.media.autoguide.base.OptionList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE TABLE options ( option_id            int NOT NULL, option_name          nvarchar(20) NULL, record_status_id     int NULL, record_status_date   datetime NULL, PRIMARY KEY (option_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 330, true, NULL);
+INSERT INTO sync_table VALUES (30, 2, 'XIF24options', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF24options ON options ( record_status_id )', 340, false, NULL);
+INSERT INTO sync_table VALUES (31, 2, 'inventoryOptionList', 'org.aspcfs.modules.media.autoguide.base.InventoryOptionList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE TABLE inventory_options ( inventory_id         int NOT NULL, option_id            int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (option_id, inventory_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (option_id) REFERENCES options (option_id) )', 350, true, NULL);
+INSERT INTO sync_table VALUES (32, 2, 'XIF25inventory_options', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF25inventory_options ON inventory_options ( option_id )', 360, false, NULL);
+INSERT INTO sync_table VALUES (33, 2, 'XIF27inventory_options', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF27inventory_options ON inventory_options ( record_status_id )', 370, false, NULL);
+INSERT INTO sync_table VALUES (34, 2, 'XIF33inventory_options', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF33inventory_options ON inventory_options ( inventory_id )', 380, false, NULL);
+INSERT INTO sync_table VALUES (35, 2, 'adTypeList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE TABLE ad_type ( ad_type_id           int NOT NULL, ad_type_name         nvarchar(20) NULL, PRIMARY KEY (ad_type_id) )', 385, true, NULL);
+INSERT INTO sync_table VALUES (36, 2, 'adRunList', 'org.aspcfs.modules.media.autoguide.base.AdRunList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE TABLE ad_run ( ad_run_id            int NOT NULL, record_status_id     int NULL, inventory_id         int NULL, ad_type_id           int NULL, ad_run_date          datetime NULL, has_picture          int NULL, modified             datetime NULL, entered              datetime NULL, modifiedby           int NULL, enteredby            int NULL, PRIMARY KEY (ad_run_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (ad_type_id) REFERENCES ad_type (ad_type_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 390, true, NULL);
+INSERT INTO sync_table VALUES (37, 2, 'XIF22ad_run', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF22ad_run ON ad_run ( record_status_id )', 400, false, NULL);
+INSERT INTO sync_table VALUES (38, 2, 'XIF36ad_run', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF36ad_run ON ad_run ( ad_type_id )', 402, false, NULL);
+INSERT INTO sync_table VALUES (39, 2, 'XIF37ad_run', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF37ad_run ON ad_run ( inventory_id )', 404, false, NULL);
+INSERT INTO sync_table VALUES (40, 2, 'inventory_picture', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE TABLE inventory_picture ( picture_name         nvarchar(20) NOT NULL, inventory_id         int NOT NULL, record_status_id     int NULL, entered              datetime NULL, modified             datetime NULL, modifiedby           int NULL, enteredby            int NULL, PRIMARY KEY (picture_name, inventory_id), FOREIGN KEY (inventory_id) REFERENCES account_inventory (inventory_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id) )', 410, false, NULL);
+INSERT INTO sync_table VALUES (41, 2, 'XIF23inventory_picture', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF23inventory_picture ON inventory_picture ( record_status_id )', 420, false, NULL);
+INSERT INTO sync_table VALUES (42, 2, 'XIF32inventory_picture', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF32inventory_picture ON inventory_picture ( inventory_id )', 430, false, NULL);
+INSERT INTO sync_table VALUES (43, 2, 'preferences', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE TABLE preferences ( user_id              int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (user_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (user_id) REFERENCES users (user_id) )', 440, false, NULL);
+INSERT INTO sync_table VALUES (44, 2, 'XIF29preferences', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF29preferences ON preferences ( record_status_id )', 450, false, NULL);
+INSERT INTO sync_table VALUES (45, 2, 'user_account', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE TABLE user_account ( user_id              int NOT NULL, account_id           int NOT NULL, record_status_id     int NULL, modified             datetime NULL, PRIMARY KEY (user_id, account_id), FOREIGN KEY (record_status_id) REFERENCES status_master (record_status_id), FOREIGN KEY (account_id) REFERENCES account (account_id), FOREIGN KEY (user_id) REFERENCES users (user_id) )', 460, false, NULL);
+INSERT INTO sync_table VALUES (46, 2, 'XIF14user_account', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF14user_account ON user_account ( user_id )', 470, false, NULL);
+INSERT INTO sync_table VALUES (47, 2, 'XIF15user_account', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF15user_account ON user_account ( account_id )', 480, false, NULL);
+INSERT INTO sync_table VALUES (48, 2, 'XIF17user_account', NULL, '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', 'CREATE INDEX XIF17user_account ON user_account ( record_status_id )', 490, false, NULL);
+INSERT INTO sync_table VALUES (49, 2, 'deleteInventoryCache', 'org.aspcfs.modules.media.autoguide.actions.DeleteInventoryCache', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, 500, false, NULL);
+INSERT INTO sync_table VALUES (50, 4, 'lookupIndustry', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (51, 4, 'lookupIndustryList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (52, 4, 'systemPrefs', 'org.aspcfs.utils.web.CustomLookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (53, 4, 'systemModules', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (54, 4, 'systemModulesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (55, 4, 'lookupContactTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (56, 4, 'lookupContactTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (57, 4, 'lookupAccountTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (58, 4, 'lookupAccountTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (59, 4, 'lookupDepartment', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (60, 4, 'lookupDepartmentList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (61, 4, 'lookupOrgAddressTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (62, 4, 'lookupOrgAddressTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (63, 4, 'lookupOrgEmailTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (64, 4, 'lookupOrgEmailTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (65, 4, 'lookupOrgPhoneTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (66, 4, 'lookupOrgPhoneTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (67, 4, 'lookupInstantMessengerTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (68, 4, 'lookupInstantMessengerTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (69, 4, 'lookupEmploymentTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (70, 4, 'lookupEmploymentTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (71, 4, 'lookupLocale', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (72, 4, 'lookupLocaleList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (73, 4, 'lookupContactAddressTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (74, 4, 'lookupContactAddressTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (75, 4, 'lookupContactEmailTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (76, 4, 'lookupContactEmailTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (77, 4, 'lookupContactPhoneTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (78, 4, 'lookupContactPhoneTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (79, 4, 'lookupStage', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (80, 4, 'lookupStageList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (81, 4, 'lookupDeliveryOptions', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (82, 4, 'lookupDeliveryOptionsList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (83, 4, 'lookupCallTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (84, 4, 'lookupCallTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (85, 4, 'ticketCategory', 'org.aspcfs.modules.troubletickets.base.TicketCategory', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (86, 4, 'ticketCategoryList', 'org.aspcfs.modules.troubletickets.base.TicketCategoryList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (87, 4, 'ticketSeverity', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (88, 4, 'ticketSeverityList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (89, 4, 'lookupTicketSource', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (90, 4, 'lookupTicketSourceList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (91, 4, 'ticketPriority', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (92, 4, 'ticketPriorityList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (93, 4, 'lookupRevenueTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (94, 4, 'lookupRevenueTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (95, 4, 'lookupRevenueDetailTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (96, 4, 'lookupRevenueDetailTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (97, 4, 'lookupSurveyTypes', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (98, 4, 'lookupSurveyTypesList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (99, 4, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (100, 4, 'user', 'org.aspcfs.modules.admin.base.User', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (101, 4, 'userList', 'org.aspcfs.modules.admin.base.UserList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (102, 4, 'contact', 'org.aspcfs.modules.contacts.base.Contact', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, 'id');
+INSERT INTO sync_table VALUES (103, 4, 'contactList', 'org.aspcfs.modules.contacts.base.ContactList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (104, 4, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, 'id');
+INSERT INTO sync_table VALUES (105, 4, 'ticketList', 'org.aspcfs.modules.troubletickets.base.TicketList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (106, 4, 'account', 'org.aspcfs.modules.accounts.base.Organization', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, 'id');
+INSERT INTO sync_table VALUES (107, 4, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (108, 4, 'role', 'org.aspcfs.modules.admin.base.Role', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (109, 4, 'roleList', 'org.aspcfs.modules.admin.base.RoleList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (110, 4, 'permissionCategory', 'org.aspcfs.modules.admin.base.PermissionCategory', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (111, 4, 'permissionCategoryList', 'org.aspcfs.modules.admin.base.PermissionCategoryList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (112, 4, 'permission', 'org.aspcfs.modules.admin.base.Permission', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (113, 4, 'permissionList', 'org.aspcfs.modules.admin.base.PermissionList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (114, 4, 'rolePermission', 'org.aspcfs.modules.admin.base.RolePermission', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (115, 4, 'rolePermissionList', 'org.aspcfs.modules.admin.base.RolePermissionList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (116, 4, 'opportunity', 'org.aspcfs.modules.pipeline.base.Opportunity', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (117, 4, 'opportunityList', 'org.aspcfs.modules.pipeline.base.OpportunityList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (118, 4, 'call', 'org.aspcfs.modules.contacts.base.Call', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (119, 4, 'callList', 'org.aspcfs.modules.contacts.base.CallList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (120, 4, 'customFieldCategory', 'org.aspcfs.modules.base.CustomFieldCategory', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (121, 4, 'customFieldCategoryList', 'org.aspcfs.modules.base.CustomFieldCategoryList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (122, 4, 'customFieldGroup', 'org.aspcfs.modules.base.CustomFieldGroup', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (123, 4, 'customFieldGroupList', 'org.aspcfs.modules.base.CustomFieldGroupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (124, 4, 'customField', 'org.aspcfs.modules.base.CustomField', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (125, 4, 'customFieldList', 'org.aspcfs.modules.base.CustomFieldList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (126, 4, 'customFieldLookup', 'org.aspcfs.utils.web.LookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (127, 4, 'customFieldLookupList', 'org.aspcfs.utils.web.LookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (128, 4, 'customFieldRecord', 'org.aspcfs.modules.base.CustomFieldRecord', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, 'id');
+INSERT INTO sync_table VALUES (129, 4, 'customFieldRecordList', 'org.aspcfs.modules.base.CustomFieldRecordList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (130, 4, 'contactEmailAddress', 'org.aspcfs.modules.contacts.base.ContactEmailAddress', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (131, 4, 'contactEmailAddressList', 'org.aspcfs.modules.contacts.base.ContactEmailAddressList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (132, 4, 'customFieldData', 'org.aspcfs.modules.base.CustomFieldData', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (133, 4, 'lookupProjectActivity', 'org.aspcfs.utils.web.CustomLookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (134, 4, 'lookupProjectActivityList', 'org.aspcfs.utils.web.CustomLookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (135, 4, 'lookupProjectIssues', 'org.aspcfs.utils.web.CustomLookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (136, 4, 'lookupProjectIssuesList', 'org.aspcfs.utils.web.CustomLookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (137, 4, 'lookupProjectLoe', 'org.aspcfs.utils.web.CustomLookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (138, 4, 'lookupProjectLoeList', 'org.aspcfs.utils.web.CustomLookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (139, 4, 'lookupProjectPriority', 'org.aspcfs.utils.web.CustomLookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (140, 4, 'lookupProjectPriorityList', 'org.aspcfs.utils.web.CustomLookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (141, 4, 'lookupProjectStatus', 'org.aspcfs.utils.web.CustomLookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (142, 4, 'lookupProjectStatusList', 'org.aspcfs.utils.web.CustomLookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (143, 4, 'project', 'com.zeroio.iteam.base.Project', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (144, 4, 'projectList', 'com.zeroio.iteam.base.ProjectList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (145, 4, 'requirement', 'com.zeroio.iteam.base.Requirement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (146, 4, 'requirementList', 'com.zeroio.iteam.base.RequirementList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (147, 4, 'assignment', 'com.zeroio.iteam.base.Assignment', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (148, 4, 'assignmentList', 'com.zeroio.iteam.base.AssignmentList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (149, 4, 'issue', 'com.zeroio.iteam.base.Issue', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (150, 4, 'issueList', 'com.zeroio.iteam.base.IssueList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (151, 4, 'issueReply', 'com.zeroio.iteam.base.IssueReply', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (152, 4, 'issueReplyList', 'com.zeroio.iteam.base.IssueReplyList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (153, 4, 'teamMember', 'com.zeroio.iteam.base.TeamMember', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (154, 4, 'fileItem', 'com.zeroio.iteam.base.FileItem', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (155, 4, 'fileItemList', 'com.zeroio.iteam.base.FileItemList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (156, 4, 'fileItemVersion', 'com.zeroio.iteam.base.FileItemVersion', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (157, 4, 'fileItemVersionList', 'com.zeroio.iteam.base.FileItemVersionList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (158, 4, 'fileDownloadLog', 'com.zeroio.iteam.base.FileDownloadLog', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (159, 4, 'contactAddress', 'org.aspcfs.modules.contacts.base.ContactAddress', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (160, 4, 'contactAddressList', 'org.aspcfs.modules.contacts.base.ContactAddressList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (161, 4, 'contactPhoneNumber', 'org.aspcfs.modules.contacts.base.ContactPhoneNumber', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (162, 4, 'contactPhoneNumberList', 'org.aspcfs.modules.contacts.base.ContactPhoneNumberList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (163, 4, 'organizationPhoneNumber', 'org.aspcfs.modules.accounts.base.OrganizationPhoneNumber', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (164, 4, 'organizationPhoneNumberList', 'org.aspcfs.modules.accounts.base.OrganizationPhoneNumberList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (165, 4, 'organizationEmailAddress', 'org.aspcfs.modules.accounts.base.OrganizationEmailAddress', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (166, 4, 'organizationEmailAddressList', 'org.aspcfs.modules.accounts.base.OrganizationEmailAddressList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (167, 4, 'organizationAddress', 'org.aspcfs.modules.accounts.base.OrganizationAddress', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (168, 4, 'organizationAddressList', 'org.aspcfs.modules.accounts.base.OrganizationAddressList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (169, 4, 'ticketLog', 'org.aspcfs.modules.troubletickets.base.TicketLog', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (170, 4, 'ticketLogList', 'org.aspcfs.modules.troubletickets.base.TicketLogList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (171, 4, 'message', 'org.aspcfs.modules.communications.base.Message', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (172, 4, 'messageList', 'org.aspcfs.modules.communications.base.MessageList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (173, 4, 'searchCriteriaElements', 'org.aspcfs.modules.communications.base.SearchCriteriaList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (174, 4, 'searchCriteriaElementsList', 'org.aspcfs.modules.communications.base.SearchCriteriaListList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (175, 4, 'savedCriteriaElement', 'org.aspcfs.modules.communications.base.SavedCriteriaElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (176, 4, 'searchFieldElement', 'org.aspcfs.utils.web.CustomLookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (177, 4, 'searchFieldElementList', 'org.aspcfs.utils.web.CustomLookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (178, 4, 'revenue', 'org.aspcfs.modules.accounts.base.Revenue', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (179, 4, 'revenueList', 'org.aspcfs.modules.accounts.base.RevenueList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (180, 4, 'campaign', 'org.aspcfs.modules.communications.base.Campaign', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (181, 4, 'campaignList', 'org.aspcfs.modules.communications.base.CampaignList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (182, 4, 'scheduledRecipient', 'org.aspcfs.modules.communications.base.ScheduledRecipient', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (183, 4, 'scheduledRecipientList', 'org.aspcfs.modules.communications.base.ScheduledRecipientList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (184, 4, 'accessLog', 'org.aspcfs.modules.admin.base.AccessLog', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (185, 4, 'accessLogList', 'org.aspcfs.modules.admin.base.AccessLogList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (186, 4, 'accountTypeLevels', 'org.aspcfs.modules.accounts.base.AccountTypeLevel', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (187, 4, 'fieldTypes', 'org.aspcfs.utils.web.CustomLookupElement', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (188, 4, 'fieldTypesList', 'org.aspcfs.utils.web.CustomLookupList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (189, 4, 'excludedRecipient', 'org.aspcfs.modules.communications.base.ExcludedRecipient', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (190, 4, 'campaignRun', 'org.aspcfs.modules.communications.base.CampaignRun', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (191, 4, 'campaignRunList', 'org.aspcfs.modules.communications.base.CampaignRunList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (192, 4, 'campaignListGroups', 'org.aspcfs.modules.communications.base.CampaignListGroup', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (193, 5, 'ticket', 'org.aspcfs.modules.troubletickets.base.Ticket', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, 'id');
+INSERT INTO sync_table VALUES (194, 5, 'ticketCategory', 'org.aspcfs.modules.troubletickets.base.TicketCategory', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (195, 5, 'ticketCategoryList', 'org.aspcfs.modules.troubletickets.base.TicketCategoryList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (196, 5, 'syncClient', 'org.aspcfs.modules.service.base.SyncClient', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, 2, false, NULL);
+INSERT INTO sync_table VALUES (197, 5, 'accountList', 'org.aspcfs.modules.accounts.base.OrganizationList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (198, 5, 'userList', 'org.aspcfs.modules.admin.base.UserList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
+INSERT INTO sync_table VALUES (199, 5, 'contactList', 'org.aspcfs.modules.contacts.base.ContactList', '2005-03-16 11:27:34.033', '2005-03-16 11:27:34.033', NULL, -1, false, NULL);
 
 
 
@@ -7639,36 +8379,36 @@ INSERT INTO sync_table VALUES (199, 5, 'contactList', 'org.aspcfs.modules.contac
 
 
 
-INSERT INTO autoguide_options VALUES (1, 'A/T', false, 10, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (2, '4-CYL', false, 20, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (3, '6-CYL', false, 30, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (4, 'V-8', false, 40, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (5, 'CRUISE', false, 50, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (6, '5-SPD', false, 60, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (7, '4X4', false, 70, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (8, '2-DOOR', false, 80, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (9, '4-DOOR', false, 90, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (10, 'LEATHER', false, 100, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (11, 'P/DL', false, 110, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (12, 'T/W', false, 120, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (13, 'P/SEATS', false, 130, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (14, 'P/WIND', false, 140, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (15, 'P/S', false, 150, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (16, 'BEDLINE', false, 160, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (17, 'LOW MILES', false, 170, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (18, 'EX CLEAN', false, 180, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (19, 'LOADED', false, 190, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (20, 'A/C', false, 200, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (21, 'SUNROOF', false, 210, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (22, 'AM/FM ST', false, 220, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (23, 'CASS', false, 225, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (24, 'CD PLYR', false, 230, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (25, 'ABS', false, 240, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (26, 'ALARM', false, 250, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (27, 'SLD R. WIN', false, 260, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (28, 'AIRBAG', false, 270, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (29, '1 OWNER', false, 280, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_options VALUES (30, 'ALLOY WH', false, 290, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
+INSERT INTO autoguide_options VALUES (1, 'A/T', false, 10, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (2, '4-CYL', false, 20, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (3, '6-CYL', false, 30, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (4, 'V-8', false, 40, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (5, 'CRUISE', false, 50, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (6, '5-SPD', false, 60, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (7, '4X4', false, 70, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (8, '2-DOOR', false, 80, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (9, '4-DOOR', false, 90, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (10, 'LEATHER', false, 100, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (11, 'P/DL', false, 110, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (12, 'T/W', false, 120, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (13, 'P/SEATS', false, 130, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (14, 'P/WIND', false, 140, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (15, 'P/S', false, 150, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (16, 'BEDLINE', false, 160, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (17, 'LOW MILES', false, 170, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (18, 'EX CLEAN', false, 180, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (19, 'LOADED', false, 190, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (20, 'A/C', false, 200, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (21, 'SUNROOF', false, 210, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (22, 'AM/FM ST', false, 220, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (23, 'CASS', false, 225, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (24, 'CD PLYR', false, 230, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (25, 'ABS', false, 240, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (26, 'ALARM', false, 250, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (27, 'SLD R. WIN', false, 260, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (28, 'AIRBAG', false, 270, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (29, '1 OWNER', false, 280, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_options VALUES (30, 'ALLOY WH', false, 290, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
 
 
 
@@ -7678,13 +8418,9 @@ INSERT INTO autoguide_options VALUES (30, 'ALLOY WH', false, 290, true, '2004-08
 
 
 
-INSERT INTO autoguide_ad_run_types VALUES (1, 'In Column', false, 1, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_ad_run_types VALUES (2, 'Display', false, 2, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-INSERT INTO autoguide_ad_run_types VALUES (3, 'Both', false, 3, true, '2004-08-31 09:16:09.384', '2004-08-31 09:16:09.384');
-
-
-
-INSERT INTO lookup_revenue_types VALUES (1, 'Technical', false, 0, true);
+INSERT INTO autoguide_ad_run_types VALUES (1, 'In Column', false, 1, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_ad_run_types VALUES (2, 'Display', false, 2, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
+INSERT INTO autoguide_ad_run_types VALUES (3, 'Both', false, 3, true, '2005-03-16 11:27:36.108', '2005-03-16 11:27:36.108');
 
 
 
@@ -7697,22 +8433,77 @@ INSERT INTO lookup_revenue_types VALUES (1, 'Technical', false, 0, true);
 
 
 
-INSERT INTO lookup_task_priority VALUES (1, '1', true, 1, true);
-INSERT INTO lookup_task_priority VALUES (2, '2', false, 2, true);
-INSERT INTO lookup_task_priority VALUES (3, '3', false, 3, true);
-INSERT INTO lookup_task_priority VALUES (4, '4', false, 4, true);
-INSERT INTO lookup_task_priority VALUES (5, '5', false, 5, true);
 
 
 
-INSERT INTO lookup_task_loe VALUES (1, 'Minute(s)', false, 1, true);
-INSERT INTO lookup_task_loe VALUES (2, 'Hour(s)', true, 2, true);
-INSERT INTO lookup_task_loe VALUES (3, 'Day(s)', false, 3, true);
-INSERT INTO lookup_task_loe VALUES (4, 'Week(s)', false, 4, true);
-INSERT INTO lookup_task_loe VALUES (5, 'Month(s)', false, 5, true);
+INSERT INTO lookup_task_priority VALUES (1, '1', true, 10, true);
+INSERT INTO lookup_task_priority VALUES (2, '2', false, 20, true);
+INSERT INTO lookup_task_priority VALUES (3, '3', false, 30, true);
+INSERT INTO lookup_task_priority VALUES (4, '4', false, 40, true);
+INSERT INTO lookup_task_priority VALUES (5, '5', false, 50, true);
 
 
 
+INSERT INTO lookup_task_loe VALUES (1, 'Minute(s)', false, 10, true);
+INSERT INTO lookup_task_loe VALUES (2, 'Hour(s)', false, 20, true);
+INSERT INTO lookup_task_loe VALUES (3, 'Day(s)', false, 30, true);
+INSERT INTO lookup_task_loe VALUES (4, 'Week(s)', false, 40, true);
+INSERT INTO lookup_task_loe VALUES (5, 'Month(s)', false, 50, true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO lookup_document_store_permission_category VALUES (1, 'Document Store Details', false, 10, true, 0);
+INSERT INTO lookup_document_store_permission_category VALUES (2, 'Team Members', false, 20, true, 0);
+INSERT INTO lookup_document_store_permission_category VALUES (3, 'Document Library', false, 30, true, 0);
+INSERT INTO lookup_document_store_permission_category VALUES (4, 'Setup', false, 40, true, 0);
+
+
+
+INSERT INTO lookup_document_store_role VALUES (1, 'Manager', false, 1, true, 1);
+INSERT INTO lookup_document_store_role VALUES (2, 'Contributor level 3', false, 2, true, 1);
+INSERT INTO lookup_document_store_role VALUES (3, 'Contributor level 2', false, 3, true, 1);
+INSERT INTO lookup_document_store_role VALUES (4, 'Contributor level 1', false, 4, true, 1);
+INSERT INTO lookup_document_store_role VALUES (5, 'Guest', false, 5, true, 1);
+
+
+
+INSERT INTO lookup_document_store_permission VALUES (1, 1, 'documentcenter-details-view', 'View document store details', false, 10, true, 1, 5);
+INSERT INTO lookup_document_store_permission VALUES (2, 1, 'documentcenter-details-edit', 'Modify document store details', false, 20, true, 1, 1);
+INSERT INTO lookup_document_store_permission VALUES (3, 1, 'documentcenter-details-delete', 'Delete document store', false, 30, true, 1, 1);
+INSERT INTO lookup_document_store_permission VALUES (4, 2, 'documentcenter-team-view', 'View team members', false, 40, true, 1, 5);
+INSERT INTO lookup_document_store_permission VALUES (5, 2, 'documentcenter-team-view-email', 'See team member email addresses', false, 50, true, 1, 4);
+INSERT INTO lookup_document_store_permission VALUES (6, 2, 'documentcenter-team-edit', 'Modify team', false, 60, true, 1, 1);
+INSERT INTO lookup_document_store_permission VALUES (7, 2, 'documentcenter-team-edit-role', 'Modify team member role', false, 70, true, 1, 1);
+INSERT INTO lookup_document_store_permission VALUES (8, 3, 'documentcenter-documents-view', 'View documents', false, 80, true, 1, 5);
+INSERT INTO lookup_document_store_permission VALUES (9, 3, 'documentcenter-documents-folders-add', 'Create folders', false, 90, true, 1, 2);
+INSERT INTO lookup_document_store_permission VALUES (10, 3, 'documentcenter-documents-folders-edit', 'Modify folders', false, 100, true, 1, 3);
+INSERT INTO lookup_document_store_permission VALUES (11, 3, 'documentcenter-documents-folders-delete', 'Delete folders', false, 110, true, 1, 2);
+INSERT INTO lookup_document_store_permission VALUES (12, 3, 'documentcenter-documents-files-upload', 'Upload files', false, 120, true, 1, 4);
+INSERT INTO lookup_document_store_permission VALUES (13, 3, 'documentcenter-documents-files-download', 'Download files', false, 130, true, 1, 5);
+INSERT INTO lookup_document_store_permission VALUES (14, 3, 'documentcenter-documents-files-rename', 'Rename files', false, 140, true, 1, 3);
+INSERT INTO lookup_document_store_permission VALUES (15, 3, 'documentcenter-documents-files-delete', 'View document store details', false, 150, true, 1, 2);
+INSERT INTO lookup_document_store_permission VALUES (16, 4, 'documentcenter-setup-permissions', 'Configure document store permissions', false, 160, true, 1, 1);
 
 
 
@@ -7812,8 +8603,8 @@ Comment: ${this.comment}
 
 
 
-INSERT INTO business_process VALUES (1, 'dhv.ticket.insert', 'Ticket change notification', 1, 8, 1, true, '2004-08-31 09:16:23.792');
-INSERT INTO business_process VALUES (2, 'dhv.report.ticketList.overdue', 'Overdue ticket notification', 2, 8, 7, true, '2004-08-31 09:16:23.792');
+INSERT INTO business_process VALUES (1, 'dhv.ticket.insert', 'Ticket change notification', 1, 8, 1, true, '2005-03-16 11:28:34.592');
+INSERT INTO business_process VALUES (2, 'dhv.report.ticketList.overdue', 'Overdue ticket notification', 2, 8, 7, true, '2005-03-16 11:28:34.592');
 
 
 
@@ -7916,6 +8707,34 @@ INSERT INTO business_process_hook VALUES (2, 2, 1, true);
 
 
 
+INSERT INTO lookup_quote_delivery VALUES (1, 'Email', false, 10, true);
+INSERT INTO lookup_quote_delivery VALUES (2, 'Fax', false, 20, true);
+INSERT INTO lookup_quote_delivery VALUES (3, 'In Person', false, 30, true);
+INSERT INTO lookup_quote_delivery VALUES (4, 'DHL', false, 40, true);
+INSERT INTO lookup_quote_delivery VALUES (5, 'FEDEX', false, 50, true);
+INSERT INTO lookup_quote_delivery VALUES (6, 'UPS', false, 60, true);
+INSERT INTO lookup_quote_delivery VALUES (7, 'USPS', false, 70, true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -7995,6 +8814,10 @@ CREATE INDEX project_assignments_cidx ON project_assignments USING btree (comple
 
 
 
+CREATE INDEX proj_assign_req_id_idx ON project_assignments USING btree (requirement_id);
+
+
+
 CREATE INDEX project_files_cidx ON project_files USING btree (link_module_id, link_item_id);
 
 
@@ -8007,7 +8830,15 @@ CREATE INDEX proj_req_map_pr_req_pos_idx ON project_requirements_map USING btree
 
 
 
-CREATE UNIQUE INDEX idx_pr_opt_val ON product_option_values USING btree (option_id, result_id);
+CREATE INDEX proj_acct_project_idx ON project_accounts USING btree (project_id);
+
+
+
+CREATE INDEX proj_acct_org_idx ON project_accounts USING btree (org_id);
+
+
+
+CREATE UNIQUE INDEX idx_pr_opt_val ON product_option_values USING btree (value_id, option_id, result_id);
 
 
 
@@ -8078,11 +8909,6 @@ ALTER TABLE ONLY access_log
 
 
 
-ALTER TABLE ONLY access_log
-    ADD CONSTRAINT "$1" FOREIGN KEY (user_id) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY usage_log
     ADD CONSTRAINT usage_log_pkey PRIMARY KEY (usage_id);
 
@@ -8090,11 +8916,6 @@ ALTER TABLE ONLY usage_log
 
 ALTER TABLE ONLY lookup_contact_types
     ADD CONSTRAINT lookup_contact_types_pkey PRIMARY KEY (code);
-
-
-
-ALTER TABLE ONLY lookup_contact_types
-    ADD CONSTRAINT "$1" FOREIGN KEY (user_id) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -8128,8 +8949,28 @@ ALTER TABLE ONLY lookup_orgphone_types
 
 
 
-ALTER TABLE ONLY lookup_instantmessenger_types
-    ADD CONSTRAINT lookup_instantmessenger_types_pkey PRIMARY KEY (code);
+ALTER TABLE ONLY lookup_im_types
+    ADD CONSTRAINT lookup_im_types_pkey PRIMARY KEY (code);
+
+
+
+ALTER TABLE ONLY lookup_im_services
+    ADD CONSTRAINT lookup_im_services_pkey PRIMARY KEY (code);
+
+
+
+ALTER TABLE ONLY lookup_contact_source
+    ADD CONSTRAINT lookup_contact_source_pkey PRIMARY KEY (code);
+
+
+
+ALTER TABLE ONLY lookup_contact_rating
+    ADD CONSTRAINT lookup_contact_rating_pkey PRIMARY KEY (code);
+
+
+
+ALTER TABLE ONLY lookup_textmessage_types
+    ADD CONSTRAINT lookup_textmessage_types_pkey PRIMARY KEY (code);
 
 
 
@@ -8168,21 +9009,6 @@ ALTER TABLE ONLY organization
 
 
 
-ALTER TABLE ONLY organization
-    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY organization
-    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY organization
-    ADD CONSTRAINT "$3" FOREIGN KEY ("owner") REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY contact
     ADD CONSTRAINT contact_pkey PRIMARY KEY (contact_id);
 
@@ -8193,63 +9019,18 @@ ALTER TABLE ONLY contact
 
 
 
-ALTER TABLE ONLY contact
-    ADD CONSTRAINT "$1" FOREIGN KEY (user_id) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY contact_lead_skipped_map
+    ADD CONSTRAINT contact_lead_skipped_map_pkey PRIMARY KEY (map_id);
 
 
 
-ALTER TABLE ONLY contact
-    ADD CONSTRAINT "$2" FOREIGN KEY (org_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact
-    ADD CONSTRAINT "$3" FOREIGN KEY (department) REFERENCES lookup_department(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact
-    ADD CONSTRAINT "$4" FOREIGN KEY (super) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact
-    ADD CONSTRAINT "$5" FOREIGN KEY (assistant) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact
-    ADD CONSTRAINT "$6" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact
-    ADD CONSTRAINT "$7" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact
-    ADD CONSTRAINT "$8" FOREIGN KEY ("owner") REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact
-    ADD CONSTRAINT "$9" FOREIGN KEY (access_type) REFERENCES lookup_access_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY contact_lead_read_map
+    ADD CONSTRAINT contact_lead_read_map_pkey PRIMARY KEY (map_id);
 
 
 
 ALTER TABLE ONLY role
     ADD CONSTRAINT role_pkey PRIMARY KEY (role_id);
-
-
-
-ALTER TABLE ONLY role
-    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY role
-    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -8263,23 +9044,8 @@ ALTER TABLE ONLY permission
 
 
 
-ALTER TABLE ONLY permission
-    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES permission_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY role_permission
     ADD CONSTRAINT role_permission_pkey PRIMARY KEY (id);
-
-
-
-ALTER TABLE ONLY role_permission
-    ADD CONSTRAINT "$1" FOREIGN KEY (role_id) REFERENCES role(role_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY role_permission
-    ADD CONSTRAINT "$2" FOREIGN KEY (permission_id) REFERENCES permission(permission_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -8298,33 +9064,8 @@ ALTER TABLE ONLY news
 
 
 
-ALTER TABLE ONLY news
-    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY organization_address
     ADD CONSTRAINT organization_address_pkey PRIMARY KEY (address_id);
-
-
-
-ALTER TABLE ONLY organization_address
-    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY organization_address
-    ADD CONSTRAINT "$2" FOREIGN KEY (address_type) REFERENCES lookup_orgaddress_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY organization_address
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY organization_address
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -8333,48 +9074,8 @@ ALTER TABLE ONLY organization_emailaddress
 
 
 
-ALTER TABLE ONLY organization_emailaddress
-    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY organization_emailaddress
-    ADD CONSTRAINT "$2" FOREIGN KEY (emailaddress_type) REFERENCES lookup_orgemail_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY organization_emailaddress
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY organization_emailaddress
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY organization_phone
     ADD CONSTRAINT organization_phone_pkey PRIMARY KEY (phone_id);
-
-
-
-ALTER TABLE ONLY organization_phone
-    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY organization_phone
-    ADD CONSTRAINT "$2" FOREIGN KEY (phone_type) REFERENCES lookup_orgphone_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY organization_phone
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY organization_phone
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -8383,48 +9084,8 @@ ALTER TABLE ONLY contact_address
 
 
 
-ALTER TABLE ONLY contact_address
-    ADD CONSTRAINT "$1" FOREIGN KEY (contact_id) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact_address
-    ADD CONSTRAINT "$2" FOREIGN KEY (address_type) REFERENCES lookup_contactaddress_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact_address
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact_address
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY contact_emailaddress
     ADD CONSTRAINT contact_emailaddress_pkey PRIMARY KEY (emailaddress_id);
-
-
-
-ALTER TABLE ONLY contact_emailaddress
-    ADD CONSTRAINT "$1" FOREIGN KEY (contact_id) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact_emailaddress
-    ADD CONSTRAINT "$2" FOREIGN KEY (emailaddress_type) REFERENCES lookup_contactemail_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact_emailaddress
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact_emailaddress
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -8433,23 +9094,13 @@ ALTER TABLE ONLY contact_phone
 
 
 
-ALTER TABLE ONLY contact_phone
-    ADD CONSTRAINT "$1" FOREIGN KEY (contact_id) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY contact_imaddress
+    ADD CONSTRAINT contact_imaddress_pkey PRIMARY KEY (address_id);
 
 
 
-ALTER TABLE ONLY contact_phone
-    ADD CONSTRAINT "$2" FOREIGN KEY (phone_type) REFERENCES lookup_contactphone_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact_phone
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact_phone
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY contact_textmessageaddress
+    ADD CONSTRAINT contact_textmessageaddress_pkey PRIMARY KEY (address_id);
 
 
 
@@ -8463,58 +9114,13 @@ ALTER TABLE ONLY cfsinbox_message
 
 
 
-ALTER TABLE ONLY cfsinbox_message
-    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY cfsinbox_message
-    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY cfsinbox_messagelink
-    ADD CONSTRAINT "$1" FOREIGN KEY (id) REFERENCES cfsinbox_message(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY cfsinbox_messagelink
-    ADD CONSTRAINT "$2" FOREIGN KEY (sent_to) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY cfsinbox_messagelink
-    ADD CONSTRAINT "$3" FOREIGN KEY (sent_from) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY account_type_levels
-    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY account_type_levels
-    ADD CONSTRAINT "$2" FOREIGN KEY (type_id) REFERENCES lookup_account_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact_type_levels
-    ADD CONSTRAINT "$1" FOREIGN KEY (contact_id) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY contact_type_levels
-    ADD CONSTRAINT "$2" FOREIGN KEY (type_id) REFERENCES lookup_contact_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY lookup_lists_lookup
     ADD CONSTRAINT lookup_lists_lookup_pkey PRIMARY KEY (id);
 
 
 
-ALTER TABLE ONLY lookup_lists_lookup
-    ADD CONSTRAINT "$1" FOREIGN KEY (module_id) REFERENCES permission_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY webdav
+    ADD CONSTRAINT webdav_pkey PRIMARY KEY (id);
 
 
 
@@ -8523,33 +9129,8 @@ ALTER TABLE ONLY category_editor_lookup
 
 
 
-ALTER TABLE ONLY category_editor_lookup
-    ADD CONSTRAINT "$1" FOREIGN KEY (module_id) REFERENCES permission_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY viewpoint
     ADD CONSTRAINT viewpoint_pkey PRIMARY KEY (viewpoint_id);
-
-
-
-ALTER TABLE ONLY viewpoint
-    ADD CONSTRAINT "$1" FOREIGN KEY (user_id) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY viewpoint
-    ADD CONSTRAINT "$2" FOREIGN KEY (vp_user_id) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY viewpoint
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY viewpoint
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -8558,38 +9139,8 @@ ALTER TABLE ONLY viewpoint_permission
 
 
 
-ALTER TABLE ONLY viewpoint_permission
-    ADD CONSTRAINT "$1" FOREIGN KEY (viewpoint_id) REFERENCES viewpoint(viewpoint_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY viewpoint_permission
-    ADD CONSTRAINT "$2" FOREIGN KEY (permission_id) REFERENCES permission(permission_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY report
     ADD CONSTRAINT report_pkey PRIMARY KEY (report_id);
-
-
-
-ALTER TABLE ONLY report
-    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES permission_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY report
-    ADD CONSTRAINT "$2" FOREIGN KEY (permission_id) REFERENCES permission(permission_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY report
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY report
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -8598,33 +9149,8 @@ ALTER TABLE ONLY report_criteria
 
 
 
-ALTER TABLE ONLY report_criteria
-    ADD CONSTRAINT "$1" FOREIGN KEY (report_id) REFERENCES report(report_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY report_criteria
-    ADD CONSTRAINT "$2" FOREIGN KEY ("owner") REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY report_criteria
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY report_criteria
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY report_criteria_parameter
     ADD CONSTRAINT report_criteria_parameter_pkey PRIMARY KEY (parameter_id);
-
-
-
-ALTER TABLE ONLY report_criteria_parameter
-    ADD CONSTRAINT "$1" FOREIGN KEY (criteria_id) REFERENCES report_criteria(criteria_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -8633,23 +9159,8 @@ ALTER TABLE ONLY report_queue
 
 
 
-ALTER TABLE ONLY report_queue
-    ADD CONSTRAINT "$1" FOREIGN KEY (report_id) REFERENCES report(report_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY report_queue
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY report_queue_criteria
     ADD CONSTRAINT report_queue_criteria_pkey PRIMARY KEY (criteria_id);
-
-
-
-ALTER TABLE ONLY report_queue_criteria
-    ADD CONSTRAINT "$1" FOREIGN KEY (queue_id) REFERENCES report_queue(queue_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -8658,38 +9169,8 @@ ALTER TABLE ONLY action_list
 
 
 
-ALTER TABLE ONLY action_list
-    ADD CONSTRAINT "$1" FOREIGN KEY ("owner") REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY action_list
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY action_list
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY action_item
     ADD CONSTRAINT action_item_pkey PRIMARY KEY (item_id);
-
-
-
-ALTER TABLE ONLY action_item
-    ADD CONSTRAINT "$1" FOREIGN KEY (action_id) REFERENCES action_list(action_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY action_item
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY action_item
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -8698,38 +9179,23 @@ ALTER TABLE ONLY action_item_log
 
 
 
-ALTER TABLE ONLY action_item_log
-    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES action_item(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY action_item_log
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY action_item_log
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY import
     ADD CONSTRAINT import_pkey PRIMARY KEY (import_id);
 
 
 
-ALTER TABLE ONLY import
-    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY import
-    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY database_version
     ADD CONSTRAINT database_version_pkey PRIMARY KEY (version_id);
+
+
+
+ALTER TABLE ONLY lookup_relationship_types
+    ADD CONSTRAINT lookup_relationship_types_pkey PRIMARY KEY (type_id);
+
+
+
+ALTER TABLE ONLY relationship
+    ADD CONSTRAINT relationship_pkey PRIMARY KEY (relationship_id);
 
 
 
@@ -8763,143 +9229,13 @@ ALTER TABLE ONLY opportunity_header
 
 
 
-ALTER TABLE ONLY opportunity_header
-    ADD CONSTRAINT "$1" FOREIGN KEY (acctlink) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY opportunity_header
-    ADD CONSTRAINT "$2" FOREIGN KEY (contactlink) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY opportunity_header
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY opportunity_header
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY opportunity_component
     ADD CONSTRAINT opportunity_component_pkey PRIMARY KEY (id);
 
 
 
-ALTER TABLE ONLY opportunity_component
-    ADD CONSTRAINT "$1" FOREIGN KEY (opp_id) REFERENCES opportunity_header(opp_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY opportunity_component
-    ADD CONSTRAINT "$2" FOREIGN KEY ("owner") REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY opportunity_component
-    ADD CONSTRAINT "$3" FOREIGN KEY (stage) REFERENCES lookup_stage(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY opportunity_component
-    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY opportunity_component
-    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY opportunity_component_levels
-    ADD CONSTRAINT "$1" FOREIGN KEY (opp_id) REFERENCES opportunity_component(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY opportunity_component_levels
-    ADD CONSTRAINT "$2" FOREIGN KEY (type_id) REFERENCES lookup_opportunity_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY call_log
     ADD CONSTRAINT call_log_pkey PRIMARY KEY (call_id);
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$2" FOREIGN KEY (contact_id) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$3" FOREIGN KEY (opp_id) REFERENCES opportunity_header(opp_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$4" FOREIGN KEY (call_type_id) REFERENCES lookup_call_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$5" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$6" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$7" FOREIGN KEY (alert_call_type_id) REFERENCES lookup_call_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$8" FOREIGN KEY (parent_id) REFERENCES call_log(call_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$9" FOREIGN KEY ("owner") REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$10" FOREIGN KEY (assignedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$11" FOREIGN KEY (completedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$12" FOREIGN KEY (result_id) REFERENCES lookup_call_result(result_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$13" FOREIGN KEY (priority_id) REFERENCES lookup_call_priority(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY call_log
-    ADD CONSTRAINT "$14" FOREIGN KEY (reminder_type_id) REFERENCES lookup_call_reminder(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY lookup_call_result
-    ADD CONSTRAINT "$1" FOREIGN KEY (next_call_type_id) REFERENCES call_log(call_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -8933,33 +9269,13 @@ ALTER TABLE ONLY lookup_project_category
 
 
 
+ALTER TABLE ONLY lookup_news_template
+    ADD CONSTRAINT lookup_news_template_pkey PRIMARY KEY (code);
+
+
+
 ALTER TABLE ONLY projects
     ADD CONSTRAINT projects_pkey PRIMARY KEY (project_id);
-
-
-
-ALTER TABLE ONLY projects
-    ADD CONSTRAINT "$1" FOREIGN KEY (department_id) REFERENCES lookup_department(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY projects
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY projects
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY projects
-    ADD CONSTRAINT "$4" FOREIGN KEY (approvalby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY projects
-    ADD CONSTRAINT "$5" FOREIGN KEY (category_id) REFERENCES lookup_project_category(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -8968,63 +9284,8 @@ ALTER TABLE ONLY project_requirements
 
 
 
-ALTER TABLE ONLY project_requirements
-    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_requirements
-    ADD CONSTRAINT "$2" FOREIGN KEY (estimated_loetype) REFERENCES lookup_project_loe(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_requirements
-    ADD CONSTRAINT "$3" FOREIGN KEY (actual_loetype) REFERENCES lookup_project_loe(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_requirements
-    ADD CONSTRAINT "$4" FOREIGN KEY (approvedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_requirements
-    ADD CONSTRAINT "$5" FOREIGN KEY (closedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_requirements
-    ADD CONSTRAINT "$6" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_requirements
-    ADD CONSTRAINT "$7" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY project_assignments_folder
     ADD CONSTRAINT project_assignments_folder_pkey PRIMARY KEY (folder_id);
-
-
-
-ALTER TABLE ONLY project_assignments_folder
-    ADD CONSTRAINT "$1" FOREIGN KEY (parent_id) REFERENCES project_assignments_folder(folder_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments_folder
-    ADD CONSTRAINT "$2" FOREIGN KEY (requirement_id) REFERENCES project_requirements(requirement_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments_folder
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments_folder
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -9033,73 +9294,8 @@ ALTER TABLE ONLY project_assignments
 
 
 
-ALTER TABLE ONLY project_assignments
-    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments
-    ADD CONSTRAINT "$2" FOREIGN KEY (requirement_id) REFERENCES project_requirements(requirement_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments
-    ADD CONSTRAINT "$3" FOREIGN KEY (assignedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments
-    ADD CONSTRAINT "$4" FOREIGN KEY (user_assign_id) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments
-    ADD CONSTRAINT "$6" FOREIGN KEY (estimated_loetype) REFERENCES lookup_project_loe(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments
-    ADD CONSTRAINT "$7" FOREIGN KEY (actual_loetype) REFERENCES lookup_project_loe(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments
-    ADD CONSTRAINT "$8" FOREIGN KEY (priority_id) REFERENCES lookup_project_priority(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments
-    ADD CONSTRAINT "$9" FOREIGN KEY (status_id) REFERENCES lookup_project_status(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments
-    ADD CONSTRAINT "$10" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments
-    ADD CONSTRAINT "$11" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments
-    ADD CONSTRAINT "$12" FOREIGN KEY (folder_id) REFERENCES project_assignments_folder(folder_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY project_assignments_status
     ADD CONSTRAINT project_assignments_status_pkey PRIMARY KEY (status_id);
-
-
-
-ALTER TABLE ONLY project_assignments_status
-    ADD CONSTRAINT "$1" FOREIGN KEY (assignment_id) REFERENCES project_assignments(assignment_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_assignments_status
-    ADD CONSTRAINT "$2" FOREIGN KEY (user_id) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -9108,43 +9304,8 @@ ALTER TABLE ONLY project_issues_categories
 
 
 
-ALTER TABLE ONLY project_issues_categories
-    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_issues_categories
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_issues_categories
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY project_issues
     ADD CONSTRAINT project_issues_pkey PRIMARY KEY (issue_id);
-
-
-
-ALTER TABLE ONLY project_issues
-    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_issues
-    ADD CONSTRAINT "$2" FOREIGN KEY (category_id) REFERENCES project_issues_categories(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_issues
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_issues
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -9153,33 +9314,8 @@ ALTER TABLE ONLY project_issue_replies
 
 
 
-ALTER TABLE ONLY project_issue_replies
-    ADD CONSTRAINT "$1" FOREIGN KEY (issue_id) REFERENCES project_issues(issue_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_issue_replies
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_issue_replies
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY project_folders
     ADD CONSTRAINT project_folders_pkey PRIMARY KEY (folder_id);
-
-
-
-ALTER TABLE ONLY project_folders
-    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_folders
-    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -9188,83 +9324,8 @@ ALTER TABLE ONLY project_files
 
 
 
-ALTER TABLE ONLY project_files
-    ADD CONSTRAINT "$1" FOREIGN KEY (folder_id) REFERENCES project_folders(folder_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_files
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_files
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_files_version
-    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES project_files(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_files_version
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_files_version
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_files_download
-    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES project_files(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_files_download
-    ADD CONSTRAINT "$2" FOREIGN KEY (user_download_id) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_files_thumbnail
-    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES project_files(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_files_thumbnail
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_files_thumbnail
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_team
-    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_team
-    ADD CONSTRAINT "$2" FOREIGN KEY (user_id) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_team
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_team
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_team
-    ADD CONSTRAINT "$5" FOREIGN KEY (userlevel) REFERENCES lookup_project_role(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY project_news_category
+    ADD CONSTRAINT project_news_category_pkey PRIMARY KEY (category_id);
 
 
 
@@ -9273,43 +9334,8 @@ ALTER TABLE ONLY project_news
 
 
 
-ALTER TABLE ONLY project_news
-    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_news
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_news
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY project_requirements_map
     ADD CONSTRAINT project_requirements_map_pkey PRIMARY KEY (map_id);
-
-
-
-ALTER TABLE ONLY project_requirements_map
-    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_requirements_map
-    ADD CONSTRAINT "$2" FOREIGN KEY (requirement_id) REFERENCES project_requirements(requirement_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_requirements_map
-    ADD CONSTRAINT "$3" FOREIGN KEY (folder_id) REFERENCES project_assignments_folder(folder_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_requirements_map
-    ADD CONSTRAINT "$4" FOREIGN KEY (assignment_id) REFERENCES project_assignments(assignment_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -9328,33 +9354,13 @@ ALTER TABLE ONLY lookup_project_permission
 
 
 
-ALTER TABLE ONLY lookup_project_permission
-    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES lookup_project_permission_category(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY lookup_project_permission
-    ADD CONSTRAINT "$2" FOREIGN KEY (default_role) REFERENCES lookup_project_role(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY project_permissions
     ADD CONSTRAINT project_permissions_pkey PRIMARY KEY (id);
 
 
 
-ALTER TABLE ONLY project_permissions
-    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_permissions
-    ADD CONSTRAINT "$2" FOREIGN KEY (permission_id) REFERENCES lookup_project_permission(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY project_permissions
-    ADD CONSTRAINT "$3" FOREIGN KEY (userlevel) REFERENCES lookup_project_role(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY project_accounts
+    ADD CONSTRAINT project_accounts_pkey PRIMARY KEY (id);
 
 
 
@@ -9373,58 +9379,18 @@ ALTER TABLE ONLY product_category
 
 
 
-ALTER TABLE ONLY product_category
-    ADD CONSTRAINT "$1" FOREIGN KEY (parent_id) REFERENCES product_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_category
-    ADD CONSTRAINT "$2" FOREIGN KEY (type_id) REFERENCES lookup_product_category_type(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_category
-    ADD CONSTRAINT "$3" FOREIGN KEY (thumbnail_image_id) REFERENCES project_files(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_category
-    ADD CONSTRAINT "$4" FOREIGN KEY (small_image_id) REFERENCES project_files(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_category
-    ADD CONSTRAINT "$5" FOREIGN KEY (large_image_id) REFERENCES project_files(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_category
-    ADD CONSTRAINT "$6" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_category
-    ADD CONSTRAINT "$7" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY product_category_map
     ADD CONSTRAINT product_category_map_pkey PRIMARY KEY (id);
 
 
 
-ALTER TABLE ONLY product_category_map
-    ADD CONSTRAINT "$1" FOREIGN KEY (category1_id) REFERENCES product_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_category_map
-    ADD CONSTRAINT "$2" FOREIGN KEY (category2_id) REFERENCES product_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY lookup_product_type
     ADD CONSTRAINT lookup_product_type_pkey PRIMARY KEY (code);
+
+
+
+ALTER TABLE ONLY lookup_product_manufacturer
+    ADD CONSTRAINT lookup_product_manufacturer_pkey PRIMARY KEY (code);
 
 
 
@@ -9458,98 +9424,8 @@ ALTER TABLE ONLY product_catalog
 
 
 
-ALTER TABLE ONLY product_catalog
-    ADD CONSTRAINT "$1" FOREIGN KEY (parent_id) REFERENCES product_catalog(product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog
-    ADD CONSTRAINT "$2" FOREIGN KEY (type_id) REFERENCES lookup_product_type(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog
-    ADD CONSTRAINT "$3" FOREIGN KEY (format_id) REFERENCES lookup_product_format(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog
-    ADD CONSTRAINT "$4" FOREIGN KEY (shipping_id) REFERENCES lookup_product_shipping(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog
-    ADD CONSTRAINT "$5" FOREIGN KEY (estimated_ship_time) REFERENCES lookup_product_ship_time(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog
-    ADD CONSTRAINT "$6" FOREIGN KEY (thumbnail_image_id) REFERENCES project_files(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog
-    ADD CONSTRAINT "$7" FOREIGN KEY (small_image_id) REFERENCES project_files(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog
-    ADD CONSTRAINT "$8" FOREIGN KEY (large_image_id) REFERENCES project_files(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog
-    ADD CONSTRAINT "$9" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog
-    ADD CONSTRAINT "$10" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY product_catalog_pricing
     ADD CONSTRAINT product_catalog_pricing_pkey PRIMARY KEY (price_id);
-
-
-
-ALTER TABLE ONLY product_catalog_pricing
-    ADD CONSTRAINT "$1" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog_pricing
-    ADD CONSTRAINT "$2" FOREIGN KEY (tax_id) REFERENCES lookup_product_tax(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog_pricing
-    ADD CONSTRAINT "$3" FOREIGN KEY (msrp_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog_pricing
-    ADD CONSTRAINT "$4" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog_pricing
-    ADD CONSTRAINT "$5" FOREIGN KEY (recurring_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog_pricing
-    ADD CONSTRAINT "$6" FOREIGN KEY (recurring_type) REFERENCES lookup_recurring_type(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog_pricing
-    ADD CONSTRAINT "$7" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog_pricing
-    ADD CONSTRAINT "$8" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -9558,83 +9434,13 @@ ALTER TABLE ONLY package
 
 
 
-ALTER TABLE ONLY package
-    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES product_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY package
-    ADD CONSTRAINT "$2" FOREIGN KEY (thumbnail_image_id) REFERENCES project_files(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY package
-    ADD CONSTRAINT "$3" FOREIGN KEY (small_image_id) REFERENCES project_files(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY package
-    ADD CONSTRAINT "$4" FOREIGN KEY (large_image_id) REFERENCES project_files(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY package
-    ADD CONSTRAINT "$5" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY package
-    ADD CONSTRAINT "$6" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY package_products_map
     ADD CONSTRAINT package_products_map_pkey PRIMARY KEY (id);
 
 
 
-ALTER TABLE ONLY package_products_map
-    ADD CONSTRAINT "$1" FOREIGN KEY (package_id) REFERENCES package(package_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY package_products_map
-    ADD CONSTRAINT "$2" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY package_products_map
-    ADD CONSTRAINT "$3" FOREIGN KEY (msrp_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY package_products_map
-    ADD CONSTRAINT "$4" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY package_products_map
-    ADD CONSTRAINT "$5" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY package_products_map
-    ADD CONSTRAINT "$6" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY product_catalog_category_map
     ADD CONSTRAINT product_catalog_category_map_pkey PRIMARY KEY (id);
-
-
-
-ALTER TABLE ONLY product_catalog_category_map
-    ADD CONSTRAINT "$1" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_catalog_category_map
-    ADD CONSTRAINT "$2" FOREIGN KEY (category_id) REFERENCES product_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -9648,23 +9454,8 @@ ALTER TABLE ONLY product_option_configurator
 
 
 
-ALTER TABLE ONLY product_option_configurator
-    ADD CONSTRAINT "$1" FOREIGN KEY (result_type) REFERENCES lookup_product_conf_result(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY product_option
     ADD CONSTRAINT product_option_pkey PRIMARY KEY (option_id);
-
-
-
-ALTER TABLE ONLY product_option
-    ADD CONSTRAINT "$1" FOREIGN KEY (configurator_id) REFERENCES product_option_configurator(configurator_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_option
-    ADD CONSTRAINT "$2" FOREIGN KEY (parent_id) REFERENCES product_option(option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -9673,88 +9464,13 @@ ALTER TABLE ONLY product_option_values
 
 
 
-ALTER TABLE ONLY product_option_values
-    ADD CONSTRAINT "$1" FOREIGN KEY (option_id) REFERENCES product_option(option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_option_values
-    ADD CONSTRAINT "$2" FOREIGN KEY (msrp_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_option_values
-    ADD CONSTRAINT "$3" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_option_values
-    ADD CONSTRAINT "$4" FOREIGN KEY (recurring_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_option_values
-    ADD CONSTRAINT "$5" FOREIGN KEY (recurring_type) REFERENCES lookup_recurring_type(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY product_option_map
     ADD CONSTRAINT product_option_map_pkey PRIMARY KEY (product_option_id);
 
 
 
-ALTER TABLE ONLY product_option_map
-    ADD CONSTRAINT "$1" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_option_map
-    ADD CONSTRAINT "$2" FOREIGN KEY (option_id) REFERENCES product_option(option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_option_map
-    ADD CONSTRAINT "$3" FOREIGN KEY (value_id) REFERENCES product_option_values(value_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_option_boolean
-    ADD CONSTRAINT "$1" FOREIGN KEY (product_option_id) REFERENCES product_option(option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_option_float
-    ADD CONSTRAINT "$1" FOREIGN KEY (product_option_id) REFERENCES product_option(option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_option_timestamp
-    ADD CONSTRAINT "$1" FOREIGN KEY (product_option_id) REFERENCES product_option(option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_option_integer
-    ADD CONSTRAINT "$1" FOREIGN KEY (product_option_id) REFERENCES product_option(option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_option_text
-    ADD CONSTRAINT "$1" FOREIGN KEY (product_option_id) REFERENCES product_option(option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY lookup_product_keyword
     ADD CONSTRAINT lookup_product_keyword_pkey PRIMARY KEY (code);
-
-
-
-ALTER TABLE ONLY product_keyword_map
-    ADD CONSTRAINT "$1" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY product_keyword_map
-    ADD CONSTRAINT "$2" FOREIGN KEY (keyword_id) REFERENCES lookup_product_keyword(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -9803,93 +9519,13 @@ ALTER TABLE ONLY service_contract
 
 
 
-ALTER TABLE ONLY service_contract
-    ADD CONSTRAINT "$1" FOREIGN KEY (account_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY service_contract
-    ADD CONSTRAINT "$2" FOREIGN KEY (category) REFERENCES lookup_sc_category(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY service_contract
-    ADD CONSTRAINT "$3" FOREIGN KEY ("type") REFERENCES lookup_sc_type(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY service_contract
-    ADD CONSTRAINT "$4" FOREIGN KEY (contact_id) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY service_contract
-    ADD CONSTRAINT "$5" FOREIGN KEY (response_time) REFERENCES lookup_response_model(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY service_contract
-    ADD CONSTRAINT "$6" FOREIGN KEY (telephone_service_model) REFERENCES lookup_phone_model(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY service_contract
-    ADD CONSTRAINT "$7" FOREIGN KEY (onsite_service_model) REFERENCES lookup_onsite_model(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY service_contract
-    ADD CONSTRAINT "$8" FOREIGN KEY (email_service_model) REFERENCES lookup_email_model(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY service_contract
-    ADD CONSTRAINT "$9" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY service_contract
-    ADD CONSTRAINT "$10" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY service_contract_hours
     ADD CONSTRAINT service_contract_hours_pkey PRIMARY KEY (history_id);
 
 
 
-ALTER TABLE ONLY service_contract_hours
-    ADD CONSTRAINT "$1" FOREIGN KEY (link_contract_id) REFERENCES service_contract(contract_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY service_contract_hours
-    ADD CONSTRAINT "$2" FOREIGN KEY (adjustment_reason) REFERENCES lookup_hours_reason(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY service_contract_hours
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY service_contract_hours
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY service_contract_products
     ADD CONSTRAINT service_contract_products_pkey PRIMARY KEY (id);
-
-
-
-ALTER TABLE ONLY service_contract_products
-    ADD CONSTRAINT "$1" FOREIGN KEY (link_contract_id) REFERENCES service_contract(contract_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY service_contract_products
-    ADD CONSTRAINT "$2" FOREIGN KEY (link_product_id) REFERENCES product_catalog(product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -9905,66 +9541,6 @@ ALTER TABLE ONLY asset_category_draft
 
 ALTER TABLE ONLY asset
     ADD CONSTRAINT asset_pkey PRIMARY KEY (asset_id);
-
-
-
-ALTER TABLE ONLY asset
-    ADD CONSTRAINT "$1" FOREIGN KEY (account_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY asset
-    ADD CONSTRAINT "$2" FOREIGN KEY (contract_id) REFERENCES service_contract(contract_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY asset
-    ADD CONSTRAINT "$3" FOREIGN KEY (level1) REFERENCES asset_category(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY asset
-    ADD CONSTRAINT "$4" FOREIGN KEY (level2) REFERENCES asset_category(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY asset
-    ADD CONSTRAINT "$5" FOREIGN KEY (level3) REFERENCES asset_category(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY asset
-    ADD CONSTRAINT "$6" FOREIGN KEY (contact_id) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY asset
-    ADD CONSTRAINT "$7" FOREIGN KEY (response_time) REFERENCES lookup_response_model(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY asset
-    ADD CONSTRAINT "$8" FOREIGN KEY (telephone_service_model) REFERENCES lookup_phone_model(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY asset
-    ADD CONSTRAINT "$9" FOREIGN KEY (onsite_service_model) REFERENCES lookup_onsite_model(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY asset
-    ADD CONSTRAINT "$10" FOREIGN KEY (email_service_model) REFERENCES lookup_email_model(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY asset
-    ADD CONSTRAINT "$11" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY asset
-    ADD CONSTRAINT "$12" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -9998,6 +9574,16 @@ ALTER TABLE ONLY lookup_ticketsource
 
 
 
+ALTER TABLE ONLY lookup_ticket_status
+    ADD CONSTRAINT lookup_ticket_status_pkey PRIMARY KEY (code);
+
+
+
+ALTER TABLE ONLY lookup_ticket_status
+    ADD CONSTRAINT lookup_ticket_status_description_key UNIQUE (description);
+
+
+
 ALTER TABLE ONLY ticket_priority
     ADD CONSTRAINT ticket_priority_pkey PRIMARY KEY (code);
 
@@ -10023,98 +9609,8 @@ ALTER TABLE ONLY ticket
 
 
 
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$2" FOREIGN KEY (contact_id) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$5" FOREIGN KEY (pri_code) REFERENCES ticket_priority(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$6" FOREIGN KEY (level_code) REFERENCES ticket_level(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$7" FOREIGN KEY (department_code) REFERENCES lookup_department(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$8" FOREIGN KEY (source_code) REFERENCES lookup_ticketsource(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$9" FOREIGN KEY (assigned_to) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$10" FOREIGN KEY (scode) REFERENCES ticket_severity(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$11" FOREIGN KEY (cat_code) REFERENCES ticket_category(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$12" FOREIGN KEY (subcat_code1) REFERENCES ticket_category(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$13" FOREIGN KEY (subcat_code2) REFERENCES ticket_category(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$14" FOREIGN KEY (subcat_code3) REFERENCES ticket_category(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$15" FOREIGN KEY (link_contract_id) REFERENCES service_contract(contract_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$16" FOREIGN KEY (link_asset_id) REFERENCES asset(asset_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$17" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY project_ticket_count
     ADD CONSTRAINT project_ticket_count_project_id_key UNIQUE (project_id);
-
-
-
-ALTER TABLE ONLY project_ticket_count
-    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10123,58 +9619,8 @@ ALTER TABLE ONLY ticketlog
 
 
 
-ALTER TABLE ONLY ticketlog
-    ADD CONSTRAINT "$1" FOREIGN KEY (ticketid) REFERENCES ticket(ticketid) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticketlog
-    ADD CONSTRAINT "$2" FOREIGN KEY (assigned_to) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticketlog
-    ADD CONSTRAINT "$3" FOREIGN KEY (pri_code) REFERENCES ticket_priority(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticketlog
-    ADD CONSTRAINT "$4" FOREIGN KEY (department_code) REFERENCES lookup_department(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticketlog
-    ADD CONSTRAINT "$5" FOREIGN KEY (scode) REFERENCES ticket_severity(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticketlog
-    ADD CONSTRAINT "$6" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticketlog
-    ADD CONSTRAINT "$7" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY ticket_csstm_form
     ADD CONSTRAINT ticket_csstm_form_pkey PRIMARY KEY (form_id);
-
-
-
-ALTER TABLE ONLY ticket_csstm_form
-    ADD CONSTRAINT "$1" FOREIGN KEY (link_ticket_id) REFERENCES ticket(ticketid) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket_csstm_form
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket_csstm_form
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10183,48 +9629,13 @@ ALTER TABLE ONLY ticket_activity_item
 
 
 
-ALTER TABLE ONLY ticket_activity_item
-    ADD CONSTRAINT "$1" FOREIGN KEY (link_form_id) REFERENCES ticket_csstm_form(form_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY ticket_sun_form
     ADD CONSTRAINT ticket_sun_form_pkey PRIMARY KEY (form_id);
 
 
 
-ALTER TABLE ONLY ticket_sun_form
-    ADD CONSTRAINT "$1" FOREIGN KEY (link_ticket_id) REFERENCES ticket(ticketid) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket_sun_form
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticket_sun_form
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY trouble_asset_replacement
     ADD CONSTRAINT trouble_asset_replacement_pkey PRIMARY KEY (replacement_id);
-
-
-
-ALTER TABLE ONLY trouble_asset_replacement
-    ADD CONSTRAINT "$1" FOREIGN KEY (link_form_id) REFERENCES ticket_sun_form(form_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticketlink_project
-    ADD CONSTRAINT "$1" FOREIGN KEY (ticket_id) REFERENCES ticket(ticketid) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY ticketlink_project
-    ADD CONSTRAINT "$2" FOREIGN KEY (project_id) REFERENCES projects(project_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10253,148 +9664,13 @@ ALTER TABLE ONLY quote_entry
 
 
 
-ALTER TABLE ONLY quote_entry
-    ADD CONSTRAINT "$1" FOREIGN KEY (parent_id) REFERENCES quote_entry(quote_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_entry
-    ADD CONSTRAINT "$2" FOREIGN KEY (org_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_entry
-    ADD CONSTRAINT "$3" FOREIGN KEY (contact_id) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_entry
-    ADD CONSTRAINT "$4" FOREIGN KEY (source_id) REFERENCES lookup_quote_source(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_entry
-    ADD CONSTRAINT "$5" FOREIGN KEY (status_id) REFERENCES lookup_quote_status(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_entry
-    ADD CONSTRAINT "$6" FOREIGN KEY (quote_terms_id) REFERENCES lookup_quote_terms(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_entry
-    ADD CONSTRAINT "$7" FOREIGN KEY (quote_type_id) REFERENCES lookup_quote_type(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_entry
-    ADD CONSTRAINT "$8" FOREIGN KEY (ticketid) REFERENCES ticket(ticketid) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_entry
-    ADD CONSTRAINT "$9" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_entry
-    ADD CONSTRAINT "$10" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY quote_product
     ADD CONSTRAINT quote_product_pkey PRIMARY KEY (item_id);
 
 
 
-ALTER TABLE ONLY quote_product
-    ADD CONSTRAINT "$1" FOREIGN KEY (quote_id) REFERENCES quote_entry(quote_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product
-    ADD CONSTRAINT "$2" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product
-    ADD CONSTRAINT "$3" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product
-    ADD CONSTRAINT "$4" FOREIGN KEY (recurring_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product
-    ADD CONSTRAINT "$5" FOREIGN KEY (recurring_type) REFERENCES lookup_recurring_type(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product
-    ADD CONSTRAINT "$6" FOREIGN KEY (status_id) REFERENCES lookup_quote_status(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY quote_product_options
     ADD CONSTRAINT quote_product_options_pkey PRIMARY KEY (quote_product_option_id);
-
-
-
-ALTER TABLE ONLY quote_product_options
-    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES quote_product(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product_options
-    ADD CONSTRAINT "$2" FOREIGN KEY (product_option_id) REFERENCES product_option_map(product_option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product_options
-    ADD CONSTRAINT "$3" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product_options
-    ADD CONSTRAINT "$4" FOREIGN KEY (recurring_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product_options
-    ADD CONSTRAINT "$5" FOREIGN KEY (recurring_type) REFERENCES lookup_recurring_type(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product_options
-    ADD CONSTRAINT "$6" FOREIGN KEY (status_id) REFERENCES lookup_quote_status(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product_option_boolean
-    ADD CONSTRAINT "$1" FOREIGN KEY (quote_product_option_id) REFERENCES quote_product_options(quote_product_option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product_option_float
-    ADD CONSTRAINT "$1" FOREIGN KEY (quote_product_option_id) REFERENCES quote_product_options(quote_product_option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product_option_timestamp
-    ADD CONSTRAINT "$1" FOREIGN KEY (quote_product_option_id) REFERENCES quote_product_options(quote_product_option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product_option_integer
-    ADD CONSTRAINT "$1" FOREIGN KEY (quote_product_option_id) REFERENCES quote_product_options(quote_product_option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY quote_product_option_text
-    ADD CONSTRAINT "$1" FOREIGN KEY (quote_product_option_id) REFERENCES quote_product_options(quote_product_option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10423,103 +9699,8 @@ ALTER TABLE ONLY order_entry
 
 
 
-ALTER TABLE ONLY order_entry
-    ADD CONSTRAINT "$1" FOREIGN KEY (parent_id) REFERENCES order_entry(order_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_entry
-    ADD CONSTRAINT "$2" FOREIGN KEY (org_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_entry
-    ADD CONSTRAINT "$3" FOREIGN KEY (quote_id) REFERENCES quote_entry(quote_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_entry
-    ADD CONSTRAINT "$4" FOREIGN KEY (sales_id) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_entry
-    ADD CONSTRAINT "$5" FOREIGN KEY (orderedby) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_entry
-    ADD CONSTRAINT "$6" FOREIGN KEY (billing_contact_id) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_entry
-    ADD CONSTRAINT "$7" FOREIGN KEY (source_id) REFERENCES lookup_order_source(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_entry
-    ADD CONSTRAINT "$8" FOREIGN KEY (status_id) REFERENCES lookup_order_status(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_entry
-    ADD CONSTRAINT "$9" FOREIGN KEY (order_terms_id) REFERENCES lookup_order_terms(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_entry
-    ADD CONSTRAINT "$10" FOREIGN KEY (order_type_id) REFERENCES lookup_order_type(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_entry
-    ADD CONSTRAINT "$11" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_entry
-    ADD CONSTRAINT "$12" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY order_product
     ADD CONSTRAINT order_product_pkey PRIMARY KEY (item_id);
-
-
-
-ALTER TABLE ONLY order_product
-    ADD CONSTRAINT "$1" FOREIGN KEY (order_id) REFERENCES order_entry(order_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product
-    ADD CONSTRAINT "$2" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product
-    ADD CONSTRAINT "$3" FOREIGN KEY (msrp_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product
-    ADD CONSTRAINT "$4" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product
-    ADD CONSTRAINT "$5" FOREIGN KEY (recurring_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product
-    ADD CONSTRAINT "$6" FOREIGN KEY (recurring_type) REFERENCES lookup_recurring_type(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product
-    ADD CONSTRAINT "$7" FOREIGN KEY (status_id) REFERENCES lookup_order_status(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10528,88 +9709,8 @@ ALTER TABLE ONLY order_product_status
 
 
 
-ALTER TABLE ONLY order_product_status
-    ADD CONSTRAINT "$1" FOREIGN KEY (order_id) REFERENCES order_entry(order_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_status
-    ADD CONSTRAINT "$2" FOREIGN KEY (item_id) REFERENCES order_product(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_status
-    ADD CONSTRAINT "$3" FOREIGN KEY (status_id) REFERENCES lookup_order_status(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_status
-    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_status
-    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY order_product_options
     ADD CONSTRAINT order_product_options_pkey PRIMARY KEY (order_product_option_id);
-
-
-
-ALTER TABLE ONLY order_product_options
-    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES order_product(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_options
-    ADD CONSTRAINT "$2" FOREIGN KEY (product_option_id) REFERENCES product_option_map(product_option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_options
-    ADD CONSTRAINT "$3" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_options
-    ADD CONSTRAINT "$4" FOREIGN KEY (recurring_currency) REFERENCES lookup_currency(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_options
-    ADD CONSTRAINT "$5" FOREIGN KEY (recurring_type) REFERENCES lookup_recurring_type(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_options
-    ADD CONSTRAINT "$6" FOREIGN KEY (status_id) REFERENCES lookup_order_status(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_option_boolean
-    ADD CONSTRAINT "$1" FOREIGN KEY (order_product_option_id) REFERENCES order_product_options(order_product_option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_option_float
-    ADD CONSTRAINT "$1" FOREIGN KEY (order_product_option_id) REFERENCES order_product_options(order_product_option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_option_timestamp
-    ADD CONSTRAINT "$1" FOREIGN KEY (order_product_option_id) REFERENCES order_product_options(order_product_option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_option_integer
-    ADD CONSTRAINT "$1" FOREIGN KEY (order_product_option_id) REFERENCES order_product_options(order_product_option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_product_option_text
-    ADD CONSTRAINT "$1" FOREIGN KEY (order_product_option_id) REFERENCES order_product_options(order_product_option_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10623,26 +9724,6 @@ ALTER TABLE ONLY order_address
 
 
 
-ALTER TABLE ONLY order_address
-    ADD CONSTRAINT "$1" FOREIGN KEY (order_id) REFERENCES order_entry(order_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_address
-    ADD CONSTRAINT "$2" FOREIGN KEY (address_type) REFERENCES lookup_orderaddress_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_address
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_address
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY lookup_payment_methods
     ADD CONSTRAINT lookup_payment_methods_pkey PRIMARY KEY (code);
 
@@ -10653,53 +9734,8 @@ ALTER TABLE ONLY lookup_creditcard_types
 
 
 
-ALTER TABLE ONLY order_payment
-    ADD CONSTRAINT order_payment_pkey PRIMARY KEY (payment_id);
-
-
-
-ALTER TABLE ONLY order_payment
-    ADD CONSTRAINT "$1" FOREIGN KEY (order_id) REFERENCES order_entry(order_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_payment
-    ADD CONSTRAINT "$2" FOREIGN KEY (payment_method_id) REFERENCES lookup_payment_methods(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_payment
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY order_payment
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY payment_creditcard
     ADD CONSTRAINT payment_creditcard_pkey PRIMARY KEY (creditcard_id);
-
-
-
-ALTER TABLE ONLY payment_creditcard
-    ADD CONSTRAINT "$1" FOREIGN KEY (payment_id) REFERENCES order_payment(payment_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY payment_creditcard
-    ADD CONSTRAINT "$2" FOREIGN KEY (card_type) REFERENCES lookup_creditcard_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY payment_creditcard
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY payment_creditcard
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10708,53 +9744,8 @@ ALTER TABLE ONLY payment_eft
 
 
 
-ALTER TABLE ONLY payment_eft
-    ADD CONSTRAINT "$1" FOREIGN KEY (payment_id) REFERENCES order_payment(payment_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY payment_eft
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY payment_eft
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY customer_product
     ADD CONSTRAINT customer_product_pkey PRIMARY KEY (customer_product_id);
-
-
-
-ALTER TABLE ONLY customer_product
-    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY customer_product
-    ADD CONSTRAINT "$2" FOREIGN KEY (order_id) REFERENCES order_entry(order_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY customer_product
-    ADD CONSTRAINT "$3" FOREIGN KEY (order_item_id) REFERENCES order_product(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY customer_product
-    ADD CONSTRAINT "$4" FOREIGN KEY (status_id) REFERENCES lookup_order_status(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY customer_product
-    ADD CONSTRAINT "$5" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY customer_product
-    ADD CONSTRAINT "$6" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10763,28 +9754,18 @@ ALTER TABLE ONLY customer_product_history
 
 
 
-ALTER TABLE ONLY customer_product_history
-    ADD CONSTRAINT "$1" FOREIGN KEY (customer_product_id) REFERENCES customer_product(customer_product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY lookup_payment_status
+    ADD CONSTRAINT lookup_payment_status_pkey PRIMARY KEY (code);
 
 
 
-ALTER TABLE ONLY customer_product_history
-    ADD CONSTRAINT "$2" FOREIGN KEY (org_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY order_payment
+    ADD CONSTRAINT order_payment_pkey PRIMARY KEY (payment_id);
 
 
 
-ALTER TABLE ONLY customer_product_history
-    ADD CONSTRAINT "$3" FOREIGN KEY (order_id) REFERENCES order_entry(order_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY customer_product_history
-    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY customer_product_history
-    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY order_payment_status
+    ADD CONSTRAINT order_payment_status_pkey PRIMARY KEY (payment_status_id);
 
 
 
@@ -10798,18 +9779,8 @@ ALTER TABLE ONLY module_field_categorylink
 
 
 
-ALTER TABLE ONLY module_field_categorylink
-    ADD CONSTRAINT "$1" FOREIGN KEY (module_id) REFERENCES permission_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY custom_field_category
     ADD CONSTRAINT custom_field_category_pkey PRIMARY KEY (category_id);
-
-
-
-ALTER TABLE ONLY custom_field_category
-    ADD CONSTRAINT "$1" FOREIGN KEY (module_id) REFERENCES module_field_categorylink(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10818,18 +9789,8 @@ ALTER TABLE ONLY custom_field_group
 
 
 
-ALTER TABLE ONLY custom_field_group
-    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES custom_field_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY custom_field_info
     ADD CONSTRAINT custom_field_info_pkey PRIMARY KEY (field_id);
-
-
-
-ALTER TABLE ONLY custom_field_info
-    ADD CONSTRAINT "$1" FOREIGN KEY (group_id) REFERENCES custom_field_group(group_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10838,38 +9799,8 @@ ALTER TABLE ONLY custom_field_lookup
 
 
 
-ALTER TABLE ONLY custom_field_lookup
-    ADD CONSTRAINT "$1" FOREIGN KEY (field_id) REFERENCES custom_field_info(field_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY custom_field_record
     ADD CONSTRAINT custom_field_record_pkey PRIMARY KEY (record_id);
-
-
-
-ALTER TABLE ONLY custom_field_record
-    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES custom_field_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY custom_field_record
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY custom_field_record
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY custom_field_data
-    ADD CONSTRAINT "$1" FOREIGN KEY (record_id) REFERENCES custom_field_record(record_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY custom_field_data
-    ADD CONSTRAINT "$2" FOREIGN KEY (field_id) REFERENCES custom_field_info(field_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10878,38 +9809,8 @@ ALTER TABLE ONLY saved_criterialist
 
 
 
-ALTER TABLE ONLY saved_criterialist
-    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY saved_criterialist
-    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY saved_criterialist
-    ADD CONSTRAINT "$3" FOREIGN KEY ("owner") REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY campaign
     ADD CONSTRAINT campaign_pkey PRIMARY KEY (campaign_id);
-
-
-
-ALTER TABLE ONLY campaign
-    ADD CONSTRAINT "$1" FOREIGN KEY (approvedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY campaign
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY campaign
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10918,33 +9819,8 @@ ALTER TABLE ONLY campaign_run
 
 
 
-ALTER TABLE ONLY campaign_run
-    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY excluded_recipient
     ADD CONSTRAINT excluded_recipient_pkey PRIMARY KEY (id);
-
-
-
-ALTER TABLE ONLY excluded_recipient
-    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY excluded_recipient
-    ADD CONSTRAINT "$2" FOREIGN KEY (contact_id) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY campaign_list_groups
-    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY campaign_list_groups
-    ADD CONSTRAINT "$2" FOREIGN KEY (group_id) REFERENCES saved_criterialist(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10953,23 +9829,8 @@ ALTER TABLE ONLY active_campaign_groups
 
 
 
-ALTER TABLE ONLY active_campaign_groups
-    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY scheduled_recipient
     ADD CONSTRAINT scheduled_recipient_pkey PRIMARY KEY (id);
-
-
-
-ALTER TABLE ONLY scheduled_recipient
-    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY scheduled_recipient
-    ADD CONSTRAINT "$2" FOREIGN KEY (contact_id) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -10983,38 +9844,8 @@ ALTER TABLE ONLY survey
 
 
 
-ALTER TABLE ONLY survey
-    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY survey
-    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY campaign_survey_link
-    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY campaign_survey_link
-    ADD CONSTRAINT "$2" FOREIGN KEY (survey_id) REFERENCES survey(survey_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY survey_questions
     ADD CONSTRAINT survey_questions_pkey PRIMARY KEY (question_id);
-
-
-
-ALTER TABLE ONLY survey_questions
-    ADD CONSTRAINT "$1" FOREIGN KEY (survey_id) REFERENCES survey(survey_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY survey_questions
-    ADD CONSTRAINT "$2" FOREIGN KEY ("type") REFERENCES lookup_survey_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11023,33 +9854,8 @@ ALTER TABLE ONLY survey_items
 
 
 
-ALTER TABLE ONLY survey_items
-    ADD CONSTRAINT "$1" FOREIGN KEY (question_id) REFERENCES survey_questions(question_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY active_survey
     ADD CONSTRAINT active_survey_pkey PRIMARY KEY (active_survey_id);
-
-
-
-ALTER TABLE ONLY active_survey
-    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY active_survey
-    ADD CONSTRAINT "$2" FOREIGN KEY ("type") REFERENCES lookup_survey_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY active_survey
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY active_survey
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11058,23 +9864,8 @@ ALTER TABLE ONLY active_survey_questions
 
 
 
-ALTER TABLE ONLY active_survey_questions
-    ADD CONSTRAINT "$1" FOREIGN KEY (active_survey_id) REFERENCES active_survey(active_survey_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY active_survey_questions
-    ADD CONSTRAINT "$2" FOREIGN KEY ("type") REFERENCES lookup_survey_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY active_survey_items
     ADD CONSTRAINT active_survey_items_pkey PRIMARY KEY (item_id);
-
-
-
-ALTER TABLE ONLY active_survey_items
-    ADD CONSTRAINT "$1" FOREIGN KEY (question_id) REFERENCES active_survey_questions(question_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11083,23 +9874,8 @@ ALTER TABLE ONLY active_survey_responses
 
 
 
-ALTER TABLE ONLY active_survey_responses
-    ADD CONSTRAINT "$1" FOREIGN KEY (active_survey_id) REFERENCES active_survey(active_survey_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY active_survey_answers
     ADD CONSTRAINT active_survey_answers_pkey PRIMARY KEY (answer_id);
-
-
-
-ALTER TABLE ONLY active_survey_answers
-    ADD CONSTRAINT "$1" FOREIGN KEY (response_id) REFERENCES active_survey_responses(response_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY active_survey_answers
-    ADD CONSTRAINT "$2" FOREIGN KEY (question_id) REFERENCES active_survey_questions(question_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11108,28 +9884,8 @@ ALTER TABLE ONLY active_survey_answer_items
 
 
 
-ALTER TABLE ONLY active_survey_answer_items
-    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES active_survey_items(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY active_survey_answer_items
-    ADD CONSTRAINT "$2" FOREIGN KEY (answer_id) REFERENCES active_survey_answers(answer_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY active_survey_answer_avg
     ADD CONSTRAINT active_survey_answer_avg_pkey PRIMARY KEY (id);
-
-
-
-ALTER TABLE ONLY active_survey_answer_avg
-    ADD CONSTRAINT "$1" FOREIGN KEY (question_id) REFERENCES active_survey_questions(question_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY active_survey_answer_avg
-    ADD CONSTRAINT "$2" FOREIGN KEY (item_id) REFERENCES active_survey_items(item_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11148,48 +9904,8 @@ ALTER TABLE ONLY message
 
 
 
-ALTER TABLE ONLY message
-    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY message
-    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY message
-    ADD CONSTRAINT "$3" FOREIGN KEY (access_type) REFERENCES lookup_access_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY message_template
     ADD CONSTRAINT message_template_pkey PRIMARY KEY (id);
-
-
-
-ALTER TABLE ONLY message_template
-    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY message_template
-    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY saved_criteriaelement
-    ADD CONSTRAINT "$1" FOREIGN KEY (id) REFERENCES saved_criterialist(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY saved_criteriaelement
-    ADD CONSTRAINT "$2" FOREIGN KEY (field) REFERENCES search_fields(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY saved_criteriaelement
-    ADD CONSTRAINT "$3" FOREIGN KEY (operatorid) REFERENCES field_types(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11198,48 +9914,8 @@ ALTER TABLE ONLY help_module
 
 
 
-ALTER TABLE ONLY help_module
-    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES permission_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY help_contents
     ADD CONSTRAINT help_contents_pkey PRIMARY KEY (help_id);
-
-
-
-ALTER TABLE ONLY help_contents
-    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES permission_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_contents
-    ADD CONSTRAINT "$2" FOREIGN KEY (link_module_id) REFERENCES help_module(module_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_contents
-    ADD CONSTRAINT "$3" FOREIGN KEY (nextcontent) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_contents
-    ADD CONSTRAINT "$4" FOREIGN KEY (prevcontent) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_contents
-    ADD CONSTRAINT "$5" FOREIGN KEY (upcontent) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_contents
-    ADD CONSTRAINT "$6" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_contents
-    ADD CONSTRAINT "$7" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11248,58 +9924,8 @@ ALTER TABLE ONLY help_tableof_contents
 
 
 
-ALTER TABLE ONLY help_tableof_contents
-    ADD CONSTRAINT "$1" FOREIGN KEY (firstchild) REFERENCES help_tableof_contents(content_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_tableof_contents
-    ADD CONSTRAINT "$2" FOREIGN KEY (nextsibling) REFERENCES help_tableof_contents(content_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_tableof_contents
-    ADD CONSTRAINT "$3" FOREIGN KEY (parent) REFERENCES help_tableof_contents(content_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_tableof_contents
-    ADD CONSTRAINT "$4" FOREIGN KEY (category_id) REFERENCES permission_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_tableof_contents
-    ADD CONSTRAINT "$5" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_tableof_contents
-    ADD CONSTRAINT "$6" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY help_tableofcontentitem_links
     ADD CONSTRAINT help_tableofcontentitem_links_pkey PRIMARY KEY (link_id);
-
-
-
-ALTER TABLE ONLY help_tableofcontentitem_links
-    ADD CONSTRAINT "$1" FOREIGN KEY (global_link_id) REFERENCES help_tableof_contents(content_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_tableofcontentitem_links
-    ADD CONSTRAINT "$2" FOREIGN KEY (linkto_content_id) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_tableofcontentitem_links
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_tableofcontentitem_links
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11313,53 +9939,8 @@ ALTER TABLE ONLY help_features
 
 
 
-ALTER TABLE ONLY help_features
-    ADD CONSTRAINT "$1" FOREIGN KEY (link_help_id) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_features
-    ADD CONSTRAINT "$2" FOREIGN KEY (link_feature_id) REFERENCES lookup_help_features(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_features
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_features
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_features
-    ADD CONSTRAINT "$5" FOREIGN KEY (completedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY help_related_links
     ADD CONSTRAINT help_related_links_pkey PRIMARY KEY (relatedlink_id);
-
-
-
-ALTER TABLE ONLY help_related_links
-    ADD CONSTRAINT "$1" FOREIGN KEY (owning_module_id) REFERENCES help_module(module_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_related_links
-    ADD CONSTRAINT "$2" FOREIGN KEY (linkto_content_id) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_related_links
-    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_related_links
-    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11368,48 +9949,8 @@ ALTER TABLE ONLY help_faqs
 
 
 
-ALTER TABLE ONLY help_faqs
-    ADD CONSTRAINT "$1" FOREIGN KEY (owning_module_id) REFERENCES help_module(module_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_faqs
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_faqs
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_faqs
-    ADD CONSTRAINT "$4" FOREIGN KEY (completedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY help_business_rules
     ADD CONSTRAINT help_business_rules_pkey PRIMARY KEY (rule_id);
-
-
-
-ALTER TABLE ONLY help_business_rules
-    ADD CONSTRAINT "$1" FOREIGN KEY (link_help_id) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_business_rules
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_business_rules
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_business_rules
-    ADD CONSTRAINT "$4" FOREIGN KEY (completedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11418,43 +9959,8 @@ ALTER TABLE ONLY help_notes
 
 
 
-ALTER TABLE ONLY help_notes
-    ADD CONSTRAINT "$1" FOREIGN KEY (link_help_id) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_notes
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_notes
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_notes
-    ADD CONSTRAINT "$4" FOREIGN KEY (completedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY help_tips
     ADD CONSTRAINT help_tips_pkey PRIMARY KEY (tip_id);
-
-
-
-ALTER TABLE ONLY help_tips
-    ADD CONSTRAINT "$1" FOREIGN KEY (link_help_id) REFERENCES help_contents(help_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_tips
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY help_tips
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11473,43 +9979,8 @@ ALTER TABLE ONLY sync_table
 
 
 
-ALTER TABLE ONLY sync_table
-    ADD CONSTRAINT "$1" FOREIGN KEY (system_id) REFERENCES sync_system(system_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY sync_map
-    ADD CONSTRAINT "$1" FOREIGN KEY (client_id) REFERENCES sync_client(client_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY sync_map
-    ADD CONSTRAINT "$2" FOREIGN KEY (table_id) REFERENCES sync_table(table_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY sync_conflict_log
-    ADD CONSTRAINT "$1" FOREIGN KEY (client_id) REFERENCES sync_client(client_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY sync_conflict_log
-    ADD CONSTRAINT "$2" FOREIGN KEY (table_id) REFERENCES sync_table(table_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY sync_log
     ADD CONSTRAINT sync_log_pkey PRIMARY KEY (log_id);
-
-
-
-ALTER TABLE ONLY sync_log
-    ADD CONSTRAINT "$1" FOREIGN KEY (system_id) REFERENCES sync_system(system_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY sync_log
-    ADD CONSTRAINT "$2" FOREIGN KEY (client_id) REFERENCES sync_client(client_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11518,23 +9989,8 @@ ALTER TABLE ONLY sync_transaction_log
 
 
 
-ALTER TABLE ONLY sync_transaction_log
-    ADD CONSTRAINT "$1" FOREIGN KEY (log_id) REFERENCES sync_log(log_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY process_log
     ADD CONSTRAINT process_log_pkey PRIMARY KEY (process_id);
-
-
-
-ALTER TABLE ONLY process_log
-    ADD CONSTRAINT "$1" FOREIGN KEY (system_id) REFERENCES sync_system(system_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY process_log
-    ADD CONSTRAINT "$2" FOREIGN KEY (client_id) REFERENCES sync_client(client_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11548,23 +10004,8 @@ ALTER TABLE ONLY autoguide_model
 
 
 
-ALTER TABLE ONLY autoguide_model
-    ADD CONSTRAINT "$1" FOREIGN KEY (make_id) REFERENCES autoguide_make(make_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY autoguide_vehicle
     ADD CONSTRAINT autoguide_vehicle_pkey PRIMARY KEY (vehicle_id);
-
-
-
-ALTER TABLE ONLY autoguide_vehicle
-    ADD CONSTRAINT "$1" FOREIGN KEY (make_id) REFERENCES autoguide_make(make_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY autoguide_vehicle
-    ADD CONSTRAINT "$2" FOREIGN KEY (model_id) REFERENCES autoguide_model(model_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11573,33 +10014,13 @@ ALTER TABLE ONLY autoguide_inventory
 
 
 
-ALTER TABLE ONLY autoguide_inventory
-    ADD CONSTRAINT "$1" FOREIGN KEY (vehicle_id) REFERENCES autoguide_vehicle(vehicle_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY autoguide_inventory
-    ADD CONSTRAINT "$2" FOREIGN KEY (account_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY autoguide_options
     ADD CONSTRAINT autoguide_options_pkey PRIMARY KEY (option_id);
 
 
 
-ALTER TABLE ONLY autoguide_inventory_options
-    ADD CONSTRAINT "$1" FOREIGN KEY (inventory_id) REFERENCES autoguide_inventory(inventory_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY autoguide_ad_run
     ADD CONSTRAINT autoguide_ad_run_pkey PRIMARY KEY (ad_run_id);
-
-
-
-ALTER TABLE ONLY autoguide_ad_run
-    ADD CONSTRAINT "$1" FOREIGN KEY (inventory_id) REFERENCES autoguide_inventory(inventory_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11623,58 +10044,8 @@ ALTER TABLE ONLY revenue
 
 
 
-ALTER TABLE ONLY revenue
-    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY revenue
-    ADD CONSTRAINT "$2" FOREIGN KEY ("type") REFERENCES lookup_revenue_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY revenue
-    ADD CONSTRAINT "$3" FOREIGN KEY ("owner") REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY revenue
-    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY revenue
-    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY revenue_detail
     ADD CONSTRAINT revenue_detail_pkey PRIMARY KEY (id);
-
-
-
-ALTER TABLE ONLY revenue_detail
-    ADD CONSTRAINT "$1" FOREIGN KEY (revenue_id) REFERENCES revenue(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY revenue_detail
-    ADD CONSTRAINT "$2" FOREIGN KEY ("type") REFERENCES lookup_revenue_types(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY revenue_detail
-    ADD CONSTRAINT "$3" FOREIGN KEY ("owner") REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY revenue_detail
-    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY revenue_detail
-    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11698,73 +10069,33 @@ ALTER TABLE ONLY task
 
 
 
-ALTER TABLE ONLY task
-    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY lookup_document_store_permission_category
+    ADD CONSTRAINT lookup_document_store_permission_category_pkey PRIMARY KEY (code);
 
 
 
-ALTER TABLE ONLY task
-    ADD CONSTRAINT "$2" FOREIGN KEY (priority) REFERENCES lookup_task_priority(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY lookup_document_store_role
+    ADD CONSTRAINT lookup_document_store_role_pkey PRIMARY KEY (code);
 
 
 
-ALTER TABLE ONLY task
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY lookup_document_store_permission
+    ADD CONSTRAINT lookup_document_store_permission_pkey PRIMARY KEY (code);
 
 
 
-ALTER TABLE ONLY task
-    ADD CONSTRAINT "$4" FOREIGN KEY (estimatedloetype) REFERENCES lookup_task_loe(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY lookup_document_store_permission
+    ADD CONSTRAINT lookup_document_store_permission_permission_key UNIQUE (permission);
 
 
 
-ALTER TABLE ONLY task
-    ADD CONSTRAINT "$5" FOREIGN KEY ("owner") REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY document_store
+    ADD CONSTRAINT document_store_pkey PRIMARY KEY (document_store_id);
 
 
 
-ALTER TABLE ONLY task
-    ADD CONSTRAINT "$6" FOREIGN KEY (category_id) REFERENCES lookup_task_category(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY tasklink_contact
-    ADD CONSTRAINT "$1" FOREIGN KEY (task_id) REFERENCES task(task_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY tasklink_contact
-    ADD CONSTRAINT "$2" FOREIGN KEY (contact_id) REFERENCES contact(contact_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY tasklink_ticket
-    ADD CONSTRAINT "$1" FOREIGN KEY (task_id) REFERENCES task(task_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY tasklink_ticket
-    ADD CONSTRAINT "$2" FOREIGN KEY (ticket_id) REFERENCES ticket(ticketid) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY tasklink_project
-    ADD CONSTRAINT "$1" FOREIGN KEY (task_id) REFERENCES task(task_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY tasklink_project
-    ADD CONSTRAINT "$2" FOREIGN KEY (project_id) REFERENCES projects(project_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY taskcategory_project
-    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES lookup_task_category(code) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY taskcategory_project
-    ADD CONSTRAINT "$2" FOREIGN KEY (project_id) REFERENCES projects(project_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY document_store_permissions
+    ADD CONSTRAINT document_store_permissions_pkey PRIMARY KEY (id);
 
 
 
@@ -11775,11 +10106,6 @@ ALTER TABLE ONLY business_process_component_library
 
 ALTER TABLE ONLY business_process_component_result_lookup
     ADD CONSTRAINT business_process_component_result_lookup_pkey PRIMARY KEY (result_id);
-
-
-
-ALTER TABLE ONLY business_process_component_result_lookup
-    ADD CONSTRAINT "$1" FOREIGN KEY (component_id) REFERENCES business_process_component_library(component_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11798,28 +10124,8 @@ ALTER TABLE ONLY business_process
 
 
 
-ALTER TABLE ONLY business_process
-    ADD CONSTRAINT "$1" FOREIGN KEY (link_module_id) REFERENCES permission_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY business_process_component
     ADD CONSTRAINT business_process_component_pkey PRIMARY KEY (id);
-
-
-
-ALTER TABLE ONLY business_process_component
-    ADD CONSTRAINT "$1" FOREIGN KEY (process_id) REFERENCES business_process(process_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY business_process_component
-    ADD CONSTRAINT "$2" FOREIGN KEY (component_id) REFERENCES business_process_component_library(component_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY business_process_component
-    ADD CONSTRAINT "$3" FOREIGN KEY (parent_id) REFERENCES business_process_component(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11828,33 +10134,13 @@ ALTER TABLE ONLY business_process_parameter
 
 
 
-ALTER TABLE ONLY business_process_parameter
-    ADD CONSTRAINT "$1" FOREIGN KEY (process_id) REFERENCES business_process(process_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY business_process_component_parameter
     ADD CONSTRAINT business_process_component_parameter_pkey PRIMARY KEY (id);
 
 
 
-ALTER TABLE ONLY business_process_component_parameter
-    ADD CONSTRAINT "$1" FOREIGN KEY (component_id) REFERENCES business_process_component(id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
-ALTER TABLE ONLY business_process_component_parameter
-    ADD CONSTRAINT "$2" FOREIGN KEY (parameter_id) REFERENCES business_process_parameter_library(parameter_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY business_process_events
     ADD CONSTRAINT business_process_events_pkey PRIMARY KEY (event_id);
-
-
-
-ALTER TABLE ONLY business_process_events
-    ADD CONSTRAINT "$1" FOREIGN KEY (process_id) REFERENCES business_process(process_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11868,18 +10154,8 @@ ALTER TABLE ONLY business_process_hook_library
 
 
 
-ALTER TABLE ONLY business_process_hook_library
-    ADD CONSTRAINT "$1" FOREIGN KEY (link_module_id) REFERENCES permission_category(category_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
-
-
-
 ALTER TABLE ONLY business_process_hook_triggers
     ADD CONSTRAINT business_process_hook_triggers_pkey PRIMARY KEY (trigger_id);
-
-
-
-ALTER TABLE ONLY business_process_hook_triggers
-    ADD CONSTRAINT "$1" FOREIGN KEY (hook_id) REFERENCES business_process_hook_library(hook_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
 
 
 
@@ -11888,28 +10164,38 @@ ALTER TABLE ONLY business_process_hook
 
 
 
-ALTER TABLE ONLY business_process_hook
-    ADD CONSTRAINT "$1" FOREIGN KEY (trigger_id) REFERENCES business_process_hook_triggers(trigger_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY lookup_quote_delivery
+    ADD CONSTRAINT lookup_quote_delivery_pkey PRIMARY KEY (code);
 
 
 
-ALTER TABLE ONLY business_process_hook
-    ADD CONSTRAINT "$2" FOREIGN KEY (process_id) REFERENCES business_process(process_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY lookup_quote_condition
+    ADD CONSTRAINT lookup_quote_condition_pkey PRIMARY KEY (code);
 
 
 
-ALTER TABLE ONLY ticket
-    ADD CONSTRAINT "$18" FOREIGN KEY (customer_product_id) REFERENCES customer_product(customer_product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY quote_group
+    ADD CONSTRAINT quote_group_pkey PRIMARY KEY (group_id);
 
 
 
-ALTER TABLE ONLY quote_entry
-    ADD CONSTRAINT "$11" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY quote_condition
+    ADD CONSTRAINT quote_condition_pkey PRIMARY KEY (map_id);
 
 
 
-ALTER TABLE ONLY quote_entry
-    ADD CONSTRAINT "$12" FOREIGN KEY (customer_product_id) REFERENCES customer_product(customer_product_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY quotelog
+    ADD CONSTRAINT quotelog_pkey PRIMARY KEY (id);
+
+
+
+ALTER TABLE ONLY lookup_quote_remarks
+    ADD CONSTRAINT lookup_quote_remarks_pkey PRIMARY KEY (code);
+
+
+
+ALTER TABLE ONLY quote_remark
+    ADD CONSTRAINT quote_remark_pkey PRIMARY KEY (map_id);
 
 
 
@@ -11918,893 +10204,4122 @@ ALTER TABLE ONLY quote_notes
 
 
 
-ALTER TABLE ONLY quote_notes
-    ADD CONSTRAINT "$1" FOREIGN KEY (quote_id) REFERENCES quote_entry(quote_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE ONLY access_log
+    ADD CONSTRAINT "$1" FOREIGN KEY (user_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY lookup_contact_types
+    ADD CONSTRAINT "$1" FOREIGN KEY (user_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY organization
+    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY organization
+    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY organization
+    ADD CONSTRAINT "$3" FOREIGN KEY ("owner") REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact
+    ADD CONSTRAINT "$1" FOREIGN KEY (user_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact
+    ADD CONSTRAINT "$2" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY contact
+    ADD CONSTRAINT "$3" FOREIGN KEY (department) REFERENCES lookup_department(code);
+
+
+
+ALTER TABLE ONLY contact
+    ADD CONSTRAINT "$4" FOREIGN KEY (super) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY contact
+    ADD CONSTRAINT "$5" FOREIGN KEY (assistant) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY contact
+    ADD CONSTRAINT "$6" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact
+    ADD CONSTRAINT "$7" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact
+    ADD CONSTRAINT "$8" FOREIGN KEY ("owner") REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact
+    ADD CONSTRAINT "$9" FOREIGN KEY (access_type) REFERENCES lookup_access_types(code);
+
+
+
+ALTER TABLE ONLY contact
+    ADD CONSTRAINT "$10" FOREIGN KEY (source) REFERENCES lookup_contact_source(code);
+
+
+
+ALTER TABLE ONLY contact
+    ADD CONSTRAINT "$11" FOREIGN KEY (rating) REFERENCES lookup_contact_rating(code);
+
+
+
+ALTER TABLE ONLY contact_lead_skipped_map
+    ADD CONSTRAINT "$1" FOREIGN KEY (user_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact_lead_skipped_map
+    ADD CONSTRAINT "$2" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY contact_lead_read_map
+    ADD CONSTRAINT "$1" FOREIGN KEY (user_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact_lead_read_map
+    ADD CONSTRAINT "$2" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY role
+    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY role
+    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY permission
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES permission_category(category_id);
+
+
+
+ALTER TABLE ONLY role_permission
+    ADD CONSTRAINT "$1" FOREIGN KEY (role_id) REFERENCES role(role_id);
+
+
+
+ALTER TABLE ONLY role_permission
+    ADD CONSTRAINT "$2" FOREIGN KEY (permission_id) REFERENCES permission(permission_id);
+
+
+
+ALTER TABLE ONLY news
+    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY organization_address
+    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY organization_address
+    ADD CONSTRAINT "$2" FOREIGN KEY (address_type) REFERENCES lookup_orgaddress_types(code);
+
+
+
+ALTER TABLE ONLY organization_address
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY organization_address
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY organization_emailaddress
+    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY organization_emailaddress
+    ADD CONSTRAINT "$2" FOREIGN KEY (emailaddress_type) REFERENCES lookup_orgemail_types(code);
+
+
+
+ALTER TABLE ONLY organization_emailaddress
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY organization_emailaddress
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY organization_phone
+    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY organization_phone
+    ADD CONSTRAINT "$2" FOREIGN KEY (phone_type) REFERENCES lookup_orgphone_types(code);
+
+
+
+ALTER TABLE ONLY organization_phone
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY organization_phone
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact_address
+    ADD CONSTRAINT "$1" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY contact_address
+    ADD CONSTRAINT "$2" FOREIGN KEY (address_type) REFERENCES lookup_contactaddress_types(code);
+
+
+
+ALTER TABLE ONLY contact_address
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact_address
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact_emailaddress
+    ADD CONSTRAINT "$1" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY contact_emailaddress
+    ADD CONSTRAINT "$2" FOREIGN KEY (emailaddress_type) REFERENCES lookup_contactemail_types(code);
+
+
+
+ALTER TABLE ONLY contact_emailaddress
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact_emailaddress
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact_phone
+    ADD CONSTRAINT "$1" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY contact_phone
+    ADD CONSTRAINT "$2" FOREIGN KEY (phone_type) REFERENCES lookup_contactphone_types(code);
+
+
+
+ALTER TABLE ONLY contact_phone
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact_phone
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact_imaddress
+    ADD CONSTRAINT "$1" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY contact_imaddress
+    ADD CONSTRAINT "$2" FOREIGN KEY (imaddress_type) REFERENCES lookup_im_types(code);
+
+
+
+ALTER TABLE ONLY contact_imaddress
+    ADD CONSTRAINT "$3" FOREIGN KEY (imaddress_service) REFERENCES lookup_im_services(code);
+
+
+
+ALTER TABLE ONLY contact_imaddress
+    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact_imaddress
+    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact_textmessageaddress
+    ADD CONSTRAINT "$1" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY contact_textmessageaddress
+    ADD CONSTRAINT "$2" FOREIGN KEY (textmessageaddress_type) REFERENCES lookup_im_types(code);
+
+
+
+ALTER TABLE ONLY contact_textmessageaddress
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY contact_textmessageaddress
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY cfsinbox_message
+    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY cfsinbox_message
+    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY cfsinbox_messagelink
+    ADD CONSTRAINT "$1" FOREIGN KEY (id) REFERENCES cfsinbox_message(id);
+
+
+
+ALTER TABLE ONLY cfsinbox_messagelink
+    ADD CONSTRAINT "$2" FOREIGN KEY (sent_to) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY cfsinbox_messagelink
+    ADD CONSTRAINT "$3" FOREIGN KEY (sent_from) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY account_type_levels
+    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY account_type_levels
+    ADD CONSTRAINT "$2" FOREIGN KEY (type_id) REFERENCES lookup_account_types(code);
+
+
+
+ALTER TABLE ONLY contact_type_levels
+    ADD CONSTRAINT "$1" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY contact_type_levels
+    ADD CONSTRAINT "$2" FOREIGN KEY (type_id) REFERENCES lookup_contact_types(code);
+
+
+
+ALTER TABLE ONLY lookup_lists_lookup
+    ADD CONSTRAINT "$1" FOREIGN KEY (module_id) REFERENCES permission_category(category_id);
+
+
+
+ALTER TABLE ONLY webdav
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES permission_category(category_id);
+
+
+
+ALTER TABLE ONLY webdav
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY webdav
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY category_editor_lookup
+    ADD CONSTRAINT "$1" FOREIGN KEY (module_id) REFERENCES permission_category(category_id);
+
+
+
+ALTER TABLE ONLY viewpoint
+    ADD CONSTRAINT "$1" FOREIGN KEY (user_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY viewpoint
+    ADD CONSTRAINT "$2" FOREIGN KEY (vp_user_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY viewpoint
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY viewpoint
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY viewpoint_permission
+    ADD CONSTRAINT "$1" FOREIGN KEY (viewpoint_id) REFERENCES viewpoint(viewpoint_id);
+
+
+
+ALTER TABLE ONLY viewpoint_permission
+    ADD CONSTRAINT "$2" FOREIGN KEY (permission_id) REFERENCES permission(permission_id);
+
+
+
+ALTER TABLE ONLY report
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES permission_category(category_id);
+
+
+
+ALTER TABLE ONLY report
+    ADD CONSTRAINT "$2" FOREIGN KEY (permission_id) REFERENCES permission(permission_id);
+
+
+
+ALTER TABLE ONLY report
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY report
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY report_criteria
+    ADD CONSTRAINT "$1" FOREIGN KEY (report_id) REFERENCES report(report_id);
+
+
+
+ALTER TABLE ONLY report_criteria
+    ADD CONSTRAINT "$2" FOREIGN KEY ("owner") REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY report_criteria
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY report_criteria
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY report_criteria_parameter
+    ADD CONSTRAINT "$1" FOREIGN KEY (criteria_id) REFERENCES report_criteria(criteria_id);
+
+
+
+ALTER TABLE ONLY report_queue
+    ADD CONSTRAINT "$1" FOREIGN KEY (report_id) REFERENCES report(report_id);
+
+
+
+ALTER TABLE ONLY report_queue
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY report_queue_criteria
+    ADD CONSTRAINT "$1" FOREIGN KEY (queue_id) REFERENCES report_queue(queue_id);
+
+
+
+ALTER TABLE ONLY action_list
+    ADD CONSTRAINT "$1" FOREIGN KEY ("owner") REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY action_list
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY action_list
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY action_item
+    ADD CONSTRAINT "$1" FOREIGN KEY (action_id) REFERENCES action_list(action_id);
+
+
+
+ALTER TABLE ONLY action_item
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY action_item
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY action_item_log
+    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES action_item(item_id);
+
+
+
+ALTER TABLE ONLY action_item_log
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY action_item_log
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY import
+    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY import
+    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY relationship
+    ADD CONSTRAINT "$1" FOREIGN KEY (type_id) REFERENCES lookup_relationship_types(type_id);
+
+
+
+ALTER TABLE ONLY opportunity_header
+    ADD CONSTRAINT "$1" FOREIGN KEY (acctlink) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY opportunity_header
+    ADD CONSTRAINT "$2" FOREIGN KEY (contactlink) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY opportunity_header
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY opportunity_header
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY opportunity_component
+    ADD CONSTRAINT "$1" FOREIGN KEY (opp_id) REFERENCES opportunity_header(opp_id);
+
+
+
+ALTER TABLE ONLY opportunity_component
+    ADD CONSTRAINT "$2" FOREIGN KEY ("owner") REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY opportunity_component
+    ADD CONSTRAINT "$3" FOREIGN KEY (stage) REFERENCES lookup_stage(code);
+
+
+
+ALTER TABLE ONLY opportunity_component
+    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY opportunity_component
+    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY opportunity_component_levels
+    ADD CONSTRAINT "$1" FOREIGN KEY (opp_id) REFERENCES opportunity_component(id);
+
+
+
+ALTER TABLE ONLY opportunity_component_levels
+    ADD CONSTRAINT "$2" FOREIGN KEY (type_id) REFERENCES lookup_opportunity_types(code);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$2" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$3" FOREIGN KEY (opp_id) REFERENCES opportunity_header(opp_id);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$4" FOREIGN KEY (call_type_id) REFERENCES lookup_call_types(code);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$5" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$6" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$7" FOREIGN KEY (alert_call_type_id) REFERENCES lookup_call_types(code);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$8" FOREIGN KEY (parent_id) REFERENCES call_log(call_id);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$9" FOREIGN KEY ("owner") REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$10" FOREIGN KEY (assignedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$11" FOREIGN KEY (completedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$12" FOREIGN KEY (result_id) REFERENCES lookup_call_result(result_id);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$13" FOREIGN KEY (priority_id) REFERENCES lookup_call_priority(code);
+
+
+
+ALTER TABLE ONLY call_log
+    ADD CONSTRAINT "$14" FOREIGN KEY (reminder_type_id) REFERENCES lookup_call_reminder(code);
+
+
+
+ALTER TABLE ONLY lookup_call_result
+    ADD CONSTRAINT "$1" FOREIGN KEY (next_call_type_id) REFERENCES call_log(call_id);
+
+
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT "$1" FOREIGN KEY (department_id) REFERENCES lookup_department(code);
+
+
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT "$2" FOREIGN KEY (approvalBy) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY projects
+    ADD CONSTRAINT "$5" FOREIGN KEY (category_id) REFERENCES lookup_project_category(code);
+
+
+
+ALTER TABLE ONLY project_requirements
+    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY project_requirements
+    ADD CONSTRAINT "$2" FOREIGN KEY (estimated_loetype) REFERENCES lookup_project_loe(code);
+
+
+
+ALTER TABLE ONLY project_requirements
+    ADD CONSTRAINT "$3" FOREIGN KEY (actual_loetype) REFERENCES lookup_project_loe(code);
+
+
+
+ALTER TABLE ONLY project_requirements
+    ADD CONSTRAINT "$4" FOREIGN KEY (approvedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_requirements
+    ADD CONSTRAINT "$5" FOREIGN KEY (closedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_requirements
+    ADD CONSTRAINT "$6" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_requirements
+    ADD CONSTRAINT "$7" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_assignments_folder
+    ADD CONSTRAINT "$1" FOREIGN KEY (parent_id) REFERENCES project_assignments_folder(folder_id);
+
+
+
+ALTER TABLE ONLY project_assignments_folder
+    ADD CONSTRAINT "$2" FOREIGN KEY (requirement_id) REFERENCES project_requirements(requirement_id);
+
+
+
+ALTER TABLE ONLY project_assignments_folder
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_assignments_folder
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_assignments
+    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY project_assignments
+    ADD CONSTRAINT "$2" FOREIGN KEY (requirement_id) REFERENCES project_requirements(requirement_id);
+
+
+
+ALTER TABLE ONLY project_assignments
+    ADD CONSTRAINT "$3" FOREIGN KEY (assignedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_assignments
+    ADD CONSTRAINT "$4" FOREIGN KEY (user_assign_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_assignments
+    ADD CONSTRAINT "$5" FOREIGN KEY (estimated_loetype) REFERENCES lookup_project_loe(code);
+
+
+
+ALTER TABLE ONLY project_assignments
+    ADD CONSTRAINT "$6" FOREIGN KEY (actual_loetype) REFERENCES lookup_project_loe(code);
+
+
+
+ALTER TABLE ONLY project_assignments
+    ADD CONSTRAINT "$7" FOREIGN KEY (priority_id) REFERENCES lookup_project_priority(code);
+
+
+
+ALTER TABLE ONLY project_assignments
+    ADD CONSTRAINT "$8" FOREIGN KEY (status_id) REFERENCES lookup_project_status(code);
+
+
+
+ALTER TABLE ONLY project_assignments
+    ADD CONSTRAINT "$9" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_assignments
+    ADD CONSTRAINT "$10" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_assignments
+    ADD CONSTRAINT "$11" FOREIGN KEY (folder_id) REFERENCES project_assignments_folder(folder_id);
+
+
+
+ALTER TABLE ONLY project_assignments_status
+    ADD CONSTRAINT "$1" FOREIGN KEY (assignment_id) REFERENCES project_assignments(assignment_id);
+
+
+
+ALTER TABLE ONLY project_assignments_status
+    ADD CONSTRAINT "$2" FOREIGN KEY (user_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_assignments_status
+    ADD CONSTRAINT "$3" FOREIGN KEY (project_status_id) REFERENCES lookup_project_status(code);
+
+
+
+ALTER TABLE ONLY project_assignments_status
+    ADD CONSTRAINT "$4" FOREIGN KEY (user_assign_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_issues_categories
+    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY project_issues_categories
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_issues_categories
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_issues
+    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY project_issues
+    ADD CONSTRAINT "$2" FOREIGN KEY (category_id) REFERENCES project_issues_categories(category_id);
+
+
+
+ALTER TABLE ONLY project_issues
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_issues
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_issue_replies
+    ADD CONSTRAINT "$1" FOREIGN KEY (issue_id) REFERENCES project_issues(issue_id);
+
+
+
+ALTER TABLE ONLY project_issue_replies
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_issue_replies
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_folders
+    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_folders
+    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_files
+    ADD CONSTRAINT "$1" FOREIGN KEY (folder_id) REFERENCES project_folders(folder_id);
+
+
+
+ALTER TABLE ONLY project_files
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_files
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_files_version
+    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY project_files_version
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_files_version
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_files_download
+    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY project_files_download
+    ADD CONSTRAINT "$2" FOREIGN KEY (user_download_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_files_thumbnail
+    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY project_files_thumbnail
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_files_thumbnail
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_team
+    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY project_team
+    ADD CONSTRAINT "$2" FOREIGN KEY (user_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_team
+    ADD CONSTRAINT "$3" FOREIGN KEY (userlevel) REFERENCES lookup_project_role(code);
+
+
+
+ALTER TABLE ONLY project_team
+    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_team
+    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_news_category
+    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY project_news
+    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY project_news
+    ADD CONSTRAINT "$2" FOREIGN KEY (category_id) REFERENCES project_news_category(category_id);
+
+
+
+ALTER TABLE ONLY project_news
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_news
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY project_news
+    ADD CONSTRAINT "$5" FOREIGN KEY (template_id) REFERENCES lookup_news_template(code);
+
+
+
+ALTER TABLE ONLY project_requirements_map
+    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY project_requirements_map
+    ADD CONSTRAINT "$2" FOREIGN KEY (requirement_id) REFERENCES project_requirements(requirement_id);
+
+
+
+ALTER TABLE ONLY project_requirements_map
+    ADD CONSTRAINT "$3" FOREIGN KEY (folder_id) REFERENCES project_assignments_folder(folder_id);
+
+
+
+ALTER TABLE ONLY project_requirements_map
+    ADD CONSTRAINT "$4" FOREIGN KEY (assignment_id) REFERENCES project_assignments(assignment_id);
+
+
+
+ALTER TABLE ONLY lookup_project_permission
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES lookup_project_permission_category(code);
+
+
+
+ALTER TABLE ONLY lookup_project_permission
+    ADD CONSTRAINT "$2" FOREIGN KEY (default_role) REFERENCES lookup_project_role(code);
+
+
+
+ALTER TABLE ONLY project_permissions
+    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY project_permissions
+    ADD CONSTRAINT "$2" FOREIGN KEY (permission_id) REFERENCES lookup_project_permission(code);
+
+
+
+ALTER TABLE ONLY project_permissions
+    ADD CONSTRAINT "$3" FOREIGN KEY (userlevel) REFERENCES lookup_project_role(code);
+
+
+
+ALTER TABLE ONLY project_accounts
+    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY project_accounts
+    ADD CONSTRAINT "$2" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY product_category
+    ADD CONSTRAINT "$1" FOREIGN KEY (parent_id) REFERENCES product_category(category_id);
+
+
+
+ALTER TABLE ONLY product_category
+    ADD CONSTRAINT "$2" FOREIGN KEY (type_id) REFERENCES lookup_product_category_type(code);
+
+
+
+ALTER TABLE ONLY product_category
+    ADD CONSTRAINT "$3" FOREIGN KEY (thumbnail_image_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY product_category
+    ADD CONSTRAINT "$4" FOREIGN KEY (small_image_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY product_category
+    ADD CONSTRAINT "$5" FOREIGN KEY (large_image_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY product_category
+    ADD CONSTRAINT "$6" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY product_category
+    ADD CONSTRAINT "$7" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY product_category_map
+    ADD CONSTRAINT "$1" FOREIGN KEY (category1_id) REFERENCES product_category(category_id);
+
+
+
+ALTER TABLE ONLY product_category_map
+    ADD CONSTRAINT "$2" FOREIGN KEY (category2_id) REFERENCES product_category(category_id);
+
+
+
+ALTER TABLE ONLY product_catalog
+    ADD CONSTRAINT "$1" FOREIGN KEY (parent_id) REFERENCES product_catalog(product_id);
+
+
+
+ALTER TABLE ONLY product_catalog
+    ADD CONSTRAINT "$2" FOREIGN KEY (type_id) REFERENCES lookup_product_type(code);
+
+
+
+ALTER TABLE ONLY product_catalog
+    ADD CONSTRAINT "$3" FOREIGN KEY (format_id) REFERENCES lookup_product_format(code);
+
+
+
+ALTER TABLE ONLY product_catalog
+    ADD CONSTRAINT "$4" FOREIGN KEY (shipping_id) REFERENCES lookup_product_shipping(code);
+
+
+
+ALTER TABLE ONLY product_catalog
+    ADD CONSTRAINT "$5" FOREIGN KEY (estimated_ship_time) REFERENCES lookup_product_ship_time(code);
+
+
+
+ALTER TABLE ONLY product_catalog
+    ADD CONSTRAINT "$6" FOREIGN KEY (thumbnail_image_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY product_catalog
+    ADD CONSTRAINT "$7" FOREIGN KEY (small_image_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY product_catalog
+    ADD CONSTRAINT "$8" FOREIGN KEY (large_image_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY product_catalog
+    ADD CONSTRAINT "$9" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY product_catalog
+    ADD CONSTRAINT "$10" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY product_catalog
+    ADD CONSTRAINT "$11" FOREIGN KEY (manufacturer_id) REFERENCES lookup_product_manufacturer(code);
+
+
+
+ALTER TABLE ONLY product_catalog_pricing
+    ADD CONSTRAINT "$1" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id);
+
+
+
+ALTER TABLE ONLY product_catalog_pricing
+    ADD CONSTRAINT "$2" FOREIGN KEY (tax_id) REFERENCES lookup_product_tax(code);
+
+
+
+ALTER TABLE ONLY product_catalog_pricing
+    ADD CONSTRAINT "$3" FOREIGN KEY (msrp_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY product_catalog_pricing
+    ADD CONSTRAINT "$4" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY product_catalog_pricing
+    ADD CONSTRAINT "$5" FOREIGN KEY (recurring_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY product_catalog_pricing
+    ADD CONSTRAINT "$6" FOREIGN KEY (recurring_type) REFERENCES lookup_recurring_type(code);
+
+
+
+ALTER TABLE ONLY product_catalog_pricing
+    ADD CONSTRAINT "$7" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY product_catalog_pricing
+    ADD CONSTRAINT "$8" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY product_catalog_pricing
+    ADD CONSTRAINT "$9" FOREIGN KEY (cost_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY package
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES product_category(category_id);
+
+
+
+ALTER TABLE ONLY package
+    ADD CONSTRAINT "$2" FOREIGN KEY (thumbnail_image_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY package
+    ADD CONSTRAINT "$3" FOREIGN KEY (small_image_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY package
+    ADD CONSTRAINT "$4" FOREIGN KEY (large_image_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY package
+    ADD CONSTRAINT "$5" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY package
+    ADD CONSTRAINT "$6" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY package_products_map
+    ADD CONSTRAINT "$1" FOREIGN KEY (package_id) REFERENCES package(package_id);
+
+
+
+ALTER TABLE ONLY package_products_map
+    ADD CONSTRAINT "$2" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id);
+
+
+
+ALTER TABLE ONLY package_products_map
+    ADD CONSTRAINT "$3" FOREIGN KEY (msrp_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY package_products_map
+    ADD CONSTRAINT "$4" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY package_products_map
+    ADD CONSTRAINT "$5" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY package_products_map
+    ADD CONSTRAINT "$6" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY product_catalog_category_map
+    ADD CONSTRAINT "$1" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id);
+
+
+
+ALTER TABLE ONLY product_catalog_category_map
+    ADD CONSTRAINT "$2" FOREIGN KEY (category_id) REFERENCES product_category(category_id);
+
+
+
+ALTER TABLE ONLY product_option_configurator
+    ADD CONSTRAINT "$1" FOREIGN KEY (result_type) REFERENCES lookup_product_conf_result(code);
+
+
+
+ALTER TABLE ONLY product_option
+    ADD CONSTRAINT "$1" FOREIGN KEY (configurator_id) REFERENCES product_option_configurator(configurator_id);
+
+
+
+ALTER TABLE ONLY product_option
+    ADD CONSTRAINT "$2" FOREIGN KEY (parent_id) REFERENCES product_option(option_id);
+
+
+
+ALTER TABLE ONLY product_option_values
+    ADD CONSTRAINT "$1" FOREIGN KEY (option_id) REFERENCES product_option(option_id);
+
+
+
+ALTER TABLE ONLY product_option_values
+    ADD CONSTRAINT "$2" FOREIGN KEY (msrp_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY product_option_values
+    ADD CONSTRAINT "$3" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY product_option_values
+    ADD CONSTRAINT "$4" FOREIGN KEY (recurring_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY product_option_values
+    ADD CONSTRAINT "$5" FOREIGN KEY (recurring_type) REFERENCES lookup_recurring_type(code);
+
+
+
+ALTER TABLE ONLY product_option_values
+    ADD CONSTRAINT "$6" FOREIGN KEY (cost_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY product_option_map
+    ADD CONSTRAINT "$1" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id);
+
+
+
+ALTER TABLE ONLY product_option_map
+    ADD CONSTRAINT "$2" FOREIGN KEY (option_id) REFERENCES product_option(option_id);
+
+
+
+ALTER TABLE ONLY product_option_boolean
+    ADD CONSTRAINT "$1" FOREIGN KEY (product_option_id) REFERENCES product_option(option_id);
+
+
+
+ALTER TABLE ONLY product_option_float
+    ADD CONSTRAINT "$1" FOREIGN KEY (product_option_id) REFERENCES product_option(option_id);
+
+
+
+ALTER TABLE ONLY product_option_timestamp
+    ADD CONSTRAINT "$1" FOREIGN KEY (product_option_id) REFERENCES product_option(option_id);
+
+
+
+ALTER TABLE ONLY product_option_integer
+    ADD CONSTRAINT "$1" FOREIGN KEY (product_option_id) REFERENCES product_option(option_id);
+
+
+
+ALTER TABLE ONLY product_option_text
+    ADD CONSTRAINT "$1" FOREIGN KEY (product_option_id) REFERENCES product_option(option_id);
+
+
+
+ALTER TABLE ONLY product_keyword_map
+    ADD CONSTRAINT "$1" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id);
+
+
+
+ALTER TABLE ONLY product_keyword_map
+    ADD CONSTRAINT "$2" FOREIGN KEY (keyword_id) REFERENCES lookup_product_keyword(code);
+
+
+
+ALTER TABLE ONLY service_contract
+    ADD CONSTRAINT "$1" FOREIGN KEY (account_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY service_contract
+    ADD CONSTRAINT "$2" FOREIGN KEY (category) REFERENCES lookup_sc_category(code);
+
+
+
+ALTER TABLE ONLY service_contract
+    ADD CONSTRAINT "$3" FOREIGN KEY ("type") REFERENCES lookup_sc_type(code);
+
+
+
+ALTER TABLE ONLY service_contract
+    ADD CONSTRAINT "$4" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY service_contract
+    ADD CONSTRAINT "$5" FOREIGN KEY (response_time) REFERENCES lookup_response_model(code);
+
+
+
+ALTER TABLE ONLY service_contract
+    ADD CONSTRAINT "$6" FOREIGN KEY (telephone_service_model) REFERENCES lookup_phone_model(code);
+
+
+
+ALTER TABLE ONLY service_contract
+    ADD CONSTRAINT "$7" FOREIGN KEY (onsite_service_model) REFERENCES lookup_onsite_model(code);
+
+
+
+ALTER TABLE ONLY service_contract
+    ADD CONSTRAINT "$8" FOREIGN KEY (email_service_model) REFERENCES lookup_email_model(code);
+
+
+
+ALTER TABLE ONLY service_contract
+    ADD CONSTRAINT "$9" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY service_contract
+    ADD CONSTRAINT "$10" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY service_contract_hours
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_contract_id) REFERENCES service_contract(contract_id);
+
+
+
+ALTER TABLE ONLY service_contract_hours
+    ADD CONSTRAINT "$2" FOREIGN KEY (adjustment_reason) REFERENCES lookup_hours_reason(code);
+
+
+
+ALTER TABLE ONLY service_contract_hours
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY service_contract_hours
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY service_contract_products
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_contract_id) REFERENCES service_contract(contract_id);
+
+
+
+ALTER TABLE ONLY service_contract_products
+    ADD CONSTRAINT "$2" FOREIGN KEY (link_product_id) REFERENCES product_catalog(product_id);
+
+
+
+ALTER TABLE ONLY asset
+    ADD CONSTRAINT "$1" FOREIGN KEY (account_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY asset
+    ADD CONSTRAINT "$2" FOREIGN KEY (contract_id) REFERENCES service_contract(contract_id);
+
+
+
+ALTER TABLE ONLY asset
+    ADD CONSTRAINT "$3" FOREIGN KEY (level1) REFERENCES asset_category(id);
+
+
+
+ALTER TABLE ONLY asset
+    ADD CONSTRAINT "$4" FOREIGN KEY (level2) REFERENCES asset_category(id);
+
+
+
+ALTER TABLE ONLY asset
+    ADD CONSTRAINT "$5" FOREIGN KEY (level3) REFERENCES asset_category(id);
+
+
+
+ALTER TABLE ONLY asset
+    ADD CONSTRAINT "$6" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY asset
+    ADD CONSTRAINT "$7" FOREIGN KEY (response_time) REFERENCES lookup_response_model(code);
+
+
+
+ALTER TABLE ONLY asset
+    ADD CONSTRAINT "$8" FOREIGN KEY (telephone_service_model) REFERENCES lookup_phone_model(code);
+
+
+
+ALTER TABLE ONLY asset
+    ADD CONSTRAINT "$9" FOREIGN KEY (onsite_service_model) REFERENCES lookup_onsite_model(code);
+
+
+
+ALTER TABLE ONLY asset
+    ADD CONSTRAINT "$10" FOREIGN KEY (email_service_model) REFERENCES lookup_email_model(code);
+
+
+
+ALTER TABLE ONLY asset
+    ADD CONSTRAINT "$11" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY asset
+    ADD CONSTRAINT "$12" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$2" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$5" FOREIGN KEY (pri_code) REFERENCES ticket_priority(code);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$6" FOREIGN KEY (level_code) REFERENCES ticket_level(code);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$7" FOREIGN KEY (department_code) REFERENCES lookup_department(code);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$8" FOREIGN KEY (source_code) REFERENCES lookup_ticketsource(code);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$9" FOREIGN KEY (cat_code) REFERENCES ticket_category(id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$10" FOREIGN KEY (subcat_code1) REFERENCES ticket_category(id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$11" FOREIGN KEY (subcat_code2) REFERENCES ticket_category(id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$12" FOREIGN KEY (subcat_code3) REFERENCES ticket_category(id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$13" FOREIGN KEY (assigned_to) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$14" FOREIGN KEY (scode) REFERENCES ticket_severity(code);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$15" FOREIGN KEY (link_contract_id) REFERENCES service_contract(contract_id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$16" FOREIGN KEY (link_asset_id) REFERENCES asset(asset_id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$17" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id);
+
+
+
+ALTER TABLE ONLY project_ticket_count
+    ADD CONSTRAINT "$1" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY ticketlog
+    ADD CONSTRAINT "$1" FOREIGN KEY (ticketid) REFERENCES ticket(ticketid);
+
+
+
+ALTER TABLE ONLY ticketlog
+    ADD CONSTRAINT "$2" FOREIGN KEY (assigned_to) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY ticketlog
+    ADD CONSTRAINT "$3" FOREIGN KEY (pri_code) REFERENCES ticket_priority(code);
+
+
+
+ALTER TABLE ONLY ticketlog
+    ADD CONSTRAINT "$4" FOREIGN KEY (department_code) REFERENCES lookup_department(code);
+
+
+
+ALTER TABLE ONLY ticketlog
+    ADD CONSTRAINT "$5" FOREIGN KEY (scode) REFERENCES ticket_severity(code);
+
+
+
+ALTER TABLE ONLY ticketlog
+    ADD CONSTRAINT "$6" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY ticketlog
+    ADD CONSTRAINT "$7" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY ticket_csstm_form
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_ticket_id) REFERENCES ticket(ticketid);
+
+
+
+ALTER TABLE ONLY ticket_csstm_form
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY ticket_csstm_form
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY ticket_activity_item
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_form_id) REFERENCES ticket_csstm_form(form_id);
+
+
+
+ALTER TABLE ONLY ticket_sun_form
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_ticket_id) REFERENCES ticket(ticketid);
+
+
+
+ALTER TABLE ONLY ticket_sun_form
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY ticket_sun_form
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY trouble_asset_replacement
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_form_id) REFERENCES ticket_sun_form(form_id);
+
+
+
+ALTER TABLE ONLY ticketlink_project
+    ADD CONSTRAINT "$1" FOREIGN KEY (ticket_id) REFERENCES ticket(ticketid);
+
+
+
+ALTER TABLE ONLY ticketlink_project
+    ADD CONSTRAINT "$2" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$1" FOREIGN KEY (parent_id) REFERENCES quote_entry(quote_id);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$2" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$3" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$4" FOREIGN KEY (source_id) REFERENCES lookup_quote_source(code);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$5" FOREIGN KEY (status_id) REFERENCES lookup_quote_status(code);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$6" FOREIGN KEY (quote_terms_id) REFERENCES lookup_quote_terms(code);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$7" FOREIGN KEY (quote_type_id) REFERENCES lookup_quote_type(code);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$8" FOREIGN KEY (ticketid) REFERENCES ticket(ticketid);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$9" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$10" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$11" FOREIGN KEY (opp_id) REFERENCES opportunity_header(opp_id);
+
+
+
+ALTER TABLE ONLY quote_product
+    ADD CONSTRAINT "$1" FOREIGN KEY (quote_id) REFERENCES quote_entry(quote_id);
+
+
+
+ALTER TABLE ONLY quote_product
+    ADD CONSTRAINT "$2" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id);
+
+
+
+ALTER TABLE ONLY quote_product
+    ADD CONSTRAINT "$3" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY quote_product
+    ADD CONSTRAINT "$4" FOREIGN KEY (recurring_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY quote_product
+    ADD CONSTRAINT "$5" FOREIGN KEY (recurring_type) REFERENCES lookup_recurring_type(code);
+
+
+
+ALTER TABLE ONLY quote_product
+    ADD CONSTRAINT "$6" FOREIGN KEY (status_id) REFERENCES lookup_quote_status(code);
+
+
+
+ALTER TABLE ONLY quote_product_options
+    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES quote_product(item_id);
+
+
+
+ALTER TABLE ONLY quote_product_options
+    ADD CONSTRAINT "$2" FOREIGN KEY (product_option_id) REFERENCES product_option_map(product_option_id);
+
+
+
+ALTER TABLE ONLY quote_product_options
+    ADD CONSTRAINT "$3" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY quote_product_options
+    ADD CONSTRAINT "$4" FOREIGN KEY (recurring_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY quote_product_options
+    ADD CONSTRAINT "$5" FOREIGN KEY (recurring_type) REFERENCES lookup_recurring_type(code);
+
+
+
+ALTER TABLE ONLY quote_product_options
+    ADD CONSTRAINT "$6" FOREIGN KEY (status_id) REFERENCES lookup_quote_status(code);
+
+
+
+ALTER TABLE ONLY quote_product_option_boolean
+    ADD CONSTRAINT "$1" FOREIGN KEY (quote_product_option_id) REFERENCES quote_product_options(quote_product_option_id);
+
+
+
+ALTER TABLE ONLY quote_product_option_float
+    ADD CONSTRAINT "$1" FOREIGN KEY (quote_product_option_id) REFERENCES quote_product_options(quote_product_option_id);
+
+
+
+ALTER TABLE ONLY quote_product_option_timestamp
+    ADD CONSTRAINT "$1" FOREIGN KEY (quote_product_option_id) REFERENCES quote_product_options(quote_product_option_id);
+
+
+
+ALTER TABLE ONLY quote_product_option_integer
+    ADD CONSTRAINT "$1" FOREIGN KEY (quote_product_option_id) REFERENCES quote_product_options(quote_product_option_id);
+
+
+
+ALTER TABLE ONLY quote_product_option_text
+    ADD CONSTRAINT "$1" FOREIGN KEY (quote_product_option_id) REFERENCES quote_product_options(quote_product_option_id);
+
+
+
+ALTER TABLE ONLY order_entry
+    ADD CONSTRAINT "$1" FOREIGN KEY (parent_id) REFERENCES order_entry(order_id);
+
+
+
+ALTER TABLE ONLY order_entry
+    ADD CONSTRAINT "$2" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY order_entry
+    ADD CONSTRAINT "$3" FOREIGN KEY (quote_id) REFERENCES quote_entry(quote_id);
+
+
+
+ALTER TABLE ONLY order_entry
+    ADD CONSTRAINT "$4" FOREIGN KEY (sales_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY order_entry
+    ADD CONSTRAINT "$5" FOREIGN KEY (orderedby) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY order_entry
+    ADD CONSTRAINT "$6" FOREIGN KEY (billing_contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY order_entry
+    ADD CONSTRAINT "$7" FOREIGN KEY (source_id) REFERENCES lookup_order_source(code);
+
+
+
+ALTER TABLE ONLY order_entry
+    ADD CONSTRAINT "$8" FOREIGN KEY (status_id) REFERENCES lookup_order_status(code);
+
+
+
+ALTER TABLE ONLY order_entry
+    ADD CONSTRAINT "$9" FOREIGN KEY (order_terms_id) REFERENCES lookup_order_terms(code);
+
+
+
+ALTER TABLE ONLY order_entry
+    ADD CONSTRAINT "$10" FOREIGN KEY (order_type_id) REFERENCES lookup_order_type(code);
+
+
+
+ALTER TABLE ONLY order_entry
+    ADD CONSTRAINT "$11" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY order_entry
+    ADD CONSTRAINT "$12" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY order_product
+    ADD CONSTRAINT "$1" FOREIGN KEY (order_id) REFERENCES order_entry(order_id);
+
+
+
+ALTER TABLE ONLY order_product
+    ADD CONSTRAINT "$2" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id);
+
+
+
+ALTER TABLE ONLY order_product
+    ADD CONSTRAINT "$3" FOREIGN KEY (msrp_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY order_product
+    ADD CONSTRAINT "$4" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY order_product
+    ADD CONSTRAINT "$5" FOREIGN KEY (recurring_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY order_product
+    ADD CONSTRAINT "$6" FOREIGN KEY (recurring_type) REFERENCES lookup_recurring_type(code);
+
+
+
+ALTER TABLE ONLY order_product
+    ADD CONSTRAINT "$7" FOREIGN KEY (status_id) REFERENCES lookup_order_status(code);
+
+
+
+ALTER TABLE ONLY order_product_status
+    ADD CONSTRAINT "$1" FOREIGN KEY (order_id) REFERENCES order_entry(order_id);
+
+
+
+ALTER TABLE ONLY order_product_status
+    ADD CONSTRAINT "$2" FOREIGN KEY (item_id) REFERENCES order_product(item_id);
+
+
+
+ALTER TABLE ONLY order_product_status
+    ADD CONSTRAINT "$3" FOREIGN KEY (status_id) REFERENCES lookup_order_status(code);
+
+
+
+ALTER TABLE ONLY order_product_status
+    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY order_product_status
+    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY order_product_options
+    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES order_product(item_id);
+
+
+
+ALTER TABLE ONLY order_product_options
+    ADD CONSTRAINT "$2" FOREIGN KEY (product_option_id) REFERENCES product_option_map(product_option_id);
+
+
+
+ALTER TABLE ONLY order_product_options
+    ADD CONSTRAINT "$3" FOREIGN KEY (price_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY order_product_options
+    ADD CONSTRAINT "$4" FOREIGN KEY (recurring_currency) REFERENCES lookup_currency(code);
+
+
+
+ALTER TABLE ONLY order_product_options
+    ADD CONSTRAINT "$5" FOREIGN KEY (recurring_type) REFERENCES lookup_recurring_type(code);
+
+
+
+ALTER TABLE ONLY order_product_options
+    ADD CONSTRAINT "$6" FOREIGN KEY (status_id) REFERENCES lookup_order_status(code);
+
+
+
+ALTER TABLE ONLY order_product_option_boolean
+    ADD CONSTRAINT "$1" FOREIGN KEY (order_product_option_id) REFERENCES order_product_options(order_product_option_id);
+
+
+
+ALTER TABLE ONLY order_product_option_float
+    ADD CONSTRAINT "$1" FOREIGN KEY (order_product_option_id) REFERENCES order_product_options(order_product_option_id);
+
+
+
+ALTER TABLE ONLY order_product_option_timestamp
+    ADD CONSTRAINT "$1" FOREIGN KEY (order_product_option_id) REFERENCES order_product_options(order_product_option_id);
+
+
+
+ALTER TABLE ONLY order_product_option_integer
+    ADD CONSTRAINT "$1" FOREIGN KEY (order_product_option_id) REFERENCES order_product_options(order_product_option_id);
+
+
+
+ALTER TABLE ONLY order_product_option_text
+    ADD CONSTRAINT "$1" FOREIGN KEY (order_product_option_id) REFERENCES order_product_options(order_product_option_id);
+
+
+
+ALTER TABLE ONLY order_address
+    ADD CONSTRAINT "$1" FOREIGN KEY (order_id) REFERENCES order_entry(order_id);
+
+
+
+ALTER TABLE ONLY order_address
+    ADD CONSTRAINT "$2" FOREIGN KEY (address_type) REFERENCES lookup_orderaddress_types(code);
+
+
+
+ALTER TABLE ONLY order_address
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY order_address
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY payment_creditcard
+    ADD CONSTRAINT "$1" FOREIGN KEY (card_type) REFERENCES lookup_creditcard_types(code);
+
+
+
+ALTER TABLE ONLY payment_creditcard
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY payment_creditcard
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY payment_creditcard
+    ADD CONSTRAINT "$4" FOREIGN KEY (order_id) REFERENCES order_entry(order_id);
+
+
+
+ALTER TABLE ONLY payment_eft
+    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY payment_eft
+    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY payment_eft
+    ADD CONSTRAINT "$3" FOREIGN KEY (order_id) REFERENCES order_entry(order_id);
+
+
+
+ALTER TABLE ONLY customer_product
+    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY customer_product
+    ADD CONSTRAINT "$2" FOREIGN KEY (order_id) REFERENCES order_entry(order_id);
+
+
+
+ALTER TABLE ONLY customer_product
+    ADD CONSTRAINT "$3" FOREIGN KEY (order_item_id) REFERENCES order_product(item_id);
+
+
+
+ALTER TABLE ONLY customer_product
+    ADD CONSTRAINT "$4" FOREIGN KEY (status_id) REFERENCES lookup_order_status(code);
+
+
+
+ALTER TABLE ONLY customer_product
+    ADD CONSTRAINT "$5" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY customer_product
+    ADD CONSTRAINT "$6" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY customer_product_history
+    ADD CONSTRAINT "$1" FOREIGN KEY (customer_product_id) REFERENCES customer_product(customer_product_id);
+
+
+
+ALTER TABLE ONLY customer_product_history
+    ADD CONSTRAINT "$2" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY customer_product_history
+    ADD CONSTRAINT "$3" FOREIGN KEY (order_id) REFERENCES order_entry(order_id);
+
+
+
+ALTER TABLE ONLY customer_product_history
+    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY customer_product_history
+    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY customer_product_history
+    ADD CONSTRAINT "$6" FOREIGN KEY (order_item_id) REFERENCES order_product(item_id);
+
+
+
+ALTER TABLE ONLY order_payment
+    ADD CONSTRAINT "$1" FOREIGN KEY (order_id) REFERENCES order_entry(order_id);
+
+
+
+ALTER TABLE ONLY order_payment
+    ADD CONSTRAINT "$2" FOREIGN KEY (order_item_id) REFERENCES order_product(item_id);
+
+
+
+ALTER TABLE ONLY order_payment
+    ADD CONSTRAINT "$3" FOREIGN KEY (history_id) REFERENCES customer_product_history(history_id);
+
+
+
+ALTER TABLE ONLY order_payment
+    ADD CONSTRAINT "$4" FOREIGN KEY (payment_method_id) REFERENCES lookup_payment_methods(code);
+
+
+
+ALTER TABLE ONLY order_payment
+    ADD CONSTRAINT "$5" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY order_payment
+    ADD CONSTRAINT "$6" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY order_payment
+    ADD CONSTRAINT "$7" FOREIGN KEY (creditcard_id) REFERENCES payment_creditcard(creditcard_id);
+
+
+
+ALTER TABLE ONLY order_payment
+    ADD CONSTRAINT "$8" FOREIGN KEY (bank_id) REFERENCES payment_eft(bank_id);
+
+
+
+ALTER TABLE ONLY order_payment
+    ADD CONSTRAINT "$9" FOREIGN KEY (status_id) REFERENCES lookup_payment_status(code);
+
+
+
+ALTER TABLE ONLY order_payment_status
+    ADD CONSTRAINT "$1" FOREIGN KEY (payment_id) REFERENCES order_payment(payment_id);
+
+
+
+ALTER TABLE ONLY order_payment_status
+    ADD CONSTRAINT "$2" FOREIGN KEY (status_id) REFERENCES lookup_payment_status(code);
+
+
+
+ALTER TABLE ONLY order_payment_status
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY order_payment_status
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY module_field_categorylink
+    ADD CONSTRAINT "$1" FOREIGN KEY (module_id) REFERENCES permission_category(category_id);
+
+
+
+ALTER TABLE ONLY custom_field_category
+    ADD CONSTRAINT "$1" FOREIGN KEY (module_id) REFERENCES module_field_categorylink(category_id);
+
+
+
+ALTER TABLE ONLY custom_field_group
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES custom_field_category(category_id);
+
+
+
+ALTER TABLE ONLY custom_field_info
+    ADD CONSTRAINT "$1" FOREIGN KEY (group_id) REFERENCES custom_field_group(group_id);
+
+
+
+ALTER TABLE ONLY custom_field_lookup
+    ADD CONSTRAINT "$1" FOREIGN KEY (field_id) REFERENCES custom_field_info(field_id);
+
+
+
+ALTER TABLE ONLY custom_field_record
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES custom_field_category(category_id);
+
+
+
+ALTER TABLE ONLY custom_field_record
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY custom_field_record
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY custom_field_data
+    ADD CONSTRAINT "$1" FOREIGN KEY (record_id) REFERENCES custom_field_record(record_id);
+
+
+
+ALTER TABLE ONLY custom_field_data
+    ADD CONSTRAINT "$2" FOREIGN KEY (field_id) REFERENCES custom_field_info(field_id);
+
+
+
+ALTER TABLE ONLY saved_criterialist
+    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY saved_criterialist
+    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY saved_criterialist
+    ADD CONSTRAINT "$3" FOREIGN KEY ("owner") REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY campaign
+    ADD CONSTRAINT "$1" FOREIGN KEY (approvedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY campaign
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY campaign
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY campaign_run
+    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id);
+
+
+
+ALTER TABLE ONLY excluded_recipient
+    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id);
+
+
+
+ALTER TABLE ONLY excluded_recipient
+    ADD CONSTRAINT "$2" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY campaign_list_groups
+    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id);
+
+
+
+ALTER TABLE ONLY campaign_list_groups
+    ADD CONSTRAINT "$2" FOREIGN KEY (group_id) REFERENCES saved_criterialist(id);
+
+
+
+ALTER TABLE ONLY active_campaign_groups
+    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id);
+
+
+
+ALTER TABLE ONLY scheduled_recipient
+    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id);
+
+
+
+ALTER TABLE ONLY scheduled_recipient
+    ADD CONSTRAINT "$2" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY survey
+    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY survey
+    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY campaign_survey_link
+    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id);
+
+
+
+ALTER TABLE ONLY campaign_survey_link
+    ADD CONSTRAINT "$2" FOREIGN KEY (survey_id) REFERENCES survey(survey_id);
+
+
+
+ALTER TABLE ONLY survey_questions
+    ADD CONSTRAINT "$1" FOREIGN KEY (survey_id) REFERENCES survey(survey_id);
+
+
+
+ALTER TABLE ONLY survey_questions
+    ADD CONSTRAINT "$2" FOREIGN KEY ("type") REFERENCES lookup_survey_types(code);
+
+
+
+ALTER TABLE ONLY survey_items
+    ADD CONSTRAINT "$1" FOREIGN KEY (question_id) REFERENCES survey_questions(question_id);
+
+
+
+ALTER TABLE ONLY active_survey
+    ADD CONSTRAINT "$1" FOREIGN KEY (campaign_id) REFERENCES campaign(campaign_id);
+
+
+
+ALTER TABLE ONLY active_survey
+    ADD CONSTRAINT "$2" FOREIGN KEY ("type") REFERENCES lookup_survey_types(code);
+
+
+
+ALTER TABLE ONLY active_survey
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY active_survey
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY active_survey_questions
+    ADD CONSTRAINT "$1" FOREIGN KEY (active_survey_id) REFERENCES active_survey(active_survey_id);
+
+
+
+ALTER TABLE ONLY active_survey_questions
+    ADD CONSTRAINT "$2" FOREIGN KEY ("type") REFERENCES lookup_survey_types(code);
+
+
+
+ALTER TABLE ONLY active_survey_items
+    ADD CONSTRAINT "$1" FOREIGN KEY (question_id) REFERENCES active_survey_questions(question_id);
+
+
+
+ALTER TABLE ONLY active_survey_responses
+    ADD CONSTRAINT "$1" FOREIGN KEY (active_survey_id) REFERENCES active_survey(active_survey_id);
+
+
+
+ALTER TABLE ONLY active_survey_answers
+    ADD CONSTRAINT "$1" FOREIGN KEY (response_id) REFERENCES active_survey_responses(response_id);
+
+
+
+ALTER TABLE ONLY active_survey_answers
+    ADD CONSTRAINT "$2" FOREIGN KEY (question_id) REFERENCES active_survey_questions(question_id);
+
+
+
+ALTER TABLE ONLY active_survey_answer_items
+    ADD CONSTRAINT "$1" FOREIGN KEY (item_id) REFERENCES active_survey_items(item_id);
+
+
+
+ALTER TABLE ONLY active_survey_answer_items
+    ADD CONSTRAINT "$2" FOREIGN KEY (answer_id) REFERENCES active_survey_answers(answer_id);
+
+
+
+ALTER TABLE ONLY active_survey_answer_avg
+    ADD CONSTRAINT "$1" FOREIGN KEY (question_id) REFERENCES active_survey_questions(question_id);
+
+
+
+ALTER TABLE ONLY active_survey_answer_avg
+    ADD CONSTRAINT "$2" FOREIGN KEY (item_id) REFERENCES active_survey_items(item_id);
+
+
+
+ALTER TABLE ONLY message
+    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY message
+    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY message
+    ADD CONSTRAINT "$3" FOREIGN KEY (access_type) REFERENCES lookup_access_types(code);
+
+
+
+ALTER TABLE ONLY message_template
+    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY message_template
+    ADD CONSTRAINT "$2" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY saved_criteriaelement
+    ADD CONSTRAINT "$1" FOREIGN KEY (id) REFERENCES saved_criterialist(id);
+
+
+
+ALTER TABLE ONLY saved_criteriaelement
+    ADD CONSTRAINT "$2" FOREIGN KEY (field) REFERENCES search_fields(id);
+
+
+
+ALTER TABLE ONLY saved_criteriaelement
+    ADD CONSTRAINT "$3" FOREIGN KEY (operatorid) REFERENCES field_types(id);
+
+
+
+ALTER TABLE ONLY help_module
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES permission_category(category_id);
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES permission_category(category_id);
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$2" FOREIGN KEY (link_module_id) REFERENCES help_module(module_id);
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$3" FOREIGN KEY (nextcontent) REFERENCES help_contents(help_id);
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$4" FOREIGN KEY (prevcontent) REFERENCES help_contents(help_id);
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$5" FOREIGN KEY (upcontent) REFERENCES help_contents(help_id);
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$6" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_contents
+    ADD CONSTRAINT "$7" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_tableof_contents
+    ADD CONSTRAINT "$1" FOREIGN KEY (firstchild) REFERENCES help_tableof_contents(content_id);
+
+
+
+ALTER TABLE ONLY help_tableof_contents
+    ADD CONSTRAINT "$2" FOREIGN KEY (nextsibling) REFERENCES help_tableof_contents(content_id);
+
+
+
+ALTER TABLE ONLY help_tableof_contents
+    ADD CONSTRAINT "$3" FOREIGN KEY (parent) REFERENCES help_tableof_contents(content_id);
+
+
+
+ALTER TABLE ONLY help_tableof_contents
+    ADD CONSTRAINT "$4" FOREIGN KEY (category_id) REFERENCES permission_category(category_id);
+
+
+
+ALTER TABLE ONLY help_tableof_contents
+    ADD CONSTRAINT "$5" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_tableof_contents
+    ADD CONSTRAINT "$6" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_tableofcontentitem_links
+    ADD CONSTRAINT "$1" FOREIGN KEY (global_link_id) REFERENCES help_tableof_contents(content_id);
+
+
+
+ALTER TABLE ONLY help_tableofcontentitem_links
+    ADD CONSTRAINT "$2" FOREIGN KEY (linkto_content_id) REFERENCES help_contents(help_id);
+
+
+
+ALTER TABLE ONLY help_tableofcontentitem_links
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_tableofcontentitem_links
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_features
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_help_id) REFERENCES help_contents(help_id);
+
+
+
+ALTER TABLE ONLY help_features
+    ADD CONSTRAINT "$2" FOREIGN KEY (link_feature_id) REFERENCES lookup_help_features(code);
+
+
+
+ALTER TABLE ONLY help_features
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_features
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_features
+    ADD CONSTRAINT "$5" FOREIGN KEY (completedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_related_links
+    ADD CONSTRAINT "$1" FOREIGN KEY (owning_module_id) REFERENCES help_module(module_id);
+
+
+
+ALTER TABLE ONLY help_related_links
+    ADD CONSTRAINT "$2" FOREIGN KEY (linkto_content_id) REFERENCES help_contents(help_id);
+
+
+
+ALTER TABLE ONLY help_related_links
+    ADD CONSTRAINT "$3" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_related_links
+    ADD CONSTRAINT "$4" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_faqs
+    ADD CONSTRAINT "$1" FOREIGN KEY (owning_module_id) REFERENCES help_module(module_id);
+
+
+
+ALTER TABLE ONLY help_faqs
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_faqs
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_faqs
+    ADD CONSTRAINT "$4" FOREIGN KEY (completedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_business_rules
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_help_id) REFERENCES help_contents(help_id);
+
+
+
+ALTER TABLE ONLY help_business_rules
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_business_rules
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_business_rules
+    ADD CONSTRAINT "$4" FOREIGN KEY (completedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_notes
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_help_id) REFERENCES help_contents(help_id);
+
+
+
+ALTER TABLE ONLY help_notes
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_notes
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_notes
+    ADD CONSTRAINT "$4" FOREIGN KEY (completedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_tips
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_help_id) REFERENCES help_contents(help_id);
+
+
+
+ALTER TABLE ONLY help_tips
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY help_tips
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY sync_table
+    ADD CONSTRAINT "$1" FOREIGN KEY (system_id) REFERENCES sync_system(system_id);
+
+
+
+ALTER TABLE ONLY sync_map
+    ADD CONSTRAINT "$1" FOREIGN KEY (client_id) REFERENCES sync_client(client_id);
+
+
+
+ALTER TABLE ONLY sync_map
+    ADD CONSTRAINT "$2" FOREIGN KEY (table_id) REFERENCES sync_table(table_id);
+
+
+
+ALTER TABLE ONLY sync_conflict_log
+    ADD CONSTRAINT "$1" FOREIGN KEY (client_id) REFERENCES sync_client(client_id);
+
+
+
+ALTER TABLE ONLY sync_conflict_log
+    ADD CONSTRAINT "$2" FOREIGN KEY (table_id) REFERENCES sync_table(table_id);
+
+
+
+ALTER TABLE ONLY sync_log
+    ADD CONSTRAINT "$1" FOREIGN KEY (system_id) REFERENCES sync_system(system_id);
+
+
+
+ALTER TABLE ONLY sync_log
+    ADD CONSTRAINT "$2" FOREIGN KEY (client_id) REFERENCES sync_client(client_id);
+
+
+
+ALTER TABLE ONLY sync_transaction_log
+    ADD CONSTRAINT "$1" FOREIGN KEY (log_id) REFERENCES sync_log(log_id);
+
+
+
+ALTER TABLE ONLY process_log
+    ADD CONSTRAINT "$1" FOREIGN KEY (system_id) REFERENCES sync_system(system_id);
+
+
+
+ALTER TABLE ONLY process_log
+    ADD CONSTRAINT "$2" FOREIGN KEY (client_id) REFERENCES sync_client(client_id);
+
+
+
+ALTER TABLE ONLY autoguide_model
+    ADD CONSTRAINT "$1" FOREIGN KEY (make_id) REFERENCES autoguide_make(make_id);
+
+
+
+ALTER TABLE ONLY autoguide_vehicle
+    ADD CONSTRAINT "$1" FOREIGN KEY (make_id) REFERENCES autoguide_make(make_id);
+
+
+
+ALTER TABLE ONLY autoguide_vehicle
+    ADD CONSTRAINT "$2" FOREIGN KEY (model_id) REFERENCES autoguide_model(model_id);
+
+
+
+ALTER TABLE ONLY autoguide_inventory
+    ADD CONSTRAINT "$1" FOREIGN KEY (vehicle_id) REFERENCES autoguide_vehicle(vehicle_id);
+
+
+
+ALTER TABLE ONLY autoguide_inventory
+    ADD CONSTRAINT "$2" FOREIGN KEY (account_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY autoguide_inventory_options
+    ADD CONSTRAINT "$1" FOREIGN KEY (inventory_id) REFERENCES autoguide_inventory(inventory_id);
+
+
+
+ALTER TABLE ONLY autoguide_ad_run
+    ADD CONSTRAINT "$1" FOREIGN KEY (inventory_id) REFERENCES autoguide_inventory(inventory_id);
+
+
+
+ALTER TABLE ONLY revenue
+    ADD CONSTRAINT "$1" FOREIGN KEY (org_id) REFERENCES organization(org_id);
+
+
+
+ALTER TABLE ONLY revenue
+    ADD CONSTRAINT "$2" FOREIGN KEY ("type") REFERENCES lookup_revenue_types(code);
+
+
+
+ALTER TABLE ONLY revenue
+    ADD CONSTRAINT "$3" FOREIGN KEY ("owner") REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY revenue
+    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY revenue
+    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY revenue_detail
+    ADD CONSTRAINT "$1" FOREIGN KEY (revenue_id) REFERENCES revenue(id);
+
+
+
+ALTER TABLE ONLY revenue_detail
+    ADD CONSTRAINT "$2" FOREIGN KEY ("type") REFERENCES lookup_revenue_types(code);
+
+
+
+ALTER TABLE ONLY revenue_detail
+    ADD CONSTRAINT "$3" FOREIGN KEY ("owner") REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY revenue_detail
+    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY revenue_detail
+    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY task
+    ADD CONSTRAINT "$1" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY task
+    ADD CONSTRAINT "$2" FOREIGN KEY (priority) REFERENCES lookup_task_priority(code);
+
+
+
+ALTER TABLE ONLY task
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY task
+    ADD CONSTRAINT "$4" FOREIGN KEY (estimatedloetype) REFERENCES lookup_task_loe(code);
+
+
+
+ALTER TABLE ONLY task
+    ADD CONSTRAINT "$5" FOREIGN KEY ("owner") REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY task
+    ADD CONSTRAINT "$6" FOREIGN KEY (category_id) REFERENCES lookup_task_category(code);
+
+
+
+ALTER TABLE ONLY tasklink_contact
+    ADD CONSTRAINT "$1" FOREIGN KEY (task_id) REFERENCES task(task_id);
+
+
+
+ALTER TABLE ONLY tasklink_contact
+    ADD CONSTRAINT "$2" FOREIGN KEY (contact_id) REFERENCES contact(contact_id);
+
+
+
+ALTER TABLE ONLY tasklink_ticket
+    ADD CONSTRAINT "$1" FOREIGN KEY (task_id) REFERENCES task(task_id);
+
+
+
+ALTER TABLE ONLY tasklink_ticket
+    ADD CONSTRAINT "$2" FOREIGN KEY (ticket_id) REFERENCES ticket(ticketid);
+
+
+
+ALTER TABLE ONLY tasklink_project
+    ADD CONSTRAINT "$1" FOREIGN KEY (task_id) REFERENCES task(task_id);
+
+
+
+ALTER TABLE ONLY tasklink_project
+    ADD CONSTRAINT "$2" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY taskcategory_project
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES lookup_task_category(code);
+
+
+
+ALTER TABLE ONLY taskcategory_project
+    ADD CONSTRAINT "$2" FOREIGN KEY (project_id) REFERENCES projects(project_id);
+
+
+
+ALTER TABLE ONLY taskcategorylink_news
+    ADD CONSTRAINT "$1" FOREIGN KEY (news_id) REFERENCES project_news(news_id);
+
+
+
+ALTER TABLE ONLY taskcategorylink_news
+    ADD CONSTRAINT "$2" FOREIGN KEY (category_id) REFERENCES lookup_task_category(code);
+
+
+
+ALTER TABLE ONLY lookup_document_store_permission
+    ADD CONSTRAINT "$1" FOREIGN KEY (category_id) REFERENCES lookup_document_store_permission_category(code);
+
+
+
+ALTER TABLE ONLY lookup_document_store_permission
+    ADD CONSTRAINT "$2" FOREIGN KEY (default_role) REFERENCES lookup_document_store_role(code);
+
+
+
+ALTER TABLE ONLY document_store
+    ADD CONSTRAINT "$1" FOREIGN KEY (approvalby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY document_store
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY document_store
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY document_store_permissions
+    ADD CONSTRAINT "$1" FOREIGN KEY (document_store_id) REFERENCES document_store(document_store_id);
+
+
+
+ALTER TABLE ONLY document_store_permissions
+    ADD CONSTRAINT "$2" FOREIGN KEY (permission_id) REFERENCES lookup_document_store_permission(code);
+
+
+
+ALTER TABLE ONLY document_store_permissions
+    ADD CONSTRAINT "$3" FOREIGN KEY (userlevel) REFERENCES lookup_document_store_role(code);
+
+
+
+ALTER TABLE ONLY document_store_user_member
+    ADD CONSTRAINT "$1" FOREIGN KEY (document_store_id) REFERENCES document_store(document_store_id);
+
+
+
+ALTER TABLE ONLY document_store_user_member
+    ADD CONSTRAINT "$2" FOREIGN KEY (item_id) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY document_store_user_member
+    ADD CONSTRAINT "$3" FOREIGN KEY (userlevel) REFERENCES lookup_document_store_role(code);
+
+
+
+ALTER TABLE ONLY document_store_user_member
+    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY document_store_user_member
+    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY document_store_role_member
+    ADD CONSTRAINT "$1" FOREIGN KEY (document_store_id) REFERENCES document_store(document_store_id);
+
+
+
+ALTER TABLE ONLY document_store_role_member
+    ADD CONSTRAINT "$2" FOREIGN KEY (item_id) REFERENCES role(role_id);
+
+
+
+ALTER TABLE ONLY document_store_role_member
+    ADD CONSTRAINT "$3" FOREIGN KEY (userlevel) REFERENCES lookup_document_store_role(code);
+
+
+
+ALTER TABLE ONLY document_store_role_member
+    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY document_store_role_member
+    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY document_store_department_member
+    ADD CONSTRAINT "$1" FOREIGN KEY (document_store_id) REFERENCES document_store(document_store_id);
+
+
+
+ALTER TABLE ONLY document_store_department_member
+    ADD CONSTRAINT "$2" FOREIGN KEY (item_id) REFERENCES lookup_department(code);
+
+
+
+ALTER TABLE ONLY document_store_department_member
+    ADD CONSTRAINT "$3" FOREIGN KEY (userlevel) REFERENCES lookup_document_store_role(code);
+
+
+
+ALTER TABLE ONLY document_store_department_member
+    ADD CONSTRAINT "$4" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY document_store_department_member
+    ADD CONSTRAINT "$5" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY business_process_component_result_lookup
+    ADD CONSTRAINT "$1" FOREIGN KEY (component_id) REFERENCES business_process_component_library(component_id);
+
+
+
+ALTER TABLE ONLY business_process
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_module_id) REFERENCES permission_category(category_id);
+
+
+
+ALTER TABLE ONLY business_process_component
+    ADD CONSTRAINT "$1" FOREIGN KEY (process_id) REFERENCES business_process(process_id);
+
+
+
+ALTER TABLE ONLY business_process_component
+    ADD CONSTRAINT "$2" FOREIGN KEY (component_id) REFERENCES business_process_component_library(component_id);
+
+
+
+ALTER TABLE ONLY business_process_component
+    ADD CONSTRAINT "$3" FOREIGN KEY (parent_id) REFERENCES business_process_component(id);
+
+
+
+ALTER TABLE ONLY business_process_parameter
+    ADD CONSTRAINT "$1" FOREIGN KEY (process_id) REFERENCES business_process(process_id);
+
+
+
+ALTER TABLE ONLY business_process_component_parameter
+    ADD CONSTRAINT "$1" FOREIGN KEY (component_id) REFERENCES business_process_component(id);
+
+
+
+ALTER TABLE ONLY business_process_component_parameter
+    ADD CONSTRAINT "$2" FOREIGN KEY (parameter_id) REFERENCES business_process_parameter_library(parameter_id);
+
+
+
+ALTER TABLE ONLY business_process_events
+    ADD CONSTRAINT "$1" FOREIGN KEY (process_id) REFERENCES business_process(process_id);
+
+
+
+ALTER TABLE ONLY business_process_hook_library
+    ADD CONSTRAINT "$1" FOREIGN KEY (link_module_id) REFERENCES permission_category(category_id);
+
+
+
+ALTER TABLE ONLY business_process_hook_triggers
+    ADD CONSTRAINT "$1" FOREIGN KEY (hook_id) REFERENCES business_process_hook_library(hook_id);
+
+
+
+ALTER TABLE ONLY business_process_hook
+    ADD CONSTRAINT "$1" FOREIGN KEY (trigger_id) REFERENCES business_process_hook_triggers(trigger_id);
+
+
+
+ALTER TABLE ONLY business_process_hook
+    ADD CONSTRAINT "$2" FOREIGN KEY (process_id) REFERENCES business_process(process_id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$18" FOREIGN KEY (customer_product_id) REFERENCES customer_product(customer_product_id);
+
+
+
+ALTER TABLE ONLY ticket
+    ADD CONSTRAINT "$19" FOREIGN KEY (status_id) REFERENCES lookup_ticket_status(code);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$12" FOREIGN KEY (product_id) REFERENCES product_catalog(product_id);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$13" FOREIGN KEY (customer_product_id) REFERENCES customer_product(customer_product_id);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$14" FOREIGN KEY (group_id) REFERENCES quote_group(group_id);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$15" FOREIGN KEY (delivery_id) REFERENCES lookup_quote_delivery(code);
+
+
+
+ALTER TABLE ONLY quote_entry
+    ADD CONSTRAINT "$16" FOREIGN KEY (logo_file_id) REFERENCES project_files(item_id);
+
+
+
+ALTER TABLE ONLY quote_condition
+    ADD CONSTRAINT "$1" FOREIGN KEY (quote_id) REFERENCES quote_entry(quote_id);
+
+
+
+ALTER TABLE ONLY quote_condition
+    ADD CONSTRAINT "$2" FOREIGN KEY (condition_id) REFERENCES lookup_quote_condition(code);
+
+
+
+ALTER TABLE ONLY quotelog
+    ADD CONSTRAINT "$1" FOREIGN KEY (quote_id) REFERENCES quote_entry(quote_id);
+
+
+
+ALTER TABLE ONLY quotelog
+    ADD CONSTRAINT "$2" FOREIGN KEY (source_id) REFERENCES lookup_quote_source(code);
+
+
+
+ALTER TABLE ONLY quotelog
+    ADD CONSTRAINT "$3" FOREIGN KEY (status_id) REFERENCES lookup_quote_status(code);
+
+
+
+ALTER TABLE ONLY quotelog
+    ADD CONSTRAINT "$4" FOREIGN KEY (terms_id) REFERENCES lookup_quote_terms(code);
+
+
+
+ALTER TABLE ONLY quotelog
+    ADD CONSTRAINT "$5" FOREIGN KEY (type_id) REFERENCES lookup_quote_type(code);
+
+
+
+ALTER TABLE ONLY quotelog
+    ADD CONSTRAINT "$6" FOREIGN KEY (delivery_id) REFERENCES lookup_quote_delivery(code);
+
+
+
+ALTER TABLE ONLY quotelog
+    ADD CONSTRAINT "$7" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY quotelog
+    ADD CONSTRAINT "$8" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
+
+
+
+ALTER TABLE ONLY quote_remark
+    ADD CONSTRAINT "$1" FOREIGN KEY (quote_id) REFERENCES quote_entry(quote_id);
+
+
+
+ALTER TABLE ONLY quote_remark
+    ADD CONSTRAINT "$2" FOREIGN KEY (remark_id) REFERENCES lookup_quote_remarks(code);
 
 
 
 ALTER TABLE ONLY quote_notes
-    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+    ADD CONSTRAINT "$1" FOREIGN KEY (quote_id) REFERENCES quote_entry(quote_id);
 
 
 
 ALTER TABLE ONLY quote_notes
-    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id) ON UPDATE NO ACTION ON DELETE NO ACTION;
+    ADD CONSTRAINT "$2" FOREIGN KEY (enteredby) REFERENCES "access"(user_id);
 
 
 
-SELECT pg_catalog.setval ('access_user_id_seq', 0, true);
+ALTER TABLE ONLY quote_notes
+    ADD CONSTRAINT "$3" FOREIGN KEY (modifiedby) REFERENCES "access"(user_id);
 
 
 
-SELECT pg_catalog.setval ('lookup_industry_code_seq', 20, true);
+SELECT pg_catalog.setval('access_user_id_seq', 0, true);
 
 
 
-SELECT pg_catalog.setval ('access_log_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_industry_code_seq', 21, true);
 
 
 
-SELECT pg_catalog.setval ('usage_log_usage_id_seq', 1, false);
+SELECT pg_catalog.setval('access_log_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_contact_types_code_seq', 20, true);
+SELECT pg_catalog.setval('usage_log_usage_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_account_types_code_seq', 10, true);
+SELECT pg_catalog.setval('lookup_contact_types_code_seq', 20, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_department_code_seq', 13, true);
+SELECT pg_catalog.setval('lookup_account_types_code_seq', 10, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_orgaddress_type_code_seq', 4, true);
+SELECT pg_catalog.setval('lookup_department_code_seq', 13, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_orgemail_types_code_seq', 2, true);
+SELECT pg_catalog.setval('lookup_orgaddress_type_code_seq', 4, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_orgphone_types_code_seq', 2, true);
+SELECT pg_catalog.setval('lookup_orgemail_types_code_seq', 2, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_instantmessenge_code_seq', 1, false);
+SELECT pg_catalog.setval('lookup_orgphone_types_code_seq', 2, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_employment_type_code_seq', 1, false);
+SELECT pg_catalog.setval('lookup_im_types_code_seq', 3, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_locale_code_seq', 1, false);
+SELECT pg_catalog.setval('lookup_im_services_code_seq', 3, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_contactaddress__code_seq', 3, true);
+SELECT pg_catalog.setval('lookup_contact_source_code_seq', 9, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_contactemail_ty_code_seq', 3, true);
+SELECT pg_catalog.setval('lookup_contact_rating_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_contactphone_ty_code_seq', 9, true);
+SELECT pg_catalog.setval('lookup_textmessage_typ_code_seq', 3, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_access_types_code_seq', 8, true);
+SELECT pg_catalog.setval('lookup_employment_type_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('organization_org_id_seq', 0, true);
+SELECT pg_catalog.setval('lookup_locale_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('contact_contact_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_contactaddress__code_seq', 3, true);
 
 
 
-SELECT pg_catalog.setval ('role_role_id_seq', 11, true);
+SELECT pg_catalog.setval('lookup_contactemail_ty_code_seq', 3, true);
 
 
 
-SELECT pg_catalog.setval ('permission_cate_category_id_seq', 21, true);
+SELECT pg_catalog.setval('lookup_contactphone_ty_code_seq', 9, true);
 
 
 
-SELECT pg_catalog.setval ('permission_permission_id_seq', 94, true);
+SELECT pg_catalog.setval('lookup_access_types_code_seq', 8, true);
 
 
 
-SELECT pg_catalog.setval ('role_permission_id_seq', 570, true);
+SELECT pg_catalog.setval('organization_org_id_seq', 0, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_stage_code_seq', 9, true);
+SELECT pg_catalog.setval('contact_contact_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_delivery_option_code_seq', 6, true);
+SELECT pg_catalog.setval('contact_lead_skipped_map_map_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('news_rec_id_seq', 1, false);
+SELECT pg_catalog.setval('contact_lead_read_map_map_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('organization_add_address_id_seq', 1, false);
+SELECT pg_catalog.setval('role_role_id_seq', 11, true);
 
 
 
-SELECT pg_catalog.setval ('organization__emailaddress__seq', 1, false);
+SELECT pg_catalog.setval('permission_cate_category_id_seq', 23, true);
 
 
 
-SELECT pg_catalog.setval ('organization_phone_phone_id_seq', 1, false);
+SELECT pg_catalog.setval('permission_permission_id_seq', 110, true);
 
 
 
-SELECT pg_catalog.setval ('contact_address_address_id_seq', 1, false);
+SELECT pg_catalog.setval('role_permission_id_seq', 660, true);
 
 
 
-SELECT pg_catalog.setval ('contact_email_emailaddress__seq', 1, false);
+SELECT pg_catalog.setval('lookup_stage_code_seq', 9, true);
 
 
 
-SELECT pg_catalog.setval ('contact_phone_phone_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_delivery_option_code_seq', 9, true);
 
 
 
-SELECT pg_catalog.setval ('notification_notification_i_seq', 1, false);
+SELECT pg_catalog.setval('news_rec_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('cfsinbox_message_id_seq', 1, false);
+SELECT pg_catalog.setval('organization_add_address_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_lists_lookup_id_seq', 24, true);
+SELECT pg_catalog.setval('organization__emailaddress__seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('category_editor_lookup_id_seq', 2, true);
+SELECT pg_catalog.setval('organization_phone_phone_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('viewpoint_viewpoint_id_seq', 1, false);
+SELECT pg_catalog.setval('contact_address_address_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('viewpoint_per_vp_permission_seq', 1, false);
+SELECT pg_catalog.setval('contact_email_emailaddress__seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('report_report_id_seq', 30, true);
+SELECT pg_catalog.setval('contact_phone_phone_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('report_criteria_criteria_id_seq', 1, false);
+SELECT pg_catalog.setval('contact_imaddress_address_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('report_criteria_parameter_parameter_id_seq', 1, false);
+SELECT pg_catalog.setval('contact_textmessageaddress_address_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('report_queue_queue_id_seq', 1, false);
+SELECT pg_catalog.setval('notification_notification_i_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('report_queue_criteria_criteria_id_seq', 1, false);
+SELECT pg_catalog.setval('cfsinbox_message_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('action_list_code_seq', 1, false);
+SELECT pg_catalog.setval('lookup_lists_lookup_id_seq', 44, true);
 
 
 
-SELECT pg_catalog.setval ('action_item_code_seq', 1, false);
+SELECT pg_catalog.setval('webdav_id_seq', 3, true);
 
 
 
-SELECT pg_catalog.setval ('action_item_log_code_seq', 1, false);
+SELECT pg_catalog.setval('category_editor_lookup_id_seq', 2, true);
 
 
 
-SELECT pg_catalog.setval ('import_import_id_seq', 1, false);
+SELECT pg_catalog.setval('viewpoint_viewpoint_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('database_version_version_id_seq', 2, true);
+SELECT pg_catalog.setval('viewpoint_per_vp_permission_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_call_types_code_seq', 10, true);
+SELECT pg_catalog.setval('report_report_id_seq', 30, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_call_priority_code_seq', 3, true);
+SELECT pg_catalog.setval('report_criteria_criteria_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_call_reminder_code_seq', 5, true);
+SELECT pg_catalog.setval('report_criteria_parameter_parameter_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_call_result_result_id_seq', 1, false);
+SELECT pg_catalog.setval('report_queue_queue_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_opportunity_typ_code_seq', 6, true);
+SELECT pg_catalog.setval('report_queue_criteria_criteria_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('opportunity_header_opp_id_seq', 1, false);
+SELECT pg_catalog.setval('action_list_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('opportunity_component_id_seq', 1, false);
+SELECT pg_catalog.setval('action_item_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('call_log_call_id_seq', 1, false);
+SELECT pg_catalog.setval('action_item_log_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_project_activit_code_seq', 10, true);
+SELECT pg_catalog.setval('import_import_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_project_priorit_code_seq', 3, true);
+SELECT pg_catalog.setval('database_version_version_id_seq', 4, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_project_status_code_seq', 6, true);
+SELECT pg_catalog.setval('lookup_relationship_types_type_id_seq', 18, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_project_loe_code_seq', 5, true);
+SELECT pg_catalog.setval('relationship_relationship_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_project_role_code_seq', 4, true);
+SELECT pg_catalog.setval('lookup_call_types_code_seq', 10, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_project_cat_code_seq', 1, false);
+SELECT pg_catalog.setval('lookup_call_priority_code_seq', 3, true);
 
 
 
-SELECT pg_catalog.setval ('projects_project_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_call_reminder_code_seq', 5, true);
 
 
 
-SELECT pg_catalog.setval ('project_requi_requirement_i_seq', 1, false);
+SELECT pg_catalog.setval('lookup_call_result_result_id_seq', 10, true);
 
 
 
-SELECT pg_catalog.setval ('project_assignmen_folder_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_opportunity_typ_code_seq', 6, true);
 
 
 
-SELECT pg_catalog.setval ('project_assig_assignment_id_seq', 1, false);
+SELECT pg_catalog.setval('opportunity_header_opp_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('project_assignmen_status_id_seq', 1, false);
+SELECT pg_catalog.setval('opportunity_component_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('project_issue_cate_categ_id_seq', 1, false);
+SELECT pg_catalog.setval('call_log_call_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('project_issues_issue_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_project_activit_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('project_issue_repl_reply_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_project_priorit_code_seq', 3, true);
 
 
 
-SELECT pg_catalog.setval ('project_folders_folder_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_project_status_code_seq', 6, true);
 
 
 
-SELECT pg_catalog.setval ('project_files_item_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_project_loe_code_seq', 5, true);
 
 
 
-SELECT pg_catalog.setval ('project_news_news_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_project_role_code_seq', 4, true);
 
 
 
-SELECT pg_catalog.setval ('project_requirements_map_map_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_project_cat_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_project_permission_category_code_seq', 9, true);
+SELECT pg_catalog.setval('lookup_news_template_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_project_permission_code_seq', 51, true);
+SELECT pg_catalog.setval('projects_project_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('project_permissions_id_seq', 1, false);
+SELECT pg_catalog.setval('project_requi_requirement_i_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_currency_code_seq', 1, false);
+SELECT pg_catalog.setval('project_assignmen_folder_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_product_categor_code_seq', 1, false);
+SELECT pg_catalog.setval('project_assig_assignment_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('product_category_category_id_seq', 1, true);
+SELECT pg_catalog.setval('project_assignmen_status_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('product_category_map_id_seq', 1, false);
+SELECT pg_catalog.setval('project_issue_cate_categ_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_product_type_code_seq', 1, false);
+SELECT pg_catalog.setval('project_issues_issue_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_product_format_code_seq', 1, false);
+SELECT pg_catalog.setval('project_issue_repl_reply_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_product_shippin_code_seq', 1, false);
+SELECT pg_catalog.setval('project_folders_folder_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_product_ship_ti_code_seq', 1, false);
+SELECT pg_catalog.setval('project_files_item_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_product_tax_code_seq', 1, false);
+SELECT pg_catalog.setval('project_news_category_category_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_recurring_type_code_seq', 1, false);
+SELECT pg_catalog.setval('project_news_news_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('product_catalog_product_id_seq', 1, false);
+SELECT pg_catalog.setval('project_requirements_map_map_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('product_catalog_pricing_price_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_project_permission_category_code_seq', 10, true);
 
 
 
-SELECT pg_catalog.setval ('package_package_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_project_permission_code_seq', 53, true);
 
 
 
-SELECT pg_catalog.setval ('package_products_map_id_seq', 1, false);
+SELECT pg_catalog.setval('project_permissions_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('product_catalog_category_map_id_seq', 1, false);
+SELECT pg_catalog.setval('project_accounts_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_product_conf_re_code_seq', 1, false);
+SELECT pg_catalog.setval('lookup_currency_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('product_option_configurator_configurator_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_product_categor_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('product_option_option_id_seq', 1, false);
+SELECT pg_catalog.setval('product_category_category_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('product_option_values_value_id_seq', 1, false);
+SELECT pg_catalog.setval('product_category_map_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('product_option_map_product_option_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_product_type_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_product_keyword_code_seq', 1, false);
+SELECT pg_catalog.setval('lookup_product_manufac_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_asset_status_code_seq', 4, true);
+SELECT pg_catalog.setval('lookup_product_format_code_seq', 2, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_sc_category_code_seq', 6, true);
+SELECT pg_catalog.setval('lookup_product_shippin_code_seq', 4, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_sc_type_code_seq', 1, false);
+SELECT pg_catalog.setval('lookup_product_ship_ti_code_seq', 3, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_response_model_code_seq', 11, true);
+SELECT pg_catalog.setval('lookup_product_tax_code_seq', 2, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_phone_model_code_seq', 7, true);
+SELECT pg_catalog.setval('lookup_recurring_type_code_seq', 3, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_onsite_model_code_seq', 5, true);
+SELECT pg_catalog.setval('product_catalog_product_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_email_model_code_seq', 4, true);
+SELECT pg_catalog.setval('product_catalog_pricing_price_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_hours_reason_code_seq', 3, true);
+SELECT pg_catalog.setval('package_package_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('service_contract_contract_id_seq', 1, false);
+SELECT pg_catalog.setval('package_products_map_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('service_contract_hours_history_id_seq', 1, false);
+SELECT pg_catalog.setval('product_catalog_category_map_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('service_contract_products_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_product_conf_re_code_seq', 5, true);
 
 
 
-SELECT pg_catalog.setval ('asset_category_id_seq', 1, false);
+SELECT pg_catalog.setval('product_option_configurator_configurator_id_seq', 4, true);
 
 
 
-SELECT pg_catalog.setval ('asset_category_draft_id_seq', 1, false);
+SELECT pg_catalog.setval('product_option_option_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('asset_asset_id_seq', 1, false);
+SELECT pg_catalog.setval('product_option_values_value_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('ticket_level_code_seq', 5, true);
+SELECT pg_catalog.setval('product_option_map_product_option_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('ticket_severity_code_seq', 3, true);
+SELECT pg_catalog.setval('lookup_product_keyword_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_ticketsource_code_seq', 5, true);
+SELECT pg_catalog.setval('lookup_asset_status_code_seq', 4, true);
 
 
 
-SELECT pg_catalog.setval ('ticket_priority_code_seq', 3, true);
+SELECT pg_catalog.setval('lookup_sc_category_code_seq', 6, true);
 
 
 
-SELECT pg_catalog.setval ('ticket_category_id_seq', 5, true);
+SELECT pg_catalog.setval('lookup_sc_type_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('ticket_category_draft_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_response_model_code_seq', 11, true);
 
 
 
-SELECT pg_catalog.setval ('ticket_ticketid_seq', 1, false);
+SELECT pg_catalog.setval('lookup_phone_model_code_seq', 7, true);
 
 
 
-SELECT pg_catalog.setval ('ticketlog_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_onsite_model_code_seq', 5, true);
 
 
 
-SELECT pg_catalog.setval ('ticket_csstm_form_form_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_email_model_code_seq', 5, true);
 
 
 
-SELECT pg_catalog.setval ('ticket_activity_item_item_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_hours_reason_code_seq', 3, true);
 
 
 
-SELECT pg_catalog.setval ('ticket_sun_form_form_id_seq', 1, false);
+SELECT pg_catalog.setval('service_contract_contract_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('trouble_asset_replacement_replacement_id_seq', 1, false);
+SELECT pg_catalog.setval('service_contract_hours_history_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_quote_status_code_seq', 10, true);
+SELECT pg_catalog.setval('service_contract_products_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_quote_type_code_seq', 1, false);
+SELECT pg_catalog.setval('asset_category_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_quote_terms_code_seq', 1, false);
+SELECT pg_catalog.setval('asset_category_draft_id_seq', 10, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_quote_source_code_seq', 1, false);
+SELECT pg_catalog.setval('asset_asset_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('quote_entry_quote_id_seq', 1, false);
+SELECT pg_catalog.setval('ticket_level_code_seq', 5, true);
 
 
 
-SELECT pg_catalog.setval ('quote_product_item_id_seq', 1, false);
+SELECT pg_catalog.setval('ticket_severity_code_seq', 3, true);
 
 
 
-SELECT pg_catalog.setval ('quote_product_options_quote_product_option_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_ticketsource_code_seq', 5, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_order_status_code_seq', 6, true);
+SELECT pg_catalog.setval('lookup_ticket_status_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_order_type_code_seq', 9, true);
+SELECT pg_catalog.setval('ticket_priority_code_seq', 4, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_order_terms_code_seq', 1, false);
+SELECT pg_catalog.setval('ticket_category_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_order_source_code_seq', 1, false);
+SELECT pg_catalog.setval('ticket_category_draft_id_seq', 5, true);
 
 
 
-SELECT pg_catalog.setval ('order_entry_order_id_seq', 1, false);
+SELECT pg_catalog.setval('ticket_ticketid_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('order_product_item_id_seq', 1, false);
+SELECT pg_catalog.setval('ticketlog_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('order_product_status_order_product_status_id_seq', 1, false);
+SELECT pg_catalog.setval('ticket_csstm_form_form_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('order_product_options_order_product_option_id_seq', 1, false);
+SELECT pg_catalog.setval('ticket_activity_item_item_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_orderaddress_types_code_seq', 2, true);
+SELECT pg_catalog.setval('ticket_sun_form_form_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('order_address_address_id_seq', 1, false);
+SELECT pg_catalog.setval('trouble_asset_replacement_replacement_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_payment_methods_code_seq', 5, true);
+SELECT pg_catalog.setval('lookup_quote_status_code_seq', 10, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_creditcard_type_code_seq', 4, true);
+SELECT pg_catalog.setval('lookup_quote_type_code_seq', 5, true);
 
 
 
-SELECT pg_catalog.setval ('order_payment_payment_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_quote_terms_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('payment_creditcard_creditcard_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_quote_source_code_seq', 7, true);
 
 
 
-SELECT pg_catalog.setval ('payment_eft_bank_id_seq', 1, false);
+SELECT pg_catalog.setval('quote_entry_quote_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('customer_product_customer_product_id_seq', 1, false);
+SELECT pg_catalog.setval('quote_product_item_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('customer_product_history_history_id_seq', 1, false);
+SELECT pg_catalog.setval('quote_product_options_quote_product_option_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('module_field_categorylin_id_seq', 4, true);
+SELECT pg_catalog.setval('lookup_order_status_code_seq', 6, true);
 
 
 
-SELECT pg_catalog.setval ('custom_field_ca_category_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_order_type_code_seq', 9, true);
 
 
 
-SELECT pg_catalog.setval ('custom_field_group_group_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_order_terms_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('custom_field_info_field_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_order_source_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('custom_field_lookup_code_seq', 1, false);
+SELECT pg_catalog.setval('order_entry_order_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('custom_field_reco_record_id_seq', 1, false);
+SELECT pg_catalog.setval('order_product_item_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('saved_criterialist_id_seq', 1, false);
+SELECT pg_catalog.setval('order_product_status_order_product_status_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('campaign_campaign_id_seq', 1, false);
+SELECT pg_catalog.setval('order_product_options_order_product_option_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('campaign_run_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_orderaddress_types_code_seq', 2, true);
 
 
 
-SELECT pg_catalog.setval ('excluded_recipient_id_seq', 1, false);
+SELECT pg_catalog.setval('order_address_address_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('active_campaign_groups_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_payment_methods_code_seq', 5, true);
 
 
 
-SELECT pg_catalog.setval ('scheduled_recipient_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_creditcard_type_code_seq', 4, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_survey_types_code_seq', 4, true);
+SELECT pg_catalog.setval('payment_creditcard_creditcard_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('survey_survey_id_seq', 1, false);
+SELECT pg_catalog.setval('payment_eft_bank_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('survey_question_question_id_seq', 1, false);
+SELECT pg_catalog.setval('customer_product_customer_product_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('survey_items_item_id_seq', 1, false);
+SELECT pg_catalog.setval('customer_product_history_history_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('active_survey_active_survey_seq', 1, false);
+SELECT pg_catalog.setval('lookup_payment_status_code_seq', 4, true);
 
 
 
-SELECT pg_catalog.setval ('active_survey_q_question_id_seq', 1, false);
+SELECT pg_catalog.setval('order_payment_payment_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('active_survey_items_item_id_seq', 1, false);
+SELECT pg_catalog.setval('order_payment_status_payment_status_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('active_survey_r_response_id_seq', 1, false);
+SELECT pg_catalog.setval('module_field_categorylin_id_seq', 5, true);
 
 
 
-SELECT pg_catalog.setval ('active_survey_ans_answer_id_seq', 1, false);
+SELECT pg_catalog.setval('custom_field_ca_category_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('active_survey_answer_ite_id_seq', 1, false);
+SELECT pg_catalog.setval('custom_field_group_group_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('active_survey_answer_avg_id_seq', 1, false);
+SELECT pg_catalog.setval('custom_field_info_field_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('field_types_id_seq', 18, true);
+SELECT pg_catalog.setval('custom_field_lookup_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('search_fields_id_seq', 11, true);
+SELECT pg_catalog.setval('custom_field_reco_record_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('message_id_seq', 1, false);
+SELECT pg_catalog.setval('saved_criterialist_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('message_template_id_seq', 1, false);
+SELECT pg_catalog.setval('campaign_campaign_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('help_module_module_id_seq', 15, true);
+SELECT pg_catalog.setval('campaign_run_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('help_contents_help_id_seq', 355, true);
+SELECT pg_catalog.setval('excluded_recipient_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('help_tableof_contents_content_id_seq', 97, true);
+SELECT pg_catalog.setval('active_campaign_groups_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('help_tableofcontentitem_links_link_id_seq', 87, true);
+SELECT pg_catalog.setval('scheduled_recipient_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_help_features_code_seq', 1, false);
+SELECT pg_catalog.setval('lookup_survey_types_code_seq', 4, true);
 
 
 
-SELECT pg_catalog.setval ('help_features_feature_id_seq', 638, true);
+SELECT pg_catalog.setval('survey_survey_id_seq', 1, true);
 
 
 
-SELECT pg_catalog.setval ('help_related_links_relatedlink_id_seq', 1, false);
+SELECT pg_catalog.setval('survey_question_question_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('help_faqs_faq_id_seq', 1, false);
+SELECT pg_catalog.setval('survey_items_item_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('help_business_rules_rule_id_seq', 19, true);
+SELECT pg_catalog.setval('active_survey_active_survey_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('help_notes_note_id_seq', 1, false);
+SELECT pg_catalog.setval('active_survey_q_question_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('help_tips_tip_id_seq', 2, true);
+SELECT pg_catalog.setval('active_survey_items_item_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('sync_client_client_id_seq', 1, false);
+SELECT pg_catalog.setval('active_survey_r_response_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('sync_system_system_id_seq', 5, true);
+SELECT pg_catalog.setval('active_survey_ans_answer_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('sync_table_table_id_seq', 199, true);
+SELECT pg_catalog.setval('active_survey_answer_ite_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('sync_log_log_id_seq', 1, false);
+SELECT pg_catalog.setval('active_survey_answer_avg_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('sync_transact_transaction_i_seq', 1, false);
+SELECT pg_catalog.setval('field_types_id_seq', 18, true);
 
 
 
-SELECT pg_catalog.setval ('process_log_process_id_seq', 1, false);
+SELECT pg_catalog.setval('search_fields_id_seq', 11, true);
 
 
 
-SELECT pg_catalog.setval ('autoguide_make_make_id_seq', 1, false);
+SELECT pg_catalog.setval('message_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('autoguide_model_model_id_seq', 1, false);
+SELECT pg_catalog.setval('message_template_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('autoguide_vehicl_vehicle_id_seq', 1, false);
+SELECT pg_catalog.setval('help_module_module_id_seq', 15, true);
 
 
 
-SELECT pg_catalog.setval ('autoguide_inve_inventory_id_seq', 1, false);
+SELECT pg_catalog.setval('help_contents_help_id_seq', 355, true);
 
 
 
-SELECT pg_catalog.setval ('autoguide_options_option_id_seq', 30, true);
+SELECT pg_catalog.setval('help_tableof_contents_content_id_seq', 97, true);
 
 
 
-SELECT pg_catalog.setval ('autoguide_ad_run_ad_run_id_seq', 1, false);
+SELECT pg_catalog.setval('help_tableofcontentitem_links_link_id_seq', 87, true);
 
 
 
-SELECT pg_catalog.setval ('autoguide_ad_run_types_code_seq', 3, true);
+SELECT pg_catalog.setval('lookup_help_features_code_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_revenue_types_code_seq', 1, true);
+SELECT pg_catalog.setval('help_features_feature_id_seq', 638, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_revenuedetail_t_code_seq', 1, false);
+SELECT pg_catalog.setval('help_related_links_relatedlink_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('revenue_id_seq', 1, false);
+SELECT pg_catalog.setval('help_faqs_faq_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('revenue_detail_id_seq', 1, false);
+SELECT pg_catalog.setval('help_business_rules_rule_id_seq', 19, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_task_priority_code_seq', 5, true);
+SELECT pg_catalog.setval('help_notes_note_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('lookup_task_loe_code_seq', 5, true);
+SELECT pg_catalog.setval('help_tips_tip_id_seq', 2, true);
 
 
 
-SELECT pg_catalog.setval ('lookup_task_category_code_seq', 1, false);
+SELECT pg_catalog.setval('sync_client_client_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('task_task_id_seq', 1, false);
+SELECT pg_catalog.setval('sync_system_system_id_seq', 5, true);
 
 
 
-SELECT pg_catalog.setval ('business_process_com_lb_id_seq', 7, true);
+SELECT pg_catalog.setval('sync_table_table_id_seq', 199, true);
 
 
 
-SELECT pg_catalog.setval ('business_process_comp_re_id_seq', 3, true);
+SELECT pg_catalog.setval('sync_log_log_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('business_process_pa_lib_id_seq', 23, true);
+SELECT pg_catalog.setval('sync_transact_transaction_i_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('business_process_process_id_seq', 2, true);
+SELECT pg_catalog.setval('process_log_process_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('business_process_compone_id_seq', 8, true);
+SELECT pg_catalog.setval('autoguide_make_make_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('business_process_param_id_seq', 1, false);
+SELECT pg_catalog.setval('autoguide_model_model_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('business_process_comp_pa_id_seq', 23, true);
+SELECT pg_catalog.setval('autoguide_vehicl_vehicle_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('business_process_e_event_id_seq', 1, false);
+SELECT pg_catalog.setval('autoguide_inve_inventory_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('business_process_hl_hook_id_seq', 1, true);
+SELECT pg_catalog.setval('autoguide_options_option_id_seq', 30, true);
 
 
 
-SELECT pg_catalog.setval ('business_process_ho_trig_id_seq', 2, true);
+SELECT pg_catalog.setval('autoguide_ad_run_ad_run_id_seq', 1, false);
 
 
 
-SELECT pg_catalog.setval ('business_process_ho_hook_id_seq', 2, true);
+SELECT pg_catalog.setval('autoguide_ad_run_types_code_seq', 3, true);
 
 
 
-SELECT pg_catalog.setval ('quote_notes_notes_id_seq', 1, false);
+SELECT pg_catalog.setval('lookup_revenue_types_code_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('lookup_revenuedetail_t_code_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('revenue_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('revenue_detail_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('lookup_task_priority_code_seq', 5, true);
+
+
+
+SELECT pg_catalog.setval('lookup_task_loe_code_seq', 5, true);
+
+
+
+SELECT pg_catalog.setval('lookup_task_category_code_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('task_task_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('lookup_document_store_permission_category_code_seq', 4, true);
+
+
+
+SELECT pg_catalog.setval('lookup_document_store_role_code_seq', 5, true);
+
+
+
+SELECT pg_catalog.setval('lookup_document_store_permission_code_seq', 16, true);
+
+
+
+SELECT pg_catalog.setval('document_store_document_store_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('document_store_permissions_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('business_process_com_lb_id_seq', 7, true);
+
+
+
+SELECT pg_catalog.setval('business_process_comp_re_id_seq', 3, true);
+
+
+
+SELECT pg_catalog.setval('business_process_pa_lib_id_seq', 23, true);
+
+
+
+SELECT pg_catalog.setval('business_process_process_id_seq', 2, true);
+
+
+
+SELECT pg_catalog.setval('business_process_compone_id_seq', 8, true);
+
+
+
+SELECT pg_catalog.setval('business_process_param_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('business_process_comp_pa_id_seq', 23, true);
+
+
+
+SELECT pg_catalog.setval('business_process_e_event_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('business_process_hl_hook_id_seq', 1, true);
+
+
+
+SELECT pg_catalog.setval('business_process_ho_trig_id_seq', 2, true);
+
+
+
+SELECT pg_catalog.setval('business_process_ho_hook_id_seq', 2, true);
+
+
+
+SELECT pg_catalog.setval('lookup_quote_delivery_code_seq', 7, true);
+
+
+
+SELECT pg_catalog.setval('lookup_quote_condition_code_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('quote_group_group_id_seq', 1000, false);
+
+
+
+SELECT pg_catalog.setval('quote_condition_map_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('quotelog_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('lookup_quote_remarks_code_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('quote_remark_map_id_seq', 1, false);
+
+
+
+SELECT pg_catalog.setval('quote_notes_notes_id_seq', 1, false);
+
+
+
+COMMENT ON SCHEMA public IS 'Standard public schema';
 
 

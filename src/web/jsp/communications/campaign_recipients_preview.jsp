@@ -27,43 +27,39 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>">Campaign Details</a> >
-Recipients
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManager.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
+<a href="CampaignManager.do?command=Details&id=<%=Campaign.getId()%>"><dhv:label name="campaign.campaignDetails">Campaign Details</dhv:label></a> >
+<dhv:label name="Recipients">Recipients</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-<% String param1 = "id=" + Campaign.getId(); %>
-<dhv:container name="communications" selected="recipients" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" width="100%">
-  <tr>
-    <td class="containerBack">
-    <center><%= CampaignDashboardRecipientInfo.getAlphabeticalPageLinks() %></center>
-    <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CampaignDashboardRecipientInfo"/>
+<dhv:container name="communications" selected="recipients" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+  <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+  <center><dhv:pagedListAlphabeticalLinks object="CampaignDashboardRecipientInfo"/></center></dhv:include>
+  <dhv:pagedListStatus title="<%= showAttribute(request, "actionError") %>" object="CampaignDashboardRecipientInfo"/>
 	<table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 	  <tr>
 	    <th colspan="6">
-	      <strong>List of Recipients</strong>
+	      <strong><dhv:label name="campaign.listOfRecipients">List of Recipients</dhv:label></strong>
 	    </th>     
 	  </tr>
 	  <tr>
 	    <th width="24" align="center" nowrap>
-	      Count
+	      <dhv:label name="campaign.count">Count</dhv:label>
 	    </th>
 	    <th>
-	      Name
+	      <dhv:label name="contacts.name">Name</dhv:label>
 	    </th>
 	    <th width="100%">
-	      Company
+	      <dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label>
 	    </th>
 	    <th align="center" nowrap>
-	      Sent Date
+	      <dhv:label name="campaign.sentDate">Sent Date</dhv:label>
 	    </th>
 	    <th align="center" nowrap>
-	      Status
+	      <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
 	    </th>
 	  </tr>
 	<%
@@ -101,11 +97,9 @@ Recipients
 	<%} else {%>
 	  <tr class="containerBody">
 	    <td colspan="6">
-	      No recipients found.
+	      <dhv:label name="campaign.noRecipientsFound">No recipients found.</dhv:label>
 	    </td>
 	  </tr>
 	</table>
 	<%}%>
-     </td>
-   </tr>
-</table>
+</dhv:container>

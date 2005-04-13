@@ -14,10 +14,11 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*" %>
+<%@ page import="org.aspcfs.modules.actionlist.base.*, org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="UserList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="UserSelectList" class="org.aspcfs.modules.admin.base.UserList" scope="request"/>
 <jsp:useBean id="SourceUser" class="org.aspcfs.modules.admin.base.User" scope="request"/>
@@ -29,6 +30,9 @@
 <jsp:useBean id="SourceOpportunities" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
 <jsp:useBean id="SourceOpenOpportunities" class="org.aspcfs.modules.pipeline.base.OpportunityList" scope="request"/>
 <jsp:useBean id="SourceAssignments" class="com.zeroio.iteam.base.AssignmentList" scope="request"/>
+<jsp:useBean id="SourceDocumentStores" class="org.aspcfs.modules.documents.base.DocumentStoreTeamMemberList" scope="request"/>
+<jsp:useBean id="SourcePendingActivities" class="org.aspcfs.modules.contacts.base.CallList" scope="request"/>
+<jsp:useBean id="SourceInProgressActionLists" class="org.aspcfs.modules.actionlist.base.ActionLists" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></SCRIPT>
@@ -39,10 +43,10 @@
     message = "";
     if (form.userId.value == "-1") {
       formTest = false;
-      message = "- User to re-assign from must be selected";
+      message = label("select.user.toreassign","- User to re-assign from must be selected");
     }
     if (!formTest) {
-      alert("Re-assignments could not be made, please check the following:\r\n\r\n" + message);
+      alert(label("alert.reassignments","Re-assignments could not be made, please check the following:\r\n\r\n") + message);
     }
     return formTest;
   }
@@ -51,8 +55,8 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> > 
-Re-assignments
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> > 
+<dhv:label name="Re-assignments">Re-assignments</dhv:label>
 </td>
 </tr>
 </table>
@@ -63,7 +67,7 @@ Re-assignments
     <form name="listView" method="post" action="Reassignments.do?command=Reassign">
     <td align="left" valign="center">
     <% UserSelectList.setJsEvent("onChange=\"javascript:document.forms['listView'].submit();\""); %>
-    User to re-assign data from:&nbsp;<%= UserSelectList.getHtmlSelect("userId", SourceUser.getId()) %>
+    <dhv:label name="calendar.userToReassignDataFrom.colon">User to re-assign data from:</dhv:label>&nbsp;<%= UserSelectList.getHtmlSelect("userId", SourceUser.getId()) %>
     <font color="red">*</font>
     </td>
     </form>
@@ -73,13 +77,13 @@ Re-assignments
 <form name="adminReassign" action="Reassignments.do?command=DoReassign" method="post" onSubmit="return doCheck(this);">
   <tr>
     <th nowrap>
-      <strong>Re-assign</strong>
+      <strong><dhv:label name="calendar.reassign">Re-assign</dhv:label></strong>
     </th>
     <th width="150" nowrap>
-      <strong>From User</strong>
+      <strong><dhv:label name="calendar.fromUser">From User</dhv:label></strong>
     </th>
     <th width="150" nowrap>
-      <strong>To User</strong>
+      <strong><dhv:label name="calendar.toUser">To User</dhv:label></strong>
     </th>
   </tr>
 <% int rowid = 0; %>
@@ -87,13 +91,13 @@ Re-assignments
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
-      Accounts (<%= SourceAccounts.size() %>)
+      <dhv:label name="calendar.Accounts">Accounts</dhv:label> (<%= SourceAccounts.size() %>)
 		</td>
     <td valign="top" nowrap>
     <% if (SourceUser.getId() > -1) { %>
       <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  None Selected
+		 <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
     <%}%>
     </td>
 		<td valign="top" nowrap>
@@ -105,13 +109,14 @@ Re-assignments
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
-      Contacts (<%= SourceContacts.size() %>)
+      <dhv:label name="accounts.Contacts">Contacts</dhv:label>
+      (<%= SourceContacts.size() %>)
 		</td>
     <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
 		  <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  None Selected
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
     <%}%>
     </td>
 		<td valign="top" nowrap>
@@ -122,13 +127,13 @@ Re-assignments
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
-      Opportunities (Open Only) (<%= SourceOpenOpportunities.size() %>)
+      <dhv:label name="calendar.opportunities.openOnly.brackets">Opportunities (Open Only)</dhv:label> (<%= SourceOpenOpportunities.size() %>)
 		</td>
     <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
 		  <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  None Selected
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
     <%}%>
     </td>
 		<td valign="top" nowrap>
@@ -139,13 +144,13 @@ Re-assignments
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
-      Opportunities (Open &amp; Closed) (<%= SourceOpportunities.size() %>)
+      <dhv:label name="calendar.opportunities.openAndClosed.brackets" param="amp=&amp;">Opportunities (Open &amp; Closed)</dhv:label> (<%= SourceOpportunities.size() %>)
 		</td>
     <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
 		  <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  None Selected
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
     <%}%>
     </td>
 		<td valign="top" nowrap>
@@ -156,13 +161,13 @@ Re-assignments
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
-      Project Activities (Incomplete) (<%= SourceAssignments.size() %>)
+      <dhv:label name="calendar.projectActivities.incomplete.brackets">Project Activities (Incomplete)</dhv:label> (<%= SourceAssignments.size() %>)
 		</td>
     <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
 		  <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  None Selected
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
     <%}%>
     </td>
 		<td valign="top" nowrap>
@@ -173,13 +178,13 @@ Re-assignments
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
-      Account Revenue (<%= SourceRevenue.size() %>)
+      <dhv:label name="calendar.accountRevenue">Account Revenue</dhv:label> (<%= SourceRevenue.size() %>)
 		</td>
     <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
 		  <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  None Selected
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
     <%}%>
     </td>
 		<td valign="top" nowrap>
@@ -190,41 +195,93 @@ Re-assignments
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
-      <dhv:label name="tickets.tickets">Tickets</dhv:label> (Open) (<%= SourceOpenTickets.size() %>)
+      <dhv:label name="calendar.tickets.open.brackets">Tickets (Open)</dhv:label> (<%= SourceOpenTickets.size() %>)
 		</td>
     <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
 		  <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  None Selected
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
     <%}%>
     </td>
 		<td valign="top" nowrap>
       <%= UserList.getHtmlSelect("ownerToOpenTickets") %>
     </td>
   </tr>
-<%-- Users --%>
+<%-- Document Stores (Open) --%>
 <% rowid = (rowid != 1?1:2); %>
   <tr class="row<%= rowid %>">
 		<td valign="top">
-      Users Reporting-to (<%= SourceUsers.size() %>)
+      <%--<dhv:label name="tickets.tickets">Document Stores</dhv:label> (Open) (<%= SourceDocumentStores.size() %>)--%>
+      <dhv:label name="calendar.documentStores">Document Stores</dhv:label> (<%= SourceDocumentStores.size() %>)
 		</td>
     <td valign="top" nowrap>
 		<% if (SourceUser.getId() > -1) { %>
 		  <%= SourceUser.getContact().getNameLastFirst() %>
     <%} else {%>
-		  None Selected
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+    <%}%>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToOpenDocumentStores") %>
+    </td>
+  </tr>
+<%-- Users --%>
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      <dhv:label name="calendar.users.reportingTo">Users Reporting-to</dhv:label> (<%= SourceUsers.size() %>)
+		</td>
+    <td valign="top" nowrap>
+		<% if (SourceUser.getId() > -1) { %>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
+    <%} else {%>
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
     <%}%>
     </td>
 		<td valign="top" nowrap>
       <%= UserList.getHtmlSelect("ownerToUsers") %>
     </td>
   </tr>  
+<%-- Activities (Pending) --%>
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      <dhv:label name="accounts.accounts_contacts_calls_list.PendingActivities">Pending Activities</dhv:label> (<%= SourcePendingActivities.size() %>)
+		</td>
+    <td valign="top" nowrap>
+		<% if (SourceUser.getId() > -1) { %>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
+    <%} else {%>
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+    <%}%>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToPendingActivities") %>
+    </td>
+  </tr>
+<%-- In Progress Action Lists --%>
+<% rowid = (rowid != 1?1:2); %>
+  <tr class="row<%= rowid %>">
+		<td valign="top">
+      <dhv:label name="actionlists.actionListsInProgress">Action Lists (In Progress)</dhv:label> (<%= SourceInProgressActionLists.size() %>)
+		</td>
+    <td valign="top" nowrap>
+		<% if (SourceUser.getId() > -1) { %>
+		  <%= SourceUser.getContact().getNameLastFirst() %>
+    <%} else {%>
+		  <dhv:label name="accounts.accounts_add.NoneSelected">None Selected</dhv:label>
+    <%}%>
+    </td>
+		<td valign="top" nowrap>
+      <%= UserList.getHtmlSelect("ownerToActionLists") %>
+    </td>
+  </tr>
 </table>
 &nbsp;<br>
 <dhv:permission name="myhomepage-reassign-edit">
-<input type="submit" value="Update" />
-<input type="button" value="Cancel" onClick="javascript:window.location.href='MyCFS.do?command=Home'" />
+<input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" />
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='MyCFS.do?command=Home'" />
 <input type="hidden" name="userId" value="<%= SourceUser.getId() %>" />
 </dhv:permission>
 </form>

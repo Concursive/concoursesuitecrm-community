@@ -1,0 +1,144 @@
+#!/bin/sh
+//usr/bin/true; exec java -classpath .:$CATALINA_HOME/common/lib/servlet-api.jar:lib/bsh.jar:lib/bcprov-jdk14-121.jar:build/lib/aspcfs.jar bsh.Interpreter "$0" "$@"
+
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.FileUtils;
+import org.aspcfs.utils.StringHelper;
+import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.*;
+
+String CRLF = System.getProperty("line.separator");
+String fs = System.getProperty("file.separator");
+Map preferences = new LinkedHashMap();
+Map defaultPrefs = new LinkedHashMap();
+
+void translateDictionary(File prefsFile) {
+  if (1 == 1) {
+    // Load the check file XML into corresponding maps
+    XMLUtils xml = new XMLUtils(prefsFile);
+    //Traverse the prefs and add the config nodes to the LinkedHashMap,
+    //then for each config, add the param nodes into a child LinkedHashMap.
+    //This will provide quick access to the values, and will allow an
+    //editor to display the fields as ordered in the XML file
+    NodeList configNodes = xml.getDocumentElement().getElementsByTagName("config");
+    for (int i = 0; i < configNodes.getLength(); i++) {
+      Node configNode = configNodes.item(i);
+      if (configNode != null &&
+          configNode.getNodeType() == Node.ELEMENT_NODE &&
+          "config".equals(((Element) configNode).getTagName())) {
+        //For each config name, create a map for each of the params
+        String configName = ((Element) configNode).getAttribute("name");
+        Map preferenceGroup = null;
+        if (configName != null) {
+          if (preferences.containsKey(configName)) {
+            preferenceGroup = (LinkedHashMap) preferences.get(configName);
+          } else {
+            preferenceGroup = new LinkedHashMap();
+            preferences.put(configName, preferenceGroup);
+          }
+          //Process the params for this config
+          NodeList paramNodes = ((Element) configNode).getElementsByTagName("param");
+          for (int j = 0; j < paramNodes.getLength(); j++) {
+            Node paramNode = paramNodes.item(j);
+            if (paramNode != null &&
+                paramNode.getNodeType() == Node.ELEMENT_NODE &&
+                "param".equals(((Element) paramNode).getTagName())) {
+              String paramName = ((Element) paramNode).getAttribute("name");
+              print("Added pref " + configName + ":" + paramName);
+              if (paramName != null) {
+                preferenceGroup.put(paramName, paramNode);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  // Read the default dictionary, replace the found terms and output a new file
+  if (1 == 1) {
+    print("");
+    // Load the check file XML into corresponding maps
+    File sourceFile = new File("src/languages/dictionary_en_US.xml");
+    XMLUtils xml = new XMLUtils(sourceFile);
+    // Prepare writing out the changes
+    BufferedWriter out = new BufferedWriter(new FileWriter("src/languages/dictionary_de_DE.xml"));
+    out.write("<aspcfs>" + CRLF);
+    //Traverse the prefs and add the config nodes to the LinkedHashMap,
+    //then for each config, add the param nodes into a child LinkedHashMap.
+    //This will provide quick access to the values, and will allow an
+    //editor to display the fields as ordered in the XML file
+    NodeList configNodes = xml.getDocumentElement().getElementsByTagName("config");
+    for (int i = 0; i < configNodes.getLength(); i++) {
+      Node configNode = configNodes.item(i);
+      if (configNode != null &&
+          configNode.getNodeType() == Node.ELEMENT_NODE &&
+          "config".equals(((Element) configNode).getTagName())) {
+        //For each config name, create a map for each of the params
+        String configName = ((Element) configNode).getAttribute("name");
+        Map preferenceGroup = null;
+        if (configName != null) {
+          out.write("  <config name=\"" + configName + "\" enabled=\"true\">" + CRLF);
+          if (defaultPrefs.containsKey(configName)) {
+            preferenceGroup = (LinkedHashMap) defaultPrefs.get(configName);
+          } else {
+            preferenceGroup = new LinkedHashMap();
+            defaultPrefs.put(configName, preferenceGroup);
+          }
+          //Process the params for this config
+          NodeList paramNodes = ((Element) configNode).getElementsByTagName("param");
+          for (int j = 0; j < paramNodes.getLength(); j++) {
+            Node paramNode = paramNodes.item(j);
+            if (paramNode != null &&
+                paramNode.getNodeType() == Node.ELEMENT_NODE &&
+                "param".equals(((Element) paramNode).getTagName())) {
+              String paramName = ((Element) paramNode).getAttribute("name");
+              //print("Added pref " + configName + ":" + paramName);
+              if (paramName != null) {
+                String translatedValue = null;
+                Map previousGroup = (Map) preferences.get(configName);
+                if (previousGroup != null) {
+                  Node previousParameter = (Node) previousGroup.get(paramName);
+                  if (previousParameter != null) {
+                    translatedValue = XMLUtils.getNodeText(XMLUtils.getFirstChild((Element) previousParameter, "value"));
+                  }
+                }
+                if (translatedValue == null) {
+                  translatedValue = XMLUtils.getNodeText(XMLUtils.getFirstChild((Element) paramNode, "value"));
+                }
+                out.write("    <param name=\"" + paramName+ "\">" + CRLF);
+                out.write("      <value><![CDATA[" + translatedValue + "]]></value>" + CRLF);
+                out.write("    </param>" + CRLF);
+              }
+            }
+          }
+          out.write("  </config>" + CRLF);
+        }
+      }
+    }
+    out.write("</aspcfs>" + CRLF);
+    out.close();
+  }
+}
+
+if (bsh.args.length == 0) {
+  print("Usage:");
+  print("  <translated dictionary file to compare>");
+  print("");
+  System.exit(0);
+}
+
+// Check the specified file
+String fileName = bsh.args[0];
+File file = new File(fileName);
+if (!file.isFile()) {
+  print("A dictionary was not specified.");
+  System.exit(0);
+}
+if (file.toString().endsWith("dictionary.xml")) {
+  print("The default dictionary cannot be compared to itself.");
+  System.exit(0);
+}
+translateDictionary(file);
+print("Done.");
+

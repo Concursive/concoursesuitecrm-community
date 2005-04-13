@@ -25,35 +25,35 @@
 <jsp:useBean id="ConstantId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="document.forms[0].name.focus();">
+<body onLoad="document.details.name.focus();">
 <form name="details" action="AdminFieldsGroup.do?command=UpdateGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&auto-populate=true" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>"><%= PermissionCategory.getCategory() %></a> >
-<a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
-<a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>">Folder</a> >
-New Group
+<a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>"><dhv:label name="admin.customFolders">Custom Folders</dhv:label></a> > 
+<a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>"><dhv:label name="accounts.accounts_documents_folders_add.Folder">Folder</dhv:label></a> >
+<dhv:label name="admin.newGroup">New Group</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:formMessage showSpace="false" />
-<strong>Module:</strong> <%=PermissionCategory.getCategory()%><br />
-<strong>Folder:</strong> <%= toHtml(Category.getName()) %><br />
+<strong><dhv:label name="admin.module.colon">Module:</dhv:label></strong> <%=PermissionCategory.getCategory()%><br />
+<strong><dhv:label name="accounts.accounts_documents_folders_add.Folder.colon">Folder:</dhv:label></strong> <%= toHtml(Category.getName()) %><br />
 <br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      Add a Group
+      <dhv:label name="admin.addGroup">Add a Group</dhv:label>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Group Name
+      <dhv:label name="admin.groupName">Group Name</dhv:label>
     </td>
     <td>
       <input type="text" name="name" maxlength="200" value="<%= toHtmlValue(Group.getName()) %>"><font color="red">*</font>
@@ -65,7 +65,7 @@ New Group
 <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
 <input type="hidden" name="moduleId" value="<%= ConstantId %>">
 <input type="hidden" name="groupId" value="<%= Group.getId() %>">
-<input type="submit" value="Update">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>'">
+<input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>'">
 </form>
 </body>

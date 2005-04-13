@@ -53,15 +53,18 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   private int topOnly = Constants.UNDEFINED;
   private int hasCategories = Constants.UNDEFINED;
   //other supplimentary data
+  private String name = null;
+  private String abbreviation = null;
+  private String sku = null;
   private String categoryName = null;
-  private double msrpAmount = 0.0;
-  private double priceAmount = 0.0;
-  private double recurringAmount = 0.0;
   private String parentName = null;
   private String typeName = null;
   private int categoryId = -1;
+  private int serviceContractId = -1;
   //resources
   private boolean buildResources = false;
+  private boolean buildActivePrice = false;
+
   private String optionText = null;
   // this will have a valid value if all the products have the same option
   private String optionPrice = null;
@@ -72,9 +75,195 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   private boolean optionMatch = true;
   // determines if the products in the list have the same option
   private boolean optionPriceMatch = true;
-
   // determines if the products in the list have the same option which has a single price
   protected HashMap selectedItems = null;
+  // display top level products only
+  protected int buildTopLevelOnly = Constants.UNDEFINED;
+  // display enabled products that have a valid price only
+  protected int buildEnabledProductsOnly = Constants.UNDEFINED;
+
+
+  /**
+   *  Gets the serviceContractId attribute of the ProductCatalogList object
+   *
+   *@return    The serviceContractId value
+   */
+  public int getServiceContractId() {
+    return serviceContractId;
+  }
+
+
+  /**
+   *  Sets the serviceContractId attribute of the ProductCatalogList object
+   *
+   *@param  tmp  The new serviceContractId value
+   */
+  public void setServiceContractId(int tmp) {
+    this.serviceContractId = tmp;
+  }
+
+
+  /**
+   *  Sets the serviceContractId attribute of the ProductCatalogList object
+   *
+   *@param  tmp  The new serviceContractId value
+   */
+  public void setServiceContractId(String tmp) {
+    this.serviceContractId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the buildActivePrice attribute of the ProductCatalogList object
+   *
+   *@return    The buildActivePrice value
+   */
+  public boolean getBuildActivePrice() {
+    return buildActivePrice;
+  }
+
+
+  /**
+   *  Sets the buildActivePrice attribute of the ProductCatalogList object
+   *
+   *@param  tmp  The new buildActivePrice value
+   */
+  public void setBuildActivePrice(boolean tmp) {
+    this.buildActivePrice = tmp;
+  }
+
+
+  /**
+   *  Sets the buildActivePrice attribute of the ProductCatalogList object
+   *
+   *@param  tmp  The new buildActivePrice value
+   */
+  public void setBuildActivePrice(String tmp) {
+    this.buildActivePrice = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the name attribute of the ProductCatalogList object
+   *
+   *@param  tmp  The new name value
+   */
+  public void setName(String tmp) {
+    this.name = tmp;
+  }
+
+
+  /**
+   *  Sets the abbreviation attribute of the ProductCatalogList object
+   *
+   *@param  tmp  The new abbreviation value
+   */
+  public void setAbbreviation(String tmp) {
+    this.abbreviation = tmp;
+  }
+
+
+  /**
+   *  Sets the sku attribute of the ProductCatalogList object
+   *
+   *@param  tmp  The new sku value
+   */
+  public void setSku(String tmp) {
+    this.sku = tmp;
+  }
+
+
+  /**
+   *  Sets the buildTopLevelOnly attribute of the ProductCatalogList object
+   *
+   *@param  tmp  The new buildTopLevelOnly value
+   */
+  public void setBuildTopLevelOnly(int tmp) {
+    this.buildTopLevelOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the buildTopLevelOnly attribute of the ProductCatalogList object
+   *
+   *@param  tmp  The new buildTopLevelOnly value
+   */
+  public void setBuildTopLevelOnly(String tmp) {
+    this.buildTopLevelOnly = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the buildEnabledProductsOnly attribute of the ProductCatalogList
+   *  object
+   *
+   *@param  tmp  The new buildEnabledProductsOnly value
+   */
+  public void setBuildEnabledProductsOnly(int tmp) {
+    this.buildEnabledProductsOnly = tmp;
+  }
+
+
+  /**
+   *  Sets the buildEnabledProductsOnly attribute of the ProductCatalogList
+   *  object
+   *
+   *@param  tmp  The new buildEnabledProductsOnly value
+   */
+  public void setBuildEnabledProductsOnly(String tmp) {
+    this.buildEnabledProductsOnly = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the buildTopLevelOnly attribute of the ProductCatalogList object
+   *
+   *@return    The buildTopLevelOnly value
+   */
+  public int getBuildTopLevelOnly() {
+    return buildTopLevelOnly;
+  }
+
+
+  /**
+   *  Gets the buildEnabledProductsOnly attribute of the ProductCatalogList
+   *  object
+   *
+   *@return    The buildEnabledProductsOnly value
+   */
+  public int getBuildEnabledProductsOnly() {
+    return buildEnabledProductsOnly;
+  }
+
+
+  /**
+   *  Gets the name attribute of the ProductCatalogList object
+   *
+   *@return    The name value
+   */
+  public String getName() {
+    return name;
+  }
+
+
+  /**
+   *  Gets the abbreviation attribute of the ProductCatalogList object
+   *
+   *@return    The abbreviation value
+   */
+  public String getAbbreviation() {
+    return abbreviation;
+  }
+
+
+  /**
+   *  Gets the sku attribute of the ProductCatalogList object
+   *
+   *@return    The sku value
+   */
+  public String getSku() {
+    return sku;
+  }
 
 
   /**
@@ -399,36 +588,6 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Gets the msrpAmount attribute of the ProductCatalogList object
-   *
-   *@return    The msrpAmount value
-   */
-  public double getMsrpAmount() {
-    return msrpAmount;
-  }
-
-
-  /**
-   *  Gets the priceAmount attribute of the ProductCatalogList object
-   *
-   *@return    The priceAmount value
-   */
-  public double getPriceAmount() {
-    return priceAmount;
-  }
-
-
-  /**
-   *  Gets the recurringAmount attribute of the ProductCatalogList object
-   *
-   *@return    The recurringAmount value
-   */
-  public double getRecurringAmount() {
-    return recurringAmount;
-  }
-
-
-  /**
    *  Gets the parentName attribute of the ProductCatalogList object
    *
    *@return    The parentName value
@@ -461,7 +620,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Gets the categoryId attribute of the ProductCatalogList object
    *
-   *@return    The publicationId value
+   *@return    The categoryId value
    */
   public int getCategoryId() {
     return categoryId;
@@ -649,36 +808,6 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
 
 
   /**
-   *  Sets the msrpAmount attribute of the ProductCatalogList object
-   *
-   *@param  tmp  The new msrpAmount value
-   */
-  public void setMsrpAmount(double tmp) {
-    this.msrpAmount = tmp;
-  }
-
-
-  /**
-   *  Sets the priceAmount attribute of the ProductCatalogList object
-   *
-   *@param  tmp  The new priceAmount value
-   */
-  public void setPriceAmount(double tmp) {
-    this.priceAmount = tmp;
-  }
-
-
-  /**
-   *  Sets the recurringAmount attribute of the ProductCatalogList object
-   *
-   *@param  tmp  The new recurringAmount value
-   */
-  public void setRecurringAmount(double tmp) {
-    this.recurringAmount = tmp;
-  }
-
-
-  /**
    *  Sets the parentName attribute of the ProductCatalogList object
    *
    *@param  tmp  The new parentName value
@@ -721,7 +850,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the categoryId attribute of the ProductCatalogList object
    *
-   *@param  tmp  The new publicationId value
+   *@param  tmp  The new categoryId value
    */
   public void setCategoryId(int tmp) {
     this.categoryId = tmp;
@@ -731,7 +860,7 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
   /**
    *  Sets the categoryId attribute of the ProductCatalogList object
    *
-   *@param  tmp  The new publicationId value
+   *@param  tmp  The new categoryId value
    */
   public void setCategoryId(String tmp) {
     this.categoryId = Integer.parseInt(tmp);
@@ -763,19 +892,13 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     //Need to build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM product_catalog pctlg " +
-        " LEFT JOIN product_catalog_category_map AS pccmap " +
-        " ON ( pctlg.product_id = pccmap.product_id ) " +
-        " LEFT JOIN product_category AS pctgy " +
-        " ON ( pccmap.category_id =  pctgy.category_id ) " +
-        " LEFT JOIN product_catalog_pricing AS pctlgpricing " +
-        " ON ( pctlg.product_id = pctlgpricing.product_id ) " +
-        " LEFT JOIN product_catalog AS pctlg2 " +
-        " ON ( pctlg.parent_id = pctlg2.product_id ) " +
-        " LEFT JOIN lookup_product_type AS pctlgtype " +
-        " ON ( pctlg.type_id = pctlgtype.code ) " +
-        " WHERE pctlg.product_id > 0  "
-        );
+        "FROM product_catalog AS pctlg " +
+        "LEFT JOIN product_catalog AS pctlg2 ON ( pctlg.parent_id = pctlg2.product_id ) " +
+        "LEFT JOIN lookup_product_type AS pctlgtype ON ( pctlg.type_id = pctlgtype.code ) " +
+        "LEFT JOIN lookup_product_format AS pctlgformat ON ( pctlg.format_id = pctlgformat.code ) " +
+        "LEFT JOIN lookup_product_shipping AS pctlgshipping ON ( pctlg.shipping_id = pctlgshipping.code ) " +
+        "LEFT JOIN lookup_product_ship_time AS pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) " +
+        "WHERE pctlg.product_id > 0 ");
 
     createFilter(sqlFilter, db);
 
@@ -791,6 +914,22 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       rs.close();
       pst.close();
 
+      //Determine the offset, based on the filter, for the first record to show
+      if (!pagedListInfo.getCurrentLetter().equals("")) {
+        pst = db.prepareStatement(sqlCount.toString() +
+            sqlFilter.toString() +
+            "AND lower(pctlg.product_name) < ? ");
+        items = prepareFilter(pst);
+        pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
+        rs = pst.executeQuery();
+        if (rs.next()) {
+          int offsetCount = rs.getInt("recordcount");
+          pagedListInfo.setCurrentOffset(offsetCount);
+        }
+        rs.close();
+        pst.close();
+      }
+
       //Determine column to sort by
       pagedListInfo.setDefaultSort("pctlg.product_name", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
@@ -804,29 +943,19 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       sqlSelect.append(" SELECT ");
     }
     sqlSelect.append(
-        " pctlg.*, " +
-        " pctgy.category_id AS category_id, " +
-        " pctgy.category_name AS category_name, " +
-        " pctlgpricing.msrp_amount AS msrp_amount, " +
-        " pctlgpricing.price_amount AS price_amount, " +
-        " pctlgpricing.recurring_amount AS recurring_amount, " +
-        " pctlgpricing.start_date AS price_start_date, " +
-        " pctlgpricing.expiration_date AS price_end_date, " +
-        " pctlg2.product_name AS parent_name, " +
-        " pctlgtype.description AS type_name " +
-        " FROM product_catalog AS pctlg " +
-        " LEFT JOIN product_catalog_category_map AS pccmap " +
-        " ON ( pctlg.product_id = pccmap.product_id ) " +
-        " LEFT JOIN product_category AS pctgy " +
-        " ON ( pccmap.category_id =  pctgy.category_id ) " +
-        " LEFT JOIN product_catalog_pricing AS pctlgpricing " +
-        " ON ( pctlg.product_id = pctlgpricing.product_id ) " +
-        " LEFT JOIN product_catalog AS pctlg2 " +
-        " ON ( pctlg.parent_id = pctlg2.product_id ) " +
-        " LEFT JOIN lookup_product_type AS pctlgtype " +
-        " ON ( pctlg.type_id = pctlgtype.code ) " +
-        " WHERE pctlg.product_id > 0  "
-        );
+        "pctlg.*, " +
+        "pctlg2.product_name AS parent_name, " +
+        "pctlgtype.description AS type_name, " +
+        "pctlgformat.description AS format_name, " +
+        "pctlgshipping.description AS shipping_name, " +
+        "pctlgshiptime.description AS shiptime_name " +
+        "FROM product_catalog AS pctlg " +
+        "LEFT JOIN product_catalog AS pctlg2 ON ( pctlg.parent_id = pctlg2.product_id ) " +
+        "LEFT JOIN lookup_product_type AS pctlgtype ON ( pctlg.type_id = pctlgtype.code ) " +
+        "LEFT JOIN lookup_product_format AS pctlgformat ON ( pctlg.format_id = pctlgformat.code ) " +
+        "LEFT JOIN lookup_product_shipping AS pctlgshipping ON ( pctlg.shipping_id = pctlgshipping.code ) " +
+        "LEFT JOIN lookup_product_ship_time AS pctlgshiptime ON ( pctlg.estimated_ship_time = pctlgshiptime.code ) " +
+        "WHERE pctlg.product_id > 0 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -847,21 +976,30 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     rs.close();
     pst.close();
     // Each product's option list is generated
-    if (buildResources) {
+    if (buildResources || buildActivePrice) {
       Iterator i = this.iterator();
       while (i.hasNext()) {
         ProductCatalog thisProduct = (ProductCatalog) i.next();
-        thisProduct.buildProductOptions(db);
+        if (buildResources) {
+          thisProduct.buildOptions(db);
+        }
+        if (buildActivePrice) {
+          thisProduct.buildActivePrice(db);
+        }
       }
-      determineMatch();
+      //TODO: remove this adsjet specific stuff
+      //determineMatch();
     }
+    //TODO: remove this adsjet specific stuff
     // detemine the product's actual category trail since it might
     // exist several levels down the category tree
-    Iterator j = this.iterator();
-    while (j.hasNext()) {
-      ProductCatalog thisProduct = (ProductCatalog) j.next();
-      thisProduct.determineActualCategory(db);
-    }
+    /*
+     *  Iterator j = this.iterator();
+     *  while (j.hasNext()) {
+     *  ProductCatalog thisProduct = (ProductCatalog) j.next();
+     *  thisProduct.determineActualCategory(db);
+     *  }
+     */
   }
 
 
@@ -881,45 +1019,48 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
     while (productIterator.hasNext()) {
       // retrieve each product from this product list
       ProductCatalog thisProduct = (ProductCatalog) productIterator.next();
-      Iterator optionIterator = thisProduct.getProductOptionList().iterator();
-      int countOption = 0;
-      // determines the total number of options a product has
-      while (optionIterator.hasNext()) {
-        // retrieve each option and determine if it is the same
-        count++;
-        countOption++;
-        ProductOption thisOption = (ProductOption) optionIterator.next();
-        if (count == 1) {
-          optionId = thisOption.getId();
-        } else {
-          if (optionId != thisOption.getId()) {
-            this.optionMatch = false;
-          }
-        }
-        Iterator valueIterator = thisOption.getOptionValuesList().iterator();
-        while (valueIterator.hasNext()) {
-          valueCount++;
-          ProductOptionValues thisValue = (ProductOptionValues) valueIterator.next();
-          optionPrice = Double.toString(thisValue.getMsrpAmount());
-          if (valueCount == 1) {
-            value = Double.toString(thisValue.getMsrpAmount());
+      ProductOptionList optionList = thisProduct.getOptionList();
+      if (optionList != null) {
+        Iterator optionIterator = optionList.iterator();
+        int countOption = 0;
+        // determines the total number of options a product has
+        while (optionIterator.hasNext()) {
+          // retrieve each option and determine if it is the same
+          count++;
+          countOption++;
+          ProductOption thisOption = (ProductOption) optionIterator.next();
+          if (count == 1) {
+            optionId = thisOption.getId();
           } else {
-            if (!value.equals(Double.toString(thisValue.getMsrpAmount()))) {
-              this.optionPriceMatch = false;
+            if (optionId != thisOption.getId()) {
+              this.optionMatch = false;
             }
           }
-          if (thisValue.getMsrpAmount() != 0) {
-            this.optionText = thisValue.getDescription();
-          } else {
-            this.optionDefaultText = thisValue.getDescription();
+          Iterator valueIterator = thisOption.getOptionValuesList().iterator();
+          while (valueIterator.hasNext()) {
+            valueCount++;
+            ProductOptionValues thisValue = (ProductOptionValues) valueIterator.next();
+            optionPrice = Double.toString(thisValue.getMsrpAmount());
+            if (valueCount == 1) {
+              value = Double.toString(thisValue.getMsrpAmount());
+            } else {
+              if (!value.equals(Double.toString(thisValue.getMsrpAmount()))) {
+                this.optionPriceMatch = false;
+              }
+            }
+            if (thisValue.getMsrpAmount() != 0) {
+              this.optionText = thisValue.getDescription();
+            } else {
+              this.optionDefaultText = thisValue.getDescription();
+            }
           }
         }
-      }
-      // if any product in the list does not have options then
-      // optionMatch should be false
-      if (countOption == 0) {
-        this.optionMatch = false;
-        this.optionPriceMatch = false;
+        // if any product in the list does not have options then
+        // optionMatch should be false
+        if (countOption == 0) {
+          this.optionMatch = false;
+          this.optionPriceMatch = false;
+        }
       }
     }
     if (!this.optionMatch) {
@@ -975,8 +1116,26 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       sqlFilter.append(" AND pctlg.type_id = ? ");
     }
 
-    if (categoryName != null) {
-      sqlFilter.append(" AND pctgy.category_name = ? ");
+    if (name != null) {
+      if (name.indexOf("%") >= 0) {
+        sqlFilter.append("AND lower(pctlg.product_name) like lower(?) ");
+      } else {
+        sqlFilter.append("AND lower(pctlg.product_name) = lower(?) ");
+      }
+    }
+    if (abbreviation != null) {
+      if (abbreviation.indexOf("%") >= 0) {
+        sqlFilter.append("AND lower(pctlg.abbreviation) like lower(?) ");
+      } else {
+        sqlFilter.append("AND lower(pctlg.abbreviation) = lower(?) ");
+      }
+    }
+    if (sku != null) {
+      if (sku.indexOf("%") >= 0) {
+        sqlFilter.append("AND lower(pctlg.sku) like lower(?) ");
+      } else {
+        sqlFilter.append("AND lower(pctlg.sku) = lower(?) ");
+      }
     }
 
     if (parentName != null) {
@@ -987,18 +1146,58 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       sqlFilter.append(" AND pctlgtype.description = ? ");
     }
 
-    if (categoryId != -1) {
-      sqlFilter.append(" AND pctgy.category_id = ? ");
+    if (categoryId > -1) {
+      sqlFilter.append("AND pctlg.product_id IN ( " +
+          "  SELECT product_id FROM product_catalog_category_map " +
+          "  WHERE category_id = ? )");
     }
 
+    if (serviceContractId > -1) {
+      sqlFilter.append("AND pctlg.product_id IN ( " + 
+                                "SELECT link_product_id FROM service_contract_products " +
+                                "WHERE link_contract_id = ? )");
+    }
+    
     if (hasCategories == Constants.TRUE) {
       sqlFilter.append(" AND pctlg.product_id IN ( " +
-          " SELECT product_id FROM product_catalog_category_map ) "
+          " SELECT pcmap1.product_id FROM product_catalog_category_map AS pcmap1 ) "
           );
     } else if (hasCategories == Constants.FALSE) {
       sqlFilter.append(" AND pctlg.product_id NOT IN ( " +
-          " SELECT product_id FROM product_catalog_category_map )"
+          " SELECT pcmap1.product_id FROM product_catalog_category_map AS pcmap1 )"
           );
+    }
+
+    if (buildTopLevelOnly == Constants.TRUE) {
+      sqlFilter.append("AND pctlg.parent_id IS NULL ");
+    } else if (buildTopLevelOnly == Constants.FALSE) {
+      sqlFilter.append("AND pctlg.parent_id IS NOT NULL ");
+    }
+
+    if (buildEnabledProductsOnly != Constants.UNDEFINED) {
+      sqlFilter.append(
+          "AND pctlg.product_id IN (( SELECT p.product_id " +
+          " FROM product_catalog AS p LEFT JOIN product_catalog_pricing AS price ON " +
+          " ( p.product_id = price.product_id ) " +
+          " WHERE p.product_id > 0 ");
+      if (buildEnabledProductsOnly == Constants.TRUE) {
+        sqlFilter.append(
+            " AND p.enabled = ? " +
+            " AND price.enabled = ? " +
+            " AND (p.start_date < ? OR p.start_date IS NULL) " +
+            " AND (p.expiration_date IS NULL OR p.expiration_date > ?) " +
+            " AND (price.start_date < ? OR price.start_date IS NULL) " +
+            " AND (price.expiration_date IS NULL OR price.expiration_date > ?) " +
+            " )) ");
+      } else if (buildEnabledProductsOnly == Constants.FALSE) {
+        sqlFilter.append(
+            " AND (p.enabled = ? " +
+            " OR price.enabled = ? " +
+            " OR p.start_date > ? OR p.expiration_date < ? " +
+            " OR price.start_date > ? OR price.expiration_date < ?) " +
+            " ) OR pctlg.product_id NOT IN (SELECT pp.product_id " +
+            " FROM product_catalog_pricing AS pp WHERE pp.product_id > 0 ))");
+      }
     }
     //Sync API
     if (syncType == Constants.SYNC_INSERTS) {
@@ -1058,8 +1257,16 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       pst.setInt(++i, typeId);
     }
 
-    if (categoryName != null) {
-      pst.setString(++i, categoryName);
+    if (name != null) {
+      pst.setString(++i, name);
+    }
+
+    if (abbreviation != null) {
+      pst.setString(++i, abbreviation);
+    }
+
+    if (sku != null) {
+      pst.setString(++i, sku);
     }
 
     if (parentName != null) {
@@ -1070,8 +1277,30 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       pst.setString(++i, typeName);
     }
 
-    if (categoryId != -1) {
+    if (categoryId > -1) {
       pst.setInt(++i, categoryId);
+    }
+
+    if (serviceContractId > -1) {
+      pst.setInt(++i, serviceContractId);
+    }
+    
+    if (buildEnabledProductsOnly == Constants.TRUE) {
+      pst.setBoolean(++i, true);
+      pst.setBoolean(++i, true);
+      Timestamp currentTimestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+      pst.setTimestamp(++i, currentTimestamp);
+      pst.setTimestamp(++i, currentTimestamp);
+      pst.setTimestamp(++i, currentTimestamp);
+      pst.setTimestamp(++i, currentTimestamp);
+    } else if (buildEnabledProductsOnly == Constants.FALSE) {
+      pst.setBoolean(++i, false);
+      pst.setBoolean(++i, false);
+      Timestamp currentTimestamp = new Timestamp(Calendar.getInstance().getTimeInMillis());
+      pst.setTimestamp(++i, currentTimestamp);
+      pst.setTimestamp(++i, currentTimestamp);
+      pst.setTimestamp(++i, currentTimestamp);
+      pst.setTimestamp(++i, currentTimestamp);
     }
 
     //Sync API
@@ -1142,6 +1371,95 @@ public class ProductCatalogList extends ArrayList implements SyncableList {
       }
     }
     return result;
+  }
+
+
+  /**
+   *  Adds a feature to the CategoryMappings attribute of the ProductCatalogList
+   *  object
+   *
+   *@param  db                The feature to be added to the CategoryMappings
+   *      attribute
+   *@param  categoryId        The feature to be added to the CategoryMappings
+   *      attribute
+   *@exception  SQLException  Description of the Exception
+   */
+  public void addCategoryMapping(Connection db, int categoryId) throws SQLException {
+    if (categoryId == -1) {
+      throw new SQLException("Invalid category ID specified");
+    }
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ProductCatalog thisCatalog = (ProductCatalog) i.next();
+      thisCatalog.addCategoryMapping(db, categoryId);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  categoryId        Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void removeCategoryMapping(Connection db, int categoryId) throws SQLException {
+    if (categoryId == -1) {
+      throw new SQLException("Invalid Category ID specified");
+    }
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ProductCatalog thisProduct = (ProductCatalog) i.next();
+      thisProduct.removeCategoryMapping(db, categoryId);
+    }
+  }
+
+
+  /**
+   *  Adds a feature to the CategoryMapping attribute of the ProductCatalogList
+   *  object
+   *
+   *@param  db                The feature to be added to the CategoryMapping
+   *      attribute
+   *@param  oldList           The feature to be added to the CategoryMapping
+   *      attribute
+   *@param  categoryId        The feature to be added to the CategoryMapping
+   *      attribute
+   *@exception  SQLException  Description of the Exception
+   */
+  public void addCategoryMapping(Connection db, ProductCatalogList oldList, int categoryId) throws SQLException {
+    try {
+      db.setAutoCommit(false);
+      // Remove the mappings of elements present in the oldList and not this list
+      Iterator i = oldList.iterator();
+      while (i.hasNext()) {
+        ProductCatalog oldProduct = (ProductCatalog) i.next();
+        boolean exists = false;
+        Iterator j = this.iterator();
+        while (j.hasNext()) {
+          ProductCatalog thisProduct = (ProductCatalog) j.next();
+          if (oldProduct.getId() == thisProduct.getId()) {
+            exists = true;
+            j.remove();
+            break;
+          }
+        }
+        if (!exists) {
+          // old product does not exist in the new list. hence remove the mapping
+          oldProduct.removeCategoryMapping(db, categoryId);
+        }
+      }
+
+      // Add mappings for the elements now present in this list
+      this.addCategoryMapping(db, categoryId);
+      db.commit();
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      db.rollback();
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
   }
 }
 

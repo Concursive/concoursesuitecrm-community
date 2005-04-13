@@ -15,37 +15,25 @@
  */
 package org.aspcfs.modules.products.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import com.zeroio.iteam.base.FileItem;
-import com.zeroio.iteam.base.FileItemList;
-import org.aspcfs.modules.contacts.base.*;
-import org.aspcfs.modules.troubletickets.base.*;
-import org.aspcfs.modules.tasks.base.TaskList;
-import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.actionlist.base.ActionList;
-import org.aspcfs.modules.actionlist.base.ActionItemLog;
-import org.aspcfs.modules.actionlist.base.ActionItemLogList;
-import org.aspcfs.modules.base.CustomFieldRecordList;
+import org.aspcfs.modules.products.configurator.OptionConfigurator;
+import java.sql.*;
+import java.util.ArrayList;
 
 /**
- *  Options for a Product Catalog.
+ *  Description of the Class
  *
  *@author     partha
  *@created    March 19, 2004
- *@version    $Id$
+ *@version    $Id: ProductOption.java,v 1.4.12.2 2004/11/12 19:55:25 mrajkowski
+ *      Exp $
  */
 public class ProductOption extends GenericBean {
-
   private int id = -1;
+  private String name = null;
   private int configuratorId = -1;
   private int parentId = -1;
   private String shortDescription = null;
@@ -56,15 +44,182 @@ public class ProductOption extends GenericBean {
   private boolean enabled = true;
   private Timestamp startDate = null;
   private Timestamp endDate = null;
-  //other supplimentary fields
-  private int productId = -1;
-
-  private String productName = null;
-  private int resultType = -1;
+  private boolean hasMultiplier = false;
+  private boolean hasRange = false;
   private String parentName = null;
+
+  //configurator properties
+  private String configuratorName = null;
+  private int resultType = -1;
+  private String label = null;
+  private String html = null;
+  private double priceAdjust = 0;
+
+  private int productId = -1;
   // resources
   private boolean buildOptionValues = true;
   private ProductOptionValuesList optionValuesList = null;
+  private boolean buildConfigDetails = false;
+
+
+  /**
+   *  Gets the priceAdjust attribute of the ProductOption object
+   *
+   *@return    The priceAdjust value
+   */
+  public double getPriceAdjust() {
+    return priceAdjust;
+  }
+
+
+  /**
+   *  Sets the priceAdjust attribute of the ProductOption object
+   *
+   *@param  tmp  The new priceAdjust value
+   */
+  public void setPriceAdjust(double tmp) {
+    this.priceAdjust = tmp;
+  }
+
+
+  /**
+   *  Sets the priceAdjust attribute of the ProductOption object
+   *
+   *@param  tmp  The new priceAdjust value
+   */
+  public void setPriceAdjust(String tmp) {
+    this.priceAdjust = Double.parseDouble(tmp);
+  }
+
+
+  /**
+   *  Gets the html attribute of the ProductOption object
+   *
+   *@return    The html value
+   */
+  public String getHtml() {
+    return html;
+  }
+
+
+  /**
+   *  Sets the html attribute of the ProductOption object
+   *
+   *@param  tmp  The new html value
+   */
+  public void setHtml(String tmp) {
+    this.html = tmp;
+  }
+
+
+  /**
+   *  Gets the buildConfigDetails attribute of the ProductOption object
+   *
+   *@return    The buildConfigDetails value
+   */
+  public boolean getBuildConfigDetails() {
+    return buildConfigDetails;
+  }
+
+
+  /**
+   *  Sets the buildConfigDetails attribute of the ProductOption object
+   *
+   *@param  tmp  The new buildConfigDetails value
+   */
+  public void setBuildConfigDetails(boolean tmp) {
+    this.buildConfigDetails = tmp;
+  }
+
+
+  /**
+   *  Sets the buildConfigDetails attribute of the ProductOption object
+   *
+   *@param  tmp  The new buildConfigDetails value
+   */
+  public void setBuildConfigDetails(String tmp) {
+    this.buildConfigDetails = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the label attribute of the ProductOption object
+   *
+   *@return    The label value
+   */
+  public String getLabel() {
+    return label;
+  }
+
+
+  /**
+   *  Sets the label attribute of the ProductOption object
+   *
+   *@param  tmp  The new label value
+   */
+  public void setLabel(String tmp) {
+    this.label = tmp;
+  }
+
+
+  /**
+   *  Sets the hasMultiplier attribute of the ProductOption object
+   *
+   *@param  tmp  The new hasMultiplier value
+   */
+  public void setHasMultiplier(boolean tmp) {
+    this.hasMultiplier = tmp;
+  }
+
+
+  /**
+   *  Sets the hasMultiplier attribute of the ProductOption object
+   *
+   *@param  tmp  The new hasMultiplier value
+   */
+  public void setHasMultiplier(String tmp) {
+    this.hasMultiplier = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the hasRange attribute of the ProductOption object
+   *
+   *@param  tmp  The new hasRange value
+   */
+  public void setHasRange(boolean tmp) {
+    this.hasRange = tmp;
+  }
+
+
+  /**
+   *  Sets the hasRange attribute of the ProductOption object
+   *
+   *@param  tmp  The new hasRange value
+   */
+  public void setHasRange(String tmp) {
+    this.hasRange = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the hasMultiplier attribute of the ProductOption object
+   *
+   *@return    The hasMultiplier value
+   */
+  public boolean getHasMultiplier() {
+    return hasMultiplier;
+  }
+
+
+  /**
+   *  Gets the hasRange attribute of the ProductOption object
+   *
+   *@return    The hasRange value
+   */
+  public boolean getHasRange() {
+    return hasRange;
+  }
 
 
   /**
@@ -87,7 +242,6 @@ public class ProductOption extends GenericBean {
   }
 
 
-
   /**
    *  Gets the productId attribute of the ProductOption object
    *
@@ -95,196 +249,6 @@ public class ProductOption extends GenericBean {
    */
   public int getProductId() {
     return productId;
-  }
-
-
-  /**
-   *  Sets the buildOptionValues attribute of the ProductOption object
-   *
-   *@param  tmp  The new buildOptionValues value
-   */
-  public void setBuildOptionValues(boolean tmp) {
-    this.buildOptionValues = tmp;
-  }
-
-
-  /**
-   *  Sets the buildOptionValues attribute of the ProductOption object
-   *
-   *@param  tmp  The new buildOptionValues value
-   */
-  public void setBuildOptionValues(String tmp) {
-    this.buildOptionValues = DatabaseUtils.parseBoolean(tmp);
-  }
-
-
-  /**
-   *  Sets the optionValuesList attribute of the ProductOption object
-   *
-   *@param  tmp  The new optionValuesList value
-   */
-  public void setOptionValuesList(ProductOptionValuesList tmp) {
-    this.optionValuesList = tmp;
-  }
-
-
-  /**
-   *  Gets the buildOptionValues attribute of the ProductOption object
-   *
-   *@return    The buildOptionValues value
-   */
-  public boolean getBuildOptionValues() {
-    return buildOptionValues;
-  }
-
-
-  /**
-   *  Gets the optionValuesList attribute of the ProductOption object
-   *
-   *@return    The optionValuesList value
-   */
-  public ProductOptionValuesList getOptionValuesList() {
-    return optionValuesList;
-  }
-
-
-  /**
-   *  Gets the id attribute of the ProductOption object
-   *
-   *@return    The id value
-   */
-  public int getId() {
-    return id;
-  }
-
-
-  /**
-   *  Gets the configuratorId attribute of the ProductOption object
-   *
-   *@return    The configuratorId value
-   */
-  public int getConfiguratorId() {
-    return configuratorId;
-  }
-
-
-  /**
-   *  Gets the parentId attribute of the ProductOption object
-   *
-   *@return    The parentId value
-   */
-  public int getParentId() {
-    return parentId;
-  }
-
-
-  /**
-   *  Gets the shortDescription attribute of the ProductOption object
-   *
-   *@return    The shortDescription value
-   */
-  public String getShortDescription() {
-    return shortDescription;
-  }
-
-
-  /**
-   *  Gets the longDescription attribute of the ProductOption object
-   *
-   *@return    The longDescription value
-   */
-  public String getLongDescription() {
-    return longDescription;
-  }
-
-
-  /**
-   *  Gets the allowCustomerConfigure attribute of the ProductOption object
-   *
-   *@return    The allowCustomerConfigure value
-   */
-  public boolean getAllowCustomerConfigure() {
-    return allowCustomerConfigure;
-  }
-
-
-  /**
-   *  Gets the allowUserConfigure attribute of the ProductOption object
-   *
-   *@return    The allowUserConfigure value
-   */
-  public boolean getAllowUserConfigure() {
-    return allowUserConfigure;
-  }
-
-
-  /**
-   *  Gets the required attribute of the ProductOption object
-   *
-   *@return    The required value
-   */
-  public boolean getRequired() {
-    return required;
-  }
-
-
-  /**
-   *  Gets the enabled attribute of the ProductOption object
-   *
-   *@return    The enabled value
-   */
-  public boolean getEnabled() {
-    return enabled;
-  }
-
-
-  /**
-   *  Gets the startDate attribute of the ProductOption object
-   *
-   *@return    The startDate value
-   */
-  public Timestamp getStartDate() {
-    return startDate;
-  }
-
-
-  /**
-   *  Gets the endDate attribute of the ProductOption object
-   *
-   *@return    The endDate value
-   */
-  public Timestamp getEndDate() {
-    return endDate;
-  }
-
-
-  /**
-   *  Gets the productName attribute of the ProductOption object
-   *
-   *@return    The productName value
-   */
-  public String getProductName() {
-    return productName;
-  }
-
-
-  /**
-   *  Gets the resultType attribute of the ProductOption object
-   *
-   *@return    The resultType value
-   */
-  public int getResultType() {
-    return resultType;
-  }
-
-
-  /**
-   *  Gets the parentName attribute of the ProductOption object
-   *
-   *@return    The parentName value
-   */
-  public String getParentName() {
-    return parentName;
   }
 
 
@@ -305,6 +269,16 @@ public class ProductOption extends GenericBean {
    */
   public void setId(String tmp) {
     this.id = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the name attribute of the ProductOption object
+   *
+   *@param  tmp  The new name value
+   */
+  public void setName(String tmp) {
+    this.name = tmp;
   }
 
 
@@ -489,12 +463,12 @@ public class ProductOption extends GenericBean {
 
 
   /**
-   *  Sets the productName attribute of the ProductOption object
+   *  Sets the configuratorName attribute of the ProductOption object
    *
-   *@param  tmp  The new productName value
+   *@param  tmp  The new configuratorName value
    */
-  public void setProductName(String tmp) {
-    this.productName = tmp;
+  public void setConfiguratorName(String tmp) {
+    this.configuratorName = tmp;
   }
 
 
@@ -525,6 +499,206 @@ public class ProductOption extends GenericBean {
    */
   public void setParentName(String tmp) {
     this.parentName = tmp;
+  }
+
+
+  /**
+   *  Sets the buildOptionValues attribute of the ProductOption object
+   *
+   *@param  tmp  The new buildOptionValues value
+   */
+  public void setBuildOptionValues(boolean tmp) {
+    this.buildOptionValues = tmp;
+  }
+
+
+  /**
+   *  Sets the buildOptionValues attribute of the ProductOption object
+   *
+   *@param  tmp  The new buildOptionValues value
+   */
+  public void setBuildOptionValues(String tmp) {
+    this.buildOptionValues = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the optionValuesList attribute of the ProductOption object
+   *
+   *@param  tmp  The new optionValuesList value
+   */
+  public void setOptionValuesList(ProductOptionValuesList tmp) {
+    this.optionValuesList = tmp;
+  }
+
+
+  /**
+   *  Gets the id attribute of the ProductOption object
+   *
+   *@return    The id value
+   */
+  public int getId() {
+    return id;
+  }
+
+
+  /**
+   *  Gets the name attribute of the ProductOption object
+   *
+   *@return    The name value
+   */
+  public String getName() {
+    return name;
+  }
+
+
+  /**
+   *  Gets the configuratorId attribute of the ProductOption object
+   *
+   *@return    The configuratorId value
+   */
+  public int getConfiguratorId() {
+    return configuratorId;
+  }
+
+
+  /**
+   *  Gets the parentId attribute of the ProductOption object
+   *
+   *@return    The parentId value
+   */
+  public int getParentId() {
+    return parentId;
+  }
+
+
+  /**
+   *  Gets the shortDescription attribute of the ProductOption object
+   *
+   *@return    The shortDescription value
+   */
+  public String getShortDescription() {
+    return shortDescription;
+  }
+
+
+  /**
+   *  Gets the longDescription attribute of the ProductOption object
+   *
+   *@return    The longDescription value
+   */
+  public String getLongDescription() {
+    return longDescription;
+  }
+
+
+  /**
+   *  Gets the allowCustomerConfigure attribute of the ProductOption object
+   *
+   *@return    The allowCustomerConfigure value
+   */
+  public boolean getAllowCustomerConfigure() {
+    return allowCustomerConfigure;
+  }
+
+
+  /**
+   *  Gets the allowUserConfigure attribute of the ProductOption object
+   *
+   *@return    The allowUserConfigure value
+   */
+  public boolean getAllowUserConfigure() {
+    return allowUserConfigure;
+  }
+
+
+  /**
+   *  Gets the required attribute of the ProductOption object
+   *
+   *@return    The required value
+   */
+  public boolean getRequired() {
+    return required;
+  }
+
+
+  /**
+   *  Gets the enabled attribute of the ProductOption object
+   *
+   *@return    The enabled value
+   */
+  public boolean getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   *  Gets the startDate attribute of the ProductOption object
+   *
+   *@return    The startDate value
+   */
+  public Timestamp getStartDate() {
+    return startDate;
+  }
+
+
+  /**
+   *  Gets the endDate attribute of the ProductOption object
+   *
+   *@return    The endDate value
+   */
+  public Timestamp getEndDate() {
+    return endDate;
+  }
+
+
+  /**
+   *  Gets the configuratorName attribute of the ProductOption object
+   *
+   *@return    The configuratorName value
+   */
+  public String getConfiguratorName() {
+    return configuratorName;
+  }
+
+
+  /**
+   *  Gets the resultType attribute of the ProductOption object
+   *
+   *@return    The resultType value
+   */
+  public int getResultType() {
+    return resultType;
+  }
+
+
+  /**
+   *  Gets the parentName attribute of the ProductOption object
+   *
+   *@return    The parentName value
+   */
+  public String getParentName() {
+    return parentName;
+  }
+
+
+  /**
+   *  Gets the buildOptionValues attribute of the ProductOption object
+   *
+   *@return    The buildOptionValues value
+   */
+  public boolean getBuildOptionValues() {
+    return buildOptionValues;
+  }
+
+
+  /**
+   *  Gets the optionValuesList attribute of the ProductOption object
+   *
+   *@return    The optionValuesList value
+   */
+  public ProductOptionValuesList getOptionValuesList() {
+    return optionValuesList;
   }
 
 
@@ -565,20 +739,21 @@ public class ProductOption extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public void queryRecord(Connection db, int id) throws SQLException {
-    if (this.getId() == -1) {
+    if (id == -1) {
       throw new SQLException("Invalid Product Option ID");
     }
     PreparedStatement pst = db.prepareStatement(
-        " SELECT " +
-        "   popt.*, " +
-        "   poptconf.result_type as result_type, " +
-        "   popt2.short_description as parent_name " +
-        " FROM product_option AS popt " +
-        " LEFT JOIN product_option_configurator as poptconf ON ( popt.configurator_id = poptconf.configurator_id ) " +
-        " LEFT JOIN product_option as popt2 ON ( popt.parent_id = popt2.option_id ) " +
-        " WHERE option_id = ? "
+        "SELECT " +
+        "popt.*, " +
+        "poptconf.result_type as result_type, " +
+        "poptconf.configurator_name as conf_name, " +
+        "popt2.option_name as parent_name " +
+        "FROM product_option AS popt " +
+        "LEFT JOIN product_option_configurator AS poptconf ON ( popt.configurator_id = poptconf.configurator_id ) " +
+        "LEFT JOIN product_option AS popt2 ON ( popt.parent_id = popt2.option_id ) " +
+        "WHERE popt.option_id = ? "
         );
-    pst.setInt(1, this.getId());
+    pst.setInt(1, id);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
@@ -586,12 +761,38 @@ public class ProductOption extends GenericBean {
     rs.close();
     pst.close();
     if (this.getId() == -1) {
-      throw new SQLException("Product Catalog not found");
+      throw new SQLException("Product Option not found");
     }
     //build resources
     if (buildOptionValues) {
       this.buildOptionValues(db);
     }
+    if (buildConfigDetails) {
+      this.buildConfigDetails(db);
+    }
+  }
+
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildConfigDetails(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Product Option ID not specified");
+    }
+    // load the configurator
+    OptionConfigurator configurator =
+        (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, this.getConfiguratorId());
+    // query the properties
+    configurator.queryProperties(db, this.getId(), false);
+    this.setConfiguratorName(configurator.getName());
+    this.setLabel(configurator.getLabel());
+    this.setHtml(configurator.getHtml());
+    this.setPriceAdjust(configurator.getPriceAdjust());
   }
 
 
@@ -603,63 +804,8 @@ public class ProductOption extends GenericBean {
    */
   public void buildOptionValues(Connection db) throws SQLException {
     optionValuesList = new ProductOptionValuesList();
-    optionValuesList.setProductId(this.productId);
     optionValuesList.setOptionId(this.id);
     optionValuesList.buildList(db);
-  }
-
-
-  /**
-   *  Adds a feature to the Catalog attribute of the ProductOption object
-   *
-   *@param  db                The feature to be added to the Catalog attribute
-   *@param  productId         The feature to be added to the Catalog attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
-  public int addCatalog(Connection db, int productId) throws SQLException {
-    int result = -1;
-    int i = 0;
-    if (productId == -1 || this.getId() == -1) {
-      throw new SQLException("Invalid catalog id or option id ");
-    }
-    PreparedStatement pst = db.prepareStatement(
-        " INSERT INTO product_option_map( product_id, option_id,  value_id ) " +
-        " VALUES ( ? , ? , 0 ); "
-        );
-    pst.setInt(++i, productId);
-    pst.setInt(++i, this.getId());
-    result = pst.executeUpdate();
-    pst.close();
-    return result;
-  }
-
-
-  /**
-   *  Adds a feature to the Catalog attribute of the ProductOption object
-   *
-   *@param  db                The feature to be added to the Catalog attribute
-   *@param  productId         The feature to be added to the Catalog attribute
-   *@param  valueId           The feature to be added to the Catalog attribute
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
-  public int addCatalog(Connection db, int productId, int valueId) throws SQLException {
-    int result = -1;
-    int i = 0;
-    if (productId == -1 || this.getId() == -1 || valueId == -1) {
-      throw new SQLException("Invalid catalog id or option id or value id");
-    }
-    PreparedStatement pst = db.prepareStatement(
-        " INSERT INTO product_option_map( product_id, option_id, value_id ) " +
-        " VALUES ( ? , ? , ? ); "
-        );
-    pst.setInt(++i, productId);
-    pst.setInt(++i, this.getId());
-    pst.setInt(++i, valueId);
-    result = pst.executeUpdate();
-    pst.close();
-    return result;
   }
 
 
@@ -677,12 +823,16 @@ public class ProductOption extends GenericBean {
     this.setShortDescription(rs.getString("short_description"));
     this.setLongDescription(rs.getString("long_description"));
     this.setAllowCustomerConfigure(rs.getBoolean("allow_customer_configure"));
-    this.setAllowCustomerConfigure(rs.getBoolean("allow_customer_configure"));
+    this.setAllowUserConfigure(rs.getBoolean("allow_user_configure"));
     this.setRequired(rs.getBoolean("required"));
     this.setStartDate(rs.getTimestamp("start_date"));
     this.setEndDate(rs.getTimestamp("end_date"));
     this.setEnabled(rs.getBoolean("enabled"));
+    this.setName(rs.getString("option_name"));
+    this.setHasMultiplier(rs.getBoolean("has_multiplier"));
+    this.setHasRange(rs.getBoolean("has_range"));
     // product_option_configurator table
+    this.setConfiguratorName(rs.getString("conf_name"));
     this.setResultType(rs.getInt("result_type"));
     // product_option parent table
     this.setParentName(rs.getString("parent_name"));
@@ -693,60 +843,81 @@ public class ProductOption extends GenericBean {
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
-   *@param  baseFilePath      Description of the Parameter
    *@return                   Description of the Return Value
    *@exception  SQLException  Description of the Exception
    */
-  public boolean delete(Connection db, String baseFilePath) throws SQLException {
+  public boolean delete(Connection db) throws SQLException {
     boolean result = false;
     if (this.getId() == -1) {
       throw new SQLException("Product Option ID not specified.");
     }
+    boolean commit = true;
     try {
       int i = 0;
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       PreparedStatement pst = null;
-      /*
-       *  /Delete any documents
-       *  FileItemList fileList = new FileItemList();
-       *  fileList.setLinkModuleId(Constants.DOCUMENTS_PRODUCT_OPTION);
-       *  fileList.setLinkItemId(this.getId());
-       *  fileList.buildList(db);
-       *  fileList.delete(db, baseFilePath);
-       *  fileList = null;
-       *  /Delete any folder data
-       *  CustomFieldRecordList folderList = new CustomFieldRecordList();
-       *  folderList.setLinkModuleId(Constants.FOLDERS_PRODUCT_OPTION);
-       *  folderList.setLinkItemId(this.getId());
-       *  folderList.buildList(db);
-       *  folderList.delete(db);
-       *  folderList = null;
-       */
-      //delete all the dependencies
       //delete all records that contain option_id in the product_option_map
       pst = db.prepareStatement(
-          " DELETE from product_option_map " +
-          " WHERE option_id = ? "
-          );
+          "DELETE FROM product_option_map " +
+          "WHERE option_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
 
-      //delete the product from the catalog
+      //delete the option values
+      pst = db.prepareStatement(
+          "DELETE FROM product_option_values " +
+          "WHERE option_id = ?");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+
+      //delete the option properties
+      pst = db.prepareStatement("DELETE FROM product_option_text WHERE product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      pst = db.prepareStatement("DELETE FROM product_option_integer WHERE product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      pst = db.prepareStatement("DELETE FROM product_option_float WHERE product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      pst = db.prepareStatement("DELETE FROM product_option_timestamp WHERE product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+      pst = db.prepareStatement("DELETE FROM product_option_boolean WHERE product_option_id = ? ");
+      pst.setInt(1, this.getId());
+      pst.execute();
+      pst.close();
+
+      //delete the option
       i = 0;
       pst = db.prepareStatement(
-          " DELETE from product_option " +
-          " WHERE option_id = ? "
-          );
+          "DELETE FROM product_option " +
+          "WHERE option_id = ? ");
       pst.setInt(++i, this.getId());
       pst.execute();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
       result = true;
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return result;
   }
@@ -774,30 +945,102 @@ public class ProductOption extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        " INSERT INTO product_option( configurator_id, " +
-        " parent_id, short_description, " +
-        " long_description, allow_customer_configure,  " +
-        " allow_user_configure, required, " +
-        " start_date, end_date, enabled ) " +
-        " VALUES( ?,?,?,?,?,?,?,?,?,? )");
-    int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql.toString());
-    DatabaseUtils.setInt(pst, ++i, this.getConfiguratorId());
-    DatabaseUtils.setInt(pst, ++i, this.getParentId());
-    pst.setString(++i, this.getShortDescription());
-    pst.setString(++i, this.getLongDescription());
-    pst.setBoolean(++i, this.getAllowCustomerConfigure());
-    pst.setBoolean(++i, this.getAllowUserConfigure());
-    pst.setBoolean(++i, this.getRequired());
-    DatabaseUtils.setTimestamp(pst, ++i, this.getStartDate());
-    DatabaseUtils.setTimestamp(pst, ++i, this.getEndDate());
-    pst.setBoolean(++i, this.getEnabled());
-    pst.execute();
-    pst.close();
-    id = DatabaseUtils.getCurrVal(db, "product_option_option_id_seq");
-    result = true;
+    boolean commit = false;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      // insert the product option
+      StringBuffer sql = new StringBuffer();
+      sql.append(
+          "INSERT INTO product_option( option_name, configurator_id, " +
+          "parent_id, short_description, long_description, allow_customer_configure, " +
+          "allow_user_configure, required, start_date, end_date, enabled, has_range, has_multiplier ) " +
+          "VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ");
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql.toString());
+      pst.setString(++i, this.getName());
+      DatabaseUtils.setInt(pst, ++i, this.getConfiguratorId());
+      DatabaseUtils.setInt(pst, ++i, this.getParentId());
+      pst.setString(++i, this.getShortDescription());
+      pst.setString(++i, this.getLongDescription());
+      pst.setBoolean(++i, this.getAllowCustomerConfigure());
+      pst.setBoolean(++i, this.getAllowUserConfigure());
+      pst.setBoolean(++i, this.getRequired());
+      DatabaseUtils.setTimestamp(pst, ++i, this.getStartDate());
+      DatabaseUtils.setTimestamp(pst, ++i, this.getEndDate());
+      pst.setBoolean(++i, this.getEnabled());
+      pst.setBoolean(++i, this.getHasRange());
+      pst.setBoolean(++i, this.getHasMultiplier());
+      pst.execute();
+      pst.close();
+      id = DatabaseUtils.getCurrVal(db, "product_option_option_id_seq");
+
+      if (this.productId != -1) {
+        pst = db.prepareStatement(
+            "INSERT INTO product_option_map(option_id, product_id) " +
+            "VALUES (?, ? )");
+        pst.setInt(1, this.id);
+        pst.setInt(2, this.productId);
+        pst.execute();
+        pst.close();
+      }
+
+      if (commit) {
+        db.commit();
+      }
+      result = true;
+    } catch (Exception e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
+    return result;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean insertClone(Connection db) throws SQLException {
+    boolean result = false;
+    boolean commit = false;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      //insert the option and its properties
+      OptionConfigurator configurator =
+          (OptionConfigurator) ProductOptionConfigurator.getConfigurator(db, this.getConfiguratorId());
+      //option to be cloned has an optionId of the source option.
+      configurator.queryProperties(db, this.getId(), false);
+      configurator.saveProperties(db, this);
+
+      if (commit) {
+        db.commit();
+      }
+      result = true;
+    } catch (Exception e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
     return result;
   }
 
@@ -811,22 +1054,23 @@ public class ProductOption extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
     StringBuffer sql = new StringBuffer();
     sql.append(
-        " UPDATE product_option " +
-        " SET configurator_id = ?, parent_id = ?, " +
-        " short_description = ?, long_description = ?, " +
-        " allow_customer_configure = ?, allow_user_configure = ?, " +
-        " required = ?, start_date = ?, end_date = ?, enabled = ? " +
-        " WHERE option_id = ? "
+        "UPDATE product_option " +
+        "SET option_name = ?, configurator_id = ?, parent_id = ?, " +
+        "short_description = ?, long_description = ?, " +
+        "allow_customer_configure = ?, allow_user_configure = ?, " +
+        "required = ?, start_date = ?, end_date = ?, enabled = ?, has_range = ?, has_multiplier = ? " +
+        "WHERE option_id = ? "
         );
 
     int i = 0;
     pst = db.prepareStatement(sql.toString());
+    pst.setString(++i, this.getName());
     DatabaseUtils.setInt(pst, ++i, this.getConfiguratorId());
     DatabaseUtils.setInt(pst, ++i, this.getParentId());
     pst.setString(++i, this.getShortDescription());
@@ -837,95 +1081,12 @@ public class ProductOption extends GenericBean {
     DatabaseUtils.setTimestamp(pst, ++i, this.getStartDate());
     DatabaseUtils.setTimestamp(pst, ++i, this.getEndDate());
     pst.setBoolean(++i, this.getEnabled());
+    pst.setBoolean(++i, this.getHasRange());
+    pst.setBoolean(++i, this.getHasMultiplier());
     DatabaseUtils.setInt(pst, ++i, this.getId());
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;
-  }
-
-
-  /**
-   *  Description of the Method
-   *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
-   */
-  public DependencyList processDependencies(Connection db) throws SQLException {
-    // This method checks all the mappings for any product_option with the current id
-    // The currently known mappings are product_option_map
-    if (this.getId() == -1) {
-      throw new SQLException("Product Option ID not specified");
-    }
-    String sql = null;
-    DependencyList dependencyList = new DependencyList();
-    PreparedStatement pst = null;
-    ResultSet rs = null;
-    int i = 0;
-    /*
-     *  /Check for documents
-     *  Dependency docDependency = new Dependency();
-     *  docDependency.setName("Documents");
-     *  docDependency.setCount(FileItemList.retrieveRecordCount(db, Constants.DOCUMENTS_PRODUCT_CATALOG, this.getId()));
-     *  docDependency.setCanDelete(true);
-     *  dependencyList.add(docDependency);
-     *  /Check for folders
-     *  Dependency folderDependency = new Dependency();
-     *  folderDependency.setName("Folders");
-     *  folderDependency.setCount(CustomFieldRecordList.retrieveRecordCount(db, Constants.FOLDERS_PRODUCT_CATALOG, this.getId()));
-     *  folderDependency.setCanDelete(true);
-     *  dependencyList.add(folderDependency);
-     */
-    //Check for product_catalog with parentId = id
-    try {
-      i = 0;
-      pst = db.prepareStatement(
-          "SELECT count(*) as parentcount " +
-          " FROM product_option " +
-          "WHERE parent_id = ?"
-          );
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int catalogCount = rs.getInt("parentcount");
-        if (catalogCount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of children of this catalog ");
-          thisDependency.setCount(catalogCount);
-          thisDependency.setCanDelete(false);
-          dependencyList.add(thisDependency);
-        }
-      }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
-    }
-
-    //Check for the current option mappings in product_option_map
-    try {
-      i = 0;
-      pst = db.prepareStatement(
-          "SELECT count(*) as catalogcount " +
-          " FROM product_option_map " +
-          "WHERE option_id = ?"
-          );
-      pst.setInt(++i, this.getId());
-      rs = pst.executeQuery();
-      if (rs.next()) {
-        int catalogCount = rs.getInt("catalogcount");
-        if (catalogCount != 0) {
-          Dependency thisDependency = new Dependency();
-          thisDependency.setName("Number of catalog_option mappings are ");
-          thisDependency.setCount(catalogCount);
-          thisDependency.setCanDelete(false);
-          dependencyList.add(thisDependency);
-        }
-      }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
-    }
-    return dependencyList;
   }
 
 
@@ -937,10 +1098,68 @@ public class ProductOption extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean isValid(Connection db) throws SQLException {
-    if (id == -1) {
-      return false;
+    if (startDate != null && endDate != null) {
+      if (startDate.after(endDate)) {
+        errors.put("startDateError", "Start Date cannot be after Expiration Date");
+      }
     }
-    return true;
+    if (hasErrors()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+
+  /**
+   *  Adds a feature to the Catalog attribute of the ProductOption object
+   *
+   *@param  db                The feature to be added to the Catalog attribute
+   *@param  productId         The feature to be added to the Catalog attribute
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int addProductMapping(Connection db, int productId) throws SQLException {
+    int result = -1;
+    int i = 0;
+    if (this.getId() == -1) {
+      throw new SQLException("Invalid option id");
+    }
+    PreparedStatement pst = db.prepareStatement(
+        " INSERT INTO product_option_map( product_id, option_id) " +
+        " VALUES (?, ? ); "
+        );
+    pst.setInt(++i, productId);
+    pst.setInt(++i, this.getId());
+    result = pst.executeUpdate();
+    pst.close();
+    return result;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  productId         Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean removeProductMapping(Connection db, int productId) throws SQLException {
+    boolean result = false;
+    if (this.getId() == -1) {
+      throw new SQLException("Invalid Option ID");
+    }
+    int i = 0;
+    // Delete the mapping between this product and option
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM product_option_map " +
+        "WHERE product_id = ? AND option_id = ? ");
+    pst.setInt(++i, productId);
+    pst.setInt(++i, this.getId());
+    result = pst.execute();
+    pst.close();
+    return result;
   }
 
 
@@ -954,25 +1173,140 @@ public class ProductOption extends GenericBean {
    */
   public static boolean lookupId(Connection db, String optName) throws SQLException {
     boolean result = false;
-    try {
-      PreparedStatement pst = db.prepareStatement(
-          " SELECT count(*) as counter " +
-          " FROM product_option " +
-          " WHERE short_description = ? "
-          );
-      pst.setString(1, optName);
-      ResultSet rs = pst.executeQuery();
-      if (rs.next()) {
-        int buffer = rs.getInt("counter");
-        if (buffer != 0) {
-          result = true;
-        }
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT count(*) as counter " +
+        "FROM product_option " +
+        "WHERE short_description = ? "
+        );
+    pst.setString(1, optName);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      int buffer = rs.getInt("counter");
+      if (buffer != 0) {
+        result = true;
       }
-      rs.close();
-      pst.close();
-    } catch (SQLException e) {
     }
+    rs.close();
+    pst.close();
     return result;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  optionId          Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public static int getNextRangeMin(Connection db, int optionId) throws SQLException {
+    int nextMin = -1;
+    if (optionId == -1) {
+      throw new SQLException("Invalid Option ID specified");
+    }
+
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT max(range_max) AS max " +
+        "FROM product_option_values " +
+        "WHERE option_id = ? ");
+    pst.setInt(1, optionId);
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      nextMin = rs.getInt("max");
+    }
+    rs.close();
+    pst.close();
+    return nextMin + 1;
+  }
+
+
+  /**
+   *  Gets the productOptionId attribute of the ProductOption object
+   *
+   *@param  db                Description of the Parameter
+   *@param  productId         Description of the Parameter
+   *@return                   The productOptionId value
+   *@exception  SQLException  Description of the Exception
+   */
+  public int getProductOptionId(Connection db, int productId) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Invalid ID");
+    }
+    int result = -1;
+    PreparedStatement pst = db.prepareStatement(
+        "SELECT product_option_id " +
+        "FROM product_option_map " +
+        "WHERE product_id = ? " +
+        "AND option_id = ? ");
+    pst.setInt(1, productId);
+    pst.setInt(2, this.getId());
+    ResultSet rs = pst.executeQuery();
+    if (rs.next()) {
+      result = rs.getInt("product_option_id");
+    }
+    rs.close();
+    pst.close();
+    return result;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public DependencyList processDependencies(Connection db) throws SQLException {
+    if (this.getId() == -1) {
+      throw new SQLException("Product Option ID not specified");
+    }
+    DependencyList dependencyList = new DependencyList();
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    //Check for the current product mappings in product_option_map
+    int i = 0;
+    pst = db.prepareStatement(
+        "SELECT count(*) as productcount " +
+        "FROM product_option_map " +
+        "WHERE option_id = ? ");
+    pst.setInt(++i, this.getId());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      int productCount = rs.getInt("productcount");
+      if (productCount != 0) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("numberOfCatalogOptionMappings");
+        thisDependency.setCount(productCount);
+        thisDependency.setCanDelete(true);
+        dependencyList.add(thisDependency);
+      }
+    }
+    rs.close();
+    pst.close();
+    
+    //Check for the current product mappings in product_option_map
+    i = 0;
+    pst = db.prepareStatement(
+        "SELECT count(*) as quoteoptioncount " +
+        "FROM quote_product_options qpo, product_option_map pom " +
+        "WHERE qpo.product_option_id = pom.product_option_id AND option_id = ? ");
+    pst.setInt(++i, this.getId());
+    rs = pst.executeQuery();
+    if (rs.next()) {
+      int quoteCount = rs.getInt("quoteoptioncount");
+      if (quoteCount != 0) {
+        Dependency thisDependency = new Dependency();
+        thisDependency.setName("numberOfQuoteOptionMappings");
+        thisDependency.setCount(quoteCount);
+        thisDependency.setCanDelete(false);
+        dependencyList.add(thisDependency);
+      }
+    }
+    rs.close();
+    pst.close();
+    return dependencyList;
   }
 }
 

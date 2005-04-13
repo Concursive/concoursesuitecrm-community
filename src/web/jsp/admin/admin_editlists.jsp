@@ -25,10 +25,10 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
-Lookup Lists
+<dhv:label name="admin.lookupLists">Lookup Lists</dhv:label>
 </td>
 </tr>
 </table>
@@ -36,16 +36,16 @@ Lookup Lists
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th width="35" align="center">
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="200">
-      <strong>List Name</strong>
+      <strong><dhv:label name="admin.listName">List Name</dhv:label></strong>
     </th>
     <th width="35" align="center">
-      <strong>Items</strong>
+      <strong><dhv:label name="project.items">Items</dhv:label></strong>
     </th>
     <th>
-      <strong>Preview</strong>
+      <strong><dhv:label name="button.preview">Preview</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -56,7 +56,7 @@ Lookup Lists
     LookupListElement thisElement = (LookupListElement)i.next();
 %>
     <tr class="row<%= rowid %>">
-      <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="Admin.do?command=ModifyList&module=<%= thisElement.getModuleId() %>&sublist=<%= thisElement.getLookupId() %>">Edit</a></td></dhv:permission>
+      <dhv:permission name="admin-sysconfig-lists-edit"><td align="center"><a href="Admin.do?command=ModifyList&module=<%= thisElement.getModuleId() %>&sublist=<%= thisElement.getLookupId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Edit">Edit</dhv:label></a></td></dhv:permission>
       <td valign="center" width="200"><%= toHtml(thisElement.getDescription()) %></td>
       <td width="35" valign="center" align="center"><%= thisElement.getLookupList().getEnabledElementCount() %></td>
       <td valign="center"><%= thisElement.getLookupList().getHtmlSelect("list", 0) %></td>
@@ -66,7 +66,7 @@ Lookup Lists
 %>
 <dhv:evaluate if="<%= LookupLists.size() == 0 %>">
   <tr>
-    <td valign="center" colspan="4">No custom lookup lists to configure.</td>
+    <td valign="center" colspan="4"><dhv:label name="admin.noCustomLookupLists.text">No custom lookup lists to configure.</dhv:label></td>
   </tr>
 </dhv:evaluate>
 </table>

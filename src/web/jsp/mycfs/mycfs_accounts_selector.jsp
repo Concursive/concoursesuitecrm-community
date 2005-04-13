@@ -35,12 +35,12 @@
 		String acctNumber = request.getParameter("acctNumber");
 		if (acctName == null || "".equals(acctName.trim())){
 	%>
-			document.acctListView.acctName.value = "<dhv:label name="organization.name">Account Name</dhv:label>";
+			document.acctListView.acctName.value = "Account Name";
 	<%
 		}
 		if (acctNumber == null || "".equals(acctNumber.trim())){
 	%>
-		  document.acctListView.acctNumber.value = "<dhv:label name="organization.accountNumber">Account Number</dhv:label>";
+		  document.acctListView.acctNumber.value = "Account Number";
 	<%
 		}
 	%>		
@@ -49,11 +49,11 @@
 	function clearSearchFields(clear, field) {
 		if (clear) {
 			// Clear the search fields since clear button was clicked
-			document.acctListView.acctName.value = "<dhv:label name="organization.accountNumber">Account Name</dhv:label>";
-			document.acctListView.acctNumber.value = "<dhv:label name="organization.accountNumber">Account Number</dhv:label>";
+			document.acctListView.acctName.value = "Account Name";
+			document.acctListView.acctNumber.value = "Account Number";
 		} else {
 			// The search fields recieved focus
-			if (field.value == "<dhv:label name="organization.name">Account Name</dhv:label>" || field.value == "<dhv:label name="organization.accountNumber">Account Number</dhv:label>") {
+			if (field.value == "Account Name" || field.value == "Account Number") {
 				field.value = "" ;
 			}
 		}
@@ -69,11 +69,11 @@
 	<table cellpadding="6" cellspacing="0" width="100%" border="0">
 		<tr>
 			<td align="center" valign="center" bgcolor="#d3d1d1">
-				<strong>Search</strong>
+				<strong><dhv:label name="button.search">Search</dhv:label></strong>
 				<input type="text" name="acctName" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("acctName")) %>">
 				<input type="text" name="acctNumber" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("acctNumber")) %>">
-				<input type="submit" value="search">
-				<input type="button" value="clear" onClick="clearSearchFields(true, '')">
+				<input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">
+				<input type="button" value="<dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label>" onClick="clearSearchFields(true, '')">
 			</td>
 		</tr>
 	</table>
@@ -91,11 +91,11 @@
             <option <%= AccountListInfo.getOptionValue(thisFilter.getValue()) %>><%= toHtml(thisFilter.getDisplayName()) %></option>
           <%}%>
          </select>
-        <% TypeSelect.setJsEvent("onChange=\"javascript:document.forms[0].submit();\""); %>
+        <% TypeSelect.setJsEvent("onChange=\"javascript:document.acctListView.submit();\""); %>
         <%= TypeSelect.getHtmlSelect("listFilter1", AccountListInfo.getFilterKey("listFilter1")) %>
       </td>
       <td>
-        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountListInfo" showHiddenParams="true" enableJScript="true"/>
+        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AccountListInfo" showHiddenParams="true" enableJScript="true" form="acctListView"/>
       </td>
     </tr>
   </table>
@@ -105,10 +105,10 @@
         &nbsp;
       </th>
       <th>
-        <strong>Name</strong>
+        <strong><dhv:label name="contacts.name">Name</dhv:label></strong>
       </th>
       <th>
-        <strong>Phone</strong>
+        <strong><dhv:label name="accounts.accounts_add.Phone">Phone</dhv:label></strong>
       </th>
     </tr>
 <%
@@ -129,9 +129,9 @@
 %>
      <input type="checkbox" name="account<%= count %>" value="<%= thisAcct.getOrgId() %>" <%= (SelectedAccounts.indexOf(orgId) != -1 ? " checked" : "") %> onClick="highlight(this,'<%= User.getBrowserId() %>');">
 <%} else if ("singleAlert".equals(request.getParameter("listType"))) {%>
-		<a href="javascript:singleAlert('<%= request.getParameter("functionName") %>','<%= request.getParameter("orgId") %>','<%= request.getParameter("itemId") %>','<%= thisAcct.getOrgId() %>','<%= thisAcct.getName() %>');">Select</a>
+		 <a href="javascript:singleAlert('<%= request.getParameter("functionName") %>','<%= request.getParameter("orgId") %>','<%= request.getParameter("itemId") %>','<%= thisAcct.getOrgId() %>','<%= thisAcct.getName() %>');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>
 <%} else {%>
-     <a href="javascript:document.acctListView.finalsubmit.value = 'true';setFieldSubmit('rowcount','<%= count %>','acctListView');">Select</a>
+     <a href="javascript:document.acctListView.finalsubmit.value = 'true';setFieldSubmit('rowcount','<%= count %>','acctListView');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>
 <%}%>
         <input type="hidden" name="hiddenAccountId<%= count %>" value="<%= thisAcct.getOrgId() %>">
       </td>
@@ -139,10 +139,15 @@
           <%= toHtml(thisAcct.getName()) %>
       </td>
       <dhv:evaluate if="<%= (thisAcct.getPrimaryContact() == null) %>">
-        <td nowrap> <%= (!"".equals(thisAcct.getPhoneNumber("Main")) ? toHtml(thisAcct.getPhoneNumber("Main")) : "None") %></td> 
+        <td nowrap> 
+        <% if(!"".equals(thisAcct.getPhoneNumber("Main"))) {%>
+          <%= toHtml(thisAcct.getPhoneNumber("Main")) %>
+        <%} else {%>
+          <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.None">None</dhv:label>
+        <%}%></td> 
       </dhv:evaluate>
       <dhv:evaluate if="<%= (thisAcct.getPrimaryContact() != null) %>">
-        <td nowrap> <%= (!"".equals(thisAcct.getPrimaryContact().getPhoneNumber("Business")) ? toHtml(thisAcct.getPrimaryContact().getPhoneNumber("Business")) : "None") %></td> 
+        <td nowrap> <%= (!"".equals(thisAcct.getPrimaryContact().getPrimaryPhoneNumber()) ? toHtml(thisAcct.getPrimaryContact().getPrimaryPhoneNumber()) : "None") %></td> 
       </dhv:evaluate>
     </tr>
 <%
@@ -151,7 +156,7 @@
 %>
     <tr>
       <td class="containerBody" colspan="4">
-        No accounts matched query.
+        <dhv:label name="calendar.noAccountsMatchedQuery">No accounts matched query.</dhv:label>
       </td>
     </tr>
 <%}%>
@@ -166,12 +171,12 @@
     <input type="hidden" name="showMyCompany" value="<%= toHtmlValue(request.getParameter("showMyCompany")) %>">
   </table>
 <% if("list".equals(request.getParameter("listType"))){ %>
-  <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','acctListView');">
-  <input type="button" value="Cancel" onClick="javascript:window.close()">
-  <a href="javascript:SetChecked(1,'account','acctListView','<%= User.getBrowserId() %>');">Check All</a>
-  <a href="javascript:SetChecked(0,'account','acctListView','<%= User.getBrowserId() %>');">Clear All</a>
+  <input type="button" value="<dhv:label name="button.done">Done</dhv:label>" onClick="javascript:setFieldSubmit('finalsubmit','true','acctListView');">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
+  <a href="javascript:SetChecked(1,'account','acctListView','<%= User.getBrowserId() %>');"><dhv:label name="quotes.checkAll">Check All</dhv:label></a>
+  <a href="javascript:SetChecked(0,'account','acctListView','<%= User.getBrowserId() %>');"><dhv:label name="quotes.clearAll">Clear All</dhv:label></a>
 <%}else{%>
-  <input type="button" value="Cancel" onClick="javascript:window.close()">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
 <%}%>
 </form>
 <%} else { %>

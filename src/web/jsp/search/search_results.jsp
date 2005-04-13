@@ -45,9 +45,12 @@
 <br>&nbsp;<br> 
 <dhv:permission name="contacts-external_contacts-view,accounts-accounts-contacts-view">
 <% if(ContactList.size() < SearchSiteContactInfo.getMaxRecords()){ %>
-Showing <strong><%= ContactList.size() %></strong> result(s) of <%= SearchSiteContactInfo.getMaxRecords() %> in <strong>Contacts</strong>.
-<% }else{ %>
-<strong><%= ContactList.size() %></strong> result(s) in <strong>Contacts</strong>.
+<% String temp_contactSize = "tempContactSize"+ContactList.size()+"|tempMaxRecords="+SearchSiteContactInfo.getMaxRecords();%>
+<dhv:label name="search.showingNumberOfTotal.text" param="<%= temp_contactSize %>">Showing <strong><%= ContactList.size() %></strong> result(s) of <%= SearchSiteContactInfo.getMaxRecords() %> in <strong>Contacts</strong>.</dhv:label>
+<% }else{ 
+  String temp_listSize = "ContactListSize="+ContactList.size();
+%>
+<dhv:label name="search.totalResultsInContacts.text" param="<%= temp_listSize %>"><strong><%= ContactList.size() %></strong> result(s) in <strong>Contacts</strong>.</dhv:label>
 <% } 
 Iterator i = ContactList.iterator();
 if (i.hasNext()) {
@@ -55,19 +58,19 @@ if (i.hasNext()) {
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Name</strong>
+      <strong><dhv:label name="contacts.name">Name</dhv:label></strong>
     </th>
     <th width="100%">
-      <strong>Company</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></strong>
     </th>
     <th width="100" nowrap>
-      <strong>Title</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label></strong>
     </th>
     <th width="100">
-      <strong>Phone</strong>
+      <strong><dhv:label name="accounts.accounts_add.Phone">Phone</dhv:label></strong>
     </th>
     <th width="100">
-      <strong>Email</strong>
+      <strong><dhv:label name="accounts.accounts_add.Email">Email</dhv:label></strong>
     </th>
   </tr>
 <%    
@@ -83,8 +86,10 @@ if (i.hasNext()) {
           <%}else{%>
           <a href="Contacts.do?command=Details&id=<%= thisContact.getId() %>"><%= toHtml(thisContact.getNameLastFirst()) %></a>
           <%}%>
-          <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
-          <%= ((thisContact.getOrgId() > 0)?"<a href=\"Accounts.do?command=Details&orgId=" + thisContact.getOrgId() + "\">[<dhv:label name=\"accounts.account\" type=\"trails\">Account</dhv:label>]</a>":"") %>
+          <%= thisContact.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"<dhv:label name='alt.sendEmail'>Send Email</dhv:label>\" align=\"absmiddle\">", "") %>
+          <dhv:evaluate if="<%= thisContact.getOrgId() > 0 %>">
+            [<a href="Accounts.do?command=Details&orgId=<%=  thisContact.getOrgId() %>"><dhv:label name="accounts.account">Account</dhv:label></a>]
+          </dhv:evaluate>
         </td>
         <td>
           <%= toHtml(thisContact.getCompany()) %>
@@ -123,10 +128,14 @@ if (i.hasNext()) {
 <%}%>
 </dhv:permission>
 <dhv:permission name="contacts-internal_contacts-view">
-<% if(EmployeeList.size() < SearchSiteEmployeeInfo.getMaxRecords()){ %>
-Showing <strong><%= EmployeeList.size() %></strong> result(s) of <%= SearchSiteEmployeeInfo.getMaxRecords() %> in <strong><dhv:label name="employees.employees">Employees</dhv:label></strong>.
-<% }else{ %>
-  <strong><%= EmployeeList.size() %></strong> result(s) in <strong><dhv:label name="employees.employees">Employees</dhv:label></strong>.
+<% if(EmployeeList.size() < SearchSiteEmployeeInfo.getMaxRecords()){ 
+      String temp_empSize = "EmployeeSize="+EmployeeList.size()+"|totalEmployees="+SearchSiteEmployeeInfo.getMaxRecords();
+%>
+<dhv:label name="search.showingNumberOfTotalEmployees.text" param="<%= temp_empSize %>">Showing <strong><%= EmployeeList.size() %></strong> result(s) of <%= SearchSiteEmployeeInfo.getMaxRecords() %> in <strong>Employees</strong>.</dhv:label>
+<% }else{ 
+      String temp_employeeSize = "EmployeeSize="+EmployeeList.size();
+%>
+<dhv:label name="search.totalResultsInEmployees.text" param="<%= temp_employeeSize %>"><strong><%= EmployeeList.size() %></strong> result(s) in <strong>Employees</strong>.</dhv:label>
 <% }
   Iterator j = EmployeeList.iterator();
   if (j.hasNext()) {
@@ -135,16 +144,16 @@ Showing <strong><%= EmployeeList.size() %></strong> result(s) of <%= SearchSiteE
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Name</strong>
+      <strong><dhv:label name="contacts.name">Name</dhv:label></strong>
     </th>
     <th width="175">
-      <strong>Department</strong>
+      <strong><dhv:label name="project.department">Department</dhv:label></strong>
     </th>
     <th width="100">
-      <strong>Title</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_add.Title">Title</dhv:label></strong>
     </th>
     <th width="100" nowrap>
-      <strong>Phone: Business</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_detailsimport.PhoneBusiness">Phone: Business</dhv:label></strong>
     </th>
   </tr>
 <%    
@@ -155,7 +164,7 @@ Showing <strong><%= EmployeeList.size() %></strong> result(s) of <%= SearchSiteE
       <tr class="row<%= rowid %>">
         <td>
           <a href="CompanyDirectory.do?command=EmployeeDetails&empid=<%= thisEmployee.getId() %>"><%= toHtml(thisEmployee.getNameLastFirst()) %></a>
-          <%= thisEmployee.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"Send email\" align=\"absmiddle\">", "") %>
+          <%= thisEmployee.getEmailAddressTag("Business", "<img border=0 src=\"images/icons/stock_mail-16.gif\" alt=\"<dhv:label name='alt.sendEmail'>Send Email</dhv:label>\" align=\"absmiddle\">", "") %>
         </td>
         <td>
           <%= toHtml(thisEmployee.getDepartmentName()) %>
@@ -178,10 +187,14 @@ Showing <strong><%= EmployeeList.size() %></strong> result(s) of <%= SearchSiteE
 <%}%>
 </dhv:permission>
 <dhv:permission name="accounts-accounts-view">
-<% if(OrganizationList.size() < SearchSiteAccountInfo.getMaxRecords()){ %>
-Showing <strong><%= OrganizationList.size() %></strong> result(s) of <%= SearchSiteAccountInfo.getMaxRecords() %> in <strong><dhv:label name="accounts.accounts">Accounts</dhv:label></strong>.
-<% }else{ %>
-<strong><%= OrganizationList.size() %></strong> result(s) in <strong><dhv:label name="accounts.accounts">Accounts</dhv:label></strong>.
+<% if(OrganizationList.size() < SearchSiteAccountInfo.getMaxRecords()){ 
+      String temp_accountsSize = "AccountSize="+OrganizationList.size()+"|TotalAccounts="+SearchSiteAccountInfo.getMaxRecords();
+%>
+<dhv:label name="search.showingNumberOfAccounts.text" param="<%= temp_accountsSize %>">Showing <strong><%= OrganizationList.size() %></strong> result(s) of <%= SearchSiteAccountInfo.getMaxRecords() %> in <strong>Accounts</strong>.</dhv:label>
+<% }else{ 
+      String temp_accountsSize = "AccountSize="+OrganizationList.size();
+%>
+<dhv:label name="search.totalResultsInAccounts" param="<%= temp_accountsSize %>"><strong><%= OrganizationList.size() %></strong> result(s) in <strong>Accounts</strong>.</dhv:label>
 <% }
 
   Iterator k = OrganizationList.iterator();
@@ -191,15 +204,15 @@ Showing <strong><%= OrganizationList.size() %></strong> result(s) of <%= SearchS
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th width="100%">
-      <strong><dhv:label name="accounts.account">Account</dhv:label> Name</strong>
+      <strong><dhv:label name="organization.name">Account Name</dhv:label></strong>
     </th>
     <dhv:include name="sitesearch-account-email" none="true">
     <th width="175">
-      <strong>Email</strong>
+      <strong><dhv:label name="accounts.accounts_add.Email">Email</dhv:label></strong>
     </th>
     </dhv:include>
     <th width="100">
-      <strong>Phone</strong>
+      <strong><dhv:label name="accounts.accounts_add.Phone">Phone</dhv:label></strong>
     </th>
   </tr>
 <%    
@@ -235,14 +248,18 @@ Showing <strong><%= OrganizationList.size() %></strong> result(s) of <%= SearchS
 <%
   } else {
 %>
-	<br>&nbsp;<br>  
+	<br>&nbsp;<br>
 <%}%>
 </dhv:permission>
 <dhv:permission name="pipeline-opportunities-view">
-<% if(OpportunityList.size() < SearchSiteOppInfo.getMaxRecords()){ %>
-Showing <strong><%= OpportunityList.size() %></strong> result(s) of <%= SearchSiteOppInfo.getMaxRecords() %> in <strong>Opportunities</strong>.
-<% }else{ %> 
- <strong><%= OpportunityList.size() %></strong> result(s) in <strong>Opportunities</strong>.
+<% if(OpportunityList.size() < SearchSiteOppInfo.getMaxRecords()){ 
+      String temp_oppSize = "OppSize="+OpportunityList.size()+"|TotalOpps="+SearchSiteOppInfo.getMaxRecords();
+%>
+<dhv:label name="search.showingNumberOfOpportunities.text" param="<%= temp_oppSize %>">Showing <strong><%= OpportunityList.size() %></strong> result(s) of <%= SearchSiteOppInfo.getMaxRecords() %> in <strong>Opportunities</strong>.</dhv:label>
+<% }else{ 
+      String temp_oppSize = "OppSize="+OpportunityList.size();
+%> 
+<dhv:label name="search.totalResultsInOpportunities.text" param="<%= temp_oppSize %>"><strong><%= OpportunityList.size() %></strong> result(s) in <strong>Opportunities</strong>.</dhv:label>
 <% } 
   Iterator m = OpportunityList.iterator();
   if (m.hasNext()) {
@@ -251,16 +268,16 @@ Showing <strong><%= OpportunityList.size() %></strong> result(s) of <%= SearchSi
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th valign="center">
-      <strong>Opportunity</strong>
+      <strong><dhv:label name="quotes.opportunity">Opportunity</dhv:label></strong>
     </th>
     <th width="175" valign="center">
-      <strong>Organization</strong>
+      <strong><dhv:label name="documents.details.organization">Organization</dhv:label></strong>
     </th>
     <th width="100" valign="center">
-      <strong>Amount</strong>
+      <strong><dhv:label name="accounts.accounts_revenue_add.Amount">Amount</dhv:label></strong>
     </th>
     <th width="100" valign="center" nowrap>
-      <strong>Revenue Start</strong>
+      <strong><dhv:label name="pipeline.revenueStart">Revenue Start</dhv:label></strong>
     </th>
   </tr>
   <%
@@ -316,7 +333,7 @@ Showing <strong><%= OpportunityList.size() %></strong> result(s) of <%= SearchSi
   String paramTicketCount = "ticketList.count=" + TicketList.size();
   String paramTicketMaxRecords = "ticketListInfo.maxRecords=" + SearchSiteTicketInfo.getMaxRecords();
   if (TicketList.size() < SearchSiteTicketInfo.getMaxRecords()) { %>
-<dhv:label name="search.results.tickets.multiPagecount" param="<%= paramTicketCount + "|" + paramTicketMaxRecords %>" >Showing <strong><%= TicketList.size() %></strong> result(s) of <%= SearchSiteTicketInfo.getMaxRecords() %> in <strong>Tickets</strong>.</dhv:label>
+<dhv:label name="search.results.tickets.multiPagecount" param="<%= paramTicketCount + "|" + paramTicketMaxRecords %>">Showing <strong><%= TicketList.size() %></strong> result(s) of <%= SearchSiteTicketInfo.getMaxRecords() %> in <strong>Tickets</strong>.</dhv:label>
 <% }else{ %>
 <dhv:label name="search.results.tickets.count" param="<%= paramTicketCount %>"><strong><%= TicketList.size() %></strong> result(s) in <strong>Tickets</strong>.</dhv:label>
 <% }
@@ -327,12 +344,12 @@ Showing <strong><%= OpportunityList.size() %></strong> result(s) of <%= SearchSi
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
     <th valign="center">
-      <strong>Number</strong>
+      <strong><dhv:label name="quotes.number">Number</dhv:label></strong>
     </th>
-    <th><b>Priority</b></th>
-    <th><b>Age</b></th>
-    <th><b>Company</b></th>
-    <th><b>Assigned&nbsp;To</b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label></b></th>
+    <th><b><dhv:label name="ticket.age">Age</dhv:label></b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label></b></th>
+    <th><b><dhv:label name="accounts.accounts_contacts_calls_list.AssignedTo">Assigned To</dhv:label></b></th>
   </tr>
   <%
   	while (n.hasNext()) {
@@ -353,7 +370,7 @@ Showing <strong><%= OpportunityList.size() %></strong> result(s) of <%= SearchSi
       <%= toHtml(thisTic.getCompanyName()) %>
 		</td>
     <td width="150" nowrap valign="top">
-      <dhv:username id="<%= thisTic.getAssignedTo() %>" default="-- unassigned --"/>
+      <dhv:username id="<%= thisTic.getAssignedTo() %>" default="ticket.unassigned.text"/>
     </td>
   </tr>
   <tr class="row<%= rowid %>">

@@ -21,13 +21,13 @@
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>New Message</strong>
+      <strong><dhv:label name="actionList.newMessage">New Message</dhv:label></strong>
     </th>
   </tr>
-  <dhv:evaluate if="<%= request.getParameter("actionId") == null %>">
+  <dhv:evaluate if="<%= (request.getParameter("actionId") == null) &&  (!"addressRequest".equals(request.getAttribute("messageType")))  %>">
   <tr>
     <td class="formLabel">
-      Name
+      <dhv:label name="contacts.name">Name</dhv:label>
     </td>
     <td>
       <input type="text" size="50" maxlength="80" name="name" value="<%= toHtmlValue(Message.getName()) %>">
@@ -36,7 +36,7 @@
   </tr>
   <tr>
     <td valign="top" class="formLabel">
-      Internal Description
+      <dhv:label name="campaign.initialDesctiption">Internal Description</dhv:label>
     </td>
     <td>
       <input type="text" size="50" maxlength="255" name="description" value="<%= toHtmlValue(Message.getDescription()) %>">
@@ -44,7 +44,7 @@
   </tr>
   <tr>
     <td nowrap class="formLabel">
-      Access Type
+      <dhv:label name="accounts.accounts_contacts_validateimport.AccessType">Access Type</dhv:label>
     </td>
     <td>
       <%=  AccessTypeList.getHtmlSelect("accessType", Message.getAccessType()) %>
@@ -53,13 +53,13 @@
   </dhv:evaluate>
 	<tr>
     <td valign="top" class="formLabel">
-      Message
+      <dhv:label name="project.message">Message</dhv:label>
     </td>
     <td valign=center>
-      From: <input type="text" size="40" maxlength="255" name="replyTo" value="<%= toHtmlValue(Message.getReplyTo()) %>">
+      <dhv:label name="campaign.from.colon" param="from=">From:</dhv:label> <input type="text" size="40" maxlength="255" name="replyTo" value="<%= toHtmlValue(Message.getReplyTo()) %>">
 			<font color="red">*</font> <%= showAttribute(request, "replyToError") %>
-      (Email address)<br>
-      Subject: <input type="text" size="50" maxlength="255" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
+      <dhv:label name="campaign.emailAddress.brackets">(Email address)</dhv:label><br>
+      <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>: <input type="text" size="50" maxlength="255" name="messageSubject" value="<%= toHtmlValue(Message.getMessageSubject()) %>">
 			<font color="red">*</font> <%= showAttribute(request, "messageSubjectError") %><br>
 <dhv:evaluate if="<%= !clientType.showApplet() %>">
   <textarea id="messageText" name="messageText" style="width:550" rows="20"><%= toString(Message.getMessageText()) %></textarea>

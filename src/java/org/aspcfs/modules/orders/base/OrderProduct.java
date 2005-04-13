@@ -24,6 +24,7 @@ import org.aspcfs.utils.DateUtils;
 import org.aspcfs.modules.base.Dependency;
 import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.products.base.*;
+import org.aspcfs.modules.quotes.base.*;
 
 /**
  *  This represents a Product that a customer requested and is associated with a
@@ -46,9 +47,15 @@ public class OrderProduct extends GenericBean {
   private double recurringAmount = 0.0;
   private int recurringType = -1;
   private double extendedPrice = 0.0;
+  private double singleTotalPrice = 0.0;
   private double totalPrice = 0;
   private int statusId = -1;
   private Timestamp statusDate = null;
+
+  private Timestamp entered = null;
+  private int enteredBy = -1;
+  private Timestamp modified = null;
+  private int modifiedBy = -1;
 
   private boolean buildProduct = false;
   protected ProductCatalog product = null;
@@ -80,12 +87,159 @@ public class OrderProduct extends GenericBean {
 
 
   /**
+   *  Sets the singleTotalPrice attribute of the OrderProduct object
+   *
+   *@param  tmp  The new singleTotalPrice value
+   */
+  public void setSingleTotalPrice(double tmp) {
+    this.singleTotalPrice = tmp;
+  }
+
+
+  /**
+   *  Gets the singleTotalPrice attribute of the OrderProduct object
+   *
+   *@return    The singleTotalPrice value
+   */
+  public double getSingleTotalPrice() {
+    singleTotalPrice = 0.0;
+    singleTotalPrice = this.getPriceAmount() - this.getExtendedPrice();
+    Iterator iterator = this.getProductOptionList().iterator();
+    while (iterator.hasNext()) {
+      OrderProductOption option = (OrderProductOption) iterator.next();
+      singleTotalPrice += option.getTotalPrice();
+    }
+    return singleTotalPrice;
+  }
+
+
+  /**
    *  Gets the buildProduct attribute of the OrderProduct object
    *
    *@return    The buildProduct value
    */
   public boolean getBuildProduct() {
     return buildProduct;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the OrderProduct object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(Timestamp tmp) {
+    this.entered = tmp;
+  }
+
+
+  /**
+   *  Sets the entered attribute of the OrderProduct object
+   *
+   *@param  tmp  The new entered value
+   */
+  public void setEntered(String tmp) {
+    this.entered = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the enteredBy attribute of the OrderProduct object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(int tmp) {
+    this.enteredBy = tmp;
+  }
+
+
+  /**
+   *  Sets the enteredBy attribute of the OrderProduct object
+   *
+   *@param  tmp  The new enteredBy value
+   */
+  public void setEnteredBy(String tmp) {
+    this.enteredBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Sets the modified attribute of the OrderProduct object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(Timestamp tmp) {
+    this.modified = tmp;
+  }
+
+
+  /**
+   *  Sets the modified attribute of the OrderProduct object
+   *
+   *@param  tmp  The new modified value
+   */
+  public void setModified(String tmp) {
+    this.modified = DatabaseUtils.parseTimestamp(tmp);
+  }
+
+
+  /**
+   *  Sets the modifiedBy attribute of the OrderProduct object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(int tmp) {
+    this.modifiedBy = tmp;
+  }
+
+
+  /**
+   *  Sets the modifiedBy attribute of the OrderProduct object
+   *
+   *@param  tmp  The new modifiedBy value
+   */
+  public void setModifiedBy(String tmp) {
+    this.modifiedBy = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the entered attribute of the OrderProduct object
+   *
+   *@return    The entered value
+   */
+  public Timestamp getEntered() {
+    return entered;
+  }
+
+
+  /**
+   *  Gets the enteredBy attribute of the OrderProduct object
+   *
+   *@return    The enteredBy value
+   */
+  public int getEnteredBy() {
+    return enteredBy;
+  }
+
+
+  /**
+   *  Gets the modified attribute of the OrderProduct object
+   *
+   *@return    The modified value
+   */
+  public Timestamp getModified() {
+    return modified;
+  }
+
+
+  /**
+   *  Gets the modifiedBy attribute of the OrderProduct object
+   *
+   *@return    The modifiedBy value
+   */
+  public int getModifiedBy() {
+    return modifiedBy;
   }
 
 
@@ -545,6 +699,13 @@ public class OrderProduct extends GenericBean {
    *@return    The totalPrice value
    */
   public double getTotalPrice() {
+    totalPrice = 0.0;
+    totalPrice = ((double) this.getQuantity()) * (this.getPriceAmount() - this.getExtendedPrice());
+    Iterator iterator = this.getProductOptionList().iterator();
+    while (iterator.hasNext()) {
+      OrderProductOption option = (OrderProductOption) iterator.next();
+      totalPrice += ((double) this.getQuantity()) * option.getTotalPrice();
+    }
     return totalPrice;
   }
 
@@ -652,7 +813,7 @@ public class OrderProduct extends GenericBean {
     }
 
     PreparedStatement pst = db.prepareStatement(
-        " SELECT op.item_id, op.order_id, op.product_id, op.quantity, op.msrp_currency, op.msrp.amount, " +
+        " SELECT op.item_id, op.order_id, op.product_id, op.quantity, op.msrp_currency, op.msrp_amount, " +
         "   op.price_currency, op.price_amount, op.recurring_currency, op.recurring_amount, op.recurring_type, " +
         "   op.extended_price, op.total_price, op.status_id, op.status_date " +
         " FROM order_product op " +
@@ -677,6 +838,7 @@ public class OrderProduct extends GenericBean {
     if (buildProductStatus) {
       this.buildProductStatus(db);
     }
+    determineTotal();
   }
 
 
@@ -714,6 +876,7 @@ public class OrderProduct extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public void buildProductOptions(Connection db) throws SQLException {
+    productOptionList = new OrderProductOptionList();
     productOptionList.setItemId(this.getId());
     productOptionList.buildList(db);
   }
@@ -724,11 +887,12 @@ public class OrderProduct extends GenericBean {
    */
   public void determineTotal() {
     // determine the total
-    System.out.println("performing option total");
-    Iterator i = productOptionList.iterator();
-    while (i.hasNext()) {
-      OrderProductOption thisOption = (OrderProductOption) i.next();
-      totalPrice += thisOption.getPriceAmount();
+    totalPrice = 0.0;
+    totalPrice = ((double) this.getQuantity()) * (this.getPriceAmount() - this.getExtendedPrice());
+    Iterator iterator = this.getProductOptionList().iterator();
+    while (iterator.hasNext()) {
+      OrderProductOption option = (OrderProductOption) iterator.next();
+      totalPrice += ((double) this.getQuantity()) * option.getTotalPrice();
     }
   }
 
@@ -768,45 +932,84 @@ public class OrderProduct extends GenericBean {
     if (!isValid(db)) {
       return result;
     }
-    db.setAutoCommit(false);
+    //TODO: remove this by making quantity INTEGER NOT NULL DEFAULT 1
+    if (quantity == 0) {
+      quantity = 1;
+    }
+    determineTotal();
+    boolean commit = true;
+    try {
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      StringBuffer sql = new StringBuffer();
+      sql.append(
+          " INSERT INTO order_product(order_id, product_id, " +
+          "   quantity, msrp_currency, msrp_amount, price_currency, price_amount, recurring_currency, " +
+          "   recurring_amount, recurring_type, extended_price, " +
+          "   total_price, status_id, status_date)");
 
-    StringBuffer sql = new StringBuffer();
-    sql.append(
-        " INSERT INTO order_product(order_id, product_id, " +
-        "   quantity, msrp_currency, msrp_amount, price_currency, price_amount, recurring_currency, " +
-        "   recurring_amount, recurring_type, extended_price, " +
-        "   total_price, status_id, status_date)");
+      sql.append(" VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+      int i = 0;
+      PreparedStatement pst = db.prepareStatement(sql.toString());
+      pst.setInt(++i, this.getOrderId());
+      pst.setInt(++i, this.getProductId());
+      pst.setInt(++i, this.getQuantity());
+      DatabaseUtils.setInt(pst, ++i, this.getMsrpCurrency());
+      pst.setDouble(++i, this.getMsrpAmount());
+      DatabaseUtils.setInt(pst, ++i, this.getPriceCurrency());
+      pst.setDouble(++i, this.getPriceAmount());
+      DatabaseUtils.setInt(pst, ++i, this.getRecurringCurrency());
+      pst.setDouble(++i, this.getRecurringAmount());
+      DatabaseUtils.setInt(pst, ++i, this.getRecurringType());
+      pst.setDouble(++i, this.getExtendedPrice());
+      pst.setDouble(++i, this.getTotalPrice());
+      DatabaseUtils.setInt(pst, ++i, this.getStatusId());
+      DatabaseUtils.setTimestamp(pst, ++i, this.getStatusDate());
 
-    sql.append("VALUES( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
-    int i = 0;
-    PreparedStatement pst = db.prepareStatement(sql.toString());
-    pst.setInt(++i, this.getOrderId());
-    pst.setInt(++i, this.getProductId());
-    pst.setInt(++i, this.getQuantity());
-    DatabaseUtils.setInt(pst, ++i, this.getMsrpCurrency());
-    pst.setDouble(++i, this.getMsrpAmount());
-    DatabaseUtils.setInt(pst, ++i, this.getPriceCurrency());
-    pst.setDouble(++i, this.getPriceAmount());
-    DatabaseUtils.setInt(pst, ++i, this.getRecurringCurrency());
-    pst.setDouble(++i, this.getRecurringAmount());
-    DatabaseUtils.setInt(pst, ++i, this.getRecurringType());
-    pst.setDouble(++i, this.getExtendedPrice());
-    pst.setDouble(++i, this.getTotalPrice());
-    DatabaseUtils.setInt(pst, ++i, this.getStatusId());
-    DatabaseUtils.setTimestamp(pst, ++i, this.getStatusDate());
+      pst.execute();
+      pst.close();
+      id = DatabaseUtils.getCurrVal(db, "order_product_item_id_seq");
 
-    pst.execute();
-    pst.close();
-    id = DatabaseUtils.getCurrVal(db, "order_product_item_id_seq");
+      // insert the order product's options
+//      productOptionList.insert(db);
 
-    // insert the order product's options
-    productOptionList.insert(db);
-
-    // insert the order product's status
-    productStatusList.insert(db);
-    db.commit();
-    result = true;
+      // insert the order product's status
+//      productStatusList.insert(db);
+      this.insertProductStatus(db);
+      if (commit) {
+        db.commit();
+      }
+      result = true;
+    } catch (SQLException e) {
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
     return result;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void insertProductStatus(Connection db) throws SQLException {
+    OrderProductStatus orderProductStatus = new OrderProductStatus();
+    orderProductStatus.setOrderId(this.getOrderId());
+    orderProductStatus.setItemId(this.getId());
+    orderProductStatus.setStatusId(this.getStatusId());
+    orderProductStatus.setEnteredBy(this.getModifiedBy());
+    orderProductStatus.setModifiedBy(this.getModifiedBy());
+    orderProductStatus.insert(db);
   }
 
 
@@ -821,8 +1024,12 @@ public class OrderProduct extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Item ID not specified");
     }
+    boolean commit = true;
     try {
-      db.setAutoCommit(false);
+      commit = db.getAutoCommit();
+      if (commit) {
+        db.setAutoCommit(false);
+      }
 
       // delete all the order product options associated with this order product
       this.buildProductOptions(db);
@@ -836,15 +1043,24 @@ public class OrderProduct extends GenericBean {
 
       // delete the order product
       PreparedStatement pst = db.prepareStatement(
-          " DELETE FROM order_product WHERE item_id = ?");
+          " DELETE FROM order_product WHERE item_id = ? ");
       pst.setInt(1, this.getId());
       pst.execute();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      e.printStackTrace();
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+
     }
     return true;
   }
@@ -897,6 +1113,7 @@ public class OrderProduct extends GenericBean {
 
     resultCount = pst.executeUpdate();
     pst.close();
+    this.insertProductStatus(db);
     return resultCount;
   }
 
@@ -932,6 +1149,55 @@ public class OrderProduct extends GenericBean {
    */
   protected boolean isValid(Connection db) throws SQLException {
     return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  id                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean createProductFromQuoteProduct(Connection db, int id) throws SQLException {
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    boolean result = true;
+
+    //Retrieve the quoteProduct from the id
+    QuoteProduct quoteProduct = new QuoteProduct(db, id);
+    quoteProduct.buildProductOptions(db);
+
+    Timestamp currentTime = new Timestamp(Calendar.getInstance().getTimeInMillis());
+    //Create the OrderProduct from the QuoteProduct
+    this.setProductId(quoteProduct.getProductId());
+    this.setQuantity(quoteProduct.getQuantity());
+    this.setPriceCurrency(quoteProduct.getPriceCurrency());
+    this.setPriceAmount(quoteProduct.getPriceAmount());
+    this.setRecurringCurrency(quoteProduct.getRecurringCurrency());
+    this.setRecurringAmount(quoteProduct.getRecurringAmount());
+    this.setRecurringType(quoteProduct.getRecurringType());
+    this.setExtendedPrice(quoteProduct.getExtendedPrice());
+    this.setTotalPrice(quoteProduct.getTotalPrice());
+    this.setStatusDate(currentTime);
+    this.insert(db);
+
+    //Check for quoteProductOptions and create the appropriate OrderProductOptions
+    if (quoteProduct.getProductOptionList().size() > 0) {
+      Iterator quoteProductOptions = (Iterator) quoteProduct.getProductOptionList().iterator();
+      while (quoteProductOptions.hasNext()) {
+        QuoteProductOption quoteProductOption = (QuoteProductOption) quoteProductOptions.next();
+        OrderProductOption orderProductOption = new OrderProductOption();
+        orderProductOption.setStatusId(this.getStatusId());
+        orderProductOption.setItemId(this.getId());
+        if (!orderProductOption.createOptionFromQuoteProductOption(db, quoteProductOption.getId())) {
+          result = false;
+          break;
+        }
+      }
+    }
+    return result;
   }
 }
 

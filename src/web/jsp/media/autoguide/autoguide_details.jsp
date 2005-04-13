@@ -34,7 +34,7 @@
   <tr>
     <th colspan="2" valign="center" style="text-align: center;">
 	    <strong><%= toHtml(InventoryItem.getVehicle().getMake().getName()) %>
-      <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %><dhv:evaluate exp="<%= hasText(InventoryItem.getStyle()) %>"> <%= toHtml(InventoryItem.getStyle()) %></dhv:evaluate>
+      <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %><dhv:evaluate if="<%= hasText(InventoryItem.getStyle()) %>"> <%= toHtml(InventoryItem.getStyle()) %></dhv:evaluate>
       <%= InventoryItem.getVehicle().getYear() %></strong>
 	  </th>
   </tr>
@@ -46,55 +46,55 @@
       <%= toHtml(InventoryItem.getOrganization().getPhoneNumber("Main")) %>
     </td>
   </tr>
-<dhv:evaluate exp="<%= hasText(InventoryItem.getStockNo()) %>">
+<dhv:evaluate if="<%= hasText(InventoryItem.getStockNo()) %>">
   <tr>
     <td nowrap class="formLabel">Stock No</td>
     <td><%= toHtml(InventoryItem.getStockNo()) %>&nbsp;</td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= (InventoryItem.getMileage() > -1) %>">
+<dhv:evaluate if="<%= (InventoryItem.getMileage() > -1) %>">
   <tr>
     <td nowrap class="formLabel">Mileage</td>
     <td><%= InventoryItem.getMileageString() %>&nbsp;</td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= hasText(InventoryItem.getVin()) %>">
+<dhv:evaluate if="<%= hasText(InventoryItem.getVin()) %>">
   <tr>
     <td nowrap class="formLabel">VIN</td>
     <td><%= toHtml(InventoryItem.getVin()) %>&nbsp;</td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= (InventoryItem.getSellingPrice() > 0) %>">
+<dhv:evaluate if="<%= (InventoryItem.getSellingPrice() > 0) %>">
   <tr>
     <td nowrap class="formLabel">Selling Price</td>
     <td><%= InventoryItem.getSellingPriceString() %>&nbsp;</td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= hasText(InventoryItem.getSellingPriceText()) %>">
+<dhv:evaluate if="<%= hasText(InventoryItem.getSellingPriceText()) %>">
   <tr>
     <td nowrap class="formLabel">Selling Price</td>
     <td><%= toHtml(InventoryItem.getSellingPriceText()) %>&nbsp;</td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= hasText(InventoryItem.getExteriorColor()) %>">
+<dhv:evaluate if="<%= hasText(InventoryItem.getExteriorColor()) %>">
   <tr>
     <td nowrap class="formLabel">Exterior Color</td>
     <td><%= toHtml(InventoryItem.getExteriorColor()) %>&nbsp;</td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= hasText(InventoryItem.getCondition()) %>">
+<dhv:evaluate if="<%= hasText(InventoryItem.getCondition()) %>">
   <tr>
     <td nowrap class="formLabel">Condition</td>
     <td><%= toHtml(InventoryItem.getCondition()) %>&nbsp;</td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= hasText(InventoryItem.getComments()) %>">
+<dhv:evaluate if="<%= hasText(InventoryItem.getComments()) %>">
   <tr>
     <td nowrap class="formLabel">Additional Text</td>
     <td><%= toHtml(InventoryItem.getComments()) %>&nbsp;</td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= InventoryItem.hasOptions() %>">
+<dhv:evaluate if="<%= InventoryItem.hasOptions() %>">
   <tr>
     <td nowrap class="formLabel">Options</td>
     <td>
@@ -110,7 +110,7 @@
     </td>
   </tr>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
+<dhv:evaluate if="<%= InventoryItem.hasAdRuns() %>">
   <tr>
     <td nowrap class="formLabel" valign="top">Ad Runs</td>
     <td>
@@ -138,10 +138,10 @@
     </td>
     <td class="rowUnderline" width="10%" nowrap style="text-align: right;">
 <dhv:permission name="autoguide-adruns-edit">
-<dhv:evaluate exp="<%= !thisAdRun.isComplete() %>">
+<dhv:evaluate if="<%= !thisAdRun.isComplete() %>">
       <a href="javascript:confirmForward('AutoGuide.do?command=MarkComplete&id=<%= InventoryItem.getId() %>&adId=<%= thisAdRun.getId() %>');">Set this item as completed</a>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= thisAdRun.isComplete() && (thisAdRun.getCompletedBy() == User.getUserId() || isManagerOf(pageContext, User.getUserId(), thisAdRun.getCompletedBy())) %>">
+<dhv:evaluate if="<%= thisAdRun.isComplete() && (thisAdRun.getCompletedBy() == User.getUserId() || isManagerOf(pageContext, User.getUserId(), thisAdRun.getCompletedBy())) %>">
       <a href="javascript:confirmForward('AutoGuide.do?command=MarkIncomplete&id=<%= InventoryItem.getId() %>&adId=<%= thisAdRun.getId() %>');"><font color="#8F8F8F">Set this item as incomplete</font></a>
 </dhv:evaluate>
 </dhv:permission>
@@ -159,14 +159,14 @@
 &nbsp;<br>
 <%-- The following is specially formatted to look correctly in an input field and cannot have line breaks --%><% String phoneType = "Main"; %>
 Ad Text:
-<input type="text" name="adtext" size="80" value="<%= toHtml(InventoryItem.getVehicle().getMake().getName()) %> <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %><dhv:evaluate exp="<%= hasText(InventoryItem.getStyle()) %>"> <%= toHtml(InventoryItem.getStyle()) %></dhv:evaluate> <%= InventoryItem.getVehicle().getYear() %><dhv:evaluate exp="<%= hasText(InventoryItem.getExteriorColor()) %>"> <%= toHtml(InventoryItem.getExteriorColor()) %></dhv:evaluate><dhv:evaluate exp="<%= (InventoryItem.getMileage() > -1) %>"> <%= InventoryItem.getMileageString() %></dhv:evaluate><dhv:evaluate exp="<%= InventoryItem.hasOptions() %>"> <%
+<input type="text" name="adtext" size="80" value="<%= toHtml(InventoryItem.getVehicle().getMake().getName()) %> <%= toHtml(InventoryItem.getVehicle().getModel().getName()) %><dhv:evaluate if="<%= hasText(InventoryItem.getStyle()) %>"> <%= toHtml(InventoryItem.getStyle()) %></dhv:evaluate> <%= InventoryItem.getVehicle().getYear() %><dhv:evaluate if="<%= hasText(InventoryItem.getExteriorColor()) %>"> <%= toHtml(InventoryItem.getExteriorColor()) %></dhv:evaluate><dhv:evaluate if="<%= (InventoryItem.getMileage() > -1) %>"> <%= InventoryItem.getMileageString() %></dhv:evaluate><dhv:evaluate if="<%= InventoryItem.hasOptions() %>"> <%
       Iterator options = InventoryItem.getOptions().iterator();
       while (options.hasNext()) {
         Option thisOption = (Option)options.next();
 %><%= toHtml(thisOption.getName()) %><%= (options.hasNext()?", ":"") %><%
       }
-%></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getComments()) %>"> <%= toHtml(InventoryItem.getComments()) %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getCondition()) %>"> <%= toHtml(InventoryItem.getCondition()) %></dhv:evaluate><dhv:evaluate exp="<%= (InventoryItem.getSellingPrice() > 0) %>"> <%= InventoryItem.getSellingPriceString() %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getSellingPriceText()) %>"> <%= toHtml(InventoryItem.getSellingPriceText()) %></dhv:evaluate><dhv:evaluate exp="<%= hasText(InventoryItem.getOrganization().getPhoneNumber(phoneType)) %>"> <%= toHtml(InventoryItem.getOrganization().getPhoneNumber("Main")) %></dhv:evaluate>"><br>
-<dhv:evaluate exp="<%= InventoryItem.hasAdRuns() %>">
+%></dhv:evaluate><dhv:evaluate if="<%= hasText(InventoryItem.getComments()) %>"> <%= toHtml(InventoryItem.getComments()) %></dhv:evaluate><dhv:evaluate if="<%= hasText(InventoryItem.getCondition()) %>"> <%= toHtml(InventoryItem.getCondition()) %></dhv:evaluate><dhv:evaluate if="<%= (InventoryItem.getSellingPrice() > 0) %>"> <%= InventoryItem.getSellingPriceString() %></dhv:evaluate><dhv:evaluate if="<%= hasText(InventoryItem.getSellingPriceText()) %>"> <%= toHtml(InventoryItem.getSellingPriceText()) %></dhv:evaluate><dhv:evaluate if="<%= hasText(InventoryItem.getOrganization().getPhoneNumber(phoneType)) %>"> <%= toHtml(InventoryItem.getOrganization().getPhoneNumber("Main")) %></dhv:evaluate>"><br>
+<dhv:evaluate if="<%= InventoryItem.hasAdRuns() %>">
 &nbsp;<br><%-- End formatting --%>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="empty">
   <tr>
@@ -182,14 +182,14 @@ Ad Text:
     </td>
     <td class="PhotoDetail">
       <span>
-<dhv:evaluate exp="<%= InventoryItem.hasPictureId() %>">
+<dhv:evaluate if="<%= InventoryItem.hasPictureId() %>">
         <a href="javascript:popURL('media/autoguide/autoguide_popup_photo.jsp?id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>&ver=1.0&popup=true','Photo','760','550','yes','yes');"><img src="AutoGuide.do?command=ShowImage&id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>" border="0"/></a>
 </dhv:evaluate>
-<dhv:evaluate exp="<%= !InventoryItem.hasPictureId() %>">
+<dhv:evaluate if="<%= !InventoryItem.hasPictureId() %>">
         <img src="images/vehicle_unavailable.gif" border="0"/>
 </dhv:evaluate>
       </span>
-<dhv:evaluate exp="<%= InventoryItem.hasPictureId() %>">   
+<dhv:evaluate if="<%= InventoryItem.hasPictureId() %>">
       <br><a href="AutoGuide.do?command=DownloadImage&id=<%= InventoryItem.getId() %>&fid=<%= InventoryItem.getPictureId() %>">D/L Hi-Res</a> (<%= InventoryItem.getPicture().getVersion(1.0d).getRelativeSize() %>k)<br>
 </dhv:evaluate>
       <br><a href="AutoGuide.do?command=DownloadText&id=<%= InventoryItem.getId() %>">D/L Text</a>

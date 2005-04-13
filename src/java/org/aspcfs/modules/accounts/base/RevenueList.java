@@ -26,9 +26,9 @@ import org.aspcfs.modules.base.Constants;
 /**
  *  Description of the Class
  *
- *@author     chris
- *@created    2002
- *@version    $Id$
+ * @author     chris
+ * @created    2002
+ * @version    $Id$
  */
 public class RevenueList extends Vector {
 
@@ -55,8 +55,8 @@ public class RevenueList extends Vector {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -114,7 +114,6 @@ public class RevenueList extends Vector {
       sqlOrder.append("ORDER BY r.year desc,r.month desc ");
     }
 
-
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
@@ -157,8 +156,8 @@ public class RevenueList extends Vector {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void delete(Connection db) throws SQLException {
     Iterator revenue = this.iterator();
@@ -172,7 +171,7 @@ public class RevenueList extends Vector {
   /**
    *  Gets the tableName attribute of the RevenueList object
    *
-   *@return    The tableName value
+   * @return    The tableName value
    */
   public String getTableName() {
     return tableName;
@@ -182,7 +181,7 @@ public class RevenueList extends Vector {
   /**
    *  Gets the uniqueField attribute of the RevenueList object
    *
-   *@return    The uniqueField value
+   * @return    The uniqueField value
    */
   public String getUniqueField() {
     return uniqueField;
@@ -192,7 +191,7 @@ public class RevenueList extends Vector {
   /**
    *  Gets the lastAnchor attribute of the RevenueList object
    *
-   *@return    The lastAnchor value
+   * @return    The lastAnchor value
    */
   public java.sql.Timestamp getLastAnchor() {
     return lastAnchor;
@@ -202,7 +201,7 @@ public class RevenueList extends Vector {
   /**
    *  Gets the nextAnchor attribute of the RevenueList object
    *
-   *@return    The nextAnchor value
+   * @return    The nextAnchor value
    */
   public java.sql.Timestamp getNextAnchor() {
     return nextAnchor;
@@ -212,7 +211,7 @@ public class RevenueList extends Vector {
   /**
    *  Gets the syncType attribute of the RevenueList object
    *
-   *@return    The syncType value
+   * @return    The syncType value
    */
   public int getSyncType() {
     return syncType;
@@ -222,7 +221,7 @@ public class RevenueList extends Vector {
   /**
    *  Sets the lastAnchor attribute of the RevenueList object
    *
-   *@param  tmp  The new lastAnchor value
+   * @param  tmp  The new lastAnchor value
    */
   public void setLastAnchor(java.sql.Timestamp tmp) {
     this.lastAnchor = tmp;
@@ -232,7 +231,7 @@ public class RevenueList extends Vector {
   /**
    *  Sets the nextAnchor attribute of the RevenueList object
    *
-   *@param  tmp  The new nextAnchor value
+   * @param  tmp  The new nextAnchor value
    */
   public void setNextAnchor(java.sql.Timestamp tmp) {
     this.nextAnchor = tmp;
@@ -242,7 +241,7 @@ public class RevenueList extends Vector {
   /**
    *  Sets the syncType attribute of the RevenueList object
    *
-   *@param  tmp  The new syncType value
+   * @param  tmp  The new syncType value
    */
   public void setSyncType(int tmp) {
     this.syncType = tmp;
@@ -252,7 +251,7 @@ public class RevenueList extends Vector {
   /**
    *  Gets the orgId attribute of the RevenueList object
    *
-   *@return    The orgId value
+   * @return    The orgId value
    */
   public int getOrgId() {
     return orgId;
@@ -262,7 +261,7 @@ public class RevenueList extends Vector {
   /**
    *  Sets the orgId attribute of the RevenueList object
    *
-   *@param  orgId  The new orgId value
+   * @param  orgId  The new orgId value
    */
   public void setOrgId(int orgId) {
     this.orgId = orgId;
@@ -272,7 +271,7 @@ public class RevenueList extends Vector {
   /**
    *  Gets the type attribute of the RevenueList object
    *
-   *@return    The type value
+   * @return    The type value
    */
   public int getType() {
     return type;
@@ -282,7 +281,7 @@ public class RevenueList extends Vector {
   /**
    *  Sets the type attribute of the RevenueList object
    *
-   *@param  type  The new type value
+   * @param  type  The new type value
    */
   public void setType(int type) {
     this.type = type;
@@ -292,7 +291,7 @@ public class RevenueList extends Vector {
   /**
    *  Gets the year attribute of the RevenueList object
    *
-   *@return    The year value
+   * @return    The year value
    */
   public int getYear() {
     return year;
@@ -302,7 +301,7 @@ public class RevenueList extends Vector {
   /**
    *  Sets the year attribute of the RevenueList object
    *
-   *@param  year  The new year value
+   * @param  year  The new year value
    */
   public void setYear(int year) {
     this.year = year;
@@ -312,7 +311,7 @@ public class RevenueList extends Vector {
   /**
    *  Sets the pagedListInfo attribute of the RevenueList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @param  pagedListInfo  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -322,7 +321,7 @@ public class RevenueList extends Vector {
   /**
    *  Gets the pagedListInfo attribute of the RevenueList object
    *
-   *@return    The pagedListInfo value
+   * @return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -332,7 +331,7 @@ public class RevenueList extends Vector {
   /**
    *  Gets the ownerIdRange attribute of the RevenueList object
    *
-   *@return    The ownerIdRange value
+   * @return    The ownerIdRange value
    */
   public String getOwnerIdRange() {
     return ownerIdRange;
@@ -342,7 +341,7 @@ public class RevenueList extends Vector {
   /**
    *  Sets the ownerIdRange attribute of the RevenueList object
    *
-   *@param  ownerIdRange  The new ownerIdRange value
+   * @param  ownerIdRange  The new ownerIdRange value
    */
   public void setOwnerIdRange(String ownerIdRange) {
     this.ownerIdRange = ownerIdRange;
@@ -352,7 +351,7 @@ public class RevenueList extends Vector {
   /**
    *  Gets the owner attribute of the RevenueList object
    *
-   *@return    The owner value
+   * @return    The owner value
    */
   public int getOwner() {
     return owner;
@@ -362,7 +361,7 @@ public class RevenueList extends Vector {
   /**
    *  Sets the owner attribute of the RevenueList object
    *
-   *@param  owner  The new owner value
+   * @param  owner  The new owner value
    */
   public void setOwner(int owner) {
     this.owner = owner;
@@ -372,10 +371,10 @@ public class RevenueList extends Vector {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  newOwner          Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  newOwner          Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public int reassignElements(Connection db, int newOwner) throws SQLException {
     int total = 0;
@@ -393,7 +392,30 @@ public class RevenueList extends Vector {
   /**
    *  Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param  db                Description of the Parameter
+   * @param  newOwner          Description of the Parameter
+   * @param  userId            Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public int reassignElements(Connection db, int newOwner, int userId) throws SQLException {
+    int total = 0;
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      Revenue thisRevenue = (Revenue) i.next();
+      thisRevenue.setModifiedBy(userId);
+      if (thisRevenue.reassign(db, newOwner)) {
+        total++;
+      }
+    }
+    return total;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  sqlFilter  Description of the Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -420,9 +442,9 @@ public class RevenueList extends Vector {
   /**
    *  Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  pst               Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -448,11 +470,11 @@ public class RevenueList extends Vector {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@param  moduleId          Description of the Parameter
-   *@param  itemId            Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @param  moduleId          Description of the Parameter
+   * @param  itemId            Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   public static int retrieveRecordCount(Connection db, int moduleId, int itemId) throws SQLException {
     int count = 0;

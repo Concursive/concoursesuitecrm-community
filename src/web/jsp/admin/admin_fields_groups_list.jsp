@@ -30,8 +30,7 @@
     if (form.dosubmit.value == "false") {
       return true;
     }
-    if (confirm("Are you sure you want to delete this folder " +
-              "and any associated data that may have been entered?")) {
+    if (confirm(label("confirm.delete.folder","Are you sure you want to delete this folder and any associated data that may have been entered?"))) {
       form.action = "AdminFieldsFolder.do?command=DeleteFolder&modId=<%= ModId %>&catId=<%= Category.getId() %>&auto-populate=true";
       return true;
     } else {
@@ -39,12 +38,12 @@
     }
   }
   function confirmDeleteGroup(url) {
-    if (confirm('Are you sure you want to delete the group, the fields in this group, and any associated data entered in the module records?')) {
+    if (confirm(label("confirm.delete.group","Are you sure you want to delete the group, the fields in this group, and any associated data entered in the module records?"))) {
       window.location = url;
     }
   }
   function confirmDeleteField(url) {
-    if (confirm('Are you sure you want to delete the field, and any associated data entered in the module records?')) {
+    if (confirm(label("confirm.delete.field","Are you sure you want to delete the field, and any associated data entered in the module records?"))) {
       window.location = url;
     }
   }
@@ -54,24 +53,24 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Admin.do?command=Config&modId=<%= ModId %>">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Admin.do?command=Config&modId=<%= ModId %>"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>"><%= PermissionCategory.getCategory() %></a> >
-<a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
-Folder
+<a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>"><dhv:label name="admin.customFolders">Custom Folders</dhv:label></a> > 
+<dhv:label name="accounts.accounts_documents_folders_add.Folder">Folder</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:formMessage showSpace="false" />
 <%
-  CategoryList.setJsEvent("onChange=\"javascript:this.form.dosubmit.value='false';document.forms[0].submit();\"");
+  CategoryList.setJsEvent("onChange=\"javascript:this.form.dosubmit.value='false';document.details.submit();\"");
 %>
-  <strong>Module:</strong> <%= toHtml(PermissionCategory.getCategory()) %><br />
-  <strong>Folder:</strong> <%= CategoryList.getHtmlSelect("catId", Category.getId()) %><br />
+  <strong><dhv:label name="admin.module.colon">Module:</dhv:label></strong> <%= toHtml(PermissionCategory.getCategory()) %><br />
+  <strong><dhv:label name="accounts.accounts_documents_folders_add.Folder.colon">Folder:</dhv:label></strong> <%= CategoryList.getHtmlSelect("catId", Category.getId()) %><br />
   <br />
   <dhv:permission name="admin-sysconfig-folders-add">
-    <a href="AdminFieldsGroup.do?command=AddGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>">Add a Group to this Folder</a><br>
+    <a href="AdminFieldsGroup.do?command=AddGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>"><dhv:label name="admin.addGoupToFolder.text">Add a Group to this Folder</dhv:label></a><br>
     &nbsp;<br>
   </dhv:permission>
 <%
@@ -89,18 +88,18 @@ Folder
     <tr>
       <td>
         <dhv:permission name="admin-sysconfig-folders-edit">
-          <a href="AdminFieldsGroup.do?command=ModifyGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>">Edit</a> |
+          <a href="AdminFieldsGroup.do?command=ModifyGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Edit">Edit</dhv:label></a> |
         </dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-delete">
-          <a href="javascript:confirmDeleteGroup('AdminFieldsGroup.do?command=DeleteGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&groupId=<%= thisGroup.getId() %>&auto-populate=true');">Del</a> |
+          <a href="javascript:confirmDeleteGroup('AdminFieldsGroup.do?command=DeleteGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&groupId=<%= thisGroup.getId() %>&auto-populate=true');"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Del">Del</dhv:label></a> |
         </dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-add">
-          <a href="AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|U">Up</a> |
-          <a href="AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|D">Down</a> 
+          <a href="AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|U"><dhv:label name="global.button.Up">Up</dhv:label></a> |
+          <a href="AdminFieldsGroup.do?command=MoveGroup&modId=<%= ModId %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|D"><dhv:label name="global.button.Down">Down</dhv:label></a> 
           <dhv:permission name="admin-sysconfig-folders-add">|</dhv:permission>
         </dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-add">
-          <a href="AdminFields.do?command=AddField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>">Add a Custom Field</a>
+          <a href="AdminFields.do?command=AddField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= thisGroup.getId() %>"><dhv:label name="admin.addCustomField">Add a Custom Field</dhv:label></a>
         </dhv:permission>
       </td>
     </tr>
@@ -112,13 +111,13 @@ Folder
         <strong><%= thisGroup.getName() %></strong>
       </th>
       <th align="center">
-        <strong>Enabled</strong>
+        <strong><dhv:label name="product.enabled">Enabled</dhv:label></strong>
       </th>
       <th align="center" nowrap>
-        <strong>Active Date</strong>
+        <strong><dhv:label name="admin.activeDate">Active Date</dhv:label></strong>
       </th>
       <th align="center" nowrap>
-        <strong>End Date</strong>
+        <strong><dhv:label name="product.endDate">End Date</dhv:label></strong>
       </th>
     </tr>
 <%      
@@ -133,15 +132,16 @@ Folder
       <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete,admin-sysconfig-folders-add">
       <td align="left" nowrap>
         <dhv:permission name="admin-sysconfig-folders-edit">
-          <a href="AdminFields.do?command=ModifyField&id=<%= thisField.getId() %>&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= thisField.getGroupId() %>">Edit</a>
+          <a href="AdminFields.do?command=ModifyField&id=<%= thisField.getId() %>&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= thisField.getGroupId() %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Edit">Edit</dhv:label></a>
         </dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete" all="true">|</dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-delete">
-          <a href="javascript:confirmDeleteField('AdminFields.do?command=DeleteField&id=<%= thisField.getId() %>&modId=<%= ModId %>&catId=<%= Category.getId() %>&groupId=<%= thisField.getGroupId() %>&auto-populate=true');">Del</a>
+          <a href="javascript:confirmDeleteField('AdminFields.do?command=DeleteField&id=<%= thisField.getId() %>&modId=<%= ModId %>&catId=<%= Category.getId() %>&groupId=<%= thisField.getGroupId() %>&auto-populate=true');"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Del">Del</dhv:label></a>
         </dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-delete">|</dhv:permission>
         <dhv:permission name="admin-sysconfig-folders-edit,admin-sysconfig-folders-add">
-          <a href="AdminFields.do?command=MoveField&modId=<%= ModId %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|U">Up </a>| <a href="AdminFields.do?command=MoveField&modId=<%= ModId %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|D">Down</a>
+          <a href="AdminFields.do?command=MoveField&modId=<%= ModId %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|U"><dhv:label name="global.button.Up">Up</dhv:label></a>|
+          <a href="AdminFields.do?command=MoveField&modId=<%= ModId %>&catId=<%= Category.getId() %>&chg=<%= groupLevel %>|<%= fieldLevel %>|D"><dhv:label name="global.button.Down">Down</dhv:label></a>
         </dhv:permission>
       </td>
       </dhv:permission>
@@ -152,7 +152,11 @@ Folder
         <%= thisField.getTypeString() %>
       </td>
       <td width="10%" align="center" nowrap>
-        <%= (thisField.getEnabled()? "Yes" : "No") %>
+<% if(thisField.getEnabled()) {%>
+  <dhv:label name="account.yes">Yes</dhv:label>
+<%} else {%>
+  <dhv:label name="account.no">No</dhv:label>
+<%}%>
       </td>
       <td width="10%" align="center" nowrap>
       <zeroio:tz timestamp="<%= thisField.getStartDate() %>" dateOnly="true" default="&nbsp;"/>
@@ -173,7 +177,7 @@ Folder
   <table cellpadding="4" cellspacing="0" border="1" width="100%" class="details">
     <tr class="containerBody">
       <td colspan="6">
-        No groups have been added.
+        <dhv:label name="admin.noGroupsAdded.text">No groups have been added.</dhv:label>
       </td>
     </tr>
   </table>
@@ -183,6 +187,6 @@ Folder
   <input type="hidden" name="moduleId" value="<%= ConstantId %>">
   <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
   <dhv:permission name="admin-sysconfig-folders-delete">
-    <input type='submit' value='Delete this folder and all fields' onClick="javascript:this.form.dosubmit.value='true';">
+    <input type='submit' value="<dhv:label name="button.deleteFolderAllFields.text">Delete this folder and all fields</dhv:label>" onClick="javascript:this.form.dosubmit.value='true';">
   </dhv:permission>
 </form>

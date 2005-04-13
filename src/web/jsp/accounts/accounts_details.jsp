@@ -30,38 +30,34 @@
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
 <% if (request.getParameter("return") == null) { %>
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%} else if (request.getParameter("return").equals("dashboard")) {%>
-<a href="Accounts.do?command=Dashboard">Dashboard</a> >
+<a href="Accounts.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
 <%}%>
 <dhv:label name="accounts.details">Account Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-<dhv:container name="accounts" selected="details" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
+<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>
+<dhv:container name="accounts" selected="details" object="OrgDetails" param="<%= param1 %>">
+<input type="hidden" name="orgId" value="<%= OrgDetails.getOrgId() %>">
 <dhv:evaluate if="<%= OrgDetails.getEnabled() %>">
   <dhv:permission name="accounts-accounts-edit">
-      <input type="button" value="Modify" onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';">
+    <input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';">
   </dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate if="<%= !(OrgDetails.getEnabled()) %>">
   <dhv:permission name="accounts-accounts-edit">
-    <input type="button" value="Enable"	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
+    <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>"	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
   </dhv:permission>
 </dhv:evaluate>
-<dhv:permission name="accounts-accounts-delete"><input type="button" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
+<dhv:permission name="accounts-accounts-delete"><input type="button" value="<dhv:label name="accounts.accounts_details.DeleteAccount">Delete Account</dhv:label>" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br>&nbsp;</dhv:permission>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Primary Information</strong>
+      <strong><dhv:label name="accounts.accounts_details.PrimaryInformation">Primary Information</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
@@ -73,6 +69,16 @@
       <dhv:evaluate if="<%= !(OrgDetails.getHasEnabledOwnerAccount()) %>"><font color="red">*</font></dhv:evaluate>
     </td>
   </tr>
+<dhv:evaluate if="<%= OrgDetails.getTypes().size() > 0 %>">
+  <tr class="containerBody">
+    <td nowrap class="formLabel">
+      <dhv:label name="accounts.account.types">Account Type(s)</dhv:label>
+    </td>
+    <td>
+       <%= toHtml(OrgDetails.getTypes().valuesAsString()) %>&nbsp;
+    </td>
+  </tr>
+</dhv:evaluate>
 <dhv:evaluate if="<%= hasText(OrgDetails.getAccountNumber()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
@@ -87,7 +93,7 @@
 <dhv:evaluate if="<%= hasText(OrgDetails.getUrl()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Web Site URL
+      <dhv:label name="accounts.accounts_add.WebSiteURL">Web Site URL</dhv:label>
     </td>
     <td>
       <a href="<%= toHtml(OrgDetails.getUrlString()) %>" target="_new"><%= toHtml(OrgDetails.getUrl()) %></a>&nbsp;
@@ -99,7 +105,7 @@
 <dhv:evaluate if="<%= hasText(OrgDetails.getIndustryName()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Industry
+      <dhv:label name="accounts.accounts_add.Industry">Industry</dhv:label>
     </td>
     <td>
        <%= toHtml(OrgDetails.getIndustryName()) %>&nbsp;
@@ -123,7 +129,7 @@
 <dhv:evaluate if="<%= (OrgDetails.getRevenue() > 0) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Revenue
+      <dhv:label name="accounts.accounts_add.Revenue">Revenue</dhv:label>
     </td>
     <td>
        <zeroio:currency value="<%= OrgDetails.getRevenue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
@@ -135,7 +141,7 @@
 <dhv:evaluate if="<%= hasText(OrgDetails.getTicker()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Ticker Symbol
+      <dhv:label name="accounts.accounts_add.TickerSymbol">Ticker Symbol</dhv:label>
     </td>
     <td>
        <%= toHtml(OrgDetails.getTicker()) %>&nbsp;
@@ -147,7 +153,7 @@
 <dhv:evaluate if="<%= hasText(OrgDetails.getContractEndDateString()) %>">
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Contract End Date
+      <dhv:label name="accounts.accounts_add.ContractEndDate">Contract End Date</dhv:label>
     </td>
     <td>
       <zeroio:tz timestamp="<%= OrgDetails.getContractEndDate() %>" dateOnly="true" timeZone="<%= OrgDetails.getContractEndDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
@@ -163,7 +169,7 @@
 <dhv:evaluate if="<%= hasText(OrgDetails.getAlertText()) %>">
    <tr class="containerBody">
     <td nowrap class="formLabel">
-      Alert Description
+      <dhv:label name="accounts.accounts_add.AlertDescription">Alert Description</dhv:label>
     </td>
     <td>
        <%= toHtml(OrgDetails.getAlertText()) %>
@@ -173,7 +179,7 @@
 <dhv:evaluate if="<%= (OrgDetails.getAlertDate() != null) %>">
    <tr class="containerBody">
     <td nowrap class="formLabel">
-      Alert Date
+      <dhv:label name="accounts.accounts_add.AlertDate">Alert Date</dhv:label>
     </td>
     <td>
       <zeroio:tz timestamp="<%= OrgDetails.getAlertDate() %>" dateOnly="true" timeZone="<%= OrgDetails.getAlertDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
@@ -191,7 +197,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Phone Numbers</strong>
+	    <strong><dhv:label name="accounts.accounts_add.PhoneNumbers">Phone Numbers</dhv:label></strong>
 	  </th>
   </tr>
 <dhv:evaluate if="<%=(OrgDetails.getPrimaryContact() == null)%>">
@@ -207,6 +213,9 @@
       </td>
       <td>
         <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>
+        <dhv:evaluate if="<%=thisPhoneNumber.getPrimaryNumber()%>">        
+          <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+        </dhv:evaluate>&nbsp;
       </td>
     </tr>
 <%    
@@ -215,7 +224,7 @@
 %>
     <tr class="containerBody">
       <td colspan="2">
-        <font color="#9E9E9E">No phone numbers entered.</font>
+        <font color="#9E9E9E"><dhv:label name="contacts.NoPhoneNumbers">No phone numbers entered.</dhv:label></font>
       </td>
     </tr>
 <%}%>
@@ -232,7 +241,10 @@
         <%= toHtml(thisPhoneNumber.getTypeName()) %>
       </td>
       <td width=100%>
-        <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>
+        <%= toHtml(thisPhoneNumber.getPhoneNumber()) %>&nbsp;
+        <dhv:evaluate if="<%=thisPhoneNumber.getPrimaryNumber()%>">        
+          <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+        </dhv:evaluate>
       </td>
     </tr>
 <%    
@@ -241,7 +253,7 @@
 %>
     <tr class="containerBody">
       <td colspan="2">
-        <font color="#9E9E9E">No phone numbers entered.</font>
+        <font color="#9E9E9E"><dhv:label name="contacts.NoPhoneNumbers">No phone numbers entered.</dhv:label></font>
       </td>
     </tr>
 <%}%>
@@ -253,7 +265,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Addresses</strong>
+	    <strong><dhv:label name="accounts.accounts_add.Addresses">Addresses</dhv:label></strong>
 	  </th>
   </tr>
 <dhv:evaluate if="<%=(OrgDetails.getPrimaryContact() == null)%>">
@@ -268,7 +280,10 @@
         <%= toHtml(thisAddress.getTypeName()) %>
       </td>
       <td>
-        <%= toHtml(thisAddress.toString()) %>
+        <%= toHtml(thisAddress.toString()) %>&nbsp;
+        <dhv:evaluate if="<%=thisAddress.getPrimaryAddress()%>">        
+          <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+        </dhv:evaluate>
       </td>
     </tr>
 <%
@@ -277,7 +292,7 @@
 %>
     <tr class="containerBody">
       <td colspan="2">
-        <font color="#9E9E9E">No addresses entered.</font>
+        <font color="#9E9E9E"><dhv:label name="contacts.NoAddresses">No addresses entered.</dhv:label></font>
       </td>
     </tr>
 <%}%>
@@ -294,7 +309,10 @@
         <%= toHtml(thisAddress.getTypeName()) %>
       </td>
       <td>
-        <%= toHtml(thisAddress.toString()) %>
+        <%= toHtml(thisAddress.toString()) %>&nbsp;
+        <dhv:evaluate if="<%=thisAddress.getPrimaryAddress()%>">        
+          <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+        </dhv:evaluate>
       </td>
     </tr>
 <%
@@ -303,7 +321,7 @@
 %>
     <tr class="containerBody">
       <td colspan="2">
-        <font color="#9E9E9E">No addresses entered.</font>
+        <font color="#9E9E9E"><dhv:label name="contacts.NoAddresses">No addresses entered.</dhv:label></font>
       </td>
     </tr>
 <%}%>
@@ -315,7 +333,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Email Addresses</strong>
+	    <strong><dhv:label name="accounts.accounts_add.EmailAddresses">Email Addresses</dhv:label></strong>
 	  </th>
   </tr>
 <dhv:evaluate if="<%=(OrgDetails.getPrimaryContact() == null)%>">
@@ -330,7 +348,10 @@
         <%= toHtml(thisEmailAddress.getTypeName()) %>
       </td>
       <td>
-        <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>
+        <a href="mailto:<%= toHtml(thisEmailAddress.getEmail()) %>"><%= toHtml(thisEmailAddress.getEmail()) %></a>&nbsp;
+        <dhv:evaluate if="<%=thisEmailAddress.getPrimaryEmail()%>">        
+          <dhv:label name="account.primary.brackets">(Primary)</dhv:label>
+        </dhv:evaluate>
       </td>
     </tr>
 <%    
@@ -339,7 +360,7 @@
 %>
     <tr class="containerBody">
       <td colspan="2">
-        <font color="#9E9E9E">No email addresses entered.</font>
+        <font color="#9E9E9E"><dhv:label name="contacts.NoEmailAdresses">No email addresses entered.</dhv:label></font>
       </td>
     </tr>
 <%}%>
@@ -365,7 +386,7 @@
 %>
     <tr class="containerBody">
       <td colspan="2">
-        <font color="#9E9E9E">No email addresses entered.</font>
+        <font color="#9E9E9E"><dhv:label name="contacts.NoEmailAdresses">No email addresses entered.</dhv:label></font>
       </td>
     </tr>
 <%}%>
@@ -376,12 +397,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Additional Details</strong>
+	    <strong><dhv:label name="accounts.accounts_add.AdditionalDetails">Additional Details</dhv:label></strong>
 	  </th>
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Notes
+      <dhv:label name="accounts.accountasset_include.Notes">Notes</dhv:label>
     </td>
     <td>
       <%=toHtml(OrgDetails.getNotes()) %>&nbsp;
@@ -392,12 +413,12 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Record Information</strong>
+      <strong><dhv:label name="accounts.accounts_contacts_calls_details.RecordInformation">Record Information</dhv:label></strong>
     </th>     
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Entered
+      <dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label>
     </td>
     <td>
       <dhv:username id="<%= OrgDetails.getEnteredBy() %>" />
@@ -406,7 +427,7 @@
   </tr>
   <tr class="containerBody">
     <td nowrap class="formLabel">
-      Modified
+      <dhv:label name="accounts.accounts_contacts_calls_details.Modified">Modified</dhv:label>
     </td>
     <td>
       <dhv:username id="<%= OrgDetails.getModifiedBy() %>" />
@@ -416,16 +437,15 @@
 </table>
 <dhv:permission name="accounts-accounts-edit,accounts-accounts-delete"><br></dhv:permission>
 <dhv:evaluate if="<%=(OrgDetails.getEnabled())%>">
-  <dhv:permission name="accounts-accounts-edit"><input type="button" value="Modify"	onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';"></dhv:permission>
+  <dhv:permission name="accounts-accounts-edit"><input type="button" value="<dhv:label name="global.button.modify">Modify</dhv:label>"	onClick="javascript:window.location.href='Accounts.do?command=Modify&orgId=<%= OrgDetails.getOrgId() %>';"></dhv:permission>
 </dhv:evaluate>
 <dhv:evaluate if="<%=!(OrgDetails.getEnabled())%>">
   <dhv:permission name="accounts-accounts-edit">
-    <input type="button" value="Enable" 	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
+    <input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" 	onClick="javascript:window.location.href='Accounts.do?command=Enable&orgId=<%= OrgDetails.getOrgId() %>';">
   </dhv:permission>
 </dhv:evaluate>
-<dhv:permission name="accounts-accounts-delete"><input type="button" value="Delete Account" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
-</td></tr>
-</table>
+<dhv:permission name="accounts-accounts-delete"><input type="button" value="<dhv:label name="accounts.accounts_details.DeleteAccount">Delete Account</dhv:label>" onClick="javascript:popURLReturn('Accounts.do?command=ConfirmDelete&id=<%=OrgDetails.getId()%>&popup=true','Accounts.do?command=Search', 'Delete_account','320','200','yes','no');"></dhv:permission>
+</dhv:container>
 <% if (request.getParameter("return") != null) { %>
 <input type="hidden" name="return" value="<%=request.getParameter("return")%>">
 <%}%>

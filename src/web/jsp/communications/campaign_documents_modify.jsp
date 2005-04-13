@@ -29,15 +29,15 @@
     var formTest = true;
     var messageText = "";
     if (form.subject.value == "") {
-      messageText += "- Subject is required\r\n";
+      messageText += label("Subject.required", "- Subject is required\r\n");
       formTest = false;
     }
     if ((form.clientFilename.value) == "") {
-      messageText += "- Filename is required\r\n";
+      messageText += label("Filename.required", "- Filename is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The file information could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("Fileinfo.not.submitted", "The file information could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
@@ -47,67 +47,60 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
+<form method="post" name="inputForm" action="CampaignDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManager.do?command=Dashboard">Dashboard</a> >
-<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>">Campaign Details</a> >
-<a href="CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>">Documents</a> >
-Modify Document
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManager.do?command=Dashboard"><dhv:label name="communications.campaign.Dashboard">Dashboard</dhv:label></a> >
+<a href="CampaignManager.do?command=Details&id=<%= Campaign.getId() %>"><dhv:label name="campaign.campaignDetails">Campaign Details</dhv:label></a> >
+<a href="CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>"><dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></a> >
+<dhv:label name="accounts.accounts_documents_modify.ModifyDocument">Modify Document</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<strong>Campaign: </strong><%= toHtml(Campaign.getName()) %>
-<% String param1 = "id=" + Campaign.getId(); %>
-<dhv:container name="communications" selected="documents" param="<%= param1 %>" style="tabs"/>
-<form method="post" name="inputForm" action="CampaignDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
-<table cellpadding="4" cellspacing="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<dhv:formMessage />
-<table cellpadding="4" cellspacing="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-      <img border="0" src="images/file.gif" align="absmiddle"><b>Modify Document Information</b>
-    </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Subject of file
-    </td>
-    <td>
-      <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
-      <input type="text" name="subject" size="59" maxlength="255" value="<%= FileItem.getSubject() %>">
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Filename
-    </td>
-    <td>
-      <input type="text" name="clientFilename" size="59" maxlength="255" value="<%= FileItem.getClientFilename() %>">
-    </td>
-  </tr>
-	<tr class="containerBody">
-    <td class="formLabel">
-      Version
-    </td>
-    <td>
-      <%= FileItem.getVersion() %>
-    </td>
-  </tr>
-</table>
-  &nbsp;<br>
-  <input type="submit" value=" Update " name="update">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>';">
+<dhv:container name="communications" selected="documents" object="Campaign" param="<%= "id=" + Campaign.getId() %>">
+  <dhv:formMessage showSpace="false"/>
+  <table cellpadding="4" cellspacing="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <img border="0" src="images/file.gif" align="absmiddle" /><b><dhv:label name="accounts.accounts_documents_modify.ModifyDocumentInformation">Modify Document Information</dhv:label></b>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_documents_modify.SubjectOfFile">Subject of file</dhv:label>
+      </td>
+      <td>
+        <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
+        <input type="text" name="subject" size="59" maxlength="255" value="<%= FileItem.getSubject() %>">
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_documents_modify.Filename">Filename</dhv:label>
+      </td>
+      <td>
+        <input type="text" name="clientFilename" size="59" maxlength="255" value="<%= FileItem.getClientFilename() %>">
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_documents_details.Version">Version</dhv:label>
+      </td>
+      <td>
+        <%= FileItem.getVersion() %>
+      </td>
+    </tr>
+  </table>
+  <br />
+  <input type="submit" value=" <dhv:label name="global.button.update">Update</dhv:label> " name="update">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='CampaignDocuments.do?command=View&id=<%= Campaign.getId() %>';">
   <input type="hidden" name="dosubmit" value="true">
   <input type="hidden" name="id" value="<%= Campaign.getId() %>">
 	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
-</td>
-</tr>
-</table>
+</dhv:container>
 </form>
 </body>

@@ -15,23 +15,25 @@
  */
 package org.aspcfs.modules.relationships.base;
 
-import java.sql.*;
-import java.text.*;
-import java.util.*;
-import java.text.DateFormat;
-import javax.servlet.http.HttpServletRequest;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 /**
  *  Builds a list of relationships $
  *
- *@author     Mathur
- *@created    August 11, 2004
- *@version    $id:exp$
+ * @author     Mathur
+ * @created    August 11, 2004
+ * @version    $id:exp$
  */
 public class RelationshipList extends LinkedHashMap {
   protected int typeId = -1;
@@ -39,7 +41,6 @@ public class RelationshipList extends LinkedHashMap {
   protected int objectIdMapsFrom = -1;
   protected boolean buildDualMappings = false;
   protected PagedListInfo pagedListInfo = null;
-
 
 
   /**
@@ -51,7 +52,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Sets the typeId attribute of the RelationshipList object
    *
-   *@param  tmp  The new typeId value
+   * @param  tmp  The new typeId value
    */
   public void setTypeId(int tmp) {
     this.typeId = tmp;
@@ -61,7 +62,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Sets the typeId attribute of the RelationshipList object
    *
-   *@param  tmp  The new typeId value
+   * @param  tmp  The new typeId value
    */
   public void setTypeId(String tmp) {
     this.typeId = Integer.parseInt(tmp);
@@ -71,7 +72,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Sets the categoryIdMapsFrom attribute of the RelationshipList object
    *
-   *@param  tmp  The new categoryIdMapsFrom value
+   * @param  tmp  The new categoryIdMapsFrom value
    */
   public void setCategoryIdMapsFrom(int tmp) {
     this.categoryIdMapsFrom = tmp;
@@ -81,7 +82,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Sets the categoryIdMapsFrom attribute of the RelationshipList object
    *
-   *@param  tmp  The new categoryIdMapsFrom value
+   * @param  tmp  The new categoryIdMapsFrom value
    */
   public void setCategoryIdMapsFrom(String tmp) {
     this.categoryIdMapsFrom = Integer.parseInt(tmp);
@@ -91,7 +92,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Sets the objectIdMapsFrom attribute of the RelationshipList object
    *
-   *@param  tmp  The new objectIdMapsFrom value
+   * @param  tmp  The new objectIdMapsFrom value
    */
   public void setObjectIdMapsFrom(int tmp) {
     this.objectIdMapsFrom = tmp;
@@ -101,7 +102,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Sets the objectIdMapsFrom attribute of the RelationshipList object
    *
-   *@param  tmp  The new objectIdMapsFrom value
+   * @param  tmp  The new objectIdMapsFrom value
    */
   public void setObjectIdMapsFrom(String tmp) {
     this.objectIdMapsFrom = Integer.parseInt(tmp);
@@ -111,7 +112,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Sets the buildDualMappings attribute of the RelationshipList object
    *
-   *@param  tmp  The new buildDualMappings value
+   * @param  tmp  The new buildDualMappings value
    */
   public void setBuildDualMappings(boolean tmp) {
     this.buildDualMappings = tmp;
@@ -121,7 +122,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Sets the buildDualMappings attribute of the RelationshipList object
    *
-   *@param  tmp  The new buildDualMappings value
+   * @param  tmp  The new buildDualMappings value
    */
   public void setBuildDualMappings(String tmp) {
     this.buildDualMappings = DatabaseUtils.parseBoolean(tmp);
@@ -131,7 +132,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Sets the pagedListInfo attribute of the RelationshipList object
    *
-   *@param  tmp  The new pagedListInfo value
+   * @param  tmp  The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo tmp) {
     this.pagedListInfo = tmp;
@@ -141,7 +142,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Gets the typeId attribute of the RelationshipList object
    *
-   *@return    The typeId value
+   * @return    The typeId value
    */
   public int getTypeId() {
     return typeId;
@@ -151,7 +152,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Gets the categoryIdMapsFrom attribute of the RelationshipList object
    *
-   *@return    The categoryIdMapsFrom value
+   * @return    The categoryIdMapsFrom value
    */
   public int getCategoryIdMapsFrom() {
     return categoryIdMapsFrom;
@@ -161,7 +162,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Gets the objectIdMapsFrom attribute of the RelationshipList object
    *
-   *@return    The objectIdMapsFrom value
+   * @return    The objectIdMapsFrom value
    */
   public int getObjectIdMapsFrom() {
     return objectIdMapsFrom;
@@ -171,7 +172,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Gets the buildDualMappings attribute of the RelationshipList object
    *
-   *@return    The buildDualMappings value
+   * @return    The buildDualMappings value
    */
   public boolean getBuildDualMappings() {
     return buildDualMappings;
@@ -181,7 +182,7 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Gets the pagedListInfo attribute of the RelationshipList object
    *
-   *@return    The pagedListInfo value
+   * @return    The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -191,8 +192,8 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param  db                Description of the Parameter
+   * @exception  SQLException  Description of the Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -302,15 +303,20 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Description of the Method
    *
-   *@param  sqlFilter  Description of the Parameter
+   * @param  sqlFilter  Description of the Parameter
    */
   protected void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
+    if (typeId != -1) {
+      sqlFilter.append(" AND r.type_id = ? ");
+    }
 
     if (buildDualMappings) {
-      sqlFilter.append("AND ((r.category_id_maps_from = ? AND r.object_id_maps_from = ?) OR (r.category_id_maps_to = ? AND r.object_id_maps_to = ?)) ");
+      sqlFilter.append(
+          "AND ((r.category_id_maps_from = ? AND r.object_id_maps_from = ?) OR " +
+          "(r.category_id_maps_to = ? AND r.object_id_maps_to = ?)) ");
     }
   }
 
@@ -318,9 +324,9 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Description of the Method
    *
-   *@param  pst               Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param  pst               Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
    */
   protected int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -342,11 +348,11 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Description of the Method
    *
-   *@param  r  Description of the Parameter
+   * @param  r  Description of the Parameter
    */
   public void add(Relationship r) {
     ArrayList tmpList = null;
-    //make sure the type has a entry
+    //make sure the type has an entry
     if (r.getObjectIdMapsFrom() == this.objectIdMapsFrom) {
       if (this.containsKey(r.getReciprocalName1())) {
         tmpList = (ArrayList) this.get(r.getReciprocalName1());
@@ -370,17 +376,17 @@ public class RelationshipList extends LinkedHashMap {
   /**
    *  Description of the Class
    *
-   *@author     Mathur
-   *@created    August 13, 2004
-   *@version    $id:exp$
+   * @author     Mathur
+   * @created    August 13, 2004
+   * @version    $id:exp$
    */
   public class relationshipComparator implements Comparator {
     /**
      *  Description of the Method
      *
-     *@param  left   Description of the Parameter
-     *@param  right  Description of the Parameter
-     *@return        Description of the Return Value
+     * @param  left   Description of the Parameter
+     * @param  right  Description of the Parameter
+     * @return        Description of the Return Value
      */
     public int compare(Object left, Object right) {
       String a = new String(((Relationship) left).getMappedObjectLabel());
@@ -389,6 +395,74 @@ public class RelationshipList extends LinkedHashMap {
       int compareResult = b.compareTo(a);
       return (compareResult);
     }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  db                Description of the Parameter
+   * @return                   Description of the Return Value
+   * @exception  SQLException  Description of the Exception
+   */
+  public boolean delete(Connection db) throws SQLException {
+    boolean result = false;
+    int size = this.size();
+    Iterator iterator = this.keySet().iterator();
+    while (iterator.hasNext()) {
+      String relType = (String) iterator.next();
+      ArrayList tmpList = (ArrayList) this.get(relType);
+      Iterator j = tmpList.iterator();
+      while (j.hasNext()) {
+        Relationship relationship = (Relationship) j.next();
+        result = relationship.delete(db);
+        j.remove();
+      }
+      iterator.remove();
+      result = true;
+    }
+    return result;
+  }
+
+
+  /**
+   *  Gets the numberOfRelationships attribute of the RelationshipList object
+   *
+   * @return    The numberOfRelationships value
+   */
+  public int getNumberOfRelationships() {
+    int relationshipCounter = 0;
+    Iterator iterator = (Iterator) this.keySet().iterator();
+    while (iterator.hasNext()) {
+      ArrayList tempList = (ArrayList) this.get((String) iterator.next());
+      Iterator tempIter = (Iterator) tempList.iterator();
+      while (tempIter.hasNext()) {
+        Relationship rel = (Relationship) tempIter.next();
+        ++relationshipCounter;
+      }
+    }
+    return relationshipCounter;
+  }
+
+
+  public int checkDuplicateRelationship(Connection db, int id, int categoryTypeId, int category ) {
+    int result = 0;
+    Iterator iterator = (Iterator) this.keySet().iterator();
+    while (iterator.hasNext()) {
+      ArrayList tempList = (ArrayList) this.get((String) iterator.next());
+      Iterator tempIter = (Iterator) tempList.iterator();
+      while (tempIter.hasNext()) {
+        Relationship rel = (Relationship) tempIter.next();
+        System.out.println("RelationshipList:: the relObejctIdMapsTo is "+ rel.getObjectIdMapsTo()+" and id is "+ id);
+        System.out.println("RelationshipList:: the relTypeId is "+ rel.getTypeId()+" and typeId is "+ categoryTypeId);
+        System.out.println("RelationshipList:: the getCategoryIdMapsTo is "+ rel.getCategoryIdMapsTo() +" and category is "+ category);
+        if (rel.getObjectIdMapsTo() == id && rel.getTypeId() == categoryTypeId && rel.getCategoryIdMapsTo() == category) {
+          ++result;
+        }
+      }
+    }
+    System.out.println("The value of result is "+ result);
+    return result;
   }
 }
 

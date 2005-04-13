@@ -1,6 +1,8 @@
 Centric CRM Open Source Edition; build: @BUILD.NUMBER@; @BUILD.DATE@
 $Id$
 
+Centric CRM 3.0 Test 2
+
 ----------------------------------------------------------------------------
 | LEGAL                                                                    |
 ----------------------------------------------------------------------------
@@ -11,7 +13,7 @@ the LICENSE file. If you did not receive a copy of the CPL, you may download
 it from http://www.centriccrm.com. Compiling or using this software
 signifies your acceptance of the  Centric Public License.
 
-Copyright(c) 2004 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
+Copyright(c) 2004-2005 Dark Horse Ventures LLC (http://www.centriccrm.com/) All
 rights reserved. This material cannot be distributed without written
 permission from Dark Horse Ventures LLC. Permission to use, copy, and modify
 this material for internal use is hereby granted, provided that the above
@@ -35,6 +37,8 @@ Welcome to Centric CRM!
 The installation and configuration of Centric CRM is intended to be as
 simple as possible.
 
+PLEASE READ ALL INSTRUCTIONS TO AVOID ANY PROBLEMS.
+
 If you are going to be developing Centric CRM, please make sure to read the
 developer information at http://www.centriccrm.com/Portal.do?key=community,
 you can also find information about installing, configuring, and using
@@ -46,18 +50,18 @@ Centric CRM there.
 
 You will need to have the following software installed in order to compile:
 
-  Sun J2SE 1.4
-  http://java.sun.com/j2se/1.4.2/download.html
+  Sun J2SE SDK 1.4 or 1.5
+  http://java.sun.com
 
   Apache Ant 1.6
   http://ant.apache.org
 
-  Apache Tomcat 5
+  Apache Tomcat 5.0 (j2se 1.4) or 5.5 (j2se 1.5)
   http://jakarta.apache.org/tomcat
 
 You will also need a database server installed.  The following are supported:
 
-  Postgresql 7.4
+  Postgresql 7.4 or 8.0
   http://www.postgresql.org
 
   Microsoft SQL Server 2000
@@ -76,17 +80,17 @@ distributed separately and include:
   commons-logging-api.jar
   commons-logging.jar
   iText.jar
-  jasperreports-0.5.3.jar
-  jcommon.jar
-  jfreechart.jar
-  jtds-0.9.jar
-  log4j.jar
+  jasperreports-0.6.4.jar
+  jcommon-0.9.6.jar
+  jfreechart-0.9.21.jar
+  jtds-1.0.1.jar
+  log4j-1.2.9.jar
   lucene-1.4.2.jar
   mail.jar
   nekohtml.jar
   poi-2.5-final-20040302.jar
   poi-scratchpad-2.5-final-20040302.jar
-  postgresql.jar
+  postgresql-8.0-310.jdbc3.jar
   tm-extractors-0.4.jar
   xercesMinimal.jar
   
@@ -97,17 +101,29 @@ distributed separately and include:
 | SYSTEM SETTINGS                                                          |
 ----------------------------------------------------------------------------
 
-You must have the JAVA_HOME environment variable properly set to the
+-> Linux, MacOSX, and Unix use "export VARIABLE=text"
+-> Windows use the "My Computer-> Properties -> Environment Variables GUI"
+
+* You must have the JAVA_HOME environment variable properly set to the
 location of your Java SDK installation directory. On MacOSX, this path is:
 /System/Library/Frameworks/JavaVM.framework/Home
 
-You must have Ant installed and ANT_HOME defined in your environment as
-well as ANT_HOME/bin in your PATH.
+  $ export JAVA_HOME=/usr/local/java/j2sdk1.4
 
-You must have Tomcat installed and CATALINA_HOME defined in your envionment
+* You must have Ant installed and ANT_HOME defined in your environment as
+well as ANT_HOME/bin in your PATH.  You must also increase the JVM memory for
+Ant by defining ANT_OPTS.
+
+  $ export ANT_HOME=/usr/local/ant
+  $ export ANT_OPTS="-Xmx192m -Xms192m"
+
+
+* You must have Tomcat installed and CATALINA_HOME defined in your envionment
 which points to the tomcat directory.  Also specify the environment variable
 CATALINA_OPTS=-Djava.awt.headless=true on Linux/Unix.
 
+  $ export CATALINA_HOME=/usr/local/tomcat
+  $ export CATALINA_OPTS=-Djava.awt.headless=true
 
 ----------------------------------------------------------------------------
 | BUILD PROCESS                                                            |
@@ -122,7 +138,7 @@ a .war from the source code, execute:
   $ ant deploy
   
 A new file will be created in the current directory, which must be edited
-with your custom settings.  Ant will notify you that you should make changes
+with your custom settings.  Ant will notify you that you must make changes
 to:
 
   build.properties

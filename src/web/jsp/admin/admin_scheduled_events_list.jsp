@@ -25,10 +25,10 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
-Scheduled Events
+<dhv:label name="admin.scheduledEvents">Scheduled Events</dhv:label>
 </td>
 </tr>
 </table>
@@ -36,19 +36,19 @@ Scheduled Events
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="50%" nowrap>
-      <strong>Process to Execute</strong>
+      <strong><dhv:label name="admin.processToExecute">Process to Execute</dhv:label></strong>
     </th>
     <th width="50%">
-      <strong>Schedule</strong>
+      <strong><dhv:label name="admin.schedule">Schedule</dhv:label></strong>
     </th>
     <th nowrap>
-      <strong>Number of<br>components</strong>
+      <strong><dhv:label name="admin.numberOfComponents" param="break=<br />">Number of<br />components</dhv:label></strong>
     </th>
     <th>
-      <strong>Available</strong>
+      <strong><dhv:label name="admin.available">Available</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -61,14 +61,14 @@ Scheduled Events
 %>
   <tr class="row<%= rowid %>">
     <td align="center" valign="top">
-      Edit
+      <dhv:label name="button.edit">Edit</dhv:label>
     </td>
     <td valign="top">
        <a href="AdminScheduledEvents.do?command=Workflow&moduleId=<%= PermissionCategory.getId() %>&process=<%= thisProcess.getId() %>&return=AdminScheduledEvents"><%= toHtml(thisProcess.getDescription()) %></a>
     </td>
     <td width="50%" valign="top">
       <dhv:evaluate if="<%= thisProcess.getEvents().isEmpty() %>">
-        Not scheduled
+        <dhv:label name="admin.notScheduled">Not scheduled</dhv:label>
       </dhv:evaluate>
       <dhv:evaluate if="<%= !thisProcess.getEvents().isEmpty() %>">
 <%
@@ -88,10 +88,10 @@ Scheduled Events
     </td>
     <td align="center" valign="top">
       <dhv:evaluate if="<%= thisProcess.getEnabled() %>">
-        Yes
+        <dhv:label name="account.yes">Yes</dhv:label>
       </dhv:evaluate>
       <dhv:evaluate if="<%= !thisProcess.getEnabled() %>">
-        No
+        <dhv:label name="account.no">No</dhv:label>
       </dhv:evaluate>
     </td>
   </tr>
@@ -101,7 +101,7 @@ Scheduled Events
 %>
    <tr class="containerBody">
     <td align="left" colspan="5">
-      No Scheduled Events found. 
+      <dhv:label name="admin.noScheduledEventsFound">No Scheduled Events found.</dhv:label>
     </td>
    </tr>
 <%

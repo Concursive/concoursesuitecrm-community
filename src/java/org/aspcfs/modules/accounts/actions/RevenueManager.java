@@ -15,43 +15,56 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import org.aspcfs.utils.web.*;
-import java.text.*;
-import java.io.*;
-import java.util.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.modules.actions.CFSModule;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.accounts.base.*;
-import org.aspcfs.modules.admin.base.*;
-import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.User;
+import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.GraphSummaryList;
-import com.jrefinery.chart.*;
-import com.jrefinery.chart.data.*;
-import com.jrefinery.chart.ui.*;
-import com.jrefinery.data.*;
-import com.jrefinery.chart.entity.StandardEntityCollection;
-import com.jrefinery.chart.tooltips.TimeSeriesToolTipGenerator;
-import java.awt.Color;
+import org.aspcfs.modules.login.beans.UserBean;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartRenderingInfo;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.entity.StandardEntityCollection;
+import org.jfree.chart.labels.StandardXYToolTipGenerator;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
+import java.awt.*;
+import java.io.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
- *  Description of the Class
+ * Description of the Class
  *
- *@author     chris
- *@created    November, 2002
- *@version    $Id: RevenueManager.java,v 1.24 2003/01/09 18:10:27 mrajkowski Exp
- *      $
+ * @author chris
+ * @version $Id: RevenueManager.java,v 1.24 2003/01/09 18:10:27 mrajkowski Exp
+ *          $
+ * @created November, 2002
  */
 public final class RevenueManager extends CFSModule {
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDashboard(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-revenue-view")) {
@@ -65,7 +78,8 @@ public final class RevenueManager extends CFSModule {
     UserBean thisUser = (UserBean) context.getSession().getAttribute("User");
     User thisRec = null;
     //Check if a specific user was selected
-    int overrideId = StringUtils.parseInt(context.getRequest().getParameter("oid"), -1);
+    int overrideId = StringUtils.parseInt(
+        context.getRequest().getParameter("oid"), -1);
     //Check if the list is being reset
     if (context.getRequest().getParameter("reset") != null) {
       overrideId = -1;
@@ -81,7 +95,8 @@ public final class RevenueManager extends CFSModule {
         context.getSession().removeAttribute("revenuepreviousId");
       }
     } else if (context.getSession().getAttribute("revenueoverride") != null) {
-      overrideId = StringUtils.parseInt((String) context.getSession().getAttribute("revenueoverride"), -1);
+      overrideId = StringUtils.parseInt(
+          (String) context.getSession().getAttribute("revenueoverride"), -1);
     } else {
       overrideId = thisUser.getUserId();
     }
@@ -96,9 +111,12 @@ public final class RevenueManager extends CFSModule {
 
     //Track the id in the request and the session
     if (idToUse > -1 && idToUse != getUserId(context)) {
-      context.getSession().setAttribute("revenueoverride", String.valueOf(overrideId));
-      context.getSession().setAttribute("revenueothername", thisRec.getContact().getNameFull());
-      context.getSession().setAttribute("revenuepreviousId", String.valueOf(thisRec.getManagerId()));
+      context.getSession().setAttribute(
+          "revenueoverride", String.valueOf(overrideId));
+      context.getSession().setAttribute(
+          "revenueothername", thisRec.getContact().getNameFull());
+      context.getSession().setAttribute(
+          "revenuepreviousId", String.valueOf(thisRec.getManagerId()));
     }
 
     //Check the cache and see if the current graph exists and is valid
@@ -137,6 +155,7 @@ public final class RevenueManager extends CFSModule {
     shortChildList.setRevenueYear(year);
     RevenueList realFullRevList = new RevenueList();
     Connection db = null;
+    Locale locale = getUser(context, getUserId(context)).getLocale();
     try {
       db = this.getConnection(context);
       //Information about the org currently selected, etc.
@@ -145,11 +164,12 @@ public final class RevenueManager extends CFSModule {
       //Build the revenueTypeList combo box
       RevenueTypeList rtl = new RevenueTypeList(db);
       rtl.addItem(0, "All Types");
-      rtl.setJsEvent("onChange=\"document.forms[0].submit();\"");
+      rtl.setJsEvent("onChange=\"document.Dashboard.submit();\"");
       context.getRequest().setAttribute("RevenueTypeList", rtl);
 
       //Generate the account pagedList for the idToUse
-      PagedListInfo revenueInfo = this.getPagedListInfo(context, "DBRevenueListInfo");
+      PagedListInfo revenueInfo = this.getPagedListInfo(
+          context, "DBRevenueListInfo");
       revenueInfo.setLink("RevenueManager.do?command=Dashboard");
       OrganizationList displayList = new OrganizationList();
       if (revenueType != null) {
@@ -169,7 +189,8 @@ public final class RevenueManager extends CFSModule {
       //FullChildList is the complete user hierarchy for the selected user and
       //is needed for the graph
       if (checkFileName == null) {
-        fullChildList = thisRec.getFullChildList(shortChildList, new UserList());
+        fullChildList = thisRec.getFullChildList(
+            shortChildList, new UserList());
         String range = fullChildList.getUserListIds(idToUse);
         //All of the revenue that make up this graph calculation
         realFullRevList.setYear(year);
@@ -212,7 +233,8 @@ public final class RevenueManager extends CFSModule {
       while (n.hasNext()) {
         User thisRecord = (User) n.next();
         thisRecord.setRevenueIsValid(false, true);
-        tempUserList = prepareLines(thisRecord, realFullRevList, tempUserList, year);
+        tempUserList = prepareLines(
+            thisRecord, realFullRevList, tempUserList, year);
       }
       UserList linesToDraw = new UserList();
       linesToDraw = calculateLine(tempUserList, linesToDraw, year);
@@ -220,42 +242,66 @@ public final class RevenueManager extends CFSModule {
       tempUserList = prepareLines(thisRec, tempRevList, tempUserList, year);
       linesToDraw = calculateLine(thisRec, linesToDraw, year);
       //Store the data in the collection
-      XYSeriesCollection categoryData = createCategoryDataset(linesToDraw, year);
-      //Vertical Axis characteristics
-      NumberAxis vnAxis = new VerticalNumberAxis("");
-      vnAxis.setAutoRangeIncludesZero(true);
-      vnAxis.setTickMarksVisible(true);
-      //Horizontal Axis characteristics
-      HorizontalDateAxis hnAxis = new HorizontalDateAxis("");
-      XYPlot bPlot = new XYPlot(categoryData, hnAxis, vnAxis);
-      SimpleDateFormat sdf = new SimpleDateFormat("MMM yy");
-      TimeSeriesToolTipGenerator ttg = new TimeSeriesToolTipGenerator(
-          sdf, NumberFormat.getInstance());
-      StandardXYItemRenderer sxyir = new StandardXYItemRenderer(
-          StandardXYItemRenderer.LINES + StandardXYItemRenderer.SHAPES,
-          ttg);
-      sxyir.setDefaultShapeFilled(false);
-      bPlot.setRenderer(sxyir);
-      //Draw the chart and save to file
-      JFreeChart chart = new JFreeChart("", JFreeChart.DEFAULT_TITLE_FONT, bPlot, false);
+      XYSeriesCollection categoryData = createCategoryDataset(
+          linesToDraw, year);
+      JFreeChart chart =
+          ChartFactory.createTimeSeriesChart(
+              "", // chart title
+              "", // xlabel
+              "", // ylabel
+              categoryData,
+              false, // legend
+              true, // tooltips
+              false  // urls
+          );                                              // a flag specifying whether or not the chart should generate URLs
       chart.setBackgroundPaint(Color.white);
+      SimpleDateFormat sdf = (SimpleDateFormat) SimpleDateFormat.getDateInstance(
+          DateFormat.SHORT, locale);
+      // X and Y axis
+      XYPlot plot = chart.getXYPlot();
+      ValueAxis yAxis = plot.getRangeAxis();
+      yAxis.setTickMarksVisible(true);
+      yAxis.setStandardTickUnits(NumberAxis.createStandardTickUnits(locale));
+      // Tell the chart how we would like dates to read
+      DateAxis axis = (DateAxis) plot.getDomainAxis();
+      axis.setDateFormatOverride(sdf);
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("Leads-> Drawing the chart");
+      }
+      // Display data points
+      XYItemRenderer renderer = plot.getRenderer();
+      if (renderer instanceof StandardXYItemRenderer) {
+        StandardXYItemRenderer rr = (StandardXYItemRenderer) renderer;
+        rr.setPlotShapes(true);
+        rr.setShapesFilled(false);
+        rr.setItemLabelsVisible(true);
+        // Tool tip formatting using locale {1} = Date, {2} = Amount
+        StandardXYToolTipGenerator ttg = new StandardXYToolTipGenerator(
+            "{2} ({1})", sdf, NumberFormat.getInstance(locale));
+        rr.setToolTipGenerator(ttg);
+      }
+      //Output the chart
       if (System.getProperty("DEBUG") != null) {
         System.out.println("RevenueManager-> Drawing the chart");
       }
-      //Output the chart
       int width = 275;
       int height = 200;
       try {
         String realPath = context.getServletContext().getRealPath("/");
         String filePath = realPath + "graphs" + fs;
         java.util.Date testDate = new java.util.Date();
-        String fileName = String.valueOf(idToUse) + String.valueOf(testDate.getTime()) + String.valueOf(context.getSession().getCreationTime());
+        String fileName = String.valueOf(idToUse) + String.valueOf(
+            testDate.getTime()) + String.valueOf(
+                context.getSession().getCreationTime());
 
         // Write the chart image
-        ChartRenderingInfo info = new ChartRenderingInfo(new StandardEntityCollection());
+        ChartRenderingInfo info = new ChartRenderingInfo(
+            new StandardEntityCollection());
         File imageFile = new File(filePath + fileName + ".jpg");
-        ChartUtilities.saveChartAsJPEG(imageFile, 1.0f, chart, width, height, info);
-        PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(filePath + fileName + ".map")));
+        ChartUtilities.saveChartAsJPEG(
+            imageFile, 1.0f, chart, width, height, info);
+        PrintWriter pw = new PrintWriter(
+            new BufferedWriter(new FileWriter(filePath + fileName + ".map")));
         ChartUtilities.writeImageMap(pw, fileName, info);
         pw.flush();
         pw.close();
@@ -279,10 +325,10 @@ public final class RevenueManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandAdd(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-revenue-add"))) {
@@ -318,10 +364,10 @@ public final class RevenueManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandView(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-revenue-view")) {
@@ -331,7 +377,8 @@ public final class RevenueManager extends CFSModule {
     Exception errorMessage = null;
 
     String orgid = context.getRequest().getParameter("orgId");
-    PagedListInfo revenueInfo = this.getPagedListInfo(context, "RevenueListInfo");
+    PagedListInfo revenueInfo = this.getPagedListInfo(
+        context, "RevenueListInfo");
     revenueInfo.setLink("RevenueManager.do?command=View&orgId=" + orgid);
 
     Connection db = null;
@@ -367,10 +414,10 @@ public final class RevenueManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDelete(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-revenue-delete")) {
@@ -420,18 +467,18 @@ public final class RevenueManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-revenue-add")) {
       return ("PermissionError");
     }
     addModuleBean(context, "View Accounts", "Insert Revenue");
-    Exception errorMessage = null;
     boolean recordInserted = false;
+    boolean isValid = false;
     Connection db = null;
 
     Revenue thisRevenue = null;
@@ -444,37 +491,33 @@ public final class RevenueManager extends CFSModule {
 
     try {
       db = this.getConnection(context);
-      recordInserted = thisRevenue.insert(db, context);
+      isValid = this.validateObject(context, db, thisRevenue);
+      if (isValid) {
+        recordInserted = thisRevenue.insert(db, context);
+      }
       if (recordInserted) {
         newRevenue = new Revenue(db, String.valueOf(thisRevenue.getId()));
         context.getRequest().setAttribute("Revenue", newRevenue);
-      } else {
-        processErrors(context, thisRevenue.getErrors());
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("InsertOK");
-      } else {
-        return (executeCommandAdd(context));
-      }
+    if (recordInserted) {
+      return ("InsertOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return (executeCommandAdd(context));
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModify(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-revenue-edit")) {
@@ -493,11 +536,13 @@ public final class RevenueManager extends CFSModule {
     User thisRec = thisUser.getUserRecord();
 
     UserList shortChildList = thisRec.getShortChildList();
-    UserList userList = thisRec.getFullChildList(shortChildList, new UserList());
+    UserList userList = thisRec.getFullChildList(
+        shortChildList, new UserList());
     userList.setMyId(getUserId(context));
     userList.setMyValue(thisUser.getContact().getNameLastFirst());
     userList.setIncludeMe(true);
     userList.setExcludeDisabledIfUnselected(true);
+    userList.setExcludeExpiredIfUnselected(true);
     context.getRequest().setAttribute("UserList", userList);
 
     //end
@@ -532,10 +577,10 @@ public final class RevenueManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandDetails(ActionContext context) {
     if (!hasPermission(context, "accounts-accounts-revenue-view")) {
@@ -579,21 +624,18 @@ public final class RevenueManager extends CFSModule {
   }
 
 
-
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
     if (!(hasPermission(context, "accounts-accounts-revenue-edit"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
-
     Revenue newRevenue = (Revenue) context.getFormBean();
-
+    boolean isValid = false;
     Organization thisOrganization = null;
     String orgid = context.getRequest().getParameter("orgId");
 
@@ -606,46 +648,44 @@ public final class RevenueManager extends CFSModule {
       if (!hasAuthority(context, newRevenue.getOwner())) {
         return "PermissionError";
       }
-      resultCount = newRevenue.update(db, context);
-      if (resultCount == -1) {
-        processErrors(context, newRevenue.getErrors());
+      isValid = this.validateObject(context, db, newRevenue);
+      if (isValid) {
+        resultCount = newRevenue.update(db, context);
+      }
+      if (resultCount == -1 || !isValid) {
         buildFormElements(context, db);
         thisOrganization = new Organization(db, Integer.parseInt(orgid));
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        context.getRequest().setAttribute("OrgDetails", thisOrganization);
-        return (executeCommandModify(context));
-      } else if (resultCount == 1) {
-        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-          return (executeCommandView(context));
-        } else {
-          return ("UpdateOK");
-        }
+    if (resultCount == -1 || !isValid) {
+      context.getRequest().setAttribute("OrgDetails", thisOrganization);
+      return (executeCommandModify(context));
+    } else if (resultCount == 1) {
+      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter(
+          "return").equals("list")) {
+        return (executeCommandView(context));
       } else {
-        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-        return ("UserError");
+        return ("UpdateOK");
       }
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  y  Description of the Parameter
-   *@param  m  Description of the Parameter
-   *@param  d  Description of the Parameter
-   *@return    Description of the Return Value
+   * @param y Description of the Parameter
+   * @param m Description of the Parameter
+   * @param d Description of the Parameter
+   * @return Description of the Return Value
    */
   public static java.util.Date createDate(int y, int m, int d) {
     GregorianCalendar calendar = new GregorianCalendar(y, m, d, 0, 0, 0);
@@ -654,15 +694,16 @@ public final class RevenueManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context           Description of the Parameter
-   *@param  db                Description of the Parameter
-   *@exception  SQLException  Description of the Exception
+   * @param context Description of the Parameter
+   * @param db      Description of the Parameter
+   * @throws SQLException Description of the Exception
    */
   protected void buildFormElements(ActionContext context, Connection db) throws SQLException {
     RevenueTypeList rtl = new RevenueTypeList(db);
-    rtl.addItem(0, "--None--");
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    rtl.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
     context.getRequest().setAttribute("RevenueTypeList", rtl);
 
     HtmlSelect monthList = new HtmlSelect();
@@ -678,13 +719,13 @@ public final class RevenueManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pertainsTo    Description of the Parameter
-   *@param  revList       Description of the Parameter
-   *@param  usersToGraph  Description of the Parameter
-   *@param  year          Description of the Parameter
-   *@return               Description of the Return Value
+   * @param pertainsTo   Description of the Parameter
+   * @param revList      Description of the Parameter
+   * @param usersToGraph Description of the Parameter
+   * @param year         Description of the Parameter
+   * @return Description of the Return Value
    */
   private UserList prepareLines(User pertainsTo, RevenueList revList, UserList usersToGraph, int year) {
     if (!pertainsTo.getRevenueIsValid()) {
@@ -692,18 +733,19 @@ public final class RevenueManager extends CFSModule {
       if (!pertainsTo.getRevenueIsValid()) {
         try {
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("RevenueManager-> (RE)BUILDING REVENUE DATA FOR " + pertainsTo.getId());
+            System.out.println(
+                "RevenueManager-> (RE)BUILDING REVENUE DATA FOR " + pertainsTo.getId());
           }
           pertainsTo.setRevenue(new GraphSummaryList());
           Iterator revIterator = revList.iterator();
           while (revIterator.hasNext()) {
             Revenue tempRev = (Revenue) revIterator.next();
             if (tempRev.getOwner() == pertainsTo.getId()) {
-              int passedDay = 0;
               int passedYear = tempRev.getYear();
               if (passedYear == year) {
                 int passedMonth = (tempRev.getMonth() - 1);
-                String valKey = String.valueOf(passedYear) + String.valueOf(passedMonth);
+                String valKey = String.valueOf(passedYear) + String.valueOf(
+                    passedMonth);
                 Double revenueAddTerm = new Double(tempRev.getAmount());
                 pertainsTo.setRevenueGraphValues(valKey, revenueAddTerm);
               }
@@ -711,7 +753,8 @@ public final class RevenueManager extends CFSModule {
           }
           pertainsTo.setRevenueIsValid(true, true);
         } catch (Exception e) {
-          System.err.println("Revenue Manager-> Unwanted exception occurred: " + e.toString());
+          System.err.println(
+              "Revenue Manager-> Unwanted exception occurred: " + e.toString());
         } finally {
         }
       }
@@ -727,12 +770,12 @@ public final class RevenueManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  primaryNode   Description of the Parameter
-   *@param  currentLines  Description of the Parameter
-   *@param  year          Description of the Parameter
-   *@return               Description of the Return Value
+   * @param primaryNode  Description of the Parameter
+   * @param currentLines Description of the Parameter
+   * @param year         Description of the Parameter
+   * @return Description of the Return Value
    */
   private UserList calculateLine(User primaryNode, UserList currentLines, int year) {
     if (currentLines.size() == 0) {
@@ -744,7 +787,10 @@ public final class RevenueManager extends CFSModule {
     Iterator x = currentLines.iterator();
     User addToMe = (User) x.next();
     for (int count = 0; count < 12; count++) {
-      thisLine.getRevenue().setValue(valKeys[count], new Double(primaryNode.getRevenue().getValue(valKeys[count]).doubleValue() + (addToMe.getRevenue().getValue(valKeys[count])).doubleValue()));
+      thisLine.getRevenue().setValue(
+          valKeys[count], new Double(
+              primaryNode.getRevenue().getValue(valKeys[count]).doubleValue() + (addToMe.getRevenue().getValue(
+                  valKeys[count])).doubleValue()));
     }
     currentLines.addElement(thisLine);
     return currentLines;
@@ -752,12 +798,12 @@ public final class RevenueManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  toRollUp      Description of the Parameter
-   *@param  currentLines  Description of the Parameter
-   *@param  year          Description of the Parameter
-   *@return               Description of the Return Value
+   * @param toRollUp     Description of the Parameter
+   * @param currentLines Description of the Parameter
+   * @param year         Description of the Parameter
+   * @return Description of the Return Value
    */
   private UserList calculateLine(UserList toRollUp, UserList currentLines, int year) {
     if (toRollUp.size() == 0) {
@@ -769,7 +815,8 @@ public final class RevenueManager extends CFSModule {
     while (x.hasNext()) {
       User thisUser = (User) x.next();
       for (int count = 0; count < 12; count++) {
-        thisLine.getRevenue().setValue(valKeys[count], thisUser.getRevenue().getValue(valKeys[count]));
+        thisLine.getRevenue().setValue(
+            valKeys[count], thisUser.getRevenue().getValue(valKeys[count]));
       }
     }
     currentLines.addElement(thisLine);
@@ -778,16 +825,17 @@ public final class RevenueManager extends CFSModule {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  year         Description of the Parameter
-   *@param  linesToDraw  Description of the Parameter
-   *@return              Description of the Return Value
+   * @param year        Description of the Parameter
+   * @param linesToDraw Description of the Parameter
+   * @return Description of the Return Value
    */
   private XYSeriesCollection createCategoryDataset(UserList linesToDraw, int year) {
     XYSeriesCollection xyDataset = new XYSeriesCollection();
     if (System.getProperty("DEBUG") != null) {
-      System.out.println("RevenueManager-> Lines to draw: " + linesToDraw.size());
+      System.out.println(
+          "RevenueManager-> Lines to draw: " + linesToDraw.size());
     }
     if (linesToDraw.size() == 0) {
       return xyDataset;
@@ -800,7 +848,8 @@ public final class RevenueManager extends CFSModule {
       XYSeries dataSeries = new XYSeries(null);
       String[] valKeys = thisUser.getRevenue().getYearRange(12, year);
       for (int count = 0; count < 12; count++) {
-        java.util.Date dateValue = createDate(iteratorDate.get(Calendar.YEAR), count, 1);
+        java.util.Date dateValue = createDate(
+            iteratorDate.get(Calendar.YEAR), count, 1);
         Double itemValue = thisUser.getRevenue().getValue(valKeys[count]);
         dataSeries.add(dateValue.getTime(), itemValue);
       }

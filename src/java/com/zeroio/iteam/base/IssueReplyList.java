@@ -15,13 +15,15 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  Description of the Class
@@ -37,7 +39,10 @@ public class IssueReplyList extends ArrayList {
   private int lastReplies = -1;
   private Issue issue = null;
   private int issueId = -1;
-
+  // resources
+  private boolean buildFiles = false;
+  private int categoryId = -1;
+  private int projectId = -1;
 
   /**
    *  Constructor for the IssueReplyList object
@@ -94,6 +99,18 @@ public class IssueReplyList extends ArrayList {
     return issue;
   }
 
+
+  public void setBuildFiles(boolean buildFiles) {
+    this.buildFiles = buildFiles;
+  }
+
+  public void setProjectId(int projectId) {
+    this.projectId = projectId;
+  }
+
+  public void setCategoryId(int categoryId) {
+    this.categoryId = categoryId;
+  }
 
   /**
    *  Description of the Method
@@ -185,6 +202,14 @@ public class IssueReplyList extends ArrayList {
     }
     rs.close();
     pst.close();
+    // build resources
+    if (buildFiles) {
+      Iterator i = this.iterator();
+      while (i.hasNext()) {
+        IssueReply thisReply = (IssueReply) i.next();
+        thisReply.buildFiles(db);
+      }
+    }
   }
 
 
@@ -219,6 +244,15 @@ public class IssueReplyList extends ArrayList {
 
     return i;
   }
-
+  
+  public void delete(Connection db, String basePath) throws SQLException {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      IssueReply thisIssueReply = (IssueReply) i.next();
+      thisIssueReply.setProjectId(projectId);
+      thisIssueReply.setCategoryId(categoryId);
+      thisIssueReply.delete(db, basePath);
+    }
+  }
 }
 

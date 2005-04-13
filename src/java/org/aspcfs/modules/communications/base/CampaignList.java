@@ -536,9 +536,9 @@ public class CampaignList extends Vector {
       } else {
         //Determine column to sort by
         if (completeOnly) {
-          pagedListInfo.setDefaultSort("active_date", "desc");
+          pagedListInfo.setDefaultSort("c.active_date", "desc");
         } else {
-          pagedListInfo.setDefaultSort("active_date", null);
+          pagedListInfo.setDefaultSort("c.active_date", null);
         }
       }
       pagedListInfo.appendSqlTail(db, sqlOrder);
@@ -553,7 +553,7 @@ public class CampaignList extends Vector {
       sqlSelect.append("SELECT ");
     }
     sqlSelect.append(
-        "c.*, msg.name as messageName, msg.subject as messageSubject, dt.description as delivery " +
+        "c.*, msg.name AS messageName, msg.subject AS messageSubject, dt.code AS deliveryType, dt.description AS deliveryTypeName " +
         "FROM campaign c " +
         "LEFT JOIN message msg ON (c.message_id = msg.id) " +
         "LEFT JOIN lookup_delivery_options dt ON (c.send_method_id = dt.code) " +
@@ -708,6 +708,8 @@ public class CampaignList extends Vector {
     while (i.hasNext()) {
       Campaign thisCampaign = (Campaign) i.next();
       thisCampaign.buildRecipientCount(db);
+      thisCampaign.buildHasAddressRequest(db);
+      thisCampaign.buildHasSurvey(db);
       thisCampaign.setGroupList(db);
       thisCampaign.buildFileCount(db);
     }

@@ -20,14 +20,14 @@ import java.util.*;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.modules.communications.base.*;
 
 /**
  *  Description of the Class
  *
  *@author     mrajkowski
  *@created    November 26, 2001
- *@version    $Id$
+ *@version    $Id: RecipientList.java,v 1.10 2004/09/16 19:24:01 mrajkowski Exp
+ *      $
  */
 public class RecipientList extends Vector {
 
@@ -43,6 +43,9 @@ public class RecipientList extends Vector {
   private java.sql.Timestamp statusRangeStart = null;
   private java.sql.Timestamp statusRangeEnd = null;
   private String status = null;
+
+  private boolean onlyResponded = false;
+  private int surveyId = -1;
 
 
   /**
@@ -160,6 +163,46 @@ public class RecipientList extends Vector {
    */
   public void setStatus(String tmp) {
     this.status = tmp;
+  }
+
+
+  /**
+   *  Sets the onlyResponded attribute of the RecipientList object
+   *
+   *@param  tmp  The new onlyResponded value
+   */
+  public void setOnlyResponded(boolean tmp) {
+    this.onlyResponded = tmp;
+  }
+
+
+  /**
+   *  Sets the onlyResponded attribute of the RecipientList object
+   *
+   *@param  tmp  The new onlyResponded value
+   */
+  public void setOnlyResponded(String tmp) {
+    this.onlyResponded = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the surveyId attribute of the RecipientList object
+   *
+   *@param  tmp  The new surveyId value
+   */
+  public void setSurveyId(int tmp) {
+    this.surveyId = tmp;
+  }
+
+
+  /**
+   *  Sets the surveyId attribute of the RecipientList object
+   *
+   *@param  tmp  The new surveyId value
+   */
+  public void setSurveyId(String tmp) {
+    this.surveyId = Integer.parseInt(tmp);
   }
 
 
@@ -378,6 +421,9 @@ public class RecipientList extends Vector {
     if (status != null) {
       sqlFilter.append("AND status = ? ");
     }
+    if (this.onlyResponded) {
+      sqlFilter.append("AND r.contact_id NOT IN (SELECT contact_id FROM active_survey_responses WHERE active_survey_id = ?) ");
+    }
   }
 
 
@@ -404,6 +450,9 @@ public class RecipientList extends Vector {
     }
     if (status != null) {
       pst.setString(++i, status);
+    }
+    if (onlyResponded) {
+      pst.setInt(++i, surveyId);
     }
     return i;
   }

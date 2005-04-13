@@ -15,14 +15,16 @@
  */
 package com.zeroio.iteam.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import org.aspcfs.modules.base.Constants;
 import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.modules.base.Constants;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  Description of the Class
@@ -174,11 +176,11 @@ public class IssueCategoryList extends ArrayList {
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void delete(Connection db) throws SQLException {
+  public void delete(Connection db, String basePath) throws SQLException {
     Iterator i = this.iterator();
     while (i.hasNext()) {
       IssueCategory thisIssueCategory = (IssueCategory) i.next();
-      thisIssueCategory.delete(db);
+      thisIssueCategory.delete(db, basePath);
     }
   }
 

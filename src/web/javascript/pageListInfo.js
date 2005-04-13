@@ -1,6 +1,6 @@
-  function offsetsubmit(newOffset) {
-    document.forms[0].offset.value = newOffset;
-    document.forms[0].submit();
+  function offsetsubmit(formName, newOffset) {
+    document.forms[formName].offset.value = newOffset;
+    document.forms[formName].submit();
   }
 
   function setFieldSubmit(formField,thisValue,thisForm) {

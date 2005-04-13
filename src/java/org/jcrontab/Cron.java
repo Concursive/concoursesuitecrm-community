@@ -130,6 +130,9 @@ public class Cron extends Thread {
    *  class. this method is inherited from Thread Class
    */
   public void run() {
+    if (System.getProperty("DEBUG") != null) {
+      System.out.println("Cron-> Status: Running");
+    }
     // this counter is used to save array`s position
     int counter = 0;
     try {
@@ -138,6 +141,7 @@ public class Cron extends Thread {
       // Generates events list
       generateEvents();
     } catch (Exception e) {
+      e.printStackTrace(System.out);
       Log.error(e.toString(), e);
     }
     // Infinite loop, this thread will stop when the jvm is stopped

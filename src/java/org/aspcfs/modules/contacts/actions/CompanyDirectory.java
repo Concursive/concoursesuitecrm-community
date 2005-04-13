@@ -15,37 +15,38 @@
  */
 package org.aspcfs.modules.contacts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
 import com.darkhorseventures.framework.actions.ActionContext;
-import java.sql.*;
-import java.util.Vector;
-import java.io.*;
-import java.sql.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.admin.base.AccessType;
 import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.base.*;
+import org.aspcfs.modules.communications.base.RecipientList;
+import org.aspcfs.modules.contacts.base.Contact;
+import org.aspcfs.modules.contacts.base.ContactList;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.util.Iterator;
 
 /**
- *  The Company Directory module.
+ * The Company Directory module.
  *
- *@author     mrajkowski
- *@created    July 9, 2001
- *@version    $Id: CompanyDirectory.java,v 1.9 2001/07/20 19:02:11 mrajkowski
- *      Exp $
+ * @author mrajkowski
+ * @version $Id: CompanyDirectory.java,v 1.9 2001/07/20 19:02:11 mrajkowski
+ *          Exp $
+ * @created July 9, 2001
  */
 public final class CompanyDirectory extends CFSModule {
 
   /**
-   *  Includes an HTML page for output
+   * Includes an HTML page for output
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.0
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.0
    */
   public String executeCommandDefault(ActionContext context) {
     String module = context.getRequest().getParameter("module");
@@ -57,12 +58,12 @@ public final class CompanyDirectory extends CFSModule {
 
 
   /**
-   *  This method retrieves a list of employees from the database and populates
-   *  a Vector of the employees retrieved.
+   * This method retrieves a list of employees from the database and populates
+   * a Vector of the employees retrieved.
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.0
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.0
    */
   public String executeCommandListEmployees(ActionContext context) {
 
@@ -72,7 +73,8 @@ public final class CompanyDirectory extends CFSModule {
 
     Exception errorMessage = null;
 
-    PagedListInfo companyDirectoryInfo = this.getPagedListInfo(context, "CompanyDirectoryInfo");
+    PagedListInfo companyDirectoryInfo = this.getPagedListInfo(
+        context, "CompanyDirectoryInfo");
     companyDirectoryInfo.setLink("CompanyDirectory.do?command=ListEmployees");
 
     Connection db = null;
@@ -80,7 +82,8 @@ public final class CompanyDirectory extends CFSModule {
     try {
       db = this.getConnection(context);
       employeeList.setPagedListInfo(companyDirectoryInfo);
-      employeeList.setEmployeesOnly(true);
+      employeeList.setEmployeesOnly(Constants.TRUE);
+      employeeList.setLeadsOnly(Constants.FALSE);
       employeeList.setCheckEnabledUserAccess(true);
       employeeList.setBuildDetails(true);
       employeeList.setPersonalId(ContactList.IGNORE_PERSONAL);
@@ -104,27 +107,22 @@ public final class CompanyDirectory extends CFSModule {
 
 
   /**
-   *  This method retrieves the details of a single employee. The resulting
-   *  Employee object is added to the request if successful.<p>
+   * This method retrieves the details of a single employee. The resulting
+   * Employee object is added to the request if successful.<p>
+   * <p/>
+   * This method handles output for both viewing and modifying a contact.
    *
-   *  This method handles output for both viewing and modifying a contact.
-   *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.0
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.0
    */
   public String executeCommandEmployeeDetails(ActionContext context) {
-
-    if (!(hasPermission(context, "contacts-internal_contacts-view"))) {
+    if (!hasPermission(context, "contacts-internal_contacts-view")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
     Contact thisEmployee = null;
     String employeeId = context.getRequest().getParameter("empid");
-    String action = context.getRequest().getParameter("action");
-
     try {
       db = this.getConnection(context);
       thisEmployee = new Contact(db, employeeId);
@@ -133,42 +131,30 @@ public final class CompanyDirectory extends CFSModule {
       context.getRequest().setAttribute("ContactDetails", thisEmployee);
       addRecentItem(context, thisEmployee);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      //If user is going to the detail screen
-      addModuleBean(context, "Internal Contacts", "View Employee Details");
-      return this.getReturn(context, "EmployeeDetails");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    //If user is going to the detail screen
+    addModuleBean(context, "Internal Contacts", "View Employee Details");
+    return getReturn(context, "EmployeeDetails");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandModifyEmployee(ActionContext context) {
-
-    if (!(hasPermission(context, "contacts-internal_contacts-edit"))) {
+    if (!hasPermission(context, "contacts-internal_contacts-view")) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
-
     String employeeId = context.getRequest().getParameter("empid");
-    String action = context.getRequest().getParameter("action");
-
     Connection db = null;
     Contact thisEmployee = null;
-
     try {
       db = this.getConnection(context);
       thisEmployee = (Contact) context.getFormBean();
@@ -177,32 +163,26 @@ public final class CompanyDirectory extends CFSModule {
       thisEmployee.checkEnabledUserAccount(db);
       addRecentItem(context, thisEmployee);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      addModuleBean(context, "Internal Contacts", "Modify Employee Details");
-      return executeCommandPrepare(context);
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    addModuleBean(context, "Internal Contacts", "Modify Employee Details");
+    return executeCommandPrepare(context);
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    Exception errorMessage = null;
-    Connection db = null;
     int resultCount = 0;
     boolean recordInserted = false;
+    boolean isValid = false;
     String permission = "contacts-internal_contacts-add";
 
     Contact thisEmployee = (Contact) context.getFormBean();
@@ -211,6 +191,7 @@ public final class CompanyDirectory extends CFSModule {
     thisEmployee.setEnteredBy(getUserId(context));
     thisEmployee.setModifiedBy(getUserId(context));
 
+    //insert
     if (thisEmployee.getId() > 0) {
       // Object is being updated
       permission = "contacts-internal_contacts-edit";
@@ -218,88 +199,93 @@ public final class CompanyDirectory extends CFSModule {
     if (!hasPermission(context, permission)) {
       return ("PermissionError");
     }
+    Connection db = null;
     try {
       db = this.getConnection(context);
-
       //set the access type as public
-      AccessTypeList accessTypes = this.getSystemStatus(context).getAccessTypeList(db, AccessType.EMPLOYEES);
+      AccessTypeList accessTypes = this.getSystemStatus(context).getAccessTypeList(
+          db, AccessType.EMPLOYEES);
       thisEmployee.setAccessType(accessTypes.getDefaultItem());
-
       if (thisEmployee.getId() == -1) {
+        // trying to insert a contact
         thisEmployee.setOrgId(0);
         addModuleBean(context, "Internal Contacts", "Internal Insert");
-        recordInserted = thisEmployee.insert(db);
+        isValid = validateObject(context, db, thisEmployee);
+        if (isValid) {
+          recordInserted = thisEmployee.insert(db);
+        }
       } else {
+        // trying to update a contact
         addModuleBean(context, "Internal Contacts", "Update Employee");
-        resultCount = thisEmployee.update(db);
+        isValid = validateObject(context, db, thisEmployee);
+        if (isValid) {
+          resultCount = thisEmployee.update(db);
+        }
       }
-
       if (recordInserted) {
-        thisEmployee = new Contact(db, "" + thisEmployee.getId());
+        thisEmployee = new Contact(db, thisEmployee.getId());
         context.getRequest().setAttribute("ContactDetails", thisEmployee);
         addRecentItem(context, thisEmployee);
       } else if (resultCount == 1) {
         //If the user is in the cache, update the contact record
         thisEmployee.checkUserAccount(db);
         this.updateUserContact(db, context, thisEmployee.getUserId());
-      } else {
-        processErrors(context, thisEmployee.getErrors());
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    //Decide what happened with the update...
-
-    if (errorMessage == null) {
-
-      if (recordInserted) {
-        if ("true".equals((String) context.getRequest().getParameter("saveAndNew"))) {
-          context.getRequest().removeAttribute("ContactDetails");
-          return (executeCommandPrepare(context));
+    // decide what happend with the processing
+    if (recordInserted) {
+      if ("true".equals(
+          (String) context.getRequest().getParameter("saveAndNew"))) {
+        context.getRequest().removeAttribute("ContactDetails");
+        return (executeCommandPrepare(context));
+      }
+      context.getRequest().setAttribute("ContactDetails", thisEmployee);
+      if ("true".equals(context.getRequest().getParameter("popup"))) {
+        if ("troubletickets".equals(
+            context.getRequest().getParameter("source"))) {
+          return ("TroubleTicketsCloseInsertPopup");
         }
-        context.getRequest().setAttribute("ContactDetails", thisEmployee);
-        if ("true".equals(context.getRequest().getParameter("popup"))) {
-          if ("troubletickets".equals(context.getRequest().getParameter("source"))) {
-            return ("TroubleTicketsCloseInsertPopup");
-          }
-          return ("CloseInsertContactPopup");
-        }
-        return ("EmployeeDetailsOK");
-      } else if (resultCount == 1) {
-        if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
-          return (executeCommandListEmployees(context));
-        } else {
-          return ("EmployeeDetailsUpdateOK");
-        }
+        return ("CloseInsertContactPopup");
+      }
+      return ("EmployeeDetailsOK");
+    } else if (resultCount == 1) {
+      if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter(
+          "return").equals("list")) {
+        return (executeCommandListEmployees(context));
       } else {
-        if (thisEmployee.getId() == -1) {
-          if (!"true".equals(context.getRequest().getParameter("popup")) || "troubletickets".equals(context.getRequest().getParameter("source"))) {
-            return (executeCommandPrepare(context));
-          } else {
-            return "ReloadAddContactPopup";
-          }
-        } else {
-          if (resultCount == -1) {
-            return executeCommandModifyEmployee(context);
-          }
-          context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-          return ("UserError");
-        }
+        return ("EmployeeDetailsUpdateOK");
       }
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      if (thisEmployee.getId() == -1) {
+        // tried to insert
+        if (!"true".equals(context.getRequest().getParameter("popup")) || "troubletickets".equals(
+            context.getRequest().getParameter("source"))) {
+          return (executeCommandPrepare(context));
+        } else {
+          return "ReloadAddContactPopup";
+        }
+      } else {
+        // tried to update
+        if (resultCount == -1 || !isValid) {
+          return executeCommandPrepare(context);
+        }
+        context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+        return ("UserError");
+      }
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of the Parameter
-   *@return          Description of the Return Value
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
    */
   public String executeCommandConfirmDelete(ActionContext context) {
     Exception errorMessage = null;
@@ -318,20 +304,22 @@ public final class CompanyDirectory extends CFSModule {
 
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       thisContact = new Contact(db, id);
       thisContact.checkUserAccount(db);
       //htmlDialog.setRelationships(thisContact.processDependencies(db));
       DependencyList dependencies = thisContact.processDependencies(db);
-      htmlDialog.addMessage(dependencies.getHtmlString());
-
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      
       if (!thisContact.hasAccount()) {
-        htmlDialog.setTitle("Centric CRM: Confirm Delete");
-        htmlDialog.setHeader("The employee you are requesting to delete has the following dependencies within Centric CRM:");
-        htmlDialog.addButton("Delete All", "javascript:window.location.href='CompanyDirectory.do?command=DeleteEmployee&empid=" + id + "&popup=true'");
-        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+        htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='CompanyDirectory.do?command=DeleteEmployee&empid=" + id + "&popup=true'");
+        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       } else {
-        htmlDialog.setHeader("This employee cannot be deleted because it is associated with a user account.");
-        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.employeeUserAccountHeader"));
+        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       }
 
     } catch (Exception e) {
@@ -350,16 +338,15 @@ public final class CompanyDirectory extends CFSModule {
 
 
   /**
-   *  Preparation for displaying the insert employee contact form
+   * Preparation for displaying the insert employee contact form
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.10
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.10
    */
   public String executeCommandPrepare(ActionContext context) {
-
     Connection db = null;
-    Exception errorMessage = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     Contact thisContact = (Contact) context.getFormBean();
     if (thisContact.getId() == -1) {
       if (!(hasPermission(context, "contacts-internal_contacts-add"))) {
@@ -371,32 +358,27 @@ public final class CompanyDirectory extends CFSModule {
       db = this.getConnection(context);
       //prepare the Department List if employee is being added.
       LookupList departmentList = new LookupList(db, "lookup_department");
-      departmentList.addItem(0, "--None--");
+      departmentList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("DepartmentList", departmentList);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (context.getRequest().getParameter("actionSource") != null) {
-        return this.getReturn(context, "EmployeePrepare");
-      }
-      return ("PrepareOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (context.getRequest().getParameter("actionSource") != null) {
+      return getReturn(context, "EmployeePrepare");
     }
+    return ("PrepareOK");
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  context  Description of Parameter
-   *@return          Description of the Returned Value
-   *@since           1.10
+   * @param context Description of Parameter
+   * @return Description of the Returned Value
+   * @since 1.10
    */
   public String executeCommandDeleteEmployee(ActionContext context) {
 
@@ -407,12 +389,36 @@ public final class CompanyDirectory extends CFSModule {
     Exception errorMessage = null;
     boolean recordDeleted = false;
     Contact thisContact = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
+    String actionError1 = "This contact has an active user account and could not be deleted.";
+    String actionError2 = "Contact disabled from view, since it has a related user account";
+    String actionError3 = "Contact disabled from view, since it has related message records";
+    
+    actionError1 = systemStatus.getLabel("object.validation.actionError.contactDeletionActiveUser");
+    actionError2 = systemStatus.getLabel("object.validation.actionError.contactDisabledRelatedUser");
+    actionError3 = systemStatus.getLabel("object.validation.actionError.contactDisabledRelatedMessage");
 
     Connection db = null;
     try {
       db = this.getConnection(context);
-      thisContact = new Contact(db, context.getRequest().getParameter("empid"));
+      thisContact = new Contact(
+          db, context.getRequest().getParameter("empid"));
       recordDeleted = thisContact.delete(db);
+      if (!recordDeleted) {
+        if (thisContact.getHasAccess() && thisContact.getIsEnabled()) {
+          thisContact.getErrors().put("actionError", actionError1);
+        }
+      } else {
+        if ((thisContact.getHasAccess() && !thisContact.getIsEnabled()) || thisContact.hasRelatedRecords(
+            db)) {
+          thisContact.getErrors().put("actionError", actionError2);
+        }
+        if (RecipientList.retrieveRecordCount(
+            db, Constants.CONTACTS, thisContact.getId()) > 0) {
+          thisContact.getErrors().put("actionError", actionError3);
+        }
+      }
+      processErrors(context, thisContact.getErrors());
     } catch (Exception e) {
       errorMessage = e;
     } finally {
@@ -424,7 +430,8 @@ public final class CompanyDirectory extends CFSModule {
       if (recordDeleted) {
         deleteRecentItem(context, thisContact);
         if ("true".equals(context.getRequest().getParameter("popup"))) {
-          context.getRequest().setAttribute("refreshUrl", "CompanyDirectory.do?command=ListEmployees");
+          context.getRequest().setAttribute(
+              "refreshUrl", "CompanyDirectory.do?command=ListEmployees");
           return ("EmployeeDeletePopupOK");
         }
         return "EmployeeDeleteOK";
@@ -436,6 +443,448 @@ public final class CompanyDirectory extends CFSModule {
       context.getRequest().setAttribute("Error", errorMessage);
       return ("SystemError");
     }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandFolderList(ActionContext context) {
+    if (!(hasPermission(context, "contacts-internal_contacts-folders-view"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Contact thisContact = null;
+    try {
+      String empId = context.getRequest().getParameter("empid");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, Integer.parseInt(empId));
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+      //Show a list of the different folders available in Accounts
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.FOLDERS_EMPLOYEES);
+      thisList.setLinkItemId(thisContact.getId());
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(false);
+      thisList.setBuildTotalNumOfRecords(true);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "View Employees", "Custom Fields Details");
+    return getReturn(context, "FolderList");
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandFields(ActionContext context) {
+    if (!(hasPermission(context, "contacts-internal_contacts-folders-view"))) {
+      return ("PermissionError");
+    }
+    Connection db = null;
+    Contact thisContact = null;
+    String catId = null;
+    String recordId = null;
+    boolean showRecords = true;
+    try {
+      String empId = context.getRequest().getParameter("empid");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, Integer.parseInt(empId));
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+      //Show a list of the different folders available in Accounts
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.FOLDERS_EMPLOYEES);
+      thisList.setLinkItemId(thisContact.getId());
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(false);
+      thisList.setBuildTotalNumOfRecords(true);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+      //Check to see if a category has been selected
+      catId = (String) context.getRequest().getParameter("catId");
+      if (Integer.parseInt(catId) > 0) {
+        //See if a specific record has been chosen from the list
+        recordId = context.getRequest().getParameter("recId");
+        String recordDeleted = (String) context.getRequest().getAttribute(
+            "recordDeleted");
+        if (recordDeleted != null) {
+          recordId = null;
+        }
+        //Build the selected category
+        CustomFieldCategory thisCategory = thisList.getCategory(
+            Integer.parseInt(catId));
+        if (recordId == null && thisCategory.getAllowMultipleRecords()) {
+          //The user didn't request a specific record, so show a list
+          //of records matching this category that the user can choose from
+          CustomFieldRecordList recordList = new CustomFieldRecordList();
+          recordList.setLinkModuleId(Constants.FOLDERS_EMPLOYEES);
+          recordList.setLinkItemId(thisContact.getId());
+          recordList.setCategoryId(thisCategory.getId());
+          recordList.buildList(db);
+          recordList.buildRecordColumns(db, thisCategory);
+          context.getRequest().setAttribute("Records", recordList);
+        } else {
+          //The user requested a specific record, or this category only
+          //allows a single record.
+          thisCategory.setLinkModuleId(Constants.FOLDERS_EMPLOYEES);
+          thisCategory.setLinkItemId(thisContact.getId());
+          if (recordId != null) {
+            thisCategory.setRecordId(Integer.parseInt(recordId));
+          } else {
+            thisCategory.buildRecordId(db);
+            recordId = String.valueOf(thisCategory.getRecordId());
+          }
+          thisCategory.setIncludeEnabled(Constants.TRUE);
+          thisCategory.setIncludeScheduled(Constants.TRUE);
+          thisCategory.setBuildResources(true);
+          thisCategory.buildResources(db);
+          showRecords = false;
+
+          if (thisCategory.getRecordId() > -1) {
+            CustomFieldRecord thisRecord = new CustomFieldRecord(
+                db, thisCategory.getRecordId());
+            context.getRequest().setAttribute("Record", thisRecord);
+          }
+        }
+        context.getRequest().setAttribute("Category", thisCategory);
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "View Employees", "Custom Fields Details");
+    if (catId != null && Integer.parseInt(catId) <= 0) {
+      return getReturn(context,"FieldsEmpty");
+    } else if (recordId == null && showRecords) {
+      return getReturn(context, "FieldRecordList");
+    } else {
+      return getReturn(context, "Fields");
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandAddFolderRecord(ActionContext context) {
+    Connection db = null;
+    Contact thisContact = null;
+    try {
+      String contactId = context.getRequest().getParameter("empid");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+      String selectedCatId = (String) context.getRequest().getParameter(
+          "catId");
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
+          Integer.parseInt(selectedCatId));
+      thisCategory.setLinkModuleId(Constants.FOLDERS_EMPLOYEES);
+      thisCategory.setLinkItemId(thisContact.getId());
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      context.getRequest().setAttribute("Category", thisCategory);
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "Employees", "Add Folder Record");
+    return getReturn(context, "AddFolderRecord");
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandInsertFields(ActionContext context) {
+    Connection db = null;
+    int resultCode = -1;
+    Contact thisContact = null;
+    boolean isValid = false;
+    try {
+      String empId = context.getRequest().getParameter("empid");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, empId);
+      if (!(hasPermission(context, "contacts-internal_contacts-folders-add"))) {
+        return ("PermissionError");
+      }
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.CONTACTS);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(false);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+
+      String selectedCatId = (String) context.getRequest().getParameter(
+          "catId");
+      context.getRequest().setAttribute("catId", selectedCatId);
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
+          Integer.parseInt(selectedCatId));
+      thisCategory.setLinkModuleId(Constants.FOLDERS_EMPLOYEES);
+      thisCategory.setLinkItemId(thisContact.getId());
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      thisCategory.setParameters(context);
+      thisCategory.setEnteredBy(this.getUserId(context));
+      thisCategory.setModifiedBy(this.getUserId(context));
+      if (!thisCategory.getReadOnly()) {
+        thisCategory.setCanNotContinue(true);
+        resultCode = thisCategory.insert(db);
+        Iterator groups = (Iterator) thisCategory.iterator();
+        isValid = true;
+        while (groups.hasNext()) {
+          CustomFieldGroup group = (CustomFieldGroup) groups.next();
+          Iterator fields = (Iterator) group.iterator();
+          while (fields.hasNext()) {
+            CustomField field = (CustomField) fields.next();
+            field.setValidateData(true);
+            field.setRecordId(thisCategory.getRecordId());
+            isValid = this.validateObject(context, db, field) && isValid;
+          }
+        }
+        thisCategory.setCanNotContinue(false);
+        if (isValid && resultCode != -1) {
+          resultCode = thisCategory.insertGroup(
+              db, thisCategory.getRecordId());
+        }
+      }
+      context.getRequest().setAttribute("Category", thisCategory);
+      if (resultCode == -1 || !isValid) {
+        if (thisCategory.getRecordId() != -1) {
+          CustomFieldRecord record = new CustomFieldRecord(
+              db, thisCategory.getRecordId());
+          record.delete(db);
+        }
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Employees-> InsertField validation error");
+        }
+        return getReturn(context, "AddFolderRecord");
+      }
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return (executeCommandFields(context));
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandModifyFields(ActionContext context) {
+    Connection db = null;
+    Contact thisContact = null;
+
+    String selectedCatId = (String) context.getRequest().getParameter("catId");
+    String recordId = (String) context.getRequest().getParameter("recId");
+
+    try {
+      String contactId = context.getRequest().getParameter("empid");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      if (!(hasPermission(context, "contacts-internal_contacts-folders-edit"))) {
+        return ("PermissionError");
+      }
+
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
+          Integer.parseInt(selectedCatId));
+      thisCategory.setLinkModuleId(Constants.FOLDERS_EMPLOYEES);
+      thisCategory.setLinkItemId(thisContact.getId());
+      thisCategory.setRecordId(Integer.parseInt(recordId));
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      context.getRequest().setAttribute("Category", thisCategory);
+
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    addModuleBean(context, "External Contacts", "Modify Custom Fields");
+    if (recordId.equals("-1")) {
+      return getReturn(context, "AddFolderRecord");
+    } else {
+      return getReturn(context, "ModifyFields");
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandUpdateFields(ActionContext context) {
+    Connection db = null;
+    Contact thisContact = null;
+    int resultCount = 0;
+    boolean isValid = false;
+    try {
+      String contactId = context.getRequest().getParameter("empid");
+      db = this.getConnection(context);
+      thisContact = new Contact(db, contactId);
+      if (!(hasPermission(context, "contacts-internal_contacts-folders-edit"))) {
+        return ("PermissionError");
+      }
+
+      context.getRequest().setAttribute("ContactDetails", thisContact);
+
+      CustomFieldCategoryList thisList = new CustomFieldCategoryList();
+      thisList.setLinkModuleId(Constants.FOLDERS_EMPLOYEES);
+      thisList.setIncludeEnabled(Constants.TRUE);
+      thisList.setIncludeScheduled(Constants.TRUE);
+      thisList.setBuildResources(false);
+      thisList.buildList(db);
+      context.getRequest().setAttribute("CategoryList", thisList);
+
+      String selectedCatId = (String) context.getRequest().getParameter(
+          "catId");
+      String recordId = (String) context.getRequest().getParameter("recId");
+
+      context.getRequest().setAttribute("catId", selectedCatId);
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
+          Integer.parseInt(selectedCatId));
+      thisCategory.setLinkModuleId(Constants.FOLDERS_EMPLOYEES);
+      thisCategory.setLinkItemId(thisContact.getId());
+      thisCategory.setRecordId(Integer.parseInt(recordId));
+      thisCategory.setIncludeEnabled(Constants.TRUE);
+      thisCategory.setIncludeScheduled(Constants.TRUE);
+      thisCategory.setBuildResources(true);
+      thisCategory.buildResources(db);
+      thisCategory.setParameters(context);
+      thisCategory.setModifiedBy(this.getUserId(context));
+      if (!thisCategory.getReadOnly()) {
+        thisCategory.setCanNotContinue(true);
+        resultCount = thisCategory.update(db);
+        Iterator groups = (Iterator) thisCategory.iterator();
+        isValid = true;
+        while (groups.hasNext()) {
+          CustomFieldGroup group = (CustomFieldGroup) groups.next();
+          Iterator fields = (Iterator) group.iterator();
+          while (fields.hasNext()) {
+            CustomField field = (CustomField) fields.next();
+            field.setValidateData(true);
+            field.setRecordId(thisCategory.getRecordId());
+            isValid = this.validateObject(context, db, field) && isValid;
+          }
+        }
+        thisCategory.setCanNotContinue(false);
+        if (isValid && resultCount != -1) {
+          resultCount = thisCategory.insertGroup(
+              db, thisCategory.getRecordId());
+        }
+      }
+      context.getRequest().setAttribute("Category", thisCategory);
+      if (resultCount == -1 || !isValid) {
+        if (System.getProperty("DEBUG") != null) {
+          System.out.println("Employees-> ModifyField validation error");
+        }
+        return getReturn(context, "ModifyFields");
+      } else {
+        thisCategory.buildResources(db);
+        CustomFieldRecord thisRecord = new CustomFieldRecord(
+            db, thisCategory.getRecordId());
+        context.getRequest().setAttribute("Record", thisRecord);
+      }
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    if (resultCount == 1) {
+      return getReturn(context, "UpdateFields");
+    } else {
+      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
+      return ("UserError");
+    }
+  }
+
+
+  /**
+   * Description of the Method
+   *
+   * @param context Description of the Parameter
+   * @return Description of the Return Value
+   */
+  public String executeCommandDeleteFields(ActionContext context) {
+    Connection db = null;
+    boolean recordDeleted = false;
+    try {
+      db = this.getConnection(context);
+      String selectedCatId = context.getRequest().getParameter("catId");
+      String recordId = context.getRequest().getParameter("recId");
+      String contactId = context.getRequest().getParameter("empid");
+      Contact thisContact = new Contact(db, Integer.parseInt(contactId));
+      if (!(hasPermission(
+          context, "contacts-internal_contacts-folders-delete"))) {
+        return ("PermissionError");
+      }
+      CustomFieldCategory thisCategory = new CustomFieldCategory(
+          db,
+          Integer.parseInt(selectedCatId));
+
+      CustomFieldRecord thisRecord = new CustomFieldRecord(
+          db, Integer.parseInt(recordId));
+      thisRecord.setLinkModuleId(Constants.FOLDERS_EMPLOYEES);
+      thisRecord.setLinkItemId(Integer.parseInt(contactId));
+      thisRecord.setCategoryId(Integer.parseInt(selectedCatId));
+      if (!thisCategory.getReadOnly()) {
+        recordDeleted = thisRecord.delete(db);
+      }
+      context.getRequest().setAttribute("recordDeleted", "true");
+    } catch (Exception errorMessage) {
+      context.getRequest().setAttribute("Error", errorMessage);
+      return ("SystemError");
+    } finally {
+      this.freeConnection(context, db);
+    }
+    return ("DeleteFieldsOK");
   }
 }
 

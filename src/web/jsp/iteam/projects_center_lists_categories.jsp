@@ -38,14 +38,14 @@
   <tr class="subtab">
     <td>
       <img border="0" src="images/icons/stock_list_enum2-16.gif" align="absmiddle">
-      Lists
+      <dhv:label name="project.lists">Lists</dhv:label>
     </td>
   </tr>
 </table>
 <br>
 <zeroio:permission name="project-lists-add">
 <img border="0" src="images/icons/stock_new_enum-16.gif" align="absmiddle">
-<a href="ProjectManagementListsCategory.do?command=AddCategory&pid=<%= Project.getId() %>">New List</a><br>
+<a href="ProjectManagementListsCategory.do?command=AddCategory&pid=<%= Project.getId() %>"><dhv:label name="project.newList">New List</dhv:label></a><br>
 </zeroio:permission>
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
@@ -61,16 +61,16 @@
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-    <th width="8" nowrap><strong>Action</strong></th>
-    <th width="100%" nowrap><strong>List</strong></th>
-    <th align="center" nowrap><strong>Items</strong></th>
-    <th align="center" nowrap><strong>Last Post</strong></th>
+    <th width="8" nowrap>&nbsp;</th>
+    <th width="100%" nowrap><strong><dhv:label name="project.list">List</dhv:label></strong></th>
+    <th align="center" nowrap><strong><dhv:label name="project.items">Items</dhv:label></strong></th>
+    <th align="center" nowrap><strong><dhv:label name="project.lastPost">Last Post</dhv:label></strong></th>
   </tr>
 <%    
   if (categoryList.size() == 0) {
 %>
   <tr class="row2">
-    <td colspan="4">No lists to display.</td>
+    <td colspan="4"><dhv:label name="project.noListsToDisplay">No lists to display.</dhv:label></td>
   </tr>
 <%
   }
@@ -82,19 +82,27 @@
     rowid = (rowid != 1?1:2);
     TaskCategory thisCategory = (TaskCategory) i.next();
 %>    
-  <tr>
-    <td class="row<%= rowid %>" valign='top' nowrap>
+  <tr class="row<%= rowid %>">
+    <td valign="top" nowrap>
       <a href="javascript:displayMenu('select_<%= SKIN %><%= count %>', 'menuItem', <%= thisCategory.getId() %>);"
          onMouseOver="over(0, <%= count %>)"
          onmouseout="out(0, <%= count %>); hideMenu('menuItem');"><img 
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>
     </td>
-    <td class="row<%= rowid %>" width="100%" valign="top">
-      <img border="0" src="images/icons/stock_list_enum-16.gif" align="absmiddle">
-      <a href="ProjectManagement.do?command=ProjectCenter&section=Lists&pid=<%= Project.getId() %>&cid=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getDescription()) %></a>
+    <td width="100%" valign="top">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" class="empty">
+        <tr>
+          <td valign="top" nowrap>
+            <img border="0" src="images/icons/stock_list_enum-16.gif" align="absmiddle" />&nbsp;
+          </td>
+          <td valign="top" width="100%">
+            <a href="ProjectManagement.do?command=ProjectCenter&section=Lists&pid=<%= Project.getId() %>&cid=<%= thisCategory.getId() %>"><%= toHtml(thisCategory.getDescription()) %></a>
+          </td>
+        </tr>
+      </table>
     </td>
-    <td class="row<%= rowid %>" valign="top" align="center" nowrap><%= thisCategory.getTaskCount() %></td>
-    <td class="row<%= rowid %>" valign="top" align="center" nowrap>
+    <td valign="top" align="center" nowrap><%= thisCategory.getTaskCount() %></td>
+    <td valign="top" align="center" nowrap>
       <zeroio:tz timestamp="<%= thisCategory.getLastTaskEntered() %>" default="--" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
     </td>
   </tr>

@@ -25,43 +25,37 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <body onLoad="document.inputForm.subject.focus();">
+<form method="post" name="inputForm" action="TroubleTicketsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
 <% if ("yes".equals((String)session.getAttribute("searchTickets"))) {%>
-  <a href="TroubleTickets.do?command=SearchTicketsForm">Search Form</a> >
-  <a href="TroubleTickets.do?command=SearchTickets">Search Results</a> >
+  <a href="TroubleTickets.do?command=SearchTicketsForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+  <a href="TroubleTickets.do?command=SearchTickets"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%}else{%> 
   <a href="TroubleTickets.do?command=Home"><dhv:label name="tickets.view">View Tickets</dhv:label></a> >
 <%}%>
 <a href="TroubleTickets.do?command=Details&id=<%= TicketDetails.getId() %>"><dhv:label name="tickets.details">Ticket Details</dhv:label></a> >
-<a href="TroubleTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>">Documents</a> >
-Modify Document
+<a href="TroubleTicketsDocuments.do?command=View&tId=<%=TicketDetails.getId()%>"><dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></a> >
+<dhv:label name="accounts.accounts_documents_modify.ModifyDocument">Modify Document</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<form method="post" name="inputForm" action="TroubleTicketsDocuments.do?command=Update" onSubmit="return checkFileForm(this);">
-<%@ include file="ticket_header_include.jsp" %>
 <% String param1 = "id=" + TicketDetails.getId(); %>
-<dhv:container name="tickets" selected="documents" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-		<td class="containerBack">
-    <dhv:formMessage />
-    <%-- include modify form --%>
-    <%@ include file="documents_modify_include.jsp" %>
-  &nbsp;<br>
-  <input type="submit" value=" Update " name="update">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';">
-  <input type="hidden" name="dosubmit" value="true">
-  <input type="hidden" name="tId" value="<%= TicketDetails.getId() %>">
-	<input type="hidden" name="fid" value="<%= FileItem.getId() %>">
-  <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>">
-  </td>
-</tr>
-</table>
+<dhv:container name="tickets" selected="documents" object="TicketDetails" param="<%= param1 %>">
+  <%@ include file="ticket_header_include.jsp" %>
+  <dhv:formMessage showSpace="false"/>
+  <%@ include file="documents_modify_include.jsp" %>
+  <br>
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" name="update">
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='TroubleTicketsDocuments.do?command=View&tId=<%= TicketDetails.getId() %>';">
+  <input type="hidden" name="dosubmit" value="true" />
+  <input type="hidden" name="tId" value="<%= TicketDetails.getId() %>" />
+  <input type="hidden" name="fid" value="<%= FileItem.getId() %>" />
+  <input type="hidden" name="folderId" value="<%= request.getParameter("folderId") %>" />
+</dhv:container>
 </form>
 </body>

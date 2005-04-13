@@ -16,26 +16,25 @@
   - Version: $Id$
   - Description:
   --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="database" class="org.aspcfs.modules.setup.beans.DatabaseBean" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <form name="configure" action="SetupUser.do?command=ConfigureUserCheck" method="post">
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Centric CRM Configuration (Step 3 of 4)<br>
-      Database Settings &amp; Installation
+      <dhv:label name="setup.configuration.step3to4">Centric CRM Configuration (Step 3 of 4)<br />Database Settings &amp; Installation</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      Database Creation Successful!<br>
+      <dhv:label name="setup.databaseCreationSuccessful">Database Creation Successful!</dhv:label><br>
       <br>
-      Centric CRM now has all of the necessary database tables as well
-      as initial data installed.<br>
+      <dhv:label name="setup.centricCRMDatabaseTables.text">Centric CRM now has all of the necessary database tables as well as initial data installed.</dhv:label><br>
       <br>
-      The final step is to create an administrative user login.<br>
+      <dhv:label name="setup.finalStep.text">The final step is to create an administrative user login.</dhv:label><br>
       <br>
-      <input type="submit" value="Continue >"/>
+      <input type="submit" value="<dhv:label name="button.continueR">Continue ></dhv:label>"/>
     </td>
   </tr>
 </table>

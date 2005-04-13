@@ -16,4 +16,4 @@
   - Version: $Id$
   - Description: 
   --%>
-You are logged into maintenance mode.
+<dhv:label name="calendar.maintenanceMode.text">You are logged into maintenance mode.</dhv:label>

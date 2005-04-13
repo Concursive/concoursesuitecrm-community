@@ -16,23 +16,25 @@
   - Version: $Id$
   - Description: 
   --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
+<jsp:useBean id="TaskId" class="java.lang.String" scope="request"/>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="MyCFS.do?command=Home">My Home Page</a> > 
-<a href="MyTasks.do?command=ListTasks">Tasks</a> >
-Forward Task
+<a href="MyCFS.do?command=Home"><dhv:label name="actionList.myHomePage">My Home Page</dhv:label></a> > 
+<a href="MyTasks.do?command=ListTasks"><dhv:label name="myitems.tasks">Tasks</dhv:label></a> >
+<dhv:label name="tasks.forwardTask">Forward Task</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<form name="newMessageForm" action="MyTasksForward.do?command=SendMessage&actionSource=MyTasksForward" method="post" onSubmit="return sendMessage();">
-<input type="submit" value="Send">
-<input type="button" value="Cancel" onClick="javascript:window.location.href='MyTasks.do?command=ListTasks'"><br><br>
+<form name="newMessageForm" action="MyTasksForward.do?command=SendMessage&actionSource=MyTasksForward&id=<%= TaskId %>" method="post" onSubmit="return sendMessage();">
+<input type="submit" value="<dhv:label name="button.send">Send</dhv:label>">
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='MyTasks.do?command=ListTasks'"><br><br>
 <%@ include file="../newmessage.jsp" %>
 <br>
-<input type="submit" value="Send">
-<input type="button" value="Cancel" onClick="javascript:window.location.href='MyTasks.do?command=ListTasks'">
+<input type="submit" value="<dhv:label name="button.send">Send</dhv:label>">
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='MyTasks.do?command=ListTasks'">
 </form>
 

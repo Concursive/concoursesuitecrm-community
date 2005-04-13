@@ -76,11 +76,11 @@ public class FormMessageHandler extends TagSupport {
       String messageToShow = "";
       if (error != null) {
         messageToShow =
-            "<img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\"/>" +
+            "<img src=\"images/error.gif\" border=\"0\" align=\"absmiddle\" /> " +
             "<font color=\"red\">" + StringUtils.toHtml(error) + "</font>";
       } else if (warning != null) {
         messageToShow =
-            "<img src=\"images/box-hold.gif\" border=\"0\" align=\"absmiddle\"/>" +
+            "<img src=\"images/box-hold.gif\" border=\"0\" align=\"absmiddle\" /> " +
             "<font color=\"#FF9933\">" + StringUtils.toHtml(warning) + "</font>";
       }
       if (!"".equals(messageToShow)) {

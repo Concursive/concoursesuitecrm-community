@@ -46,7 +46,7 @@ CREATE TABLE campaign (
 );
 
 CREATE TABLE campaign_run (
-  id serial PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   campaign_id INTEGER NOT NULL REFERENCES campaign(campaign_id),
   status INTEGER NOT NULL DEFAULT 0,
   run_date TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -98,7 +98,7 @@ CREATE TABLE lookup_survey_types (
 );
 
 CREATE TABLE survey (
-  survey_id serial PRIMARY KEY,
+  survey_id SERIAL PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
   description VARCHAR(255),
   intro TEXT,
@@ -185,7 +185,8 @@ CREATE TABLE active_survey_responses (
   contact_id INT NOT NULL DEFAULT -1,
   unique_code VARCHAR(255),
   ip_address VARCHAR(15) NOT NULL,
-  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+  entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  address_updated INT
 );
 
 CREATE SEQUENCE active_survey_ans_answer_id_seq;
@@ -215,7 +216,7 @@ CREATE TABLE active_survey_answer_avg (
 );
 
 CREATE TABLE field_types (
-  id serial PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   data_typeid int NOT NULL DEFAULT -1,
 	data_type VARCHAR(20),
   operator VARCHAR(50),
@@ -253,7 +254,7 @@ CREATE TABLE message (
 );
 
 CREATE TABLE message_template (
-  id serial PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   name VARCHAR(80) NOT NULL,
   description VARCHAR(255),
   template_file varchar(80),

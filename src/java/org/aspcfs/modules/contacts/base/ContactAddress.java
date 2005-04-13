@@ -87,22 +87,18 @@ public class ContactAddress extends Address {
    */
   public void queryRecord(Connection db, int addressId) throws SQLException {
     isContact = true;
-    Statement st = null;
-    ResultSet rs = null;
-    StringBuffer sql = new StringBuffer();
-    sql.append("SELECT c.address_id, c.contact_id, c.address_type, c.addrline1, c.addrline1,  " +
+    PreparedStatement pst = db.prepareStatement("SELECT c.address_id, c.contact_id, c.address_type, c.addrline1, c.addrline1,  " +
         "c.addrline2, c.addrline3, c.city, c.state, c.country, c.postalcode, c.entered, c.enteredby, " +
         "c.modified, c.modifiedby, c.primary_address, l.description " +
         "FROM contact_address c, lookup_contactaddress_types l " +
         "WHERE c.address_type = l.code " +
         "AND address_id = " + addressId + " ");
-    st = db.createStatement();
-    rs = st.executeQuery(sql.toString());
+    ResultSet rs = pst.executeQuery();
     if (rs.next()) {
       buildRecord(rs);
     }
     rs.close();
-    st.close();
+    pst.close();
     if (this.getId() == -1) {
       throw new SQLException("Address record not found.");
     }

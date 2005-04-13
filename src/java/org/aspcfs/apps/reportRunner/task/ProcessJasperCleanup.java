@@ -15,15 +15,15 @@
  */
 package org.aspcfs.apps.reportRunner.task;
 
-import java.sql.*;
-import java.util.*;
+import org.aspcfs.modules.reports.base.ReportQueue;
+import org.aspcfs.modules.reports.base.ReportQueueList;
 import org.aspcfs.modules.system.base.Site;
-import org.aspcfs.modules.reports.base.*;
-import org.aspcfs.utils.JasperReportUtils;
-import dori.jasper.engine.*;
-import dori.jasper.engine.util.*;
-import java.io.File;
 import org.aspcfs.utils.DateUtils;
+
+import java.sql.Connection;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *  Class to delete old reports from the database and any files associated

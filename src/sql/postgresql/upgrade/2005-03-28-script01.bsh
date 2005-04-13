@@ -1,0 +1,26 @@
+/*
+  This is a beanshell script that performs maintenance on a given database 
+  connection (db) from ant upgradedb
+  
+  - Updates the permission "admin-sysconfig-products" in the "Admin" category
+*/
+import java.sql.*;
+import org.aspcfs.modules.admin.base.Permission;
+import org.aspcfs.modules.admin.base.PermissionCategory;
+
+String permission = "admin-sysconfig-products";
+int permissionId = Permission.lookupId(db, permission);
+
+if (permissionId > -1) {
+  pst = db.prepareStatement(
+    "UPDATE permission " + 
+    "SET description = ? " +
+    "WHERE permission_id = ? ");
+  pst.setString(1, "Product Catalog Editor");
+  pst.setInt(2, permissionId);
+  int result = pst.executeUpdate();
+  if (result > 0) {
+    print("Description updated successfully");
+  }
+}
+

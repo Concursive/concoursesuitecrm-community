@@ -24,13 +24,11 @@ import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.*;
 import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.controller.objectHookManager.*;
-import org.aspcfs.controller.SessionManager;
-import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.admin.base.CategoryEditor;
-import org.aspcfs.controller.ImportManager;
 import java.io.File;
 import org.w3c.dom.*;
 import javax.servlet.ServletContext;
+import com.zeroio.webdav.WebdavManager;
 
 /**
  *  System status maintains global values for a shared group of users. This is
@@ -77,11 +75,17 @@ public class SystemStatus {
   //Session Manager
   private SessionManager sessionManager = new SessionManager();
 
+  //Webdav Manager
+  private WebdavManager webdavManager = new WebdavManager();
+
   //Category Editor
   private Map categoryEditorList = new HashMap();
 
   //Cached access types
   private HashMap accessTypes = new HashMap();
+
+  //Access to applicationPrefs (readOnly)
+  private ApplicationPrefs applicationPrefs = null;
 
 
   /**
@@ -114,6 +118,7 @@ public class SystemStatus {
     buildHierarchyList(db);
     buildPreferences(db);
     buildRolePermissions(db);
+    buildWebdavResources(db);
   }
 
 
@@ -166,6 +171,16 @@ public class SystemStatus {
    */
   public void setSessionManager(SessionManager sessionManager) {
     this.sessionManager = sessionManager;
+  }
+
+
+  /**
+   *  Sets the webdavManager attribute of the SystemStatus object
+   *
+   *@param  webdavManager  The new webdavManager value
+   */
+  public void setWebdavManager(WebdavManager webdavManager) {
+    this.webdavManager = webdavManager;
   }
 
 
@@ -244,6 +259,16 @@ public class SystemStatus {
 
 
   /**
+   *  Gets the webdavManager attribute of the SystemStatus object
+   *
+   *@return    The webdavManager value
+   */
+  public WebdavManager getWebdavManager() {
+    return webdavManager;
+  }
+
+
+  /**
    *  Gets the PermissionCheck attribute of the SystemStatus object
    *
    *@return    The PermissionCheck value
@@ -300,7 +325,39 @@ public class SystemStatus {
    *@return            The label value
    */
   public String getLabel(String thisLabel) {
-    return this.getValue("system.fields.label", thisLabel);
+    String text = this.getValue("system.fields.label", thisLabel);
+    if (text == null) {
+      text = applicationPrefs.getLabel("system.fields.label", thisLabel);
+    }
+    return text;
+  }
+
+  /**
+   * Gets the label for this key, if it's not found then use the default text
+   * that was specified
+   * @param thisLabel The key corresponding to the item to be replaced
+   * @param defaultText
+   * @return The label value
+   */
+  public String getLabel(String thisLabel, String defaultText) {
+    String result = getLabel(thisLabel);
+    if (result == null) {
+      return defaultText;
+    } else {
+      return result;
+    }
+  }
+
+
+  /**
+   *  Gets the lettersArray attribute of the SystemStatus object
+   *
+   *@param  thisLabel  Description of the Parameter
+   *@return            The lettersArray value
+   */
+  public String[] getLettersArray(String thisLabel) {
+    String letters = this.getLabel(thisLabel);
+    return letters.split(",");
   }
 
 
@@ -312,7 +369,42 @@ public class SystemStatus {
    *@return               The title value
    */
   public String getMenuProperty(String item, String thisProperty) {
-    return this.getValue("system.modules.label", item, thisProperty);
+    String text = this.getValue("system.modules.label", item, thisProperty);
+    if (text == null) {
+      text = applicationPrefs.getValue("system.modules.label", item, thisProperty);
+    }
+    return text;
+  }
+
+
+  /**
+   *  Gets the subMenuProperty attribute of the SystemStatus object
+   *
+   *@param  thisLabel     Description of the Parameter
+   *@return               The subMenuProperty value
+   */
+  public String getSubMenuProperty(String thisLabel) {
+    String text = this.getValue("system.submenu.label", thisLabel);
+    if (text == null) {
+      text = applicationPrefs.getLabel("system.submenu.label", thisLabel);
+    }
+    return text;
+  }
+
+
+  /**
+   *  Gets the containerMenuProperty attribute of the SystemStatus object
+   *
+   *@param  collection    Description of the Parameter
+   *@param  thisProperty  Description of the Parameter
+   *@return               The containerMenuProperty value
+   */
+  public String getContainerMenuProperty(String collection, String thisProperty) {
+    String text = this.getValue(collection, thisProperty, "value");
+    if (text == null) {
+      text = applicationPrefs.getValue(collection, thisProperty, "value");
+    }
+    return text;
   }
 
 
@@ -343,6 +435,26 @@ public class SystemStatus {
    */
   public ObjectHookManager getHookManager() {
     return hookManager;
+  }
+
+
+  /**
+   *  Gets the applicationPrefs attribute of the SystemStatus object
+   *
+   *@return    The applicationPrefs value
+   */
+  public ApplicationPrefs getApplicationPrefs() {
+    return applicationPrefs;
+  }
+
+
+  /**
+   *  Sets the applicationPrefs attribute of the SystemStatus object
+   *
+   *@param  tmp  The new applicationPrefs value
+   */
+  public void setApplicationPrefs(ApplicationPrefs tmp) {
+    this.applicationPrefs = tmp;
   }
 
 
@@ -557,6 +669,18 @@ public class SystemStatus {
   }
 
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public void buildWebdavResources(Connection db) throws SQLException {
+    webdavManager.buildModules(db, fileLibraryPath);
+  }
+
+
   /**
    *  Initializes the permissions cache.
    *
@@ -604,10 +728,10 @@ public class SystemStatus {
   public LookupList getLookupList(Connection db, String tableName) throws SQLException {
     if (!lookups.containsKey(tableName) && db != null) {
       synchronized (this) {
-        if (!(lookups.containsKey(tableName))) {
+        if (!lookups.containsKey(tableName)) {
           lookups.put(tableName, new LookupList(db, tableName));
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("SystemStatus --> Added new LookupList object: " + tableName);
+            System.out.println("SystemStatus-> Added LookupList object: " + tableName);
           }
         }
       }
@@ -624,12 +748,12 @@ public class SystemStatus {
    *@return            Description of the Return Value
    */
   public boolean removeLookup(String tableName) {
-    if (!(lookups.containsKey(tableName))) {
+    if (lookups.containsKey(tableName)) {
       synchronized (this) {
-        if (!(lookups.containsKey(tableName))) {
+        if (lookups.containsKey(tableName)) {
           lookups.remove(tableName);
           if (System.getProperty("DEBUG") != null) {
-            System.out.println("SystemStatus --> Removed LookupList object: " + tableName);
+            System.out.println("SystemStatus-> Removed LookupList object: " + tableName);
           }
         }
       }
@@ -802,14 +926,7 @@ public class SystemStatus {
    *@return            The value value
    */
   public String getValue(String section, String parameter) {
-    Map prefGroup = (Map) preferences.get(section);
-    if (prefGroup != null) {
-      Node param = (Node) prefGroup.get(parameter);
-      if (param != null) {
-        return XMLUtils.getNodeText(XMLUtils.getFirstChild((Element) param, "value"));
-      }
-    }
-    return null;
+    return getValue(section, parameter, "value");
   }
 
 

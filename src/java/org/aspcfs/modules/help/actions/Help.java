@@ -15,17 +15,15 @@
  */
 package org.aspcfs.modules.help.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.help.base.*;
-import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.utils.web.LookupElement;
-import com.isavvix.tools.*;
-import java.sql.*;
-import java.util.StringTokenizer;
+import org.aspcfs.modules.help.base.HelpContents;
+import org.aspcfs.modules.help.base.HelpItem;
+import org.aspcfs.modules.help.base.HelpModule;
+import org.aspcfs.modules.help.base.HelpTOC;
 import org.aspcfs.utils.HTTPUtils;
+
+import java.sql.Connection;
 
 /**
  *  Help Module
@@ -276,7 +274,7 @@ public final class Help extends CFSModule {
       this.freeConnection(context, db);
     }
     context.getRequest().setAttribute("refreshUrl", "Help.do?command=ViewModuleDescription&module=" + thisModule.getRelatedAction() + HTTPUtils.addLinkParams(context.getRequest(), "popup"));
-    return this.getReturn(context, "SaveDescription");
+    return getReturn(context, "SaveDescription");
   }
 }
 

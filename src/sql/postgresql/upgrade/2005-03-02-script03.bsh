@@ -1,0 +1,42 @@
+/*
+  This is a beanshell script that performs maintenance on a given database
+  connection (db) from ant upgradedb
+
+  New project permission
+*/
+import java.sql.*;
+import org.aspcfs.utils.DatabaseUtils;
+
+
+pst = db.prepareStatement(
+  "UPDATE lookup_project_permission_category SET level = 100 WHERE description = 'Setup'");
+pst.executeUpdate();
+pst.close();
+
+pst = db.prepareStatement(
+  "INSERT INTO lookup_project_permission_category (group_id, level, description) VALUES (1, 90, 'Accounts')");
+pst.execute();
+pst.close();
+int categoryId = DatabaseUtils.getCurrVal(db, "lookup_project_permission_category_code_seq");
+
+pst = db.prepareStatement(
+  "INSERT INTO lookup_project_permission (group_id, category_id, level, default_role, permission, description) VALUES (1, ?, ?, ?, ?, ?)");
+if (1 == 1) {
+  int i = 0;
+  pst.setInt(++i, categoryId);
+  pst.setInt(++i, 10);
+  pst.setInt(++i, 3);
+  pst.setString(++i, "project-accounts-view");
+  pst.setString(++i, "View account links");
+  pst.execute();
+}
+if (1 == 1) {
+  int i = 0;
+  pst.setInt(++i, categoryId);
+  pst.setInt(++i, 20);
+  pst.setInt(++i, 1);
+  pst.setString(++i, "project-accounts-manage");
+  pst.setString(++i, "Manage account links");
+  pst.execute();
+}
+pst.close();

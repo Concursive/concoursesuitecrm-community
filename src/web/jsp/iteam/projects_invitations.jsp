@@ -23,6 +23,16 @@
 <jsp:useBean id="invitedProjectList" class="com.zeroio.iteam.base.ProjectList" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
+<%-- Trails --%>
+<table class="trails" cellspacing="0">
+<tr>
+<td>
+<a href="ProjectManagement.do"><dhv:label name="Projects" mainMenuItem="true">Projects</dhv:label></a> >
+<dhv:label name="Invitations" subMenuItem="true">Invitations</dhv:label>
+</td>
+</tr>
+</table>
+<%-- End Trails --%>
 <dhv:evaluate if="<%= invitedProjectList.size() > 0 %>">
 <table class="note" cellspacing="0">
 <tr>
@@ -30,9 +40,7 @@
     <img src="images/icons/stock_form-open-in-design-mode-16.gif" border="0" align="absmiddle" />
   </th>
   <td>
-    You have been invited to the following projects and have been requested to
-    either <b>ACCEPT</b> or <b>REJECT</b> each project.<br />
-    Accepting will simply add the project to your list and allow you to access it.
+    <dhv:label name="project.youHaveBeenInvited.text" param="boldStart=<b>|boldEnd=</b>|break=<br />">You have been invited to the following projects and have been requested to either <b>ACCEPT</b> or <b>REJECT</b> each project.<br />Accepting will simply add the project to your list and allow you to access it.</dhv:label>
   </td>
 </tr>
 </table>
@@ -56,10 +64,7 @@
     <a href="ProjectManagement.do?command=RejectProject&pid=<%= thisProject.getId() %>"><img src="images/buttons/reject.gif" border="0" align="absmiddle" /></a>
   </td>
   <td valign="top" width="100%">
-    <b><%= toHtml(thisProject.getTitle()) %></b>,
-    created by <dhv:username id="<%= thisProject.getEnteredBy() %>"/>
-    on <zeroio:tz timestamp="<%= thisProject.getEntered() %>" default="&nbsp;"/><br />
-    <%= toHtml(thisProject.getShortDescription()) %>
+    <dhv:label name="project.createdBy.on" param="<%= "project.Title="+toHtml(thisProject.getTitle())+"|username="+getUsername(pageContext,thisProject.getEnteredBy(),false,false,"&nbsp;")+"|time="+getTime(pageContext,thisProject.getEntered(),"&nbsp;",DateFormat.SHORT,false,false,false,"&nbsp;")+"|project.shortDescription="+toHtml(thisProject.getShortDescription()) %>"><b><%= toHtml(thisProject.getTitle()) %></b>, created by <dhv:username id="<%= thisProject.getEnteredBy() %>"/> on <zeroio:tz timestamp="<%= thisProject.getEntered() %>" default="&nbsp;"/><br /><%= toHtml(thisProject.getShortDescription()) %></dhv:label>
   </td>
 </tr>
 <%
@@ -74,11 +79,10 @@
     <img src="images/icons/stock_form-open-in-design-mode-16.gif" border="0" align="absmiddle" />
   </th>
   <td>
-    Invitations to join a project are listed here.
+    <dhv:label name="project.invitationsList.text">Invitations to join a project are listed here.</dhv:label>
   </td>
 </tr>
 </table>
-There are currently no projects awaiting your reply.<br />
-You can view the projects that you belong to by navigating to the 
-<a href="ProjectManagement.do?command=EnterpriseView">Project List</a>.
+<dhv:label name="project.noProjectsAwaitingReply.text" param="break=<br />">There are currently no projects awaiting your reply.<br />You can view the projects that you belong to by navigating to the </dhv:label>
+<a href="ProjectManagement.do?command=ProjectList"><dhv:label name="project.projectList">Project List</dhv:label></a>.
 </dhv:evaluate>

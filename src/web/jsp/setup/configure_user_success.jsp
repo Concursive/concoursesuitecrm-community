@@ -16,6 +16,7 @@
   - Version: $Id$
   - Description:
   --%>
+<%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="server" class="org.aspcfs.modules.setup.beans.ServerBean" scope="request"/>
 <jsp:useBean id="userAddress" class="java.lang.String" scope="request"/>
 <%@ include file="../initPage.jsp" %>
@@ -23,27 +24,24 @@
 <table border="0" width="100%">
   <tr class="sectionTitle">
     <th>
-      Centric CRM Configuration (Step 4 of 4)<br>
-      User Settings
+      <dhv:label name="setup.centricCRM.step4of4">Centric CRM Configuration (Step 4 of 4)<br />User Settings</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      Login account created!<br>
-      <br>
-      Installation is complete and you can now begin to use Centric CRM.<br>
-      <br>
-      Further configuration can be completed by clicking on the System Administration tab in Centric CRM.<br>
-      <br>
-      Since the JavaServerPages have not yet been compiled, you should choose to precompile the
-      JSPs first so that the application works without compile delays.
-      Precompiling will occur in the background and you can continue to use Centric CRM.<br>
-      <br>
-      <input type="button" value="Precompile JSPs" onClick="javascript:popURL('setup/precompile.html','CRM_Precompile','500','325','yes','yes')"/><br>
-      <br>
-      The next step is to login!<br>
-      <br>
-      <input type="button" value="Continue >" onClick="javascript:window.location.href='index.jsp'"/>
+      <dhv:label name="setup.loginAccountCreated">Login account created!</dhv:label><br />
+      <br />
+      <dhv:label name="setup.installationComplete.text">Installation is complete and you can now begin to use Centric CRM.</dhv:label><br />
+      <br />
+      <dhv:label name="setup.furtherConfiguration.text">Further configuration can be completed by clicking on the System Administration tab in Centric CRM.</dhv:label><br />
+      <br />
+      <dhv:label name="setup.jspPrecompile.note">Since the JavaServerPages have not yet been compiled, you should choose to precompile the JSPs so that the application works without compile delays. Compiling will occur in the background and you can continue to use Centric CRM.</dhv:label><br />
+      <br />
+      <input type="button" value="Compile JSPs" onClick="javascript:popURL('setup/precompile.html','CRM_Compile','500','325','yes','yes')"/><br />
+      <br />
+      <dhv:label name="setup.nextStepLogin.text">The next step is to login!</dhv:label><br />
+      <br />
+      <input type="button" value="<dhv:label name="button.continueR">Continue ></dhv:label>" onClick="javascript:window.location.href='index.jsp'"/>
     </td>
   </tr>
 </table>

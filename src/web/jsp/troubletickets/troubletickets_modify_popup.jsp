@@ -41,14 +41,14 @@
   <tr>
   	<td>
       <dhv:evaluate if="<%= TicketDetails.getClosed() != null %>">
-        <font color="red">This <dhv:label name="tickets.ticket.lowercase">ticket</dhv:label>was closed on <%= toHtml(TicketDetails.getClosedString()) %></font><br>
+        <font color="red"><dhv:label name="project.ticketClosedOn" param="<%= "time="+toHtml(TicketDetails.getClosedString()) %>">This ticket was closed on <%= toHtml(TicketDetails.getClosedString()) %></dhv:label></font><br>
         &nbsp;<br>
       </dhv:evaluate>
       <% if (TicketDetails.getClosed() != null) { %>
-        <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>&popup=true&return=calendar';submit();" />
+        <input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>&popup=true&return=calendar';submit();" />
       <%} else {%>
-        <input type="submit" value="Update" onClick="return checkForm(this.form)" />
-         <input type="button" value="Cancel" onClick="window.close()" />
+        <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="return checkForm(this.form)" />
+        <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.close()" />
       <%}%>
       <br />
       <dhv:formMessage />
@@ -56,10 +56,10 @@
       <%-- include basic troubleticket modify form --%>
       <%@ include file="troubletickets_modify_include.jsp" %>
       <% if (TicketDetails.getClosed() != null) { %>
-        <input type="button" value="Reopen" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>&popup=true&return=calendar';submit();" />
+        <input type="button" value="<dhv:label name="button.reopen">Reopen</dhv:label>" onClick="javascript:this.form.action='TroubleTickets.do?command=Reopen&id=<%= TicketDetails.getId()%>&popup=true&return=calendar';submit();" />
       <%} else {%>
-        <input type="submit" value="Update" onClick="return checkForm(this.form)" />
-        <input type="button" value="Cancel" onClick="window.close()" />
+        <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="return checkForm(this.form)" />
+        <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.close()" />
       <%}%>
     </td>
   </tr>

@@ -23,9 +23,17 @@
         showSpan("listSpan2");
         if (value.indexOf("dept|") == 0) {
           hideSpan("select1SpanProject");
+          hideSpan("select1SpanAccountType");
           showSpan("select1SpanDepartment");
-        } else {
+        } 
+        if (value.indexOf("acct|") == 0){
           hideSpan("select1SpanDepartment");
+          hideSpan("select1SpanProject");
+          showSpan("select1SpanAccountType");
+        }
+        if (value.indexOf("my|") == 0) {
+          hideSpan("select1SpanDepartment");
+          hideSpan("select1SpanAccountType");
           showSpan("select1SpanProject");
         }
         var url = "ProjectManagementTeamList.do?command=Projects&source=" + escape(value);

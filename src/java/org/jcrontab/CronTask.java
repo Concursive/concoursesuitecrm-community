@@ -25,13 +25,14 @@
  
 package org.jcrontab;
 
+import org.aspcfs.utils.Dictionary;
+import org.jcrontab.log.Log;
+
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import org.jcrontab.log.Log;
 
 /** 
  * Implements a runnable task that can be scheduled and executed by the
@@ -50,6 +51,7 @@ public class CronTask
     public String strMethodName;
     public String[] strParams;
     private static Runnable runnable = null;
+    private Dictionary dictionary = null;
 
     /**
      * Constructor of a task.
@@ -70,6 +72,11 @@ public class CronTask
      */
     public CronTask() {
     }
+    
+    public void setDictionary(Dictionary dictionary) {
+      this.dictionary = dictionary;
+    }
+    
     /**
      * Selects the initial parameters for the task. As a task is created loaded
      * dinamically from the class name, the default constructor called is
@@ -115,30 +122,37 @@ public class CronTask
             try {
                 Class cl = CronTask.class.getClassLoader().loadClass(strClassName);
                 //Class cl = Class.forName(strClassName);
-                Class[] argTypes = {String[].class};
-                Object[] arg = {strExtraInfo};
+                Class[] argTypes = {String[].class, Dictionary.class};
+                Object[] args = {strExtraInfo, dictionary};
 
                 // accessing the given method
                 try {
+                    //accessing method with dictionary parameter
                     Method mMethod = cl.getMethod(strMethodName, argTypes);
-                    mMethod.invoke(null, arg);
+                    mMethod.invoke(null, args);
                 } catch (NoSuchMethodException e) {
-
-                    // If its not a method meaybe is a Constructor
+                    Class[] argType = {String[].class};
+                    Object[] arg = {strExtraInfo};
                     try {
-                        Constructor con = cl.getConstructor(argTypes);
-                        runnable = (Runnable)con.newInstance(arg);
-                    } catch (NoSuchMethodException e2) {
+                      // accessing a method without the dictionary
+                      Method mMethod = cl.getMethod(strMethodName, argType);
+                      mMethod.invoke(null, arg);
+                    } catch (NoSuchMethodException exp) {
+                      // If its not a method meaybe is a Constructor
+                      try {
+                          Constructor con = cl.getConstructor(argType);
+                          runnable = (Runnable)con.newInstance(arg);
+                      } catch (NoSuchMethodException e2) {
 
-                        // Well maybe its not a method neither a constructor
-                        // Usually this code will never run
-                        // but?
-                        runnable = (Runnable)cl.newInstance();
+                          // Well maybe its not a method neither a constructor
+                          // Usually this code will never run
+                          // but?
+                          runnable = (Runnable)cl.newInstance();
+                      }
+
+                      runnable.run();
                     }
-
-                    runnable.run();
                 }
-
                 // let's catch Throwable its more generic
             } catch (Exception e) {
                 Log.error(e.toString(), e);
@@ -186,7 +200,7 @@ public class CronTask
 
         try {
             if (Crontab.getInstance().getProperty("org.jcrontab.SendMail.to") != null) {
-                tempFile = new File(strClassName).createTempFile("jcrontab", 
+                tempFile = new File(strClassName).createTempFile("jcrontab",
                                                                  ".tmp");
 
                 FileOutputStream fos = new FileOutputStream(tempFile);

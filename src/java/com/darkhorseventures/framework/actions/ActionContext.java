@@ -15,13 +15,14 @@
  */
 package com.darkhorseventures.framework.actions;
 
-import java.io.*;
-import java.util.*;
-import java.sql.*;
-import javax.naming.*;
-import javax.servlet.http.*;
-import javax.servlet.*;
-import com.darkhorseventures.framework.beans.*;
+import com.darkhorseventures.framework.beans.GenericBean;
+
+import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.Serializable;
 
 /**
  *  ActionContext is created in the <code>DefaultAction</code> so that a single
@@ -109,7 +110,11 @@ public class ActionContext
   }
 
 
+  public Servlet getServlet() {
+    return servlet;
+  }
 
+  
   /**
    *  Returns a reference to a bean that is mapped to this action. The reference
    *  is an HttpSession bean reference.

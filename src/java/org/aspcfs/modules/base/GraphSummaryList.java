@@ -15,10 +15,11 @@
  */
 package org.aspcfs.modules.base;
 
-import com.darkhorseventures.framework.beans.*;
-import java.util.*;
-import java.sql.*;
-import java.text.*;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Hashtable;
 
 /**
  *  Description of the Class
@@ -34,6 +35,13 @@ public class GraphSummaryList extends Hashtable {
   boolean isValid = false;
   String lastFileName = null;
   Hashtable values = new Hashtable();
+  int size = -1;
+  boolean isFutureDateRange = false;
+  public final static int MONTH_RANGE = 0;
+  public final static int DATE_RANGE = 1;
+  public final static int YEAR_RANGE = 2;
+  public final static int WEEK_RANGE = 3;
+  public final static int TEN_DAY_RANGE = 4;
 
 
   /**
@@ -43,6 +51,35 @@ public class GraphSummaryList extends Hashtable {
     String[] valKeys = getRange(12);
     Double initialVal = new Double(0.0);
     for (int i = 0; i < 12; i++) {
+      this.values.put(valKeys[i], initialVal);
+    }
+  }
+
+
+  /**
+   *  Constructor for the GraphSummaryList object
+   *
+   * @param  range     Description of the Parameter
+   * @param  type      Description of the Parameter
+   * @param  inFuture  Description of the Parameter
+   */
+  public GraphSummaryList(int range, int type, boolean inFuture) {
+    this.isFutureDateRange = inFuture;
+    this.setSize(range);
+    String[] valKeys = new String[range];
+    if (type == GraphSummaryList.MONTH_RANGE) {
+      valKeys = getMonthRange(range);
+    } else if (type == GraphSummaryList.YEAR_RANGE) {
+      //valKeys = getYearRange(range,);
+    } else if (type == GraphSummaryList.WEEK_RANGE) {
+      valKeys = getWeekRange(range);
+    } else if (type == GraphSummaryList.DATE_RANGE) {
+      valKeys = getDayRange(range);
+    } else if (type == GraphSummaryList.TEN_DAY_RANGE) {
+      valKeys = getTenDayRange(range);
+    }
+    Double initialVal = new Double(0.0);
+    for (int i = 0; i < range; i++) {
       this.values.put(valKeys[i], initialVal);
     }
   }
@@ -152,6 +189,128 @@ public class GraphSummaryList extends Hashtable {
 
 
   /**
+   *  Gets the monthRange attribute of the GraphSummaryList object
+   *
+   * @param  size  Description of the Parameter
+   * @return       The monthRange value
+   */
+  public String[] getMonthRange(int size) {
+    String[] valKeys = new String[size];
+    Calendar rightNow = Calendar.getInstance();
+    int year = rightNow.get(Calendar.YEAR);
+    int month = rightNow.get(Calendar.MONTH);
+    for (int x = 0; x < size; x++) {
+      valKeys[x] = String.valueOf(year) + String.valueOf(month);
+      if (isFutureDateRange) {
+        rightNow.add(Calendar.MONTH, +1);
+      } else {
+        rightNow.add(Calendar.MONTH, -1);
+      }
+      year = rightNow.get(Calendar.YEAR);
+      month = rightNow.get(Calendar.MONTH);
+    }
+    return valKeys;
+  }
+
+
+  /**
+   *  Gets the tenDayRange attribute of the GraphSummaryList object
+   *
+   * @param  size  Description of the Parameter
+   * @return       The tenDayRange value
+   */
+  public String[] getTenDayRange(int size) {
+    String[] valKeys = new String[size];
+    Calendar rightNow = Calendar.getInstance();
+    int day = rightNow.get(Calendar.DATE);
+    int year = rightNow.get(Calendar.YEAR);
+    int month = rightNow.get(Calendar.MONTH);
+    for (int x = 0; x < size; x++) {
+      valKeys[x] = String.valueOf(year) + String.valueOf(month) + String.valueOf(day);
+      if (day <= 10) {
+        if (isFutureDateRange) {
+          rightNow.add(Calendar.DATE, +(10 - rightNow.get(Calendar.DATE)));
+        } else {
+          rightNow.add(Calendar.DATE, -rightNow.get(Calendar.DATE));
+        }
+      } else if (day <= 20 && day > 10) {
+        if (isFutureDateRange) {
+          rightNow.add(Calendar.DATE, +(20 - rightNow.get(Calendar.DATE)));
+        } else {
+          rightNow.add(Calendar.DATE, -(rightNow.get(Calendar.DATE) - 10));
+        }
+      } else if (day <= 31 && day > 20) {
+        if (isFutureDateRange) {
+          rightNow.add(Calendar.DATE, +(getDaysInMonth(rightNow.get(Calendar.MONTH), rightNow.get(Calendar.YEAR)) - rightNow.get(Calendar.DATE)));
+        } else {
+          rightNow.add(Calendar.DATE, -(rightNow.get(Calendar.DATE) - 20));
+        }
+      }
+      year = rightNow.get(Calendar.YEAR);
+      month = rightNow.get(Calendar.MONTH);
+      day = rightNow.get(Calendar.DATE);
+    }
+    return valKeys;
+  }
+
+
+  /**
+   *  Gets the weekRange attribute of the GraphSummaryList object
+   *
+   * @param  size  Description of the Parameter
+   * @return       The weekRange value
+   */
+  public String[] getWeekRange(int size) {
+    String[] valKeys = new String[size];
+    Calendar rightNow = Calendar.getInstance();
+    rightNow.add(Calendar.DATE, -(rightNow.get(Calendar.DAY_OF_WEEK) - rightNow.getFirstDayOfWeek()));
+    int day = rightNow.get(Calendar.DATE);
+    int year = rightNow.get(Calendar.YEAR);
+    int month = rightNow.get(Calendar.MONTH);
+    for (int x = 0; x < size; x++) {
+      valKeys[x] = String.valueOf(year) + String.valueOf(month) + String.valueOf(day);
+      if (isFutureDateRange) {
+        rightNow.add(Calendar.WEEK_OF_YEAR, +1);
+      } else {
+        rightNow.add(Calendar.WEEK_OF_YEAR, -1);
+      }
+      rightNow.add(Calendar.DATE, -(rightNow.get(Calendar.DAY_OF_WEEK) - rightNow.getFirstDayOfWeek()));
+      year = rightNow.get(Calendar.YEAR);
+      month = rightNow.get(Calendar.MONTH);
+      day = rightNow.get(Calendar.DATE);
+    }
+    return valKeys;
+  }
+
+
+  /**
+   *  Gets the dayRange attribute of the GraphSummaryList object
+   *
+   * @param  size  Description of the Parameter
+   * @return       The dayRange value
+   */
+  public String[] getDayRange(int size) {
+    String[] valKeys = new String[size];
+    Calendar rightNow = Calendar.getInstance();
+    int day = rightNow.get(Calendar.DATE);
+    int year = rightNow.get(Calendar.YEAR);
+    int month = rightNow.get(Calendar.MONTH);
+    for (int x = 0; x < size; x++) {
+      valKeys[x] = String.valueOf(year) + String.valueOf(month) + String.valueOf(day);
+      if (isFutureDateRange) {
+        rightNow.add(Calendar.DATE, +1);
+      } else {
+        rightNow.add(Calendar.DATE, -1);
+      }
+      year = rightNow.get(Calendar.YEAR);
+      month = rightNow.get(Calendar.MONTH);
+      day = rightNow.get(Calendar.DATE);
+    }
+    return valKeys;
+  }
+
+
+  /**
    *  Gets the yearRange attribute of the GraphSummaryList object
    *
    *@param  size  Description of the Parameter
@@ -194,5 +353,105 @@ public class GraphSummaryList extends Hashtable {
     this.values.put(which, tempValue);
   }
 
+
+  /**
+   *  Gets the size attribute of the GraphSummaryList object
+   *
+   * @return    The size value
+   */
+  public int getSize() {
+    return size;
+  }
+
+
+  /**
+   *  Sets the size attribute of the GraphSummaryList object
+   *
+   * @param  tmp  The new size value
+   */
+  public void setSize(int tmp) {
+    this.size = tmp;
+  }
+
+
+  /**
+   *  Sets the size attribute of the GraphSummaryList object
+   *
+   * @param  tmp  The new size value
+   */
+  public void setSize(String tmp) {
+    this.size = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the isFutureDateRange attribute of the GraphSummaryList object
+   *
+   * @return    The isFutureDateRange value
+   */
+  public boolean getIsFutureDateRange() {
+    return isFutureDateRange;
+  }
+
+
+  /**
+   *  Sets the isFutureDateRange attribute of the GraphSummaryList object
+   *
+   * @param  tmp  The new isFutureDateRange value
+   */
+  public void setIsFutureDateRange(boolean tmp) {
+    this.isFutureDateRange = tmp;
+  }
+
+
+  /**
+   *  Sets the isFutureDateRange attribute of the GraphSummaryList object
+   *
+   * @param  tmp  The new isFutureDateRange value
+   */
+  public void setIsFutureDateRange(String tmp) {
+    this.isFutureDateRange = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the daysInMonth attribute of the GraphSummaryList object
+   *
+   * @param  month  Description of the Parameter
+   * @param  year   Description of the Parameter
+   * @return        The daysInMonth value
+   */
+  public int getDaysInMonth(int month, int year) {
+    switch (month) {
+      case Calendar.APRIL:
+      case Calendar.JUNE:
+      case Calendar.SEPTEMBER:
+      case Calendar.NOVEMBER:
+        return 30;
+      case Calendar.FEBRUARY:
+        return ((Math.IEEEremainder((double) year, (double) 4) == 0) ? 29 : 28);
+    }
+    return 31;
+  }
+
+
+  /**
+   *  Gets the values attribute of the GraphSummaryList object
+   *
+   * @return    The values value
+   */
+  public Hashtable getValues() {
+    return values;
+  }
+
+
+  /**
+   *  Sets the values attribute of the GraphSummaryList object
+   *
+   * @param  tmp  The new values value
+   */
+  public void setValues(Hashtable tmp) {
+    this.values = tmp;
+  }
 }
 

@@ -15,18 +15,19 @@
  */
 package com.zeroio.iteam.actions;
 
-import com.zeroio.iteam.base.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import java.util.ArrayList;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
-import com.zeroio.iteam.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.isavvix.tools.FileInfo;
+import com.isavvix.tools.HttpMultiPartParser;
+import com.zeroio.iteam.base.Project;
+import com.zeroio.iteam.base.Requirement;
+import com.zeroio.iteam.base.TeamMember;
+import com.zeroio.iteam.utils.AssignmentImporter;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.utils.web.HtmlSelect;
+
+import java.sql.Connection;
+import java.util.HashMap;
 
 /**
  *  Project Management module for CFS
@@ -50,7 +51,7 @@ public final class ProjectManagementRequirements extends CFSModule {
     String projectId = (String) context.getRequest().getParameter("pid");
     try {
       db = getConnection(context);
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-add")) {
         return "PermissionError";
@@ -81,15 +82,13 @@ public final class ProjectManagementRequirements extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandInsert(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
-
     String projectId = (String) context.getRequest().getParameter("pid");
-
     boolean recordInserted = false;
+    boolean isValid = false;
     try {
       db = getConnection(context);
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-add")) {
         return "PermissionError";
@@ -101,29 +100,24 @@ public final class ProjectManagementRequirements extends CFSModule {
       thisRequirement.setProjectId(thisProject.getId());
       thisRequirement.setEnteredBy(getUserId(context));
       thisRequirement.setModifiedBy(getUserId(context));
-      recordInserted = thisRequirement.insert(db);
-      indexAddItem(context, thisRequirement);
-      if (!recordInserted) {
-        processErrors(context, thisRequirement.getErrors());
-      } else {
+      isValid = this.validateObject(context, db, thisRequirement);
+      if (isValid) {
+        recordInserted = thisRequirement.insert(db);
+        indexAddItem(context, thisRequirement);
+      }
+      if (recordInserted) {
         context.getRequest().setAttribute("pid", projectId);
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("AddOK");
-      } else {
-        return (executeCommandAdd(context));
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (recordInserted) {
+      return ("AddOK");
     }
+    return (executeCommandAdd(context));
   }
 
 
@@ -141,7 +135,7 @@ public final class ProjectManagementRequirements extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-plan-view")) {
         return "PermissionError";
@@ -178,7 +172,7 @@ public final class ProjectManagementRequirements extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project and permissions
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-edit")) {
         return "PermissionError";
@@ -208,10 +202,10 @@ public final class ProjectManagementRequirements extends CFSModule {
    *@return          Description of the Return Value
    */
   public String executeCommandUpdate(ActionContext context) {
-    Exception errorMessage = null;
     Requirement thisRequirement = (Requirement) context.getFormBean();
     Connection db = null;
-    int resultCount = 0;
+    boolean isValid = false;
+    int resultCount = -1;
     try {
       db = this.getConnection(context);
       Project thisProject = new Project(db, thisRequirement.getProjectId(), getUserRange(context));
@@ -222,9 +216,11 @@ public final class ProjectManagementRequirements extends CFSModule {
       thisRequirement.setProject(thisProject);
       thisRequirement.setProjectId(thisProject.getId());
       thisRequirement.setModifiedBy(getUserId(context));
-      resultCount = thisRequirement.update(db, context);
+      isValid = this.validateObject(context, db, thisRequirement);
+      if (isValid) {
+        resultCount = thisRequirement.update(db, context);
+      }
       if (resultCount == -1) {
-        processErrors(context, thisRequirement.getErrors());
         context.getRequest().setAttribute("Project", thisProject);
         context.getRequest().setAttribute("Requirement", thisRequirement);
         context.getRequest().setAttribute("IncludeSection", ("requirements_add").toLowerCase());
@@ -234,26 +230,22 @@ public final class ProjectManagementRequirements extends CFSModule {
         context.getRequest().setAttribute("IncludeSection", ("requirements").toLowerCase());
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-
-    if (errorMessage == null) {
-      if (resultCount == -1) {
-        return ("ProjectCenterOK");
-      } else if (resultCount == 1) {
-        return ("UpdateOK");
-      } else {
-        context.getRequest().setAttribute("Error",
-            "<b>This record could not be updated because someone else updated it first.</b><p>" +
-            "You can hit the back button to review the changes that could not be committed, " +
-            "but you must reload the record and make the changes again.");
-        return ("UserError");
-      }
+    if (resultCount == 1) {
+      return ("UpdateOK");
     } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      if (resultCount == -1 || !isValid) {
+        return ("ProjectCenterOK");
+      }
+      context.getRequest().setAttribute("Error",
+          "<b>This record could not be updated because someone else updated it first.</b><p>" +
+          "You can hit the back button to review the changes that could not be committed, " +
+          "but you must reload the record and make the changes again.");
+      return ("UserError");
     }
   }
 
@@ -272,7 +264,7 @@ public final class ProjectManagementRequirements extends CFSModule {
     try {
       db = getConnection(context);
       //Load the project and permissions
-      Project thisProject = new Project(db, Integer.parseInt(projectId), getUserRange(context));
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
       thisProject.buildPermissionList(db);
       if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-delete")) {
         return "PermissionError";
@@ -282,8 +274,14 @@ public final class ProjectManagementRequirements extends CFSModule {
       Requirement thisRequirement = new Requirement(db, Integer.parseInt(requirementId), thisProject.getId());
       TeamMember currentMember = new TeamMember(db, thisProject.getId(), getUserId(context));
       if (currentMember.getRoleId() <= TeamMember.PROJECT_LEAD) {
-        thisRequirement.delete(db);
-        indexDeleteItem(context, thisRequirement);
+        boolean recordDeleted = thisRequirement.delete(db);
+        if (!recordDeleted) {
+          SystemStatus systemStatus = this.getSystemStatus(context);
+          thisRequirement.getErrors().put("actionError", systemStatus.getLabel("object.validation.requirementDeletion"));
+          processErrors(context, thisRequirement.getErrors());
+        } else {
+          indexDeleteItem(context, thisRequirement);
+        }
       }
       context.getRequest().setAttribute("IncludeSection", ("requirements").toLowerCase());
       return ("DeleteOK");
@@ -292,6 +290,77 @@ public final class ProjectManagementRequirements extends CFSModule {
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
+    }
+  }
+  
+  
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandPrepareImport(ActionContext context) {
+    String projectId = (String) context.getRequest().getParameter("pid");
+    String requirementId = (String) context.getRequest().getParameter("rid");
+    Connection db = null;
+    try {
+      db = this.getConnection(context);
+      //Load the project and permissions
+      Project thisProject = loadProject(db, Integer.parseInt(projectId), context);
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-delete")) {
+        return "PermissionError";
+      }
+      context.getRequest().setAttribute("Project", thisProject);
+      //Load the requirement
+      Requirement thisRequirement = new Requirement(db, Integer.parseInt(requirementId), thisProject.getId());
+      context.getRequest().setAttribute("Requirement", thisRequirement);
+    } catch (Exception e) {
+      if (db != null) {
+        this.freeConnection(context, db);
+      }
+    }
+    context.getRequest().setAttribute("IncludeSection", ("requirements_import"));
+    return ("ProjectCenterOK");
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@return          Description of the Return Value
+   */
+  public String executeCommandImport(ActionContext context) {
+    Connection db = null;
+    try {
+      HttpMultiPartParser multiPart = new HttpMultiPartParser();
+      HashMap parts = multiPart.parseData(context.getRequest(), null);
+      db = this.getConnection(context);
+      //Load the project and permissions
+      Project thisProject = loadProject(db, Integer.parseInt((String) parts.get("pid")), context);
+      thisProject.buildPermissionList(db);
+      if (!hasProjectAccess(context, db, thisProject, "project-plan-outline-delete")) {
+        return "PermissionError";
+      }
+      context.getRequest().setAttribute("Project", thisProject);
+      // Requirement to use for saving plan
+      Requirement thisRequirement = new Requirement(db, Integer.parseInt((String) parts.get("rid")), thisProject.getId());
+      context.getRequest().setAttribute("Requirement", thisRequirement);
+      // Import
+      FileInfo fileInfo = (FileInfo) parts.get("file");
+      // Determine file type
+      AssignmentImporter.parse(fileInfo, thisRequirement, db);
+      context.getRequest().setAttribute("IncludeSection", ("requirements_import_ok"));
+      return ("ImportOK");
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      return "ImportERROR";
+    } finally {
+      if (db != null) {
+        this.freeConnection(context, db);
+      }
     }
   }
 }

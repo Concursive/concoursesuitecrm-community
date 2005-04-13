@@ -66,6 +66,21 @@ CREATE TABLE lookup_project_category (
   group_id INTEGER NOT NULL DEFAULT 0
 );
 
+CREATE TABLE lookup_news_template (
+  code INT IDENTITY PRIMARY KEY,
+  description VARCHAR(255) NOT NULL,
+  default_item BIT DEFAULT 0,
+  level INTEGER DEFAULT 0,
+  enabled BIT DEFAULT 1,
+  group_id INTEGER NOT NULL DEFAULT 0,
+  load_article BIT DEFAULT 0,
+  load_project_article_list BIT DEFAULT 0,
+  load_article_linked_list BIT DEFAULT 0,
+  load_public_projects BIT DEFAULT 0,
+  load_article_category_list BIT DEFAULT 0,
+  mapped_jsp VARCHAR(255) NOT NULL
+);
+
 
 CREATE TABLE projects (
   project_id INT IDENTITY PRIMARY KEY,
@@ -107,8 +122,22 @@ CREATE TABLE projects (
   est_closedate DATETIME,
   budget FLOAT,
   budget_currency VARCHAR(5),
-  requestdate_timezone VARCHAR(255),
-  est_closedate_timezone VARCHAR(255)
+  requestDate_timezone VARCHAR(255),
+  est_closedate_timezone VARCHAR(255),
+  portal_default BIT NOT NULL DEFAULT 0,
+  portal_header VARCHAR(255),
+  portal_format VARCHAR(255),
+  portal_key VARCHAR(255),
+  portal_build_news_body BIT NOT NULL DEFAULT 0,
+  portal_news_menu BIT NOT NULL DEFAULT 0,
+  description TEXT,
+  allows_user_observers BIT NOT NULL DEFAULT 0,
+  level INTEGER NOT NULL DEFAULT 10,
+  portal_page_type INTEGER,
+  calendar_enabled BIT NOT NULL DEFAULT 1,
+  calendar_label VARCHAR(50) NULL,
+  accounts_enabled BIT NOT NULL DEFAULT 1,
+  accounts_label VARCHAR(50) NULL
 );
 
 CREATE INDEX "projects_idx"
@@ -184,16 +213,22 @@ CREATE TABLE project_assignments (
   due_date_timezone VARCHAR(255) NULL
 );
 
-CREATE INDEX "project_assignments_cidx" ON "project_assignments" 
+CREATE INDEX "project_assignments_cidx" ON "project_assignments"
   ("complete_date", "user_assign_id");
+  
+CREATE INDEX proj_assign_req_id_idx ON project_assignments (requirement_id);
   
 CREATE TABLE project_assignments_status (
   status_id INT IDENTITY PRIMARY KEY,
   assignment_id INTEGER NOT NULL REFERENCES project_assignments,
   user_id INTEGER NOT NULL REFERENCES access(user_id),
   description TEXT NOT NULL,
-  status_date DATETIME DEFAULT CURRENT_TIMESTAMP
+  status_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  percent_complete INTEGER NULL,
+  project_status_id INTEGER REFERENCES lookup_project_status,
+  user_assign_id INTEGER NULL REFERENCES access(user_id)
 );
+
 
 CREATE TABLE project_issues_categories (
   category_id INT IDENTITY PRIMARY KEY,
@@ -208,7 +243,8 @@ CREATE TABLE project_issues_categories (
   topics_count INTEGER NOT NULL DEFAULT 0,
   posts_count INTEGER NOT NULL DEFAULT 0,
   last_post_date DATETIME,
-  last_post_by INTEGER
+  last_post_by INTEGER,
+  allow_files BIT NOT NULL DEFAULT 0
 );
 
 CREATE TABLE project_issues (
@@ -232,7 +268,7 @@ CREATE TABLE project_issue_replies (
   reply_id INT IDENTITY PRIMARY KEY ,
   issue_id INTEGER NOT NULL REFERENCES project_issues,
   reply_to INTEGER DEFAULT 0 ,
-  subject VARCHAR(50) NOT NULL ,
+  subject VARCHAR(255) NOT NULL ,
   message TEXT NOT NULL ,
   importance INTEGER NULL,
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -270,7 +306,8 @@ CREATE TABLE project_files (
   entered DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES access(user_id),
   modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy INTEGER NOT NULL REFERENCES access(user_id)
+  modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
+  default_file BIT DEFAULT 0
 );
 
 CREATE INDEX "project_files_cidx" ON "project_files" 
@@ -323,17 +360,26 @@ CREATE TABLE project_team (
 );
 CREATE UNIQUE INDEX project_team_uni_idx ON project_team (project_id, user_id);
 
+CREATE TABLE project_news_category (
+  category_id INT IDENTITY PRIMARY KEY,
+  project_id INTEGER NOT NULL REFERENCES projects(project_id),
+  category_name VARCHAR(255),
+  entered DATETIME DEFAULT CURRENT_TIMESTAMP,
+  level INTEGER NOT NULL DEFAULT 0,
+  enabled BIT DEFAULT 1
+);
+
 CREATE TABLE project_news (
   news_id INT IDENTITY PRIMARY KEY,
   project_id INTEGER NOT NULL REFERENCES projects(project_id),
-  category_id INTEGER NULL,
+  category_id INTEGER NULL REFERENCES project_news_category(category_id),
   subject VARCHAR(255) NOT NULL,
-  intro VARCHAR(2048) NULL,
+  intro TEXT NULL,
   message TEXT,
   entered DATETIME DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES access(user_id),
   modified DATETIME DEFAULT CURRENT_TIMESTAMP,
-   modifiedby INTEGER NOT NULL REFERENCES access(user_id),
+  modifiedby INTEGER NOT NULL REFERENCES access(user_id),
   start_date DATETIME DEFAULT CURRENT_TIMESTAMP,
   end_date DATETIME DEFAULT NULL,
   allow_replies BIT DEFAULT 0,
@@ -346,7 +392,9 @@ CREATE TABLE project_news (
   status INTEGER DEFAULT NULL,
   html BIT NOT NULL DEFAULT 1,
   start_date_timezone VARCHAR(255),
-  end_date_timezone VARCHAR(255)
+  end_date_timezone VARCHAR(255),
+  classification_id INTEGER NOT NULL,
+  template_id INTEGER REFERENCES lookup_news_template
 );
 
 CREATE TABLE project_requirements_map (
@@ -388,3 +436,14 @@ CREATE TABLE project_permissions (
   permission_id INTEGER NOT NULL REFERENCES lookup_project_permission(code),
   userlevel INTEGER NOT NULL REFERENCES lookup_project_role(code)
 );
+
+CREATE TABLE project_accounts (
+  id INT IDENTITY PRIMARY KEY,
+  project_id INTEGER NOT NULL REFERENCES projects(project_id),
+  org_id INTEGER NOT NULL REFERENCES organization(org_id),
+  entered DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX proj_acct_project_idx ON project_accounts (project_id);
+CREATE INDEX proj_acct_org_idx ON project_accounts (org_id);
+

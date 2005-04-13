@@ -120,7 +120,7 @@ public class UnitTestReader implements DataReader {
       thisRecord.addField("orgId", "0");
       thisRecord.addField("contactId", "1");
       thisRecord.addField("sourceCode", "1");
-      thisRecord.addField("problem", "This is a Dark Horse test ticket\r\nThis is line 2.");
+      thisRecord.addField("problem", "This is a Centric CRM test ticket\r\nThis is line 2.");
       thisRecord.addField("comment", "The following is set by this ticket:\r\n" +
           "The ticket is entered, modified by, and assigned to McClean using the Web Site source.\r\n" +
           "The ticket will be saved against the internal account (My Company).\r\n" +

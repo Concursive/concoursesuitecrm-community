@@ -15,12 +15,14 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import java.util.Calendar;
-import java.text.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
 
 /**
  *  Represents an issue category (forum) in iTeam
@@ -46,6 +48,7 @@ public class IssueCategory extends GenericBean {
   private int postsCount = 0;
   private java.sql.Timestamp lastPostDate = null;
   private int lastPostBy = -1;
+  private boolean allowFileAttachments = false;
   //other
   private Project project = null;
 
@@ -487,6 +490,17 @@ public class IssueCategory extends GenericBean {
     return project;
   }
 
+  public boolean getAllowFileAttachments() {
+    return allowFileAttachments;
+  }
+
+  public void setAllowFileAttachments(boolean allowFileAttachments) {
+    this.allowFileAttachments = allowFileAttachments;
+  }
+
+  public void setAllowFileAttachments(String tmp) {
+    allowFileAttachments = DatabaseUtils.parseBoolean(tmp);
+  }
 
   /**
    *  Description of the Method
@@ -508,6 +522,7 @@ public class IssueCategory extends GenericBean {
     postsCount = rs.getInt("posts_count");
     lastPostDate = rs.getTimestamp("last_post_date");
     lastPostBy = DatabaseUtils.getInt(rs, "last_post_by");
+    allowFileAttachments = rs.getBoolean("allow_files");
   }
 
 
@@ -542,26 +557,6 @@ public class IssueCategory extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the IssueCategory object
-   *
-   *@return    The valid value
-   */
-  private boolean isValid() {
-    if (projectId == -1) {
-      errors.put("actionError", "Project ID not specified");
-    }
-    if (subject == null || subject.equals("")) {
-      errors.put("subjectError", "Required field");
-    }
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -569,9 +564,6 @@ public class IssueCategory extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO project_issues_categories " +
@@ -584,7 +576,7 @@ public class IssueCategory extends GenericBean {
     }
     sql.append(
         "enteredBy, modifiedBy, " +
-        "topics_count, posts_count, last_post_date, last_post_by) ");
+        "topics_count, posts_count, last_post_date, last_post_by, allow_files) ");
     sql.append("VALUES (?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
@@ -592,7 +584,7 @@ public class IssueCategory extends GenericBean {
     if (modified != null) {
       sql.append("?, ");
     }
-    sql.append("?, ?, ?, ?, ?, ?) ");
+    sql.append("?, ?, ?, ?, ?, ?, ?) ");
     int i = 0;
     PreparedStatement pst = db.prepareStatement(sql.toString());
     pst.setInt(++i, projectId);
@@ -611,6 +603,7 @@ public class IssueCategory extends GenericBean {
     pst.setInt(++i, postsCount);
     DatabaseUtils.setTimestamp(pst, ++i, lastPostDate);
     DatabaseUtils.setInt(pst, ++i, lastPostBy);
+    pst.setBoolean(++i, allowFileAttachments);
     pst.execute();
     pst.close();
     id = DatabaseUtils.getCurrVal(db, "project_issue_cate_categ_id_seq");
@@ -629,20 +622,19 @@ public class IssueCategory extends GenericBean {
     if (this.getId() == -1 || this.projectId == -1) {
       throw new SQLException("ID was not specified");
     }
-    if (!isValid()) {
-      return -1;
-    }
     int resultCount = 0;
     int i = 0;
     PreparedStatement pst = db.prepareStatement(
         "UPDATE project_issues_categories " +
         "SET subject = ?, description = ?, " +
-        "modifiedby = ?, modified = CURRENT_TIMESTAMP " +
+        "modifiedby = ?, modified = " + DatabaseUtils.getCurrentTimestamp(db) + ", " +
+        "allow_files = ? " +
         "WHERE category_id = ? " +
         "AND modified = ? ");
     pst.setString(++i, subject);
     pst.setString(++i, description);
     pst.setInt(++i, modifiedBy);
+    pst.setBoolean(++i, allowFileAttachments);
     pst.setInt(++i, id);
     pst.setTimestamp(++i, modified);
     resultCount = pst.executeUpdate();
@@ -657,32 +649,20 @@ public class IssueCategory extends GenericBean {
    *@param  db                Description of the Parameter
    *@exception  SQLException  Description of the Exception
    */
-  public void delete(Connection db) throws SQLException {
+  public void delete(Connection db, String basePath) throws SQLException {
     boolean commit = db.getAutoCommit();
     try {
       if (commit) {
         db.setAutoCommit(false);
       }
-      //Delete the replies
-      PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM project_issue_replies " +
-          "WHERE issue_id IN (SELECT issue_id FROM project_issues WHERE " +
-          "category_id = ? AND project_id = ?) ");
-      pst.setInt(1, id);
-      pst.setInt(2, projectId);
-      pst.execute();
-      pst.close();
-      //Delete the issues
-      pst = db.prepareStatement(
-          "DELETE FROM project_issues " +
-          "WHERE category_id = ? " +
-          "AND project_id = ? ");
-      pst.setInt(1, id);
-      pst.setInt(2, projectId);
-      pst.execute();
-      pst.close();
+      IssueList issueList = new IssueList();
+      issueList.setCategoryId(id);
+      issueList.setProjectId(projectId);
+      issueList.buildList(db);
+      issueList.delete(db, basePath);
+
       //Delete this category
-      pst = db.prepareStatement(
+      PreparedStatement pst = db.prepareStatement(
           "DELETE FROM project_issues_categories " +
           "WHERE category_id = ? " +
           "AND project_id = ? ");
@@ -697,6 +677,7 @@ public class IssueCategory extends GenericBean {
       if (commit) {
         db.rollback();
       }
+      throw new SQLException(e.getMessage());
     } finally {
       if (commit) {
         db.setAutoCommit(true);

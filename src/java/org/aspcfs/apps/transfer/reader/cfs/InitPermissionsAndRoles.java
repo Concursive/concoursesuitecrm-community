@@ -15,19 +15,14 @@
  */
 package org.aspcfs.apps.transfer.reader.cfs;
 
-import java.sql.*;
+import org.aspcfs.apps.transfer.DataReader;
+import org.aspcfs.apps.transfer.DataRecord;
+import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Element;
+
+import java.io.File;
 import java.util.*;
-import java.util.logging.*;
-import java.io.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import org.aspcfs.apps.transfer.*;
-import org.aspcfs.apps.transfer.writer.cfshttpxmlwriter.CFSHttpXMLWriter;
-import org.aspcfs.utils.*;
 
 /**
  *  Processes the permissions.xml file, turns the data into objects and can be
@@ -132,7 +127,7 @@ public class InitPermissionsAndRoles implements DataReader {
 
       //Read in all of the permission categories (categories and permissions)
       ArrayList categoryList = new ArrayList();
-      xml.getAllChildren(xml.getFirstChild("permissions"), "category", categoryList);
+      XMLUtils.getAllChildren(xml.getFirstChild("permissions"), "category", categoryList);
       logger.info("Categories: " + categoryList.size());
       Comparator comparator = new CategoryElementComparator();
       Object sortArray[] = categoryList.toArray();
@@ -154,6 +149,7 @@ public class InitPermissionsAndRoles implements DataReader {
         DataRecord thisRecord = new DataRecord();
         thisRecord.setName("permissionCategory");
         thisRecord.setAction("insert");
+        thisRecord.addField("constant", (String) category.getAttribute("id"));
         thisRecord.addField("category", (String) category.getAttribute("name"));
         thisRecord.addField("level", String.valueOf(categoryLevel));
         //The default is true, if not set in the XML
@@ -172,6 +168,8 @@ public class InitPermissionsAndRoles implements DataReader {
         thisRecord.addField("objectEvents", (String) category.getAttribute("objectEvents"));
         thisRecord.addField("categories", (String) category.getAttribute("categories"));
         thisRecord.addField("products", (String) category.getAttribute("products"));
+        thisRecord.addField("webdav", (String) category.getAttribute("webdav"));
+        thisRecord.addField("logos", (String) category.getAttribute("logos"));
         processOK = writer.save(thisRecord);
         int categoryId = Integer.parseInt(writer.getLastResponse());
 
@@ -299,11 +297,25 @@ public class InitPermissionsAndRoles implements DataReader {
           multipleRecord.addField("maxLevels", (String) multiple.getAttribute("maxLevels"));
           writer.save(multipleRecord);
         }
+        
+        //Insert any webdav modules under this category
+        ArrayList webdavList = new ArrayList();
+        XMLUtils.getAllChildren(category, "webdav", webdavList);
+        Iterator webdavItems = webdavList.iterator();
+        while (webdavItems.hasNext()) {
+          Element webdav = (Element) webdavItems.next();
+          DataRecord webdavRecord = new DataRecord();
+          webdavRecord.setName("webdav");
+          webdavRecord.setAction("insert");
+          webdavRecord.addField("categoryId", String.valueOf(categoryId));
+          webdavRecord.addField("class", (String) webdav.getAttribute("class"));
+          writer.save(webdavRecord);
+        }
       }
 
       //Read in all of the roles and associate with previously read in permissions so IDs match
       ArrayList roleList = new ArrayList();
-      xml.getAllChildren(xml.getFirstChild("roles"), "role", roleList);
+      XMLUtils.getAllChildren(xml.getFirstChild("roles"), "role", roleList);
       logger.info("Roles: " + roleList.size());
       Iterator roleItems = roleList.iterator();
       while (roleItems.hasNext()) {
@@ -324,7 +336,7 @@ public class InitPermissionsAndRoles implements DataReader {
 
         //Process the permissions within the role
         ArrayList rolePermissionList = new ArrayList();
-        xml.getAllChildren(role, "permission", rolePermissionList);
+        XMLUtils.getAllChildren(role, "permission", rolePermissionList);
         Iterator permissionList = rolePermissionList.iterator();
         while (permissionList.hasNext()) {
           Element rolePermission = (Element) permissionList.next();

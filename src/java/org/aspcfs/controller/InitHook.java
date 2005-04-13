@@ -53,10 +53,10 @@ public class InitHook implements ControllerInitHook {
     ApplicationPrefs prefs = new ApplicationPrefs(context);
     context.setAttribute("applicationPrefs", prefs);
     //Define the keystore, to be used by tasks that require SSL certificates
-    this.addAttribute(config, context, "ClientSSLKeystore", "ClientSSLKeystore");
-    this.addAttribute(config, context, "ClientSSLKeystorePassword", "ClientSSLKeystorePassword");
+    addAttribute(config, context, "ClientSSLKeystore", "ClientSSLKeystore");
+    addAttribute(config, context, "ClientSSLKeystorePassword", "ClientSSLKeystorePassword");
     //Read in the default module settings
-    this.addAttribute(config, context, "ContainerMenuConfig", "ContainerMenuConfig");
+    addAttribute(config, context, "ContainerMenuConfig", "ContainerMenuConfig");
     if (config.getInitParameter("DynamicFormConfig") != null) {
       context.setAttribute("DynamicFormConfig", config.getInitParameter("DynamicFormConfig"));
       CustomFormList forms = new CustomFormList(context, config.getInitParameter("DynamicFormConfig"));

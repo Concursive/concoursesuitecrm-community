@@ -14,7 +14,6 @@
     upgrade.forward(request, response);
   }
   // END DHV CODE ONLY
-  // 
   String scheme = request.getScheme();
   // If SSL is configured, but this user isn't using SSL, then go to the welcome page
   if ("true".equals((String) getServletConfig().getServletContext().getAttribute("ForceSSL")) && 

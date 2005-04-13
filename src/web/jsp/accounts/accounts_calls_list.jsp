@@ -43,46 +43,39 @@
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%=OrgDetails.getOrgId()%>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-Activities
+<dhv:label name="accounts.accounts_calls_list.Activities">Activities</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<% 
-  String param1 = "orgId=" + OrgDetails.getOrgId(); 
-  int i = 0;
-%>
-<dhv:container name="accounts" selected="activities" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <% if ((request.getParameter("pagedListSectionId") == null && !AccountContactCompletedCallsListInfo.getExpandedSelection()) || AccountContactCallsListInfo.getExpandedSelection()) { %>
-      <%-- Pending list --%>
-      <dhv:pagedListStatus showExpandLink="true" title="Pending Activities" object="AccountContactCallsListInfo"/>
-      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-        <tr>
-          <th>
-            <strong>Action</strong>
-          </th>
-          <th nowrap="true">
-            <strong>Contact</strong>
-          </th>
-          <th nowrap="true">
-            <strong>Due Date</strong>
-          </th>
-          <th nowrap="true">
-            <strong>Assigned To</strong>
-          </th>
-          <th>
-            <strong>Type</strong>
-          </th>
-          <th width="100%">
-            <strong>Description</strong>
-          </th>
-        </tr>
+<% int i = 0; %>
+<dhv:container name="accounts" selected="activities" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <% if ((request.getParameter("pagedListSectionId") == null && !AccountContactCompletedCallsListInfo.getExpandedSelection()) || AccountContactCallsListInfo.getExpandedSelection()) { %>
+  <%-- Pending list --%>
+  <dhv:pagedListStatus showExpandLink="true" title="Pending Activities" object="AccountContactCallsListInfo"/>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <th width="8">
+        &nbsp;
+      </th>
+      <th nowrap="true">
+        <dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label>
+      </th>
+      <th nowrap="true">
+        <dhv:label name="accounts.accounts_calls_list.DueDate">Due Date</dhv:label>
+      </th>
+      <th nowrap="true">
+        <dhv:label name="accounts.accounts_calls_list.AssignedTo">Assigned To</dhv:label>
+      </th>
+      <th>
+        <dhv:label name="accounts.accounts_add.Type">Type</dhv:label></strong>
+      </th>
+      <th width="100%">
+        <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
+      </th>
+    </tr>
 <%
       Iterator j = CallList.iterator();
       if ( j.hasNext() ) {
@@ -92,82 +85,79 @@ Activities
             rowid = (rowid != 1?1:2);
             Call thisCall = (Call) j.next();
 %>
-        <tr class="row<%= rowid %>">
-          <td <%= AccountContactCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) ? "rowspan=\"2\"" : ""%> width="9" valign="top" nowrap>
-            <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-             <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= thisCall.getContactId() %>', '<%= thisCall.getId() %>', 'pending');"
-             onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
-          </td>
-          <td valign="top" nowrap>
-            <%= toHtml(thisCall.getContactName()) %>
-          </td>
-          <td valign="top" nowrap>
+    <tr class="row<%= rowid %>">
+      <td <%= AccountContactCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) ? "rowspan=\"2\"" : ""%> width="9" valign="top" nowrap>
+        <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+         <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= thisCall.getContactId() %>', '<%= thisCall.getId() %>', 'pending');"
+         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+      </td>
+      <td valign="top" nowrap>
+        <%= toHtml(thisCall.getContactName()) %>
+      </td>
+      <td valign="top" nowrap>
 <% if(!User.getTimeZone().equals(thisCall.getAlertDateTimeZone())){%>
 <zeroio:tz timestamp="<%= thisCall.getAlertDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
 <% } else { %>
 <zeroio:tz timestamp="<%= thisCall.getAlertDate() %>" dateOnly="true" timeZone="<%= thisCall.getAlertDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
 <% } %>
-          </td>
-          <td valign="top" nowrap>
-            <dhv:username id="<%= thisCall.getOwner() %>" firstInitialLast="true"/>
-          </td>
-          <td valign="top" nowrap>
-            <%= toHtml(CallTypeList.getSelectedValue(thisCall.getAlertCallTypeId())) %>
-          </td>
-          <td width="100%" valign="top">
-            <a href="AccountContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= thisCall.getContactId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&view=pending&trailSource=accounts">
-            <%= toHtml(thisCall.getAlertText()) %>
-            </a>
-          </td>
-        </tr>
-        <dhv:evaluate if="<%= AccountContactCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) %>">
-            <tr class="row<%= rowid %>">
-              <td colspan="5" valign="top">
-                <%= toHtmlValue(thisCall.getFollowupNotes()) %>
-              </td>
-            </tr>
-        </dhv:evaluate>
-     <%}%>
-    <%} else {%>
-        <tr class="containerBody">
-          <td colspan="6">
-            No activities found.
+      </td>
+      <td valign="top" nowrap>
+        <dhv:username id="<%= thisCall.getOwner() %>" firstInitialLast="true"/>
+      </td>
+      <td valign="top" nowrap>
+        <%= toHtml(CallTypeList.getSelectedValue(thisCall.getAlertCallTypeId())) %>
+      </td>
+      <td width="100%" valign="top">
+        <a href="AccountContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= thisCall.getContactId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&view=pending&trailSource=accounts">
+        <%= toHtml(thisCall.getAlertText()) %>
+        </a>
+      </td>
+    </tr>
+    <dhv:evaluate if="<%= AccountContactCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getFollowupNotes())) %>">
+        <tr class="row<%= rowid %>">
+          <td colspan="5" valign="top">
+            <%= toHtmlValue(thisCall.getFollowupNotes()) %>
           </td>
         </tr>
-    <%}%>
-     </table>
-     <br>
+    </dhv:evaluate>
+ <%}%>
+<%} else {%>
+    <tr class="containerBody">
+      <td colspan="6">
+        <dhv:label name="accounts.accounts_calls_list.NoActivitiesFound">No activities found.</dhv:label>
+      </td>
+    </tr>
+<%}%>
+  </table>
+  <br>
 <%}%>
 <% if ((request.getParameter("pagedListSectionId") == null && !AccountContactCallsListInfo.getExpandedSelection()) || AccountContactCompletedCallsListInfo.getExpandedSelection()) { %>
-     <%-- Completed/Canceled list --%>
-      <dhv:pagedListStatus showExpandLink="true" title="Completed/Canceled Activities" object="AccountContactCompletedCallsListInfo"/>
-      <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-        <tr>
-          <th>
-            <strong>Action</strong>
-          </th>
-          <th nowrap>
-            <strong>Contact</strong>
-          </th>
-          <th>
-            Status
-          </th>
-          <th>
-            <strong>Type</strong>
-          </th>
-          <th width="100%">
-            <strong>Subject</strong>
-          </th>
-          <th>
-            Result
-          </th>
-          <th nowrap="true">
-            <strong>Entered By</strong>
-          </th>
-          <th>
-            <strong>Entered</strong>
-          </th>
-        </tr>
+  <%-- Completed/Canceled list --%>
+  <dhv:pagedListStatus showExpandLink="true" title="Completed/Canceled Activities" object="AccountContactCompletedCallsListInfo"/>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <th width="8">
+        &nbsp;
+      </th>
+      <th nowrap>
+        <strong><dhv:label name="accounts.accountasset_include.Contact">Contact</dhv:label></strong>
+      </th>
+      <th>
+        <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
+      </th>
+      <th>
+        <strong><dhv:label name="accounts.accounts_add.Type">Type</dhv:label></strong>
+      </th>
+      <th width="50%">
+        <strong><dhv:label name="accounts.accounts_calls_list.Subject">Subject</dhv:label></strong>
+      </th>
+      <th width="50%">
+        <dhv:label name="accounts.accounts_calls_list.Result">Result</dhv:label>
+      </th>
+      <th nowrap="true">
+        <strong><dhv:label name="accounts.accounts_calls_list.Entered">Entered</dhv:label></strong>
+      </th>
+    </tr>
 <%
       Iterator jc = CompletedCallList.iterator();
       if ( jc.hasNext() ) {
@@ -177,56 +167,49 @@ Activities
             rowid = (rowid != 1?1:2);
             Call thisCall = (Call) jc.next();
 %>
-        <tr class="row<%= rowid %>">
-          <td <%= AccountContactCompletedCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getNotes())) ? "rowspan=\"2\"" : ""%> width="9" valign="top" nowrap>
-             <%-- Use the unique id for opening the menu, and toggling the graphics --%>
-             <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= thisCall.getContactId() %>', '<%= thisCall.getId() %>', '<%= thisCall.getStatusId() == Call.CANCELED ? "cancel" : ""%>');"
-             onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
-          </td>
-          <td valign="top" nowrap>
-            <%= thisCall.getContactName() %>
-          </td>
-          <td valign="top" nowrap>
-            <%= thisCall.getStatusString() %>
-          </td>
-          <td valign="top" nowrap>
-            <%= toHtml(CallTypeList.getSelectedValue(thisCall.getCallTypeId())) %>
-          </td>
-          <td width="100%" valign="top">
-            <a href="AccountContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= thisCall.getContactId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&trailSource=accounts">
-              <%= toHtml(thisCall.getSubject()) %>
-            </a>
-          </td>
-          <td nowrap valign="top">
-            <%= toHtml(callResultList.getLookupList(thisCall.getResultId()).getSelectedValue(thisCall.getResultId())) %>
-          </td>
-          <td valign="top" nowrap>
-            <dhv:username id="<%= thisCall.getEnteredBy() %>" firstInitialLast="true"/>
-          </td>
-          <td valign="top" nowrap>
-            <zeroio:tz timestamp="<%= thisCall.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
-          </td>
-        </tr>
-        <dhv:evaluate if="<%= AccountContactCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>">
-        <tr class="row<%= rowid %>">
-          <td colspan="8" valign="top">
-            <%= toHtmlValue(thisCall.getNotes()) %>
-          </td>
-        </tr>
-        </dhv:evaluate>
-     <%}%>
-    <%} else {%>
-        <tr class="containerBody">
-          <td colspan="9">
-            No activities found.
-          </td>
-        </tr>
-    <%}%>
-     </table>
+    <tr class="row<%= rowid %>">
+      <td <%= AccountContactCompletedCallsListInfo.getExpandedSelection() && !"".equals(toString(thisCall.getNotes())) ? "rowspan=\"2\"" : ""%> width="9" valign="top" nowrap>
+         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
+         <a href="javascript:displayMenu('select<%= i %>','menuCall', '<%= thisCall.getContactId() %>', '<%= thisCall.getId() %>', '<%= thisCall.getStatusId() == Call.CANCELED ? "cancel" : ""%>');"
+         onMouseOver="over(0, <%= i %>)" onmouseout="out(0, <%= i %>);hideMenu('menuCall');"><img src="images/select.gif" name="select<%= i %>" id="select<%= i %>" align="absmiddle" border="0"></a>
+      </td>
+      <td valign="top" nowrap>
+        <%= thisCall.getContactName() %>
+      </td>
+      <td valign="top" nowrap>
+        <%= thisCall.getStatusString() %>
+      </td>
+      <td valign="top" nowrap>
+        <%= toHtml(CallTypeList.getSelectedValue(thisCall.getCallTypeId())) %>
+      </td>
+      <td width="50%" valign="top">
+        <a href="AccountContactsCalls.do?command=Details&id=<%= thisCall.getId() %>&contactId=<%= thisCall.getContactId() %><%= addLinkParams(request, "popup|popupType|actionId") %>&trailSource=accounts">
+          <%= toHtml(thisCall.getSubject()) %>
+        </a>
+      </td>
+      <td width="50%" valign="top">
+        <%= toHtml(callResultList.getLookupList(thisCall.getResultId()).getSelectedValue(thisCall.getResultId())) %>
+      </td>
+      <td valign="top" nowrap>
+        <dhv:username id="<%= thisCall.getEnteredBy() %>" firstInitialLast="true"/><br />
+        <zeroio:tz timestamp="<%= thisCall.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
+      </td>
+    </tr>
+    <dhv:evaluate if="<%= AccountContactCompletedCallsListInfo.getExpandedSelection()  && !"".equals(toString(thisCall.getNotes()))%>">
+    <tr class="row<%= rowid %>">
+      <td colspan="7" valign="top">
+        <%= toHtmlValue(thisCall.getNotes()) %>
+      </td>
+    </tr>
+    </dhv:evaluate>
+ <%}%>
+<%} else {%>
+    <tr class="containerBody">
+      <td colspan="7">
+        <dhv:label name="accounts.accounts_calls_list.NoActivitiesFound">No activities found.</dhv:label>
+      </td>
+    </tr>
 <%}%>
-     <%-- End Container --%>
-   </td>
- </tr>
-</table>
-
-
+  </table>
+<%}%>
+</dhv:container>

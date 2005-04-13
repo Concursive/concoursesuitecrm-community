@@ -15,31 +15,35 @@
  */
 package org.aspcfs.modules.troubletickets.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.io.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.troubletickets.base.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.iteam.base.FileItemList;
+import com.zeroio.webutils.FileDownload;
+import org.aspcfs.controller.SystemStatus;
+import org.aspcfs.modules.accounts.base.Organization;
+import org.aspcfs.modules.actions.CFSModule;
+import org.aspcfs.modules.admin.base.UserList;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.DependencyList;
+import org.aspcfs.modules.communications.base.CampaignList;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
-import org.aspcfs.modules.accounts.base.OrganizationList;
-import org.aspcfs.modules.accounts.base.Organization;
-import org.aspcfs.modules.admin.base.UserList;
-import org.aspcfs.modules.communications.base.CampaignList;
-import org.aspcfs.modules.tasks.base.TaskList;
-import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.base.DependencyList;
-import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.login.beans.UserBean;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import java.text.*;
-import org.aspcfs.modules.products.base.*;
-import org.aspcfs.modules.quotes.base.*;
+import org.aspcfs.modules.products.base.CustomerProduct;
+import org.aspcfs.modules.products.base.ProductCatalog;
+import org.aspcfs.modules.quotes.base.QuoteList;
+import org.aspcfs.modules.troubletickets.base.*;
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.JasperReportUtils;
+import org.aspcfs.utils.web.HtmlDialog;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 
 /**
  *  Description of the Class
@@ -89,7 +93,7 @@ public final class TroubleTickets extends CFSModule {
       buildFormElements(context, db, newTic);
 
       //getting current date in mm/dd/yyyy format
-      String currentDate = this.getCurrentDateAsString(context);
+      String currentDate = getCurrentDateAsString(context);
       context.getRequest().setAttribute("currentDate", currentDate);
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -100,6 +104,7 @@ public final class TroubleTickets extends CFSModule {
     }
     addModuleBean(context, "AddTicket", "Ticket Add");
     if (context.getRequest().getParameter("actionSource") != null) {
+      context.getRequest().setAttribute("actionSource", context.getRequest().getParameter("actionSource"));
       return "AddTicketOK";
     }
     return ("AddOK");
@@ -133,8 +138,6 @@ public final class TroubleTickets extends CFSModule {
     if (!hasPermission(context, "tickets-reports-add")) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
-    boolean recordInserted = false;
     Connection db = null;
     String subject = context.getRequest().getParameter("subject");
     String ownerCriteria = context.getRequest().getParameter("criteria1");
@@ -177,16 +180,12 @@ public final class TroubleTickets extends CFSModule {
       ticketReport.setModifiedBy(getUserId(context));
       ticketReport.saveAndInsert(db);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      return executeCommandReports(context);
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    return executeCommandReports(context);
   }
 
 
@@ -207,7 +206,7 @@ public final class TroubleTickets extends CFSModule {
       db = getConnection(context);
       FileItem thisItem = new FileItem(db, Integer.parseInt(itemId));
       String filePath = this.getPath(context, "ticket-reports") + getDatePath(thisItem.getEntered()) + thisItem.getFilename() + ".html";
-      String textToShow = this.includeFile(filePath);
+      String textToShow = includeFile(filePath);
       context.getRequest().setAttribute("ReportText", textToShow);
     } catch (Exception e) {
     } finally {
@@ -394,7 +393,7 @@ public final class TroubleTickets extends CFSModule {
       sourceList.addItem(0, "-- None --");
       context.getRequest().setAttribute("SourceList", sourceList);
 
-      if (this.getDbName(context).equals("cdb_voice") || this.getDbName(context).equals("cdb_ds21")) {
+      if (getDbName(context).equals("cdb_voice") || getDbName(context).equals("cdb_ds21")) {
         CampaignList campaignList = new CampaignList();
         campaignList.setEnabled(Constants.TRUE);
         campaignList.setCompleteOnly(true);
@@ -416,7 +415,9 @@ public final class TroubleTickets extends CFSModule {
       userList.setBuildContactDetails(false);
       userList.setDepartment(newTic.getDepartmentCode());
       userList.setExcludeDisabledIfUnselected(true);
+      userList.setExcludeExpiredIfUnselected(true);
       userList.setRoleType(Constants.ROLETYPE_REGULAR);
+      userList.setHidden(Constants.FALSE);
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
 
@@ -483,7 +484,7 @@ public final class TroubleTickets extends CFSModule {
       addRecentItem(context, newTic);
 
       //getting current date in mm/dd/yyyy format
-      String currentDate = this.getCurrentDateAsString(context);
+      String currentDate = getCurrentDateAsString(context);
       context.getRequest().setAttribute("currentDate", currentDate);
 
     } catch (Exception errorMessage) {
@@ -495,7 +496,7 @@ public final class TroubleTickets extends CFSModule {
     context.getRequest().setAttribute("TicketDetails", newTic);
     addModuleBean(context, "ViewTickets", "View Tickets");
 
-    return this.getReturn(context, "Modify");
+    return getReturn(context, "Modify");
   }
 
 
@@ -583,6 +584,8 @@ public final class TroubleTickets extends CFSModule {
       db = this.getConnection(context);
       thisTic = new Ticket();
       thisTic.setBuildHistory(true);
+      SystemStatus systemStatus = this.getSystemStatus(context);
+      thisTic.setSystemStatus(systemStatus);
       thisTic.queryRecord(db, Integer.parseInt(ticketId));
 
       //check whether or not the owner is an active User
@@ -652,11 +655,9 @@ public final class TroubleTickets extends CFSModule {
     if (sectionId == null || assignedToMeInfo.getExpandedSelection() == true) {
       assignedToMeList.setPagedListInfo(assignedToMeInfo);
       assignedToMeList.setAssignedTo(getUserId(context));
-      assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       assignedToMeList.setOnlyOpen(true);
       if ("assignedToMe".equals(assignedToMeInfo.getListView())) {
         assignedToMeList.setAssignedTo(getUserId(context));
-        assignedToMeList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       }
     }
     //Other Tickets In My Department
@@ -738,7 +739,6 @@ public final class TroubleTickets extends CFSModule {
       }
       if (sectionId == null || allTicketsInfo.getExpandedSelection() == true) {
         allTicketsList.buildList(db);
-        //System.out.println("Built all tickets --> "+ allTicketsList.size());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -775,7 +775,7 @@ public final class TroubleTickets extends CFSModule {
 
     ticListInfo.setLink("TroubleTickets.do?command=SearchTickets");
     ticList.setPagedListInfo(ticListInfo);
-    ticListInfo.setSearchCriteria(ticList, UserUtils.getUserLocale(context.getRequest()));
+    ticListInfo.setSearchCriteria(ticList, context);
 
     try {
       db = this.getConnection(context);
@@ -785,24 +785,19 @@ public final class TroubleTickets extends CFSModule {
         ticList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       } else if ("assignedToMe".equals(ticListInfo.getListView())) {
         ticList.setAssignedTo(getUserId(context));
-        ticList.setDepartment(thisUser.getUserRecord().getContact().getDepartment());
       } else {
         ticList.setUnassignedToo(true);
-
         if ("createdByMe".equals(ticListInfo.getListView())) {
           ticList.setEnteredBy(getUserId(context));
         }
       }
-
       //set the status
       if (ticListInfo.getFilterKey("listFilter1") == 1) {
         ticList.setOnlyOpen(true);
       } else if (ticListInfo.getFilterKey("listFilter1") == 2) {
         ticList.setOnlyClosed(true);
       }
-
       ticList.buildList(db);
-
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
       return ("SystemError");
@@ -860,16 +855,13 @@ public final class TroubleTickets extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandInsert(ActionContext context) {
-
     if (!(hasPermission(context, "tickets-tickets-add"))) {
       return ("PermissionError");
     }
-
-    Exception errorMessage = null;
     Connection db = null;
-    int resultCount = 0;
     boolean recordInserted = false;
     boolean contactRecordInserted = false;
+    boolean isValid = true;
 
     Contact nc = null;
     Ticket newTicket = null;
@@ -900,18 +892,24 @@ public final class TroubleTickets extends CFSModule {
       db = this.getConnection(context);
 
       if (nc != null) {
-        contactRecordInserted = nc.insert(db);
-        if (contactRecordInserted) {
-          newTic.setContactId(nc.getId());
-        } else {
-          processErrors(context, nc.getErrors());
-        }
-
-        if (contactRecordInserted) {
-          recordInserted = newTic.insert(db);
+        isValid = this.validateObject(context, db, nc);
+        if (isValid) {
+          contactRecordInserted = nc.insert(db);
+          if (contactRecordInserted) {
+            newTic.setContactId(nc.getId());
+          }
+          if (contactRecordInserted) {
+            isValid = this.validateObject(context,db,newTic) && isValid;
+            if (isValid) {
+              recordInserted = newTic.insert(db);
+            }
+          }
         }
       } else {
-        recordInserted = newTic.insert(db);
+        isValid = this.validateObject(context, db, newTic) && isValid;
+        if (isValid) {
+          recordInserted = newTic.insert(db);
+        }
       }
 
       if (recordInserted) {
@@ -935,7 +933,6 @@ public final class TroubleTickets extends CFSModule {
 
         processInsertHook(context, newTic);
       } else {
-        processErrors(context, newTic.getErrors());
         if (newTic.getOrgId() != -1) {
           Organization thisOrg = new Organization(db, newTic.getOrgId());
           newTic.setCompanyName(thisOrg.getName());
@@ -943,25 +940,20 @@ public final class TroubleTickets extends CFSModule {
       }
 
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      addModuleBean(context, "ViewTickets", "Ticket Insert ok");
-      if (recordInserted) {
-        if (context.getRequest().getParameter("actionSource") != null) {
-          return "InsertTicketOK";
-        }
-        return ("InsertOK");
-      } else {
-        return (executeCommandAdd(context));
+    addModuleBean(context, "ViewTickets", "Ticket Insert ok");
+    if (recordInserted && isValid) {
+      if (context.getRequest().getParameter("actionSource") != null) {
+        context.getRequest().setAttribute("actionSource", context.getRequest().getParameter("actionSource"));
+        return "InsertTicketOK";
       }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+      return ("InsertOK");
     }
-
+    return (executeCommandAdd(context));
   }
 
 
@@ -1024,13 +1016,13 @@ public final class TroubleTickets extends CFSModule {
     if (!hasPermission(context, "tickets-tickets-edit")) {
       return ("PermissionError");
     }
-    Connection db = null;
     int resultCount = 0;
     int catCount = 0;
     TicketCategory thisCat = null;
     boolean catInserted = false;
-    boolean smartCommentsResult = true;
+    boolean isValid = true;
     Ticket newTic = (Ticket) context.getFormBean();
+    Connection db = null;
     try {
       db = this.getConnection(context);
       for (catCount = 0; catCount < 4; catCount++) {
@@ -1048,16 +1040,19 @@ public final class TroubleTickets extends CFSModule {
           thisCat.setDescription(context.getRequest().getParameter("newCat" + catCount));
           thisCat.setCategoryLevel(catCount);
           thisCat.setLevel(catCount);
-          catInserted = thisCat.insert(db);
-          if (catInserted == true) {
-            if (catCount == 0) {
-              newTic.setCatCode(thisCat.getId());
-            } else if (catCount == 1) {
-              newTic.setSubCat1(thisCat.getId());
-            } else if (catCount == 2) {
-              newTic.setSubCat2(thisCat.getId());
-            } else {
-              newTic.setSubCat3(thisCat.getId());
+          isValid = this.validateObject(context, db, thisCat) && isValid;
+          if (isValid) {
+            catInserted = thisCat.insert(db);
+            if (catInserted == true) {
+              if (catCount == 0) {
+                newTic.setCatCode(thisCat.getId());
+              } else if (catCount == 1) {
+                newTic.setSubCat1(thisCat.getId());
+              } else if (catCount == 2) {
+                newTic.setSubCat2(thisCat.getId());
+              } else {
+                newTic.setSubCat3(thisCat.getId());
+              }
             }
           }
         }
@@ -1065,32 +1060,31 @@ public final class TroubleTickets extends CFSModule {
       newTic.setModifiedBy(getUserId(context));
       //Get the previousTicket, update the ticket, then send both to a hook
       Ticket previousTicket = new Ticket(db, newTic.getId());
-
-      resultCount = newTic.update(db);
-      if (resultCount == 1) {
-        processUpdateHook(context, previousTicket, newTic);
+      if (previousTicket.getProductId() > -1) {
+        // TODO: determine why this was being done. If this code is allowed to execute, then a new product cannot
+        // be linked to this ticket 
+        //newTic.setProductId(previousTicket.getProductId());
       }
-    } catch (Exception errorMessage) {
-      context.getRequest().setAttribute("Error", errorMessage);
+      isValid = this.validateObject(context, db, newTic) && isValid;
+      if (isValid) {
+        resultCount = newTic.update(db);
+        if (resultCount == 1) {
+          processUpdateHook(context, previousTicket, newTic);
+        }
+      }
+    } catch (Exception e) {
+      context.getRequest().setAttribute("Error", e);
       return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (resultCount == -1) {
-      processErrors(context, newTic.getErrors());
-    }
-    if (resultCount == -1) {
-      return (executeCommandModify(context));
-    } else if (resultCount == 1) {
+    if (resultCount == 1) {
       if (context.getRequest().getParameter("return") != null && context.getRequest().getParameter("return").equals("list")) {
         return (executeCommandHome(context));
-      } else {
-        return this.getReturn(context, "Update");
       }
-    } else {
-      context.getRequest().setAttribute("Error", NOT_UPDATED_MESSAGE);
-      return ("UserError");
+      return getReturn(context, "Update");
     }
+    return (executeCommandModify(context));
   }
 
 
@@ -1104,46 +1098,43 @@ public final class TroubleTickets extends CFSModule {
     if (!(hasPermission(context, "tickets-tickets-delete"))) {
       return ("PermissionError");
     }
-    Exception errorMessage = null;
     HtmlDialog htmlDialog = new HtmlDialog();
     Ticket ticket = null;
     String id = context.getRequest().getParameter("id");
     Connection db = null;
     try {
       db = this.getConnection(context);
+      SystemStatus systemStatus = this.getSystemStatus(context);
       ticket = new Ticket(db, Integer.parseInt(id));
       DependencyList dependencies = ticket.processDependencies(db);
-      htmlDialog.setTitle("Centric CRM: Confirm Delete");
+      dependencies.setSystemStatus(systemStatus);
+      htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
         htmlDialog.setDeleteUrl("javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       } else if (dependencies.canDelete()) {
-        htmlDialog.addMessage(dependencies.getHtmlString());
-        htmlDialog.setHeader("This object has the following dependencies within Centric CRM:");
-
+        htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
         String returnType = (String) context.getRequest().getParameter("return");
         if ("searchResults".equals(returnType)) {
-          htmlDialog.addButton("Delete All", "javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + "&return=searchResults" + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+          htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + "&return=searchResults" + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
         } else {
-          htmlDialog.addButton("Delete All", "javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+          htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='TroubleTickets.do?command=Delete&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
         }
-        htmlDialog.addButton("Cancel", "javascript:parent.window.close()");
+        htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       } else {
-        htmlDialog.setHeader("This ticket cannot be deleted because it is associated with an activities form.");
-        htmlDialog.addButton("OK", "javascript:parent.window.close()");
+        htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
+        htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
+        htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      context.getSession().setAttribute("Dialog", htmlDialog);
-      return ("ConfirmDeleteOK");
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
-    }
+    context.getSession().setAttribute("Dialog", htmlDialog);
+    return ("ConfirmDeleteOK");
   }
 
 
@@ -1226,6 +1217,8 @@ public final class TroubleTickets extends CFSModule {
     userList.setBuildContact(true);
     userList.setBuildContactDetails(false);
     userList.setExcludeDisabledIfUnselected(true);
+    userList.setExcludeExpiredIfUnselected(true);
+    userList.setHidden(Constants.FALSE);
     userList.setRoleType(Constants.ROLETYPE_REGULAR);
     if (newTic.getDepartmentCode() > 0) {
       userList.setDepartment(newTic.getDepartmentCode());
@@ -1410,6 +1403,8 @@ public final class TroubleTickets extends CFSModule {
       map.put("ticketid", new Integer(id));
       String reportPath = getWebInfPath(context, "reports");
       map.put("path", reportPath);
+      //provide the dictionary as a parameter to the quote report
+      map.put("CENTRIC_DICTIONARY", this.getSystemStatus(context).getApplicationPrefs().getLocalizationPrefs());
       String filename = "ticket.xml";
       byte[] bytes = JasperReportUtils.getReportAsBytes(reportPath + filename, map, db);
       if (bytes != null) {

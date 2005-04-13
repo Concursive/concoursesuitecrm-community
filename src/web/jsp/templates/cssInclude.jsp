@@ -47,3 +47,14 @@
 %>
 <link rel="stylesheet" href="css/<%= applicationPrefs.get("LAYOUT.TEMPLATE") %>.css" type="text/css">
 <link rel="stylesheet" href="css/print.css" type="text/css" media="print">
+<%-- Use the system's language if not specified at user --%>
+<dhv:evaluate if="<%= User.getUserRecord() == null  %>">
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>.js"></SCRIPT>
+</dhv:evaluate>
+<%-- Use the user's language since they are logged in --%>
+<dhv:evaluate if="<%= User.getUserRecord() != null  %>">
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_<%= User.getUserRecord().getLanguage() %>.js"></SCRIPT>
+</dhv:evaluate>
+<%-- The JavaScript resource label handler --%>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/language.js"></SCRIPT>
+

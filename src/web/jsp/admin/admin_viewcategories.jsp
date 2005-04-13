@@ -30,11 +30,11 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> > 
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> > 
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
-<a href="AdminCategories.do?command=Show&moduleId=<%= PermissionCategory.getId() %>&constantId=<%= request.getParameter("constantId") %>">Categories</a> >
-Editor
+<a href="AdminCategories.do?command=Show&moduleId=<%= PermissionCategory.getId() %>&constantId=<%= request.getParameter("constantId") %>"><dhv:label name="product.Categories">Categories</dhv:label></a> >
+<dhv:label name="product.editor">Editor</dhv:label>
 </td>
 </tr>
 </table>
@@ -92,7 +92,7 @@ function activate(){
   if(catList.length > 0 && catList.options[0].value != -1){
     confirmForward('AdminCategories.do?command=Activate&constantId=<%= request.getParameter("constantId") %>&moduleId=<%= PermissionCategory.getId() %>');
   }else{
-    alert('No entries to activate');
+    alert(label("alert.noentriestoactivate",'No entries to activate'));
   }
 }
 
@@ -100,22 +100,19 @@ function activate(){
 <strong>Categories</strong>
 <% String param1 = "moduleId=" + PermissionCategory.getId(); %>
 <% String param2 = "constantId=" + request.getParameter("constantId"); %>
-<dhv:container name="categories" selected="draft categories" param="<%= param1 + "|" + param2 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack" align="center">
-      <table border="0" cellpadding="2" cellspacing="0" class="empty">
-        <tr>
-          <td align="center">
-            Level 1<br>
-            <% int value = ((selectedCategories.get(new Integer(0)) != null) ? ((Integer) selectedCategories.get(new Integer(0))).intValue() : -1); 
-            categoryEditor.getTopCategoryList().getCatListSelect().setSelectSize(10);
-            categoryEditor.getTopCategoryList().setHtmlJsEvent("onChange=\"javascript:loadCategories('0');\"");
-            categoryEditor.getTopCategoryList().getCatListSelect().addAttribute("style", "width: 150px");
-            %>
-            <%= categoryEditor.getTopCategoryList().getHtmlSelect("level0", value) %><br>
-            <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Edit" id="edit0" onClick="javascript:editCategory('0');"></dhv:permission>
-          </td>
+<dhv:container name="categories" selected="draft categories" param="<%= param1 + "|" + param2 %>" style="tabs">
+  <table border="0" cellpadding="2" cellspacing="0" class="empty">
+    <tr>
+      <td align="center">
+        <dhv:label name="admin.level1">Level 1</dhv:label><br>
+        <% int value = ((selectedCategories.get(new Integer(0)) != null) ? ((Integer) selectedCategories.get(new Integer(0))).intValue() : -1);
+        categoryEditor.getTopCategoryList().getCatListSelect().setSelectSize(10);
+        categoryEditor.getTopCategoryList().setHtmlJsEvent("onChange=\"javascript:loadCategories('0');\"");
+        categoryEditor.getTopCategoryList().getCatListSelect().addAttribute("style", "width: 150px");
+        %>
+        <%= categoryEditor.getTopCategoryList().getHtmlSelect("level0", value) %><br>
+        <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Edit" id="edit0" onClick="javascript:editCategory('0');"></dhv:permission>
+      </td>
 <%-- Variably draw the rest of the editors --%>
 <%
    for (int k = 1; k < categoryEditor.getMaxLevels(); k++) {
@@ -124,28 +121,26 @@ function activate(){
        thisSubList = new TicketCategoryDraftList();
      }
 %>
-          <td align="center">
-            Level <%= k + 1 %><br>
+      <td align="center">
+        <dhv:label name="admin.level" param="<%= "level="+ (k+1) %>">Level <%= k + 1 %></dhv:label><br>
 <%
-            value = ((selectedCategories.get(new Integer(k)) != null) ? ((Integer) selectedCategories.get(new Integer(k))).intValue() : -1);
-            thisSubList.getCatListSelect().setSelectSize(10);
-            thisSubList.getCatListSelect().addAttribute("onChange", "javascript:loadCategories('" + k + "');");
-            thisSubList.getCatListSelect().addAttribute("style", "width: 150px");
+        value = ((selectedCategories.get(new Integer(k)) != null) ? ((Integer) selectedCategories.get(new Integer(k))).intValue() : -1);
+        thisSubList.getCatListSelect().setSelectSize(10);
+        thisSubList.getCatListSelect().addAttribute("onChange", "javascript:loadCategories('" + k + "');");
+        thisSubList.getCatListSelect().addAttribute("style", "width: 150px");
 %>
-            <%= thisSubList.getHtmlSelect("level" + k, value) %><br>
-            <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Edit" id="edit<%= k %>" onClick="javascript:editCategory('<%= k %>');" disabled></dhv:permission>
-          </td>
+        <%= thisSubList.getHtmlSelect("level" + k, value) %><br>
+        <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="<dhv:label name="button.edit">Edit</dhv:label>" id="edit<%= k %>" onClick="javascript:editCategory('<%= k %>');" disabled></dhv:permission>
+      </td>
 <%
    }
 %>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
+    </tr>
+  </table>
+</dhv:container>
 <dhv:permission name="admin-sysconfig-categories-edit"><br>
-<input type="button" value="Revert to Active List" onClick="javascript:confirmReset('AdminCategories.do?command=Reset&constantId=<%= request.getParameter("constantId") %>&moduleId=<%= PermissionCategory.getId() %>', 'You will lose all the changes made to the draft. Proceed ?');">
-<input type="button" value="Activate Now" onClick="javascript:activate();"></dhv:permission>
+<input type="button" value="<dhv:label name="button.revertToActiveList">Revert to Active List</dhv:label>" onClick="javascript:confirmReset('AdminCategories.do?command=Reset&constantId=<%= request.getParameter("constantId") %>&moduleId=<%= PermissionCategory.getId() %>', label('confirm.looseChanges','You will lose all the changes made to the draft. Proceed ?'));">
+<input type="button" value="<dhv:label name="button.activateNow">Activate Now</dhv:label>" onClick="javascript:activate();"></dhv:permission>
 <%-- script to enable edit buttons if any categories are selected --%>
 <script>
 <%
@@ -178,4 +173,3 @@ function activate(){
 </script>
 <dhv:formMessage />
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-

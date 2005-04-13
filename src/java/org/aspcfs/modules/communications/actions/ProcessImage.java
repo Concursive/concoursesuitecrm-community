@@ -15,19 +15,12 @@
  */
 package org.aspcfs.modules.communications.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import java.sql.*;
-import java.util.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.base.FileItem;
+import com.zeroio.webutils.FileDownload;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.communications.base.*;
-import org.aspcfs.modules.base.DependencyList;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import com.isavvix.tools.*;
-import java.io.*;
+
+import java.util.StringTokenizer;
 
 /**
  *  A stand alone servlet that sends files. Currently it will stream an image
@@ -58,10 +51,7 @@ public final class ProcessImage extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
-    Exception errorMessage = null;
     String id = (String) context.getRequest().getParameter("id");
-    FileItem thisItem = null;
-
     //Start the download
     try {
       String dbName = null;
@@ -113,10 +103,8 @@ public final class ProcessImage extends CFSModule {
     } catch (java.net.SocketException se) {
       //User either canceled the download or lost connection
     } catch (Exception e) {
-      errorMessage = e;
       System.out.println(e.toString());
     }
-
     return ("-none-");
   }
 }

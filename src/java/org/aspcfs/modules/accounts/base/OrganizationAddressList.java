@@ -15,16 +15,14 @@
  */
 package org.aspcfs.modules.accounts.base;
 
-import java.util.Vector;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.*;
-import org.aspcfs.modules.accounts.base.OrganizationAddress;
 import org.aspcfs.modules.base.AddressList;
 import org.aspcfs.modules.base.Constants;
-import javax.servlet.*;
-import javax.servlet.http.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *  Builds an address list for an organization using a custom query that extends
@@ -59,9 +57,16 @@ public class OrganizationAddressList extends AddressList {
    */
   public OrganizationAddressList(HttpServletRequest request) {
     int i = 0;
+    int primaryAddress = -1;
+    if (request.getParameter("primaryAddress") != null) {
+      primaryAddress = Integer.parseInt((String) request.getParameter("primaryAddress"));
+    }
     while (request.getParameter("address" + (++i) + "type") != null) {
       OrganizationAddress thisAddress = new OrganizationAddress();
       thisAddress.buildRecord(request, i);
+      if (primaryAddress == i) {
+        thisAddress.setPrimaryAddress(true);
+      }
       if (thisAddress.isValid()) {
         this.addElement(thisAddress);
       }

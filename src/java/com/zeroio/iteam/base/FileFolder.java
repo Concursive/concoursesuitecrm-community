@@ -15,12 +15,15 @@
  */
 package com.zeroio.iteam.base;
 
-import java.sql.*;
-import java.util.*;
-import java.text.*;
-import com.darkhorseventures.framework.beans.*;
-import com.darkhorseventures.framework.actions.*;
+import com.darkhorseventures.framework.beans.GenericBean;
 import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.util.Map;
 
 /**
  *  Represents a file system folder in which files can be organized within
@@ -31,9 +34,9 @@ import org.aspcfs.utils.DatabaseUtils;
  *      $
  */
 public class FileFolder extends GenericBean {
-  private int VIEW_LIBRARY = -1;
-  private int VIEW_GALLERY = 1;
-  private int VIEW_SLIDESHOW = 2;
+  public static final int VIEW_LIBRARY = -1;
+  public static final int VIEW_GALLERY = 1;
+  public static final int VIEW_SLIDESHOW = 2;
 
   //Object Properties
   private int id = -1;
@@ -591,9 +594,6 @@ public class FileFolder extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
     StringBuffer sql = new StringBuffer();
     sql.append(
         "INSERT INTO project_folders " +
@@ -604,7 +604,7 @@ public class FileFolder extends GenericBean {
     if (modified != null) {
       sql.append("modified, ");
     }
-    sql.append("enteredby, modifiedby, display) " +
+    sql.append("enteredBy, modifiedBy, display) " +
         "VALUES (?, ?, ?, ?, ?, ");
     if (entered != null) {
       sql.append("?, ");
@@ -645,9 +645,6 @@ public class FileFolder extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid()) {
-      return -1;
-    }
     String sql =
         "UPDATE project_folders " +
         "SET subject = ?, description = ?, display = ? " +
@@ -663,6 +660,24 @@ public class FileFolder extends GenericBean {
     resultCount = pst.executeUpdate();
     pst.close();
     return resultCount;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@return                   Description of the Return Value
+   *@exception  SQLException  Description of the Exception
+   */
+  public boolean deleteBlankFolder(Connection db) throws SQLException {
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM project_folders " +
+        "WHERE folder_id = ?");
+    pst.setInt(1, this.getId());
+    pst.execute();
+    pst.close();
+    return true;
   }
 
 
@@ -724,26 +739,6 @@ public class FileFolder extends GenericBean {
       }
     }
     return result;
-  }
-
-
-  /**
-   *  Gets the valid attribute of the FileFolder object
-   *
-   *@return    The valid value
-   */
-  private boolean isValid() {
-    if (linkModuleId == -1 || linkItemId == -1) {
-      errors.put("actionError", "Id not specified");
-    }
-    if (subject == null || subject.equals("")) {
-      errors.put("subjectError", "Required field");
-    }
-    if (hasErrors()) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
 

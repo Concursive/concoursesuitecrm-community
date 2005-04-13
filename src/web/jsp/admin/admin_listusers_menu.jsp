@@ -67,7 +67,7 @@
           <img src="images/icons/stock_zoom-page-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          View Details
+          <dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -77,7 +77,7 @@
           <img src="images/icons/stock_edit-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          Modify
+          <dhv:label name="global.button.modify">Modify</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -87,7 +87,7 @@
           <img src="images/icons/stock_toggle-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td>
-          Disable Login
+          <dhv:label name="admin.disableLogin">Disable Login</dhv:label>
         </td>
       </tr>
       </dhv:permission>
@@ -97,7 +97,7 @@
           <img src="images/icons/stock_toggle-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>        
         <td>
-          Enable Login
+          <dhv:label name="admin.enableLogin">Enable Login</dhv:label>
         </td>
       </tr>
       </dhv:permission>

@@ -25,18 +25,18 @@
 %>
 <table width="100%" border="0">
   <tr>
-    <td><b>Centric CRM Installation</b></td>
+    <td><b><dhv:label name="setup.centricCRMInstallation">Centric CRM Installation</dhv:label></b></td>
   </tr>
 </table>
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th colspan="2">
-      You are here...
+      <dhv:label name="setup.youWereHere.label">You are here...</dhv:label>
     </th>
   </tr>
   <tr>
     <td nowrap valign="top"><dhv:evaluate if="<%= "Welcome".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
-    <td valign="top" width="100%">Welcome</td>
+    <td valign="top" width="100%"><dhv:label name="Welcome">Welcome</dhv:label></td>
   </tr>
   <tr>
     <td nowrap valign="top"><dhv:evaluate if="<%= "Register".equals(ModuleBean.getCurrentAction()) %>"><%= image %></dhv:evaluate></td>
@@ -65,16 +65,15 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      Welcome
+      <dhv:label name="Welcome">Welcome</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      Acquire, retain, and service your customers with
-      Centric CRM.<br>
+      <dhv:label name="setup.acquireRetainAndServiceCustomers.text">Acquire, retain, and service your customers with Centric CRM.</dhv:label><br>
       <br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.centriccrm.com" target="_blank">Learn more about our products</a><br>
+      <a href="http://www.centriccrm.com" target="_blank"><dhv:label name="setup.learnMore.text">Learn more about our products</dhv:label></a><br>
       &nbsp;
     </td>
   </tr>
@@ -85,17 +84,15 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      Registration
+      <dhv:label name="setup.registration">Registration</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      Privacy is extremely important to us.<br>
-      <br>
-      Your information will not be provided to others.<br>
+      <dhv:label name="setup.privacyStatement.text">Privacy is extremely important to us.<br /><br />Your information will not be provided to others.</dhv:label><br>
       <br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="javascript:popURL('privacy_statement.html','CRM_Privacy','400','400','yes','yes');">Review Privacy Statement</a><br>
+      <a href="javascript:popURL('privacy_statement.html','CRM_Privacy','400','400','yes','yes');"><dhv:label name="setup.reviewPrivacyStatement">Review Privacy Statement</dhv:label></a><br>
       &nbsp;
     </td>
   </tr>
@@ -106,15 +103,15 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      Storage Resources
+      <dhv:label name="setup.storageResources">Storage Resources</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
-      Remember to make backups of your data.<br>
+      <dhv:label name="setup.backupReminder.text">Remember to make backups of your data.</dhv:label><br>
       <br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.centriccrm.com" target="_blank">File Backup Help</a><br>
+      <a href="http://www.centriccrm.com" target="_blank"><dhv:label name="setup.fileBackupHelp">File Backup Help</dhv:label></a><br>
       &nbsp;
     </td>
   </tr>
@@ -125,15 +122,15 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      Server Resources
+      <dhv:label name="setup.serverResources">Server Resources</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.centriccrm.com" target="_blank">Sendmail Help</a><br>
+      <a href="http://www.centriccrm.com" target="_blank"><dhv:label name="setup.sendmailHelp">Sendmail Help</dhv:label></a><br>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.centriccrm.com" target="_blank">HylaFax Help</a><br>
+      <a href="http://www.centriccrm.com" target="_blank"><dhv:label name="setup.hylafaxHelp">HylaFax Help</dhv:label></a><br>
       &nbsp;
     </td>
   </tr>
@@ -144,13 +141,13 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      Database Resources
+      <dhv:label name="setup.databaseResources">Database Resources</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.centriccrm.com" target="_blank">PostgreSQL Help</a><br>
+      <a href="http://www.centriccrm.com" target="_blank"><dhv:label name="setup.postgreSQLHelp">PostgreSQL Help</dhv:label></a><br>
       &nbsp;
     </td>
   </tr>
@@ -161,13 +158,13 @@
 <table width="100%" border="0" class="globalItem" cellpadding="0" cellspacing="0">
   <tr>
     <th>
-      Centric CRM Resources
+      <dhv:label name="setup.centricCRMResources">Centric CRM Resources</dhv:label>
     </th>
   </tr>
   <tr>
     <td>
       <img alt="" src="images/bullet.gif" align="absmiddle"/>
-      <a href="http://www.centriccrm.com" target="_blank">Centric CRM Help</a><br>
+      <a href="http://www.centriccrm.com" target="_blank"><dhv:label name="setup.centricCRMHelp">Centric CRM Help</dhv:label></a><br>
       &nbsp;
     </td>
   </tr>

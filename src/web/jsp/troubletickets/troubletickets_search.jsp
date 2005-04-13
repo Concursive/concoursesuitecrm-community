@@ -34,32 +34,32 @@
     document.forms['searchTicket'].searchcodeId.value="";
     document.forms['searchTicket'].searchDescription.value="";
     document.forms['searchTicket'].searchcodeOrgId.value="-1";
-    changeDivContent('changeaccount','All');
+    changeDivContent('changeaccount',label('label.all','All'));
     document.forms['searchTicket'].searchcodeSeverity.options.selectedIndex = 0;
     document.forms['searchTicket'].searchcodePriority.options.selectedIndex = 0;
     document.forms['searchTicket'].listFilter1.options.selectedIndex = 0;
     document.forms['searchTicket'].searchcodeAssignedTo.value="-1";
-    changeDivContent('changeowner',' Anyone ');
+    changeDivContent('changeowner',label('label.anyone','Anyone'));
   }
   
   function clearAccount(){
     document.forms['searchTicket'].searchcodeOrgId.value="-1";
-    changeDivContent('changeaccount','All');
+    changeDivContent('changeaccount',label('label.all','All'));
   }
   
   function clearOwner(){
     document.forms['searchTicket'].searchcodeAssignedTo.value="-1";
-    changeDivContent('changeowner',' Anyone ');
+    changeDivContent('changeowner',label('label.anyone','Anyone'));
   }
 </script>
-<body onLoad="javascript:document.forms[0].searchcodeId.focus();">
+<body onLoad="javascript:document.searchTicket.searchcodeId.focus();">
 <form name="searchTicket" action="TroubleTickets.do?command=SearchTickets" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="TroubleTickets.do"><dhv:label name="tickets.helpdesk">Help Desk</dhv:label></a> > 
-Search Form
+<dhv:label name="tickets.searchForm">Search Form</dhv:label>
 </td>
 </tr>
 </table>
@@ -96,7 +96,7 @@ Search Form
           <td>
             <div id="changeaccount">
             <%if("".equals(TicListInfo.getSearchOptionValue("searchcodeOrgId")) || "-1".equals(TicListInfo.getSearchOptionValue("searchcodeOrgId"))){ %>
-                All
+                <dhv:label name="quotes.all">All</dhv:label>
               <% }else{ %>
                 <%= toHtmlValue(OrgDetails.getName()) %>
               <% } %>
@@ -104,8 +104,8 @@ Search Form
           </td>
           <td>
             <input type="hidden" name="searchcodeOrgId" id="searchcodeOrgId" value="<%= TicListInfo.getSearchOptionValue("searchcodeOrgId") %>">
-            &nbsp;[<a href="javascript:popAccountsListSingle('searchcodeOrgId','changeaccount', 'filters=all|my|disabled');">Select</a>]
-            &nbsp;[<a href="javascript:clearAccount();">Clear</a>]
+            &nbsp;[<a href="javascript:popAccountsListSingle('searchcodeOrgId','changeaccount', 'showMyCompany=true&filters=all|my|disabled');"><dhv:label name="accounts.accounts_add.select">Select</dhv:label></a>]
+            &nbsp;[<a href="javascript:clearAccount();"><dhv:label name="button.clear">Clear</dhv:label></a>]
           </td>
         </tr>
       </table>
@@ -114,7 +114,7 @@ Search Form
 <dhv:include name="ticket.severity" none="true">
   <tr>
     <td class="formLabel">
-      Severity
+      <dhv:label name="project.severity">Severity</dhv:label>
     </td>
     <td>
       <%= SeverityList.getHtmlSelect("searchcodeSeverity", TicListInfo.getSearchOptionValue("searchcodeSeverity")) %>
@@ -124,7 +124,7 @@ Search Form
 <dhv:include name="ticket.priority" none="true">
 	<tr>
     <td class="formLabel">
-      Priority
+      <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.Priority">Priority</dhv:label>
     </td>
     <td>
       <%= PriorityList.getHtmlSelect("searchcodePriority", TicListInfo.getSearchOptionValue("searchcodePriority")) %>
@@ -133,7 +133,7 @@ Search Form
 </dhv:include>
 	<tr>
     <td class="formLabel">
-      Status
+      <dhv:label name="accounts.accountasset_include.Status">Status</dhv:label>
     </td>
     <td>
       <%= TicketTypeSelect.getHtml("listFilter1", TicListInfo.getFilterKey("listFilter1")) %>
@@ -142,7 +142,7 @@ Search Form
 	</tr>
   <tr>
     <td class="formLabel">
-      Resource Assigned
+      <dhv:label name="project.resourceAssigned">Resource Assigned</dhv:label>
     </td>
     <td>
       <table class="empty">
@@ -150,7 +150,7 @@ Search Form
           <td>
             <div id="changeowner">
             <%if("".equals(TicListInfo.getSearchOptionValue("searchcodeAssignedTo")) || "-1".equals(TicListInfo.getSearchOptionValue("searchcodeAssignedTo"))){ %>
-                &nbsp;Anyone&nbsp;
+                &nbsp;<dhv:label name="tickets.anyone">Anyone</dhv:label>&nbsp;
               <% }else{ %>
                 <dhv:username id="<%= TicListInfo.getSearchOptionValue("searchcodeAssignedTo") %>"/>
               <% } %>
@@ -158,8 +158,8 @@ Search Form
           </td>
           <td>
             <input type="hidden" name="searchcodeAssignedTo" id="ownerid" value="<%= TicListInfo.getSearchOptionValue("searchcodeAssignedTo") %>">
-            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&reset=true');">Change Owner</a>]
-            &nbsp;[<a href="javascript:clearOwner();">Clear</a>]
+            &nbsp;[<a href="javascript:popContactsListSingle('ownerid','changeowner', 'listView=employees&usersOnly=true&reset=true');"><dhv:label name="accounts.accounts_contacts_validateimport.ChangeOwner">Change Owner</dhv:label></a>]
+            &nbsp;[<a href="javascript:clearOwner();"><dhv:label name="button.clear">Clear</dhv:label></a>]
           </td>
         </tr>
       </table>
@@ -167,7 +167,7 @@ Search Form
 	</tr>
 </table>
 <br>
-<input type="submit" value="Search">
-<input type="button" value="Clear" onClick="javascript:clearForm();">
+<input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">
+<input type="button" value="<dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label>" onClick="javascript:clearForm();">
 </form>
 </body>

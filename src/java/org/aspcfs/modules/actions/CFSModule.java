@@ -17,17 +17,18 @@ package org.aspcfs.modules.actions;
 
 import com.darkhorseventures.framework.actions.*;
 import com.darkhorseventures.database.*;
-import com.darkhorseventures.framework.servlets.*;
 import org.aspcfs.controller.RecentItem;
 import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.contacts.base.*;
 import org.aspcfs.modules.accounts.base.*;
+import org.aspcfs.modules.documents.base.*;
 import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.communications.base.Campaign;
 import org.aspcfs.modules.pipeline.base.*;
 import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.modules.admin.base.AccessTypeList;
+import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.beans.ModuleBean;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.controller.objectHookManager.*;
@@ -114,6 +115,28 @@ public class CFSModule {
     if (setParams) {
       tmpInfo.setParameters(context);
     }
+    return tmpInfo;
+  }
+
+
+  /**
+   * Get the pagedListInfo, if it doesn't already exist then set the default items per page
+   * @param context
+   * @param viewName
+   * @param defaultItemsPerPage
+   * @return
+   */
+  protected PagedListInfo getPagedListInfo(ActionContext context, String viewName, int defaultItemsPerPage) {
+    PagedListInfo tmpInfo = (PagedListInfo) context.getSession().getAttribute(viewName);
+    if (tmpInfo == null) {
+      tmpInfo = new PagedListInfo();
+      tmpInfo.setId(viewName);
+      tmpInfo.setItemsPerPage(defaultItemsPerPage);
+      context.getSession().setAttribute(viewName, tmpInfo);
+    }
+    ActionContext actionContext = new ActionContext(
+        context.getServlet(), null, null, context.getRequest(), context.getResponse());
+    tmpInfo.setParameters(actionContext);
     return tmpInfo;
   }
 
@@ -290,7 +313,14 @@ public class CFSModule {
    *@return          The systemStatus value
    */
   protected SystemStatus getSystemStatus(ActionContext context, ConnectionElement ce) {
-    return (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    if (ce != null) {
+      return (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
+    } else {
+      if (System.getProperty("DEBUG") != null) {
+        System.out.println("CFSModule-> ** System status is null **");
+      }
+      return null;
+    }
   }
 
 
@@ -344,8 +374,6 @@ public class CFSModule {
    */
   public static String includeFile(String sourceFile) {
     StringBuffer HTMLBuffer = new StringBuffer();
-    String desc;
-    char[] chars = null;
     int c;
     FileReader in;
     try {
@@ -417,7 +445,7 @@ public class CFSModule {
   protected String getPath(ActionContext context, String moduleFolderName) {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     return (prefs.get("FILELIBRARY") +
-        (this.getDbName(context) == null ? "" : this.getDbName(context) + fs) +
+        (getDbName(context) == null ? "" : getDbName(context) + fs) +
         (moduleFolderName == null ? "" : moduleFolderName + fs));
   }
 
@@ -433,7 +461,7 @@ public class CFSModule {
   protected String getPath(ActionContext context, ConnectionElement ce, String moduleFolderName) {
     ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
     return (prefs.get("FILELIBRARY") +
-        (this.getDbName(ce) == null ? "" : this.getDbName(ce) + fs) +
+        (getDbName(ce) == null ? "" : getDbName(ce) + fs) +
         moduleFolderName + fs);
   }
 
@@ -602,7 +630,15 @@ public class CFSModule {
     context.getRequest().setAttribute("errors", errors);
     if (errors.size() > 0) {
       if (context.getRequest().getAttribute("actionError") == null) {
-        context.getRequest().setAttribute("actionError", "Form could not be submitted, review messages below.");
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        if (systemStatus != null) {
+          context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.genericActionError"));
+        } else {
+          ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+          if (prefs != null) {
+            context.getRequest().setAttribute("actionError", prefs.getLabel("object.validation.genericActionError"));
+          }
+        }
       }
     }
   }
@@ -627,7 +663,15 @@ public class CFSModule {
     context.getRequest().setAttribute("warnings", warnings);
     if (warnings.size() > 0) {
       if (context.getRequest().getAttribute("actionWarning") == null) {
-        context.getRequest().setAttribute("actionWarning", "Please review the warnings in the form.");
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        if (systemStatus != null) {
+          context.getRequest().setAttribute("actionWarning", systemStatus.getLabel("object.validation.actionWarning.warning"));
+        } else {
+          ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
+          if (prefs != null) {
+            context.getRequest().setAttribute("actionWarning", prefs.getLabel("object.validation.actionWarning.warning"));
+          }
+        }
       }
     }
   }
@@ -676,6 +720,7 @@ public class CFSModule {
     ConnectionElement ce = (ConnectionElement) context.getSession().getAttribute("ConnectionElement");
     SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
     systemStatus.getHierarchyList().getUser(userId).setIsValid(false, true);
+    systemStatus.getHierarchyList().getUser(userId).setIsValidLead(false, true);
   }
 
 
@@ -717,6 +762,7 @@ public class CFSModule {
           User indUser = (User) k.next();
           if (indUser.getId() == userId) {
             indUser.setIsValid(false, true);
+            indUser.setIsValidLead(false, true);
             if (System.getProperty("DEBUG") != null) {
               System.out.println("clearing: " + indUser.getId());
             }
@@ -1079,6 +1125,7 @@ public class CFSModule {
         userList.add(thisUser);
       }
     }
+    userList = UserList.sortEnabledUsers(userList, new UserList());
     context.getRequest().setAttribute("Viewpoints", userList);
     return userList;
   }
@@ -1215,6 +1262,25 @@ public class CFSModule {
 
 
   /**
+   *  Gets the documentStoreUserLevel attribute of the CFSModule object
+   *
+   *@param  context           Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@param  roleLevel         Description of the Parameter
+   *@return                   The documentStoreUserLevel value
+   *@exception  SQLException  Description of the Exception
+   */
+  protected int getDocumentStoreUserLevel(ActionContext context, Connection db, int roleLevel) throws SQLException {
+    SystemStatus thisSystem = this.getSystemStatus(context);
+    LookupList roleList = thisSystem.getLookupList(db, "lookup_document_store_role");
+    if (roleList != null) {
+      return roleList.getIdFromLevel(roleLevel);
+    }
+    return -1;
+  }
+
+
+  /**
    *  Gets the roleId attribute of the CFSModule object
    *
    *@param  context           Description of the Parameter
@@ -1226,6 +1292,25 @@ public class CFSModule {
   protected int getRoleId(ActionContext context, Connection db, int userlevel) throws SQLException {
     SystemStatus thisSystem = this.getSystemStatus(context);
     LookupList roleList = thisSystem.getLookupList(db, "lookup_project_role");
+    if (roleList != null) {
+      return roleList.getLevelFromId(userlevel);
+    }
+    return -1;
+  }
+
+
+  /**
+   *  Gets the documentStoreRoleId attribute of the CFSModule object
+   *
+   *@param  context           Description of the Parameter
+   *@param  db                Description of the Parameter
+   *@param  userlevel         Description of the Parameter
+   *@return                   The documentStoreRoleId value
+   *@exception  SQLException  Description of the Exception
+   */
+  protected int getDocumentStoreRoleId(ActionContext context, Connection db, int userlevel) throws SQLException {
+    SystemStatus thisSystem = this.getSystemStatus(context);
+    LookupList roleList = thisSystem.getLookupList(db, "lookup_document_store_role");
     if (roleList != null) {
       return roleList.getLevelFromId(userlevel);
     }
@@ -1273,6 +1358,53 @@ public class CFSModule {
   }
 
 
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context            Description of the Parameter
+   *@param  db                 Description of the Parameter
+   *@param  thisDocumentStore  Description of the Parameter
+   *@param  permission         Description of the Parameter
+   *@return                    Description of the Return Value
+   *@exception  SQLException   Description of the Exception
+   */
+  protected boolean hasDocumentStoreAccess(ActionContext context, Connection db, DocumentStore thisDocumentStore, String permission) throws SQLException {
+    // See if the team member has access to perform a document store action
+    DocumentStoreTeamMember thisMember = (DocumentStoreTeamMember) context.getRequest().getAttribute("currentMember");
+    if (thisMember == null) {
+      try {
+        // Load from document store
+        int tmpUserId = this.getUserId(context);
+        User tmpUser = getUser(context, tmpUserId);
+        int tmpUserRoleId = tmpUser.getRoleId(); 
+        Contact tmpContact = new Contact (db,tmpUser.getContactId());
+        int tmpDepartmentId = tmpContact.getDepartment(); 
+
+        thisMember = new DocumentStoreTeamMember(db, thisDocumentStore.getId(), tmpUserId, tmpUserRoleId, tmpDepartmentId);
+      } catch (Exception notValid) {
+        // Create a guest
+        thisMember = new DocumentStoreTeamMember();
+        thisMember.setDocumentStoreId(thisDocumentStore.getId());
+        thisMember.setUserLevel(getDocumentStoreUserLevel(context, db, DocumentStoreTeamMember.GUEST));
+        thisMember.setRoleId(DocumentStoreTeamMember.GUEST);
+      }
+      context.getRequest().setAttribute("currentMember", thisMember);
+    }
+    // Return the status of the permission
+    if (thisMember.getRoleId() == DocumentStoreTeamMember.DOCUMENTSTORE_MANAGER) {
+      return true;
+    }
+    // See what the minimum required is and see if user meets that
+    int code = thisDocumentStore.getAccessUserLevel(permission);
+    int roleId = getDocumentStoreRoleId(context, db, code);
+    if (code == -1 || roleId == -1) {
+      return false;
+    }
+    return (thisMember.getRoleId() <= roleId);
+  }
+
+
   /**
    *  Description of the Method
    *
@@ -1311,6 +1443,30 @@ public class CFSModule {
       // Remove from cache
       ((HashMap) getSystemStatus(context).getObject(Constants.SYSTEM_PROJECT_NAME_LIST)).remove(
           new Integer(id));
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context  Description of the Parameter
+   *@param  id       Description of the Parameter
+   *@param  title    Description of the Parameter
+   */
+  protected void updateDocumentStoreCache(ActionContext context, int id, String title) {
+    if (title != null) {
+      // Update the system status
+      /*
+       *  ((HashMap) getSystemStatus(context).getObject(Constants.SYSTEM_DOCUMENT_NAME_LIST)).put(
+       *  new Integer(id), title);
+       */
+    } else {
+      // Remove from cache
+      /*
+       *  ((HashMap) getSystemStatus(context).getObject(Constants.SYSTEM_DOCUMENT_NAME_LIST)).remove(
+       *  new Integer(id));
+       */
     }
   }
 
@@ -1425,7 +1581,7 @@ public class CFSModule {
       Class c = Class.forName(item.getClass().getName() + "Indexer");
       Class[] argTypes = new Class[]{writer.getClass(), item.getClass(), boolean.class};
       Method m = c.getDeclaredMethod("add", argTypes);
-      Object o = m.invoke(null, new Object[]{writer, item, new Boolean(true)});
+      m.invoke(null, new Object[]{writer, item, new Boolean(true)});
       writer.optimize();
       // Update the shared searcher
       IndexSearcher searcher = new IndexSearcher(index);
@@ -1494,7 +1650,7 @@ public class CFSModule {
       } catch (Exception ie) {
       }
     }
-    
+
     // Optimize the cache
     IndexWriter writer = null;
     try {
@@ -1547,5 +1703,81 @@ public class CFSModule {
     }
     return currentDateAsString;
   }
+
+
+  /**
+   *  Checks to see if the specified object is valid for inserting or updating
+   *
+   *@param  context        Description of the Parameter
+   *@param  db             Description of the Parameter
+   *@param  object         Description of the Parameter
+   *@return                Description of the Return Value
+   *@exception  Exception  Description of the Exception
+   */
+  protected boolean validateObject(ActionContext context, Connection db, Object object) throws Exception {
+    ObjectValidator.validate(getSystemStatus(context), db, object);
+    HashMap errors = (HashMap) ObjectUtils.getObject(object, "errors");
+    HashMap warnings = (HashMap) ObjectUtils.getObject(object, "warnings");
+    if (errors.size() > 0) {
+      ObjectUtils.setParam(object, "onlyWarnings", false);
+      // Iterate the errors and put in request
+      processErrors(context, errors);
+      return false;
+    } else if (warnings.size() > 0) {
+      String showWarnings = ObjectUtils.getParam(object, "onlyWarnings");
+      if (showWarnings != null && "true".equals(showWarnings)) {
+        return true;
+      }
+      // if onlyWarnings = false
+      processWarnings(context, warnings);
+      ObjectUtils.setParam(object, "onlyWarnings", true);
+      return false;
+    }
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  context        Description of the Parameter
+   *@param  db             Description of the Parameter
+   *@param  object         Description of the Parameter
+   *@param  map            Description of the Parameter
+   *@return                Description of the Return Value
+   *@exception  Exception  Description of the Exception
+   */
+  protected boolean validateObject(ActionContext context, Connection db, Object object, HashMap map) throws Exception {
+    ObjectValidator.validate(getSystemStatus(context), db, object, map);
+    HashMap errors = (HashMap) ObjectUtils.getObject(object, "errors");
+    HashMap warnings = (HashMap) ObjectUtils.getObject(object, "warnings");
+    if (errors.size() > 0) {
+      ObjectUtils.setParam(object, "onlyWarnings", false);
+      // Iterate the errors and put in request
+      processErrors(context, errors);
+      return false;
+    } else if (warnings.size() > 0) {
+      String showWarnings = ObjectUtils.getParam(object, "onlyWarnings");
+      if (showWarnings != null && "true".equals(showWarnings)) {
+        return true;
+      }
+      // if onlyWarnings = false
+      processWarnings(context, warnings);
+      ObjectUtils.setParam(object, "onlyWarnings", true);
+      return false;
+    }
+    return true;
+  }
+  
+  
+  protected Project loadProject(Connection db, int projectId, ActionContext context) throws SQLException {
+    // TODO: Implement this when a system admin is defined
+    //User thisUser = getUser(context, getUserId(context));
+    //if (thisUser.getAccessAdmin()) {
+    //  return new Project(db, projectId);
+    //}
+    return new Project(db, projectId, getUserRange(context));
+  }
+
 }
 

@@ -18,8 +18,7 @@
   --%>
 <%@page import="java.io.*"%>
 <img src="images/error.gif" border="0" align="absmiddle"/>
-<font color='red'>An Error Has Occurred</font>
+<font color='red'><dhv:label name="errors.anErrorHasOccured">An Error Has Occurred</dhv:label></font>
 <hr color="#BFBFBB" noshade>
-The system administrator has been notified.<p>
-You do not have the permissions to perform this action.
+<dhv:label name="errors.systemAdminNotified.text" param="p=<p>">The system administrator has been notified.<p>You do not have the permissions to perform this action.</dhv:label>
 

@@ -15,13 +15,13 @@
  */
 package org.aspcfs.modules.base;
 
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DateUtils;
-import org.aspcfs.utils.DatabaseUtils;
 import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.DateUtils;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *  Represents a phone number.
@@ -544,9 +544,7 @@ public class PhoneNumber {
     }
     this.setModified(rs.getTimestamp("modified"));
     this.setModifiedBy(rs.getInt("modifiedby"));
-    if (isContact) {
-      this.setPrimaryNumber(rs.getBoolean("primary_number"));
-    }
+    this.setPrimaryNumber(rs.getBoolean("primary_number"));
     if (modifiedBy == -1) {
       this.setModifiedBy(0);
     }

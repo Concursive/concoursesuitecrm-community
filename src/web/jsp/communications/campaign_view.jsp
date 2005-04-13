@@ -18,7 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
-<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*" %>
+<%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.communications.base.*, org.aspcfs.modules.base.Notification " %>
 <jsp:useBean id="campList" class="org.aspcfs.modules.communications.base.CampaignList" scope="request"/>
 <jsp:useBean id="CampaignListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <%@ include file="../initPage.jsp" %>
@@ -35,21 +35,22 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-Campaign List
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<dhv:label name="campaign.campaignList">Campaign List</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:permission name="campaign-campaigns-add"><a href="CampaignManager.do?command=Add&source=list">Add a Campaign</a></dhv:permission>
-<center><%= CampaignListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:permission name="campaign-campaigns-add"><a href="CampaignManager.do?command=Add&source=list"><dhv:label name="campaign.addCampaign">Add a Campaign</dhv:label></a></dhv:permission>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="CampaignListInfo"/></center></dhv:include>
 <table width="100%" border="0">
   <tr>
     <form name="listView" method="post" action="CampaignManager.do?command=View">
     <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= CampaignListInfo.getOptionValue("my") %>>My Incomplete Campaigns</option>
-        <option <%= CampaignListInfo.getOptionValue("all") %>>All Incomplete Campaigns</option>
+      <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+        <option <%= CampaignListInfo.getOptionValue("my") %>><dhv:label name="campaign.myIncompleteCampaigns">My Incomplete Campaigns</dhv:label></option>
+        <option <%= CampaignListInfo.getOptionValue("all") %>><dhv:label name="campaign.allIncompleteCampaigns">All Incomplete Campaigns</dhv:label></option>
       </select>
     </td>
     <td>
@@ -60,29 +61,27 @@ Campaign List
 </table>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
 	<tr>
-    <th width="8" valign="center" align="left">
-      <strong>Action</strong>
-    </th>
+    <th width="8">&nbsp;</th>
     <th valign="center" width="100%" align="left" nowrap>
-      <a href="CampaignManager.do?command=View&column=c.name"><strong>Name</strong></a>
+      <a href="CampaignManager.do?command=View&column=c.name"><strong><dhv:label name="contacts.name">Name</dhv:label></strong></a>
       <%= CampaignListInfo.getSortIcon("c.name") %>
     </th>
     <th valign="center" align="left">
-      <strong>Groups?</strong>
+      <strong><dhv:label name="campaign.groups.question">Groups?</dhv:label></strong>
     </th>
     <th valign="center" align="left">
-      <strong>Message?</strong>
+      <strong><dhv:label name="campaign.message.question">Message?</dhv:label></strong>
     </th>
     <th valign="center" align="left">
-      <strong>Delivery?</strong>
+      <strong><dhv:label name="campaign.delivery.question">Delivery?</dhv:label></strong>
     </th>
     <th valign="center" align="left" nowrap>
-      <a href="CampaignManager.do?command=View&column=active_date"><strong>Start Date</strong></a>
+      <a href="CampaignManager.do?command=View&column=active_date"><strong><dhv:label name="documents.details.startDate">Start Date</dhv:label></strong></a>
       <%= CampaignListInfo.getSortIcon("active_date") %>
     </th>
     <dhv:permission name="campaign-campaigns-edit">
     <th valign="center" align="left">
-      <strong>Activate?</strong>
+      <strong><dhv:label name="campaign.activate.question">Activate?</dhv:label></strong>
     </th>
     </dhv:permission>
 <%
@@ -103,23 +102,48 @@ Campaign List
       </td>
     <td valign="center" width="100%" class="row<%= rowid %>">
       <a href="CampaignManager.do?command=ViewDetails&id=<%= campaign.getId() %>&reset=true"><%= toHtml(campaign.getName()) %></a>
-      <%= (("true".equals(request.getParameter("notify")) && (String.valueOf(campaign.getId())).equals(request.getParameter("id")))?" <font color=\"red\">(Canceled)</font>":"") %>
+<font color="red"><% if(("true".equals(request.getParameter("notify")) && (String.valueOf(campaign.getId())).equals(request.getParameter("id")))) {%>
+  <dhv:label name="account.canceled.brackets">(Canceled)</dhv:label>
+<%} else {%>
+<%}%></font>
     </td>
     <td valign="center" align="center" nowrap class="row<%= rowid %>">
-      <dhv:permission name="campaign-campaigns-groups-edit"><a href="CampaignManager.do?command=AddGroups&id=<%= campaign.getId() %>"></dhv:permission><%= (campaign.hasGroups()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %><dhv:permission name="campaign-campaigns-groups-view"></a></dhv:permission>
+      <dhv:permission name="campaign-campaigns-groups-edit"><a href="CampaignManager.do?command=AddGroups&id=<%= campaign.getId() %>"></dhv:permission>
+        <% if(campaign.hasGroups()) {%>
+         <font color='green'><dhv:label name="global.button.complete">Complete</dhv:label></font>
+        <%} else {%>
+         <font color='red'><dhv:label name="quotes.incomplete">Incomplete</dhv:label></font>
+        <%}%>
+      <dhv:permission name="campaign-campaigns-groups-view"></a></dhv:permission>
     </td>
     <td valign="center" align="center" nowrap class="row<%= rowid %>">
-      <dhv:permission name="campaign-campaigns-messages-view"><a href="CampaignManager.do?command=ViewMessage&id=<%= campaign.getId() %>"></dhv:permission><%= (campaign.hasMessage()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %><dhv:permission name="campaign-campaigns-messages-view"></a></dhv:permission>
+      <dhv:permission name="campaign-campaigns-messages-view"><a href="CampaignManager.do?command=ViewMessage&id=<%= campaign.getId() %>"></dhv:permission>
+        <% if(campaign.hasMessage()) {%>
+         <font color='green'><dhv:label name="global.button.complete">Complete</dhv:label></font>
+        <%} else {%>
+         <font color='red'><dhv:label name="quotes.incomplete">Incomplete</dhv:label></font>
+        <%}%>
+      <dhv:permission name="campaign-campaigns-messages-view"></a></dhv:permission>
     </td>
     <td valign="center" align="center" nowrap class="row<%= rowid %>">
-      <dhv:permission name="campaign-campaigns-view"><a href="CampaignManager.do?command=ViewSchedule&id=<%= campaign.getId() %>"></dhv:permission><%= (campaign.hasDetails()?"<font color='green'>Complete</font>":"<font color='red'>Incomplete</font>") %><dhv:permission name="campaign-campaigns-view"></a></dhv:permission>
+      <dhv:permission name="campaign-campaigns-view"><a href="CampaignManager.do?command=ViewSchedule&id=<%= campaign.getId() %>"></dhv:permission>
+        <% if(campaign.hasDetails()) {%>
+         <font color='green'><dhv:label name="global.button.complete">Complete</dhv:label></font>
+        <%} else {%>
+         <font color='red'><dhv:label name="quotes.incomplete">Incomplete</dhv:label></font>
+        <%}%>
+      <dhv:permission name="campaign-campaigns-view"></a></dhv:permission>
     </td>
     <td valign="center" align="center" nowrap class="row<%= rowid %>">
       <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" dateOnly="true" default="&nbsp;"/>
     </td>
     <dhv:permission name="campaign-campaigns-edit">
     <td valign="center" align="center" nowrap class="row<%= rowid %>">
-      <%= (campaign.isReadyToActivate()?"<a href=\"javascript:confirmForward('CampaignManager.do?command=Activate&id=" + campaign.getId() + "&notify=true&modified=" + campaign.getModified() + "');\"><font color=\"red\">Activate</font></a>":"&nbsp;") %>
+      <% if(campaign.isReadyToActivate()) {%>
+        <a href="javascript:confirmForward('CampaignManager.do?command=Activate&id=<%= campaign.getId() %>&notify=true&modified=<%= campaign.getModified() %>');"><font color="red"><dhv:label name="campaign.activate">Activate</dhv:label></font></a>
+      <%} else {%>
+        &nbsp;
+      <%}%>
     </td>
     </dhv:permission>
 	</tr>
@@ -127,7 +151,7 @@ Campaign List
 <%} else {%>
   <tr class="containerBody">
     <td colspan="7">
-      No incomplete campaigns found.
+      <dhv:label name="campaign.noIncompleteCampaignsFound">No incomplete campaigns found.</dhv:label>
     </td>
   </tr>
 <%}%>

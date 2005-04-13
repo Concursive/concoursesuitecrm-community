@@ -120,7 +120,7 @@ CREATE TABLE service_contract_products(
 CREATE TABLE asset_category ( 
   id serial PRIMARY KEY,
   cat_level int NOT NULL DEFAULT 0,
-  parent_cat_code int NOT NULL,
+  parent_cat_code int NOT NULL DEFAULT 0,
   description VARCHAR(300) NOT NULL,
   full_description text NOT NULL DEFAULT '',
   default_item BOOLEAN DEFAULT false,
@@ -131,8 +131,8 @@ CREATE TABLE asset_category (
 CREATE TABLE asset_category_draft (
   id serial PRIMARY KEY,
   link_id INT DEFAULT -1,
-  cat_level int  NOT NULL DEFAULT 0,
-  parent_cat_code int  NOT NULL,
+  cat_level int NOT NULL DEFAULT 0,
+  parent_cat_code int NOT NULL DEFAULT 0,
   description VARCHAR(300) NOT NULL,
   full_description text NOT NULL DEFAULT '',
   default_item BOOLEAN DEFAULT false,

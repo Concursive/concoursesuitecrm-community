@@ -864,47 +864,6 @@ public class TicketActivityLog extends GenericBean {
 
 
   /**
-   *  Gets the valid attribute of the TicketCSSTMMaintenance object
-   *
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  protected boolean isValid() throws SQLException {
-    if (hasErrors()) {
-      //Check warnings
-      checkWarnings();
-      onlyWarnings = false;
-      return false;
-    } else {
-      //Do not check for warnings if it was found that only warnings existed
-      // in the previous call to isValid for the same form.
-      if (!onlyWarnings) {
-        //Check for warnings if there are no errors
-        checkWarnings();
-        if (hasWarnings()) {
-          onlyWarnings = true;
-          return false;
-        }
-      }
-      return true;
-    }
-  }
-
-
-  /**
-   *  Generates warnings that need to be reviewed before the form can be
-   *  submitted.
-   */
-  protected void checkWarnings() {
-    if ((errors.get("alertDateError") == null) && (alertDate != null)) {
-      if (alertDate.before(new java.util.Date())) {
-        warnings.put("alertDateWarning", "Alert date is earlier than current date or set to current date");
-      }
-    }
-  }
-
-
-  /**
    *  Description of the Method
    *
    *@param  db                Description of the Parameter
@@ -913,9 +872,6 @@ public class TicketActivityLog extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = -1;
-    if (!isValid()) {
-      return resultCount;
-    }
     boolean doCommit = false;
     try {
       if ((doCommit = db.getAutoCommit()) == true) {
@@ -1007,7 +963,7 @@ public class TicketActivityLog extends GenericBean {
       Timestamp timeStampToday = new Timestamp(today.getTimeInMillis());
       Dependency ticDependency = new Dependency();
       if (this.alertDate.compareTo(timeStampToday) > 0) {
-        ticDependency.setName("Has Future Alert Date");
+        ticDependency.setName("hasFutureAlertDate");
         ticDependency.setCount(1);
         ticDependency.setCanDelete(true);
         dependencyList.add(ticDependency);
@@ -1076,9 +1032,6 @@ public class TicketActivityLog extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
-    if (!isValid()) {
-      return false;
-    }
 
     boolean doCommit = false;
     try {
@@ -1220,7 +1173,6 @@ public class TicketActivityLog extends GenericBean {
       prevTotalMinutes = prevTotalMinutes + ((prevTravelMinutes == null) ? 0 : Integer.parseInt(prevTravelMinutes));
     }
     prevHoursUsed = prevTotalHours + ((prevTotalMinutes == 0) ? 0 : (prevTotalMinutes * 1.0) / 60);
-
     String travelTowardsServiceContract = (String) request.getParameter("travelTowardsServiceContract");
     String laborTowardsServiceContract = (String) request.getParameter("laborTowardsServiceContract");
     int travelMinutes = getTotalTravelMinutes();

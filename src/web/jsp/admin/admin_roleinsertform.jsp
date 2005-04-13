@@ -21,40 +21,40 @@
 <%@ include file="../initPage.jsp" %>
 <jsp:useBean id="Role" class="org.aspcfs.modules.admin.base.Role" scope="request"/>
 <jsp:useBean id="PermissionList" class="org.aspcfs.modules.admin.base.PermissionList" scope="request"/>
-<body onLoad="javascript:document.forms[0].role.focus();">
-<form action='Roles.do?command=InsertRole&auto-populate=true' method='post'>
+<body onLoad="javascript:document.roleForm.role.focus();">
+<form name="roleForm" action="Roles.do?command=InsertRole&auto-populate=true" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-Add Role
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<dhv:label name="admin.addRole">Add Role</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<input type="submit" value="Add" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
+<input type="submit" value="<dhv:label name="button.add">Add</dhv:label>" name="Save">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
 <br>
 <dhv:formMessage />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-	    <strong>Add a Role</strong>
+	    <strong><dhv:label name="admin.addRole">Add Role</dhv:label></strong>
 	  </th>
   </tr>
   <tr>
-    <td class="formLabel">Role Name</td>
+    <td class="formLabel"><dhv:label name="admin.roleName">Role Name</dhv:label></td>
     <td><input type="text" name="role" maxlength="80" value="<%= toHtmlValue(Role.getRole()) %>"><font color="red">*</font> <%= showAttribute(request, "roleError") %></td>
   </tr>
   <tr>
-    <td class="formLabel">Description</td>
+    <td class="formLabel"><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></td>
     <td nowrap><input type="text" name="description" size="60" maxlength="255" value="<%= toHtmlValue(Role.getDescription()) %>"><font color="red">*</font> <%= showAttribute(request, "descriptionError") %></td>
   </tr>
 <%--
   <tr>
     <td class="formLabel">
-      Portal Role
+      <dhv:label name="accounts.accounts_contacts_portal_include.PortalRole">Portal Role</dhv:label>
     </td>
     <td>
     <input type="checkbox" name="roleType" value="on" />
@@ -66,7 +66,7 @@ Add Role
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="5">
-	    <strong>Configure permissions for this role</strong>
+	    <strong><dhv:label name="admin.configurePermissions.text">Configure permissions for this role</dhv:label></strong>
 	  </th>
   </tr>
 <%
@@ -81,10 +81,10 @@ Add Role
       <td>
         <%= toHtml(thisPermission.getCategoryName()) %>
       </td>
-      <td width="40" align="center">Access/<br>View</td>
-      <td width="40" align="center">Add</td>
-      <td width="40" align="center">Edit</td>
-      <td width="40" align="center">Delete</td>
+      <td width="40" align="center"><dhv:label name="admin.accessView" param="break=<br />">Access/<br />View</dhv:label></td>
+      <td width="40" align="center"><dhv:label name="button.add">Add</dhv:label></td>
+      <td width="40" align="center"><dhv:label name="button.edit">Edit</dhv:label></td>
+      <td width="40" align="center"><dhv:label name="button.delete">Delete</dhv:label></td>
   </tr>
 <%
    }
@@ -128,7 +128,7 @@ Add Role
 %>
 </table>
 <br>
-<input type="submit" value="Add" name="Save">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
+<input type="submit" value="<dhv:label name="button.add">Add</dhv:label>" name="Save">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='Roles.do?command=ListRoles'">
 </form>
 </body>

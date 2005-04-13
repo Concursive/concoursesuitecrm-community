@@ -15,18 +15,15 @@
  */
 package org.aspcfs.modules.products.base;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.troubletickets.base.*;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.base.SyncableList;
-import org.aspcfs.utils.web.*;
-import java.util.Calendar;
+import org.aspcfs.utils.DatabaseUtils;
 import org.aspcfs.utils.web.HtmlSelect;
-import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  The List class of Product Category.
@@ -55,17 +52,241 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
   private PagedListInfo pagedListInfo = null;
   private int enteredBy = -1;
   private int id = -1;
+  private int productId = -1;
   private int parentId = -1;
   private int typeId = -1;
   private int enabled = Constants.UNDEFINED;
   private boolean hasExpireDate = false;
   private int topOnly = Constants.UNDEFINED;
   private int masterCategoryId = -1;
+  private int serviceContractId = -1;
   //other descriptors
+  private String name = null;
+  private String abbreviation = null;
   private String parentName = null;
   private String typeName = null;
+  private boolean excludeMappedCategories = false;
   private int hasProducts = Constants.UNDEFINED;
   private boolean buildProducts = false;
+  private boolean buildChildList = false;
+  private boolean include = true;
+  private boolean buildCompleteHierarchy = false;
+  private int buildEnabledProducts = Constants.UNDEFINED;
+  private boolean buildActivePrice = false;
+
+
+  /**
+   *  Gets the serviceContractId attribute of the ProductCategoryList object
+   *
+   *@return    The serviceContractId value
+   */
+  public int getServiceContractId() {
+    return serviceContractId;
+  }
+
+
+  /**
+   *  Sets the serviceContractId attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new serviceContractId value
+   */
+  public void setServiceContractId(int tmp) {
+    this.serviceContractId = tmp;
+  }
+
+
+  /**
+   *  Sets the serviceContractId attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new serviceContractId value
+   */
+  public void setServiceContractId(String tmp) {
+    this.serviceContractId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the buildActivePrice attribute of the ProductCategoryList object
+   *
+   *@return    The buildActivePrice value
+   */
+  public boolean getBuildActivePrice() {
+    return buildActivePrice;
+  }
+
+
+  /**
+   *  Sets the buildActivePrice attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new buildActivePrice value
+   */
+  public void setBuildActivePrice(boolean tmp) {
+    this.buildActivePrice = tmp;
+  }
+
+
+  /**
+   *  Sets the buildActivePrice attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new buildActivePrice value
+   */
+  public void setBuildActivePrice(String tmp) {
+    this.buildActivePrice = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+
+  /**
+   *  Sets the productId attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(int tmp) {
+    this.productId = tmp;
+  }
+
+
+  /**
+   *  Sets the productId attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new productId value
+   */
+  public void setProductId(String tmp) {
+    this.productId = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the productId attribute of the ProductCategoryList object
+   *
+   *@return    The productId value
+   */
+  public int getProductId() {
+    return productId;
+  }
+
+
+  /**
+   *  Sets the name attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new name value
+   */
+  public void setName(String tmp) {
+    this.name = tmp;
+  }
+
+
+  /**
+   *  Sets the abbreviation attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new abbreviation value
+   */
+  public void setAbbreviation(String tmp) {
+    this.abbreviation = tmp;
+  }
+
+
+  /**
+   *  Gets the name attribute of the ProductCategoryList object
+   *
+   *@return    The name value
+   */
+  public String getName() {
+    return name;
+  }
+
+
+  /**
+   *  Gets the abbreviation attribute of the ProductCategoryList object
+   *
+   *@return    The abbreviation value
+   */
+  public String getAbbreviation() {
+    return abbreviation;
+  }
+
+
+  /**
+   *  Sets the include attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new include value
+   */
+  public void setInclude(boolean tmp) {
+    this.include = tmp;
+  }
+
+
+  /**
+   *  Sets the include attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new include value
+   */
+  public void setInclude(String tmp) {
+    this.include = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the include attribute of the ProductCategoryList object
+   *
+   *@return    The include value
+   */
+  public boolean getInclude() {
+    return include;
+  }
+
+
+  /**
+   *  Sets the excludeMappedCategories attribute of the ProductCategoryList
+   *  object
+   *
+   *@param  tmp  The new excludeMappedCategories value
+   */
+  public void setExcludeMappedCategories(boolean tmp) {
+    this.excludeMappedCategories = tmp;
+  }
+
+
+  /**
+   *  Sets the excludeMappedCategories attribute of the ProductCategoryList
+   *  object
+   *
+   *@param  tmp  The new excludeMappedCategories value
+   */
+  public void setExcludeMappedCategories(String tmp) {
+    this.excludeMappedCategories = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the excludeMappedCategories attribute of the ProductCategoryList
+   *  object
+   *
+   *@return    The excludeMappedCategories value
+   */
+  public boolean getExcludeMappedCategories() {
+    return excludeMappedCategories;
+  }
+
+
+  /**
+   *  Sets the buildChildList attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new buildChildList value
+   */
+  public void setBuildChildList(boolean tmp) {
+    this.buildChildList = tmp;
+  }
+
+
+  /**
+   *  Sets the buildChildList attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new buildChildList value
+   */
+  public void setBuildChildList(String tmp) {
+    this.buildChildList = DatabaseUtils.parseBoolean(tmp);
+  }
 
 
   /**
@@ -85,6 +306,79 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
    */
   public void setBuildProducts(String tmp) {
     this.buildProducts = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Sets the buildCompleteHierarchy attribute of the ProductCategoryList
+   *  object
+   *
+   *@param  tmp  The new buildCompleteHierarchy value
+   */
+  public void setBuildCompleteHierarchy(boolean tmp) {
+    this.buildCompleteHierarchy = tmp;
+  }
+
+
+  /**
+   *  Sets the buildCompleteHierarchy attribute of the ProductCategoryList
+   *  object
+   *
+   *@param  tmp  The new buildCompleteHierarchy value
+   */
+  public void setBuildCompleteHierarchy(String tmp) {
+    this.buildCompleteHierarchy = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   *  Gets the buildCompleteHierarchy attribute of the ProductCategoryList
+   *  object
+   *
+   *@return    The buildCompleteHierarchy value
+   */
+  public boolean getBuildCompleteHierarchy() {
+    return buildCompleteHierarchy;
+  }
+
+
+  /**
+   *  Gets the buildEnabledProducts attribute of the ProductCategoryList object
+   *
+   *@return    The buildEnabledProducts value
+   */
+  public int getBuildEnabledProducts() {
+    return buildEnabledProducts;
+  }
+
+
+  /**
+   *  Sets the buildEnabledProducts attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new buildEnabledProducts value
+   */
+  public void setBuildEnabledProducts(int tmp) {
+    this.buildEnabledProducts = tmp;
+  }
+
+
+  /**
+   *  Sets the buildEnabledProducts attribute of the ProductCategoryList object
+   *
+   *@param  tmp  The new buildEnabledProducts value
+   */
+  public void setBuildEnabledProducts(String tmp) {
+    this.buildEnabledProducts = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   *  Gets the buildChildList attribute of the ProductCategoryList object
+   *
+   *@return    The buildChildList value
+   */
+  public boolean getBuildChildList() {
+    return buildChildList;
   }
 
 
@@ -295,11 +589,14 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
       categoryListSelect.addItem(-1, emptyHtmlSelectRecord);
     }
     Iterator i = this.iterator();
+    int type = -1;
     while (i.hasNext()) {
       ProductCategory thisCategory = (ProductCategory) i.next();
-      categoryListSelect.addItem(
-          thisCategory.getId(),
-          thisCategory.getName());
+      if (type != thisCategory.getTypeId()) {
+        type = thisCategory.getTypeId();
+        categoryListSelect.addGroup(thisCategory.getTypeName());
+      }
+      categoryListSelect.addItem(thisCategory.getId(), thisCategory.getName());
     }
     return categoryListSelect.getHtml(selectName, defaultKey);
   }
@@ -610,11 +907,26 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
       rs.close();
       pst.close();
 
+      //Determine the offset, based on the filter, for the first record to show
+      if (!pagedListInfo.getCurrentLetter().equals("")) {
+        pst = db.prepareStatement(sqlCount.toString() +
+            sqlFilter.toString() +
+            "AND lower(pctgy.category_name) < ? ");
+        items = prepareFilter(pst);
+        pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
+        rs = pst.executeQuery();
+        if (rs.next()) {
+          int offsetCount = rs.getInt("recordcount");
+          pagedListInfo.setCurrentOffset(offsetCount);
+        }
+        rs.close();
+        pst.close();
+      }
       //Determine column to sort by
       pagedListInfo.setDefaultSort("pctgy.category_name", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY pctgy.category_name ");
+      sqlOrder.append("ORDER BY pctgy.type_id, pctgy.category_name ");
     }
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -644,7 +956,13 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
         break;
       }
       ProductCategory productCategory = new ProductCategory(rs);
-      this.add(productCategory);
+      if (serviceContractId > -1) {
+        if (productCategory.hasServiceContractProducts(db, serviceContractId)) {
+          this.add(productCategory);
+        }
+      } else {
+        this.add(productCategory);
+      }
     }
     rs.close();
     pst.close();
@@ -652,7 +970,22 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
       Iterator i = this.iterator();
       while (i.hasNext()) {
         ProductCategory thisCategory = (ProductCategory) i.next();
+        thisCategory.setBuildEnabledProducts(buildEnabledProducts);
         thisCategory.buildProductList(db);
+      }
+    }
+    if (buildChildList || buildCompleteHierarchy) {
+      int size = this.size();
+      for (int i = 0; i < size; i++) {
+        ProductCategory thisCategory = (ProductCategory) this.get(i);
+        thisCategory.setBuildChildList(buildChildList);
+        thisCategory.setBuildCompleteHierarchy(buildCompleteHierarchy);
+        thisCategory.setBuildEnabledProducts(this.buildEnabledProducts);
+        thisCategory.setBuildActivePrice(buildActivePrice);
+        thisCategory.buildChildList(db);
+        if (buildCompleteHierarchy && thisCategory.getChildList().size() != 0) {
+          this.addAll(this.size(), thisCategory.getChildList());
+        }
       }
     }
   }
@@ -684,8 +1017,18 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     if (enteredBy > -1) {
       sqlFilter.append("AND pctgy.enteredby = ? ");
     }
-    if (id > -1) {
-      sqlFilter.append("AND pctgy.category_id = ? ");
+    if (include) {
+      if (id > -1) {
+        sqlFilter.append("AND pctgy.category_id = ? ");
+      }
+    } else {
+      if (id > -1) {
+        sqlFilter.append("AND pctgy.category_id <> ? ");
+      }
+    }
+    if (productId > -1) {
+      sqlFilter.append("AND pctgy.category_id IN (SELECT category_id FROM product_catalog_category_map " +
+          " WHERE product_id = ?) ");
     }
     if (topOnly == Constants.TRUE) {
       sqlFilter.append("AND pctgy.parent_id IS NULL ");
@@ -698,8 +1041,22 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     if (typeId > -1) {
       sqlFilter.append("AND pctgy.type_id = ? ");
     }
+    if (name != null) {
+      if (name.indexOf("%") >= 0) {
+        sqlFilter.append("AND lower(pctgy.category_name) like lower(?) ");
+      } else {
+        sqlFilter.append("AND lower(pctgy.category_name) = lower(?) ");
+      }
+    }
+    if (abbreviation != null) {
+      if (abbreviation.indexOf("%") >= 0) {
+        sqlFilter.append("AND lower(pctgy.abbreviation) like lower(?) ");
+      } else {
+        sqlFilter.append("AND lower(pctgy.abbreviation) = lower(?) ");
+      }
+    }
     if (parentName != null) {
-      sqlFilter.append("AND pctgy3.category_name = ? ");
+      sqlFilter.append("AND pctgy2.category_name = ? ");
     }
     if (typeName != null) {
       sqlFilter.append("AND pctgytype.description = ? ");
@@ -740,10 +1097,18 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     if (enabled != Constants.UNDEFINED) {
       sqlFilter.append("AND pctgy.enabled = ? ");
     }
-    if (masterCategoryId > -1) {
-      sqlFilter.append(
-          "AND pctgy.category_id IN " +
-          "(SELECT category2_id FROM product_category_map WHERE category1_id = ?) ");
+    if (excludeMappedCategories) {
+      if (masterCategoryId > -1) {
+        sqlFilter.append(
+            "AND pctgy.category_id NOT IN " +
+            "(SELECT category2_id FROM product_category_map WHERE category1_id = ?) ");
+      }
+    } else {
+      if (masterCategoryId > -1) {
+        sqlFilter.append(
+            "AND pctgy.category_id IN " +
+            "(SELECT category2_id FROM product_category_map WHERE category1_id = ?) ");
+      }
     }
   }
 
@@ -765,12 +1130,24 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
       pst.setInt(++i, id);
     }
 
+    if (productId > -1) {
+      pst.setInt(++i, productId);
+    }
+
     if (parentId > -1) {
       pst.setInt(++i, parentId);
     }
 
     if (typeId > -1) {
       pst.setInt(++i, typeId);
+    }
+
+    if (name != null) {
+      pst.setString(++i, name);
+    }
+
+    if (abbreviation != null) {
+      pst.setString(++i, abbreviation);
     }
 
     if (parentName != null) {
@@ -883,6 +1260,166 @@ public class ProductCategoryList extends ArrayList implements SyncableList {
     while (iterator.hasNext()) {
       ProductCategory category = (ProductCategory) iterator.next();
       if (category.checkForProducts(db)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  /**
+   *  Iterates through all the categories and checks if a category's type
+   *  matches the typeId parameter
+   *
+   *@param  typeId  Description of the Parameter
+   *@return         Description of the Return Value
+   */
+  public boolean hasMappingsWithType(int typeId) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ProductCategory thisCategory = (ProductCategory) i.next();
+      if (thisCategory.getTypeId() == typeId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+
+  /**
+   *  Adds a feature to the ProductMapping attribute of the ProductCategoryList
+   *  object
+   *
+   *@param  db                The feature to be added to the ProductMapping
+   *      attribute
+   *@param  productId         The feature to be added to the ProductMapping
+   *      attribute
+   *@exception  SQLException  Description of the Exception
+   */
+  public void addProductMapping(Connection db, int productId) throws SQLException {
+    if (productId == -1) {
+      throw new SQLException("Invalid category ID specified");
+    }
+    ProductCatalog product = new ProductCatalog(db, productId);
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ProductCategory thisCategory = (ProductCategory) i.next();
+      product.addCategoryMapping(db, thisCategory.getId());
+    }
+
+  }
+
+
+  /**
+   *  Adds a feature to the ProductMapping attribute of the ProductCategoryList
+   *  object
+   *
+   *@param  db                The feature to be added to the ProductMapping
+   *      attribute
+   *@param  productId         The feature to be added to the ProductMapping
+   *      attribute
+   *@param  oldList           The feature to be added to the ProductMapping
+   *      attribute
+   *@exception  SQLException  Description of the Exception
+   */
+  public void addProductMapping(Connection db, ProductCategoryList oldList, int productId) throws SQLException {
+    ProductCatalog product = null;
+    try {
+      db.setAutoCommit(false);
+      product = new ProductCatalog(db, productId);
+      // Remove the mappings of elements present in the oldList and not this list
+      Iterator i = oldList.iterator();
+      while (i.hasNext()) {
+        ProductCategory oldCategory = (ProductCategory) i.next();
+        boolean exists = false;
+        Iterator j = this.iterator();
+        while (j.hasNext()) {
+          ProductCategory thisProduct = (ProductCategory) j.next();
+          if (oldCategory.getId() == thisProduct.getId()) {
+            exists = true;
+            j.remove();
+            break;
+          }
+        }
+        if (!exists) {
+          // old category does not exist in the new list. hence remove the mapping
+          product.removeCategoryMapping(db, oldCategory.getId());
+        }
+      }
+
+      // Add mappings for the elements now present in this list
+      this.addProductMapping(db, productId);
+      db.commit();
+    } catch (Exception e) {
+      e.printStackTrace(System.out);
+      db.rollback();
+      throw new SQLException(e.getMessage());
+    } finally {
+      db.setAutoCommit(true);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  db                Description of the Parameter
+   *@param  categoryList      Description of the Parameter
+   *@exception  SQLException  Description of the Exception
+   */
+  public static void buildHierarchy(Connection db, ProductCategoryList categoryList) throws SQLException {
+    Iterator i = categoryList.iterator();
+    while (i.hasNext()) {
+      ProductCategory thisCategory = (ProductCategory) i.next();
+      ProductCategoryList childList = new ProductCategoryList();
+      childList.setParentId(thisCategory.getId());
+      childList.buildList(db);
+      childList.setLevel(thisCategory.getLevel() + 1);
+      thisCategory.setChildList(childList);
+      buildHierarchy(db, childList);
+    }
+  }
+
+
+  /**
+   *  Sets the level attribute of the ProductCategoryList object
+   *
+   *@param  level  The new level value
+   */
+  public void setLevel(int level) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ProductCategory thisCategory = (ProductCategory) i.next();
+      thisCategory.setLevel(level);
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   */
+  public void buildCompleteHierarchy() {
+    for (int j = 0; j < this.size(); j++) {
+      ProductCategory thisCategory = (ProductCategory) this.get(j);
+      if (thisCategory.getChildList().size() > 0) {
+        this.addAll(j + 1, thisCategory.getChildList());
+      }
+    }
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  categoryId  Description of the Parameter
+   *@return             Description of the Return Value
+   */
+  public boolean hasCategory(int categoryId) {
+    Iterator i = this.iterator();
+    while (i.hasNext()) {
+      ProductCategory thisCategory = (ProductCategory) i.next();
+      if (thisCategory.getId() == categoryId) {
         return true;
       }
     }

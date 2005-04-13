@@ -33,80 +33,81 @@
 <script language="JavaScript" type="text/javascript">
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
+  function reopenContact(id) {
+    if (id == '<%= ContactDetails.getId() %>') {
+      scrollReload('ExternalContacts.do?command=SearchContacts');
+      return -1;
+    } else {
+      return '<%= ContactDetails.getId() %>';
+    }
+  }
 </script>
-<dhv:evaluate exp="<%= !isPopup(request) %>">
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do">Contacts</a> > 
-<a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
-<a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>">Contact Details</a> >
-Opportunities
+<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+<a href="ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
+<dhv:label name="accounts.accounts_contacts_oppcomponent_add.Opportunities">Opportunities</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<%@ include file="contact_details_header_include.jsp" %>
-<% String param1 = "id=" + ContactDetails.getId(); 
-    String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-<dhv:container name="contacts" selected="opportunities" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<% if(ContactDetails.getOrgId() > 0){ %>
-  <dhv:permission name="contacts-external_contacts-opportunities-add,accounts-accounts-contacts-opportunities-add" all="true"><a href="ExternalContactsOpps.do?command=Prepare&contactId=<%= ContactDetails.getId() %>&actionSource=ExternalContactsOpps<%= addLinkParams(request, "popup|popupType|actionId") %>">Add an Opportunity</a></dhv:permission>
-<% }else{ %>
-  <dhv:permission name="contacts-external_contacts-opportunities-add"><a href="ExternalContactsOpps.do?command=Prepare&contactId=<%= ContactDetails.getId() %>&actionSource=ExternalContactsOpps<%= addLinkParams(request, "popup|popupType|actionId") %>">Add an Opportunity</a></dhv:permission>
-<% } %>
-<center><%= ExternalOppsPagedListInfo.getAlphabeticalPageLinks() %></center>
-<table width="100%" border="0">
-  <tr>
-    <form name="listView" method="post" action="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
-    <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= ExternalOppsPagedListInfo.getOptionValue("my") %>>My Open Opportunities </option>
-        <option <%= ExternalOppsPagedListInfo.getOptionValue("all") %>>All Open Opportunities</option>
-        <option <%= ExternalOppsPagedListInfo.getOptionValue("closed") %>>All Closed Opportunities</option>
-      </select>
-    </td>
-    <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ExternalOppsPagedListInfo"/>
-    </td>
-    </form>
-  </tr>
-</table>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-  <tr>
-    <th>
-      <strong>Action</strong>
-    </th>
-    <th nowrap>
-      <strong><a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>&column=x.description<%= addLinkParams(request, "popup|popupType|actionId") %>">Opportunity Name</a></strong>
-      <%= ExternalOppsPagedListInfo.getSortIcon("x.description") %>
-    </th>
-    <th nowrap>
-      <strong>Best Guess Total</strong>
-    </th>
-    <th nowrap>
-      <strong><a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>&column=x.modified<%= addLinkParams(request, "popup|popupType|actionId") %>">Last Modified</a></strong>
-      <%= ExternalOppsPagedListInfo.getSortIcon("x.modified") %>
-    </th>
-  </tr>
-<%
-	Iterator j = opportunityHeaderList.iterator();
-  FileItem thisFile = new FileItem();
-	if ( j.hasNext() ) {
-		int rowid = 0;
-    int count =0;
-	    while (j.hasNext()) {
-        count++;
-        rowid = (rowid != 1?1:2);
-        OpportunityHeader oppHeader = (OpportunityHeader)j.next();
-%>      
-    <tr class="containerBody">
-      <td width="8" valign="top" align="center" class="row<%= rowid %>" nowrap>
+<dhv:container name="contacts" selected="opportunities" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <dhv:evaluate if="<%= (ContactDetails.getEnabled() && ContactDetails.getOrgId() > 0) %>" >
+    <dhv:permission name="contacts-external_contacts-opportunities-add,accounts-accounts-contacts-opportunities-add" all="true"><a href="ExternalContactsOpps.do?command=Prepare&contactId=<%= ContactDetails.getId() %>&actionSource=ExternalContactsOpps<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a></dhv:permission>
+    </dhv:evaluate><dhv:evaluate if="<%= (ContactDetails.getEnabled() && ContactDetails.getOrgId() <= 0) %>" >
+    <dhv:permission name="contacts-external_contacts-opportunities-add"><a href="ExternalContactsOpps.do?command=Prepare&contactId=<%= ContactDetails.getId() %>&actionSource=ExternalContactsOpps<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AddAnOpportunity">Add an Opportunity</dhv:label></a></dhv:permission>
+  </dhv:evaluate>
+  <dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+  <center><dhv:pagedListAlphabeticalLinks object="ExternalOppsPagedListInfo"/></center></dhv:include>
+  <table width="100%" border="0">
+    <tr>
+      <form name="listView" method="post" action="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
+      <td align="left">
+        <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+          <option <%= ExternalOppsPagedListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.MyOpenOpportunities">My Open Opportunities</dhv:label> </option>
+          <option <%= ExternalOppsPagedListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllOpenOpportunities">All Open Opportunities</dhv:label></option>
+          <option <%= ExternalOppsPagedListInfo.getOptionValue("closed") %>><dhv:label name="accounts.accounts_contacts_oppcomponent_list.AllClosedOpportunities">All Closed Opportunities</dhv:label></option>
+        </select>
+      </td>
+      <td>
+        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ExternalOppsPagedListInfo"/>
+      </td>
+      </form>
+    </tr>
+  </table>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <th width="8">&nbsp;</th>
+      <th nowrap>
+        <strong><a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>&column=x.description<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.OpportunityName">Opportunity Name</dhv:label></a></strong>
+        <%= ExternalOppsPagedListInfo.getSortIcon("x.description") %>
+      </th>
+      <th nowrap>
+        <strong><dhv:label name="accounts.accounts_contacts_oppcomponent_list.BestGuessTotal">Best Guess Total</dhv:label></strong>
+      </th>
+      <th nowrap>
+        <strong><a href="ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>&column=x.modified<%= addLinkParams(request, "popup|popupType|actionId") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.LastModified">Last Modified</dhv:label></a></strong>
+        <%= ExternalOppsPagedListInfo.getSortIcon("x.modified") %>
+      </th>
+    </tr>
+  <%
+    Iterator j = opportunityHeaderList.iterator();
+    FileItem thisFile = new FileItem();
+    if ( j.hasNext() ) {
+      int rowid = 0;
+      int count =0;
+        while (j.hasNext()) {
+          count++;
+          rowid = (rowid != 1?1:2);
+          OpportunityHeader oppHeader = (OpportunityHeader)j.next();
+  %>
+    <tr class="row<%= rowid %>">
+      <td width="8" valign="top" align="center" nowrap>
       <%-- check if user has edit or delete based on the type of contact --%>
         <%
           int hasEditPermission = 0;
@@ -126,7 +127,7 @@ Opportunities
             <% hasDeletePermission = 1; %>
           </dhv:permission>
         <% } %>
-        
+
         <%-- Use the unique id for opening the menu, and toggling the graphics --%>
          <a href="javascript:displayMenu('select<%= count %>','menuOpp','<%= ContactDetails.getId() %>','<%= oppHeader.getId() %>','<%= hasEditPermission %>', '<%= hasDeletePermission %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuOpp');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
       </td>
@@ -134,31 +135,28 @@ Opportunities
         <a href="ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= oppHeader.getId() %>&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>">
         <%= toHtml(oppHeader.getDescription()) %></a>
         (<%= oppHeader.getComponentCount() %>)
-<dhv:evaluate if="<%= oppHeader.hasFiles() %>">
-        <%= thisFile.getImageTag() %>
-</dhv:evaluate>
-      </td>  
-      <td valign="top" align="right" class="row<%= rowid %>" nowrap>
+  <dhv:evaluate if="<%= oppHeader.hasFiles() %>">
+          <%= thisFile.getImageTag() %>
+  </dhv:evaluate>
+      </td>
+      <td valign="top" align="right" nowrap>
         <zeroio:currency value="<%= oppHeader.getTotalValue() %>" code="<%= applicationPrefs.get("SYSTEM.CURRENCY") %>" locale="<%= User.getLocale() %>" default="&nbsp;"/>
       </td>
-      <td valign="top" align="center" class="row<%= rowid %>" nowrap>
+      <td valign="top" align="center" nowrap>
         <zeroio:tz timestamp="<%= oppHeader.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" />
       </td>
     </tr>
-<%
-    }
-	} else {
-%>
+  <%
+      }
+    } else {
+  %>
     <tr class="containerBody">
       <td colspan="6">
-        No opportunities found.
+        <dhv:label name="accounts.accounts_contacts_oppcomponent_list.NoOpportunitiesFound">No opportunities found.</dhv:label>
       </td>
     </tr>
-<%}%>
-</table>
-<br>
-<dhv:pagedListControl object="ExternalOppsPagedListInfo"/>
-</td>
-</tr>
-</table>
-
+  <%}%>
+  </table>
+  <br>
+  <dhv:pagedListControl object="ExternalOppsPagedListInfo"/>
+</dhv:container>

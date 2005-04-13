@@ -26,27 +26,22 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Users.do?command=ListUsers">View Users</a> >
-<a href="Users.do?command=UserDetails&id=<%=UserRecord.getId()%>">User Details</a> >
-Login History
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Users.do?command=ListUsers"><dhv:label name="admin.viewUsers">View Users</dhv:label></a> >
+<a href="Users.do?command=UserDetails&id=<%=UserRecord.getId()%>"><dhv:label name="admin.userDetails">User Details</dhv:label></a> >
+<dhv:label name="users.history.long_html">Login History</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<strong><%= toHtml(UserRecord.getUsername()) %> (<%= toHtml(UserRecord.getContact().getNameLastFirst()) %>)</strong>
-<% String param1 = "id=" + UserRecord.getId(); %>      
-<dhv:container name="users" selected="history" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-      <dhv:pagedListStatus object="AccessLogInfo"/>
-        <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-          <tr>
-            <th><b>Username</b></th>
-            <th nowrap><b>Login IP Address</b></th>
-            <th nowrap><b>Date/Time</b></th>
-          </tr>
+<dhv:container name="users" selected="history" object="UserRecord" param="<%= "id=" + UserRecord.getId() %>">
+  <dhv:pagedListStatus object="AccessLogInfo"/>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <th><b><dhv:label name="accounts.Username">Username</dhv:label></b></th>
+      <th nowrap><b><dhv:label name="admin.loginIpAddress">Login IP Address</dhv:label></b></th>
+      <th nowrap><b><dhv:label name="admin.dateTime">Date/Time</dhv:label></b></th>
+    </tr>
 <%
 	Iterator k = AccessLog.iterator();
 	if ( k.hasNext() ) {
@@ -55,24 +50,22 @@ Login History
 		  rowid = (rowid != 1?1:2);
       AccessLog thisLog = (AccessLog)k.next();
 %>   
-	<tr>
-		<td valign="top" nowrap class="row<%= rowid %>">
-			<%= toHtml(thisLog.getUsername()) %>
-		</td>
-		<td valign="top" nowrap class="row<%= rowid %>">
-			<%= toHtml(thisLog.getIp()) %>
-		</td>
-		<td nowrap valign="top" class="row<%= rowid %>">
-      <zeroio:tz timestamp="<%= thisLog.getEntered() %>" />
-		</td>
-	</tr>
+    <tr>
+      <td valign="top" nowrap class="row<%= rowid %>">
+        <%= toHtml(thisLog.getUsername()) %>
+      </td>
+      <td valign="top" nowrap class="row<%= rowid %>">
+        <%= toHtml(thisLog.getIp()) %>
+      </td>
+      <td nowrap valign="top" class="row<%= rowid %>">
+        <zeroio:tz timestamp="<%= thisLog.getEntered() %>" />
+      </td>
+    </tr>
   <%}%>
 <%} else {%>
-  <tr class="containerBody"><td colspan="3">No login history found.</td></tr>
+    <tr class="containerBody"><td colspan="3"><dhv:label name="admin.noLoginHistory">No login history found.</dhv:label></td></tr>
 <%}%>
   </table>
   <br>
   <dhv:pagedListControl object="AccessLogInfo"/>
-</td>
-</tr>
-</table>
+</dhv:container>

@@ -24,95 +24,105 @@
 <jsp:useBean id="ContactMessageListInfo" class="org.aspcfs.utils.web.PagedListInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
-<dhv:evaluate exp="<%= !isPopup(request) %>">
+<script type="text/javascript">
+function reopenContact(id) {
+  if (id == '<%= ContactDetails.getId() %>') {
+    scrollReload('ExternalContacts.do?command=SearchContacts');
+    return -1;
+  } else {
+    return '<%= ContactDetails.getId() %>';
+  }
+}
+</script>
+<dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="ExternalContacts.do">Contacts</a> > 
-<a href="ExternalContacts.do?command=SearchContacts">Search Results</a> >
-<a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>">Contact Details</a> >
-Messages
+<a href="ExternalContacts.do"><dhv:label name="accounts.Contacts">Contacts</dhv:label></a> > 
+<a href="ExternalContacts.do?command=SearchContacts"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+<a href="ExternalContacts.do?command=ContactDetails&id=<%=ContactDetails.getId()%>"><dhv:label name="accounts.accounts_contacts_add.ContactDetails">Contact Details</dhv:label></a> >
+<dhv:label name="Messages">Messages</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 </dhv:evaluate>
-<%@ include file="contact_details_header_include.jsp" %>
-<% String param1 = "id=" + ContactDetails.getId(); 
-   String param2 = addLinkParams(request, "popup|popupType|actionId"); %>
-<dhv:container name="contacts" selected="messages" param="<%= param1 %>" appendToUrl="<%= param2 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr>
-    <td class="containerBack">
-<br>
-<table width="100%" border="0">
-  <tr>
-    <form name="listView" method="post" action="ExternalContacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%>">
-    <td align="left">
-      <select size="1" name="listView" onChange="javascript:document.forms[0].submit();">
-        <option <%= ContactMessageListInfo.getOptionValue("my") %>>My Messages</option>
-        <option <%= ContactMessageListInfo.getOptionValue("all") %>>All Messages</option>
-      </select>
-    </td>
-    <td>
-      <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactMessageListInfo"/>
-    </td>
-    <%= addHiddenParams(request, "popup|popupType|actionId") %>
-    </form>
-  </tr>
-</table>
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
-  <tr>
-    <th width="20%" nowrap>
-      <a href="ExternalContacts.do?command=ViewMessages&column=c.name&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><strong>Name</strong></a>
-      <%= ContactMessageListInfo.getSortIcon("c.name") %>
-    </th>
-    <th width="45%" ><strong>Message Subject</strong></th>
-    <th width="20%" nowrap>
-      <a href="ExternalContacts.do?command=ViewMessages&column=active_date&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><strong>Run Date</strong></a>
-      <%= ContactMessageListInfo.getSortIcon("active_date") %>
-    </th>
-    <th width="15%">
-      <strong>Status</strong>
-    </th>
-  </tr>
-<%
-    Iterator j = campList.iterator();
-    if ( j.hasNext() ) {
-      int rowid = 0;
-      while (j.hasNext()) {
-        rowid = (rowid != 1?1:2);
-        Campaign campaign = (Campaign)j.next();
-%>
-  <tr class="row<%= rowid %>">
-    <td>
-      <a href="ExternalContacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>"><%= toHtml(campaign.getMessageName() != null && !"".equals(campaign.getMessageName()) ? campaign.getMessageName() : "\"No name available\"") %></a>
-      <%= (("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id")))?" <font color=\"red\">(Canceled)</font>":"") %>
-    </td>
-    <td><%= toHtml(campaign.getSubject()) %></td>
-    <td valign="top" align="left" nowrap>
-      <% if(!User.getTimeZone().equals(campaign.getActiveDateTimeZone())){%>
-      <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% } else { %>
-      <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= campaign.getActiveDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
-      <% } %>
-    </td>
-    <td valign="top" nowrap>
-      <%= toHtml(campaign.getStatus()) %>
-    </td>
-	</tr>
-	<%}%>
-<%} else {%>
-  <tr class="containerBody">
-    <td colspan="4">
-      No messages found.
-    </td>
-  </tr>
-<%}%>
-</table>
-<br>
-<dhv:pagedListControl object="ContactMessageListInfo"/>
-<br>
-</td></tr>
-</table>
+<dhv:container name="contacts" selected="messages" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
+  <table width="100%" border="0">
+    <tr>
+      <form name="listView" method="post" action="ExternalContacts.do?command=ViewMessages&contactId=<%=ContactDetails.getId()%>">
+      <td align="left">
+        <select size="1" name="listView" onChange="javascript:document.listView.submit();">
+          <option <%= ContactMessageListInfo.getOptionValue("my") %>><dhv:label name="accounts.accounts_contacts_messages_view.MyMessages">My Messages</dhv:label></option>
+          <option <%= ContactMessageListInfo.getOptionValue("all") %>><dhv:label name="accounts.accounts_contacts_messages_view.AllMessages">All Messages</dhv:label></option>
+        </select>
+      </td>
+      <td>
+        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="ContactMessageListInfo"/>
+      </td>
+      <%= addHiddenParams(request, "popup|popupType|actionId") %>
+      </form>
+    </tr>
+  </table>
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
+    <tr>
+      <th width="20%" nowrap>
+        <a href="ExternalContacts.do?command=ViewMessages&column=c.name&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><strong><dhv:label name="contacts.name">Name</dhv:label></strong></a>
+        <%= ContactMessageListInfo.getSortIcon("c.name") %>
+      </th>
+      <th width="45%" ><strong><dhv:label name="accounts.accounts_contacts_messages_details.MessageSubject">Message Subject</dhv:label></strong></th>
+      <th width="20%" nowrap>
+        <a href="ExternalContacts.do?command=ViewMessages&column=active_date&contactId=<%= ContactDetails.getId() %><%= addLinkParams(request, "popup|popupType|actionId") %>"><strong><dhv:label name="accounts.accounts_contacts_messages_view.RunDate">Run Date</dhv:label></strong></a>
+        <%= ContactMessageListInfo.getSortIcon("active_date") %>
+      </th>
+      <th width="15%">
+        <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
+      </th>
+    </tr>
+  <%
+      Iterator j = campList.iterator();
+      if ( j.hasNext() ) {
+        int rowid = 0;
+        while (j.hasNext()) {
+          rowid = (rowid != 1?1:2);
+          Campaign campaign = (Campaign)j.next();
+  %>
+    <tr class="row<%= rowid %>">
+      <td>
+        <a href="ExternalContacts.do?command=MessageDetails&id=<%= campaign.getId() %>&contactId=<%=ContactDetails.getId()%><%= addLinkParams(request, "popup|popupType|actionId") %>">
+          <% if(campaign.getMessageName() != null && !"".equals(campaign.getMessageName())) {%>
+            <%= toHtml(campaign.getMessageName()) %>
+          <%} else {%>
+            <dhv:label name="account.noNameAvailable.quotes">"No name available"</dhv:label>
+          <%}%>
+        </a>
+  <font color="red"><% if(("true".equals(request.getParameter("notify")) && ("" + campaign.getId()).equals(request.getParameter("id")))) {%>
+    <dhv:label name="account.canceled.brackets">(Canceled)</dhv:label>
+  <%} else {%>
+  <%}%></font>
+      </td>
+      <td><%= toHtml(campaign.getSubject()) %></td>
+      <td valign="top" align="left" nowrap>
+        <% if(!User.getTimeZone().equals(campaign.getActiveDateTimeZone())){%>
+        <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+        <% } else { %>
+        <zeroio:tz timestamp="<%= campaign.getActiveDate() %>" dateOnly="true" timeZone="<%= campaign.getActiveDateTimeZone() %>" showTimeZone="true" default="&nbsp;"/>
+        <% } %>
+      </td>
+      <td valign="top" nowrap>
+        <%= toHtml(campaign.getStatus()) %>
+      </td>
+    </tr>
+    <%}%>
+  <%} else {%>
+    <tr class="containerBody">
+      <td colspan="4">
+        <dhv:label name="accounts.accounts_contacts_messages_view.NoMessagesFound">No messages found.</dhv:label>
+      </td>
+    </tr>
+  <%}%>
+  </table>
+  <br>
+  <dhv:pagedListControl object="ContactMessageListInfo"/>
+</dhv:container>

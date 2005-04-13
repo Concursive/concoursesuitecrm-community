@@ -15,12 +15,19 @@
  */
 package org.aspcfs.modules.reports.base;
 
-import java.util.*;
-import java.sql.*;
-import org.aspcfs.utils.web.PagedListInfo;
+import net.sf.jasperreports.engine.JasperReport;
 import org.aspcfs.utils.DatabaseUtils;
-import dori.jasper.engine.*;
-import java.lang.reflect.*;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  *  Contains all criteria items for a report queue
@@ -246,7 +253,9 @@ public class QueueCriteriaList extends ArrayList {
       } else if (classValue.getName().equals("java.sql.Timestamp")) {
         parameters.put(thisCriteria.getParameter(), DatabaseUtils.parseTimestamp(thisCriteria.getValue()));
       } else if (classValue.getName().equals("java.lang.Boolean")) {
-
+        //do nothing
+      } else if (classValue.getName().equals("java.util.Map")) {
+        //do nothing
       } else if (!classValue.getName().equals("java.lang.String")) {
         Class[] argTypes = new Class[]{String.class};
         Method method = classValue.getMethod("valueOf", argTypes);

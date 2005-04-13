@@ -69,6 +69,21 @@ CREATE TABLE lookup_project_category (
   group_id INTEGER NOT NULL DEFAULT 0
 );
 
+CREATE TABLE lookup_news_template (
+  code SERIAL PRIMARY KEY,
+  description VARCHAR(255) NOT NULL,
+  default_item BOOLEAN DEFAULT false,
+  level INTEGER DEFAULT 0,
+  enabled BOOLEAN DEFAULT true,
+  group_id INTEGER NOT NULL DEFAULT 0,
+  load_article BOOLEAN DEFAULT false,
+  load_project_article_list BOOLEAN DEFAULT false,
+  load_article_linked_list BOOLEAN DEFAULT false,
+  load_public_projects BOOLEAN DEFAULT false,
+  load_article_category_list BOOLEAN DEFAULT false,
+  mapped_jsp VARCHAR(255) NOT NULL
+);
+
 
 CREATE TABLE projects (
   project_id SERIAL PRIMARY KEY,
@@ -111,7 +126,21 @@ CREATE TABLE projects (
   budget FLOAT,
   budget_currency VARCHAR(5),
   requestDate_timezone VARCHAR(255),
-  est_closedate_timezone VARCHAR(255)
+  est_closedate_timezone VARCHAR(255),
+  portal_default BOOLEAN NOT NULL DEFAULT false,
+  portal_header VARCHAR(255),
+  portal_format VARCHAR(255),
+  portal_key VARCHAR(255),
+  portal_build_news_body BOOLEAN NOT NULL DEFAULT false,
+  portal_news_menu BOOLEAN NOT NULL DEFAULT false,
+  description TEXT,
+  allows_user_observers BOOLEAN NOT NULL DEFAULT false,
+  level INTEGER NOT NULL DEFAULT 10,
+  portal_page_type INTEGER,
+  calendar_enabled BOOLEAN NOT NULL DEFAULT true,
+  calendar_label VARCHAR(50) NULL,
+  accounts_enabled BOOLEAN NOT NULL DEFAULT true,
+  accounts_label VARCHAR(50) NULL
 );
 
 CREATE INDEX "projects_idx"
@@ -193,13 +222,18 @@ CREATE TABLE project_assignments (
 CREATE INDEX "project_assignments_cidx" ON "project_assignments" 
   USING btree ("complete_date", "user_assign_id");
   
+CREATE INDEX proj_assign_req_id_idx ON project_assignments (requirement_id);
+  
 CREATE SEQUENCE project_assignmen_status_id_seq;
 CREATE TABLE project_assignments_status (
   status_id INTEGER DEFAULT nextval('project_assignmen_status_id_seq') NOT NULL PRIMARY KEY,
   assignment_id INTEGER NOT NULL REFERENCES project_assignments,
   user_id INTEGER NOT NULL REFERENCES access(user_id),
   description TEXT NOT NULL,
-  status_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+  status_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  percent_complete INTEGER NULL,
+  project_status_id INTEGER REFERENCES lookup_project_status,
+  user_assign_id INTEGER NULL REFERENCES access(user_id)
 );
 
 
@@ -217,7 +251,8 @@ CREATE TABLE project_issues_categories (
   topics_count INTEGER NOT NULL DEFAULT 0,
   posts_count INTEGER NOT NULL DEFAULT 0,
   last_post_date TIMESTAMP(3),
-  last_post_by INTEGER
+  last_post_by INTEGER,
+  allow_files BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE project_issues (
@@ -242,7 +277,7 @@ CREATE TABLE project_issue_replies (
   reply_id INTEGER DEFAULT nextval('project_issue_repl_reply_id_seq') NOT NULL PRIMARY KEY,
   issue_id INTEGER NOT NULL REFERENCES project_issues,
   reply_to INTEGER DEFAULT 0 ,
-  subject VARCHAR(50) NOT NULL ,
+  subject VARCHAR(255) NOT NULL ,
   message TEXT NOT NULL ,
   importance INTEGER NULL,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -259,9 +294,9 @@ CREATE TABLE project_folders (
   description TEXT,
   parent_id INT NULL,
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  enteredby INTEGER NOT NULL REFERENCES access(user_id),
+  enteredBy INTEGER NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedby INTEGER NOT NULL REFERENCES access(user_id),
+  modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
   display INTEGER NULL
 );
   
@@ -280,7 +315,8 @@ CREATE TABLE project_files (
   entered TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   enteredBy INTEGER NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy INTEGER NOT NULL REFERENCES access(user_id)
+  modifiedBy INTEGER NOT NULL REFERENCES access(user_id),
+  default_file BOOLEAN DEFAULT FALSE
 );
 
 CREATE INDEX "project_files_cidx" ON "project_files" 
@@ -333,19 +369,28 @@ CREATE TABLE project_team (
 );
 CREATE UNIQUE INDEX project_team_uni_idx ON project_team (project_id, user_id);
 
+CREATE TABLE project_news_category (
+  category_id SERIAL PRIMARY KEY,
+  project_id INTEGER NOT NULL REFERENCES projects(project_id),
+  category_name VARCHAR(255),
+  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  level INTEGER NOT NULL DEFAULT 0,
+  enabled BOOLEAN DEFAULT true
+);
+
 CREATE TABLE project_news (
   news_id SERIAL PRIMARY KEY,
   project_id INTEGER NOT NULL REFERENCES projects(project_id),
-  category_id INTEGER NULL,
+  category_id INTEGER NULL REFERENCES project_news_category(category_id),
   subject VARCHAR(255) NOT NULL,
-  intro VARCHAR(2048) NULL,
+  intro TEXT NULL,
   message TEXT,
   entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
   enteredby INTEGER NOT NULL REFERENCES access(user_id),
   modified TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
-   modifiedby INTEGER NOT NULL REFERENCES access(user_id),
-  start_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  end_date TIMESTAMP DEFAULT NULL,
+  modifiedby INTEGER NOT NULL REFERENCES access(user_id),
+  start_date TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+  end_date TIMESTAMP(3) DEFAULT NULL,
   allow_replies BOOLEAN DEFAULT false,
   allow_rating BOOLEAN DEFAULT false,
   rating_count INTEGER NOT NULL DEFAULT 0,
@@ -356,7 +401,9 @@ CREATE TABLE project_news (
   status INTEGER DEFAULT NULL,
   html BOOLEAN NOT NULL DEFAULT true,
   start_date_timezone VARCHAR(255),
-  end_date_timezone VARCHAR(255)
+  end_date_timezone VARCHAR(255),
+  classification_id INTEGER NOT NULL,
+  template_id INTEGER REFERENCES lookup_news_template
 );
 
 CREATE TABLE project_requirements_map (
@@ -398,3 +445,14 @@ CREATE TABLE project_permissions (
   permission_id INTEGER NOT NULL REFERENCES lookup_project_permission(code),
   userlevel INTEGER NOT NULL REFERENCES lookup_project_role(code)
 );
+
+CREATE TABLE project_accounts (
+  id SERIAL PRIMARY KEY,
+  project_id INTEGER NOT NULL REFERENCES projects(project_id),
+  org_id INTEGER NOT NULL REFERENCES organization(org_id),
+  entered TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX proj_acct_project_idx ON project_accounts (project_id);
+CREATE INDEX proj_acct_org_idx ON project_accounts (org_id);
+

@@ -45,7 +45,6 @@ public class Database {
     long startMs = System.currentTimeMillis();
     ConnectionPool sqlDriver = null;
     System.out.println("Starting...");
-    int recordCount = 0;
     try {
       sqlDriver = new ConnectionPool();
     } catch (SQLException e) {

@@ -50,20 +50,20 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManagerMessage.do?command=View">Message List</a> >
-Add Message
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManagerMessage.do?command=View"><dhv:label name="campaign.messageList">Message List</dhv:label></a> >
+<dhv:label name="campaign.addMessage">Add Message</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<input type="submit" value="Save Message">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
+<input type="submit" value="<dhv:label name="button.saveMessage">Save Message</dhv:label>">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
 <br />
 <dhv:formMessage />
 <%@ include file="message_include.jsp" %>
 <br>
-<input type="submit" value="Save Message">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
+<input type="submit" value="<dhv:label name="button.saveMessage">Save Message</dhv:label>">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='CampaignManagerMessage.do?command=View'">
 </form>
 </body>

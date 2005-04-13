@@ -27,31 +27,31 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManagerAttachment.do">Create Attachments</a> >
-<a href="CampaignManagerSurvey.do?command=View">Surveys</a> >
-Survey Details
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManagerAttachment.do"><dhv:label name="communications.campaign.CreateAttachments">Create Attachments</dhv:label></a> >
+<a href="CampaignManagerSurvey.do?command=View"><dhv:label name="campaign.surveys">Surveys</dhv:label></a> >
+<dhv:label name="campaign.surveyDetails">Survey Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:permission name="campaign-campaigns-surveys-edit">
-<input type="button" name="action" value="Modify" onClick="javascript:window.location.href='CampaignManagerSurvey.do?command=Modify&id=<%=Survey.getId()%>'">
+<input type="button" name="action" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='CampaignManagerSurvey.do?command=Modify&id=<%=Survey.getId()%>'">
 </dhv:permission>
 <dhv:permission name="campaign-campaigns-surveys-delete">
-<input type="button" name="action" value="Delete Survey" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">
+<input type="button" name="action" value="<dhv:label name="campaign.deleteSurvey">Delete Survey</dhv:label>" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">
 </dhv:permission>
-<input type="button" name="action" value="Preview" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=Preview&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=Details&id=<%=Survey.getId()%>', 'Preview_Survey','760','510','yes','yes');">
+<input type="button" name="action" value="<dhv:label name="button.preview">Preview</dhv:label>" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=Preview&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=Details&id=<%=Survey.getId()%>', 'Preview_Survey','760','510','yes','yes');">
 <br>&nbsp;
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Survey Details</strong>
+      <strong><dhv:label name="campaign.surveyDetails">Survey Details</dhv:label></strong>
     </th>
   </tr>
     <tr class="containerBody">
       <td valign="top" class="formLabel">
-        Name
+        <dhv:label name="contacts.name">Name</dhv:label>
       </td>
       <td valign="top">
         <%= toHtml(Survey.getName()) %>
@@ -59,7 +59,7 @@ Survey Details
     </tr>
     <tr class="containerBody">
       <td valign="top" class="formLabel">
-        Description
+        <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>
       </td>
       <td valign="top">
         <%= toHtml(Survey.getDescription()) %>
@@ -67,7 +67,7 @@ Survey Details
     </tr>
     <tr class="containerBody">
       <td class="formLabel">
-        Entered By
+        <dhv:label name="accounts.accounts_calls_list.EnteredBy">Entered By</dhv:label>
       </td>
       <td>
         <dhv:username id="<%= Survey.getEnteredBy() %>"/>
@@ -75,7 +75,7 @@ Survey Details
     </tr>
     <tr class="containerBody">
       <td class="formLabel">
-        Date
+        <dhv:label name="quotes.date">Date</dhv:label>
       </td>
       <td>
         <zeroio:tz timestamp="<%= Survey.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
@@ -83,7 +83,7 @@ Survey Details
     </tr>
     <tr class="containerBody">
       <td class="formLabel">
-        Last Modified By
+        <dhv:label name="campaign.lastModifiedBy">Last Modified By</dhv:label>
       </td>
       <td valign="top">
         <dhv:username id="<%= Survey.getModifiedBy() %>"/>
@@ -91,7 +91,7 @@ Survey Details
     </tr>
     <tr class="containerBody">
       <td class="formLabel">
-        Date
+        <dhv:label name="quotes.date">Date</dhv:label>
       </td>
       <td>
         <zeroio:tz timestamp="<%= Survey.getModified() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
@@ -102,7 +102,7 @@ Survey Details
   <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
       <th>
-        <strong>Survey Introduction Text</strong>
+        <strong><dhv:label name="campaign.surveyIntroduction.text">Survey Introduction Text</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
@@ -115,7 +115,7 @@ Survey Details
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Survey Questions</strong>
+      <strong><dhv:label name="campaign.surveyQuestions">Survey Questions</dhv:label></strong>
     </th>
   </tr>
 <%
@@ -155,14 +155,14 @@ Survey Details
      <dhv:evaluate if="<%= (type == SurveyQuestion.QUANT_COMMENTS) || (type == SurveyQuestion.OPEN_ENDED) %>">
        <tr class="containerBody">
           <td width="15%" valign="center" style="text-align: right;">
-            Comments
+            <dhv:label name="campaign.comments">Comments</dhv:label>
           </td>
           <td colspan="7" valign="center">
             <textarea name="quest<%= count %>comments" rows="2" cols="80"></textarea>
           </td>
        </tr>
      </dhv:evaluate>
-     <dhv:evaluate exp="<%= (type == SurveyQuestion.ITEMLIST) %>">
+     <dhv:evaluate if="<%= (type == SurveyQuestion.ITEMLIST) %>">
       <%
         Iterator k = thisQuestion.getItemList().iterator();
         if ( k.hasNext() ) {
@@ -181,7 +181,7 @@ Survey Details
        }else{%>
        <tr>
            <td style="text-align: center">
-            No items found.
+            <dhv:label name="campaign.noItemsFound">No items found.</dhv:label>
            </td>
         </tr>
         <%}%>
@@ -194,7 +194,7 @@ Survey Details
     } else {%>
       <tr class="containerBody">
         <td colspan="6">
-          No Questions found in this Survey
+          <dhv:label name="campaign.neQuestionsFound">No Questions found in this Survey</dhv:label>
         </td>
       </tr>
       <%}%>
@@ -203,7 +203,7 @@ Survey Details
    <table cellpadding="4" cellspacing="0" width="100%" class="details">
     <tr>
       <th colspan="2">
-        <strong>Survey Thank You Text</strong>
+        <strong><dhv:label name="campaign.surveyThankYouText">Survey Thank You Text</dhv:label></strong>
       </th>
     </tr>
     <tr class="containerBody">
@@ -214,10 +214,10 @@ Survey Details
   </table>
   <br>
 <dhv:permission name="campaign-campaigns-surveys-edit">
-<input type="button" name="action" value="Modify" onClick="javascript:window.location.href='CampaignManagerSurvey.do?command=Modify&id=<%=Survey.getId()%>'">
+<input type="button" name="action" value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='CampaignManagerSurvey.do?command=Modify&id=<%=Survey.getId()%>'">
 </dhv:permission>
 <dhv:permission name="campaign-campaigns-surveys-delete">
-<input type="button" name="action" value="Delete Survey" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">
+<input type="button" name="action" value="<dhv:label name="campaign.deleteSurvey">Delete Survey</dhv:label>" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=ConfirmDelete&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=View', 'Delete_survey','330','200','yes','no');">
 </dhv:permission>
-<input type="button" name="action" value="Preview" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=Preview&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=Details&id=<%=Survey.getId()%>', 'Preview_Survey','700','550','yes','yes');">
+<input type="button" name="action" value="<dhv:label name="button.preview">Preview</dhv:label>" onClick="javascript:popURLReturn('CampaignManagerSurvey.do?command=Preview&id=<%=Survey.getId()%>&popup=true','CampaignManagerSurvey.do?command=Details&id=<%=Survey.getId()%>', 'Preview_Survey','700','550','yes','yes');">
 

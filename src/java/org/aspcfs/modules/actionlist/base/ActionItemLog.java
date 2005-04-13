@@ -15,21 +15,21 @@
  */
 package org.aspcfs.modules.actionlist.base;
 
-import java.util.*;
-import java.text.*;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.beans.*;
-import org.aspcfs.modules.base.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.modules.contacts.base.Contact;
+import com.darkhorseventures.framework.beans.GenericBean;
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.communications.base.Campaign;
+import org.aspcfs.modules.contacts.base.Call;
+import org.aspcfs.modules.mycfs.base.CFSNote;
+import org.aspcfs.modules.pipeline.base.OpportunityHeader;
 import org.aspcfs.modules.tasks.base.Task;
 import org.aspcfs.modules.troubletickets.base.Ticket;
-import org.aspcfs.modules.contacts.base.Call;
-import org.aspcfs.modules.pipeline.base.OpportunityHeader;
-import org.aspcfs.modules.mycfs.base.CFSNote;
-import org.aspcfs.modules.communications.base.Campaign;
+import org.aspcfs.utils.DatabaseUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
 
 /**
  *  Represents an action performed on a action item
@@ -407,8 +407,11 @@ public class ActionItemLog extends GenericBean {
    * @exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    boolean doCommit = false;
     try {
-      db.setAutoCommit(false);
+      if ((doCommit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       int i = 0;
       PreparedStatement pst = db.prepareStatement(
           "INSERT INTO action_item_log " +
@@ -423,7 +426,6 @@ public class ActionItemLog extends GenericBean {
       pst.execute();
       this.id = DatabaseUtils.getCurrVal(db, "action_item_log_code_seq");
       pst.close();
-
       //update the action item table to reflect the change
       i = 0;
       pst = db.prepareStatement(
@@ -435,13 +437,18 @@ public class ActionItemLog extends GenericBean {
       pst.setInt(++i, this.getItemId());
       pst.execute();
       pst.close();
-
-      db.commit();
+      if (doCommit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (doCommit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (doCommit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -458,18 +465,15 @@ public class ActionItemLog extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("ID was not specified");
     }
-
     int recordCount = 0;
-
     PreparedStatement pst = db.prepareStatement(
         "DELETE FROM action_item_log " +
         "WHERE log_id = ? ");
     pst.setInt(1, id);
     recordCount = pst.executeUpdate();
     pst.close();
-
     if (recordCount == 0) {
-      errors.put("actionError", "Item could not be deleted because it no longer exists.");
+//      errors.put("actionError", "Item could not be deleted because it no longer exists.");
       return false;
     } else {
       return true;
@@ -490,24 +494,14 @@ public class ActionItemLog extends GenericBean {
     if (linkId == -1) {
       throw new SQLException("Link Id was not specified");
     }
-
     int recordCount = 0;
-    try {
-      db.setAutoCommit(false);
-      PreparedStatement pst = db.prepareStatement(
-          "DELETE FROM action_item_log " +
-          "WHERE link_item_id = ? AND type = ? ");
-      pst.setInt(1, linkId);
-      pst.setInt(2, thisType);
-      recordCount = pst.executeUpdate();
-      pst.close();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-      throw new SQLException(e.getMessage());
-    } finally {
-      db.setAutoCommit(true);
-    }
+    PreparedStatement pst = db.prepareStatement(
+        "DELETE FROM action_item_log " +
+        "WHERE link_item_id = ? AND type = ? ");
+    pst.setInt(1, linkId);
+    pst.setInt(2, thisType);
+    recordCount = pst.executeUpdate();
+    pst.close();
     return true;
   }
 

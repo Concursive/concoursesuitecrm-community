@@ -56,9 +56,9 @@
       }
     }
     if (tmpList.length == 0) {
-      alert("Nothing to remove")
+      alert(label("caution.nothingtoremove","Nothing to remove"));
     }	else if (tmpList.selectedIndex == -1) {
-      alert("An item needs to be selected before it can be removed");
+      alert(label("caution.itemneedstobe.selected","An item needs to be selected before it can be removed"));
     } else {
         if(itemList[tmpList.selectedIndex].id == -1){
         itemList[tmpList.selectedIndex] = "skip";
@@ -86,11 +86,11 @@
         itemList[tmpList.selectedIndex].enabled = 'false';
         tmpList.options[tmpList.selectedIndex].text = tmpList.options[tmpList.selectedIndex].text + "*";
         }else{
-          alert('The selected category is already disabled');
+          alert(label("caution.category.disabled","The selected category is already disabled"));
         }
       }
     }
-    document.getElementById("addButton").value  = "Add >";
+    document.getElementById("addButton").value  = label("button.addR","Add >");
     document.getElementById("newitem").value = "";
   }
   
@@ -99,19 +99,19 @@
     var tmpList = document.getElementById("itemSelect");
     var mode = document.getElementById("addButton").value;
     if(text == ""){
-      alert('Description is required');
+      alert(label("description.required","Description is required"));
       return;
     }else if(checkDuplicate(text, mode)){
-      alert('Category with that description already exists');
+      alert(label("caution.category.exists","Category with that description already exists"));
       return;
     }else if(text.indexOf("\"") > -1){
-      alert('Double Quotes are not allowed in the description');
+      alert(label("caution.doublequotes.notallowed",'Double Quotes are not allowed in the description'));
       return;
     }
     if (tmpList.length == 0 || tmpList.options[0].value == "-1"){
       tmpList.options[0] = new Option(text);
     }	else {
-      if(mode  == "Add >"){
+      if(mode  == label("button.addR","Add >")){
         tmpList.options[tmpList.length] = new Option(text);
       }else{
         if(itemList[tmpList.selectedIndex].enabled == 'true'){
@@ -121,12 +121,12 @@
         }
       }
     }
-    if(mode == "Add >"){
+    if(mode == label("button.addR","Add >")){
       itemList[tmpList.length-1] = new category(-1, text, 'true');
     }else{
       itemList[tmpList.selectedIndex].description = text;
     }
-    document.getElementById("addButton").value  = "Add >";
+    document.getElementById("addButton").value  = label("button.addR","Add >");
     document.getElementById("newitem").value = "";
     document.getElementById("newitem").focus();
   }
@@ -134,11 +134,11 @@
   function editValues(){
    var tmpList = document.getElementById("itemSelect");
    if(tmpList.selectedIndex == -1){
-     alert('An item needs to be selected');
+     alert(label("caution.item.needed","An item needs to be selected"));
      return;
    }
     if(tmpList.options[0].value != "-1"){
-      document.getElementById("addButton").value  = "Update >";
+      document.getElementById("addButton").value  = label("button.updateR","Update >");
       document.getElementById("newitem").value = itemList[tmpList.selectedIndex].description;
     }
   }
@@ -152,7 +152,7 @@
           itemList[i].enabled = 'true';
           tmpList.options[tmpList.selectedIndex].text = itemList[i].description;
         }else{
-          alert('Category is already enabled');
+          alert(label("caution.category.enabled","Category is already enabled"));
         }
       }
     }
@@ -161,14 +161,14 @@
   
   function clearSelection(){
     document.getElementById("itemSelect").selectedIndex =  "-1";
-    document.getElementById("addButton").value  = "Add >";
+    document.getElementById("addButton").value  = label("button.addR","Add >");
     document.getElementById("newitem").value = "";
   }
   
   function checkDuplicate(description, mode){
     for(i = 0; i < itemList.length ; i++){
       if(itemList[i].description == description){
-        if(mode == "Add >" || (mode == "Update >" && document.getElementById("itemSelect").selectedIndex != i)){
+        if(mode == label("button.addR","Add >") || (mode == label("button.updateR","Update >") && document.getElementById("itemSelect").selectedIndex != i)){
           return true;
         }
       }
@@ -187,7 +187,7 @@
   }
   
   function reset(){
-    document.getElementById("addButton").value  = "Add >";
+    document.getElementById("addButton").value  = label("button.addR","Add >");
     document.getElementById("newitem").value = "";
   }
 </SCRIPT>
@@ -195,7 +195,7 @@
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details" id="viewTable">
 <tr>
   <th colspan="2">
-    <strong>Edit Categories</strong>
+    <strong><dhv:label name="admin.editCategories">Edit Categories</dhv:label></strong>
   </th>
 </tr>
 <tr>
@@ -203,7 +203,7 @@
     <table width="100%" border="0" cellpadding="2" cellspacing="0" class="empty">
       <tr>
         <td nowrap align="left">
-          Description&nbsp;
+          <dhv:label name="accounts.accountasset_include.Description">Description</dhv:label>&nbsp;
         </td>
       </tr>
       <tr>
@@ -212,7 +212,7 @@
           <font color="red">*</font>
         </td>
         <td nowrap align="right" width="12">
-          <input type="button" value="Add >" onClick="javascript:addValues();" id="addButton">
+          <input type="button" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onClick="javascript:addValues();" id="addButton">
         </td>
      </tr>
     </table>
@@ -235,14 +235,14 @@
         <%= categoryList.getHtmlSelect("itemSelect", -1) %>
     <%}else{%>
       <select name="itemSelect" id="itemSelect" size="10">
-        <option value="-1">--------Item List-------</option>
+        <option value="-1"><dhv:label name="admin.itemList">--------Item List-------</dhv:label></option>
         </select>
     <%}%>
     <br>
     <center>
-      <dhv:permission name="admin-sysconfig-categories-delete"><input type="button" value="Remove" onclick="javascript:removeValues()"></dhv:permission>
-      <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Rename" onclick="javascript:editValues();"></dhv:permission>
-      <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="Enable" onclick="javascript:enable();" disable></dhv:permission>
+      <dhv:permission name="admin-sysconfig-categories-delete"><input type="button" value="<dhv:label name="button.remove">Remove</dhv:label>" onclick="javascript:removeValues()"></dhv:permission>
+      <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="<dhv:label name="accounts.Rename">Rename</dhv:label>" onclick="javascript:editValues();"></dhv:permission>
+      <dhv:permission name="admin-sysconfig-categories-edit"><input type="button" value="<dhv:label name="global.button.Enable">Enable</dhv:label>" onclick="javascript:enable();" disable></dhv:permission>
     </center>
    </td>
   </tr>
@@ -251,8 +251,8 @@
  <table cellpadding="0" cellspacing="0" border="0" width="100%" class="empty">
   <tr>
     <td align="left" colspan="2">
-      <input type="button" value="Save" onClick="javascript:save();">&nbsp;
-      <input type="button" value="Cancel" onclick="javascript:window.close();">
+      <input type="button" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="javascript:save();">&nbsp;
+      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onclick="javascript:window.close();">
     </td>
   </tr>
  </table>

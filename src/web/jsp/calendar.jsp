@@ -2,14 +2,29 @@
 <%@ page import="org.aspcfs.modules.mycfs.beans.CalendarBean" %>
 <jsp:useBean id="CompanyCalendar" class="org.aspcfs.utils.web.CalendarView" scope="request"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
+<jsp:useBean id="SelectedUser" class="org.aspcfs.modules.admin.base.User" scope="request"/>
+<%
+  response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+  response.setHeader("Cache-Control", "no-cache"); // HTTP 1.1
+  response.setHeader("Expires", "-1");
+%>
 <jsp:include page="templates/cssInclude.jsp" flush="true"/>
-<%@ include file="../initPage.jsp" %>
+<%@ include file="initPage.jsp" %>
 <% 
    String returnPage = (String)request.getParameter("return");
    CalendarBean CalendarInfo = (CalendarBean) session.getAttribute(returnPage!=null?returnPage + "CalendarInfo" :"CalendarInfo");
 %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/images.js"></SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></SCRIPT>
 <script type="text/javascript">
+  function showMessage(selectedUser, user) {
+    msg = "Viewing your Centric CRM calendar offline requires an iCalendar compliant desktop application. " + 
+               "These applications include Mozilla Sunbird, Apple iCal, and possibly others." + "\r\n\r\n" +
+               "This feature may not work on your system.";
+    if(confirm(label("webcal.message", msg))) {
+      window.location.href = 'webcal://<%= getServerUrl(request) %>/files/Synchronization/Calendars/' + selectedUser + '.ics?user=' + user; 
+    }
+  }
   function showDayEvents(year, month,day){
     window.parent.frames['calendardetails'].location.href='MyCFS.do?command=DayView&userId=<%=CalendarInfo.getSelectedUserId()%>&inline=true&year='+year+'&month='+month+'&day='+day+'&source=calendardetails<%=returnPage!=null?"&return="+returnPage:""%>';
   }
@@ -38,30 +53,23 @@
   function showWeekEvents(startYear,startMonth,startDay){
     window.parent.frames['calendardetails'].location.href='MyCFS.do?command=WeekView&userId=<%=CalendarInfo.getSelectedUserId()%>&inline=true&year='+ startYear +'&month='+startMonth+'&startMonthOfWeek='+startMonth+'&startDayOfWeek='+startDay+'&source=calendarDetails<%=returnPage!=null?"&return="+returnPage:""%>';
   }
-  
-  function switchTableClass(E,className,rowOrCell,browser){
+
+  function switchTableClass(E,className,rowOrCell){
     if(rowOrCell == "cell"){
       tdToChange = E;
     }
-    if (browser=="ie"){
-        while (E.tagName!="TR"){
-          E=E.parentElement;
-        }
-        E.className = className;
-    } else {
-      while (E.tagName!="TR") {
-        E=E.parentNode;
-      }
-      rowToChange = E;
-      resetCalendar();
-      if (rowOrCell == "cell") {
-        tdToChange.className = className;
-        return;
-      }
-      for (i=0;i<rowToChange.childNodes.length;i++) {
-        if (rowToChange.childNodes.item(i).tagName == "TD") {
-          rowToChange.childNodes.item(i).className = className;
-        }
+    while (E.tagName!="TR") {
+      E=E.parentNode;
+    }
+    rowToChange = E;
+    resetCalendar();
+    if (rowOrCell == "cell") {
+      tdToChange.className = className;
+      return;
+    }
+    for (i=0;i<rowToChange.childNodes.length;i++) {
+      if (rowToChange.childNodes.item(i).tagName == "TD") {
+        rowToChange.childNodes.item(i).className = className;
       }
     }
   }
@@ -92,6 +100,7 @@
       CompanyCalendar.setMonthArrows(true);
       CompanyCalendar.setFrontPageView(true);
       CompanyCalendar.setShowSubject(false);
+      CompanyCalendar.setLocale(User.getUserRecord().getLocale());
 %>
 <%= CompanyCalendar.getHtml() %>
 <dhv:include name="calendar.legend">
@@ -101,29 +110,36 @@
     <table bgcolor="#FFFFFF" width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td nowrap>
-          <img border='0' src='images/accounts.gif'> -- Accounts
+          <img border='0' src='images/accounts.gif'>
+          <dhv:label name="calendar.Accounts">Accounts</dhv:label>
         </td>
         <td nowrap>
-          <img border='0' src='images/alertcall.gif'><img border='0' src='images/box-hold.gif' align="ABSBOTTOM"> -- Calls
+          <img border='0' src='images/alertcall.gif'><img border='0' src='images/box-hold.gif' align="ABSBOTTOM">
+          <dhv:label name="calendar.Calls">Calls</dhv:label>
         </td>
         <td nowrap>
-          <img border='0' src='images/event-holiday.gif'> -- Holidays
+          <img border='0' src='images/event-holiday.gif'>
+          <dhv:label name="calendar.holidays">Holidays</dhv:label>
         </td>
       </tr>
       <tr>
         <td nowrap>
-          <img border='0' src='images/alertopp.gif'> -- Opportunities
+          <img border='0' src='images/alertopp.gif'>
+          <dhv:label name="dependency.opportunities">Opportunities</dhv:label>
         </td>
         <td nowrap>
-          <img border='0' src='images/box.gif'> -- Tasks
+          <img border='0' src='images/box.gif'>
+          <dhv:label name="myitems.tasks">Tasks</dhv:label>
         </td>
         <td>
-          <img border='0' src='images/tree0.gif'> -- <dhv:label name="tickets.tickets">Tickets</dhv:label>
+          <img border='0' src='images/tree0.gif'>
+          <dhv:label name="tickets.tickets">Tickets</dhv:label>
         </td>
       </tr>
       <tr>
         <td colspan="3">
-          <img border='0' src='images/box-checked.gif'> -- Complete <dhv:label name="tickets.tickets">Tickets</dhv:label>
+          <img border='0' src='images/box-checked.gif'>
+          <dhv:label name="calendar.completeTickets">Complete Tickets</dhv:label>
         </td>
       </tr>
     </table>
@@ -131,6 +147,15 @@
   </tr>
 </table>
 </dhv:include>
+<%-- Display the webcal link--%>
+<table width="100%" border="0" celldpadding="4" cellspacing="4">
+  <tr>
+    <td nowrap>
+      <img src="images/icons/stock_internet-16.gif" title="Calendar" border="0" align="absMiddle">
+      <a href="javascript:showMessage('<%= toHtml(SelectedUser.getContact().getNameFirstLast()) %>', '<%= toHtml(User.getUserRecord().getUsername()) %>');"><dhv:label name="calendar.subscribe">Subscribe to web calendar</dhv:label></a>
+    </td>
+  </tr>
+</table>
 </form>
 <dhv:evaluate if="<%= "true".equals(request.getParameter("reloadCalendarDetails")) %>">
 </body>

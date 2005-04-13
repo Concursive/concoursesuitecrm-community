@@ -599,9 +599,6 @@ public class CustomerProductHistory extends GenericBean {
    */
   public boolean insert(Connection db) throws SQLException {
     boolean result = false;
-    if (!isValid(db)) {
-      return result;
-    }
 
     StringBuffer sql = new StringBuffer();
     sql.append(
@@ -662,20 +659,12 @@ public class CustomerProductHistory extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Customer Product History ID not specified");
     }
-    try {
-      db.setAutoCommit(false);
-
-      // delete the customer product history
-      PreparedStatement pst = db.prepareStatement(" DELETE FROM customer_product_history WHERE history_id = ? ");
-      pst.setInt(1, this.getId());
-      pst.execute();
-      pst.close();
-      db.commit();
-    } catch (SQLException e) {
-      db.rollback();
-    } finally {
-      db.setAutoCommit(true);
-    }
+    
+    // delete the customer product history
+    PreparedStatement pst = db.prepareStatement("DELETE FROM customer_product_history WHERE history_id = ? ");
+    pst.setInt(1, this.getId());
+    pst.execute();
+    pst.close();
     return true;
   }
 
@@ -689,7 +678,7 @@ public class CustomerProductHistory extends GenericBean {
    */
   public int update(Connection db) throws SQLException {
     int resultCount = 0;
-    if (!isValid(db)) {
+    if (this.getId() == -1) {
       return -1;
     }
     PreparedStatement pst = null;
@@ -720,16 +709,5 @@ public class CustomerProductHistory extends GenericBean {
     return resultCount;
   }
 
-
-  /**
-   *  Gets the valid attribute of the CustomerProductHistory object
-   *
-   *@param  db                Description of the Parameter
-   *@return                   The valid value
-   *@exception  SQLException  Description of the Exception
-   */
-  protected boolean isValid(Connection db) throws SQLException {
-    return true;
-  }
 }
 

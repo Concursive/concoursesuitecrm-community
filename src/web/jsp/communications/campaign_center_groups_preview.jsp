@@ -35,36 +35,36 @@
 <table cellpadding="4" cellspacing="0" width="100%" style="border: 1px solid #000;">
   <tr class="containerHeader">
     <td style="border-bottom: 1px solid #000;">
-      <strong>Group Preview: </strong><%= toHtml(SCL.getGroupName()) %>
+      <dhv:label name="campaign.groupPreview.colon" param="<%= "scl.groupName="+toHtml(SCL.getGroupName()) %>"><strong>Group Preview:</strong> <%= toHtml(SCL.getGroupName()) %></dhv:label> 
     </td>
   </tr>
   <tr>
     <td class="containerBack">
       <ul>
-        <li>A recipient can be removed from this campaign</li>
-        <li>The removed recipient will not be deleted from the group or from other campaigns</li>
+        <li><dhv:label name="campaign.removeRecipient.text">A recipient can be removed from this campaign</dhv:label></li>
+        <li><dhv:label name="campaign.canNotRemoveRecipient.text">The removed recipient will not be deleted from the group or from other campaigns</dhv:label></li>
       </ul>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="5">
-      <strong>Contacts in this group</strong>
+      <strong><dhv:label name="campaign.contactsInTheGroup">Contacts in this group</dhv:label></strong>
     </th>
   </tr>
   <tr>
     <th style="text-align: right;">
-      Count
+      <dhv:label name="campaign.count">Count</dhv:label>
     </th>
     <th width="33%">
-      Name
+      <dhv:label name="contacts.name">Name</dhv:label>
     </th>
     <th width="33%">
-      Company
+      <dhv:label name="accounts.accounts_contacts_detailsimport.Company">Company</dhv:label>
     </th>
     <th width="34%">
-      Email
+      <dhv:label name="accounts.accounts_add.Email">Email</dhv:label>
     </th>
     <th align="center">
-      Included
+      <dhv:label name="campaign.included">Included</dhv:label>
     </th>
   </tr>
 <%
@@ -88,7 +88,7 @@
       <%= toHtml(thisContact.getAffiliation()) %>
     </td>
     <td nowrap>
-      <%= toHtml(thisContact.getEmailAddress("Business")) %>
+      <%= toHtml(thisContact.getPrimaryEmailAddress()) %>
     </td>
     <td align="center" nowrap>
       <div id="change<%= thisContact.getId() %>">
@@ -106,7 +106,7 @@
 <%} else {%>
   <tr class="containerBody">
     <td colspan="5">
-      No contacts matched query.
+      <dhv:label name="campaign.noContactsMatchedQuery">No contacts matched query.</dhv:label>
     </td>
   </tr>
 </table>
@@ -114,4 +114,4 @@
   </td>
   </tr>
 </table>
-<input type="button" value="Close Window" onClick="javascript:window.close()">
+<input type="button" value="<dhv:label name="button.closeWindow">Close Window</dhv:label>" onClick="javascript:window.close()">

@@ -23,11 +23,11 @@
       <img src="images/icons/stock_bcard-16.gif" border="0" align="absmiddle">
       <strong><%= toHtml(ContactDetails.getNameFull()) %></strong>
       <dhv:include name="accounts-selectedList" none="true">
-      <dhv:evaluate exp="<%= hasText(ContactDetails.getTitle()) %>">
+      <dhv:evaluate if="<%= hasText(ContactDetails.getTitle()) %>">
         / <%= toHtml(ContactDetails.getTitle()) %>
       </dhv:evaluate>
       </dhv:include>
-      [<a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>&popup=true&viewOnly=true','Details','650','500','yes','yes');">View Details</a>]
+      [<a href="javascript:popURL('ExternalContacts.do?command=ContactDetails&id=<%= ContactDetails.getId() %>&popup=true&viewOnly=true','Details','650','500','yes','yes');"><dhv:label name="accounts.accounts_calls_list_menu.ViewDetails">View Details</dhv:label></a>]
       <dhv:evaluate if="<%= !isPopup(request) %>">
       <br>
       <% String param2 = "";
@@ -42,5 +42,4 @@
       &nbsp;
     </td>
   </tr>
-  
 </table>

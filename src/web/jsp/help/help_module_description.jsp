@@ -26,9 +26,15 @@
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
   <%-- Title --%>
   <tr>
-  <td> <strong>Module Name:<%=((helpModule.getModuleName() == null) || ("".equals(helpModule.getModuleName())))? "Not Specified" : helpModule.getModuleName()%></strong>
+  <td>
+    <strong><dhv:label name="help.moduleName.colon">Module Name:</dhv:label>
+    <% if((helpModule.getModuleName() == null) || ("".equals(helpModule.getModuleName()))) {%>
+      <dhv:label name="account.notSpecified.label">Not Specified</dhv:label>
+    <%} else {%>
+      <%= toHtml(helpModule.getModuleName()) %>
+    <%}%></strong>
   <dhv:evaluate if="<%= hasText(helpModule.getModuleName()) %>">
-    <dhv:permission name="qa-edit">[<a href="javascript:popURL('Help.do?command=ModifyDescription&id=<%= helpModule.getId() %>&action=<%= helpModule.getRelatedAction()%>&popup=true', 'Help_Description','700','500','yes','yes');">Edit</a>]</td></dhv:permission>
+    <dhv:permission name="qa-edit">[<a href="javascript:popURL('Help.do?command=ModifyDescription&id=<%= helpModule.getId() %>&action=<%= helpModule.getRelatedAction()%>&popup=true', 'Help_Description','700','500','yes','yes');"><dhv:label name="accounts.accounts_contacts_oppcomponent_list.Edit">Edit</dhv:label></a>]</td></dhv:permission>
   </dhv:evaluate>
   </tr>
   <tr>
@@ -36,7 +42,7 @@
       <table cellpadding="4" cellspacing="0" width="100%" class="details">
       <tr>
        <th>
-          <strong>Brief Description</strong> 
+          <strong><dhv:label name="help.briefDescription">Brief Description</dhv:label></strong> 
        </th>
       </tr>
        <tr>
@@ -52,7 +58,7 @@
       <table cellpadding="4" cellspacing="0" width="100%" class="details">
       <tr>
        <th>
-          <strong>Detail Description</strong>
+          <strong><dhv:label name="help.detailDescription">Detail Description</dhv:label></strong>
        </th>
       </tr>
        <tr>

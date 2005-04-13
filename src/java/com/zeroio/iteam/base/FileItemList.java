@@ -15,22 +15,26 @@
  */
 package com.zeroio.iteam.base;
 
+import org.aspcfs.modules.base.Constants;
+import org.aspcfs.utils.DatabaseUtils;
+import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.web.HtmlSelect;
+import org.aspcfs.utils.web.PagedListInfo;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.sql.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.aspcfs.utils.DatabaseUtils;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.HtmlSelect;
 
 /**
- *  A list of files stored in the filesystem and referenced in a database
+ * A list of files stored in the filesystem and referenced in a database
  *
- *@author     matt rajkowski
- *@created    February 8, 2002
- *@version    $Id: FileItemList.java,v 1.2.66.1 2004/03/19 21:00:50 rvasista Exp
- *      $
+ * @author matt rajkowski
+ * @version $Id: FileItemList.java,v 1.2.66.1 2004/03/19 21:00:50 rvasista Exp
+ *          $
+ * @created February 8, 2002
  */
 public class FileItemList extends ArrayList {
   //filters
@@ -42,23 +46,109 @@ public class FileItemList extends ArrayList {
   private String ownerIdRange = null;
   private String fileLibraryPath = null;
   private boolean topLevelOnly = false;
+  private boolean webImageFormatOnly = false;
+  private int defaultFile = Constants.UNDEFINED;
+  private int enabled = Constants.UNDEFINED;
   //calendar
   protected java.sql.Timestamp alertRangeStart = null;
   protected java.sql.Timestamp alertRangeEnd = null;
   //custom for projects, otherwise need to extend class
   private int forProjectUser = -1;
+  //html select
+  private String htmlJsEvent = "";
 
 
   /**
-   *  Constructor for the FileItemList object
-   */
-  public FileItemList() { }
-
-
-  /**
-   *  Sets the linkModuleId attribute of the FileItemList object
+   * Gets the enabled attribute of the FileItemList object
    *
-   *@param  tmp  The new linkModuleId value
+   * @return The enabled value
+   */
+  public int getEnabled() {
+    return enabled;
+  }
+
+
+  /**
+   * Sets the enabled attribute of the FileItemList object
+   *
+   * @param tmp The new enabled value
+   */
+  public void setEnabled(int tmp) {
+    this.enabled = tmp;
+  }
+
+
+  /**
+   * Sets the enabled attribute of the FileItemList object
+   *
+   * @param tmp The new enabled value
+   */
+  public void setEnabled(String tmp) {
+    this.enabled = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Gets the htmlJsEvent attribute of the FileItemList object
+   *
+   * @return The htmlJsEvent value
+   */
+  public String getHtmlJsEvent() {
+    return htmlJsEvent;
+  }
+
+
+  /**
+   * Sets the htmlJsEvent attribute of the FileItemList object
+   *
+   * @param tmp The new htmlJsEvent value
+   */
+  public void setHtmlJsEvent(String tmp) {
+    this.htmlJsEvent = tmp;
+  }
+
+
+  /**
+   * Constructor for the FileItemList object
+   */
+  public FileItemList() {
+  }
+
+
+  /**
+   * Gets the defaultFile attribute of the FileItemList object
+   *
+   * @return The defaultFile value
+   */
+  public int getDefaultFile() {
+    return defaultFile;
+  }
+
+
+  /**
+   * Sets the defaultFile attribute of the FileItemList object
+   *
+   * @param tmp The new defaultFile value
+   */
+  public void setDefaultFile(int tmp) {
+    this.defaultFile = tmp;
+  }
+
+
+  /**
+   * Sets the defaultFile attribute of the FileItemList object
+   *
+   * @param tmp The new defaultFile value
+   */
+  public void setDefaultFile(String tmp) {
+    this.defaultFile = Integer.parseInt(tmp);
+  }
+
+
+  /**
+   * Sets the linkModuleId attribute of the FileItemList object
+   *
+   * @param tmp The new linkModuleId value
    */
   public void setLinkModuleId(int tmp) {
     this.linkModuleId = tmp;
@@ -66,9 +156,19 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the linkItemId attribute of the FileItemList object
+   * Gets the linkModuleId attribute of the FileItemList object
    *
-   *@param  tmp  The new linkItemId value
+   * @return The linkModuleId value
+   */
+  public int getLinkModuleId() {
+    return linkModuleId;
+  }
+
+
+  /**
+   * Sets the linkItemId attribute of the FileItemList object
+   *
+   * @param tmp The new linkItemId value
    */
   public void setLinkItemId(int tmp) {
     this.linkItemId = tmp;
@@ -76,9 +176,19 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the pagedListInfo attribute of the FileItemList object
+   * Gets the linkItemId attribute of the FileItemList object
    *
-   *@param  pagedListInfo  The new pagedListInfo value
+   * @return The linkItemId value
+   */
+  public int getLinkItemId() {
+    return linkItemId;
+  }
+
+
+  /**
+   * Sets the pagedListInfo attribute of the FileItemList object
+   *
+   * @param pagedListInfo The new pagedListInfo value
    */
   public void setPagedListInfo(PagedListInfo pagedListInfo) {
     this.pagedListInfo = pagedListInfo;
@@ -86,9 +196,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the owner attribute of the FileItemList object
+   * Sets the owner attribute of the FileItemList object
    *
-   *@param  tmp  The new owner value
+   * @param tmp The new owner value
    */
   public void setOwner(int tmp) {
     this.owner = tmp;
@@ -96,9 +206,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the ownerIdRange attribute of the FileItemList object
+   * Sets the ownerIdRange attribute of the FileItemList object
    *
-   *@param  tmp  The new ownerIdRange value
+   * @param tmp The new ownerIdRange value
    */
   public void setOwnerIdRange(String tmp) {
     this.ownerIdRange = tmp;
@@ -106,9 +216,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the folderId attribute of the FileItemList object
+   * Sets the folderId attribute of the FileItemList object
    *
-   *@param  tmp  The new folderId value
+   * @param tmp The new folderId value
    */
   public void setFolderId(int tmp) {
     this.folderId = tmp;
@@ -116,9 +226,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the fileLibraryPath attribute of the FileItemList object
+   * Sets the fileLibraryPath attribute of the FileItemList object
    *
-   *@param  tmp  The new fileLibraryPath value
+   * @param tmp The new fileLibraryPath value
    */
   public void setFileLibraryPath(String tmp) {
     this.fileLibraryPath = tmp;
@@ -126,9 +236,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the topLevelOnly attribute of the FileItemList object
+   * Sets the topLevelOnly attribute of the FileItemList object
    *
-   *@param  tmp  The new topLevelOnly value
+   * @param tmp The new topLevelOnly value
    */
   public void setTopLevelOnly(boolean tmp) {
     this.topLevelOnly = tmp;
@@ -136,9 +246,39 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the FileItemList object
+   * Gets the webImageFormatOnly attribute of the FileItemList object
    *
-   *@param  tmp  The new alertRangeStart value
+   * @return The webImageFormatOnly value
+   */
+  public boolean getWebImageFormatOnly() {
+    return webImageFormatOnly;
+  }
+
+
+  /**
+   * Sets the webImageFormatOnly attribute of the FileItemList object
+   *
+   * @param tmp The new webImageFormatOnly value
+   */
+  public void setWebImageFormatOnly(boolean tmp) {
+    this.webImageFormatOnly = tmp;
+  }
+
+
+  /**
+   * Sets the webImageFormatOnly attribute of the FileItemList object
+   *
+   * @param tmp The new webImageFormatOnly value
+   */
+  public void setWebImageFormatOnly(String tmp) {
+    this.webImageFormatOnly = DatabaseUtils.parseBoolean(tmp);
+  }
+
+
+  /**
+   * Sets the alertRangeStart attribute of the FileItemList object
+   *
+   * @param tmp The new alertRangeStart value
    */
   public void setAlertRangeStart(java.sql.Timestamp tmp) {
     this.alertRangeStart = tmp;
@@ -146,9 +286,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeStart attribute of the FileItemList object
+   * Sets the alertRangeStart attribute of the FileItemList object
    *
-   *@param  tmp  The new alertRangeStart value
+   * @param tmp The new alertRangeStart value
    */
   public void setAlertRangeStart(String tmp) {
     this.alertRangeStart = DatabaseUtils.parseTimestamp(tmp);
@@ -156,9 +296,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the FileItemList object
+   * Sets the alertRangeEnd attribute of the FileItemList object
    *
-   *@param  tmp  The new alertRangeEnd value
+   * @param tmp The new alertRangeEnd value
    */
   public void setAlertRangeEnd(java.sql.Timestamp tmp) {
     this.alertRangeEnd = tmp;
@@ -166,9 +306,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the alertRangeEnd attribute of the FileItemList object
+   * Sets the alertRangeEnd attribute of the FileItemList object
    *
-   *@param  tmp  The new alertRangeEnd value
+   * @param tmp The new alertRangeEnd value
    */
   public void setAlertRangeEnd(String tmp) {
     this.alertRangeEnd = DatabaseUtils.parseTimestamp(tmp);
@@ -176,9 +316,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the forProjectUser attribute of the FileItemList object
+   * Sets the forProjectUser attribute of the FileItemList object
    *
-   *@param  tmp  The new forProjectUser value
+   * @param tmp The new forProjectUser value
    */
   public void setForProjectUser(int tmp) {
     this.forProjectUser = tmp;
@@ -186,9 +326,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Sets the forProjectUser attribute of the FileItemList object
+   * Sets the forProjectUser attribute of the FileItemList object
    *
-   *@param  tmp  The new forProjectUser value
+   * @param tmp The new forProjectUser value
    */
   public void setForProjectUser(String tmp) {
     this.forProjectUser = Integer.parseInt(tmp);
@@ -196,9 +336,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Gets the pagedListInfo attribute of the FileItemList object
+   * Gets the pagedListInfo attribute of the FileItemList object
    *
-   *@return    The pagedListInfo value
+   * @return The pagedListInfo value
    */
   public PagedListInfo getPagedListInfo() {
     return pagedListInfo;
@@ -206,9 +346,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Gets the owner attribute of the FileItemList object
+   * Gets the owner attribute of the FileItemList object
    *
-   *@return    The owner value
+   * @return The owner value
    */
   public int getOwner() {
     return owner;
@@ -216,9 +356,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Gets the ownerIdRange attribute of the FileItemList object
+   * Gets the ownerIdRange attribute of the FileItemList object
    *
-   *@return    The ownerIdRange value
+   * @return The ownerIdRange value
    */
   public String getOwnerIdRange() {
     return ownerIdRange;
@@ -226,9 +366,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Gets the folderId attribute of the FileItemList object
+   * Gets the folderId attribute of the FileItemList object
    *
-   *@return    The folderId value
+   * @return The folderId value
    */
   public int getFolderId() {
     return folderId;
@@ -236,9 +376,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Gets the fileLibraryPath attribute of the FileItemList object
+   * Gets the fileLibraryPath attribute of the FileItemList object
    *
-   *@return    The fileLibraryPath value
+   * @return The fileLibraryPath value
    */
   public String getFileLibraryPath() {
     return fileLibraryPath;
@@ -246,9 +386,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Gets the fileSize of all of the FileItem objects within this collection
+   * Gets the fileSize of all of the FileItem objects within this collection
    *
-   *@return    The fileSize value
+   * @return The fileSize value
    */
   public long getFileSize() {
     long fileSize = 0;
@@ -261,9 +401,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Gets the alertRangeStart attribute of the FileItemList object
+   * Gets the alertRangeStart attribute of the FileItemList object
    *
-   *@return    The alertRangeStart value
+   * @return The alertRangeStart value
    */
   public java.sql.Timestamp getAlertRangeStart() {
     return alertRangeStart;
@@ -271,9 +411,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Gets the alertRangeEnd attribute of the FileItemList object
+   * Gets the alertRangeEnd attribute of the FileItemList object
    *
-   *@return    The alertRangeEnd value
+   * @return The alertRangeEnd value
    */
   public java.sql.Timestamp getAlertRangeEnd() {
     return alertRangeEnd;
@@ -281,9 +421,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Gets the forProjectUser attribute of the FileItemList object
+   * Gets the forProjectUser attribute of the FileItemList object
    *
-   *@return    The forProjectUser value
+   * @return The forProjectUser value
    */
   public int getForProjectUser() {
     return forProjectUser;
@@ -291,10 +431,10 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Generates a list of matching FileItems
+   * Generates a list of matching FileItems
    *
-   *@param  db                Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void buildList(Connection db) throws SQLException {
     PreparedStatement pst = null;
@@ -323,9 +463,10 @@ public class FileItemList extends ArrayList {
       pst.close();
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
-        pst = db.prepareStatement(sqlCount.toString() +
+        pst = db.prepareStatement(
+            sqlCount.toString() +
             sqlFilter.toString() +
-            "AND lower(subject) < ? ");
+            "AND lower(f.subject) < ? ");
         items = prepareFilter(pst);
         pst.setString(++items, pagedListInfo.getCurrentLetter().toLowerCase());
         rs = pst.executeQuery();
@@ -337,10 +478,10 @@ public class FileItemList extends ArrayList {
         pst.close();
       }
       //Determine column to sort by
-      pagedListInfo.setDefaultSort("subject, client_filename", null);
+      pagedListInfo.setDefaultSort("f.subject, f.client_filename", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
-      sqlOrder.append("ORDER BY subject ");
+      sqlOrder.append("ORDER BY f.subject ");
     }
     //Build a base SQL statement for returning records
     if (pagedListInfo != null) {
@@ -353,7 +494,8 @@ public class FileItemList extends ArrayList {
         "FROM project_files f " +
         "LEFT JOIN project_files_thumbnail t ON (f.item_id = t.item_id AND f.version = t.version) " +
         "WHERE f.item_id > -1 ");
-    pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
+    pst = db.prepareStatement(
+        sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
     if (pagedListInfo != null) {
@@ -377,11 +519,11 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Deletes all files in this list
+   * Deletes all files in this list
    *
-   *@param  db                Description of Parameter
-   *@param  baseFilePath      Description of Parameter
-   *@exception  SQLException  Description of Exception
+   * @param db           Description of Parameter
+   * @param baseFilePath Description of Parameter
+   * @throws SQLException Description of Exception
    */
   public void delete(Connection db, String baseFilePath) throws SQLException {
     Iterator documents = this.iterator();
@@ -393,9 +535,9 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  sqlFilter  Description of Parameter
+   * @param sqlFilter Description of Parameter
    */
   private void createFilter(StringBuffer sqlFilter) {
     if (sqlFilter == null) {
@@ -419,6 +561,10 @@ public class FileItemList extends ArrayList {
     if (topLevelOnly) {
       sqlFilter.append("AND f.folder_id IS NULL ");
     }
+    if (webImageFormatOnly) {
+      sqlFilter.append(
+          "AND (lower(f.client_filename) LIKE '%.gif' OR lower(f.client_filename) LIKE '%.jpg' OR lower(f.client_filename) LIKE '%.png') ");
+    }
     if (alertRangeStart != null) {
       sqlFilter.append("AND f.modified >= ? ");
     }
@@ -426,18 +572,25 @@ public class FileItemList extends ArrayList {
       sqlFilter.append("AND f.modified < ? ");
     }
     if (forProjectUser > -1) {
-      sqlFilter.append("AND (f.link_item_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
-          "AND status IS NULL )) ");
+      sqlFilter.append(
+          "AND (f.link_item_id in (SELECT DISTINCT project_id FROM project_team WHERE user_id = ? " +
+          "AND status IS NULL) OR f.link_item_id IN (SELECT project_id FROM projects WHERE allow_guests = ? AND approvaldate IS NOT NULL)) ");
+    }
+    if (defaultFile != Constants.UNDEFINED) {
+      sqlFilter.append("AND f.default_file = ? ");
+    }
+    if (enabled != Constants.UNDEFINED) {
+      sqlFilter.append("AND f.enabled = ? ");
     }
   }
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  pst               Description of Parameter
-   *@return                   Description of the Returned Value
-   *@exception  SQLException  Description of Exception
+   * @param pst Description of Parameter
+   * @return Description of the Returned Value
+   * @throws SQLException Description of Exception
    */
   private int prepareFilter(PreparedStatement pst) throws SQLException {
     int i = 0;
@@ -461,19 +614,26 @@ public class FileItemList extends ArrayList {
     }
     if (forProjectUser > -1) {
       pst.setInt(++i, forProjectUser);
+      pst.setBoolean(++i, true);
+    }
+    if (defaultFile != Constants.UNDEFINED) {
+      pst.setBoolean(++i, defaultFile == Constants.TRUE);
+    }
+    if (enabled != Constants.UNDEFINED) {
+      pst.setBoolean(++i, enabled == Constants.TRUE);
     }
     return i;
   }
 
 
   /**
-   *  Returns the number of fileItems that match the module and itemid
+   * Returns the number of fileItems that match the module and itemid
    *
-   *@param  db                Description of the Parameter
-   *@param  linkModuleId      Description of the Parameter
-   *@param  linkItemId        Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db           Description of the Parameter
+   * @param linkModuleId Description of the Parameter
+   * @param linkItemId   Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public static int retrieveRecordCount(Connection db, int linkModuleId, int linkItemId) throws SQLException {
     int count = 0;
@@ -494,10 +654,10 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Checks to see if any of the files has the specified extension
+   * Checks to see if any of the files has the specified extension
    *
-   *@param  extension  Description of the Parameter
-   *@return            Description of the Return Value
+   * @param extension Description of the Parameter
+   * @return Description of the Return Value
    */
   public boolean hasFileType(String extension) {
     Iterator i = this.iterator();
@@ -512,11 +672,11 @@ public class FileItemList extends ArrayList {
 
 
   /**
-   *  Description of the Method
+   * Description of the Method
    *
-   *@param  db                Description of the Parameter
-   *@return                   Description of the Return Value
-   *@exception  SQLException  Description of the Exception
+   * @param db Description of the Parameter
+   * @return Description of the Return Value
+   * @throws SQLException Description of the Exception
    */
   public long queryFileSize(Connection db) throws SQLException {
     long recordSize = 0;
@@ -526,7 +686,8 @@ public class FileItemList extends ArrayList {
         "FROM project_files f " +
         "WHERE f.item_id > -1 ";
     createFilter(sqlFilter);
-    PreparedStatement pst = db.prepareStatement(sqlCount + sqlFilter.toString());
+    PreparedStatement pst = db.prepareStatement(
+        sqlCount + sqlFilter.toString());
     int items = prepareFilter(pst);
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {
@@ -535,6 +696,47 @@ public class FileItemList extends ArrayList {
     rs.close();
     pst.close();
     return recordSize;
+  }
+
+
+  /**
+   * Gets the htmlSelectDefaultNone attribute of the FileItemList object
+   *
+   * @param selectName Description of the Parameter
+   * @param currentKey Description of the Parameter
+   * @param useDefault Description of the Parameter
+   * @return The htmlSelectDefaultNone value
+   */
+  public String getHtmlSelectDefaultNone(String selectName, int currentKey, boolean useDefault) {
+    HtmlSelect fileSelect = new HtmlSelect();
+    fileSelect.addItem(-1, "-- None --");
+    Iterator i = this.iterator();
+    int defaultKey = -1;
+    while (i.hasNext()) {
+      FileItem thisItem = (FileItem) i.next();
+      if (thisItem.getEnabled()) {
+        // Only add the item if enabled
+        if (useDefault && thisItem.getDefaultFile()) {
+          defaultKey = thisItem.getId();
+        }
+        fileSelect.addItem(
+            thisItem.getId(), StringUtils.toHtml(thisItem.getSubject()));
+      } else {
+        // Allow disabled items that match the current key
+        if (thisItem.getId() == currentKey) {
+          fileSelect.addItem(
+              thisItem.getId(), StringUtils.toHtml(thisItem.getSubject()) + " (X)");
+        }
+      }
+    }
+    if (!(this.getHtmlJsEvent().equals(""))) {
+      fileSelect.setJsEvent(this.getHtmlJsEvent());
+    }
+    if (currentKey > 0) {
+      return fileSelect.getHtml(selectName, currentKey);
+    } else {
+      return fileSelect.getHtml(selectName, defaultKey);
+    }
   }
 }
 

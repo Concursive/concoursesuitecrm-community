@@ -26,6 +26,7 @@ import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.modules.pipeline.base.*;
 import org.aspcfs.modules.pipeline.beans.*;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.controller.*;
 
 /**
  *  Contains a list of opportunities, which are now a combination of
@@ -69,6 +70,7 @@ public class OpportunityList extends ArrayList {
   private int typeId = 0;
 
   protected HashMap errors = new HashMap();
+  protected HashMap warnings = new HashMap();
 
 
   /**
@@ -118,6 +120,26 @@ public class OpportunityList extends ArrayList {
    */
   public void setQueryClosedOnly(boolean queryClosedOnly) {
     this.queryClosedOnly = queryClosedOnly;
+  }
+
+
+  /**
+   *  Sets the warnings attribute of the OpportunityList object
+   *
+   *@param  tmp  The new warnings value
+   */
+  public void setWarnings(HashMap tmp) {
+    this.warnings = tmp;
+  }
+
+
+  /**
+   *  Gets the warnings attribute of the OpportunityList object
+   *
+   *@return    The warnings value
+   */
+  public HashMap getWarnings() {
+    return warnings;
   }
 
 
@@ -599,8 +621,9 @@ public class OpportunityList extends ArrayList {
     PreparedStatement pst = null;
     ResultSet rs = null;
     int items = -1;
-
-    if (!isValid()) {
+    boolean canReturn = false;
+    canReturn = !ObjectValidator.validate(null, db, this);
+    if (canReturn) {
       return false;
     }
     StringBuffer sqlSelect = new StringBuffer();
@@ -614,9 +637,7 @@ public class OpportunityList extends ArrayList {
         "FROM opportunity_header x " +
         "LEFT JOIN opportunity_component oc on (x.opp_id = oc.opp_id) " +
         "WHERE x.opp_id > -1 ");
-
     createFilter(sqlFilter);
-
     if (pagedListInfo != null) {
       //Get the total number of records matching filter
       pst = db.prepareStatement(sqlCount.toString() +
@@ -629,7 +650,6 @@ public class OpportunityList extends ArrayList {
       }
       rs.close();
       pst.close();
-
       //Determine the offset, based on the filter, for the first record to show
       if (!pagedListInfo.getCurrentLetter().equals("")) {
         pst = db.prepareStatement(sqlCount.toString() +
@@ -645,13 +665,11 @@ public class OpportunityList extends ArrayList {
         rs.close();
         pst.close();
       }
-
       pagedListInfo.setDefaultSort("x.description", null);
       pagedListInfo.appendSqlTail(db, sqlOrder);
     } else {
       sqlOrder.append("ORDER BY x.entered");
     }
-
     //Need to build a base SQL statement for returning records
     if (pagedListInfo != null) {
       pagedListInfo.appendSqlSelectHead(db, sqlSelect);
@@ -714,20 +732,6 @@ public class OpportunityList extends ArrayList {
       }
     }
     return true;
-  }
-
-
-  /**
-   *  Gets the valid attribute of the OpportunityList object
-   *
-   *@return    The valid value
-   */
-  private boolean isValid() {
-    if (errors.size() > 0) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
 
@@ -964,11 +968,12 @@ public class OpportunityList extends ArrayList {
         "LEFT JOIN opportunity_component oc ON (o.opp_id = oc.opp_id) " +
         "WHERE o.opp_id > 0 ");
     if (moduleId == Constants.ACCOUNTS) {
-      sql.append("AND o.acctlink = ? ");
+      sql.append("AND (o.acctlink = ? OR o.contactlink IN (SELECT contact_id FROM contact c WHERE c.org_id = ? )) ");
     }
     PreparedStatement pst = db.prepareStatement(sql.toString());
     if (moduleId == Constants.ACCOUNTS) {
       pst.setInt(1, itemId);
+      pst.setInt(2, itemId);
     }
     ResultSet rs = pst.executeQuery();
     if (rs.next()) {

@@ -15,21 +15,16 @@
  */
 package org.aspcfs.modules.accounts.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.sql.*;
-import java.util.*;
-import java.io.*;
-import com.zeroio.iteam.base.*;
-import com.zeroio.webutils.*;
-import com.isavvix.tools.*;
-import com.darkhorseventures.framework.actions.*;
-import org.aspcfs.utils.*;
+import com.darkhorseventures.framework.actions.ActionContext;
+import com.zeroio.iteam.actions.ProjectManagementFileFolders;
+import com.zeroio.iteam.base.FileFolder;
+import com.zeroio.iteam.base.FileFolderHierarchy;
+import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
-import org.aspcfs.modules.accounts.base.*;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.utils.web.*;
-import com.zeroio.iteam.actions.*;
+
+import java.sql.Connection;
+import java.util.Iterator;
 
 /**
  *  Description of the Class
@@ -82,10 +77,10 @@ public final class AccountsDocumentsFolders extends CFSModule {
    * @return          Description of the Return Value
    */
   public String executeCommandSave(ActionContext context) {
-    Exception errorMessage = null;
     Connection db = null;
     int resultCount = 0;
     boolean recordInserted = false;
+    boolean isValid = false;
     String orgId = (String) context.getRequest().getParameter("orgId");
     Organization orgDetails = null;
     try {
@@ -100,33 +95,30 @@ public final class AccountsDocumentsFolders extends CFSModule {
       thisFolder.setModifiedBy(getUserId(context));
       thisFolder.setLinkModuleId(Constants.ACCOUNTS);
       thisFolder.setLinkItemId(orgDetails.getId());
+      isValid = this.validateObject(context, db, thisFolder);
       if (newFolder) {
-        recordInserted = thisFolder.insert(db);
+        if (isValid) {
+          recordInserted = thisFolder.insert(db);
+        }
       } else {
-        resultCount = thisFolder.update(db);
-      }
-      if (!recordInserted && resultCount < 1) {
-        processErrors(context, thisFolder.getErrors());
+        if (isValid) {
+          resultCount = thisFolder.update(db);
+        }
       }
       //Build array of folder trails
       ProjectManagementFileFolders.buildHierarchy(db, context);
     } catch (Exception e) {
-      errorMessage = e;
+      context.getRequest().setAttribute("Error", e);
+      return ("SystemError");
     } finally {
       this.freeConnection(context, db);
     }
-    if (errorMessage == null) {
-      if (recordInserted) {
-        return ("InsertOK");
-      } else if (resultCount == 1) {
-        return ("UpdateOK");
-      } else {
-        return (executeCommandAdd(context));
-      }
-    } else {
-      context.getRequest().setAttribute("Error", errorMessage);
-      return ("SystemError");
+    if (recordInserted) {
+      return ("InsertOK");
+    } else if (resultCount == 1) {
+      return ("UpdateOK");
     }
+    return (executeCommandAdd(context));
   }
 
 
@@ -289,6 +281,5 @@ public final class AccountsDocumentsFolders extends CFSModule {
       this.freeConnection(context, db);
     }
   }
-
 }
 

@@ -109,7 +109,7 @@ public class CustomField extends GenericBean implements Cloneable {
 
   //static field i.e label
   private boolean isStatic = false;
-
+  private boolean validateData = false;
 
 
   /**
@@ -164,6 +164,36 @@ public class CustomField extends GenericBean implements Cloneable {
    */
   public int getLinkItemId() {
     return linkItemId;
+  }
+
+
+  /**
+   *  Gets the validateData attribute of the CustomField object
+   *
+   *@return    The validateData value
+   */
+  public boolean getValidateData() {
+    return validateData;
+  }
+
+
+  /**
+   *  Sets the validateData attribute of the CustomField object
+   *
+   *@param  tmp  The new validateData value
+   */
+  public void setValidateData(boolean tmp) {
+    this.validateData = tmp;
+  }
+
+
+  /**
+   *  Sets the validateData attribute of the CustomField object
+   *
+   *@param  tmp  The new validateData value
+   */
+  public void setValidateData(String tmp) {
+    this.validateData = DatabaseUtils.parseBoolean(tmp);
   }
 
 
@@ -858,22 +888,22 @@ public class CustomField extends GenericBean implements Cloneable {
     if (newValue != null) {
       newValue = newValue.trim();
       switch (type) {
-          case SELECT:
-            selectedItemId = Integer.parseInt(newValue);
-            enteredValue = ((LookupList) elementData).getSelectedValue(selectedItemId);
-            break;
-          case CHECKBOX:
-            if ("ON".equalsIgnoreCase(newValue)) {
-              selectedItemId = 1;
-              enteredValue = "Yes";
-            } else {
-              selectedItemId = 0;
-              enteredValue = "No";
-            }
-            break;
-          default:
-            enteredValue = newValue;
-            break;
+        case SELECT:
+          selectedItemId = Integer.parseInt(newValue);
+          enteredValue = ((LookupList) elementData).getSelectedValue(selectedItemId);
+          break;
+        case CHECKBOX:
+          if ("ON".equalsIgnoreCase(newValue)) {
+            selectedItemId = 1;
+            enteredValue = "Yes";
+          } else {
+            selectedItemId = 0;
+            enteredValue = "No";
+          }
+          break;
+        default:
+          enteredValue = newValue;
+          break;
       }
     }
   }
@@ -952,6 +982,16 @@ public class CustomField extends GenericBean implements Cloneable {
         ((LookupList) elementData).add(thisElement);
       }
     }
+  }
+
+
+  /**
+   *  Gets the enteredDouble attribute of the CustomField object
+   *
+   *@return    The enteredDouble value
+   */
+  public double getEnteredDouble() {
+    return enteredDouble;
   }
 
 
@@ -1245,16 +1285,16 @@ public class CustomField extends GenericBean implements Cloneable {
    */
   public boolean getLengthRequired() {
     switch (type) {
-        case TEXT:
-          return true;
-        case INTEGER:
-          return true;
-        case FLOAT:
-          return true;
-        case CURRENCY:
-          return true;
-        default:
-          return false;
+      case TEXT:
+        return true;
+      case INTEGER:
+        return true;
+      case FLOAT:
+        return true;
+      case CURRENCY:
+        return true;
+      default:
+        return false;
     }
   }
 
@@ -1267,10 +1307,10 @@ public class CustomField extends GenericBean implements Cloneable {
    */
   public boolean getLookupListRequired() {
     switch (type) {
-        case SELECT:
-          return true;
-        default:
-          return false;
+      case SELECT:
+        return true;
+      default:
+        return false;
     }
   }
 
@@ -1312,38 +1352,46 @@ public class CustomField extends GenericBean implements Cloneable {
       return StringUtils.toHtml(enteredValue);
     }
     switch (type) {
-        case URL:
-          if (enableLinks) {
-            return "<a href=\"" + ((enteredValue.indexOf(":") > -1) ? "" : "http://") + enteredValue + "\" target=\"_new\">" + enteredValue + "</a>";
-          } else {
-            return StringUtils.toHtml(enteredValue);
-          }
-        case EMAIL:
-          if (enableLinks && enteredValue.indexOf("@") > 0) {
-            return "<a href=\"mailto:" + enteredValue + "\">" + enteredValue + "</a>";
-          } else {
-            return StringUtils.toHtml(enteredValue);
-          }
-        case SELECT:
-          if (elementData != null) {
-            return StringUtils.toHtml(((LookupList) elementData).getSelectedValue(selectedItemId));
-          } else {
-            return StringUtils.toHtml(enteredValue);
-          }
-        case CHECKBOX:
-          return (selectedItemId == 1 ? "Yes" : "No");
-        case CURRENCY:
-          try {
-            double thisAmount = Double.parseDouble(enteredValue);
-            NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
-            return (numberFormatter.format(thisAmount));
-          } catch (Exception e) {
-            return (StringUtils.toHtml(enteredValue));
-          }
-        case PERCENT:
-          return (StringUtils.toHtml(enteredValue) + "%");
-        default:
+      case URL:
+        if (enableLinks) {
+          return "<a href=\"" + ((enteredValue.indexOf(":") > -1) ? "" : "http://") + enteredValue + "\" target=\"_new\">" + enteredValue + "</a>";
+        } else {
+          return StringUtils.toHtml(enteredValue);
+        }
+      case EMAIL:
+        if (enableLinks && enteredValue.indexOf("@") > 0) {
+          return "<a href=\"mailto:" + enteredValue + "\">" + enteredValue + "</a>";
+        } else {
+          return StringUtils.toHtml(enteredValue);
+        }
+      case SELECT:
+        if (elementData != null) {
+          return StringUtils.toHtml(((LookupList) elementData).getSelectedValue(selectedItemId));
+        } else {
+          return StringUtils.toHtml(enteredValue);
+        }
+      case CHECKBOX:
+        return (selectedItemId == 1 ? "Yes" : "No");
+      case CURRENCY:
+        try {
+          double thisAmount = Double.parseDouble(enteredValue);
+          NumberFormat numberFormatter = NumberFormat.getNumberInstance(Locale.US);
+          return (numberFormatter.format(thisAmount));
+          /*
+          Locale locale = new Locale(System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
+          NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
+          Currency currency = Currency.getInstance(System.getProperty("CURRENCY"));
+          currencyFormatter.setCurrency(currency);
+          return (currencyFormatter.format(thisAmount));
+          */
+        } catch (Exception e) {
           return (StringUtils.toHtml(enteredValue));
+          //return ("$" + StringUtils.toHtml(enteredValue));
+        }
+      case PERCENT:
+        return (StringUtils.toHtml(enteredValue) + "%");
+      default:
+        return (StringUtils.toHtml(enteredValue));
     }
   }
 
@@ -1411,54 +1459,54 @@ public class CustomField extends GenericBean implements Cloneable {
     String country = System.getProperty("COUNTRY");
 
     switch (type) {
-        case TEXTAREA:
-          return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.toString(enteredValue) + "</textarea>");
-        case HTMLAREA:
-          return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.fromHtmlValue(enteredValue) + "</textarea>");
-        case SELECT:
-          if (!(((LookupList) elementData).containsKey(-1))) {
-            ((LookupList) elementData).addItem(-1, "-- None --");
+      case TEXTAREA:
+        return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.toString(enteredValue) + "</textarea>");
+      case HTMLAREA:
+        return ("<textarea cols=\"50\" rows=\"4\" name=\"" + elementName + "\">" + StringUtils.fromHtmlValue(enteredValue) + "</textarea>");
+      case SELECT:
+        if (!(((LookupList) elementData).containsKey(-1))) {
+          ((LookupList) elementData).addItem(-1, "-- None --");
+        }
+        LookupList tmpList = (LookupList) elementData;
+        tmpList.setJsEvent(this.getOnChange() != null ? " onchange=\"" + this.getOnChange() + "\"" : "");
+        return tmpList.getHtmlSelect(elementName, selectedItemId);
+      case BUTTON:
+        return ("<input type=\"button\" name=\"" + elementName + "\" value=\"" + display + "\" " + (jsEvent != null ? " onClick=\"" + jsEvent + "\"" : "") + (enabled ? "" : " disabled") + ">");
+      case CHECKBOX:
+        return ("<input type=\"checkbox\" name=\"" + elementName + "\" value=\"ON\" " + (selectedItemId == 1 ? "checked" : "") + ">");
+      case DATE:
+        return ("<input type=\"text\" name=\"" + elementName + "\" size=\"10\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\"> " +
+            "<a href=\"javascript:popCalendar('details', '" + elementName + "','" + language + "','" + country + "');\">" +
+            "<img src=\"images/icons/stock_form-date-field-16.gif\" " +
+            "border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/></a>");
+      case PERCENT:
+        return ("<input type=\"text\" name=\"" + elementName + "\" size=\"8\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\"> " + "%");
+      case HIDDEN:
+        return ("<input type=\"hidden\" name=\"" + elementName + "\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\">");
+      case DISPLAYTEXT:
+        return (StringUtils.toHtmlValue(enteredValue));
+      case LABEL:
+        return this.getDisplayHtml();
+      case LINK:
+        return ("<a href=\"" + jsEvent + "\" >" + display + "</a>");
+      case STATE_SELECT:
+        StateSelect stateSelect = new StateSelect();
+        return (stateSelect.getHtml(elementName, StringUtils.toHtmlValue(enteredValue)));
+      default:
+        String maxlength = this.getParameter("maxlength");
+        String size = "";
+        if (!maxlength.equals("")) {
+          if (Integer.parseInt(maxlength) > 40) {
+            size = "40";
+          } else {
+            size = maxlength;
           }
-          LookupList tmpList = (LookupList) elementData;
-          tmpList.setJsEvent(this.getOnChange() != null ? " onchange=\"" + this.getOnChange() + "\"" : "");
-          return tmpList.getHtmlSelect(elementName, selectedItemId);
-        case BUTTON:
-          return ("<input type=\"button\" name=\"" + elementName + "\" value=\"" + display + "\" " + (jsEvent != null ? " onClick=\"" + jsEvent + "\"" : "") + (enabled ? "" : " disabled") + ">");
-        case CHECKBOX:
-          return ("<input type=\"checkbox\" name=\"" + elementName + "\" value=\"ON\" " + (selectedItemId == 1 ? "checked" : "") + ">");
-        case DATE:
-          return ("<input type=\"text\" name=\"" + elementName + "\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\"> " +
-              "<a href=\"javascript:popCalendar('forms[0]', '" + elementName + "','" + language + "','" + country + "');\">" + 
-              "<img src=\"images/icons/stock_form-date-field-16.gif\" " +
-              "border=\"0\" align=\"absmiddle\" height=\"16\" width=\"16\"/></a>");
-        case PERCENT:
-          return ("<input type=\"text\" name=\"" + elementName + "\" size=\"8\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\"> " + "%");
-        case HIDDEN:
-          return ("<input type=\"hidden\" name=\"" + elementName + "\" value=\"" + StringUtils.toHtmlValue(enteredValue) + "\">");
-        case DISPLAYTEXT:
-          return (StringUtils.toHtmlValue(enteredValue));
-        case LABEL:
-          return this.getDisplayHtml();
-        case LINK:
-          return ("<a href=\"" + jsEvent + "\" >" + display + "</a>");
-        case STATE_SELECT:
-          StateSelect stateSelect = new StateSelect();
-          return (stateSelect.getHtml(elementName, StringUtils.toHtmlValue(enteredValue)));
-        default:
-          String maxlength = this.getParameter("maxlength");
-          String size = "";
-          if (!maxlength.equals("")) {
-            if (Integer.parseInt(maxlength) > 40) {
-              size = "40";
-            } else {
-              size = maxlength;
-            }
-          }
-          return ("<input type=\"text\" " +
-              "name=\"" + elementName + "\" " +
-              (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
-              (size.equals("") ? "" : "size=\"" + size + "\" ") +
-              "value=\"" + StringUtils.toHtmlValue(enteredValue) + "\">");
+        }
+        return ("<input type=\"text\" " +
+            "name=\"" + elementName + "\" " +
+            (maxlength.equals("") ? "" : "maxlength=\"" + maxlength + "\" ") +
+            (size.equals("") ? "" : "size=\"" + size + "\" ") +
+            "value=\"" + StringUtils.toHtmlValue(enteredValue) + "\">");
     }
   }
 
@@ -1517,38 +1565,38 @@ public class CustomField extends GenericBean implements Cloneable {
    */
   public String getTypeString(int dataType, boolean dynamic) {
     switch (dataType) {
-        case TEXT:
-          if ((getParameter("maxlength") == null || getParameter("maxlength").equals("")) || !dynamic) {
-            return "Text (up to 255 characters)";
-          } else {
-            return "Text (" + getParameter("maxlength") + ")";
-          }
-        case TEXTAREA:
-          return "Text Area (unlimited)";
-        case SELECT:
-          return "Lookup List";
-        case CHECKBOX:
-          return "Check Box";
-        case DATE:
-          return "Date";
-        case INTEGER:
-          return "Number";
-        case FLOAT:
-          return "Decimal Number";
-        case PERCENT:
-          return "Percent";
-        case CURRENCY:
-          return "Currency";
-        case EMAIL:
-          return "Email Address";
-        case URL:
-          return "URL";
-        case PHONE:
-          return "Phone Number";
-        case STATE_SELECT:
-          return "US State List";
-        default:
-          return "";
+      case TEXT:
+        if ((getParameter("maxlength") == null || getParameter("maxlength").equals("")) || !dynamic) {
+          return "Text (up to 255 characters)";
+        } else {
+          return "Text (" + getParameter("maxlength") + ")";
+        }
+      case TEXTAREA:
+        return "Text Area (unlimited)";
+      case SELECT:
+        return "Lookup List";
+      case CHECKBOX:
+        return "Check Box";
+      case DATE:
+        return "Date";
+      case INTEGER:
+        return "Number";
+      case FLOAT:
+        return "Decimal Number";
+      case PERCENT:
+        return "Percent";
+      case CURRENCY:
+        return "Currency";
+      case EMAIL:
+        return "Email Address";
+      case URL:
+        return "URL";
+      case PHONE:
+        return "Phone Number";
+      case STATE_SELECT:
+        return "US State List";
+      default:
+        return "";
     }
   }
 
@@ -1674,9 +1722,6 @@ public class CustomField extends GenericBean implements Cloneable {
    */
   public boolean insertField(Connection db) throws SQLException {
     boolean result = false;
-    if (!isFieldValid()) {
-      return result;
-    }
 
     try {
       db.setAutoCommit(false);
@@ -1745,7 +1790,7 @@ public class CustomField extends GenericBean implements Cloneable {
    *@since
    */
   public boolean updateField(Connection db) throws SQLException {
-    if (!isFieldValid() || id == -1) {
+    if (id == -1) {
       return false;
     }
 
@@ -1798,7 +1843,6 @@ public class CustomField extends GenericBean implements Cloneable {
 
     boolean result = false;
     if (groupId == -1 || id == -1) {
-      errors.put("actionError", "Form data error");
       return result;
     }
 
@@ -1842,47 +1886,6 @@ public class CustomField extends GenericBean implements Cloneable {
       db.setAutoCommit(true);
     }
     return result;
-  }
-
-
-  /**
-   *  Gets the FieldValid attribute of the CustomField object
-   *
-   *@return    The FieldValid value
-   *@since
-   */
-  private boolean isFieldValid() {
-    if (groupId == -1) {
-      errors.put("actionError", "Form data is missing");
-    }
-    if (type == -1) {
-      errors.put("typeError", "Type is required");
-    }
-    if (name == null || name.equals("")) {
-      errors.put("nameError", "Name is required");
-    }
-    if (getLengthRequired()) {
-      if (getParameter("maxlength").equals("")) {
-        errors.put("maxLengthError", "Length is required");
-      } else {
-        try {
-          if (Integer.parseInt(getParameter("maxlength")) > 255) {
-            errors.put("maxLengthError", "Max length is too high");
-          }
-        } catch (Exception e) {
-          errors.put("maxLengthError", "Max length must be a number");
-        }
-      }
-    }
-    /*
-     *  /Removed because this doesn't have to happen here
-     *  if (type == SELECT &&
-     *  (elementData == null || (((LookupList) elementData).size() == 0))
-     *  ) {
-     *  errors.put("lookupListError", "Items are required");
-     *  }
-     */
-    return (errors.size() == 0);
   }
 
 
@@ -1946,6 +1949,13 @@ public class CustomField extends GenericBean implements Cloneable {
           double testNumber = Double.parseDouble(testString);
           this.setEnteredValue(testString);
           enteredDouble = testNumber;
+          /*
+          Locale locale = new Locale(System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
+          NumberFormat nf = NumberFormat.getInstance(locale);
+          enteredDouble = nf.parse(this.getEnteredValue()).doubleValue();
+          Double tmpDouble = new Double(enteredDouble);
+          this.setEnteredValue(tmpDouble.toString());
+          */
         } catch (Exception e) {
           error = "Value should be a number";
         }
@@ -1955,8 +1965,8 @@ public class CustomField extends GenericBean implements Cloneable {
           // a temporary and insufficient fix for dates in custom fields
         try {
           /*
-          Locale locale = new Locale(System.getProperty("LANGUAGE"),System.getProperty("COUNTRY"));
-          DateFormat localeFormatter = DateFormat.getDateInstance(DateFormat.SHORT,locale);
+          Locale locale = new Locale(System.getProperty("LANGUAGE"), System.getProperty("COUNTRY"));
+          DateFormat localeFormatter = DateFormat.getDateInstance(DateFormat.SHORT, locale);
           localeFormatter.setLenient(false);
           localeFormatter.parse(this.getEnteredValue());
           */

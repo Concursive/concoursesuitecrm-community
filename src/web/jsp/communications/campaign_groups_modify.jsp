@@ -18,6 +18,7 @@
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,org.aspcfs.utils.web.LookupElement" %>
+<%@ page import="org.aspcfs.utils.*" %>
 <jsp:useBean id="SearchFieldList" class="org.aspcfs.modules.communications.base.SearchFieldList" scope="request"/>
 <jsp:useBean id="StringOperatorList" class="org.aspcfs.modules.communications.base.SearchOperatorList" scope="request"/>
 <jsp:useBean id="DateOperatorList" class="org.aspcfs.modules.communications.base.SearchOperatorList" scope="request"/>
@@ -30,6 +31,7 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <SCRIPT LANGUAGE="JavaScript">
 <!-- 
 //updateOperators has to be defined in each file because it uses bean
@@ -45,12 +47,12 @@ function updateOperators(){
     while (x.hasNext()) {
       LookupElement thisContactType = (LookupElement)x.next();
       if (!thisContactType.isGroup()) {
-    %>
-        insertOption("<%=thisContactType.getDescription()%>", "<%=thisContactType.getCode()%>", "idSelect");
-    <%
-      } else {
-        // option group
-      }
+        if (thisContactType.getEnabled() || (!thisContactType.getEnabled() && !ContactTypeList.getExcludeDisabledIfUnselected())) {%>
+          insertOption("<%= StringUtils.jsStringEscape(thisContactType.getDescription()) %>", "<%= thisContactType.getCode() %>", "idSelect");
+    <%}} else {%>
+      // option group
+        insertOptionGroup("<%= StringUtils.jsStringEscape(thisContactType.getDescription()) %>",  "idSelect");
+    <%}
     }
     %>
 		javascript:showSpan('new0');
@@ -78,12 +80,11 @@ function updateOperators(){
     if (z.hasNext()) {
       while (z.hasNext()) {
         LookupElement thisElt = (LookupElement)z.next();
-    %>
-        insertOption("<%=thisElt.getDescription()%>", "<%=thisElt.getCode()%>", "idSelect");
-    <%
+        if (thisElt.getEnabled() || (!thisElt.getEnabled() && !ContactTypeList.getExcludeDisabledIfUnselected())) {%>
+          insertOption("<%= thisElt.getDescription() %>", "<%=thisElt.getCode()%>", "idSelect");
+      <%}
       }
-    }
-    %>
+    }%>
 		javascript:showSpan('new0');
     javascript:showSpan('new0a');
     javascript:hideSpan('searchText1');
@@ -111,20 +112,25 @@ function updateOperators(){
 function checkForm(form) {
   formTest = true;
   message = "";
-  if (form.groupName.value == "") {
-    message += "- Group Name is required\r\n";
+  if (checkNullString(form.groupName.value)) {
+    message += label("check.group.name","- Group Name is required\r\n");
     formTest = false;
   }
+  saveValues();
+  if (form.searchCriteriaText.value == "") {
+    message += label("check.criteria","- Criteria is required\r\n");
+    formTest = false;
+  }  
+
   if (formTest == false) {
-    alert("Criteria could not be processed, please check the following:\r\n\r\n" + message);
+    alert(label("check.campaign.criteria","Criteria could not be processed, please check the following:\r\n\r\n") + message);
     return false;
   } 
-  saveValues();
   return true;
 }
 
 </SCRIPT>
-<body onLoad="javascript:document.forms[0].groupName.focus()">
+<body onLoad="javascript:document.searchForm.groupName.focus()">
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/searchForm.js"></script>
@@ -186,35 +192,35 @@ listOfOperators[2] = numberOperators
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="CampaignManager.do">Communications</a> >
-<a href="CampaignManagerGroup.do?command=View">View Groups</a> >
+<a href="CampaignManager.do"><dhv:label name="communications.campaign.Communications">Communications</dhv:label></a> >
+<a href="CampaignManagerGroup.do?command=View"><dhv:label name="campaign.viewGroups">View Groups</dhv:label></a> >
 <dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
-<a href="CampaignManagerGroup.do?command=Details&id=<%= SCL.getId() %>">Group Details</a> >
+<a href="CampaignManagerGroup.do?command=Details&id=<%= SCL.getId() %>"><dhv:label name="campaign.groupDetails">Group Details</dhv:label></a> >
 </dhv:evaluate>
-Group Details
+<dhv:label name="campaign.groupDetails">Group Details</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<input type="submit" value="Save" name="Save">
+<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="Save">
 <dhv:evaluate if="<%= "list".equals(request.getParameter("return")) %>">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerGroup.do?command=View'">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=View'">
 </dhv:evaluate>
 <dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerGroup.do?command=Details&id=<%= SCL.getId() %>'">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=Details&id=<%= SCL.getId() %>'">
 </dhv:evaluate>
-<input type="button" value="Preview" onClick="javascript:popPreview()">
+<input type="button" value="<dhv:label name="button.preview">Preview</dhv:label>" onClick="javascript:popPreview()">
 <br>
 &nbsp;<br>
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      Update contact group details
+      <dhv:label name="campaign.updateContactGroupDetails">Update contact group details</dhv:label>
     </th>
   </tr>
   <tr>
     <td class="formLabel" nowrap>
-      Group Name
+      <dhv:label name="admin.groupName">Group Name</dhv:label>
     </td>
     <td>
       <input type="text" size="40" name="groupName" value="<%= toHtmlValue(SCL.getGroupName()) %>"><font color="red">*</font> <%= showAttribute(request, "groupNameError") %>
@@ -225,7 +231,7 @@ Group Details
 <table cellpadding="4" cellspacing="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      Update contact criteria for this group
+      <dhv:label name="campaign.updateContactCriteria.text">Update contact criteria for this group</dhv:label>
     </th>
   </tr>
 	<tr>
@@ -233,12 +239,12 @@ Group Details
       <table width="100%" border="0" cellpadding="2" cellspacing="0" class="empty">
         <tr>
           <td class="row1" colspan="2">
-            Choose specific contacts:
+            <dhv:label name="campaign.chooseSpecificContacts.colon">Choose specific contacts:</dhv:label>
           </td>
         </tr>
         <tr>
           <td colspan="2" style="text-align: center;">
-            [<a href="javascript:popContactsListMultipleCampaign('listViewId','1');">Add/Remove Contacts</a>]
+            [<a href="javascript:popContactsListMultipleCampaign('listViewId','1');"><dhv:label name="contacts.addRemove">Add/Remove Contacts</dhv:label></a>]
           </td>
         </tr>
         <tr>
@@ -248,12 +254,12 @@ Group Details
         </tr>
         <tr>
           <td class="row1" colspan="2">
-            Define criteria to generate a list:
+            <dhv:label name="campaign.defineCriteria.text">Define criteria to generate a list:</dhv:label>
           </td>
         </tr>
         <tr>
           <td style="text-align: right;" nowrap>
-            Field
+            <dhv:label name="accounts.accounts_contacts_validateimport.Field">Field</dhv:label>
           </td>
           <td width="100%" valign="center">
       <script language="JavaScript">
@@ -296,7 +302,7 @@ Group Details
         </tr>
         <tr>
           <td style="text-align: right;" nowrap>
-            <span name="searchText1" ID="searchText1">Search Text</span>
+            <span name="searchText1" ID="searchText1"><dhv:label name="contact.searchText">Search Text</dhv:label></span>
           </td>
           <td width="100%" valign="center">
             <span name="searchText2" ID="searchText2"><input type="text" name="searchValue" value="" size="25"  maxlength="125"></span> 
@@ -314,7 +320,7 @@ Group Details
         </tr>
         <tr>
           <td style="text-align: right;" nowrap>
-            <span name="new0a" ID="new0a" style="display:none">Search Text</span>
+            <span name="new0a" ID="new0a" style="display:none"><dhv:label name="contact.searchText">Search Text</dhv:label></span>
           </td>
           <td valign="center">
             <span name="new0" ID="new0" style="display:none"><select id="idSelect" name="idSelect" onChange="javascript:setText(document.searchForm.idSelect);"></select></span>
@@ -322,7 +328,7 @@ Group Details
         </tr>
         <tr>
           <td style="text-align: right;" nowrap>
-            From
+            <dhv:label name="campaign.from">From</dhv:label>
           </td>
           <td width="100%" valign="center">
             <%= ContactSource.getHtml("contactSource", -1) %>
@@ -331,7 +337,7 @@ Group Details
         <tr>
           <td style="text-align: center;" colspan="2" nowrap>
             <br>
-            <input type="button" value="Add >" onclick="javascript:addValues()">
+            <input type="button" value="<dhv:label name="accounts.accounts_reports_generate.AddR">Add ></dhv:label>" onclick="javascript:addValues()">
           </td>
         </tr>
       </table>
@@ -340,7 +346,7 @@ Group Details
       <table width="100%" border="0" cellpadding="2" cellspacing="0" class="empty">
         <tr>
           <td class="row1">
-            Selected criteria and contacts:
+            <dhv:label name="campaign.selectedCriteriaAndContacts.colon">Selected criteria and contacts:</dhv:label>
           </td>
         </tr>
         <tr>
@@ -355,13 +361,13 @@ Group Details
 			<%= SCL.getHtmlSelect("searchCriteria") %>
 		<%} else {%>
 			<select name="searchCriteria" id="listViewId" size="10">
-        <option value="-1">----------------Search Criteria----------------</option>
+        <option value="-1"><dhv:label name="campaign.searchCriteria.label">----------------Search Criteria----------------</dhv:label></option>
 			</select>
 		<%}%>
       <br>
       &nbsp;<br>
       <input type="hidden" name="previousSelection" value="">
-      <input type="button" value="Remove" onclick="removeValues()">
+      <input type="button" value="<dhv:label name="button.remove">Remove</dhv:label>" onclick="removeValues()">
           </td>
         </tr>
       </table>
@@ -372,13 +378,13 @@ Group Details
 <input type="hidden" name="searchCriteriaText">
 <input type="hidden" name="owner" value="<%= SCL.getOwner() %>">
 <input type="hidden" name="return" value="<%= request.getParameter("return") %>">
-<input type="submit" value="Save" name="Save">
+<input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" name="Save">
 <dhv:evaluate if="<%= "list".equals(request.getParameter("return")) %>">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerGroup.do?command=View'">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=View'">
 </dhv:evaluate>
 <dhv:evaluate if="<%= !"list".equals(request.getParameter("return")) %>">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.action='CampaignManagerGroup.do?command=Details&id=<%= SCL.getId() %>'">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="window.location.href='CampaignManagerGroup.do?command=Details&id=<%= SCL.getId() %>'">
 </dhv:evaluate>
-<input type="button" value="Preview" onClick="javascript:popPreview()">
+<input type="button" value="<dhv:label name="button.preview">Preview</dhv:label>" onClick="javascript:popPreview()">
 </form>
 </body>

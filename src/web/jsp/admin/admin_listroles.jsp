@@ -34,30 +34,31 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-View Roles
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<dhv:label name="admin.viewRoles">View Roles</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:permission name="admin-roles-add"><a href="Roles.do?command=InsertRoleForm">Add New Role</a></dhv:permission>
-<center><%= RoleListInfo.getAlphabeticalPageLinks() %></center>
+<dhv:permission name="admin-roles-add"><a href="Roles.do?command=InsertRoleForm"><dhv:label name="admin.addNewRole">Add New Role</dhv:label></a></dhv:permission>
+<dhv:include name="pagedListInfo.alphabeticalLinks" none="true">
+<center><dhv:pagedListAlphabeticalLinks object="RoleListInfo"/></center></dhv:include>
 <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="RoleListInfo"/>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="35%" nowrap>
-      <b><a href="Roles.do?command=ListRoles&column=role">Role</a></b>
+      <b><a href="Roles.do?command=ListRoles&column=role"><dhv:label name="project.role">Role</dhv:label></a></b>
       <%= RoleListInfo.getSortIcon("role") %>
     </th>
     <th width="65%" nowrap>
-      <b><a href="Roles.do?command=ListRoles&column=description">Description</a></b>
+      <b><a href="Roles.do?command=ListRoles&column=description"><dhv:label name="accounts.accountasset_include.Description">Description</dhv:label></a></b>
       <%= RoleListInfo.getSortIcon("description") %>
     </th>
     <th nowrap>
-      <b># of users</b>
+      <b><dhv:label name="admin.numberOfUsers"># of users</dhv:label></b>
     </th>
   </tr>
 <%
@@ -91,7 +92,7 @@ View Roles
 %>  
   <tr>
     <td class="containerBody" colspan="5">
-      No roles found.
+      <dhv:label name="admin.noRolesFound">No roles found.</dhv:label>
     </td>
   </tr>
 <%  

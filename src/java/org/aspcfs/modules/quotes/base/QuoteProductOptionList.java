@@ -33,6 +33,39 @@ import org.aspcfs.utils.DateUtils;
 public class QuoteProductOptionList extends ArrayList {
   private int itemId = -1;
   private int statusId = -1;
+  //resources
+  private boolean buildConfigDetails = false;
+
+
+  /**
+   *  Gets the buildConfigDetails attribute of the QuoteProductOptionList object
+   *
+   *@return    The buildConfigDetails value
+   */
+  public boolean getBuildConfigDetails() {
+    return buildConfigDetails;
+  }
+
+
+  /**
+   *  Sets the buildConfigDetails attribute of the QuoteProductOptionList object
+   *
+   *@param  tmp  The new buildConfigDetails value
+   */
+  public void setBuildConfigDetails(boolean tmp) {
+    this.buildConfigDetails = tmp;
+  }
+
+
+  /**
+   *  Sets the buildConfigDetails attribute of the QuoteProductOptionList object
+   *
+   *@param  tmp  The new buildConfigDetails value
+   */
+  public void setBuildConfigDetails(String tmp) {
+    this.buildConfigDetails = DatabaseUtils.parseBoolean(tmp);
+  }
+
 
 
   /**
@@ -118,21 +151,39 @@ public class QuoteProductOptionList extends ArrayList {
     //Build a base SQL statement for counting records
     sqlCount.append(
         "SELECT COUNT(*) AS recordcount " +
-        "FROM quote_product_options qpo " +
-        "WHERE qpo.quote_product_option_id > -1 ");
+        "FROM quote_product_options opt " +
+        "LEFT JOIN quote_product_option_boolean bool ON ( opt.quote_product_option_id = bool.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_float float ON ( opt.quote_product_option_id = float.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_timestamp tst ON ( opt.quote_product_option_id = tst.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_integer intr ON ( opt.quote_product_option_id = intr.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_text txt ON ( opt.quote_product_option_id = txt.quote_product_option_id ) " +
+        "LEFT JOIN product_option_map pom ON (opt.product_option_id = pom.product_option_id) " +
+        "LEFT JOIN product_option po ON (pom.option_id = po.option_id), " +
+        "quote_product prod " +
+        "WHERE opt.item_id = prod.item_id " +
+        "AND opt.quote_product_option_id > -1 ");
     createFilter(sqlFilter);
-    sqlOrder.append("ORDER BY status_id");
+    sqlOrder.append("ORDER BY opt.status_id");
     //Build a base SQL statement for returning records
     sqlSelect.append("SELECT ");
     sqlSelect.append(
-        "     opt.quote_product_option_id, opt.item_id, opt.product_option_id, " +
-        "     opt.quantity, opt.price_currency, opt.price_amount, opt.recurring_currency, " +
-        "     opt.recurring_amount, opt.recurring_type, opt.extended_price, " +
-        "     opt.total_price, opt.status_id, " +
-        "     prod.product_id " +
-        " FROM quote_product_options opt, quote_product prod " +
-        " WHERE opt.item_id = prod.item_id AND opt.quote_product_option_id > -1 ");
-
+        "opt.*, " +
+        "bool.value AS boolean_value, " +
+        "float.value AS float_value, intr.value AS integer_value, " +
+        "tst.value AS timestamp_value, txt.value AS text_value, " +
+        "pom.option_id, po.configurator_id, " +
+        "prod.product_id " +
+        "FROM quote_product_options opt " +
+        "LEFT JOIN quote_product_option_boolean bool ON ( opt.quote_product_option_id = bool.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_float float ON ( opt.quote_product_option_id = float.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_timestamp tst ON ( opt.quote_product_option_id = tst.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_integer intr ON ( opt.quote_product_option_id = intr.quote_product_option_id ) " +
+        "LEFT JOIN quote_product_option_text txt ON ( opt.quote_product_option_id = txt.quote_product_option_id ) " +
+        "LEFT JOIN product_option_map pom ON (opt.product_option_id = pom.product_option_id) " +
+        "LEFT JOIN product_option po ON (pom.option_id = po.option_id), " +
+        "quote_product prod " +
+        "WHERE opt.item_id = prod.item_id " +
+        "AND opt.quote_product_option_id > -1 ");
     pst = db.prepareStatement(sqlSelect.toString() + sqlFilter.toString() + sqlOrder.toString());
     items = prepareFilter(pst);
     rs = pst.executeQuery();
@@ -142,6 +193,13 @@ public class QuoteProductOptionList extends ArrayList {
     }
     rs.close();
     pst.close();
+    if (buildConfigDetails) {
+      Iterator i = this.iterator();
+      while (i.hasNext()) {
+        QuoteProductOption thisOption = (QuoteProductOption) i.next();
+        thisOption.buildConfigDetails(db);
+      }
+    }
   }
 
 
@@ -154,11 +212,9 @@ public class QuoteProductOptionList extends ArrayList {
     if (sqlFilter == null) {
       sqlFilter = new StringBuffer();
     }
-
     if (itemId > -1) {
       sqlFilter.append("AND opt.item_id = ? ");
     }
-
     if (statusId > -1) {
       sqlFilter.append("AND opt.status_id = ? ");
     }

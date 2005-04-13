@@ -155,16 +155,9 @@ public class ProjectListScheduledActions extends ProjectList implements Schedule
         Iterator assignmentList = thisProject.getAssignments().iterator();
         while (assignmentList.hasNext()) {
           com.zeroio.iteam.base.Assignment thisAssignment = (com.zeroio.iteam.base.Assignment) assignmentList.next();
-          String tmp = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisAssignment.getDueDate());
-          java.sql.Timestamp dueDate = DateUtils.parseTimestampString(tmp);
-          CalendarEvent thisEvent = new CalendarEvent();
-          thisEvent.setDate(dueDate);
-          thisEvent.setSubject(thisAssignment.getRole());
-          thisEvent.setCategory("Assignments");
-          thisEvent.setId(thisAssignment.getProjectId());
-          thisEvent.setIdsub(thisAssignment.getId());
-          thisEvent.setIcon(thisAssignment.getStatusGraphicTag());
-          //companyCalendar.addEvent(thisEvent);
+          String dueDate = DateUtils.getServerToUserDateString(timeZone, DateFormat.SHORT, thisAssignment.getDueDate());
+          thisAssignment.setProject(thisProject);
+          companyCalendar.addEvent(dueDate, CalendarEventList.EVENT_TYPES[8], thisAssignment);
         }
       }
 */

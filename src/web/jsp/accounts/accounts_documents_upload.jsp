@@ -30,21 +30,21 @@
     var formTest = true;
     var messageText = "";
     if (form.subject.value == "") {
-      messageText += "- Subject is required\r\n";
+      messageText += label("Subject.required", "- Subject is required\r\n");
       formTest = false;
     }
     if (form.id<%= OrgDetails.getOrgId() %>.value.length < 5) {
-      messageText += "- File is required\r\n";
+      messageText += label("file.required", "- File is required\r\n");
       formTest = false;
     }
     if (formTest == false) {
-      messageText = "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n" + messageText;
+      messageText = label("File.not.submitted", "The file could not be submitted.          \r\nPlease verify the following items:\r\n\r\n") + messageText;
       form.dosubmit.value = "true";
       alert(messageText);
       return false;
     } else {
-      if (form.upload.value != 'Please Wait...') {
-        form.upload.value='Please Wait...';
+      if (form.upload.value != label("button.pleasewait","Please Wait...")) {
+        form.upload.value=label("button.pleasewait","Please Wait...");
         return true;
       } else {
         return false;
@@ -53,61 +53,55 @@
   }
 </script>
 <body onLoad="document.inputForm.subject.focus();">
+<form method="post" name="inputForm" action="AccountsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
 <a href="Accounts.do"><dhv:label name="accounts.accounts">Accounts</dhv:label></a> > 
-<a href="Accounts.do?command=Search">Search Results</a> >
+<a href="Accounts.do?command=Search"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <a href="Accounts.do?command=Details&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.details">Account Details</dhv:label></a> >
-<a href="AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>">Documents</a> >
-Upload Document
+<a href="AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>"><dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></a> >
+<dhv:label name="accounts.accounts_documents_upload.UploadDocument">Upload Document</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
-<%@ include file="accounts_details_header_include.jsp" %>
-<% String param1 = "orgId=" + OrgDetails.getOrgId(); %>      
-<dhv:container name="accounts" selected="documents" param="<%= param1 %>" style="tabs"/>
-<table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <form method="post" name="inputForm" action="AccountsDocuments.do?command=Upload" enctype="multipart/form-data" onSubmit="return checkFileForm(this);">
-  <tr>
-    <td class="containerBack">
-      <dhv:formMessage />
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <th colspan="2">
-      <img border="0" src="images/file.gif" align="absmiddle"><b>Upload a New Document</b>
-    </th>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      Subject
-    </td>
-    <td>
-      <input type="text" name="subject" size="59" maxlength="255" value="<%= toHtmlValue((String)request.getAttribute("subject")) %>"><font color="red">*</font>
-    </td>
-  </tr>
-  <tr class="containerBody">
-    <td class="formLabel">
-      File
-    </td>
-    <td>
-      <input type="file" name="id<%= OrgDetails.getOrgId() %>" size="45">
-    </td>
-  </tr>
-</table>
+<dhv:container name="accounts" selected="documents" object="OrgDetails" param="<%= "orgId=" + OrgDetails.getOrgId() %>">
+  <dhv:formMessage />
+  <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
+    <tr>
+      <th colspan="2">
+        <img border="0" src="images/file.gif" align="absmiddle"><b><dhv:label name="accounts.accounts_documents_upload.UploadNewDocument">Upload a New Document</dhv:label></b>
+      </th>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label>
+      </td>
+      <td>
+        <input type="text" name="subject" size="59" maxlength="255" value="<%= toHtmlValue((String)request.getAttribute("subject")) %>"><font color="red">*</font>
+        <%= showAttribute(request, "subjectError") %>
+      </td>
+    </tr>
+    <tr class="containerBody">
+      <td class="formLabel">
+        <dhv:label name="contacts.companydirectory_confirm_importupload.File">File</dhv:label>
+      </td>
+      <td>
+        <input type="file" name="id<%= OrgDetails.getOrgId() %>" size="45">
+      </td>
+    </tr>
+  </table>
   <p align="center">
-    * Large files may take a while to upload.<br>
-    Wait for file completion message when upload is complete.
+    * <dhv:label name="accounts.accounts_documents_upload.LargeFilesUpload">Large files may take a while to upload.</dhv:label><br>
+    <dhv:label name="accounts.accounts_documents_upload.WaitForUpload">Wait for file completion message when upload is complete.</dhv:label>
   </p>
-  <input type="submit" value=" Upload " name="upload">
-  <input type="submit" value="Cancel" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';">
-  <input type="hidden" name="dosubmit" value="true">
-  <input type="hidden" name="id" value="<%= OrgDetails.getOrgId() %>">
-  <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>">
-</td>
-</tr>
+  <input type="submit" value="<dhv:label name="global.button.Upload">Upload</dhv:label> " name="upload" />
+  <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.dosubmit.value='false';this.form.action='AccountsDocuments.do?command=View&orgId=<%= OrgDetails.getOrgId() %>&folderId=<%= (String)request.getAttribute("folderId") %>';" />
+  <input type="hidden" name="dosubmit" value="true" />
+  <input type="hidden" name="id" value="<%= OrgDetails.getOrgId() %>" />
+  <input type="hidden" name="folderId" value="<%= (String)request.getAttribute("folderId") %>" />
+</dhv:container>
 </form>
-</table>
 </body>

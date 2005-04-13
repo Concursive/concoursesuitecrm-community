@@ -65,18 +65,17 @@
 </SCRIPT>  
 <%
   if (!"true".equals(request.getParameter("finalsubmit"))) {
-     String source = request.getParameter("source");
 %>
 <body onLoad="init()">
 <form name="assetListView" method="post" action="AssetSelector.do?command=ListAssets">
 	<table cellpadding="6" cellspacing="0" width="100%" border="0">
 		<tr>
 			<td align="center" valign="center" bgcolor="#d3d1d1">
-				<strong>Search</strong>
+				<strong><dhv:label name="button.search">Search</dhv:label></strong>
 				<input type="text" name="serialNumber" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("serialNumber")) %>">
 				<input type="text" name="contractNumber" onFocus="clearSearchFields(false, this)" value="<%= toHtmlValue(request.getParameter("contractNumber")) %>">
-				<input type="submit" value="search">
-				<input type="button" value="clear" onClick="clearSearchFields(true, '')">
+				<input type="submit" value="<dhv:label name="button.search">Search</dhv:label>">
+				<input type="button" value="<dhv:label name="accounts.accountasset_include.clear">Clear</dhv:label>" onClick="clearSearchFields(true, '')">
 			</td>
 		</tr>
 	</table>
@@ -96,32 +95,32 @@
          </select>
       </td>
       <td>
-        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AssetListInfo" showHiddenParams="true" enableJScript="true" />
+        <dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="AssetListInfo" showHiddenParams="true" enableJScript="true" form="assetListView"/>
       </td>
     </tr>
   </table>
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="15%">
-      <strong>Serial Number</strong>
+      <strong><dhv:label name="accounts.accountasset_include.SerialNumber">Serial Number</dhv:label></strong>
     </th>
     <th width="15%">
-      <strong>Service Contract</strong>
+      <strong><dhv:label name="accounts.accountasset_include.ServiceContract">Service Contract</dhv:label></strong>
     </th>
     <th width="15%" nowrap>
-      <strong>Manufacturer</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Manufacturer">Manufacturer</dhv:label></strong>
     </th>
     <th width="15%">
-      <strong>Model Version</strong>
+      <strong><dhv:label name="calendar.modelVersion">Model Version</dhv:label></strong>
     </th>
     <th width="25%">
-      <strong>Category</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Category">Category</dhv:label></strong>
     </th>
     <th width="15%" nowrap>
-      <strong>Status</strong>
+      <strong><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></strong>
     </th>
   </tr>
   
@@ -143,7 +142,7 @@
   %>  
         <input type="checkbox" name="asset<%= i %>" value="<%= assetId %>" <%= (selectedAssets.indexOf(assetId) != -1 ? " checked" : "") %> onClick="highlight(this,'<%=User.getBrowserId()%>');">
 <%} else {%>
-        <a href="javascript:document.assetListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%= i %>','assetListView');">Add</a>
+        <a href="javascript:document.assetListView.finalsubmit.value = 'true';javascript:setFieldSubmit('rowcount','<%= i %>','assetListView');"><dhv:label name="button.add">Add</dhv:label></a>
 <%}%>
         <input type="hidden" name="hiddenAssetId<%= i %>" value="<%= assetId %>" />
       </td>
@@ -178,7 +177,7 @@
     %>
     <tr>
       <td colspan="7">
-        No assets found.
+        <dhv:label name="accounts.accounts_asset_list_include.NoAssetsFound">No assets found.</dhv:label>
       </td>
     </tr>
   <%}%>
@@ -196,12 +195,12 @@
  <dhv:pagedListControl object="AssetListInfo" /> 
 
 <% if("list".equals(request.getParameter("listType"))){ %>
-  <input type="button" value="Done" onClick="javascript:setFieldSubmit('finalsubmit','true','assetListView');">
-  <input type="button" value="Cancel" onClick="javascript:window.close()">
-  <a href="javascript:SetChecked(1,'asset','assetListView','<%=User.getBrowserId()%>');">Check All</a>
-  <a href="javascript:SetChecked(0,'asset','assetListView','<%=User.getBrowserId()%>');">Clear All</a>
+  <input type="button" value="<dhv:label name="button.done">Done</dhv:label>" onClick="javascript:setFieldSubmit('finalsubmit','true','assetListView');">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
+  <a href="javascript:SetChecked(1,'asset','assetListView','<%=User.getBrowserId()%>');"><dhv:label name="quotes.checkAll">Check All</dhv:label></a>
+  <a href="javascript:SetChecked(0,'asset','assetListView','<%=User.getBrowserId()%>');"><dhv:label name="quotes.clearAll">Clear All</dhv:label></a>
 <%}else{%>
-  <input type="button" value="Cancel" onClick="javascript:window.close()">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close()">
 <%}%>
 </form>
 

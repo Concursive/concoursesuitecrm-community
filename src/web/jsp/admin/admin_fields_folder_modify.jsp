@@ -23,33 +23,33 @@
 <jsp:useBean id="ConstantId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="PermissionCategory" class="org.aspcfs.modules.admin.base.PermissionCategory" scope="request"/>
 <%@ include file="../initPage.jsp" %>
-<body onLoad="document.forms[0].name.focus();">
+<body onLoad="document.details.name.focus();">
 <form name="details" action="AdminFieldsFolder.do?command=UpdateFolder&modId=<%= ModId %>&catId=<%= Category.getId() %>&auto-populate=true" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>"><%= PermissionCategory.getCategory() %></a> >
-<a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>">Custom Folders</a> > 
-Existing Folder
+<a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>"><dhv:label name="admin.customFolders">Custom Folders</dhv:label></a> > 
+<dhv:label name="admin.existingFolder">Existing Folder</dhv:label>
 </td>
 </tr>
 </table>
 <%-- End Trails --%>
 <dhv:formMessage showSpace="false" />
-<strong>Module:</strong> <%=PermissionCategory.getCategory()%><br />
+<strong><dhv:label name="admin.module.colon">Module:</dhv:label></strong> <%=PermissionCategory.getCategory()%><br />
 <br />
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
   <tr>
     <th colspan="2">
-      <strong>Update an Existing Folder</strong>
+      <strong><dhv:label name="admin.updateExistingFolder">Update an Existing Folder</dhv:label></strong>
     </th>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Folder Name
+      <dhv:label name="admin.folderName">Folder Name</dhv:label>
     </td>
     <td>
       <input type="text" name="name" maxlength="200" value="<%= toHtmlValue(Category.getName()) %>"><font color="red">*</font>
@@ -58,33 +58,34 @@ Existing Folder
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Records
+      <dhv:label name="admin.records">Records</dhv:label>
     </td>
     <td>
-      <input type="checkbox" value="ON" name="allowMultipleRecords" <%= Category.getAllowMultipleRecords()?"checked":"" %>>folder can have multiple records
+      <input type="checkbox" value="ON" name="allowMultipleRecords" <%= Category.getAllowMultipleRecords()?"checked":"" %>><dhv:label name="accounts.accounts_fields_list.FolderHaveMultipleRecords">folder can have multiple records</dhv:label>
+      <%= showAttribute(request, "allowMultipleRecordsError") %>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Read Only
+      <dhv:label name="admin.readOnly">Read Only</dhv:label>
     </td>
     <td>
-      <input type="checkbox" value="ON" name="readOnly" <%= Category.getReadOnly()?"checked":"" %>>folder is read only by all users
+      <input type="checkbox" value="ON" name="readOnly" <%= Category.getReadOnly()?"checked":"" %>><dhv:label name="admin.folderReadOnlyAllUsers.text">folder is read only by all users</dhv:label>
     </td>
   </tr>
   <tr class="containerBody">
     <td class="formLabel">
-      Enabled
+      <dhv:label name="product.enabled">Enabled</dhv:label>
     </td>
     <td>
-      <input type="checkbox" value="ON" name="enabled" <%= Category.getEnabled()?"checked":"" %>>folder is visible by users
+      <input type="checkbox" value="ON" name="enabled" <%= Category.getEnabled()?"checked":"" %>><dhv:label name="admin.folderVisibleUsers.text">folder is visible to users</dhv:label>
     </td>
   </tr>
 </table>
 &nbsp;<br>
 <input type="hidden" name="moduleId" value="<%= ConstantId %>">
 <input type="hidden" name="categoryId" value="<%= Category.getId() %>">
-<input type="submit" value="Update">
-<input type="submit" value="Cancel" onClick="javascript:this.form.action='AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>'">
+<input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>">
+<input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:this.form.action='AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>'">
 </form>
 </body>

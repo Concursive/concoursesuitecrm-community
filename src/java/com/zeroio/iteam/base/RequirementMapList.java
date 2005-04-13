@@ -252,5 +252,79 @@ public class RequirementMapList extends ArrayList {
     }
     return false;
   }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  assignments  Description of the Parameter
+   *@param  value        Description of the Parameter
+   *@return              Description of the Return Value
+   */
+  public boolean filterAssignments(AssignmentList assignments, String value) {
+    if (value != null) {
+      //Go through list from the bottom, if item doesn't meet the value, then
+      //remove it from the parent and remove it from the iterator
+      ListIterator list = this.listIterator(this.size());
+      while (list.hasPrevious()) {
+        RequirementMapItem thisItem = (RequirementMapItem) list.previous();
+        RequirementMapItem thisParent = thisItem.getParent();
+        if (checkAssignment(thisItem, thisItem.getChildren(), assignments, value)) {
+          //Remove this item because it's not valid
+          if (thisParent != null) {
+            thisParent.getChildren().remove(thisItem);
+            if (thisParent.getChildren().isEmpty()) {
+              thisParent.setFinalNode(true);
+            }
+          }
+          list.remove();
+        } else {
+          //Check to see if this item has visually changed because of other items
+          if (thisParent != null) {
+            if (!thisItem.getFinalNode() && thisParent.getChildren().indexOf(thisItem) == thisParent.getChildren().size() - 1) {
+              thisItem.setFinalNode(true);
+            }
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   *@param  thisItem     Description of the Parameter
+   *@param  assignments  Description of the Parameter
+   *@param  value        Description of the Parameter
+   *@return              Description of the Return Value
+   */
+  private boolean checkAssignment(RequirementMapItem thisItem, ArrayList children, AssignmentList assignments, String value) {
+    boolean childrenResult = true;
+    if (children.size() > 0) {
+      Iterator childrenIterator = children.iterator();
+      while( childrenIterator.hasNext()) {
+        RequirementMapItem child = (RequirementMapItem) childrenIterator.next();
+        if (!checkAssignment(child, child.getChildren(), assignments, value)) {
+          childrenResult = false;
+          break;
+        }
+      }
+    }
+    if (value.equals("incompleteOnly")) {
+      Assignment assign = assignments.getAssignment(thisItem.getAssignmentId());
+      if (assign != null && assign.getCompleteDate() != null) {
+        return (true && childrenResult);
+      }
+    } else if (value.equals("closedOnly")) {
+      Assignment assign = assignments.getAssignment(thisItem.getAssignmentId());
+      if (assign != null && assign.getCompleteDate() == null) {
+        return (true && childrenResult);
+      }
+    }
+    return false;
+  }
+
 }
 

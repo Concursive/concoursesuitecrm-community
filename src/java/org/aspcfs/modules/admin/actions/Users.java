@@ -15,8 +15,6 @@
  */
 package org.aspcfs.modules.admin.actions;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
 import java.sql.*;
 import java.util.*;
 import com.darkhorseventures.framework.actions.*;
@@ -25,12 +23,10 @@ import org.aspcfs.utils.*;
 import org.aspcfs.utils.web.*;
 import org.aspcfs.modules.admin.base.*;
 import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.modules.contacts.base.ContactTypeList;
-import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.troubletickets.base.Ticket;
 import org.aspcfs.modules.base.Constants;
-import org.aspcfs.controller.ApplicationPrefs;
+import org.aspcfs.controller.*;
 
 /**
  *  Methods for managing users
@@ -380,6 +376,7 @@ public final class Users extends CFSModule {
     boolean recordDeleted = false;
     User thisUser = null;
     Connection db = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = this.getConnection(context);
       thisUser = new User(db, context.getRequest().getParameter("id"));
@@ -394,6 +391,7 @@ public final class Users extends CFSModule {
     if (recordDeleted) {
       return ("UserDeleteOK");
     } else {
+      thisUser.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.userDeletion"));
       processErrors(context, thisUser.getErrors());
       return (executeCommandListUsers(context));
     }
@@ -410,6 +408,7 @@ public final class Users extends CFSModule {
     if (!hasPermission(context, "admin-users-delete")) {
       return ("PermissionError");
     }
+    SystemStatus systemStatus = this.getSystemStatus(context);
     boolean recordDisabled = false;
     User thisUser = null;
     Ticket thisTicket = null;
@@ -426,10 +425,12 @@ public final class Users extends CFSModule {
       recordDisabled = thisUser.delete(db);
       if (recordDisabled) {
         thisTicket = new Ticket();
-        thisTicket.setProblem(
-            "Centric CRM user " + thisUser.getUsername() + " has been disabled by " + thisRec.getUsername() +
-            ".  Since you are the direct manager of " + thisUser.getUsername() + ", you have been notified.  It is essential that " +
-            "any data still directly associated with this disabled user gets re-assigned as soon as possible.");
+        HashMap map = new HashMap();
+        map.put("${thisUser.username}", thisUser.getUsername());
+        map.put("${thisRec.username}", thisRec.getUsername());
+        Template template = new Template(systemStatus.getLabel("ticket.problem.userDisabled"));
+        template.setParseElements(map);
+        thisTicket.setProblem(template.getParsedText());
         thisTicket.setEnteredBy(thisRec.getId());
         thisTicket.setModifiedBy(thisRec.getId());
         thisTicket.setOrgId(0);
@@ -447,6 +448,9 @@ public final class Users extends CFSModule {
           thisTicket.setDepartmentCode(thisUser.getContact().getDepartment());
         }
         thisTicket.insert(db);
+      } else {
+        thisUser.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.userNotDisabled"));
+        processErrors(context, thisUser.getErrors());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -475,9 +479,9 @@ public final class Users extends CFSModule {
     if (!hasPermission(context, "admin-users-edit")) {
       return ("PermissionError");
     }
+    SystemStatus systemStatus = this.getSystemStatus(context);
     boolean recordEnabled = false;
     User thisUser = null;
-    User managerUser = null;
     Connection db = null;
     try {
       synchronized(this) {
@@ -519,6 +523,9 @@ public final class Users extends CFSModule {
         recordEnabled = thisUser.enable(db);
         if (recordEnabled) {
           updateSystemHierarchyCheck(db, context);
+        } else {
+          thisUser.getErrors().put("actionError", systemStatus.getLabel("object.validation.actionError.userNotEnabled"));
+          processErrors(context, thisUser.getErrors());
         }
       }
     } catch (Exception e) {
@@ -601,6 +608,7 @@ public final class Users extends CFSModule {
       userList.setBuildContact(false);
       userList.setBuildContactDetails(false);
       userList.setExcludeDisabledIfUnselected(true);
+      userList.setExcludeExpiredIfUnselected(true);
       userList.setRoleType(Constants.ROLETYPE_REGULAR);
       userList.buildList(db);
       context.getRequest().setAttribute("UserList", userList);
@@ -643,6 +651,9 @@ public final class Users extends CFSModule {
       resultCount = newUser.update(db, context);
       if (resultCount == -1) {
         //Prepare the form again
+        newUser.setBuildContact(true);
+        newUser.buildResources(db);
+        context.getRequest().setAttribute("UserRecord", newUser);
         //Prepare the user list
         UserList userList = new UserList();
         userList.setEmptyHtmlSelectRecord("-- None --");
@@ -657,7 +668,7 @@ public final class Users extends CFSModule {
         roleList.setEmptyHtmlSelectRecord("-- None --");
         roleList.setEnabledState(Constants.TRUE);
         roleList.setRoleType(Constants.ROLETYPE_REGULAR);
-      roleList.buildList(db);
+        roleList.buildList(db);
         context.getRequest().setAttribute("RoleList", roleList);
       } else if (resultCount == 1) {
         if (context.getRequest().getParameter("generatePass") != null) {

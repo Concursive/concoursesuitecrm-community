@@ -36,10 +36,10 @@
 <table class="trails" cellspacing="0">
 <tr>
 <td>
-<a href="Admin.do">Admin</a> >
-<a href="Admin.do?command=Config">Configure Modules</a> >
+<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
 <a href="Admin.do?command=ConfigDetails&moduleId=<%= PermissionCategory.getId() %>"><%= toHtml(PermissionCategory.getCategory()) %></a> >
-Object Events
+<dhv:label name="admin.objectEvents">Object Events</dhv:label>
 </td>
 </tr>
 </table>
@@ -47,25 +47,25 @@ Object Events
 <table cellpadding="4" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>
-      <strong>Action</strong>
+      &nbsp;
     </th>
     <th width="50%">
-      <strong>Object Event</strong>
+      <strong><dhv:label name="admin.objectEvent">Object Event</dhv:label></strong>
     </th>
     <th width="50%" nowrap>
-      <strong>Triggered Process</strong>
+      <strong><dhv:label name="admin.triggeredProcess">Triggered Process</dhv:label></strong>
     </th>
     <th nowrap>
-      <strong>Number of<br>components</strong>
+      <strong><dhv:label name="admin.numberOfComponents" param="break=<br />">Number of<br />components</dhv:label></strong>
     </th>
     <th>
-      <strong>Available</strong>
+      <strong><dhv:label name="admin.available">Available</dhv:label></strong>
     </th>
   </tr>
 <dhv:evaluate if="<%= hookList.values().size() == 0 %>">
   <tr>
     <td colspan="5">
-      No object events found.
+      <dhv:label name="admin.noObjectEventsFound">No object events found.</dhv:label>
     </td>
   </tr>
 </dhv:evaluate>
@@ -87,9 +87,7 @@ Object Events
           <a href="javascript:displayMenu('select<%= count %>','menuProcess', '<%= PermissionCategory.getId() %>', '<%= thisAction.getProcessId() %>');" onMouseOver="over(0, <%= count %>)" onmouseout="out(0, <%= count %>); hideMenu('menuProcess');"><img src="images/select.gif" name="select<%= count %>" id="select<%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td width="50%" valign="top">
-      <%= toHtml(thisAction.getTypeText()) %>
-      <%= toHtml(thisAction.getBaseClassName().toLowerCase()) %>
-      object
+      <dhv:label name="admin.object.lowercase" param="<%= "action.TypeText="+toHtml(thisAction.getTypeText())+"|action.baseClassName="+toHtml(thisAction.getBaseClassName().toLowerCase()) %>"><%= toHtml(thisAction.getTypeText()) %> <%= toHtml(thisAction.getBaseClassName().toLowerCase()) %> object</dhv:label>
     </td>
     <td valign="top">
        <a href="AdminObjectEvents.do?command=Workflow&moduleId=<%= PermissionCategory.getId() %>&process=<%= thisAction.getProcessId() %>&return=AdminObjectEvents"><%= toHtml(thisAction.getProcessName()) %></a>
@@ -99,10 +97,10 @@ Object Events
     </td>
     <td align="center" valign="top">
       <dhv:evaluate if="<%= ((BusinessProcess) processList.get(thisAction.getProcessName())).getEnabled() %>">
-        Yes
+        <dhv:label name="account.yes">Yes</dhv:label>
       </dhv:evaluate>
       <dhv:evaluate if="<%= !((BusinessProcess) processList.get(thisAction.getProcessName())).getEnabled() %>">
-        No
+        <dhv:label name="account.no">No</dhv:label>
       </dhv:evaluate>
     </td>
   </tr>
