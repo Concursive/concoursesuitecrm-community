@@ -114,7 +114,7 @@
       </td>
       <td colspan="2" width="35%">
         <dhv:username id="<%= thisArticle.getEnteredBy() %>"/><br />
-        <zeroio:tz timestamp="<%= thisArticle.getStartDate() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%= thisArticle.getStartDate() %>" dateOnly="true" default="&nbsp;"/>
       </td>
     </tr>
 <%
@@ -209,7 +209,7 @@
       </td>
       <td colspan="2" width="35%">
         <dhv:username id="<%= thisFile.getModifiedBy() %>" /><br />
-        <zeroio:tz timestamp="<%= thisFile.getModified() %>" dateOnly="true" timeZone="<%= User.getTimeZone() %>" showTimeZone="yes" default="&nbsp;"/>
+        <zeroio:tz timestamp="<%= thisFile.getModified() %>" dateOnly="true" default="&nbsp;"/>
       </td>
     </tr>
 <%

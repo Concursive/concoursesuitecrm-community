@@ -92,3 +92,7 @@ templates/template0centric.jsp
 css/template0.css
 css/template0-10pt.css
 css/template0-8pt.css
+
+## 2004-04-18 3.0 cleanup
+communications/campaign_center_js_attachmentlist.jsp
+admin/admin_jsuser_contactlist.jsp
