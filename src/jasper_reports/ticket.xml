@@ -980,9 +980,9 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="5"
-						y="117"
+						y="118"
 						width="276"
-						height="17"
+						height="14"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
 						key="textField"
@@ -1002,7 +1002,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="283"
-						y="20"
+						y="18"
 						width="288"
 						height="16"
 						forecolor="#000000"
@@ -1027,7 +1027,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="283"
-						y="59"
+						y="57"
 						width="288"
 						height="16"
 						forecolor="#000000"
@@ -1064,7 +1064,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 		<group  name="issue" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[null]]></groupExpression>
 			<groupHeader>
-			<band height="37"  isSplitAllowed="true" >
+			<band height="33"  isSplitAllowed="true" >
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
@@ -1111,7 +1111,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						x="8"
 						y="21"
 						width="93"
-						height="14"
+						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -1133,7 +1133,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						x="109"
 						y="21"
 						width="457"
-						height="15"
+						height="11"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -1153,7 +1153,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="5"
-						y="5"
+						y="3"
 						width="0"
 						height="30"
 						forecolor="#000000"
@@ -1171,7 +1171,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="570"
-						y="5"
+						y="2"
 						width="0"
 						height="30"
 						forecolor="#000000"
@@ -1200,7 +1200,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="8"
-						y="4"
+						y="3"
 						width="93"
 						height="13"
 						forecolor="#000000"
@@ -1222,7 +1222,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="109"
-						y="4"
+						y="3"
 						width="457"
 						height="14"
 						forecolor="#000000"
@@ -1280,7 +1280,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="5"
-						y="19"
+						y="18"
 						width="565"
 						height="0"
 						forecolor="#000000"
@@ -1304,7 +1304,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 		<group  name="resolution" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[null]]></groupExpression>
 			<groupHeader>
-			<band height="36"  isSplitAllowed="true" >
+			<band height="34"  isSplitAllowed="true" >
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
@@ -1347,7 +1347,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						x="571"
 						y="3"
 						width="0"
-						height="32"
+						height="30"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="line"
@@ -1363,9 +1363,9 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="8"
-						y="20"
+						y="19"
 						width="93"
-						height="15"
+						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -1385,9 +1385,9 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="109"
-						y="20"
+						y="19"
 						width="457"
-						height="14"
+						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -1442,7 +1442,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						x="8"
 						y="2"
 						width="93"
-						height="15"
+						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -1464,7 +1464,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						x="109"
 						y="2"
 						width="457"
-						height="16"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -1502,9 +1502,9 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="571"
-						y="1"
+						y="0"
 						width="0"
-						height="18"
+						height="19"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="line"
@@ -1520,7 +1520,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="6"
-						y="19"
+						y="18"
 						width="565"
 						height="0"
 						forecolor="#000000"
@@ -1551,7 +1551,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						x="5"
 						y="3"
 						width="564"
-						height="13"
+						height="15"
 						forecolor="#000000"
 						backcolor="#000000"
 						key="rectangle"
@@ -1587,7 +1587,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						x="4"
 						y="3"
 						width="565"
-						height="17"
+						height="14"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
 						key="textField"
@@ -1607,9 +1607,9 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="8"
-						y="22"
+						y="18"
 						width="280"
-						height="18"
+						height="13"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -1717,9 +1717,9 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="290"
-						y="22"
+						y="18"
 						width="73"
-						height="18"
+						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -1741,9 +1741,9 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="368"
-						y="22"
+						y="18"
 						width="73"
-						height="17"
+						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -1765,9 +1765,9 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="447"
-						y="22"
+						y="18"
 						width="73"
-						height="17"
+						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -1936,12 +1936,12 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 			</band>
 		</background>
 		<title>
-			<band height="88"  isSplitAllowed="true" >
+			<band height="85"  isSplitAllowed="true" >
 				<rectangle radius="0" >
 					<reportElement
 						mode="Transparent"
 						x="284"
-						y="39"
+						y="37"
 						width="286"
 						height="45"
 						forecolor="#000000"
@@ -1958,10 +1958,10 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="61"
+						x="59"
 						y="21"
 						width="105"
-						height="16"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -2002,8 +2002,8 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="103"
-						y="69"
+						x="108"
+						y="65"
 						width="107"
 						height="15"
 						forecolor="#000000"
@@ -2026,8 +2026,8 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 						mode="Opaque"
 						x="4"
 						y="21"
-						width="55"
-						height="17"
+						width="52"
+						height="15"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -2047,7 +2047,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="7"
-						y="70"
+						y="65"
 						width="92"
 						height="15"
 						forecolor="#000000"
@@ -2069,7 +2069,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="7"
-						y="56"
+						y="51"
 						width="92"
 						height="14"
 						forecolor="#000000"
@@ -2091,7 +2091,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="108"
-						y="55"
+						y="51"
 						width="107"
 						height="14"
 						forecolor="#000000"
@@ -2113,9 +2113,9 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="4"
-						y="39"
+						y="36"
 						width="276"
-						height="15"
+						height="13"
 						forecolor="#000000"
 						backcolor="#000000"
 						key="rectangle"
@@ -2130,8 +2130,8 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						mode="Opaque"
-						x="5"
-						y="40"
+						x="4"
+						y="36"
 						width="276"
 						height="16"
 						forecolor="#FFFFFF"
@@ -2241,7 +2241,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="284"
-						y="38"
+						y="36"
 						width="286"
 						height="13"
 						forecolor="#000000"
@@ -2259,7 +2259,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="284"
-						y="37"
+						y="36"
 						width="286"
 						height="16"
 						forecolor="#FFFFFF"
@@ -2327,7 +2327,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="4"
-						y="40"
+						y="36"
 						width="276"
 						height="45"
 						forecolor="#000000"
@@ -2364,7 +2364,7 @@ WHERE myorg.org_id = 0 AND t.ticketid = $P{ticketid}]]></queryString>
 			</band>
 		</pageFooter>
 		<summary>
-			<band height="0"  isSplitAllowed="true" >
+			<band height="7"  isSplitAllowed="true" >
 			</band>
 		</summary>
 </jasperReport>

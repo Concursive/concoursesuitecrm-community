@@ -83,7 +83,7 @@ where sch.link_contract_id = $P{service_contract_id}]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Serif" pdfFontName="Times-Roman" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double(com.darkhorseventures.framework.beans.GenericBean.round($V{hrs_pos}.doubleValue(),2))]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{hrs_pos}]]></textFieldExpression>
 				</textField>
 			</band>
 		</summary>

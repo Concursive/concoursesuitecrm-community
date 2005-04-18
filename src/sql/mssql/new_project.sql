@@ -92,7 +92,7 @@ CREATE TABLE projects (
   requestedBy VARCHAR(50) NULL ,
   requestedDept VARCHAR(50) NULL ,
   requestDate DATETIME DEFAULT CURRENT_TIMESTAMP NULL ,
-  approvalDate DATETIME NULL ,
+  approvalDate DATETIME NULL,
   closeDate DATETIME NULL,
   owner INTEGER NULL,
   entered DATETIME DEFAULT CURRENT_TIMESTAMP,

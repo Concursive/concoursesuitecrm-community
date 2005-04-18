@@ -740,7 +740,6 @@
         <exclude name="**/SendTicketToBPM.java"/>
         <exclude name="src/java/org/aspcfs/modules/healthcare/edit/**"/>
         <exclude name="src/java/org/aspcfs/modules/setup/actions/SetupServer.java"/>
-        <exclude name="src/java/org/aspcfs/modules/setup/actions/Upgrade.java"/>
         <!-- src/web/jsp -->
         <include name="src/web/jsp/**" />
         <exclude name="src/web/jsp/media/autoguide/**"/>

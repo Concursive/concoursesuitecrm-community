@@ -169,8 +169,8 @@ configuration steps of Centric CRM.
 
 Centric CRM licenses libraries and code from the following projects, some 
 are proprietary in which Dark Horse Ventures has been granted a license
-to redistribute with Centric CRM, some are Open Source and are used 
-according to the project license:
+to redistribute, some are Open Source and are used according to the project
+license:
 
 Project Name                      License
 --------------------------------  -----------------------------------------

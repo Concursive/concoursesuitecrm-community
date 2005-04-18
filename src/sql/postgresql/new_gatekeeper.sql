@@ -1,5 +1,7 @@
---	Gatekeeper database tables.
---	Assumes the user 'gatekeeper' is already created.
+/*
+	Gatekeeper database tables.
+	Assumes the user 'gatekeeper' is already created.
+*/
 
 CREATE TABLE sites (
   site_id SERIAL PRIMARY KEY,

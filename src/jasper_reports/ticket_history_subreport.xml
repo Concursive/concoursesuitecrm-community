@@ -57,7 +57,7 @@ AND t.comment NOT LIKE '']]></queryString>
 			</band>
 		</pageHeader>
 		<columnHeader>
-			<band height="38"  isSplitAllowed="true" >
+			<band height="34"  isSplitAllowed="true" >
 				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
@@ -82,7 +82,7 @@ AND t.comment NOT LIKE '']]></queryString>
 						x="5"
 						y="0"
 						width="145"
-						height="16"
+						height="15"
 						forecolor="#FFFFFF"
 						backcolor="#000000"
 						key="textField"
@@ -102,9 +102,9 @@ AND t.comment NOT LIKE '']]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="3"
-						y="18"
+						y="17"
 						width="176"
-						height="18"
+						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -124,9 +124,9 @@ AND t.comment NOT LIKE '']]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="184"
-						y="18"
+						y="17"
 						width="265"
-						height="17"
+						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"
@@ -146,8 +146,8 @@ AND t.comment NOT LIKE '']]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="2"
-						y="37"
-						width="525"
+						y="30"
+						width="513"
 						height="0"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -164,9 +164,9 @@ AND t.comment NOT LIKE '']]></queryString>
 					<reportElement
 						mode="Transparent"
 						x="451"
-						y="18"
+						y="17"
 						width="77"
-						height="17"
+						height="12"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField"

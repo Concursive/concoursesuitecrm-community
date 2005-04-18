@@ -2469,20 +2469,7 @@ Export: Data can be exported and displayed in different formats. The exported da
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="3">
-<action>AccountsServiceContracts.do</action>
-<section>List</section>
-<subSection/>
-<title>Contracts</title>
-<description>This page lists all the service contracts associated with the account. Based on your permissions you would be able to add new service contracts and modify exting ones from this page. &#13;
-&#13;
-A service contract describes the terms and conditions in a contract including the start and end dates, the contract value, the number of hours, service models and other details.</description>
-<features/>
-<notes/>
-<rules/>
-<tips/>
-</pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>AccountsServiceContracts.do</action>
 <section>Add</section>
 <subSection/>
@@ -2506,9 +2493,9 @@ A service contract describes the terms and conditions in a contract including th
 </rules>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>AccountsServiceContracts.do</action>
-<section>Modify Contract</section>
+<section>Modify</section>
 <subSection/>
 <title>Modify Contract</title>
 <description>This page allows your to modify contract information.&#13;
@@ -2523,7 +2510,18 @@ A service contract describes the terms and conditions in a contract including th
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
+<action>AccountsServiceContracts.do</action>
+<section>List</section>
+<subSection/>
+<title>Contracts</title>
+<description>This page lists all the service contracts associated with the account. Based on your permissions you would be able to add new service contracts and modify exting ones from this page.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
 <action>AccountsServiceContracts.do</action>
 <section>View</section>
 <subSection/>
@@ -2538,7 +2536,7 @@ A service contract describes the terms and conditions in a contract including th
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>AccountsAssets.do</action>
 <section>List</section>
 <subSection/>
@@ -2549,7 +2547,7 @@ A service contract describes the terms and conditions in a contract including th
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>AccountsAssets.do</action>
 <section>Add</section>
 <subSection/>
@@ -2571,7 +2569,7 @@ A service contract describes the terms and conditions in a contract including th
 </rules>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>AccountsAssets.do</action>
 <section>View</section>
 <subSection/>
@@ -2585,7 +2583,7 @@ A service contract describes the terms and conditions in a contract including th
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>AccountsAssets.do</action>
 <section>Modify</section>
 <subSection/>
@@ -2598,7 +2596,7 @@ A service contract describes the terms and conditions in a contract including th
 </rules>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>AccountsAssets.do</action>
 <section>History</section>
 <subSection/>
@@ -3744,7 +3742,7 @@ The data can be exported in different formats. The exported data can be viewed w
 <tipDescription>Make sure to resolve your tickets as soon as possible so they don't appear here!</tipDescription>
 </tips>
 </pageDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>TroubleTicketActivityLog.do</action>
 <section>List</section>
 <subSection/>
@@ -3759,7 +3757,7 @@ The data can be exported in different formats. The exported data can be viewed w
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>TroubleTicketActivityLog.do</action>
 <section>Add</section>
 <subSection/>
@@ -3780,7 +3778,7 @@ The data can be exported in different formats. The exported data can be viewed w
 </rules>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>TroubleTicketActivityLog.do</action>
 <section>View</section>
 <subSection/>
@@ -3794,7 +3792,7 @@ The data can be exported in different formats. The exported data can be viewed w
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>TroubleTicketActivityLog.do</action>
 <section>Modify</section>
 <subSection/>
@@ -3815,7 +3813,7 @@ The data can be exported in different formats. The exported data can be viewed w
 </rules>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>TroubleTicketMaintenanceNotes.do</action>
 <section>List</section>
 <subSection/>
@@ -3829,7 +3827,7 @@ The data can be exported in different formats. The exported data can be viewed w
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>TroubleTicketMaintenanceNotes.do</action>
 <section>Add</section>
 <subSection/>
@@ -3844,7 +3842,7 @@ The data can be exported in different formats. The exported data can be viewed w
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>TroubleTicketMaintenanceNotes.do</action>
 <section>Modify</section>
 <subSection/>
@@ -4730,70 +4728,38 @@ This page lists the different roles present in the system, their role descriptio
 <tips/>
 </pageDescription>
 </module>
-<module name="Projects" contentLevel="2">
+<module name="Projects" contentLevel="0">
 <briefDescription>The Project management module allows individuals and organizations to share up-to-the-minute information with others. Whether you are sharing information with employees, clients, vendors, friends, and family, the information is easily and securely accessible.</briefDescription>
 <detailDescription>Project detail description</detailDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>ProjectManagement.do</action>
-<section/>
-<subSection/>
-<title>Dashboard</title>
-<description>This page provides a snap shot of all recent items (of the last 7 days) of all the projects that a you are a member of.&#13;
+<section>ProjectCenter</section>
+<subSection>Setup</subSection>
+<title>Setup</title>
+<description>Within the  Setup  tab you also have the choice to  either &amp;quot;Configure Permissions&amp;quot; or &amp;quot;Customize Project&amp;quot;  for this project. &#13;
 &#13;
-By changing the filter, you can choose to view information over a longer time period (14 days or 30 days), or a shorter time period(24hrs or 48hrs.)&#13;
+Configuring Permissions allows you to define what members of your project can be allowed to view, add, change, or delete.&#13;
 &#13;
-The menu allows you to add a project, search for information in projects, list existing projects, and view invitations to join projects
-</description>
+Customizing the project allows you to show(or hide) the tabs and change the tab names according to your preferences.</description>
 <features/>
 <notes/>
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>ProjectManagement.do</action>
-<section>AddProject</section>
+<section>CustomizeProject</section>
 <subSection/>
-<title>Add Project</title>
-<description>This page allows you to create a new project.&#13;
+<title>Customize Project</title>
+<description>This &amp;quot;Customize Project&amp;quot; view allows you to change the names for each of the project subtabs. Changing the names of the tabs does not change any of the existing functionality for that tab.&#13;
 &#13;
-The following fields are requested: &#13;
-1. Title -  A brief name for your project.&#13;
-2. Short Description -  A brief description for your project&#13;
-3. Start Date - The date in which the project started or will start 4. Estimated End Date  - The date in which you believe the project will be finished .&#13;
-5. Requested By -  The name of a person that may have initiated the reason for the project; could be the name of a client.&#13;
-6. Organization - The organization that may have initiated the reason for the project; could be the name of a company.&#13;
-7. Budget  - A high-level view of the project budget; this figure generally is an estimate.&#13;
-8. Status - Specifies whether the project has been approved or if it is closed (finished.)&#13;
-&#13;
-Once the fields have been successfully submitted, a new project is created. You should see the name of the project you created and several tabs underneath that will contain all the information for your project.</description>
+It also allows you to turn off the subtabs based on your preferences.  Turning tabs off can be helpful if you do not intend to have any information under that tab. Making things simple for your team members certainly helps to streamline the usage of your project.</description>
 <features/>
 <notes/>
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="3">
-<action>ProjectManagement.do</action>
-<section>RSVP</section>
-<subSection/>
-<title>Invitations</title>
-<description>This page displays the projects to which you have been invited to.  By accepting an invitation, you become a team member of the project and assume a role (applicable to this project alone) assigned by the owner (or creator) of the project.</description>
-<features/>
-<notes/>
-<rules/>
-<tips/>
-</pageDescription>
-<pageDescription contentLevel="3">
-<action>ProjectManagementSearch.do</action>
-<section>ShowForm</section>
-<subSection/>
-<title>Search</title>
-<description>This page allows you to search for items in a project based on the search item. For advanced search options, you may click on the &amp;quot;tips&amp;quot; link.</description>
-<features/>
-<notes/>
-<rules/>
-<tips/>
-</pageDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>ProjectManagement.do</action>
 <section>ProjectCenter</section>
 <subSection>Details</subSection>
@@ -4806,35 +4772,7 @@ The General Information section displays the project status, the title (also the
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="3">
-<action>ProjectManagement.do</action>
-<section>ProjectCenter</section>
-<subSection>Setup Project Module</subSection>
-<title>Setup</title>
-<description>Within the  Setup  tab you also have the choice to  either &amp;quot;Configure Permissions&amp;quot; or &amp;quot;Customize Project&amp;quot;  for this project. &#13;
-&#13;
-Configuring Permissions allows you to define what members of your project can be allowed to view, add, change, or delete.&#13;
-&#13;
-Customizing the project allows you to show(or hide) the tabs and change the tab names according to your preferences.</description>
-<features/>
-<notes/>
-<rules/>
-<tips/>
-</pageDescription>
-<pageDescription contentLevel="3">
-<action>ProjectManagement.do</action>
-<section>CustomizeProject</section>
-<subSection/>
-<title>Customize Project Module</title>
-<description>This &amp;quot;Customize Project&amp;quot; view allows you to change the names for each of the project subtabs. Changing the names of the tabs does not change any of the existing functionality for that tab.&#13;
-&#13;
-It also allows you to turn off the subtabs based on your preferences.  Turning tabs off can be helpful if you do not intend to have any information under that tab. Making things simple for your team members certainly helps to streamline the usage of your project.</description>
-<features/>
-<notes/>
-<rules/>
-<tips/>
-</pageDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>ProjectManagement.do</action>
 <section>ConfigurePermissions</section>
 <subSection/>
@@ -4855,7 +4793,7 @@ The screen also allows you to define what members of your project can be allowed
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>ProjectManagement.do</action>
 <section>ProjectCenter</section>
 <subSection>News</subSection>
@@ -4870,7 +4808,7 @@ You can also filter the list of news items you want listed based on prec-configu
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>ProjectManagementNews.do</action>
 <section>Add</section>
 <subSection/>
@@ -4891,7 +4829,7 @@ You can also filter the list of news items you want listed based on prec-configu
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>ProjectManagement.do</action>
 <section>ProjectCenter</section>
 <subSection>Team</subSection>
@@ -4915,11 +4853,11 @@ To setup team members, choose the  Modify Team  link. At this point you will now
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>ProjectManagementTeam.do</action>
 <section>Modify</section>
 <subSection/>
-<title>Manage Team</title>
+<title>Modify Team</title>
 <description>This page allows you to modify (add and remove) members from the project team.&#13;
 &#13;
 This page shows you four (4) lists, some of which are empty. The right most list shows you the team members of your project. The left most list shows you ways in which you can add a team member.</description>
@@ -4936,7 +4874,7 @@ This page shows you four (4) lists, some of which are empty. The right most list
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>ProjectManagement.do</action>
 <section>ProjectCenter</section>
 <subSection>Issues_Categories</subSection>
@@ -4955,7 +4893,7 @@ Once a topic has been posted, other team members can reply.</description>
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>ProjectManagement.do</action>
 <section>ProjectCenter</section>
 <subSection>File_Library</subSection>
@@ -4979,7 +4917,7 @@ You can choose the  View File History  link for additional options</description>
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>ProjectManagement.do</action>
 <section>ProjectCenter</section>
 <subSection>Lists_Categories</subSection>
@@ -4994,7 +4932,7 @@ Lists are good for jotting down related items to be referenced later. While to-d
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>ProjectManagement.do</action>
 <section>ProjectCenter</section>
 <subSection>Requirements</subSection>
@@ -5015,7 +4953,7 @@ Plans can be used for creating a high-level view of project milestones or object
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>ProjectManagementRequirements.do</action>
 <section>Add</section>
 <subSection/>
@@ -5038,7 +4976,7 @@ Once you create the outline, the next task would be to elaborate the outline wit
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>ProjectManagement.do</action>
 <section>ProjectCenter</section>
 <subSection>Assignments</subSection>
@@ -5083,7 +5021,7 @@ e) Delete Activity</description>
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="3">
+<pageDescription contentLevel="0">
 <action>ProjectManagement.do</action>
 <section>ProjectCenter</section>
 <subSection>Tickets</subSection>
@@ -5102,7 +5040,7 @@ The displayed list can be sorted based on all the underlined column headers of t
 <rules/>
 <tips/>
 </pageDescription>
-<pageDescription contentLevel="4">
+<pageDescription contentLevel="0">
 <action>ProjectManagementTickets.do</action>
 <section>Add</section>
 <subSection/>
@@ -5120,6 +5058,63 @@ The displayed list can be sorted based on all the underlined column headers of t
 7. Close Ticket   Indicates whether this ticket is complete and needs no further action.&#13;
 &#13;
 Once a ticket has been added, its details can be reviewed. A ticket also has a history in which you can see the progress or escalation that has occurred with the ticket. Once a ticket has been closed, it can be re-opened later, if necessary.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section/>
+<subSection/>
+<title>Projects</title>
+<description>This page provides a snap shot of all recent items (of the last 7 days) of all the projects that a you are a member of.&#13;
+&#13;
+By changing the filter, you can choose to view information over a longer time period (14 days or 30 days), or a shorter time period(24hrs or 48hrs.)</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>RSVP</section>
+<subSection/>
+<title>Invitations</title>
+<description>This page displays the projects to which you have been invited to.  By accepting an invitation, you become a team member of the project and assume a role (applicable to this project alone) assigned by the owner (or creator) of the project.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagementSearch.do</action>
+<section>ShowForm</section>
+<subSection/>
+<title>Search</title>
+<description>This page allows you to search for items in a project based on the search item. For advanced search options, you may click on the &amp;quot;tips&amp;quot; link.</description>
+<features/>
+<notes/>
+<rules/>
+<tips/>
+</pageDescription>
+<pageDescription contentLevel="0">
+<action>ProjectManagement.do</action>
+<section>AddProject</section>
+<subSection/>
+<title>Add Project</title>
+<description>This page allows you to create a new project.&#13;
+&#13;
+The following fields are requested: &#13;
+1. Title -  A brief name for your project.&#13;
+2. Short Description -  A brief description for your project&#13;
+3. Start Date - The date in which the project started or will start 4. Estimated End Date  - The date in which you believe the project will be finished .&#13;
+5. Requested By -  The name of a person that may have initiated the reason for the project; could be the name of a client.&#13;
+6. Organization - The organization that may have initiated the reason for the project; could be the name of a company.&#13;
+7. Budget  - A high-level view of the project budget; this figure generally is an estimate.&#13;
+8. Status - Specifies whether the project has been approved or if it is closed (finished.)&#13;
+&#13;
+Once the fields have been successfully submitted, a new project is created. You should see the name of the project you created and several tabs underneath that will contain all the information for your project.</description>
 <features/>
 <notes/>
 <rules/>

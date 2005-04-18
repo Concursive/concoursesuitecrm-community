@@ -11,17 +11,9 @@ ALTER TABLE contact_address ADD [primary_address] [bit] NULL;
 UPDATE contact_address SET primary_address = 0;
 ALTER TABLE contact_address ALTER COLUMN [primary_address] [bit] NOT NULL;
 
-ALTER TABLE [contact_address] WITH NOCHECK ADD 
-	CONSTRAINT [DF__contact_a__prima__43D61337] DEFAULT (0) FOR [primary_address]
-GO
-
 ALTER TABLE contact_phone ADD [primary_number] [bit] NULL;
 UPDATE contact_phone SET primary_number = 0;
 ALTER TABLE contact_phone ALTER COLUMN [primary_number] [bit] NOT NULL;
-
-ALTER TABLE [dbo].[contact_phone] WITH NOCHECK ADD 
-	CONSTRAINT [DF__contact_p__prima__55009F39] DEFAULT (0) FOR [primary_number]
-GO
 
 
 CREATE TABLE [lookup_call_priority] (
@@ -281,7 +273,7 @@ CREATE TABLE [project_issues_categories] (
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
-DROP INDEX project_issues.project_issues_limit_idx;
+DROP INDEX project_issues.project_issues_limit_idx; 
 ALTER TABLE project_issues DROP COLUMN type_id;
 ALTER TABLE project_issues ADD category_id integer;
 
@@ -295,6 +287,10 @@ ALTER TABLE project_issues ALTER COLUMN last_reply_date DATETIME NOT NULL;
 
 ALTER TABLE project_issues ADD last_reply_by integer;
 
+ALTER TABLE [project_issues] WITH NOCHECK ADD 
+	CONSTRAINT [DF__project_i__reply__08162EEB] DEFAULT (0) FOR [reply_count],
+	CONSTRAINT [DF__project_i__last___090A5324] DEFAULT (getdate()) FOR [last_reply_date]
+GO
 
 
 ALTER TABLE project_folders DROP COLUMN parent;
@@ -321,21 +317,6 @@ ALTER TABLE project_folders ADD display integer;
 ALTER TABLE [project_folders] WITH NOCHECK ADD 
 	CONSTRAINT [DF__project_f__enter__1387E197] DEFAULT (getdate()) FOR [entered],
 	CONSTRAINT [DF__project_f__modif__15702A09] DEFAULT (getdate()) FOR [modified]
-GO
-
-ALTER TABLE [project_folders] ADD 
-	 FOREIGN KEY 
-	(
-		[enteredBy]
-	) REFERENCES [access] (
-		[user_id]
-	),
-	 FOREIGN KEY 
-	(
-		[modifiedBy]
-	) REFERENCES [access] (
-		[user_id]
-	)
 GO
 
 CREATE TABLE [project_files_thumbnail] (
