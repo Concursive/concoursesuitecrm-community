@@ -559,7 +559,6 @@ public class ApplicationPrefs {
   }
 
 
-  // BEGIN DHV CODE ONLY
   /**
    *  Determines if this system is upgradeable (not an ASP)
    *

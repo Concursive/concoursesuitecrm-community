@@ -2320,7 +2320,7 @@ public final class CampaignManager extends CFSModule {
 
 
   /**
-   *  Resets all pagedlists
+   *  Description of the Method
    *
    *@param  context  Description of the Parameter
    *@return          Description of the Return Value

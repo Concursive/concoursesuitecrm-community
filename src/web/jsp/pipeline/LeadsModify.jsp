@@ -27,7 +27,7 @@ function reopenOpportunity(id) {
   if (id == '<%= opportunityHeader.getId() %>') {
     if ('<%= request.getParameter("return") == null %>' =='true') {
       scrollReload('Leads.do?command=Search');
-    } else if ('<%= request.getParameter("return") != null && "dashboard".equals((String) request.getParameter("return") %>' == 'true') {
+    } else if ('<%= request.getParameter("return") != null && "dashboard".equals((String) request.getParameter("return")) %>' == 'true') {
       scrollReload('Leads.do?command=Dashboard');
     }
     return id;

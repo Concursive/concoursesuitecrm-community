@@ -193,8 +193,7 @@ public final class CompanyDirectory extends CFSModule {
 
     //insert
     if (thisEmployee.getId() > 0) {
-      // Object is being updated
-      permission = "contacts-internal_contacts-edit";
+      permission = "accounts-accounts-contacts-edit";
     }
     if (!hasPermission(context, permission)) {
       return ("PermissionError");

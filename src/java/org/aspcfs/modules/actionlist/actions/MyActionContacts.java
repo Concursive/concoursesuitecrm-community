@@ -291,12 +291,10 @@ public final class MyActionContacts extends CFSModule {
     Connection db = null;
     try {
       db = getConnection(context);
-      if (!"".equals(selectedContacts)){
-        ActionContactsList thisList = new ActionContactsList();
-        thisList.setActionId(Integer.parseInt(actionId));
-        thisList.setEnteredBy(this.getUserId(context));
-        thisList.update(db, selectedContacts);
-      }
+      ActionContactsList thisList = new ActionContactsList();
+      thisList.setActionId(Integer.parseInt(actionId));
+      thisList.setEnteredBy(this.getUserId(context));
+      thisList.update(db, selectedContacts);
     } catch (Exception e) {
       errorMessage = e;
     } finally {
