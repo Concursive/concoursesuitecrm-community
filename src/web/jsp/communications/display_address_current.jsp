@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*, org.aspcfs.utils.web.* " %>
@@ -27,7 +27,7 @@
 </script>
 </head>
 <body>
-  <form name="addContact" action="ProcessAddressSurvey.do?command=Update&auto-populate=true" onSubmit="return doCheck(this);window.close()" method="post">
+  <form name="addContact" action="ProcessAddressSurvey.do?command=Update&auto-populate=true" onSubmit="window.close()" method="post">
     &nbsp;<br>
     &nbsp;<br>
     <center>

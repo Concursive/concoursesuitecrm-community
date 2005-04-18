@@ -54,7 +54,7 @@ public final class AccountContactsOpps extends CFSModule {
     addModuleBean(context, "View Accounts", "View Opportunities");
 
     PagedListInfo oppPagedListInfo = this.getPagedListInfo(context, "AccountContactOppsPagedListInfo");
-    oppPagedListInfo.setLink("AccountContactsOpps.do?command=ViewOpps&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+    oppPagedListInfo.setLink("AccountContactsOpps.do?command=ViewOpps&contactId=" + contactId + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
 
     Connection db = null;
     OpportunityHeaderList oppList = new OpportunityHeaderList();
@@ -516,7 +516,7 @@ public final class AccountContactsOpps extends CFSModule {
       htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-      htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountContactsOpps.do?command=DeleteOpp&contactId=" + contactId + "&id=" + headerId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+      htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountContactsOpps.do?command=DeleteOpp&contactId=" + contactId + "&id=" + headerId + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -556,7 +556,7 @@ public final class AccountContactsOpps extends CFSModule {
       SystemStatus systemStatus = this.getSystemStatus(context);
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.contact.opps.delete"));
       htmlDialog.setShowAndConfirm(false);
-      htmlDialog.setDeleteUrl("javascript:window.location.href='AccountContactsOppComponents.do?command=DeleteComponent&contactId=" + contactId + "&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+      htmlDialog.setDeleteUrl("javascript:window.location.href='AccountContactsOppComponents.do?command=DeleteComponent&contactId=" + contactId + "&id=" + id + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -602,7 +602,7 @@ public final class AccountContactsOpps extends CFSModule {
     boolean inLinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
     if (recordDeleted) {
       context.getRequest().setAttribute("contactId", contactId);
-      context.getRequest().setAttribute("refreshUrl", "AccountContactsOpps.do?command=ViewOpps&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
+      context.getRequest().setAttribute("refreshUrl", "AccountContactsOpps.do?command=ViewOpps&contactId=" + contactId + RequestUtils.addLinkParams(context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
       deleteRecentItem(context, newOpp);
       return "OppDeleteOK";
     } else {
@@ -643,7 +643,7 @@ public final class AccountContactsOpps extends CFSModule {
     }
     boolean inLinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
     if (recordDeleted) {
-      context.getRequest().setAttribute("refreshUrl", "AccountContactsOpps.do?command=DetailsOpp&headerId=" + component.getHeaderId() + "&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
+      context.getRequest().setAttribute("refreshUrl", "AccountContactsOpps.do?command=DetailsOpp&headerId=" + component.getHeaderId() + "&contactId=" + contactId + RequestUtils.addLinkParams(context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
       deleteRecentItem(context, component);
       return ("ComponentDeleteOK");
     } else {

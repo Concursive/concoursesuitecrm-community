@@ -115,7 +115,7 @@
           <img src="images/icons/stock_drag-mode-16.gif" border="0" align="absmiddle" height="16" width="16"/>
         </th>
         <td width="100%">
-          <dhv:label name="global.button.Move">Move</dhv:label>
+          <dhv:label name="global.button.move">Move</dhv:label>
         </td>
       </tr>
       </dhv:permission>

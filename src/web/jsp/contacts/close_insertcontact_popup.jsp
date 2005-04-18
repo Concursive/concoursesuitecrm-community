@@ -16,8 +16,16 @@
   - Version: $Id$
   - Description: 
   --%>
+<%@ page import="org.aspcfs.utils.StringUtils" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
 <html>
-  <body onload="javascript:opener.document.getElementById('contactLink').value='<%= ContactDetails.getId() %>';opener.changeDivContent('changecontact', '<%= ContactDetails.getNameLastFirst() %>');window.close();">
-</body>
+  <body onLoad="javascript:doClose();">
+    <script language="JavaScript" TYPE="text/javascript">
+      function doClose() {
+        opener.document.getElementById('contactLink').value="<%= ContactDetails.getId() %>";
+        opener.changeDivContent("changecontact", "<%= StringUtils.jsStringEscape(ContactDetails.getNameLastFirst()) %>");
+        window.close();
+      }
+    </script>
+  </body>
 </html>

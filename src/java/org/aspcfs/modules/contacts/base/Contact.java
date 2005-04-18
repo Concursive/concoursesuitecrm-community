@@ -1836,7 +1836,7 @@ public class Contact extends GenericBean {
    */
   public String getEmailAddressTag(String thisType, String linkText, String noLinkText) {
     String tmpAddress = emailAddressList.getEmailAddress(thisType);
-    if ("".equals(thisType) && !"".equals(linkText)) {
+    if ("".equals(thisType) && !("".equals(linkText) || "&nbsp;".equals(linkText) || (linkText == null))) {
       return "<a href=\"mailto:" + this.getPrimaryEmailAddress() + "\">" + linkText + "</a>";
     } else if (tmpAddress != null && !"".equals(tmpAddress)) {
       return "<a href=\"mailto:" + this.getEmailAddress(thisType) + "\">" + linkText + "</a>";
@@ -2644,14 +2644,17 @@ public class Contact extends GenericBean {
     rs.close();
     pst.close();
 
-    if (hasAccess && isEnabled) {
-      return false;
-    } else if ((hasAccess && !isEnabled) || hasRelatedRecords(db)) {
-      this.disable(db);
-      return true;
-    } else {
-      try {
+    boolean commit = db.getAutoCommit();
+    try {
+      if (commit) {
         db.setAutoCommit(false);
+      }
+      if (hasAccess && isEnabled) {
+        return false;
+      } else if ((hasAccess && !isEnabled) || hasRelatedRecords(db)) {
+        this.disable(db);
+        return true;
+      } else {
 
         CustomFieldRecordList folderList = new CustomFieldRecordList();
         folderList.setLinkModuleId(Constants.CONTACTS);
@@ -2696,13 +2699,12 @@ public class Contact extends GenericBean {
 
         // For history, keep this contact if they previously received a comm. message
         /*
-        if (RecipientList.retrieveRecordCount(db, Constants.CONTACTS, this.getId()) > 0) {
-          this.disable(db);
-          db.commit();
-          return true;
-        }
-        */
-        
+         *  if (RecipientList.retrieveRecordCount(db, Constants.CONTACTS, this.getId()) > 0) {
+         *  this.disable(db);
+         *  db.commit();
+         *  return true;
+         *  }
+         */
         // If we're not keeping this contact, get rid of some more data
         // TODO: Use the ExcludedRecipientList class when it exists
         pst = db.prepareStatement(
@@ -2759,15 +2761,21 @@ public class Contact extends GenericBean {
         pst.setInt(1, this.getId());
         pst.execute();
         pst.close();
+      }
+      if (commit) {
         db.commit();
-      } catch (SQLException e) {
+      }
+    } catch (SQLException e) {
+      if (commit) {
         db.rollback();
-        System.out.println(e.toString());
-      } finally {
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
         db.setAutoCommit(true);
       }
-      return true;
     }
+    return true;
   }
 
 
@@ -2912,7 +2920,7 @@ public class Contact extends GenericBean {
     pst.setInt(1, this.getId());
     pst.setBoolean(2, true);
     ResultSet rs = pst.executeQuery();
-    if (rs.next() || !hasAccount()) {
+    if (rs.next()) {
       setHasEnabledAccount(true);
     } else {
       setHasEnabledAccount(false);
@@ -3210,6 +3218,7 @@ public class Contact extends GenericBean {
    * @param  contactId         Description of the Parameter
    * @param  orgId             Description of the Parameter
    * @param  orgName           Description of the Parameter
+   * @param  userId            Description of the Parameter
    * @exception  SQLException  Description of the Exception
    */
   public static void move(Connection db, int contactId, int orgId, String orgName, int userId) throws SQLException {
@@ -3639,6 +3648,75 @@ public class Contact extends GenericBean {
       SystemStatus systemStatus = (SystemStatus) ((Hashtable) context.getServletContext().getAttribute("SystemStatus")).get(ce.getUrl());
       systemStatus.getHierarchyList().getUser(userId).setIsValidLead(false, true);
     }
+  }
+
+
+  /**
+   *  Gets the htmlString attribute of the Contact object
+   *
+   * @param  dependencies  Description of the Parameter
+   * @return               The htmlString value
+   */
+  public String getHtmlString(DependencyList dependencies, SystemStatus systemStatus) {
+    boolean canMove = true;
+    Iterator i = dependencies.iterator();
+    StringBuffer html = new StringBuffer();
+    html.append("<br />");
+    int count = 0;
+    while (i.hasNext()) {
+      Dependency thisDependency = (Dependency) i.next();
+      if (thisDependency.getCount() > 0) {
+        ++count;
+        html.append("&nbsp;&nbsp;");
+        if (thisDependency.getCanDelete()) {
+          html.append("- ");
+        } else {
+          if (thisDependency.getName().equals("opportunities") || thisDependency.getName().equals("activities") || thisDependency.getName().equals("folders")) {
+            html.append("- ");
+          } else {
+            html.append("* ");
+            canMove = false;
+          }
+        }
+        if (systemStatus != null) {
+          html.append(systemStatus.getLabel("dependency." + thisDependency.getName()) + " (" + thisDependency.getCount() + ")");
+        }
+        html.append("<br />");
+      }
+    }
+    if (count == 0) {
+      if (systemStatus != null) {
+        html.append("&nbsp;&nbsp;" + systemStatus.getLabel("dependency.noDependencyForAction") + "<br />");
+      }
+    }
+    if (!canMove) {
+      if (systemStatus != null) {
+        html.append("<br />(*) " + systemStatus.getLabel("dependency.preventingContactMove"));
+        html.append("<br />" + systemStatus.getLabel("dependency.note") + "<br />");
+      }
+    }
+    return html.toString();
+  }
+
+
+  /**
+   *  Description of the Method
+   *
+   * @param  dependencies  Description of the Parameter
+   * @return               Description of the Return Value
+   */
+  public boolean canMoveContact(DependencyList dependencies) {
+    Iterator thisList = dependencies.iterator();
+    boolean canMove = true;
+    while (thisList.hasNext()) {
+      Dependency thisDependency = (Dependency) thisList.next();
+      if (!thisDependency.getCanDelete() && thisDependency.getCount() > 0) {
+        if (!(thisDependency.getName().equals("opportunities") || thisDependency.getName().equals("activities") || thisDependency.getName().equals("folders"))) {
+          canMove = false;
+        }
+      }
+    }
+    return canMove;
   }
 }
 

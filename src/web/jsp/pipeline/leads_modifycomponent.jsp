@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -70,6 +70,18 @@ function checkForm(form) {
     }
   }
 }
+function reopenOpportunity(id) {
+  if (id == '<%= opportunityHeader.getId() %>') {
+    if ('<%= "dashboard".equals(request.getParameter("viewSource")) %>' == 'true') {
+      scrollReload('Leads.do?command=Dashboard');
+    } else {
+      scrollReload('Leads.do?command=Search');
+    }
+    return id;
+  } else {
+    return '<%= opportunityHeader.getId() %>';
+  }
+}
 </SCRIPT>
 <form name="opportunityForm" action="LeadsComponents.do?command=SaveComponent&auto-populate=true<%= (request.getParameter("popup") != null?"&popup=true":"") %>" onSubmit="return doCheck(this);" method="post">
 <%
@@ -105,7 +117,7 @@ function checkForm(form) {
   <dhv:label name="pipeline.viewpoint.colon" param="<%= "username="+PipelineViewpointInfo.getVpUserName() %>"><b>Viewpoint: </b><b class="highlight"><%= PipelineViewpointInfo.getVpUserName() %></b></dhv:label><br />
   &nbsp;<br>
 </dhv:evaluate>
-<dhv:container name="opportunities" selected="details" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>">
+<dhv:container name="opportunities" selected="details" object="opportunityHeader" param="<%= "id=" + opportunityHeader.getId() %>" appendToUrl="<%= addLinkParams(request, "viewSource") %>" hideContainer="<%= isPopup(request) %>">
   <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
   <%
     if (request.getParameter("return") != null) {

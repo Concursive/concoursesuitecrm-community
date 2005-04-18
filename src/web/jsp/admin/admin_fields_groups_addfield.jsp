@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,java.text.*,org.aspcfs.modules.admin.base.*" %>
@@ -28,13 +28,21 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <body<% if (CustomField.getName() == null) { %> onLoad="document.details.name.focus();"<%}%>>
 <form name="details" action="AdminFields.do?command=AddField&modId=<%= ModId %>&catId=<%= Category.getId() %>&grpId=<%= (String)request.getParameter("grpId") %>&auto-populate=true" method="post">
-<a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
-<a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
-<a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>"><%= PermissionCategory.getCategory() %></a> >
-<a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>"><dhv:label name="admin.customFolders">Custom Folders</dhv:label></a> > 
-<a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>"><dhv:label name="accounts.accounts_documents_folders_add.Folder">Folder</dhv:label></a> >
-<dhv:label name="admin.newField">New Field</dhv:label><br />
-<dhv:formMessage />
+<%-- Trails --%>
+<table class="trails" cellspacing="0">
+  <tr>
+    <td>
+      <a href="Admin.do"><dhv:label name="trails.admin">Admin</dhv:label></a> >
+      <a href="Admin.do?command=Config"><dhv:label name="trails.configureModules">Configure Modules</dhv:label></a> >
+      <a href="Admin.do?command=ConfigDetails&moduleId=<%=ModId%>"><%= PermissionCategory.getCategory() %></a> >
+      <a href="AdminFieldsFolder.do?command=ListFolders&modId=<%= ModId %>"><dhv:label name="admin.customFolders">Custom Folders</dhv:label></a> > 
+      <a href="AdminFieldsGroup.do?command=ListGroups&modId=<%= ModId %>&catId=<%= Category.getId() %>"><dhv:label name="accounts.accounts_documents_folders_add.Folder">Folder</dhv:label></a> >
+      <dhv:label name="admin.newField">New Field</dhv:label><br />
+    </td>
+  </tr>
+</table>
+<%-- End Trails --%>
+<dhv:formMessage showSpace="false" />
 <br />
 <%
   CategoryList.setJsEvent("ONCHANGE=\"javascript:document.details.submit();\"");

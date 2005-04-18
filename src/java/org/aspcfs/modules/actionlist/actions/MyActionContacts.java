@@ -29,6 +29,7 @@ import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.web.HtmlSelect;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.util.HashMap;
@@ -518,8 +519,13 @@ public final class MyActionContacts extends CFSModule {
       if ("".equals(recipient.getPrimaryEmailAddress())) {
         context.getRequest().setAttribute("actionError", systemStatus.getLabel("object.validation.actionError.contactNoEmail"));
       }
-      String messageType = context.getRequest().getParameter("messageType");
-      context.getRequest().setAttribute("messageType", messageType);
+      String messageType = (String) context.getRequest().getAttribute("messageType");
+      if (messageType == null || "".equals(messageType)) {
+        messageType = (String) context.getRequest().getParameter("messageType");
+      }
+      if (messageType != null && !"".equals(messageType)) {
+        context.getRequest().setAttribute("messageType", messageType);
+      }
       String orgId = context.getRequest().getParameter("orgId");
       if (orgId != null) {
         context.getRequest().setAttribute("orgId", orgId);
@@ -640,6 +646,10 @@ public final class MyActionContacts extends CFSModule {
     if (viewUserId == null || "".equals(viewUserId)) {
       viewUserId = String.valueOf(this.getUserId(context));
     }
+    String messageType = (String) context.getRequest().getParameter("messageType");
+    if (messageType != null && !"".equals(messageType)) {
+      context.getRequest().setAttribute("messageType", messageType);
+    }
     String msgId = context.getRequest().getParameter("id");
     String contactId = context.getRequest().getParameter("contactId");
     boolean messageSent = false;
@@ -705,7 +715,7 @@ public final class MyActionContacts extends CFSModule {
           activeSurvey.setCampaignId(actionCampaign.getId());
           activeSurvey.insert(db);
           addressSurveyId = activeSurvey.getId();
-          String serverName = HTTPUtils.getServerUrl(context.getRequest());
+          String serverName = RequestUtils.getServerUrl(context.getRequest());
 
           thisMessage.setMessageText(thisMessage.getMessageText() + "<br />" +
               "${server_name=" + serverName + "}" + "<br />" +

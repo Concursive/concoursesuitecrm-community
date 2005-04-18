@@ -160,7 +160,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
    */
   public String getLocaleFormat(java.util.Date date) throws JRScriptletException {
     if (date == null) {
-      return null;
+      return "";
     }
     return (getLocaleFormat(new Timestamp(date.getTime())));
   }
@@ -176,7 +176,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
    */
   public String getLocaleFormat(java.util.Date date, String pattern) throws JRScriptletException {
     if (date == null) {
-      return null;
+      return "";
     }
     return (getLocaleFormat(new Timestamp(date.getTime()), pattern));
   }
@@ -191,7 +191,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
    */
   public String getLocaleFormat(java.sql.Timestamp ts) throws JRScriptletException {
     if (ts == null) {
-      return null;
+      return "";
     }
     String language = (String) this.getParameterValue("language");
     String country = (String) this.getParameterValue("country");
@@ -214,7 +214,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
    */
   public String getLocaleFormat(java.sql.Timestamp ts, String pattern) throws JRScriptletException {
     if (ts == null) {
-      return null;
+      return "";
     }
     String language = (String) this.getParameterValue("language");
     String country = (String) this.getParameterValue("country");
@@ -237,7 +237,7 @@ public class JasperScriptletUtils extends JRDefaultScriptlet {
    */
   public String getLocaleFormat(Double value) throws JRScriptletException {
     if (value == null) {
-      return null;
+      return "";
     }
     
     String language = (String) this.getParameterValue("language");

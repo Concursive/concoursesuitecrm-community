@@ -23,6 +23,7 @@
 <jsp:useBean id="contactId" class="java.lang.String" scope="request"/>
 <jsp:useBean id="next" class="java.lang.String" scope="request" />
 <jsp:useBean id="from" class="java.lang.String" scope="request" />
+<jsp:useBean id="listForm" class="java.lang.String" scope="request" />
 <jsp:useBean id="assignStatus" class="java.lang.String" scope="request" />
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session" />
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
@@ -36,7 +37,7 @@
       if ('<%= from %>' == 'dashboard') {
         parent.location.href="Sales.do?command=Dashboard";
       } else {
-        parent.location.href="Sales.do?command=Details&contactId=<%= contactId %>&nextValue=true";
+        parent.location.href="Sales.do?command=Details&contactId=<%= contactId %>&nextValue=true&from=<%= from %>&listForm=<%= (listForm != null ? listForm : "") %>";
       }
     }
     var next= "<%= next.trim() %>";
@@ -52,14 +53,14 @@
         opener.showSpan("nextlead");
         var rating = opener.document.forms['details'].rating.value;
         var comments = opener.document.forms['details'].comments.value;
-        window.location.href= 'Sales.do?command=WorkLead&id=<%= contactId %>&rating='+rating+'&comments='+comments+'&popup=true';
+        window.location.href= 'Sales.do?command=WorkLead&id=<%= contactId %>&rating='+rating+'&comments='+comments+'&popup=true&listForm=<%= (listForm != null ? listForm : "") %>';
       } else if (next == "assign") {
         var test = parent.continueAssignLead();
       } else if (next == "trash") {
         var test = parent.continueTrashLead();
       } else if (next == "delete") {
         //Just perform the deletion and skip right here
-        var test = parent.continueDeleteLead();
+        window.location.href= 'Sales.do?command=ConfirmDelete&contactId=<%= contactId %>&popup=true&from=<%= from %>&listForm=<%= (listForm != null ? listForm : "") %>';
       } else {
         alert('programming error');
       }

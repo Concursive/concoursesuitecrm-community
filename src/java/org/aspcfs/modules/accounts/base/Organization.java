@@ -2017,9 +2017,9 @@ public class Organization extends GenericBean {
    *
    *@param  db                Description of Parameter
    *@return                   Description of the Returned Value
-   *@exception  Exception     Description of the Exception
+   *@exception  SQLException     Description of the Exception
    */
-  public boolean insert(Connection db) throws Exception {
+  public boolean insert(Connection db) throws SQLException {
 
     StringBuffer sql = new StringBuffer();
     boolean doCommit = false;
@@ -2028,7 +2028,7 @@ public class Organization extends GenericBean {
       if ((doCommit = db.getAutoCommit()) == true) {
         db.setAutoCommit(false);
       }
-      sql.append("INSERT INTO ORGANIZATION (name, industry_temp_code, url, miner_only, owner, duplicate_id, ");
+      sql.append("INSERT INTO organization (name, industry_temp_code, url, miner_only, owner, duplicate_id, ");
       sql.append("notes, employees, revenue, ticker_symbol, account_number, nameFirst, nameLast, nameMiddle, ");
       if (entered != null) {
         sql.append("entered, ");

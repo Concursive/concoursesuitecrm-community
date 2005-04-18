@@ -299,11 +299,10 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
-      <% if (!applicationPrefs.get("SYSTEM.COUNTRY").equals("UNITED STATES") && !applicationPrefs.get("SYSTEM.COUNTRY").equals("CANADA")) { %>
       <script type="text/javascript">
         update('address<%= acount %>country','<%= acount %>');
       </script>
-      <% } CountrySelect = new CountrySelect(); %>
+      <%CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -388,11 +387,10 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <% if (!applicationPrefs.get("SYSTEM.COUNTRY").equals("UNITED STATES") && !applicationPrefs.get("SYSTEM.COUNTRY").equals("CANADA")) { %>
       <script type="text/javascript">
         update('address<%= acount %>country','<%= acount %>');
       </script>
-      <% } CountrySelect = new CountrySelect(); %>
+      <% CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
   <dhv:evaluate if="<%= acount != atotal %>">
@@ -477,11 +475,10 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <% if (!applicationPrefs.get("SYSTEM.COUNTRY").equals("UNITED STATES") && !applicationPrefs.get("SYSTEM.COUNTRY").equals("CANADA")) { %>
       <script type="text/javascript">
         update('address<%= acount %>country','<%= acount %>');
       </script>
-      <% } CountrySelect = new CountrySelect(); %>
+      <% CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
   <dhv:evaluate if="<%= acount != atotal %>">

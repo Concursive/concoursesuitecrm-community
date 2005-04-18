@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.utils.web.*,com.zeroio.iteam.base.*" %>
@@ -25,6 +25,16 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContacts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
+<script type="text/javascript">
+  function reopenOpportunity(id) {
+    if (id == '<%= opportunityHeader.getId() %>') {
+      scrollReload('Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= isPopup(request)?"&popup=true":"" %>');
+      return id;
+    } else {
+      return '<%= opportunityHeader.getId() %>';
+    }
+  }
+</script>
 <form name="modifyOpp" action="Opportunities.do?command=Update&orgId=<%= OrgDetails.getId() %>&auto-populate=true" method="post">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -105,7 +115,7 @@
       <table border="0" cellspacing="0" cellpadding="0" class="empty">
         <tr>
           <td>
-            <input type="radio" name="type" value="contact" onclick=<%= "\"javascript:document.forms['opportunityForm'].accountLink.value = '-1';\" " %> <dhv:evaluate if="<%= opportunityHeader.getContactLink() > -1 || "contact".equals(request.getParameter("type"))%>">checked</dhv:evaluate>>
+            <input type="radio" name="type" value="contact" onclick=<%= "\"javascript:document.forms['modifyOpp'].accountLink.value = '-1';\" " %> <dhv:evaluate if="<%= opportunityHeader.getContactLink() > -1 || "contact".equals(request.getParameter("type"))%>">checked</dhv:evaluate>>
           </td>
           <td>
             <dhv:label name="account.contact.colon">Contact:</dhv:label>&nbsp;

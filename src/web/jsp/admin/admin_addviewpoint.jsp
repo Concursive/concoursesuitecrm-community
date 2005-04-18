@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ include file="../initPage.jsp" %>
@@ -22,6 +22,7 @@
 <jsp:useBean id="PermissionList" class="org.aspcfs.modules.admin.base.PermissionList" scope="request"/>
 <jsp:useBean id="UserRecord" class="org.aspcfs.modules.admin.base.User" scope="request"/>
 <jsp:useBean id="Viewpoint" class="org.aspcfs.modules.admin.base.Viewpoint" scope="request"/>
+<jsp:useBean id="vpUserId" class="java.lang.String" scope="request" />
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/submit.js"></script>
 <form name="viewpointForm" action="Viewpoints.do?command=InsertViewpoint&auto-populate=true" method="post">
@@ -58,7 +59,14 @@
         <table class="empty">
           <tr>
             <td>
-              <div id="changecontact"><dhv:label name="accounts.accounts_contacts_calls_details_followup_include.None">None</dhv:label></div>
+              <div id="changecontact">
+                <dhv:evaluate if="<%= vpUserId != null && !"".equals(vpUserId) %>">
+                  <dhv:username id="<%= vpUserId %>" lastFirst="true" />
+                </dhv:evaluate>
+                <dhv:evaluate if="<%= vpUserId == null || "".equals(vpUserId) %>">
+                  <dhv:label name="accounts.accounts_contacts_calls_details_followup_include.None">None</dhv:label>
+                </dhv:evaluate>
+              </div>
             </td>
             <td>
               <font color="red">*</font><%= showAttribute(request, "ContactError") %>

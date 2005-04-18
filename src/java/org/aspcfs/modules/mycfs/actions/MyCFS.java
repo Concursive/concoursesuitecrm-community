@@ -492,9 +492,10 @@ public final class MyCFS extends CFSModule {
             thisContact.setId(hashKey.intValue());
             thisContact.setBuildDetails(true);
             thisContact.build(db);
-            thisContact.checkUserAccount(db);
+            thisContact.checkEnabledUserAccount(db);
             thisNote.setSentTo(contactId);
             if ((!email.startsWith("P:")) && (copyrecipients || !thisContact.hasAccount())) {
+              /*All contacts with email addresses (without user accounts)*/
               SMTPMessage mail = new SMTPMessage();
               mail.setHost(getPref(context, "MAILSERVER"));
               mail.setFrom(getPref(context, "EMAILADDRESS"));
@@ -532,11 +533,13 @@ public final class MyCFS extends CFSModule {
                 recordInserted = thisNote.insertLink(db, thisContact.hasAccount());
               }
             } else if (email.startsWith("P:") && !thisContact.hasAccount()) {
+              /*All contacts without user accounts and without email addresses*/
               if (errors == null) {
                 errors = new HashMap();
               }
               errors.put("contact" + thisContact.getId(), systemStatus.getLabel("mail.contactNoEmailAddress"));
-            } else if (email.startsWith("P:") && (thisContact.hasAccount() && (thisContact.getOrgId() != 0))) {
+            } else if (email.startsWith("P:") && thisContact.getOrgId() != -1 && (!thisContact.hasEnabledAccount() || copyrecipients)) {
+              /*all contacts without email addresses with invalid user accounts*/
               if (errors == null) {
                 errors = new HashMap();
               }
@@ -810,32 +813,33 @@ public final class MyCFS extends CFSModule {
     userListSelect.addAttribute("id", "userId");
     context.getRequest().setAttribute("NewUserList", userListSelect);
 
+    SystemStatus systemStatus = this.getSystemStatus(context);
     CalendarBean calendarInfo = (CalendarBean) context.getSession().getAttribute("CalendarInfo");
     if (calendarInfo == null) {
       calendarInfo = new CalendarBean(thisRec.getLocale());
       if (hasPermission(context, "myhomepage-tasks-view")) {
-        calendarInfo.addAlertType("Task", "org.aspcfs.modules.tasks.base.TaskListScheduledActions", "Tasks");
+        calendarInfo.addAlertType("Task", "org.aspcfs.modules.tasks.base.TaskListScheduledActions", systemStatus.getLabel("calendar.Tasks"));
       }
       if (hasPermission(context, "contacts-external_contacts-calls-view") || hasPermission(context, "accounts-accounts-contacts-calls-view")) {
-        calendarInfo.addAlertType("Call", "org.aspcfs.modules.contacts.base.CallListScheduledActions", "Activities");
+        calendarInfo.addAlertType("Call", "org.aspcfs.modules.contacts.base.CallListScheduledActions", systemStatus.getLabel("calendar.Activities"));
       }
       if (hasPermission(context, "projects-projects-view")) {
-        calendarInfo.addAlertType("Project", "com.zeroio.iteam.base.ProjectListScheduledActions", "Projects");
+        calendarInfo.addAlertType("Project", "com.zeroio.iteam.base.ProjectListScheduledActions", systemStatus.getLabel("calendar.Projects"));
       }
       if (hasPermission(context, "accounts-accounts-view")) {
-        calendarInfo.addAlertType("Accounts", "org.aspcfs.modules.accounts.base.AccountsListScheduledActions", "Accounts");
+        calendarInfo.addAlertType("Accounts", "org.aspcfs.modules.accounts.base.AccountsListScheduledActions", systemStatus.getLabel("calendar.Accounts"));
       }
       if (hasPermission(context, "contacts-external_contacts-opportunities-view") || hasPermission(context, "pipeline-opportunities-view")) {
-        calendarInfo.addAlertType("Opportunity", "org.aspcfs.modules.pipeline.base.OpportunityListScheduledActions", "Opportunities");
+        calendarInfo.addAlertType("Opportunity", "org.aspcfs.modules.pipeline.base.OpportunityListScheduledActions", systemStatus.getLabel("calendar.Opportunities"));
       }
       if (hasPermission(context, "products-view")) {
-        calendarInfo.addAlertType("Quote", "org.aspcfs.modules.quotes.base.QuotesListScheduledActions", "Quotes");
+        calendarInfo.addAlertType("Quote", "org.aspcfs.modules.quotes.base.QuotesListScheduledActions", systemStatus.getLabel("calendar.Quotes"));
       }
       if (hasPermission(context, "products-view") || hasPermission(context, "tickets-tickets-view")) {
-        calendarInfo.addAlertType("Ticket", "org.aspcfs.modules.troubletickets.base.TicketListScheduledActions", "Tickets");
+        calendarInfo.addAlertType("Ticket", "org.aspcfs.modules.troubletickets.base.TicketListScheduledActions", systemStatus.getLabel("calendar.Tickets"));
       }
       if (hasPermission(context, "projects-projects-view")) {
-        calendarInfo.addAlertType("Project Ticket", "org.aspcfs.modules.troubletickets.base.ProjectTicketListScheduledActions", "Project Tickets");
+        calendarInfo.addAlertType("Project Ticket", "org.aspcfs.modules.troubletickets.base.ProjectTicketListScheduledActions", systemStatus.getLabel("calendar.projectTickets"));
       }
       context.getSession().setAttribute("CalendarInfo", calendarInfo);
     } else {

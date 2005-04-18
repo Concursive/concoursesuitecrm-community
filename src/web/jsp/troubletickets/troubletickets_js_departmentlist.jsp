@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*,org.aspcfs.modules.admin.base.User, org.aspcfs.modules.contacts.base.Contact" %>
@@ -40,10 +40,11 @@ function page_init() {
   Iterator list1 = UserList.iterator();
   while (list1.hasNext()) {
     User thisUser = (User)list1.next();
+    if (thisUser.getId() != 0) {
 %>
-  list.options[list.length] = newOpt("<%= Contact.getNameLastFirst(thisUser.getContact().getNameLast(),
-          thisUser.getContact().getNameFirst()) %>", "<%= thisUser.getId() %>");
+  list.options[list.length] = newOpt("<%= thisUser.getContact().getValidName() %>", "<%= thisUser.getId() %>");
 <%
+    }
   }
 %>
 </dhv:evaluate>

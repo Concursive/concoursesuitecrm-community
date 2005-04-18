@@ -15,7 +15,7 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -64,7 +64,7 @@
           <option value="thisDiscussion" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.DISCUSSION) %>>&nbsp; <dhv:label name="project.discussion">Discussion</dhv:label></option>
           <option value="thisDocuments" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.DOCUMENTS) %>>&nbsp; <dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></option>
           <option value="thisLists" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.LISTS) %>>&nbsp; <dhv:label name="project.lists">Lists</dhv:label></option>
-          <option value="this<dhv:label name="project.plan">Plan</dhv:label>" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.PLAN) %>>&nbsp; <dhv:label name="project.plan">Plan</dhv:label></option>
+          <option value="thisPlan" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.PLAN) %>>&nbsp; <dhv:label name="project.plan">Plan</dhv:label></option>
           <option value="thisTickets" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.TICKETS) %>>&nbsp; <dhv:label name="dependency.tickets">Tickets</dhv:label></option>
           <option value="thisDetails" <%= selected(searchBean, SearchBean.THIS, IteamSearchBean.DETAILS) %>>&nbsp; <dhv:label name="accounts.details.long_html">Details</dhv:label></option>
       </dhv:evaluate>
@@ -73,7 +73,7 @@
           <option value="allDiscussion" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.DISCUSSION) %>>&nbsp; <dhv:label name="project.discussion">Discussion</dhv:label></option>
           <option value="allDocuments" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.DOCUMENTS) %>>&nbsp; <dhv:label name="accounts.accounts_documents_details.Documents">Documents</dhv:label></option>
           <option value="allLists" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.LISTS) %>>&nbsp; <dhv:label name="project.lists">Lists</dhv:label></option>
-          <option value="all<dhv:label name="project.plan">Plan</dhv:label>" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.PLAN) %>>&nbsp; <dhv:label name="project.plan">Plan</dhv:label></option>
+          <option value="allPlan" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.PLAN) %>>&nbsp; <dhv:label name="project.plan">Plan</dhv:label></option>
           <option value="allTickets" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.TICKETS) %>>&nbsp; <dhv:label name="dependency.tickets">Tickets</dhv:label></option>
           <option value="allDetails" <%= selected(searchBean, SearchBean.ALL, IteamSearchBean.DETAILS) %>>&nbsp; <dhv:label name="accounts.details.long_html">Details</dhv:label></option>
       </select>

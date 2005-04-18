@@ -31,7 +31,7 @@
 <jsp:useBean id="readStatus" class="java.lang.String" scope="request" />
 <jsp:useBean id="nextValue" class="java.lang.String" scope="request" />
 <jsp:useBean id="from" class="java.lang.String" scope="request" />
-<jsp:useBean id="searchForm" class="java.lang.String" scope="request" />
+<jsp:useBean id="listForm" class="java.lang.String" scope="request" />
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session" />
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
@@ -74,14 +74,14 @@
   }
   
   function workLead() {
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=work&popup=true&from=<%= from %>';
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=work&popup=true&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>';
     popURL(url,'WorkLead','650','500','yes','yes');
   }
-  
+
   function continueWorkLead() {
     var rating = document.forms['details'].rating.value;
     var comments = document.forms['details'].comments.value;
-    popURL('Sales.do?command=WorkLead&id=<%= ContactDetails.getId() %>&rating='+rating+'&comments='+comments+'&popup=true','WorkLead','650','500','yes','yes');
+    popURL('Sales.do?command=WorkLead&id=<%= ContactDetails.getId() %>&rating='+rating+'&comments='+comments+'&popup=true&listForm=<%= (listForm != null?listForm:"") %>','WorkLead','650','500','yes','yes');
     hideSpan("worklead");
     showSpan("nextlead");
   }
@@ -90,7 +90,7 @@
     if ('<%= from %>' == 'dashboard') {
       scrollReload('Sales.do?command=Dashboard');
     } else {
-      window.location.href = "Sales.do?command=Details&contactId=<%= ContactDetails.getId() %>&nextValue=true";
+      window.location.href = "Sales.do?command=Details&contactId=<%= ContactDetails.getId() %>&nextValue=true&listForm=<%= (listForm != null?listForm:"") %>";
     }
   }
   
@@ -99,10 +99,10 @@
     if (owner == '-1') {
      owner = '<%= User.getUserRecord().getId() %>';
     }
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=assign&from=<%= from %>&owner='+owner;
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=assign&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>&owner='+owner;
     window.frames['server_commands'].location.href=url;
   }
-  
+
   function continueAssignLead() {
     var rating = document.forms['details'].rating.value;
     var comments = document.forms['details'].comments.value;
@@ -111,13 +111,13 @@
     if (owner == '-1') {
      owner = '<%= User.getUserRecord().getId() %>';
     }
-    var url = "Sales.do?command=Update&contactId="+contactId+"&nextValue=true&owner="+owner+"&leadStatus=<%= Contact.LEAD_ASSIGNED %>&from=<%= from %>";
+    var url = "Sales.do?command=Update&contactId="+contactId+"&nextValue=true&owner="+owner+"&leadStatus=<%= Contact.LEAD_ASSIGNED %>&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>";
     url += "&comments="+comments+"&rating="+rating;
     window.location.href= url;
   }
 
   function trashLead() {
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=trash&from=<%= from %>';
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=trash&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>';
     window.frames['server_commands'].location.href=url;
   }
 
@@ -126,25 +126,19 @@
     var comments = document.forms['details'].comments.value;
     var leadStatus = '<%= Contact.LEAD_TRASHED %>';
     var contactId = '<%= ContactDetails.getId() %>';
-    var url = "Sales.do?command=Update&contactId="+contactId+"&nextValue=true&leadStatus="+leadStatus+'&from=<%= from %>';
+    var url = "Sales.do?command=Update&contactId="+contactId+"&nextValue=true&leadStatus="+leadStatus+'&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>';
     url += "&comments="+comments+"&rating="+rating;
     window.location.href= url;
   }
 
   function skipLead() {
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=skip&from=<%= from %>';
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=skip&from=<%= from %>&listForm=<%= (listForm != null?listForm:"") %>';
     window.frames['server_commands'].location.href=url;
   }
 
   function deleteLead() {
-    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=delete&from=<%= from %>';
-    window.frames['server_commands'].location.href=url;
-  }
-
-  function continueDeleteLead() {
-    var leadStatus = '<%= Contact.LEAD_TRASHED %>';
-    var contactId = '<%= ContactDetails.getId() %>';
-    popURL('Sales.do?command=ConfirmDelete&contactId='+contactId+'&popup=true&return=<%= from %>&searchForm=<%= (searchForm != null ? searchForm : "") %>', 'Delete_Lead','330','200','yes','no');
+    var url = 'Sales.do?command=CheckAssignStatus&contactId=<%= ContactDetails.getId() %>&next=delete&from=<%= from %>&listForm=<%= listForm!=null?listForm:"" %>';
+    popURL(url+'&popup=true','DeleteLead','330','200','yes','yes');
   }
 
   function contactDetails() {
@@ -154,7 +148,6 @@
   function resetNumericFieldValue(fieldId){
     document.getElementById(fieldId).value = -1;
   }
-
 </script>
 <form name="details" action="Sales.do?command=Update&contactId=<%= ContactDetails.getId() %>" method="post">
 <input type="hidden" name="id" value="<%= ContactDetails.getId() %>" />
@@ -164,11 +157,11 @@
 <tr>
 <td>
 <a href="Sales.do"><dhv:label name="Leads" mainMenuItem="true">Leads</dhv:label></a> >
-<% if (searchForm != null && !"".equals(searchForm)) { %>
-  <a href="Sales.do?command=SearchForm&backFromDetails=true"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
+<% if (listForm != null && !"".equals(listForm)) { %>
+  <a href="Sales.do?command=SearchForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
 <%}%>
 <% if (from != null && "list".equals(from) && !"dashboard".equals(from)) { %>
-  <a href="Sales.do?command=List&backFromDetails=true&searchForm=<%= (searchForm != null? searchForm:"") %>"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
+  <a href="Sales.do?command=List&listForm=<%= (listForm != null? listForm:"") %>"><dhv:label name="accounts.SearchResults">Search Results</dhv:label></a> >
 <%}%>
 <dhv:label name="sales.leadDetails">Lead Details</dhv:label>
 </td>
@@ -195,12 +188,12 @@
       <%= toHtml(ContactDetails.getNameFull()) %>
       <dhv:evaluate if="<%= foundDuplicateLastName != null && !"".equals(foundDuplicateLastName) %>">&nbsp;&nbsp;
         <span class="duplicate"><dhv:label name="sales.foundDuplicateLastName">Duplicate last name found</dhv:label></span>
-      </dhv:evaluate>&nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= ContactDetails.getNameFull() %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
+      </dhv:evaluate>&nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= "%22"+ContactDetails.getNameFull()+"%22" %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
 <%--        &nbsp;<a href="http://search.lycos.com/default.asp?lpv=1&loc=searchhp&tab=web&query=<%= ContactDetails.getNameFull() %>" target="_blank"><img src="images/lycos_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a> --%>
-        &nbsp;<a href="http://search.yahoo.com/search?p=<%= ContactDetails.getNameFull() %>" target="_blank"><img src="images/yahoo_logo.gif" border="0" align="absmiddle" height="15" width="60"/></a>
+        &nbsp;<a href="http://search.yahoo.com/search?p=<%= "%22"+ContactDetails.getNameFull()+"%22" %>" target="_blank"><img src="images/yahoo_logo.gif" border="0" align="absmiddle" height="15" width="60"/></a>
 <%--        &nbsp;<a href="http://www.hotbot.com/default.asp?query=<%= ContactDetails.getNameFull() %>" target="_blank"><img src="images/hotbot_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a> --%>
-        &nbsp;<a href="http://search.msn.com/results.aspx?FORM=MSNH&srch_type=0&q=<%= ContactDetails.getNameFull() %>" target="_blank"><img src="images/msn_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
-        &nbsp;<a href="http://web.ask.com/web?q=<%= ContactDetails.getNameFull() %>" target="_blank"><img src="images/ask_logo.gif" border="0" align="absmiddle" height="15" width="50"/></a>
+        &nbsp;<a href="http://search.msn.com/results.aspx?FORM=MSNH&srch_type=0&q=<%= "%22"+ContactDetails.getNameFull()+"%22" %>" target="_blank"><img src="images/msn_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
+        &nbsp;<a href="http://web.ask.com/web?q=<%= "%22"+ContactDetails.getNameFull()+"%22" %>" target="_blank"><img src="images/ask_logo.gif" border="0" align="absmiddle" height="15" width="50"/></a>
 
 </td>
   </tr>
@@ -223,12 +216,12 @@
       <%= toHtml(ContactDetails.getCompany()) %>
       <dhv:evaluate if="<%= foundDuplicateCompany != null && (foundDuplicateCompany.size() > 1) %>">&nbsp;&nbsp;
         <span class="duplicate"><dhv:label name="sales.foundDuplicateCompanyName">Duplicate company name found</dhv:label></span>
-      </dhv:evaluate>&nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= ContactDetails.getCompany() %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
+      </dhv:evaluate>&nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= "%22"+ContactDetails.getCompany()+"%22" %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
 <%--        &nbsp;<a href="http://search.lycos.com/default.asp?lpv=1&loc=searchhp&tab=web&query=<%= ContactDetails.getCompany() %>" target="_blank"><img src="images/lycos_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a>--%>
-        &nbsp;<a href="http://search.yahoo.com/search?p=<%= ContactDetails.getCompany() %>" target="_blank"><img src="images/yahoo_logo.gif" border="0" align="absmiddle" height="15" width="60"/></a>
+        &nbsp;<a href="http://search.yahoo.com/search?p=<%= "%22"+ContactDetails.getCompany()+"%22" %>" target="_blank"><img src="images/yahoo_logo.gif" border="0" align="absmiddle" height="15" width="60"/></a>
 <%--        &nbsp;<a href="http://www.hotbot.com/default.asp?query=<%= ContactDetails.getCompany() %>" target="_blank"><img src="images/hotbot_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a>--%>
-        &nbsp;<a href="http://search.msn.com/results.aspx?FORM=MSNH&srch_type=0&q=<%= ContactDetails.getCompany() %>" target="_blank"><img src="images/msn_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
-        &nbsp;<a href="http://web.ask.com/web?q=<%= ContactDetails.getCompany() %>" target="_blank"><img src="images/ask_logo.gif" border="0" align="absmiddle" height="15" width="50"/></a>
+        &nbsp;<a href="http://search.msn.com/results.aspx?FORM=MSNH&srch_type=0&q=<%= "%22"+ContactDetails.getCompany()+"%22" %>" target="_blank"><img src="images/msn_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
+        &nbsp;<a href="http://web.ask.com/web?q=<%= "%22"+ContactDetails.getCompany()+"%22" %>" target="_blank"><img src="images/ask_logo.gif" border="0" align="absmiddle" height="15" width="50"/></a>
     </td>
   </tr>
 </dhv:evaluate>
@@ -273,12 +266,12 @@
       </dhv:evaluate>
         <dhv:evaluate if="<%= foundDuplicateEmailAddress != null && (foundDuplicateEmailAddress.size() > 0) && (foundDuplicateEmailAddress.get(thisEmailAddress.getEmail()) != null) %>">&nbsp;&nbsp;
           <span class="duplicate"><dhv:label name="sales.foundDuplicateEmailAddress">Duplicate email address found</dhv:label></span>
-        </dhv:evaluate>&nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= thisEmailAddress.getEmail() %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
+        </dhv:evaluate>&nbsp;&nbsp;<a href="http://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=<%= "%22"+thisEmailAddress.getEmail()+"%22" %>" target="_blank"><img src="images/google_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
 <%--        &nbsp;<a href="http://search.lycos.com/default.asp?lpv=1&loc=searchhp&tab=web&query=<%= thisEmailAddress.getEmail() %>" target="_blank"><img src="images/lycos_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a> --%>
-        &nbsp;<a href="http://search.yahoo.com/search?p=<%= thisEmailAddress.getEmail() %>" target="_blank"><img src="images/yahoo_logo.gif" border="0" align="absmiddle" height="15" width="60"/></a>
+        &nbsp;<a href="http://search.yahoo.com/search?p=<%= "%22"+thisEmailAddress.getEmail()+"%22" %>" target="_blank"><img src="images/yahoo_logo.gif" border="0" align="absmiddle" height="15" width="60"/></a>
 <%--        &nbsp;<a href="http://www.hotbot.com/default.asp?query=<%= thisEmailAddress.getEmail() %>" target="_blank"><img src="images/hotbot_logo.gif" border="0" align="absmiddle" height="20" width="60"/></a> --%>
-        &nbsp;<a href="http://search.msn.com/results.aspx?FORM=MSNH&srch_type=0&q=<%= thisEmailAddress.getEmail() %>" target="_blank"><img src="images/msn_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
-        &nbsp;<a href="http://web.ask.com/web?q=<%= thisEmailAddress.getEmail() %>" target="_blank"><img src="images/ask_logo.gif" border="0" align="absmiddle" height="15" width="50"/></a>
+        &nbsp;<a href="http://search.msn.com/results.aspx?FORM=MSNH&srch_type=0&q=<%= "%22"+thisEmailAddress.getEmail()+"%22" %>" target="_blank"><img src="images/msn_logo.gif" border="0" align="absmiddle" height="15" width="45"/></a>
+        &nbsp;<a href="http://web.ask.com/web?q=<%= "%22"+thisEmailAddress.getEmail()+"%22" %>" target="_blank"><img src="images/ask_logo.gif" border="0" align="absmiddle" height="15" width="50"/></a>
       <br />
 <%}%>
     </td>
@@ -404,6 +397,17 @@
 <dhv:permission name="contacts-external_contacts-view"><input type="button" value="<dhv:label name="calendar.viewContactDetails">View Contact Details</dhv:label>" onClick="javascript:contactDetails();" /></dhv:permission>
 <dhv:permission name="sales-leads-edit"><input type="button" value="<dhv:label name="button.nextR">Next ></dhv:label>" onClick="javascript:nextLead();" /></dhv:permission>
 </span>
-<iframe src="../empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </form>
-
+<iframe src="../empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+<dhv:browser id="applewebkit" include="true">
+  <%-- Safari browser does not reload the form data when an iframe triggers a url change --%>
+  <script type="text/javascript">
+    var obj = document.forms['details'].rating;
+    for (i=0;i<obj.options.length;i++) {
+      if (obj.options[i].value == <%= ContactDetails.getRating() %>) {
+          obj.options[i].selected = true;
+      }
+    }
+    document.forms['details'].comments.value = '<%= StringUtils.jsStringEscape(toString(ContactDetails.getComments())) %>';
+  </script>
+</dhv:browser>

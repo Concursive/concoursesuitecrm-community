@@ -15,6 +15,8 @@
  */
 package org.aspcfs.modules.setup.beans;
 
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.ApplicationPrefs;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.*;
 import org.w3c.dom.Document;
@@ -410,10 +412,10 @@ public class Zlib {
    *@return                Description of the Return Value
    *@exception  Exception  Description of the Exception
    */
-  public boolean sendEmailRegistration() throws Exception {
+  public boolean sendEmailRegistration(ActionContext context) throws Exception {
     String theLicense = "<license>" + getCode() + "</license>" + CRLF;
     SMTPMessage mail = new SMTPMessage();
-    mail.setHost("127.0.0.1");
+    mail.setHost(ApplicationPrefs.getPref(context.getServletContext(), "MAILSERVER"));
     mail.setType("text/plain");
     mail.addTo(email);
     mail.setFrom("Centric CRM Registration <registration@centriccrm.com>");
@@ -424,7 +426,7 @@ public class Zlib {
       map.put("${crlf}", "" + CRLF);
       Template template = new Template(systemStatus.getLabel("mail.body.crmRegistration"));
       template.setParseElements(map);
-      mail.setBody(template.getParsedText());
+      mail.setBody(template.getParsedText() + CRLF);
     } else {
       mail.setSubject("Centric CRM Registration");
       mail.setBody(

@@ -245,16 +245,6 @@ public class StringUtils {
       htmlReady = replace(htmlReady, "\u00FE", "&thorn;");
       htmlReady = replace(htmlReady, "\u00FF", "&yuml;");
       htmlReady = replace(htmlReady, "\u20AC", "&euro;");
-      htmlReady = replace(htmlReady, "\u0106", "&Cacute;");
-      htmlReady = replace(htmlReady, "\u0107", "&cacute;");
-      htmlReady = replace(htmlReady, "\u010C", "&Ccaron;");
-      htmlReady = replace(htmlReady, "\u010D", "&ccaron;");
-      htmlReady = replace(htmlReady, "\u0160", "&Scaron;");
-      htmlReady = replace(htmlReady, "\u0161", "&scaron;");
-      htmlReady = replace(htmlReady, "\u017D", "&Zcaron;");
-      htmlReady = replace(htmlReady, "\u017E", "&zcaron;");
-      htmlReady = replace(htmlReady, "\u0110", "&Dcroat;");
-      htmlReady = replace(htmlReady, "\u0111", "&dcroat;");
       return (htmlReady);
     } else {
       return ("");
@@ -798,6 +788,10 @@ public class StringUtils {
       String jsReady = s.trim();
       jsReady = replace(jsReady, "'", "\\'");
       jsReady = replace(jsReady, "\"", "\\\"");
+      jsReady = replace(jsReady, "\\", "\\\\");
+      jsReady = replace(jsReady, "\r", "\\r");
+      jsReady = replace(jsReady, "\n", "\\n");
+      jsReady = replace(jsReady, "\t", "\\t");
       return (jsReady);
     } else {
       return ("");

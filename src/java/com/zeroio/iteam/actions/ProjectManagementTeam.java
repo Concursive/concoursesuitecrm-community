@@ -201,7 +201,7 @@ public final class ProjectManagementTeam extends CFSModule {
             inviteBody.addParseElement("${user.name}", projectContact.getNameFirstLast());
             inviteBody.addParseElement("${project.name}", thisProject.getTitle());
             inviteBody.addParseElement("${project.description}", thisProject.getShortDescription());
-            inviteBody.addParseElement("${link}", HTTPUtils.getLink(context, "ProjectManagement.do?command=RSVP"));
+            inviteBody.addParseElement("${link}", RequestUtils.getLink(context, "ProjectManagement.do?command=RSVP"));
             //Send the message
             SMTPMessage message = new SMTPMessage();
             message.setHost(prefs.get("MAILSERVER"));

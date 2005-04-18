@@ -1,7 +1,7 @@
 Centric CRM Open Source Edition; build: @BUILD.NUMBER@; @BUILD.DATE@
 $Id$
 
-Centric CRM 3.0 Test 2
+Centric CRM 3.0
 
 ----------------------------------------------------------------------------
 | LEGAL                                                                    |

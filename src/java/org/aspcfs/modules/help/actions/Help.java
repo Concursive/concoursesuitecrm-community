@@ -22,6 +22,7 @@ import org.aspcfs.modules.help.base.HelpItem;
 import org.aspcfs.modules.help.base.HelpModule;
 import org.aspcfs.modules.help.base.HelpTOC;
 import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 
@@ -273,7 +274,7 @@ public final class Help extends CFSModule {
     } finally {
       this.freeConnection(context, db);
     }
-    context.getRequest().setAttribute("refreshUrl", "Help.do?command=ViewModuleDescription&module=" + thisModule.getRelatedAction() + HTTPUtils.addLinkParams(context.getRequest(), "popup"));
+    context.getRequest().setAttribute("refreshUrl", "Help.do?command=ViewModuleDescription&module=" + thisModule.getRelatedAction() + RequestUtils.addLinkParams(context.getRequest(), "popup"));
     return getReturn(context, "SaveDescription");
   }
 }

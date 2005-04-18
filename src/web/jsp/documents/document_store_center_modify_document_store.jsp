@@ -15,7 +15,7 @@
   - 
   - Author(s):
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -90,9 +90,9 @@
     </td>
     <td>
       <input type="checkbox" name="approved" value="ON"<%= documentStoreApprovedCheck %>>
-      <dhv:label name="documents.details.approved">Approved</dhv:label><zeroio:tz timestamp="<%= documentStore.getApprovalDate() %>"/><br />
+      <dhv:label name="documents.details.approved">Approved</dhv:label> <zeroio:tz timestamp="<%= documentStore.getApprovalDate() %>"/><br />
       <input type="checkbox" name="closed" value="ON"<%= documentStoreClosedCheck %>>
-      <dhv:label name="documents.details.archived">Archived</dhv:label><zeroio:tz timestamp="<%= documentStore.getCloseDate() %>"/><br />
+      <dhv:label name="documents.details.archived">Archived</dhv:label> <zeroio:tz timestamp="<%= documentStore.getCloseDate() %>"/><br />
     </td>
   </tr>
   <tr class="containerBody">

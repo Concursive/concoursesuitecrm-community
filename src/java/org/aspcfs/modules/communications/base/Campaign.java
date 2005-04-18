@@ -2448,6 +2448,7 @@ public class Campaign extends GenericBean {
           template.addParseElement("${survey_url}", "<a href=\"http://" + this.getServerName() + "/ProcessSurvey.do?id=${surveyId=" + this.getActiveSurveyId() + "}\">http://" + this.getServerName() + "/ProcessSurvey.do?id=${surveyId=" + this.getActiveSurveyId() + "}</a>");
           if (thisMessage.getMessageText().indexOf("${survey_url}") == -1) {
             template.setText(thisMessage.getMessageText() + "<br><br>You can take the survey at the following web-site:<br />${survey_url}");
+            thisMessage.setMessageText(thisMessage.getMessageText() + "<br><br>You can take the survey at the following web-site:<br />${survey_url}");
           } else {
             template.setText(thisMessage.getMessageText());
           }

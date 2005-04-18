@@ -857,7 +857,75 @@
     </delete>
     <delete dir="${dist.dir}/files"/>
   </target>
-  
+
+  <!-- Create tools distribution -->
+  <target name="tools"
+          description="Compile, build, and generate tools archive"
+          depends="deploy,tools.archive">
+  </target>
+
+  <target name="tools.archive">
+    <property name="zip.dir" value="centric_crm"/>
+    <delete dir="${dist.dir}"/>
+    <mkdir dir="${dist.dir}"/>
+    <!-- Update the build number -->
+    <copy file="${base.dir}/pref/cfs/tools/readme.txt" todir="${dist.dir}" verbose="true"/>
+    <buildnumber file="tools.number"/>
+    <replace file="${dist.dir}/readme.txt"
+             token="@BUILD.NUMBER@" value="${build.number}"/>
+    <replace file="${dist.dir}/readme.txt"
+             token="@BUILD.DATE@" value="${date.long}"/>
+    <!-- Ignore certain code when zipping -->
+    <mkdir dir="${dist.dir}/files/src"/>
+    <copy todir="${dist.dir}/files" verbose="true">
+      <fileset dir="${base.dir}">
+        <!-- src/java -->
+        <include name="src/java/org/aspcfs/utils/CRMConnection.java" />
+        <include name="src/java/org/aspcfs/apps/transfer/writer/cfshttpxmlwriter/CFSHttpXMLWriter.java" />
+        <include name="src/java/org/aspcfs/apps/transfer/DataImportHandler.java" />
+        <include name="src/java/org/aspcfs/apps/transfer/Transfer.java" />
+        <include name="src/java/org/aspcfs/utils/XMLUtils.java" />
+        <include name="src/java/org/aspcfs/utils/HTTPUtils.java" />
+        <include name="src/java/org/aspcfs/utils/HttpsTrustManager.java" />
+        <include name="src/java/org/aspcfs/utils/HttpsHostnameVerifier.java" />
+        <include name="src/java/org/aspcfs/utils/HttpsHostnameVerifierDeprecated.java" />
+        <include name="src/java/org/aspcfs/utils/StringUtils.java" />
+        <include name="src/java/org/aspcfs/utils/ObjectUtils.java" />
+        <include name="src/java/org/aspcfs/apps/transfer/DataRecord.java" />
+        <include name="src/java/org/aspcfs/apps/transfer/DataField.java" />
+        <include name="src/java/org/aspcfs/apps/transfer/DataWriter.java" />
+        <include name="src/java/org/aspcfs/apps/transfer/DataReader.java" />
+      </fileset>
+      <filterchain>
+        <filterreader classname="org.aspcfs.ant.filters.StripSection">
+          <param name="beginBlock" value="BEGIN DHV CODE ONLY"/>
+          <param name="endBlock" value="END DHV CODE ONLY"/>
+          <classpath>
+            <fileset dir="${build.lib.dir}">
+              <include name="*.jar"/>
+            </fileset>
+            <fileset dir="${lib.dir}">
+              <include name="*.jar"/>
+            </fileset>
+          </classpath>
+        </filterreader>
+      </filterchain>
+    </copy>
+    <jar jarfile="${dist.dir}/${zip.dir}-tools.jar"
+          basedir="${dist.dir}/files/src/java"/>
+    <!-- Create the distributable .zip file -->
+    <zip destfile="${dist.dir}/${zip.dir}_tools.zip">
+      <!-- main directory -->
+      <zipfileset dir="${dist.dir}" includes="readme.txt" prefix="${zip.dir}"/>
+      <zipfileset dir="${dist.dir}" includes="${zip.dir}-tools.jar" prefix="${zip.dir}"/>
+    </zip>
+    <!-- delete temporary files -->
+    <delete>
+        <fileset dir= "${dist.dir}" includes="*.txt"/>
+    </delete>
+    <delete dir="${dist.dir}/files"/>
+  </target>
+
   <!-- Remove the build folder -->
   <target name="clean"
           description="Delete the temporary build folder used by the install"

@@ -171,7 +171,7 @@
 <input type="button" value="<dhv:label name="button.clear">Clear</dhv:label>" onClick="javascript:clearForm(this.form);" />
 <input type="hidden" name="searchcodeUserId" value="<%= User.getUserRecord().getId() %>" />
 <input type="hidden" name="searchcodeLeadsOnly" value="<%= Constants.TRUE %>" />
-<input type="hidden" name="searchForm" value="true" />
+<input type="hidden" name="listForm" value="true" />
 <input type="hidden" name="nextValue" value="" />
 </form>
 

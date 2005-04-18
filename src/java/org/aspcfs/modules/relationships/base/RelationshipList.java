@@ -317,6 +317,13 @@ public class RelationshipList extends LinkedHashMap {
       sqlFilter.append(
           "AND ((r.category_id_maps_from = ? AND r.object_id_maps_from = ?) OR " +
           "(r.category_id_maps_to = ? AND r.object_id_maps_to = ?)) ");
+    } else {
+      if (categoryIdMapsFrom != -1) {
+        sqlFilter.append("AND r.category_id_maps_from = ? ");
+      }
+      if (objectIdMapsFrom != -1) {
+        sqlFilter.append("AND r.object_id_maps_from = ? ");
+      }
     }
   }
 
@@ -340,6 +347,13 @@ public class RelationshipList extends LinkedHashMap {
       pst.setInt(++i, objectIdMapsFrom);
       pst.setInt(++i, categoryIdMapsFrom);
       pst.setInt(++i, objectIdMapsFrom);
+    } else {
+      if (categoryIdMapsFrom != -1) {
+        pst.setInt(++i, categoryIdMapsFrom);
+      }
+      if (objectIdMapsFrom != -1) {
+        pst.setInt(++i, objectIdMapsFrom);
+      }
     }
     return i;
   }
@@ -445,7 +459,16 @@ public class RelationshipList extends LinkedHashMap {
   }
 
 
-  public int checkDuplicateRelationship(Connection db, int id, int categoryTypeId, int category ) {
+  /**
+   *  Description of the Method
+   *
+   * @param  db              Description of the Parameter
+   * @param  id              Description of the Parameter
+   * @param  categoryTypeId  Description of the Parameter
+   * @param  category        Description of the Parameter
+   * @return                 Description of the Return Value
+   */
+  public int checkDuplicateRelationship(Connection db, int id, int categoryTypeId, int category) {
     int result = 0;
     Iterator iterator = (Iterator) this.keySet().iterator();
     while (iterator.hasNext()) {
@@ -453,15 +476,11 @@ public class RelationshipList extends LinkedHashMap {
       Iterator tempIter = (Iterator) tempList.iterator();
       while (tempIter.hasNext()) {
         Relationship rel = (Relationship) tempIter.next();
-        System.out.println("RelationshipList:: the relObejctIdMapsTo is "+ rel.getObjectIdMapsTo()+" and id is "+ id);
-        System.out.println("RelationshipList:: the relTypeId is "+ rel.getTypeId()+" and typeId is "+ categoryTypeId);
-        System.out.println("RelationshipList:: the getCategoryIdMapsTo is "+ rel.getCategoryIdMapsTo() +" and category is "+ category);
         if (rel.getObjectIdMapsTo() == id && rel.getTypeId() == categoryTypeId && rel.getCategoryIdMapsTo() == category) {
           ++result;
         }
       }
     }
-    System.out.println("The value of result is "+ result);
     return result;
   }
 }

@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -39,6 +39,20 @@
 <%-- Preload image rollovers for drop-down menu --%>
 <script language="JavaScript" type="text/javascript">
   loadImages('select');
+</script>
+<script type="text/javascript">
+function reopenOpportunity(id) {
+  if (id == '<%= opportunityHeader.getId() %>') {
+    if ('<%= "dashboard".equals(request.getParameter("viewSource")) %>' == 'true') {
+      scrollReload('Leads.do?command=Dashboard');
+    } else {
+      scrollReload('Leads.do?command=Search');
+    }
+    return id;
+  } else {
+    return '<%= opportunityHeader.getId() %>';
+  }
+}
 </script>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">

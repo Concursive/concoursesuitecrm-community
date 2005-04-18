@@ -7,8 +7,8 @@ import com.zeroio.iteam.base.TeamMemberList;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.base.Constants;
 import org.aspcfs.modules.contacts.base.Contact;
-import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.util.Iterator;
@@ -48,7 +48,7 @@ public final class CompanyDirectoryProjects extends CFSModule {
       ProjectList projects = new ProjectList();
       PagedListInfo companyDirectoryProjectsInfo = this.getPagedListInfo(context, "CompanyDirectoryProjectsInfo");
       companyDirectoryProjectsInfo.setLink("CompanyDirectoryProjects.do?command=List&empid="+employeeId +
-            HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+            RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
       companyDirectoryProjectsInfo.setItemsPerPage(0);
       projects.setPagedListInfo(companyDirectoryProjectsInfo);
       //Project Info

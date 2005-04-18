@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,java.text.*,org.aspcfs.modules.admin.base.*" %>
@@ -61,7 +61,7 @@
       <dhv:label name="admin.records">Records</dhv:label>
     </td>
     <td>
-      <input type="checkbox" value="ON" name="allowMultipleRecords" <%= Category.getAllowMultipleRecords()?"checked":"" %>><dhv:label name="accounts.accounts_fields_list.FolderHaveMultipleRecords">folder can have multiple records</dhv:label>
+      <input type="checkbox" value="ON" name="allowMultipleRecords" <%= Category.getAllowMultipleRecords()?"checked":"" %>><dhv:label name="accounts.accounts_fields.FolderHaveMultipleRecords">folder can have multiple records</dhv:label>
     </td>
   </tr>
   <tr class="containerBody">

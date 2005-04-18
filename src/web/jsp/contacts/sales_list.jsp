@@ -28,7 +28,7 @@
 <jsp:useBean id="SourceList" class="org.aspcfs.utils.web.LookupList" scope="request" />
 <jsp:useBean id="RatingList" class="org.aspcfs.utils.web.LookupList" scope="request" />
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session" />
-<jsp:useBean id="searchForm" class="java.lang.String" scope="request" />
+<jsp:useBean id="listForm" class="java.lang.String" scope="request" />
 <jsp:useBean id="allOpenLeads" class="java.lang.String" scope="request" />
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application" />
 <%@ include file="../initPage.jsp" %>
@@ -58,7 +58,7 @@
 <tr>
 <td>
   <a href="Sales.do"><dhv:label name="Leads" mainMenuItem="true">Leads</dhv:label></a> >
-<% if (searchForm != null && !"".equals(searchForm)) { %>
+<% if (listForm != null && !"".equals(listForm)) { %>
   <a href="Sales.do?command=SearchForm"><dhv:label name="tickets.searchForm">Search Form</dhv:label></a> >
 <%}%>
   <dhv:label name="accounts.SearchResults">Search Results</dhv:label>
@@ -66,7 +66,7 @@
 </tr>
 </table>
 <%-- End Trails --%>
-<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SalesListInfo"/>
+<dhv:pagedListStatus title="<%= showError(request, "actionError") %>" object="SalesListInfo" showHiddenParams="false" />
 <table cellpadding="3" cellspacing="0" border="0" width="100%" class="pagedList">
   <tr>
     <th>&nbsp;</th>
@@ -126,7 +126,7 @@
 <table width="100%" border="0" cellpadding="3">
   <tr>
     <td style="text-align: center;">
-      <dhv:pagedListStatus object="SalesListInfo" showRefresh="false" showControlOnly="true"/>
+      <dhv:pagedListStatus object="SalesListInfo" showRefresh="false" showControlOnly="true" showHiddenParams="false" />
     </td>
   </tr>
 </table>

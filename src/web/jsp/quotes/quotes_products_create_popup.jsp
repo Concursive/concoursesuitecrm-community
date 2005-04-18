@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -37,6 +37,7 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popProductCatalogs.js"></script> 
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <script language="JavaScript">
 	function doCheck(form) {
 		if (form.dosubmit.value == "false") {
@@ -49,14 +50,31 @@
 	function checkForm(form) {
 		formTest = true;
 		message = "";
-		if (form.name.value == "") {
+		if (checkNullString(form.name.value)) {
 			message += label("check.quote.product.name","- Please specify the product name\r\n");
 			formTest = false;
 		}
-		
-		if (formTest == false) {
-      alert(label("check.form","Form could not be saved, please check the following:\r\n\r\n") + message);
-			return false;
+    if (checkNullString(form.priceAmount.value)) {
+      message += label("check.priceamount.blank","- The price can not be blank\r\n");
+      flag = false;
+    } else {
+      if (!checkRealNumber(form.priceAmount.value)) {
+        message += label("check.number.invalid","- Please enter a valid Number\r\n");
+        flag = false;
+      }
+    }
+    if (checkNullString(form.quantity.value)) {
+      message += label("check.quote.quantity.blank","The quantity can not be blank.\r\n");
+      flag = false;
+    } else {
+      if (!checkNumber(form.quantity.value)) {
+        message += label("check.number.invalid","- Please enter a valid Number\r\n");
+        flag = false;
+      }
+    }
+		if (flag == false) {
+        alert(label("check.form","Form could not be saved, please check the following:\r\n\r\n") + message);
+	      return false;
 		} else {
 			return true;
 		}

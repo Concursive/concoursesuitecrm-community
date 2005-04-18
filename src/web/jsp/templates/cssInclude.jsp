@@ -13,12 +13,11 @@
   - ANY DAMAGES, INCLUDING ANY LOST PROFITS OR OTHER INCIDENTAL OR CONSEQUENTIAL
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
-  - Version: $Id$
 
   @author     Matt Rajkowski
   @created    March 10, 2003
   @version    $Id$
-  
+
   Description: An include that configures CSS for all pages, whether
   the user is logged in or not, depending on browser, version, and os.
 --%>
@@ -48,12 +47,18 @@
 <link rel="stylesheet" href="css/<%= applicationPrefs.get("LAYOUT.TEMPLATE") %>.css" type="text/css">
 <link rel="stylesheet" href="css/print.css" type="text/css" media="print">
 <%-- Use the system's language if not specified at user --%>
-<dhv:evaluate if="<%= User.getUserRecord() == null  %>">
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>.js"></SCRIPT>
+<dhv:evaluate if="<%= User.getUserRecord() == null %>">
+  <dhv:evaluate if="<%= !"en_US".equals(applicationPrefs.get("SYSTEM.LANGUAGE")) %>">
+    <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_<%= applicationPrefs.get("SYSTEM.LANGUAGE") %>.js"></SCRIPT>
+  </dhv:evaluate>
+  <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_en_US.js"></SCRIPT>
 </dhv:evaluate>
 <%-- Use the user's language since they are logged in --%>
-<dhv:evaluate if="<%= User.getUserRecord() != null  %>">
-<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_<%= User.getUserRecord().getLanguage() %>.js"></SCRIPT>
+<dhv:evaluate if="<%= User.getUserRecord() != null %>">
+  <dhv:evaluate if="<%= !"en_US".equals(User.getUserRecord().getLanguage()) %>">
+    <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_<%= User.getUserRecord().getLanguage() %>.js"></SCRIPT>
+  </dhv:evaluate>
+  <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/dictionary_en_US.js"></SCRIPT>
 </dhv:evaluate>
 <%-- The JavaScript resource label handler --%>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/languages/language.js"></SCRIPT>

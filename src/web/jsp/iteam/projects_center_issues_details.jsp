@@ -15,7 +15,7 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -67,7 +67,12 @@
             Posted on
             <zeroio:tz timestamp="<%= Issue.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
             <dhv:evaluate if="<%= !(Issue.getModified().equals(Issue.getEntered())) %>">
-            <dhv:label name="project.edited.braces">(edited)</dhv:label>
+            <dhv:evaluate if="<%= Issue.getModifiedBy() != Issue.getEnteredBy() %>">
+              <dhv:label name="project.editedby.braces" param="<%= "username="+getUsername(pageContext,Issue.getModifiedBy(),false,false,"&nbsp;") %>">(edited by <dhv:username id="<%= Issue.getModifiedBy() %>" />)</dhv:label>
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= Issue.getModifiedBy() == Issue.getEnteredBy() %>">
+              <dhv:label name="project.edited.braces">(edited)</dhv:label>
+            </dhv:evaluate>
             </dhv:evaluate>
           </td>
           <td valign="top" align="right" nowrap>
@@ -148,7 +153,12 @@
         <td width="100%">
           <dhv:label name="project.by.postedOn" param="<%= "username="+getUsername(pageContext,thisReply.getEnteredBy(),false,false,"&nbsp;")+"|time="+getTime(pageContext,thisReply.getEntered(),User.getTimeZone(),DateFormat.SHORT,true,false,false,"&nbsp;") %>">By <dhv:username id="<%= thisReply.getEnteredBy() %>"/> - Posted on <zeroio:tz timestamp="<%= thisReply.getEntered() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/></dhv:label>
           <dhv:evaluate if="<%= !(thisReply.getModified().equals(thisReply.getEntered())) %>">
-          <dhv:label name="project.edited.braces">(edited)</dhv:label>
+            <dhv:evaluate if="<%= thisReply.getModifiedBy() != thisReply.getEnteredBy() %>">
+              <dhv:label name="project.editedby.braces" param="<%= "username="+getUsername(pageContext,thisReply.getModifiedBy(),false,false,"&nbsp;") %>">(edited by <dhv:username id="<%= thisReply.getModifiedBy() %>" />)</dhv:label>
+            </dhv:evaluate>
+            <dhv:evaluate if="<%= thisReply.getModifiedBy() == thisReply.getEnteredBy() %>">
+              <dhv:label name="project.edited.braces">(edited)</dhv:label>
+            </dhv:evaluate>
           </dhv:evaluate>
           &nbsp;
         </td>

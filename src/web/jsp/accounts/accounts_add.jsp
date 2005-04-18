@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -220,7 +220,7 @@
   }
   
   function update(countryObj, stateObj) {
-  var country = document.forms['addAccount'].elements[countryObj].value;
+   var country = document.forms['addAccount'].elements[countryObj].value;
    if(country == "UNITED STATES" || country == "CANADA"){
       hideSpan('state2' + stateObj);
       showSpan('state1' + stateObj);
@@ -649,7 +649,12 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
-      <% CountrySelect = new CountrySelect(); %>
+      <script type="text/javascript">
+        update('address<%= acount %>country','<%= acount %>');
+      </script>
+      <%
+        CountrySelect = new CountrySelect();
+      %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -731,7 +736,12 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <% CountrySelect = new CountrySelect(); %>
+      <script type="text/javascript">
+        update('address<%= acount %>country','<%= acount %>');
+      </script>
+      <%
+        CountrySelect = new CountrySelect();
+       %>
     </td>
   </tr>
 <%
@@ -821,7 +831,12 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
-      <% CountrySelect = new CountrySelect(); %>
+      <script type="text/javascript">
+          update('address<%= acount %>country','<%= acount %>');
+        </script>
+      <%
+        CountrySelect = new CountrySelect();
+       %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -904,7 +919,12 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <% CountrySelect = new CountrySelect(); %>
+      <script type="text/javascript">
+        update('address<%= acount %>country','<%= acount %>');
+      </script>
+      <%
+        CountrySelect = new CountrySelect();
+       %>
     </td>
   </tr>
 <%
@@ -987,11 +1007,12 @@
     <td>
     <% CountrySelect.setJsEvent("onChange=\"javascript:update('address1country', '1');\"");%>
     <%= CountrySelect.getHtml("address1country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <% if (applicationPrefs.get("SYSTEM.COUNTRY").equals("UNITED STATES") || applicationPrefs.get("SYSTEM.COUNTRY").equals("CANADA")) { %>
-      <script type="text/javascript">
-        update('address1country','1');
-      </script>
-      <% } %>
+    <script type="text/javascript">
+      update('address1country','1');
+    </script>
+    <%
+      CountrySelect = new CountrySelect();
+     %>
     </td>
   </tr>
   <tr>
@@ -1065,11 +1086,12 @@
     </td>
     <td>
       <%= CountrySelect.getHtml("address2country", applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <% if (applicationPrefs.get("SYSTEM.COUNTRY").equals("UNITED STATES") || applicationPrefs.get("SYSTEM.COUNTRY").equals("CANADA")) { %>
       <script type="text/javascript">
         update('address2country','2');
       </script>
-      <% } %>
+      <%
+        CountrySelect = new CountrySelect();
+       %>
     </td>
   </tr>
  </dhv:evaluate>

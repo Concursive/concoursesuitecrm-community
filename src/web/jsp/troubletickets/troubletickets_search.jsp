@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="OrgList" class="org.aspcfs.modules.accounts.base.OrganizationList" scope="request"/>
@@ -29,7 +29,23 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popAccounts.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/submit.js"></script>
 <script language="JavaScript" type="text/javascript" src="javascript/popContacts.js"></script>
-<script language="JavaScript">
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
+<script type="text/javascript">
+  function checkForm(form) {
+    formTest = true;
+    message = "";
+    if (!checkNullString(form.searchcodeId.value) && !checkNaturalNumber(form.searchcodeId.value)) {
+      message += label("check.number.invalid","- Please enter a valid Number\r\n");
+      formTest = false;
+    }
+    if (formTest == false) {
+      alert(label("check.campaign.criteria","Criteria could not be processed, please check the following:\r\n\r\n") + message);
+      return false;
+    }
+    return true;
+  }
+
   function clearForm() {
     document.forms['searchTicket'].searchcodeId.value="";
     document.forms['searchTicket'].searchDescription.value="";
@@ -53,7 +69,7 @@
   }
 </script>
 <body onLoad="javascript:document.searchTicket.searchcodeId.focus();">
-<form name="searchTicket" action="TroubleTickets.do?command=SearchTickets" method="post">
+<form name="searchTicket" action="TroubleTickets.do?command=SearchTickets" method="post" onSubmit="javascript:return checkForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>

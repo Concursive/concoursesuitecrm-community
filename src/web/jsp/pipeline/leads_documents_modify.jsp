@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,com.zeroio.iteam.base.*" %>
@@ -47,6 +47,20 @@
       return true;
     }
   }
+</script>
+<script type="text/javascript">
+function reopenOpportunity(id) {
+  if (id == '<%= opportunityHeader.getId() %>') {
+    if ('<%= "dashboard".equals(request.getParameter("viewSource")) %>' == 'true') {
+      scrollReload('Leads.do?command=Dashboard');
+    } else {
+      scrollReload('Leads.do?command=Search');
+    }
+    return id;
+  } else {
+    return '<%= opportunityHeader.getId() %>';
+  }
+}
 </script>
 <body onLoad="document.inputForm.subject.focus();">
 <%-- Trails --%>

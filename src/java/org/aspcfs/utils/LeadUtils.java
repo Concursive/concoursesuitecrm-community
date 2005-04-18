@@ -373,6 +373,10 @@ public class LeadUtils {
     int rating = criteria.getRating();
     int leadStatusExists = criteria.getLeadStatusExists();
     int postalCode = criteria.getPostalCode();
+    int employeesOnly = criteria.getEmployeesOnly();
+    boolean ownerOrReader = criteria.getOwnerOrReader();
+    int hasConversionDate = criteria.getHasConversionDate();
+    String country = criteria.getCountry();
     String emailAddress = criteria.getEmailAddress();
     Timestamp enteredStart = criteria.getEnteredStart();
     Timestamp enteredEnd = criteria.getEnteredEnd();
@@ -385,30 +389,20 @@ public class LeadUtils {
       sqlFilter.append("AND c.owner = ? ");
     }
 
-    if (leadStatus > 0) {
+    if (leadStatus > 0 && employeesOnly == Constants.UNDEFINED) {
       if (leadStatus == Contact.LEAD_UNPROCESSED || leadStatus == Contact.LEAD_TRASHED || leadStatus == Contact.LEAD_ASSIGNED) {
         sqlFilter.append("AND c.lead_status = ? ");
       }
-    } else if (leadsOnly == Constants.TRUE && (leadStatus == Contact.LEAD_UNREAD || leadStatus == -1) && readBy == -1) {
-      if (leadStatus == Contact.LEAD_UNREAD) {
-        sqlFilter.append("AND c.lead_status = ? ");
-      } else if (leadStatus == -1) {
-        sqlFilter.append("AND c.lead_status IN (?, ?, ?) ");
-      }
+    } else if (leadsOnly == Constants.TRUE && leadStatus == Contact.LEAD_UNREAD && readBy == -1 && !ownerOrReader && employeesOnly == Constants.UNDEFINED) {
+      sqlFilter.append("AND c.lead_status = ? ");
       sqlFilter.append(
           "AND c.contact_id NOT IN ( " +
-          "SELECT clm.contact_id AS contact_id FROM contact_lead_read_map clm WHERE clm.contact_id = c.contact_id AND clm.user_id <> ? ) " +
+          "SELECT clm.contact_id AS contact_id FROM contact_lead_read_map clm WHERE clm.user_id <> ? ) " +
           "AND c.contact_id NOT IN ( " +
-          "SELECT clsm.contact_id AS contact_id FROM contact_lead_skipped_map clsm WHERE clsm.contact_id = c.contact_id AND clsm.user_id = ?) " +
-          "OR c.contact_id IN ( " +
-          "SELECT clrm.contact_id AS contact_id FROM contact_lead_read_map clrm LEFT JOIN contact c ON (clrm.contact_id = c.contact_id) WHERE clrm.user_id = ? ");
-      if (leadStatus == Contact.LEAD_UNREAD) {
-        sqlFilter.append("AND c.lead_status = ? )");
-        sqlFilter.append("AND c.contact_id NOT IN ( " +
-            "SELECT clrm.contact_id as contact_id FROM contact_lead_read_map clrm WHERE clrm.user_id <> c.user_id ) ");
-      } else {
-        sqlFilter.append("AND c.lead_status IN (?, ?, ?) ) ");
-      }
+          "SELECT clsm.contact_id AS contact_id FROM contact_lead_skipped_map clsm WHERE clsm.user_id = ?) " +
+          "");
+    } else if (leadStatus == -1 && readBy == -1 && employeesOnly == Constants.UNDEFINED && leadsOnly == Constants.TRUE) {
+      sqlFilter.append("AND c.lead_status IN (?, ?, ?) ");
     }
     if (source > -1) {
       sqlFilter.append("AND c.source = ? ");
@@ -418,8 +412,10 @@ public class LeadUtils {
       sqlFilter.append("AND c.rating = ? ");
     }
 
-    if (leadsOnly == Constants.TRUE && readBy > -1) {
+    if (leadsOnly == Constants.TRUE && readBy > -1 && !ownerOrReader) {
       sqlFilter.append(
+          "AND c.contact_id NOT IN ( " +
+          "SELECT clsm.contact_id AS contact_id FROM contact_lead_skipped_map clsm WHERE clsm.user_id = ?) " +
           "AND c.contact_id IN ( " +
           "SELECT clrm.contact_id AS contact_id FROM contact_lead_read_map clrm WHERE clrm.user_id = ? ) ");
     }
@@ -456,7 +452,27 @@ public class LeadUtils {
       sqlFilter.append("AND c.contact_id IN (" +
           "SELECT cc.contact_id FROM contact cc LEFT JOIN contact_address ca " +
           "ON (cc.contact_id = ca.contact_id) " +
-          "WHERE cc.contact_id = c.contact_id AND ca.postalcode = ? ) ");
+          "WHERE ca.postalcode = ? ) ");
+    }
+
+    if (hasConversionDate == Constants.TRUE) {
+      sqlFilter.append("AND c.conversion_date IS NOT NULL ");
+    } else if (hasConversionDate == Constants.FALSE) {
+      sqlFilter.append("AND c.conversion_date IS NULL ");
+    }
+
+    if (country != null && !"-1".equals(country)) {
+      sqlFilter.append("AND c.contact_id IN (SELECT cc.contact_id FROM " +
+          "contact cc LEFT JOIN contact_address ca ON (cc.contact_id = ca.contact_id) " +
+          "WHERE ca.country = ? ) ");
+    }
+
+    if (ownerOrReader) {
+      sqlFilter.append(
+          "AND c.contact_id NOT IN ( " +
+          "SELECT clsm.contact_id AS contact_id FROM contact_lead_skipped_map clsm WHERE clsm.user_id = ?) " +
+          "AND (c.owner = ? OR c.contact_id IN (SELECT cr.contact_id AS contact_id " +
+          "FROM contact_lead_read_map cr WHERE cr.user_id = ?)) ");
     }
   }
 
@@ -477,9 +493,13 @@ public class LeadUtils {
     int readBy = criteria.getReadBy();
     int source = criteria.getSource();
     int rating = criteria.getRating();
-    int userId = criteria.getUserId();
     int leadStatusExists = criteria.getLeadStatusExists();
     int postalCode = criteria.getPostalCode();
+    int userId = criteria.getUserId();
+    int employeesOnly = criteria.getEmployeesOnly();
+    boolean ownerOrReader = criteria.getOwnerOrReader();
+    int hasConversionDate = criteria.getHasConversionDate();
+    String country = criteria.getCountry();
     String emailAddress = criteria.getEmailAddress();
     Timestamp enteredStart = criteria.getEnteredStart();
     Timestamp enteredEnd = criteria.getEnteredEnd();
@@ -491,23 +511,17 @@ public class LeadUtils {
     if (owner != -1) {
       pst.setInt(++i, owner);
     }
-    if (leadStatus > 0) {
+    if (leadStatus > 0 && employeesOnly == Constants.UNDEFINED) {
       if (leadStatus == Contact.LEAD_UNPROCESSED || leadStatus == Contact.LEAD_TRASHED || leadStatus == Contact.LEAD_ASSIGNED) {
         pst.setInt(++i, leadStatus);
       }
-    } else if (leadsOnly == Constants.TRUE && (leadStatus == Contact.LEAD_UNREAD || leadStatus == -1) && readBy == -1) {
-      if (leadStatus == -1) {
-        pst.setInt(++i, Contact.LEAD_TRASHED);
-        pst.setInt(++i, Contact.LEAD_ASSIGNED);
-      }
+    } else if (leadsOnly == Constants.TRUE && leadStatus == Contact.LEAD_UNREAD && readBy == -1 && !ownerOrReader && employeesOnly == Constants.UNDEFINED) {
       pst.setInt(++i, Contact.LEAD_UNPROCESSED);
       pst.setInt(++i, userId);
       pst.setInt(++i, userId);
-      pst.setInt(++i, userId);
-      if (leadStatus == -1) {
-        pst.setInt(++i, Contact.LEAD_TRASHED);
-        pst.setInt(++i, Contact.LEAD_ASSIGNED);
-      }
+    } else if (leadStatus == -1 && readBy == -1 && employeesOnly == Constants.UNDEFINED && leadsOnly == Constants.TRUE) {
+      pst.setInt(++i, Contact.LEAD_TRASHED);
+      pst.setInt(++i, Contact.LEAD_ASSIGNED);
       pst.setInt(++i, Contact.LEAD_UNPROCESSED);
     }
     if (source > -1) {
@@ -516,7 +530,8 @@ public class LeadUtils {
     if (rating > -1) {
       pst.setInt(++i, rating);
     }
-    if (leadsOnly == Constants.TRUE && readBy > -1) {
+    if (leadsOnly == Constants.TRUE && readBy > -1 && !ownerOrReader) {
+      pst.setInt(++i, readBy);
       pst.setInt(++i, readBy);
     }
 
@@ -542,6 +557,16 @@ public class LeadUtils {
 
     if (postalCode != -1) {
       pst.setInt(++i, postalCode);
+    }
+
+    if (country != null && !"-1".equals(country)) {
+      pst.setString(++i, country);
+    }
+
+    if (ownerOrReader) {
+      pst.setInt(++i, readBy);
+      pst.setInt(++i, owner);
+      pst.setInt(++i, readBy);
     }
     return i;
   }

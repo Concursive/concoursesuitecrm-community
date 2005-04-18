@@ -1356,8 +1356,11 @@ public class Asset extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Asset Id not specified.");
     }
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       //Assets have tickets related, so delete them first
       TicketList ticketList = new TicketList();
       ticketList.setAssetId(this.getId());
@@ -1366,13 +1369,19 @@ public class Asset extends GenericBean {
       ticketList = null;
 
       delete(db);
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
       e.printStackTrace(System.out);
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }

@@ -29,6 +29,7 @@ import org.aspcfs.modules.setup.beans.ServerBean;
 import org.aspcfs.modules.setup.beans.UserSetupBean;
 import org.aspcfs.modules.setup.utils.Prefs;
 import org.aspcfs.utils.*;
+import org.aspcfs.utils.web.RequestUtils;
 import org.w3c.dom.Element;
 import sun.misc.BASE64Encoder;
 
@@ -133,7 +134,7 @@ public class Setup extends CFSModule {
       }
       context.getRequest().setAttribute("server",
           HTTPUtils.getServerName(context.getRequest().getScheme() + "://" +
-          HTTPUtils.getServerUrl(context.getRequest())));
+          RequestUtils.getServerUrl(context.getRequest())));
       return "SetupNeedRegOK";
     }
     // END DHV CODE ONLY
@@ -160,7 +161,7 @@ public class Setup extends CFSModule {
     }
     context.getRequest().setAttribute("server",
         HTTPUtils.getServerName(context.getRequest().getScheme() + "://" +
-        HTTPUtils.getServerUrl(context.getRequest())));
+        RequestUtils.getServerUrl(context.getRequest())));
     try {
       boolean isValid = false;
       isValid = this.validateObject(context, null, bean);
@@ -205,7 +206,7 @@ public class Setup extends CFSModule {
       bean.setText(PrivateString.encrypt(key, "5USERBINARY-1.1"));
       bean.setWebserver(
           HTTPUtils.getServerName(context.getRequest().getScheme() + "://" +
-          HTTPUtils.getServerUrl(context.getRequest())));
+          RequestUtils.getServerUrl(context.getRequest())));
       //Configure proxy server
       ApplicationPrefs prefs = getApplicationPrefs(context);
       Properties systemSettings = System.getProperties();
@@ -720,7 +721,7 @@ public class Setup extends CFSModule {
       } catch (Exception e) {
       }
       if (bean.getUrl() == null) {
-        bean.setUrl(HTTPUtils.getServerUrl(context.getRequest()));
+        bean.setUrl(RequestUtils.getServerUrl(context.getRequest()));
       }
       if (bean.getTimeZone() == null) {
         bean.setTimeZone(TimeZone.getDefault().getID());

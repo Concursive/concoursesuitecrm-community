@@ -15,7 +15,7 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -117,7 +117,7 @@
          src="images/select_<%= SKIN %>.gif" name="select_<%= SKIN %><%= count %>" id="select_<%= SKIN %><%= count %>" align="absmiddle" border="0"></a>
     </td>
     <td align="center" nowrap valign="top">
-      <a href="ProjectManagementTickets.do?command=Details&pid=<%= Project.getId() %>&id=<%= thisTicket.getId() %>"><%= thisTicket.getProjectTicketCount() %></a>
+      <a href="ProjectManagementTickets.do?command=Details&pid=<%= Project.getId() %>&id=<%= thisTicket.getId() %>"><%= thisTicket.getPaddedProjectTicketCount() %></a>
     </td>
     <td align="center" nowrap valign="top">
 <% if (thisTicket.getClosed() == null) { %>

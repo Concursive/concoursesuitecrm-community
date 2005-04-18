@@ -15,7 +15,7 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -53,7 +53,7 @@
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        Assignment
+        <dhv:label name="project.assignment">Assignment</dhv:label>
       </th>
     </tr>
     <tr class="containerBody">
@@ -96,14 +96,13 @@
   <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
     <tr>
       <th colspan="2">
-        Progress
+        <dhv:label name="project.progress">Progress</dhv:label>
       </th>
     </tr>
     <tr class="containerBody">
       <td nowrap class="formLabel" valign="top"><dhv:label name="accounts.accountasset_include.Status">Status</dhv:label></td>
       <td>
         <%= toHtml(StatusList.getValueFromId(Assignment.getStatusId())) %> (<%= toHtml(StatusPercentList.getValueFromId(Assignment.getPercentComplete())) %>)
-        (<%= toHtml(StatusPercentList.getValueFromId(Assignment.getPercentComplete())) %>)
       </td>
     </tr>
   </table>

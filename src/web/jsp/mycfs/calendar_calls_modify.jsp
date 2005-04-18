@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -159,64 +159,59 @@ function showHistory() {
   <body onLoad="javascript:document.addCall.subject.focus();">
 <% } %>
 <% request.setAttribute("includeDetails", "true"); %>
-<%@ include file="../contacts/contact_details_header_include.jsp" %><br>
+<%-- <%@ include file="../contacts/contact_details_header_include.jsp" %><br> --%>
 <form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true&actionSource=CalendarCalls" onSubmit="return doCheck(this);" method="post">
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <td class="containerBack">
-      <%-- include call update form --%>
-      <dhv:evaluate if="<%= CallDetails.getStatusId() != Call.CANCELED %>">
-      <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
-      </dhv:evaluate>
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
-      [<a href="javascript:showHistory();"><dhv:label name="calendar.viewContactHistory">View Contact History</dhv:label></a>]
-      <br />
-      <dhv:formMessage />
-      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-      <% if("pending".equals(request.getParameter("view"))){ %>
-        <%-- include pending activity form --%>
-        <%@ include file="../contacts/call_followup_include.jsp" %>
-        &nbsp;
-        <%-- include completed activity details --%>
-        <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
-      <% }else{ %>
-        <% if(CallDetails.getStatusId() != Call.CANCELED){ %>
-        <%-- include completed activity form --%>
-        <%@ include file="../contacts/call_completed_include.jsp" %>
-        <% }else{ %>
-        <%-- include completed activity details --%>
-        <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
-        <% } %>
-        &nbsp;
-        <% if((CallDetails.getAlertDate() != null) && (request.getAttribute("alertDateWarning") == null) && request.getParameter("hasFollowup") == null){ %>
-          <%-- include followup activity details --%>
-          <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
-        <% }else{ %>
-          <span name="nextActionSpan" id="nextActionSpan" <%= CallDetails.getHasFollowup() ? "" : "style=\"display:none\"" %>>
-          <br>
-          <%-- include pending activity form --%>
-          <%@ include file="../contacts/call_followup_include.jsp" %>
-          </span>
-      <% 
-          }
-        }
-      %>
-      &nbsp;
+<dhv:container name="contacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>" hideContainer="<%= isPopup(request) %>">
+  <%-- include call update form --%>
+  <dhv:evaluate if="<%= CallDetails.getStatusId() != Call.CANCELED %>">
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  </dhv:evaluate>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
+  [<a href="javascript:showHistory();"><dhv:label name="calendar.viewContactHistory">View Contact History</dhv:label></a>]
+  <br />
+  <dhv:formMessage />
+  <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+  <% if("pending".equals(request.getParameter("view"))){ %>
+    <%-- include pending activity form --%>
+    <%@ include file="../contacts/call_followup_include.jsp" %>
+    &nbsp;
+    <%-- include completed activity details --%>
+    <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
+  <% }else{ %>
+    <% if(CallDetails.getStatusId() != Call.CANCELED){ %>
+    <%-- include completed activity form --%>
+    <%@ include file="../contacts/call_completed_include.jsp" %>
+    <% }else{ %>
+    <%-- include completed activity details --%>
+    <%@ include file="../accounts/accounts_contacts_calls_details_include.jsp" %>
+    <% } %>
+    &nbsp;
+    <% if((CallDetails.getAlertDate() != null) && (request.getAttribute("alertDateWarning") == null) && request.getParameter("hasFollowup") == null){ %>
+      <%-- include followup activity details --%>
+      <%@ include file="../accounts/accounts_contacts_calls_details_followup_include.jsp" %>
+    <% }else{ %>
+      <span name="nextActionSpan" id="nextActionSpan" <%= CallDetails.getHasFollowup() ? "" : "style=\"display:none\"" %>>
       <br>
-      <dhv:evaluate if="<%= CallDetails.getStatusId() != Call.CANCELED %>">
-      <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
-      </dhv:evaluate>
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
-      <input type="hidden" name="dosubmit" value="true">
-      <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
-      <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
-      <input type="hidden" name="id" value="<%= CallDetails.getId() %>">
-      <input type="hidden" name="previousId" value="<%= PreviousCallDetails.getId() %>">
-      <br>
-      &nbsp;
-    </td>
-  </tr>
-</table>
+      <%-- include pending activity form --%>
+      <%@ include file="../contacts/call_followup_include.jsp" %>
+      </span>
+  <% 
+      }
+    }
+  %>
+  &nbsp;
+  <br>
+  <dhv:evaluate if="<%= CallDetails.getStatusId() != Call.CANCELED %>">
+  <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  </dhv:evaluate>
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
+  <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
+  <input type="hidden" name="modified" value="<%= CallDetails.getModified() %>">
+  <input type="hidden" name="id" value="<%= CallDetails.getId() %>">
+  <input type="hidden" name="previousId" value="<%= PreviousCallDetails.getId() %>">
+  <br>
+  &nbsp;
 <% if("pending".equals(request.getParameter("view"))){ %>
   <%-- include completed activity values --%>
   <input type="hidden" name="callTypeId" value="<%= CallDetails.getCallTypeId() %>">
@@ -239,5 +234,6 @@ function showHistory() {
 <input type="hidden" name="statusId" value="<%= CallDetails.getStatusId() %>">
 <input type="hidden" name="return" value="calendar">
 <%= addHiddenParams(request, "view|popup") %>
+</dhv:container>
 </form>
 </body>

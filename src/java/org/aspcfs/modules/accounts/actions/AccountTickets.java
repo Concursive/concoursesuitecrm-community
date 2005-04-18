@@ -33,6 +33,7 @@ import org.aspcfs.modules.troubletickets.base.TicketCategoryList;
 import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -352,11 +353,11 @@ public final class AccountTickets extends CFSModule {
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+        htmlDialog.setDeleteUrl("javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       } else if (dependencies.canDelete()){
         htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='AccountTickets.do?command=DeleteTicket&id=" + id + "&orgId=" + orgId + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
         htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       } else {
         htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution")+"\n"+dependencies.getHtmlString());
@@ -428,6 +429,7 @@ public final class AccountTickets extends CFSModule {
     Ticket newTic = null;
     //Parameters
     String ticketId = context.getRequest().getParameter("id");
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       db = this.getConnection(context);
       //Load the ticket
@@ -441,7 +443,7 @@ public final class AccountTickets extends CFSModule {
       context.getRequest().setAttribute("OrgDetails", thisOrganization);
       //Load the departmentList for assigning
       LookupList departmentList = new LookupList(db, "lookup_department");
-      departmentList.addItem(0, "-- None --");
+      departmentList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       departmentList.setJsEvent("onChange=\"javascript:updateUserList();javascript:resetAssignedDate();\"");
       context.getRequest().setAttribute("DepartmentList", departmentList);
       //Load the severity list
@@ -452,7 +454,7 @@ public final class AccountTickets extends CFSModule {
       context.getRequest().setAttribute("PriorityList", priorityList);
       //Load the ticket source list
       LookupList sourceList = new LookupList(db, "lookup_ticketsource");
-      sourceList.addItem(0, "-- None --");
+      sourceList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
       context.getRequest().setAttribute("SourceList", sourceList);
       //Load the top level category list
       TicketCategoryList categoryList = new TicketCategoryList();
@@ -463,11 +465,11 @@ public final class AccountTickets extends CFSModule {
       context.getRequest().setAttribute("CategoryList", categoryList);
       //Load the user list the ticket can be assigned to
       UserList userList = new UserList();
-      userList.setEmptyHtmlSelectRecord("-- None --");
+      userList.setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
       userList.setHidden(Constants.FALSE);
       userList.setBuildContact(true);
       userList.setBuildContactDetails(false);
-      userList.setDepartment(newTic.getDepartmentCode());
+      userList.setDepartment(newTic.getDepartmentCode()!= -1?newTic.getDepartmentCode():0);
       userList.setExcludeDisabledIfUnselected(true);
       userList.setExcludeExpiredIfUnselected(true);
       userList.setRoleType(Constants.ROLETYPE_REGULAR);
@@ -487,7 +489,7 @@ public final class AccountTickets extends CFSModule {
         contactList.setBuildDetails(false);
         contactList.setBuildTypes(false);
         contactList.setOrgId(newTic.getOrgId());
-        contactList.setEmptyHtmlSelectRecord("-- None --");
+        contactList.setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
         contactList.buildList(db);
       }
       context.getRequest().setAttribute("ContactList", contactList);
@@ -644,8 +646,9 @@ public final class AccountTickets extends CFSModule {
    *@since
    */
   protected void buildFormElements(ActionContext context, Connection db, Ticket newTic) throws SQLException {
+    SystemStatus systemStatus = this.getSystemStatus(context);
     LookupList departmentList = new LookupList(db, "lookup_department");
-    departmentList.addItem(0, "-- None --");
+    departmentList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
     departmentList.setJsEvent("onChange=\"javascript:updateUserList();javascript:resetAssignedDate();\"");
     context.getRequest().setAttribute("DepartmentList", departmentList);
 
@@ -656,7 +659,7 @@ public final class AccountTickets extends CFSModule {
     context.getRequest().setAttribute("PriorityList", priorityList);
 
     LookupList sourceList = new LookupList(db, "lookup_ticketsource");
-    sourceList.addItem(0, "-- None --");
+    sourceList.addItem(0, systemStatus.getLabel("calendar.none.4dashes"));
     context.getRequest().setAttribute("SourceList", sourceList);
 
     TicketCategoryList categoryList = new TicketCategoryList();
@@ -669,16 +672,14 @@ public final class AccountTickets extends CFSModule {
 
     UserList userList = new UserList();
     userList.setHidden(Constants.FALSE);
-    userList.setEmptyHtmlSelectRecord("-- None --");
+    userList.setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
     userList.setBuildContact(true);
     userList.setBuildContactDetails(false);
     userList.setExcludeDisabledIfUnselected(true);
     userList.setExcludeExpiredIfUnselected(true);
     userList.setRoleType(Constants.ROLETYPE_REGULAR);
-    if (newTic.getDepartmentCode() > 0) {
-      userList.setDepartment(newTic.getDepartmentCode());
-      userList.buildList(db);
-    }
+    userList.setDepartment(newTic.getDepartmentCode()!= -1?newTic.getDepartmentCode():0);
+    userList.buildList(db);
     context.getRequest().setAttribute("UserList", userList);
 
     ContactList contactList = new ContactList();
@@ -785,6 +786,7 @@ public final class AccountTickets extends CFSModule {
    */
   public String executeCommandDepartmentJSList(ActionContext context) {
     Connection db = null;
+    SystemStatus systemStatus = this.getSystemStatus(context);
     try {
       String departmentCode = context.getRequest().getParameter("departmentCode");
       db = this.getConnection(context);
@@ -792,8 +794,8 @@ public final class AccountTickets extends CFSModule {
       userList.setEnabled(Constants.TRUE);
       userList.setHidden(Constants.FALSE);
       userList.setExpired(Constants.FALSE);
-      userList.setEmptyHtmlSelectRecord("-- None --");
-      if ((departmentCode != null) && (!"0".equals(departmentCode))) {
+      userList.setEmptyHtmlSelectRecord(systemStatus.getLabel("calendar.none.4dashes"));
+      if (departmentCode != null && !"".equals(departmentCode) && !"-1".equals(departmentCode)) {
         userList.setBuildContact(true);
         userList.setBuildContactDetails(false);
         userList.setDepartment(Integer.parseInt(departmentCode));

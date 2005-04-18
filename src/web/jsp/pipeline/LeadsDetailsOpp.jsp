@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -34,6 +34,24 @@
 <script language="JavaScript" type="text/javascript">
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
+</script>
+<script type="text/javascript">
+function reopenOpportunity(id) {
+  if (id == '<%= opportunityHeader.getId() %>') {
+    if ('<%= opportunityHeader.getComponentCount() %>' == '1' || '<%= opportunityHeader.getComponentCount() %>' == '0' || '<%= opportunityHeader.getComponentCount() %>' == '-1') {
+      if ('<%= "dashboard".equals(request.getParameter("viewSource")) %>' == 'true') {
+        scrollReload('Leads.do?command=Dashboard');
+      } else {
+        scrollReload('Leads.do?command=Search');
+      }
+    } else {
+      scrollReload('Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&reset=true<%= "dashboard".equals(request.getParameter("viewSource")) ? "viewSource=dashboard":"" %>');
+    }
+    return id;
+  } else {
+    return '<%= opportunityHeader.getId() %>';
+  }
+}
 </script>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
@@ -82,8 +100,8 @@
         <%= LeadsComponentListInfo.getSortIcon("oc.closedate") %>
       </th>
       <th nowrap>
-        <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=stage<%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label></a></strong>
-        <%= LeadsComponentListInfo.getSortIcon("stage") %>
+        <strong><a href="Leads.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&column=stagename<%= addLinkParams(request, "viewSource") %>"><dhv:label name="accounts.accounts_contacts_oppcomponent_details.CurrentStage">Current Stage</dhv:label></a></strong>
+        <%= LeadsComponentListInfo.getSortIcon("stagename") %>
       </th>
       <th>
         <strong><dhv:label name="accounts.accounts_contacts_detailsimport.Owner">Owner</dhv:label></strong>

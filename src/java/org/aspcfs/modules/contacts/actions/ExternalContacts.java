@@ -43,6 +43,7 @@ import org.aspcfs.utils.Template;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
@@ -479,7 +480,7 @@ public final class ExternalContacts extends CFSModule {
       context.getSession().removeAttribute("ContactMessageListInfo");
     }
     PagedListInfo pagedListInfo = this.getPagedListInfo(context, "ContactMessageListInfo");
-    pagedListInfo.setLink("ExternalContacts.do?command=ViewMessages&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+    pagedListInfo.setLink("ExternalContacts.do?command=ViewMessages&contactId=" + contactId + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
     try {
       db = this.getConnection(context);
 
@@ -660,7 +661,7 @@ public final class ExternalContacts extends CFSModule {
           //The user didn't request a specific record, so show a list
           //of records matching this category that the user can choose from
           PagedListInfo folderListInfo = this.getPagedListInfo(context, "ContactFolderInfo");
-          folderListInfo.setLink("ExternalContacts.do?command=Fields&contactId=" + contactId + "&catId=" + selectedCatId + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+          folderListInfo.setLink("ExternalContacts.do?command=Fields&contactId=" + contactId + "&catId=" + selectedCatId + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
 
           CustomFieldRecordList recordList = new CustomFieldRecordList();
           recordList.setLinkModuleId(Constants.CONTACTS);
@@ -1012,7 +1013,7 @@ public final class ExternalContacts extends CFSModule {
         }
         isValid = validateObject(context, db, thisContact);
         if (isValid) {
-          resultCount = thisContact.update(db);
+          resultCount = thisContact.update(db, context);
         }
       } else {
         // trying to insert a contact
@@ -1136,13 +1137,12 @@ public final class ExternalContacts extends CFSModule {
     addModuleBean(context, "External Contacts", "Delete a contact");
     if (recordDeleted) {
       context.getSession().removeAttribute("ContactMessageListInfo");
+      deleteRecentItem(context, thisContact);
       if (popup != null && "true".equals(popup)) {
-        deleteRecentItem(context, thisContact);
+        context.getRequest().setAttribute("id", ""+thisContact.getId());
         return "ContactDeletePopupOK";
-      } else {
-        context.getRequest().setAttribute("refreshUrl", "ExternalContacts.do?command=SearchContacts");
-        deleteRecentItem(context, thisContact);
       }
+      context.getRequest().setAttribute("refreshUrl", "ExternalContacts.do?command=SearchContacts");
       return "ContactDeleteOK";
     } else {
       processErrors(context, thisContact.getErrors());
@@ -1459,7 +1459,7 @@ public final class ExternalContacts extends CFSModule {
           if (dependencies.canDelete()) {
             htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
             htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-            htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='ExternalContacts.do?command=DeleteContact&id=" + id +HTTPUtils.addLinkParams(context.getRequest(), "popupType|actionId|popup|sourcePopup")+"'");
+            htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='ExternalContacts.do?command=DeleteContact&id=" + id +RequestUtils.addLinkParams(context.getRequest(), "popupType|actionId|popup|sourcePopup")+"'");
             htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
           } else {
             htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
@@ -1625,7 +1625,7 @@ public final class ExternalContacts extends CFSModule {
       mail.setSubject("Address update request");
 
       int tmpAddressSurveyId = Survey.getAddressSurveyId(db);
-      String serverName = HTTPUtils.getServerUrl(context.getRequest());
+      String serverName = RequestUtils.getServerUrl(context.getRequest());
       Template template = new Template();
       template.setText("<br>Please update your address at: <a href=\"http://" + serverName + "/ProcessAddressSurvey.do?id=${addressSurveyId=" + tmpAddressSurveyId + "}\">http://" + serverName + "/ProcessAddressSurvey.do?id=${addressSurveyId=" + tmpAddressSurveyId + "}</a>");
 
@@ -1711,7 +1711,7 @@ public final class ExternalContacts extends CFSModule {
       thisContact.checkUserAccount(db);
       DependencyList dependencies = thisContact.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + thisContact.getHtmlString(dependencies, systemStatus));
 
       if (thisContact.getPrimaryContact()) {
         htmlDialog.setTitle(systemStatus.getLabel("accounts.contacts.moveTitle"));
@@ -1719,7 +1719,7 @@ public final class ExternalContacts extends CFSModule {
         htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
         context.getSession().setAttribute("Dialog", htmlDialog);
         return ("ConfirmDeleteOK");
-      } else if (!dependencies.canDelete()) {
+      } else if (!thisContact.canMoveContact(dependencies)) {
         htmlDialog.setTitle(systemStatus.getLabel("accounts.contacts.moveTitle"));
         htmlDialog.setHeader(systemStatus.getLabel("accounts.contacts.unableToMoveHeader"));
         htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");

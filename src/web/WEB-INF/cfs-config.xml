@@ -421,7 +421,7 @@
     <bean name="ComponentDetails" class="org.aspcfs.modules.pipeline.base.OpportunityComponent" scope="request"/>
     <forward name="PrepareOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=LeadsComponents"/>
     <forward name="PopupModifyOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=CalendarOpportunities"/>
-    <forward name="PrepareModifyOppPopupOK" resource="/pipeline/leads_modifycomponent_popup.jsp" layout="style"/>
+    <forward name="PrepareModifyOppPopupOK" resource="/pipeline/leads_modifycomponent.jsp" layout="style"/>
     <forward name="PopupCloseOK" resource="/closepopupandreload.jsp"/>
   </action>
   <action name="CalendarAccounts" class="org.aspcfs.modules.accounts.actions.Accounts">
@@ -690,7 +690,7 @@
     <forward name="DetailsOppOK" resource="/contacts/companydirectory_detailsopp.jsp" layout="nav"/>
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <!-- duplicate actions for pop ups with layout="style" -->
-    <forward name="OppDeletePopupOK" resource="/dialogcloseandreload.jsp" layout="style"/>
+    <forward name="OppDeletePopupOK" resource="/dialogcloseandreopenOpener.jsp" layout="style"/>
     <forward name="ListOppsPopupOK" resource="/contacts/companydirectory_listopps.jsp" layout="style"/>
     <forward name="PrepareAddOppPopupOK" resource="/contacts/companydirectory_addopp.jsp" layout="style"/>
     <forward name="ModifyOppPopupOK" resource="/contacts/companydirectory_modifyopp.jsp" layout="style"/>
@@ -707,6 +707,7 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <!-- duplicate actions for pop ups with layout="style" -->
+    <forward name="OppDeletePopupOK" resource="/dialogcloseandreopenOpener.jsp" layout="style"/>
     <forward name="PrepareAddOppPopupOK" resource="/contacts/companydirectory_addoppcomponent.jsp" layout="style"/>
     <forward name="PrepareModifyOppPopupOK" resource="/contacts/companydirectory_modifycomponent.jsp" layout="style"/>
     <forward name="DetailsOppPopupOK" resource="/contacts/companydirectory_detailsopp.jsp" layout="style"/>
@@ -867,7 +868,7 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="OppListOK" resource="/pipeline/LeadsViewOpp.jsp" layout="nav"/>
     <forward name="PopupModifyOK" resource="/OpportunityForm.do?command=Prepare&amp;actionSource=LeadsComponents"/>
-    <forward name="PrepareModifyOppPopupOK" resource="/pipeline/leads_modifycomponent_popup.jsp" layout="style"/>
+    <forward name="PrepareModifyOppPopupOK" resource="/pipeline/leads_modifycomponent.jsp" layout="style"/>
     <forward name="ComponentDeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="ComponentModifyOK" resource="/pipeline/leads_modifycomponent.jsp" layout="nav"/>
     <forward name="ComponentUpdateOK" resource="LeadsComponents.do?command=DetailsComponent"/>
@@ -1018,7 +1019,7 @@
     <forward name="ConfirmDeleteOK" resource="/dialog.jsp"/>
     <forward name="DeleteOK" resource="/dialogcloseandreload.jsp" layout="style"/>
     <forward name="CloseAddPopup" resource="/accounts/accounts_closepopup_addcontact.jsp"/>
-    <forward name="PrepareAddPopupOK" resource="/accounts/accounts_contacts_add_popup.jsp" layout="style"/>
+    <forward name="PrepareAddPopupOK" resource="/accounts/accounts_contacts_add.jsp" layout="style"/>
     <forward name="ViewMessagesOK" resource="/accounts/accounts_contacts_messages_view.jsp" layout="nav"/>
     <forward name="MessageDetailsOK" resource="/accounts/accounts_contacts_messages_details.jsp" layout="nav"/>
     <forward name="AddPortalOK" resource="/ContactsPortal.do?command=Add" />
@@ -1617,7 +1618,7 @@
     <forward name="ResultsOK" resource="/troubletickets/troubletickets_searchresults.jsp" layout="nav"/>
     <forward name="AddOK" resource="/troubletickets/troubletickets_add.jsp" layout="nav"/>
     <forward name="ModifyOK" resource="/troubletickets/troubletickets_modify.jsp" layout="nav"/>
-    <forward name="ModifyPopupOK" resource="/troubletickets/troubletickets_modify_popup.jsp" layout="style"/>
+    <forward name="ModifyPopupOK" resource="/troubletickets/troubletickets_modify.jsp" layout="style"/>
     <forward name="DetailsOK" resource="/troubletickets/troubletickets_details.jsp" layout="nav"/>
     <forward name="SearchTicketsFormOK" resource="/troubletickets/troubletickets_search.jsp" layout="nav"/>
     <forward name="InsertOK" resource="/troubletickets/troubletickets_details.jsp" layout="nav"/>

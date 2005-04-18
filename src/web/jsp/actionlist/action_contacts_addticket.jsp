@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.troubletickets.base.*" %>
@@ -28,7 +28,7 @@
 <%-- include basic troubleticket add form --%>
 <%@ include file="../troubletickets/troubletickets_include.jsp" %>
 <br />
-<input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>" name="Save" onClick="return checkForm(this.form)" />
+<input type="submit" value="<dhv:label name="global.button.insert">Insert</dhv:label>" name="Save" onClick="return checkForm(this.form)" />
 <input type="submit" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();" />
 <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 </form>

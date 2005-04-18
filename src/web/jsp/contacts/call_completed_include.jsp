@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ page import="org.aspcfs.utils.web.HtmlSelect,org.aspcfs.utils.StringUtils,org.aspcfs.utils.web.LookupList" %>
 <dhv:evaluate if="<%= PreviousCallDetails.getId() > 0 %>">
@@ -163,7 +163,7 @@
       %>
       <%= resultSelect.getHtml("resultId") %><font color="red">*</font><%= showAttribute(request, "resultError") %>
       <input type="checkbox" name="hasFollowup" value="on" onClick="toggleSpan(this, 'nextActionSpan')" <%= CallDetails.getHasFollowup() ? " checked" : "" %> />
-      Schedule follow-up activity?
+      <dhv:label name="contacts.scheduleFollowUpActivity">Schedule follow-up activity?</dhv:label>
       <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
       <% }else{ %>
         <%= thisLookupList.getHtmlSelect("resultId", CallDetails.getResultId()) %>

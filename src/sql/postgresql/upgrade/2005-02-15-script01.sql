@@ -90,7 +90,7 @@ UPDATE project_news SET classification_id = 20;
 ALTER TABLE project_news ALTER COLUMN classification_id SET NOT NULL;
 
 ALTER TABLE project_news ADD COLUMN template_id INTEGER REFERENCES lookup_news_template;
-UPDATE project_news SET template_id = 1;
+--UPDATE project_news SET template_id = 1;
 
 -- Update size of column
 ALTER TABLE project_issue_replies RENAME COLUMN subject TO subject_old;

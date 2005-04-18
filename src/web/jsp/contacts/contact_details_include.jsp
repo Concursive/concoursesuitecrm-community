@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.contacts.base.*" %>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
@@ -49,7 +49,7 @@ function reopenOnDelete() {
 function reopenContact(id) {
   if (id == '<%= ContactDetails.getId() %>') {
     scrollReload('ExternalContacts.do?command=SearchContacts');
-    return -1;
+    return id;
   } else {
     return '<%= ContactDetails.getId() %>';
   }

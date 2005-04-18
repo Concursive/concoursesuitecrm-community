@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*, org.aspcfs.utils.web.* " %>
@@ -373,6 +373,9 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
+      <script type="text/javascript">
+        update('address<%= acount %>country','<%= acount %>');
+      </script>
       <% CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
@@ -458,6 +461,9 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
+      <script type="text/javascript">
+        update('address<%= acount %>country','<%= acount %>');
+      </script>
       <% CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
@@ -473,7 +479,7 @@
 <tr>
 <td>
 <input type="submit" value="<dhv:label name="global.button.update">Update</dhv:label>" /> &nbsp;
-<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();" />
+<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="window.opener=self;window.close();" />
 <input type="hidden" name="dosubmit" value="true" />
 <input type="hidden" name="enteredBy" value="<%=ContactDetails.getEnteredBy()%>" />
 <input type="hidden" name="modifiedBy" value="<%=ContactDetails.getModifiedBy()%>" />

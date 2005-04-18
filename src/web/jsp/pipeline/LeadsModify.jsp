@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.pipeline.base.*,org.aspcfs.utils.web.*,com.zeroio.iteam.base.*" %>
@@ -22,6 +22,20 @@
 <jsp:useBean id="PipelineViewpointInfo" class="org.aspcfs.utils.web.ViewpointInfo" scope="session"/>
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <%@ include file="../initPage.jsp" %>
+<script type="text/javascript">
+function reopenOpportunity(id) {
+  if (id == '<%= opportunityHeader.getId() %>') {
+    if ('<%= request.getParameter("return") == null %>' =='true') {
+      scrollReload('Leads.do?command=Search');
+    } else if ('<%= request.getParameter("return") != null && "dashboard".equals((String) request.getParameter("return") %>' == 'true') {
+      scrollReload('Leads.do?command=Dashboard');
+    }
+    return id;
+  } else {
+    return '<%= opportunityHeader.getId() %>';
+  }
+}
+</script>
 <form name="modifyOpp" action="Leads.do?command=UpdateOpp<%= (request.getParameter("popup") != null?"&popup=true":"") %>" method="post">
 <%
   boolean popUp = false;

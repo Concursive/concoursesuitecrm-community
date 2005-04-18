@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,java.text.DateFormat,org.aspcfs.modules.accounts.base.*,org.aspcfs.controller.*,org.aspcfs.utils.*,org.aspcfs.utils.web.*" %>
@@ -255,6 +255,9 @@ Company Information
 			<td>
 				<% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
 				<%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
+        <script type="text/javascript">
+          update('address<%= acount %>country','<%= acount %>');
+        </script>
 				<% CountrySelect = new CountrySelect(); %>
 			</td>
 		</tr>
@@ -337,6 +340,9 @@ Company Information
 			<td>
 				<% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
 				<%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
+        <script type="text/javascript">
+          update('address<%= acount %>country','<%= acount %>');
+        </script>
 				<% CountrySelect = new CountrySelect(); %>
 			</td>
 		</tr>

@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%-- Trails --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -29,10 +29,10 @@
 </table>
 <%-- End Trails --%>
 <form name="newMessageForm" action="MyCFSInbox.do?command=SendMessage" method="post" onSubmit="return sendMessage();">
-<input type="submit" value="<dhv:label name="button.send">Send</dhv:label>">
+<input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
 <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=Inbox'"><br><br>
 <%@ include file="../newmessage.jsp" %>
 <br>
-<input type="submit" value="<dhv:label name="button.send">Send</dhv:label>">
+<input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
 <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='MyCFSInbox.do?command=Inbox'">
 </form>

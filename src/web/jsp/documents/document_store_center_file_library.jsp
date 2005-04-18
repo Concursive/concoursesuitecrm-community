@@ -15,7 +15,7 @@
   - 
   - Author(s): 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -65,11 +65,11 @@
 </dhv:evaluate>
 <dhv:documentPermission name="documentcenter-documents-folders-add,documentcenter-documents-files-upload,documentcenter-documents-folders-edit" if="any">
 <br>
-&nbsp;<br>
+<br>
 </dhv:documentPermission>
 <table cellpadding="4" cellspacing="0" width="100%" class="pagedList">
   <tr>
-    <th width="8" align="center" nowrap><strong><dhv:label name="documents.documents.action">Action</dhv:label></strong></th>
+    <th width="8">&nbsp;</th>
     <th width="100%"><strong><dhv:label name="documents.documents.file">File</dhv:label></strong></th>
     <th align="center"><strong><dhv:label name="documents.documents.type">Type</dhv:label></strong></th>
     <th align="center"><strong><dhv:label name="documents.documents.size">Size</dhv:label></strong></th>

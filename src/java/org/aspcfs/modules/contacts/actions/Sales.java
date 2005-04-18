@@ -367,17 +367,12 @@ public final class Sales extends CFSModule {
     if (!(hasPermission(context, "sales-leads-view"))) {
       return ("PermissionError");
     }
-    String backFromDetails = context.getRequest().getParameter("backFromDetails");
-    boolean fromDetails = false;
-    if (backFromDetails != null && !"".equals(backFromDetails)) {
-      fromDetails = backFromDetails.equals("true");
-    }
     SystemStatus systemStatus = this.getSystemStatus(context);
     Connection db = null;
     try {
       db = getConnection(context);
       //Create the paged list info to store the search form
-      PagedListInfo salesListInfo = this.getPagedListInfo(context, "SalesListInfo",!fromDetails);
+      PagedListInfo salesListInfo = this.getPagedListInfo(context, "SalesListInfo");
       salesListInfo.setCurrentLetter("");
       salesListInfo.setCurrentOffset(0);
 
@@ -390,7 +385,7 @@ public final class Sales extends CFSModule {
       context.getRequest().setAttribute("RatingList", ratings);
       CountrySelect countrySelect = new CountrySelect(systemStatus.getLabel("pipeline.any"));
       context.getRequest().setAttribute("countrySelect", countrySelect);
-      context.getRequest().setAttribute("searchForm", ""+true);
+      context.getRequest().setAttribute("listForm", ""+true);
 
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);
@@ -517,11 +512,6 @@ public final class Sales extends CFSModule {
     if (!(hasPermission(context, "sales-leads-view"))) {
       return ("PermissionError");
     }
-    String backFromDetails = context.getRequest().getParameter("backFromDetails");
-    boolean fromDetails = false;
-    if (backFromDetails != null && !"".equals(backFromDetails)) {
-      fromDetails = backFromDetails.equals("true");
-    }
     String nextValue = (String) context.getRequest().getAttribute("nextValue");
     if (nextValue == null || "".equals(nextValue)) {
       nextValue = (String) context.getRequest().getParameter("nextValue");
@@ -529,15 +519,15 @@ public final class Sales extends CFSModule {
     context.getRequest().setAttribute("nextValue", nextValue);
     String from = (String) context.getRequest().getParameter("from");
     context.getRequest().setAttribute("from", from);
-    String searchForm = (String) context.getRequest().getParameter("searchForm");
-    if (searchForm != null && !"".equals(searchForm)) {
-      context.getRequest().setAttribute("searchForm", searchForm);
+    String listForm = (String) context.getRequest().getParameter("listForm");
+    if (listForm != null && !"".equals(listForm)) {
+      context.getRequest().setAttribute("listForm", listForm);
     }
 
     ContactList contacts = new ContactList();
     //Prepare pagedListInfo
-    PagedListInfo searchListInfo = this.getPagedListInfo(context, "SalesListInfo",!fromDetails);
-    searchListInfo.setLink("Sales.do?command=List&searchForm="+(searchForm != null ? searchForm : ""));
+    PagedListInfo searchListInfo = this.getPagedListInfo(context, "SalesListInfo");
+    searchListInfo.setLink("Sales.do?command=List&listForm="+(listForm != null ? listForm : ""));
 
     Connection db = null;
     try {
@@ -587,9 +577,9 @@ public final class Sales extends CFSModule {
     if (nextValue == null || "".equals(nextValue)) {
       nextValue = (String) context.getRequest().getParameter("nextValue");
     }
-    String searchForm = (String) context.getRequest().getParameter("searchForm");
-    if (searchForm != null && !"".equals(searchForm)) {
-      context.getRequest().setAttribute("searchForm", searchForm);
+    String listForm = (String) context.getRequest().getParameter("listForm");
+    if (listForm != null && !"".equals(listForm)) {
+      context.getRequest().setAttribute("listForm", listForm);
     }
     String readStatusString = (String) context.getRequest().getAttribute("readStatus");
     String contactId = (String) context.getRequest().getAttribute("contactId");
@@ -668,9 +658,9 @@ public final class Sales extends CFSModule {
       from = (String) context.getRequest().getParameter("from");
     }
     context.getRequest().setAttribute("from", from);
-    String searchForm = (String) context.getRequest().getParameter("searchForm");
-    if (searchForm != null && !"".equals(searchForm)) {
-      context.getRequest().setAttribute("searchForm", searchForm);
+    String listForm = (String) context.getRequest().getParameter("listForm");
+    if (listForm != null && !"".equals(listForm)) {
+      context.getRequest().setAttribute("listForm", listForm);
     }
     String contactId = (String) context.getRequest().getParameter("contactId");
     context.getRequest().setAttribute("contactId", contactId);
@@ -772,9 +762,9 @@ public final class Sales extends CFSModule {
       from = (String) context.getRequest().getParameter("from");
     }
     context.getRequest().setAttribute("from", from);
-    String searchForm = (String) context.getRequest().getParameter("searchForm");
-    if (searchForm != null && !"".equals(searchForm)) {
-      context.getRequest().setAttribute("searchForm", searchForm);
+    String listForm = (String) context.getRequest().getParameter("listForm");
+    if (listForm != null && !"".equals(listForm)) {
+      context.getRequest().setAttribute("listForm", listForm);
     }
     String nextValue = (String) context.getRequest().getAttribute("nextValue");
     if (nextValue == null || "".equals(nextValue)) {
@@ -809,7 +799,7 @@ public final class Sales extends CFSModule {
       }
       isValid = validateObject(context, db, thisContact);
       if (isValid) {
-        resultCount = thisContact.update(db);
+        resultCount = thisContact.update(db, context);
       }
       if (isValid && resultCount == 1) {
         processUpdateHook(context, oldContact, thisContact);
@@ -847,9 +837,9 @@ public final class Sales extends CFSModule {
     String contactId = (String) context.getRequest().getParameter("contactId");
     Contact contact = null;
     Connection db = null;
-    String searchForm = (String) context.getRequest().getParameter("searchForm");
-    if (searchForm != null && !"".equals(searchForm)) {
-      context.getRequest().setAttribute("searchForm", searchForm);
+    String listForm = (String) context.getRequest().getParameter("listForm");
+    if (listForm != null && !"".equals(listForm)) {
+      context.getRequest().setAttribute("listForm", listForm);
     }
     HtmlDialog htmlDialog = new HtmlDialog();
     SystemStatus systemStatus = this.getSystemStatus(context);
@@ -863,10 +853,10 @@ public final class Sales extends CFSModule {
       htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='Sales.do?command=Delete&contactId=" + contactId + "&searchForm="+ (searchForm != null ? searchForm : "") + "'");
+        htmlDialog.setDeleteUrl("javascript:window.location.href='Sales.do?command=Delete&contactId=" + contactId + "&listForm="+ (listForm != null ? listForm : "") + "'");
       } else {
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header2"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='Sales.do?command=Delete&contactId=" + contactId + "&searchForm="+ (searchForm != null ? searchForm : "") + HTTPUtils.addLinkParams(context.getRequest(), "popup|return") + "'");
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='Sales.do?command=Delete&contactId=" + contactId + "&listForm="+ (listForm != null ? listForm : "") + RequestUtils.addLinkParams(context.getRequest(), "popup|from") + "'");
         htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception e) {
@@ -893,7 +883,7 @@ public final class Sales extends CFSModule {
       return ("PermissionError");
     }
     String contactId = (String) context.getRequest().getParameter("contactId");
-    String searchForm = (String) context.getRequest().getParameter("searchForm");
+    String listForm = (String) context.getRequest().getParameter("listForm");
     Contact contact = null;
     Connection db = null;
     try {
@@ -906,9 +896,9 @@ public final class Sales extends CFSModule {
       contact.delete(db, context);
       String returnType = (String) context.getRequest().getParameter("return");
       if (returnType != null && !"list".equals(returnType)) {
-        context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + HTTPUtils.addLinkParams(context.getRequest(), "actionId"));
+        context.getRequest().setAttribute("refreshUrl", "Sales.do?command=Dashboard" + RequestUtils.addLinkParams(context.getRequest(), "actionId"));
       } else {
-        context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List&backFromDetails=true" + HTTPUtils.addLinkParams(context.getRequest(), "actionId|searchForm"));
+        context.getRequest().setAttribute("refreshUrl", "Sales.do?command=List" + RequestUtils.addLinkParams(context.getRequest(), "actionId|listForm|from"));
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

@@ -48,6 +48,9 @@
 # Product catalog permissions
 #ant upgradedb -Darg1=2005-03-28-script01.bsh -Darg2=
 
+# Missing leads lookup editors
+#ant upgradedb -Darg1=2005-04-09-script01.bsh -Darg2=
+
 #   **[UPDATED PRODUCTION BETA/TEST SERVER TO THIS POINT]**
 
 

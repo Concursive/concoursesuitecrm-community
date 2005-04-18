@@ -56,8 +56,8 @@
 <% Quote quote = quoteBean; %>
 <iframe src="../empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
 <form method="post" name="addQuote" action="Quotes.do?command=AddQuote&auto-populate=true" onSubmit="return checkForm(this);">
-<input type="submit" value="<dhv:label name="button.insert">Insert</dhv:label>"/>
-<input type="button" value="<dhv:label name="button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Quotes.do?command=Search&orgId=<%= OrgDetails.getId() %>';"/>
+<input type="submit" value="<dhv:label name="global.button.insert">Insert</dhv:label>"/>
+<input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='Quotes.do?command=Search&orgId=<%= OrgDetails.getId() %>';"/>
 <br />
 <%= showError(request, "actionError") %>
 <%

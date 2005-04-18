@@ -32,6 +32,7 @@ import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 import org.aspcfs.modules.base.Notification;
 
 import java.sql.Connection;
@@ -1309,7 +1310,7 @@ public final class CampaignManager extends CFSModule {
       }
       campaign.setModifiedBy(getUserId(context));
       campaign.setModified(modified);
-      campaign.setServerName(HTTPUtils.getServerUrl(context.getRequest()));
+      campaign.setServerName(RequestUtils.getServerUrl(context.getRequest()));
       resultCount = campaign.activate(db, campaign.getEnteredBy(), this.getUserRange(context, campaign.getEnteredBy()));
     } catch (Exception errorMessage) {
       context.getRequest().setAttribute("Error", errorMessage);
@@ -2374,7 +2375,7 @@ public final class CampaignManager extends CFSModule {
         }
         campaign.setModifiedBy(userId);
         campaign.setModified(modified);
-        campaign.setServerName(HTTPUtils.getServerUrl(context.getRequest()));
+        campaign.setServerName(RequestUtils.getServerUrl(context.getRequest()));
         resultCount = campaign.activate(db, campaign.getEnteredBy(),
             this.getUserRange(context, campaign.getEnteredBy()));
       }

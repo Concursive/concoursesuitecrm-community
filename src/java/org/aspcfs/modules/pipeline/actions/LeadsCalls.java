@@ -29,6 +29,7 @@ import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
 import org.aspcfs.utils.web.ViewpointInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -62,7 +63,7 @@ public final class LeadsCalls extends CFSModule {
     addModuleBean(context, "View Opportunities", "Opportunity Activities");
 
     PagedListInfo leadsCallListInfo = this.getPagedListInfo(context, "LeadsCallListInfo");
-    leadsCallListInfo.setLink("LeadsCalls.do?command=View&headerId=" + headerId + HTTPUtils.addLinkParams(context.getRequest(), "viewSource"));
+    leadsCallListInfo.setLink("LeadsCalls.do?command=View&headerId=" + headerId + RequestUtils.addLinkParams(context.getRequest(), "viewSource"));
 
     //reset the paged lists
     if ("true".equals(context.getRequest().getParameter("resetList"))) {
@@ -89,7 +90,7 @@ public final class LeadsCalls extends CFSModule {
     if (sectionId == null || pendingPagedListId.equals(sectionId)) {
       PagedListInfo callListInfo = this.getPagedListInfo(context, pendingPagedListId, "c.alertdate", null);
       callListInfo.setLink("LeadsCalls.do?command=View&headerId=" + headerId +
-          HTTPUtils.addLinkParams(context.getRequest(), "viewSource"));
+          RequestUtils.addLinkParams(context.getRequest(), "viewSource"));
       if (sectionId == null) {
         if (!callListInfo.getExpandedSelection()) {
           if (callListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -120,7 +121,7 @@ public final class LeadsCalls extends CFSModule {
     if (sectionId == null || completedPagedListId.equals(sectionId)) {
       PagedListInfo completedCallListInfo = this.getPagedListInfo(context, completedPagedListId, "c.entered", "desc");
       completedCallListInfo.setLink("LeadsCalls.do?command=View&headerId=" + headerId +
-          HTTPUtils.addLinkParams(context.getRequest(), "viewSource"));
+          RequestUtils.addLinkParams(context.getRequest(), "viewSource"));
       if (sectionId == null) {
         if (!completedCallListInfo.getExpandedSelection()) {
           if (completedCallListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -556,8 +557,7 @@ public final class LeadsCalls extends CFSModule {
     String headerId = context.getRequest().getParameter("headerId");
     CFSNote newNote = null;
     addModuleBean(context, "View Opportunities", "Opportunity Activities");
-    int noteType = Integer.parseInt(context.getRequest().getParameter("forwardType"));
-    context.getRequest().setAttribute("forwardType", ""+Constants.TASKS);
+    context.getRequest().setAttribute("forwardType", String.valueOf(Constants.TASKS));
 
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(context, "PipelineViewpointInfo");

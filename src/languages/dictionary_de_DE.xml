@@ -132,7 +132,7 @@
     <param name="organization.accountNumber">
       <value><![CDATA[Kundennummer]]></value>
     </param>
-    <param name="global.button.Move">
+    <param name="global.button.move">
       <value><![CDATA[Verschieben]]></value>
     </param>
     <param name="accounts.accounts_contacts_communication_preference_add.AddCommunicationsPreference">
@@ -2091,7 +2091,7 @@
     <param name="accounts.accountasset_include.DateListed">
       <value><![CDATA[Datum aufgeführt]]></value>
     </param>
-    <param name="accounts.accounts_fields_list.FolderHaveMultipleRecords">
+    <param name="accounts.accounts_fields.FolderHaveMultipleRecords">
       <value><![CDATA[Dieses Verzeichnis kann nicht mehrere Einträge besitzen]]></value>
     </param>
     <param name="accounts.Messages">
@@ -3509,6 +3509,15 @@
     </param>
     <param name="calendar.Tickets">
       <value><![CDATA[Belege]]></value>
+    </param>
+    <param name="calendar.Projects">
+      <value><![CDATA[Projekte]]></value>
+    </param>
+    <param name="calendar.projectTickets">
+      <value><![CDATA[Project Tickets]]></value>
+    </param>
+    <param name="calendar.Quotes">
+      <value><![CDATA[Angebote]]></value>
     </param>
     <param name="reports.generatedBy">
       <value><![CDATA[generiert von]]></value>
@@ -9226,6 +9235,10 @@ You do not have the permissions to perform this action.]]></value>
   </config>
   
   <config name="system.modules.label" enabled="true">
+    <param name="My Home Page">
+      <page_title><![CDATA[Meine Homepage]]></page_title>
+      <menu_title><![CDATA[Meine<br />Home Page]]></menu_title>
+	</param>
     <param name="Employees">
       <page_title><![CDATA[Angestellte]]></page_title>
       <menu_title><![CDATA[Angestellte]]></menu_title>
@@ -9359,7 +9372,7 @@ You do not have the permissions to perform this action.]]></value>
   
   <config name="system.container.menu.label" enabled="true">
     <param name="accounts.folders.long_html">
-      <value><![CDATA[Anwendung]]></value>
+      <value><![CDATA[Verzeichnisse]]></value>
     </param>
     <param name="accounts.contacts.long_html">
       <value><![CDATA[Kontakte]]></value>
@@ -9372,6 +9385,9 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="accounts.quotes.long_html">
       <value><![CDATA[Angebote]]></value>
+    </param>
+    <param name="accounts.projects.long_html">
+      <value><![CDATA[Projekte]]></value>
     </param>
     <param name="accounts.orders.long_html">
       <value><![CDATA[Bestellungen]]></value>
@@ -9393,6 +9409,9 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="accounts.documents.long_html">
       <value><![CDATA[Dokumente]]></value>
+    </param>
+    <param name="accounts.relationships.long_html">
+      <value><![CDATA[Beziehung]]></value>
     </param>
     <param name="accounts.contacts.contactIndividualAccountHeader">
       <value><![CDATA[Dieser Kontakt kann nicht verschoben werden, da es sich hierbei auch um ein individuelles Konto handelt.]]></value>
@@ -9424,6 +9443,12 @@ You do not have the permissions to perform this action.]]></value>
     <param name="employees.details.long_html">
       <value><![CDATA[Details]]></value>
     </param>
+    <param name="employees.folders.long_html">
+      <value><![CDATA[Verzeichnisse]]></value>
+    </param>
+    <param name="employees.projects.long_html">
+      <value><![CDATA[Projekte]]></value>
+    </param>
     <param name="accountscontacts.details.long_html">
       <value><![CDATA[Details]]></value>
     </param>
@@ -9453,6 +9478,9 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="opportunities.documents.long_html">
       <value><![CDATA[Dokumente]]></value>
+    </param>
+    <param name="opportunities.quotes.long_html">
+      <value><![CDATA[Angebote]]></value>
     </param>
     <param name="communications.details.long_html">
       <value><![CDATA[Details]]></value>
@@ -9552,6 +9580,9 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="quotes.notes.long_html">
       <value><![CDATA[Notes]]></value>
+    </param>
+    <param name="quotes.history.long_html">
+      <value><![CDATA[Historie]]></value>
     </param>
     <param name="accountsQuotes.details.long_html">
       <value><![CDATA[Details]]></value>

@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*" %>
@@ -33,33 +33,29 @@
 </script>
 <body onLoad="javascript:document.addCall.subject.focus();">
 <% request.setAttribute("includeDetails", "true"); %>
-<%@ include file="../contacts/contact_details_header_include.jsp" %><br>
+<%-- <%@ include file="../contacts/contact_details_header_include.jsp" %><br>--%>
 <form name="addCall" action="AccountContactsCalls.do?command=Save&auto-populate=true&actionSource=CalendarCalls" onSubmit="return doCheck(this);" method="post">
-<table cellpadding="4" cellspacing="0" border="0" width="100%" class="details">
-  <tr>
-    <td class="containerBack">
-      <%-- include call add form --%>
-      <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
-      [<a href="javascript:showHistory();"><dhv:label name="calendar.viewContactHistory">View Contact History</dhv:label></a>]
-      <br />
-      <dhv:formMessage />
-      <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
-      <%@ include file="../contacts/call_include.jsp" %>
-      <br />
-      <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
-      <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
-      <input type="hidden" name="dosubmit" value="true">
-      <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
-      <dhv:evaluate if="<%= PreviousCallDetails.getId() > -1 %>">
-      <input type="hidden" name="parentId" value="<%= PreviousCallDetails.getId() %>">
-      </dhv:evaluate>
-      <input type="hidden" name="return" value="calendar">
-      <%= addHiddenParams(request, "action|popup") %>
-      <br>
-      &nbsp;
-    </td>
-  </tr>
-</table>
+<dhv:container name="accountscontacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" hideContainer="<%= isPopup(request) %>">
+  <%-- include call add form --%>
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
+  [<a href="javascript:showHistory();"><dhv:label name="calendar.viewContactHistory">View Contact History</dhv:label></a>]
+  <br />
+  <dhv:formMessage />
+  <iframe src="empty.html" name="server_commands" id="server_commands" style="visibility:hidden" height="0"></iframe>
+  <%@ include file="../contacts/call_include.jsp" %>
+  <br />
+  <input type="submit" value="<dhv:label name="global.button.save">Save</dhv:label>" onClick="this.form.dosubmit.value='true';">
+  <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.close();">
+  <input type="hidden" name="dosubmit" value="true">
+  <input type="hidden" name="contactId" value="<%= ContactDetails.getId() %>">
+  <dhv:evaluate if="<%= PreviousCallDetails.getId() > -1 %>">
+  <input type="hidden" name="parentId" value="<%= PreviousCallDetails.getId() %>">
+  </dhv:evaluate>
+  <input type="hidden" name="return" value="calendar">
+  <%= addHiddenParams(request, "action|popup") %>
+  <br>
+  &nbsp;
+</dhv:container>
 </form>
 </body>

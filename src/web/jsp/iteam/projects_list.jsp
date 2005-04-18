@@ -156,12 +156,12 @@ String actionError = showError(request, "actionError");
         </dhv:evaluate>
         <dhv:evaluate if="<%= requirements.getPlanActivityCount() > 0 %>">
           <% if (requirements.getPlanActivityCount() == 1) { %>
-          <dhv:label name="projects.oneOfOneActivityComplete.text" param="<%= "closedCount="+requirements.getPlanClosedCount()+"activityCount="+requirements.getPlanActivityCount() %>">(<%= requirements.getPlanClosedCount() %> of <%= requirements.getPlanActivityCount() %>activity is complete)</dhv:label>
+          <dhv:label name="projects.oneOfOneActivityComplete.text" param="<%= "closedCount="+requirements.getPlanClosedCount()+"activityCount="+requirements.getPlanActivityCount() %>">(<%= requirements.getPlanClosedCount() %> of <%= requirements.getPlanActivityCount() %> activity is complete)</dhv:label>
           <%} else {%>
             <% if (requirements.getPlanClosedCount() == 1) { %>
-          <dhv:label name="projects.oneOfSeveralActivitiesComplete.text" param="<%= "closedCount="+requirements.getPlanClosedCount()+"activityCount="+requirements.getPlanActivityCount() %>">(<%= requirements.getPlanClosedCount() %> of <%= requirements.getPlanActivityCount() %>activities is complete)</dhv:label>
+          <dhv:label name="projects.oneOfSeveralActivitiesComplete.text" param="<%= "closedCount="+requirements.getPlanClosedCount()+"activityCount="+requirements.getPlanActivityCount() %>">(<%= requirements.getPlanClosedCount() %> of <%= requirements.getPlanActivityCount() %> activities is complete)</dhv:label>
             <%} else {%>
-          <dhv:label name="projects.numberofSeveralActivitiesComplete.text" param="<%= "closedCount="+requirements.getPlanClosedCount()+"activityCount="+requirements.getPlanActivityCount() %>">(<%= requirements.getPlanClosedCount() %> of <%= requirements.getPlanActivityCount() %>activities are complete)</dhv:label>
+          <dhv:label name="projects.numberofSeveralActivitiesComplete.text" param="<%= "closedCount="+requirements.getPlanClosedCount()+"activityCount="+requirements.getPlanActivityCount() %>">(<%= requirements.getPlanClosedCount() %> of <%= requirements.getPlanActivityCount() %> activities are complete)</dhv:label>
           <%}%>
           <%}%>
         </dhv:evaluate>

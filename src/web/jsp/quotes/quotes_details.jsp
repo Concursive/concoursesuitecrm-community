@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -124,7 +124,7 @@ String quoteEditPermission = "quotes-quotes-edit";
 String ticketLink = "TroubleTickets.do?command=Details&id="+ quote.getTicketId();
 String quoteNextVersionLink = "Quotes.do?command=Details&quoteId="+ quote.getParentId() +"&version="+ (version!=null?version:"");
 String orderLink = "Orders.do?command=Details&id="+ order.getId();
-String opportunityLink = "Leads.do?command=DetailsOpp&headerId="+ quote.getHeaderId() +"&viewSource=dashboard&reset=true";
+String opportunityLink = "Leads.do?command=DetailsOpp&headerId="+ quote.getHeaderId() +"&viewSource=dashboard&reset=true&fromQuoteDetails=true";
 String contactLink = "ExternalContacts.do?command=ContactDetails&id="+ quote.getContactId();
 // set the other items
 String secondId = "";

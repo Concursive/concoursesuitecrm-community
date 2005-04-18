@@ -50,6 +50,9 @@
     <param name="calendar.noItemsPending">
       <value><![CDATA[There are currently no items pending for you.]]></value>
     </param>
+    <param name="accounts.company.colon">
+      <value><![CDATA[Company:]]></value>
+    </param>
     <param name="accounts.accountasset_include.Category">
       <value><![CDATA[Category]]></value>
     </param>
@@ -722,7 +725,7 @@
     <param name="organization.accountNumber">
       <value><![CDATA[Account Number]]></value>
     </param>
-    <param name="global.button.Move">
+    <param name="global.button.move">
       <value><![CDATA[Move]]></value>
     </param>
     <param name="accounts.accounts_contacts_communication_preference_add.AddCommunicationsPreference">
@@ -1001,7 +1004,7 @@
     <param name="accounts.accountasset_include.DateListed">
       <value><![CDATA[Date Listed]]></value>
     </param>
-    <param name="accounts.accounts_fields_list.FolderHaveMultipleRecords">
+    <param name="accounts.accounts_fields.FolderHaveMultipleRecords">
       <value><![CDATA[This folder can have multiple records]]></value>
     </param>
     <param name="accounts.Messages">
@@ -3308,6 +3311,9 @@
     <param name="project.edited.braces">
       <value><![CDATA[(edited)]]></value>
     </param>
+    <param name="project.editedby.braces">
+      <value><![CDATA[(edited by ${username})]]></value>
+    </param>
     <param name="project.quoteThisMessage">
       <value><![CDATA[Quote this message]]></value>
     </param>
@@ -4728,7 +4734,7 @@ while a Guest has very limited functionality.]]></value>
       <value><![CDATA[Modify Server's Email Address]]></value>
     </param>
     <param name="admin.emailAddress.example">
-      <value><![CDATA[(ex: darkhorse_crm@yourcompany.com)]]></value>
+      <value><![CDATA[(ex: centric_crm@yourcompany.com)]]></value>
     </param>
     <param name="admin.faxServer.note.1">
       <value><![CDATA[The specified server must allow this server to send faxes]]></value>
@@ -4941,7 +4947,7 @@ reflect those changes.]]></value>
       <value><![CDATA[Add User]]></value>
     </param>
     <param name="admin.licenseLimit.text">
-      <value><![CDATA[The installed license limits this system to ${appSize} active users.]]></value>
+      <value><![CDATA[The installed license limits this system to ${appsize} active users.]]></value>
     </param>
     <param name="admin.addUserAccount">
       <value><![CDATA[Add a user account]]></value>
@@ -5824,6 +5830,12 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="errors.actualErrorIs.colon">
       <value><![CDATA[The actual error is:<br /><br />${errorMessage}]]></value>
+    </param>
+    <param name="translation.paramError">
+      <value><![CDATA[Value has incorrect params]]></value>
+    </param>
+    <param name="object.validation.opportunities.quotes.noQuotesForGeneralContacts">
+    <value><![CDATA[Quotes can not be added for opportunities associated with General Contacts]]></value>
     </param>
     <param name="object.validation.task.ownerPersonal">
       <value><![CDATA[Personal tasks cannot be assigned to other users]]></value>
@@ -7017,8 +7029,14 @@ You do not have the permissions to perform this action.]]></value>
     <param name="tickets.perDayDescription">
       <value><![CDATA[Per Day Description of Service]]></value>
     </param>
+    <param name="contacts.scheduleFollowUpActivity">
+      <value><![CDATA[Schedule follow-up activity?]]></value>
+    </param>
     <param name="tickets.activityDate">
       <value><![CDATA[Activity Date]]></value>
+    </param>
+    <param name="action.contacts.Note.text">
+      <value><![CDATA[Note: The recipient's contact information will be attached with the chosen message.]]></value>
     </param>
     <param name="tickets.towardsContract">
       <value><![CDATA[Towards Contract]]></value>
@@ -7309,6 +7327,12 @@ You do not have the permissions to perform this action.]]></value>
       <value><![CDATA[If you have misplaced your license or you are installing Centric CRM on a different server, then you can ${license}request a new license${endLicense} to be sent by email]]></value>
     </param>
     <!-- Java classes -->
+    <param name="object.validation.duplicateViewpointUserCanNotBeInserted">
+      <value><![CDATA[A duplicate viewpoint can not be created]]></value>
+    </param>
+    <param name="object.validation.ownViewpointNotAllowed">
+      <value><![CDATA[A viewpoint can not be created for the selected contact]]></value>
+    </param>
     <param name="object.validation.quoteClosedWithoutExplanation">
       <value><![CDATA[The Quote cannot be closed without an explanation]]></value>
     </param>
@@ -8102,6 +8126,9 @@ You do not have the permissions to perform this action.]]></value>
     <param name="dependency.preventingDeletion">
       <value><![CDATA[Indicates any dependency preventing this item from being deleted.]]></value>
     </param>
+    <param name="dependency.preventingContactMove">
+      <value><![CDATA[Indicates any dependency preventing this contact from being moved.]]></value>
+    </param>
     <param name="dependency.noDependencyForAction">
       <value><![CDATA[No dependencies for this action]]></value>
     </param>
@@ -8362,8 +8389,14 @@ You do not have the permissions to perform this action.]]></value>
     <param name="calendar.Tickets">
       <value><![CDATA[Tickets]]></value>
     </param>
+    <param name="calendar.Projects">
+      <value><![CDATA[Projects]]></value>
+    </param>
     <param name="calendar.projectTickets">
       <value><![CDATA[Project Tickets]]></value>
+    </param>
+    <param name="calendar.Quotes">
+      <value><![CDATA[Quotes]]></value>
     </param>
 		<!-- Reports Module Translation -->
 		<!-- Eg: reports.[module name].[Label]-->
@@ -9517,6 +9550,9 @@ You do not have the permissions to perform this action.]]></value>
     <param name="accounts.quotes.long_html">
       <value>Quotes</value>
     </param>
+    <param name="accounts.projects.long_html">
+      <value>Projects</value>
+    </param>
     <param name="accounts.orders.long_html">
       <value>Orders</value>
     </param>
@@ -9537,6 +9573,9 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="accounts.documents.long_html">
       <value>Documents</value>
+    </param>
+    <param name="accounts.relationships.long_html">
+      <value>Relationships</value>
     </param>
     <!-- Contacts -->
     <param name="contacts.details.long_html">
@@ -9560,6 +9599,12 @@ You do not have the permissions to perform this action.]]></value>
     <!-- Employees -->
     <param name="employees.details.long_html">
       <value>Details</value>
+    </param>
+    <param name="employees.folders.long_html">
+      <value>Folders</value>
+    </param>
+    <param name="employees.projects.long_html">
+      <value>Projects</value>
     </param>
     <!-- Accounts Contacts -->
     <param name="accountscontacts.details.long_html">
@@ -9593,6 +9638,9 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="opportunities.documents.long_html">
       <value>Documents</value>
+    </param>
+    <param name="opportunities.quotes.long_html">
+      <value>Quotes</value>
     </param>
     <!-- Communications -->
     <param name="communications.details.long_html">
@@ -9699,6 +9747,9 @@ You do not have the permissions to perform this action.]]></value>
     </param>
     <param name="quotes.notes.long_html">
       <value>Notes</value>
+    </param>
+    <param name="quotes.history.long_html">
+      <value>History</value>
     </param>
     <!-- Accounts Quotes -->
     <param name="accountsQuotes.details.long_html">

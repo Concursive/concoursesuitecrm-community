@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -69,6 +69,20 @@
   }
 
 </script>
+<script type="text/javascript">
+function reopenOpportunity(id) {
+  if (id == '<%= opportunityHeader.getId() %>') {
+    if ('<%= "dashboard".equals(request.getParameter("viewSource")) %>' == 'true') {
+      scrollReload('Leads.do?command=Dashboard');
+    } else {
+      scrollReload('Leads.do?command=Search');
+    }
+    return id;
+  } else {
+    return '<%= opportunityHeader.getId() %>';
+  }
+}
+</script>
 <form method="post" name="addProduct" action="Quotes.do?">
 <% int showAction = quote.getClosed() == null?1:0; %>
 <%-- Trails --%>
@@ -97,7 +111,7 @@
     <%String status = quoteStatusList.getValueFromId(quote.getStatusId());%>
     <%@ include file="../quotes/quotes_header_include.jsp" %>
     <% if(quote.getClosed() == null){%>
-      <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="button.submit">Submit</dhv:label>" onClick="javascript:popURL('Quotes.do?command=Submit&quoteId=<%= quote.getId() %>','Submit','500','400','yes','yes');"/></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.submit">Submit</dhv:label>" onClick="javascript:popURL('Quotes.do?command=Submit&quoteId=<%= quote.getId() %>','Submit','500','400','yes','yes');"/></dhv:permission>
       <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='LeadsQuotes.do?command=ModifyForm&version=<%= version %>&quoteId=<%= quote.getId() %><%= addLinkParams(request, "viewSource") %>';"/></dhv:permission>
     <%}%>
     <dhv:permission name="pipeline-opportunities-add"><input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="generateClone();"/></dhv:permission>
@@ -127,7 +141,7 @@ OpportunityHeader opportunity = opportunityHeader;
 %>
     <%@ include file="../quotes/quotes_details_include.jsp" %>
     <% if(quote.getClosed() == null){%>
-      <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="button.submit">Submit</dhv:label>" onClick="javascript:popURL('Quotes.do?command=Submit&quoteId=<%= quote.getId() %>','Submit','500','400','yes','yes');"/></dhv:permission>
+      <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="global.button.submit">Submit</dhv:label>" onClick="javascript:popURL('Quotes.do?command=Submit&quoteId=<%= quote.getId() %>','Submit','500','400','yes','yes');"/></dhv:permission>
       <dhv:permission name="pipeline-opportunities-edit"><input type="button" value="<dhv:label name="button.modify">Modify</dhv:label>" onClick="javascript:window.location.href='LeadsQuotes.do?command=ModifyForm&version=<%= version %>&quoteId=<%= quote.getId() %><%= addLinkParams(request, "viewSource") %>';"/></dhv:permission>
     <%}%>
     <dhv:permission name="pipeline-opportunities-add"><input type="button" value="<dhv:label name="button.clone">Clone</dhv:label>" onClick="generateClone();"/></dhv:permission>

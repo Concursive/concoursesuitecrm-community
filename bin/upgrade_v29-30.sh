@@ -124,6 +124,9 @@ ant upgradedb -Darg1=2005-03-11-script01.sql -Darg2=
 # Product catalog permissions
 ant upgradedb -Darg1=2005-03-28-script01.bsh -Darg2=
 
+# Missing leads lookup editors
+ant upgradedb -Darg1=2005-04-09-script01.bsh -Darg2=
+
 
 # Manually upgrade the help for each site
 echo ...

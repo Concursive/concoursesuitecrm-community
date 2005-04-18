@@ -15,7 +15,7 @@
   - 
   - Author(s): Matt Rajkowski
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%-- Note: When cancel is submitted, the encoding of the form has to be processed differently
      or the id can be added to the action --%>
@@ -90,7 +90,7 @@
     <tr class="containerBody">
       <td nowrap class="formLabel"><dhv:label name="accounts.accounts_contacts_calls_details_include.Subject">Subject</dhv:label></td>
       <td>
-        <input type="text" name="subject" size="59" maxlength="255" value="<%= toHtmlValue(FileItem.getSubject()) %>">
+        <input type="text" name="subject" size="59" maxlength="255" value="<%= toHtmlValue((request.getAttribute("subject") != null && !"".equals((String) request.getAttribute("subject")) ? ((String) request.getAttribute("subject")):FileItem.getSubject())) %>">
         <font color="red">*</font>
         <%= showAttribute(request, "subjectError") %>
       </td>
@@ -111,7 +111,6 @@
       <td nowrap class="formLabel"><dhv:label name="contacts.companydirectory_confirm_importupload.File">File</dhv:label></td>
       <td>
         <input type="file" name="id<%= Project.getId() %>" size="45">
-        <%= showAttribute(request, "actionError") %>
       </td>
     </tr>
   </table>

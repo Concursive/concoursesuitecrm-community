@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -25,6 +25,7 @@
 <jsp:useBean id="yesAddressUpdateResponseList" class="org.aspcfs.modules.communications.base.SurveyResponseList" scope="request"/>
 <jsp:useBean id="noAddressUpdateResponseList" class="org.aspcfs.modules.communications.base.SurveyResponseList" scope="request"/>
 <jsp:useBean id="recipientList" class="org.aspcfs.modules.communications.base.RecipientList" scope="request"/>
+<jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <script language="JavaScript" type="text/javascript" src="javascript/popURL.js"></script>
 <%@ include file="../initPage.jsp" %>
 <%-- Trails --%>
@@ -67,7 +68,7 @@
                     <dhv:label name="campaign.lastResponseReceived.colon" param="time=--">Last Response Received: --</dhv:label>
                   </dhv:evaluate>
                   <dhv:evaluate if="<%= !"".equals(Campaign.getLastAddressResponseString()) %>">
-                    <dhv:label name="campaign.lastResponseReceived.colon" param="<%= "time="+getTime(pageContext,Campaign.getLastAddressResponse(),"&nbsp;",DateFormat.SHORT,false,false,false,"&nbsp;") %>">Last Response Received: <zeroio:tz timestamp="<%= Campaign.getLastAddressResponse() %>" default="&nbsp;"/></dhv:label>
+                    <dhv:label name="campaign.lastResponseReceived.colon" param="time=">Last Response Received:</dhv:label><zeroio:tz timestamp="<%= Campaign.getLastAddressResponse() %>" timeZone="<%= User.getTimeZone() %>"  showTimeZone="true"/>
                   </dhv:evaluate>
                   <br />
                   For more information on those who updated their contact information (#<%=yesAddressUpdateResponseList.size()%>), click <a href="javascript:popURLReturn('CampaignManager.do?command=AddressUpdateResponseDetails&id=<%=Campaign.getId()%>&section=<%=SurveyResponse.ADDRESS_UPDATED%>&popup=true','CampaignManager.do?command=Details&reset=true', 'View_Address_Response_Details','700','500','yes','no');">here</a><br />
@@ -102,7 +103,7 @@
                     <dhv:label name="campaign.lastResponseReceived.colon" param="time=--">Last Response Received: --</dhv:label>
                   </dhv:evaluate>
                   <dhv:evaluate if="<%= !"".equals(Campaign.getLastResponseString()) %>">
-                    <dhv:label name="campaign.lastResponseReceived.colon" param="<%= "time="+getTime(pageContext,Campaign.getLastResponse(),"&nbsp;",DateFormat.SHORT,false,false,false,"&nbsp;") %>">Last Response Received: <zeroio:tz timestamp="<%= Campaign.getLastResponse() %>" default="&nbsp;"/></dhv:label>
+                    <dhv:label name="campaign.lastResponseReceived.colon" param="time=">Last Response Received:</dhv:label><zeroio:tz timestamp="<%= Campaign.getLastResponse() %>" timeZone="<%= User.getTimeZone() %>"  showTimeZone="true"/>
                   </dhv:evaluate>
                 </td>
               </tr>

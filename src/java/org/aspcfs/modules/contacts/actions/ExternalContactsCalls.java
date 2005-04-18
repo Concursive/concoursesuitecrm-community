@@ -28,6 +28,7 @@ import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -91,7 +92,7 @@ public final class ExternalContactsCalls extends CFSModule {
     if (sectionId == null || pendingPagedListId.equals(sectionId)) {
       PagedListInfo callListInfo = this.getPagedListInfo(context, pendingPagedListId, "c.alertdate", null);
       callListInfo.setLink("ExternalContactsCalls.do?command=View&contactId=" + contactId +
-          HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+          RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
       if (sectionId == null) {
         if (!callListInfo.getExpandedSelection()) {
           if (callListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -125,11 +126,11 @@ public final class ExternalContactsCalls extends CFSModule {
       if ("calendar".equals(source)) {
         completedCallListInfo.setItemsPerPage(PagedListInfo.DEFAULT_ITEMS_PER_PAGE);
         completedCallListInfo.setLink("CalendarCalls.do?command=View&contactId=" + contactId +
-            HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId|source"));
+            RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId|source"));
         completedCallListInfo.setExpandedSelection(true);
       } else {
         completedCallListInfo.setLink("ExternalContactsCalls.do?command=View&contactId=" + contactId +
-            HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+            RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
         if (sectionId == null) {
           if (!completedCallListInfo.getExpandedSelection()) {
             if (completedCallListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -408,12 +409,12 @@ public final class ExternalContactsCalls extends CFSModule {
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+        htmlDialog.setDeleteUrl("javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
       } else {
         dependencies.setSystemStatus(systemStatus);
         htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='ExternalContactsCalls.do?command=Delete&contactId=" + contactId + "&id=" + id + RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId") + "'");
         htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       }
     } catch (Exception errorMessage) {
@@ -467,7 +468,7 @@ public final class ExternalContactsCalls extends CFSModule {
     boolean inLinePopup = "inline".equals(context.getRequest().getParameter("popupType"));
     if (recordDeleted) {
       context.getRequest().setAttribute("contactId", contactId);
-      context.getRequest().setAttribute("refreshUrl", "ExternalContactsCalls.do?command=View&contactId=" + contactId + HTTPUtils.addLinkParams(context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
+      context.getRequest().setAttribute("refreshUrl", "ExternalContactsCalls.do?command=View&contactId=" + contactId + RequestUtils.addLinkParams(context.getRequest(), "popupType|actionId" + (inLinePopup ? "|popup" : "")));
       return getReturn(context, "Delete");
     } else {
       processErrors(context, thisCall.getErrors());

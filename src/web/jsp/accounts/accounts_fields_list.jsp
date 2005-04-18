@@ -58,7 +58,7 @@
     <% if (CategoryList.size() > 0) { %>
       <td align="right" nowrap>
         <img src="images/icons/16_edit_comment.gif" align="absMiddle" border="0">
-        <dhv:label name="accounts.accounts_fields_list.FolderHaveMultipleRecords">This folder can have multiple records</dhv:label>
+        <dhv:label name="accounts.accounts_fields.FolderHaveMultipleRecords">This folder can have multiple records</dhv:label>
       </td>
     <% } %>
     </tr>

@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.accounts.base.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*" %>
@@ -230,6 +230,8 @@
     <%}%>
     <input type="hidden" name="owner" value="<%= ContactDetails.getOwner() %>">
     <input type="hidden" name="id" value="<%= ContactDetails.getId() %>">
+    <input type="hidden" name="leadStatus" value="<%= ContactDetails.getLeadStatus() %>" />
+    <input type="hidden" name="conversionDate" value="<%=ContactDetails.getConversionDate()%>">
     <input type="hidden" name="primaryContact" value="<%=ContactDetails.getPrimaryContact()%>">
     <input type="hidden" name="orgName" value="<%= OrgDetails.getName() %>">
     <input type="hidden" name="modified" value="<%= ContactDetails.getModified() %>">

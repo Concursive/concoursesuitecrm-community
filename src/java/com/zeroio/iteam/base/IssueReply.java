@@ -677,6 +677,7 @@ public class IssueReply extends GenericBean {
       throw new SQLException("IssueReply ID was not specified");
     }
     boolean canDelete = false;
+    boolean commit = db.getAutoCommit();
     try {
       PreparedStatement pst = null;
       int i = 0;
@@ -694,7 +695,9 @@ public class IssueReply extends GenericBean {
       pst.close();
       if (canDelete) {
         buildFiles(db);
-        db.setAutoCommit(false);
+        if (commit) {
+          db.setAutoCommit(false);
+        }
         files.delete(db, filePath);
         //Update the category count
         pst = db.prepareStatement(
@@ -724,13 +727,19 @@ public class IssueReply extends GenericBean {
         pst.setInt(1, id);
         pst.execute();
         pst.close();
-        db.commit();
+        if (commit) {
+          db.commit();
+        }
       }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       return false;
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }

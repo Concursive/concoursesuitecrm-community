@@ -22,10 +22,12 @@ import org.aspcfs.modules.admin.base.PermissionList;
 import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.Viewpoint;
 import org.aspcfs.modules.admin.base.ViewpointList;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.utils.web.HtmlDialog;
 import org.aspcfs.utils.web.PagedListInfo;
 
 import java.sql.Connection;
+import java.util.HashMap;
 
 /**
  *  Description of the Class
@@ -317,6 +319,16 @@ public final class Viewpoints extends CFSModule {
     try {
       db = this.getConnection(context);
       isValid = this.validateObject(context, db, thisViewpoint);
+      ViewpointList viewpoints = new ViewpointList();
+      viewpoints.setUserId(thisViewpoint.getUserId());
+      viewpoints.buildList(db);
+      if (viewpoints.checkForDuplicates(thisViewpoint.getVpUserId()) != 0) {
+        HashMap errors = new HashMap();
+        SystemStatus systemStatus = this.getSystemStatus(context);
+        errors.put("actionError", systemStatus.getLabel("object.validation.duplicateViewpointUserCanNotBeInserted"));
+        processErrors(context, errors);
+        isValid = false;
+      }
       if (isValid) {
         recordInserted = thisViewpoint.insert(db);
       }
@@ -335,6 +347,8 @@ public final class Viewpoints extends CFSModule {
         thisUser.setBuildContact(true);
         thisUser.buildRecord(db, Integer.parseInt(userId));
         context.getRequest().setAttribute("UserRecord", thisUser);
+      } else {
+        context.getRequest().setAttribute("vpUserId", ""+thisViewpoint.getVpUserId());
       }
     } catch (Exception e) {
       context.getRequest().setAttribute("Error", e);

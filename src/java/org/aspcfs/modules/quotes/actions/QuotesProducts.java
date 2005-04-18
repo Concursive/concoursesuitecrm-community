@@ -128,7 +128,7 @@ public final class QuotesProducts extends CFSModule {
       quoteProduct.setBuildProductOptions(true);
       quoteProduct.setBuildProduct(true);
       quoteProduct.queryRecord(db, quoteProductId);
-      quoteProduct.setPriceAmount(Double.parseDouble(priceAmount));
+      quoteProduct.setPriceAmount(bean.getPriceAmount());
       quoteProduct.setComment(comment);
       quoteProduct.setQuantity(Integer.parseInt(quantity));
       quoteProduct.setEstimatedDelivery(estimatedDelivery);

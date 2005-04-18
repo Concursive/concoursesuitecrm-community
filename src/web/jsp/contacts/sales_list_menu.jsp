@@ -51,29 +51,29 @@
   }
 
   function details() {
-    window.location.href = 'Sales.do?command=Details&contactId=' + thisContactId +'&from='+ thisReturnValue + '&searchForm=<%= (searchForm!=null?searchForm:"")  %><%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href = 'Sales.do?command=Details&contactId=' + thisContactId +'&from='+ thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"")  %><%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
   function trash() {
-    var url = 'Sales.do?command=CheckAssignStatus&contactId='+thisContactId+'&next=trash&from='+ thisReturnValue + '&searchForm=<%= (searchForm!=null?searchForm:"") %>';
+    var url = 'Sales.do?command=CheckAssignStatus&contactId='+thisContactId+'&next=trash&from='+ thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"") %>';
     window.frames['server_commands'].location.href=url;
   }
 
   function continueTrashLead() {
     var leadStatus = '<%= Contact.LEAD_TRASHED %>';
-    window.location.href="Sales.do?command=Update&contactId="+thisContactId+"&leadStatus="+leadStatus+"&from="+thisReturnValue + '&backFromDetails=true&searchForm=<%= (searchForm!=null?searchForm:"") %>';
+    window.location.href="Sales.do?command=Update&contactId="+thisContactId+"&leadStatus="+leadStatus+"&from="+thisReturnValue + '&listForm=<%= (listForm!=null?listForm:"") %>';
   }
   
   function deleteLead() {
     var url = 'Sales.do?command=CheckAssignStatus&contactId='+thisContactId+'&next=delete&from='+ thisReturnValue;
-    window.frames['server_commands'].location.href=url;    
+    popURL(url+'&popup=true','DeleteLead','330','200','yes','yes');
   }
 
   function continueDeleteLead() {
     if (thisReturnValue != 'list') {
       popURL('Sales.do?command=ConfirmDelete&contactId='+thisContactId+ '&popup=true&return='+thisReturnValue+'<%= addLinkParams(request, "popupType|actionId") %>','Delete_Lead','330','200','yes','no');
     } else {
-      popURL('Sales.do?command=ConfirmDelete&contactId='+thisContactId+ '&popup=true&return='+thisReturnValue+'&searchForm=<%= (searchForm!=null?searchForm:"") %><%= addLinkParams(request, "popupType|actionId") %>', 'Delete_Lead','330','200','yes','no');
+      popURL('Sales.do?command=ConfirmDelete&contactId='+thisContactId+ '&popup=true&return='+thisReturnValue+'&listForm=<%= (listForm!=null?listForm:"") %><%= addLinkParams(request, "popupType|actionId") %>', 'Delete_Lead','330','200','yes','no');
     }
   }
   

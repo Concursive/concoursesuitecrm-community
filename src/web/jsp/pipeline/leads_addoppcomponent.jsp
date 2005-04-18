@@ -71,6 +71,19 @@
       }
     }
   }
+  
+  function reopenOpportunity(id) {
+    if (id == '<%= opportunityHeader.getId() %>') {
+      if ('<%= "dashboard".equals(request.getParameter("viewSource")) %>' == 'true') {
+        scrollReload('Leads.do?command=Dashboard');
+      } else {
+        scrollReload('Leads.do?command=Search');
+      }
+      return id;
+    } else {
+      return '<%= opportunityHeader.getId() %>';
+    }
+  }
 </script>
 <form name="opportunityForm" action="LeadsComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <%-- Trails --%>

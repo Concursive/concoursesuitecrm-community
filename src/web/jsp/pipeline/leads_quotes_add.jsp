@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
@@ -42,6 +42,20 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContactEmailAddressListSingle.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popContactPhoneNumberListSingle.js"></script>
 <%@ include file="../initPage.jsp" %>
+<script type="text/javascript">
+function reopenOpportunity(id) {
+  if (id == '<%= opportunityHeader.getId() %>') {
+    if ('<%= "dashboard".equals(request.getParameter("viewSource")) %>' == 'true') {
+      scrollReload('Leads.do?command=Dashboard');
+    } else {
+      scrollReload('Leads.do?command=Search');
+    }
+    return id;
+  } else {
+    return '<%= opportunityHeader.getId() %>';
+  }
+}
+</script>
 <body onLoad="javascript:document.addQuote.shortDescription.focus();">
 <form method="post" name="addQuote" action="LeadsQuotes.do?command=AddQuote&auto-populate=true<%= addLinkParams(request, "viewSource") %>" onSubmit="return checkForm(this);">
 <%-- Trails --%>

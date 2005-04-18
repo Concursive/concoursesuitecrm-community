@@ -27,7 +27,7 @@
 <jsp:useBean id="contactList" class="org.aspcfs.modules.contacts.base.ContactList" scope="request" />
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session" />
 <jsp:useBean id="myLeads" class="java.lang.String" scope="session" />
-<jsp:useBean id="searchForm" class="java.lang.String" scope="session" />
+<jsp:useBean id="listForm" class="java.lang.String" scope="request" />
 <jsp:useBean id="GraphFileName" class="java.lang.String" scope="request" />
 <jsp:useBean id="applicationPrefs" class="org.aspcfs.controller.ApplicationPrefs" scope="application" />
 <%@ include file="../initPage.jsp" %>

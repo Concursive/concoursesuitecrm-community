@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="ContactDetails" class="org.aspcfs.modules.contacts.base.Contact" scope="request"/>
@@ -48,7 +48,7 @@ function reopenContact(id) {
 </dhv:evaluate>
 <%-- End Trails --%>
 <dhv:container name="contacts" selected="calls" object="ContactDetails" param="<%= "id=" + ContactDetails.getId() %>" appendToUrl="<%= addLinkParams(request, "popup|popupType|actionId") %>">
-  <input type="submit" value="<dhv:label name="button.send">Send</dhv:label>">
+  <input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
   <% if("list".equals(request.getParameter("return"))){ %>
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %><%= addLinkParams(request, "popup|view|popupType") %>'">
   <% }else{ %>
@@ -57,7 +57,7 @@ function reopenContact(id) {
   <br><br>
   <%@ include file="../newmessage.jsp" %>
   <br>
-  <input type="submit" value="<dhv:label name="button.send">Send</dhv:label>">
+  <input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
   <% if("list".equals(request.getParameter("return"))){ %>
     <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='ExternalContactsCalls.do?command=View&contactId=<%= request.getParameter("contactId") %>'">
   <% }else{ %>

@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -65,7 +65,7 @@
   }
 </script>
 <% if ("addressRequest".equals(request.getAttribute("messageType"))){%>
-  <form name="sendMessage" action="MyActionContacts.do?command=SendAddressRequest&auto-populate=true&actionSource=MyActionContacts&orgId=<%=request.getAttribute("orgId")%>" method="post" onSubmit="return checkForm(this);">
+  <form name="sendMessage" action="MyActionContacts.do?command=SendAddressRequest&auto-populate=true&actionSource=MyActionContacts&orgId=<%=request.getAttribute("orgId")%>&messageType=<%= (String) request.getAttribute("messageType") %>" method="post" onSubmit="return checkForm(this);">
 <%}else{%>
   <form name="sendMessage" action="MyActionContacts.do?command=SendMessage&auto-populate=true&actionSource=MyActionContacts" method="post" onSubmit="return checkForm(this);">
 <%}%>
@@ -93,7 +93,7 @@
 <%@ include file="../communications/message_include.jsp" %>
 <br />
 <% if ("addressRequest".equals(request.getAttribute("messageType"))){%>
-  Note: The recipient's contact information will be attached with the chosen message.
+  <dhv:label name="action.contacts.Note.text">Note: The recipient's contact information will be attached with the chosen message.</dhv:label>
 <%}%>
 <br />
 <input type="submit" value="<dhv:label name="button.sendMessage">Send Message</dhv:label>" />

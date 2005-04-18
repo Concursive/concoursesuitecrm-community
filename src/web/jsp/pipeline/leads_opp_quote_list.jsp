@@ -36,6 +36,20 @@
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
 </script>
+<script type="text/javascript">
+function reopenOpportunity(id) {
+  if (id == '<%= opportunityHeader.getId() %>') {
+    if ('<%= "dashboard".equals(request.getParameter("viewSource")) %>' == 'true') {
+      scrollReload('Leads.do?command=Dashboard');
+    } else {
+      scrollReload('Leads.do?command=Search');
+    }
+    return id;
+  } else {
+    return '<%= opportunityHeader.getId() %>';
+  }
+}
+</script>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
 <tr>

@@ -12,9 +12,16 @@ import java.util.*;
  */
 public class DataRecord extends ArrayList {
 
-  protected String name = null;
-  protected String action = "insert";
+  //Requested object actions
+  public final static String INSERT = "insert";
+  public final static String SELECT = "select";
+  public final static String UPDATE = "update";
+  public final static String DELETE = "delete";
+  public final static String GET_DATETIME = "getDateTime";
 
+  protected String name = null;
+  protected String action = INSERT;
+  protected boolean shareKey = false;
 
   /**
    *  Gets the name attribute of the DataRecord object
@@ -55,6 +62,13 @@ public class DataRecord extends ArrayList {
     return action;
   }
 
+  public boolean getShareKey() {
+    return shareKey;
+  }
+
+  public void setShareKey(boolean shareKey) {
+    this.shareKey = shareKey;
+  }
 
   /**
    *  Adds a feature to the Field attribute of the DataRecord object

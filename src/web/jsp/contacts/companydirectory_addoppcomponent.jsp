@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -32,6 +32,9 @@
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></SCRIPT>
+<%if (isPopup(request)) {%>
+<script language="JavaScript" type="text/javascript" src="javascript/scrollReload.js"></script>
+<%}%>
 <script language="JavaScript">
   function doCheck(form) {
     if (form.dosubmit.value == "false") {
@@ -73,7 +76,35 @@
         }
       }
     }
- }
+  }
+  
+  function reopenOnDelete() {
+    try {
+      if ('<%= isPopup(request) %>' != 'true') {
+        scrollReload('ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>');
+      } else {
+        scrollReload('ExternalContactsOpps.do?command=DetailsOpp&headerId=<%= opportunityHeader.getId() %>&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>');
+        var oppId = -1;
+        try {
+          oppId = opener.reopenOpportunity('<%= opportunityHeader.getId() %>');
+        } catch (oException) {
+        }
+        if (oppId != '<%= opportunityHeader.getId() %>') {
+          opener.reopen();
+        }
+      }
+    } catch (oException) {
+    }
+  }
+  
+  function reopenOpportunity(id) {
+    if (id == '<%= opportunityHeader.getId() %>') {
+      scrollReload('ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>');
+      return id;
+    } else {
+      return '<%= opportunityHeader.getId() %>';
+    }
+  }
 </script>
 <form name="opportunityForm" action="ExternalContactsOppComponents.do?command=SaveComponent&auto-populate=true" onSubmit="return doCheck(this);" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">

@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -52,7 +52,7 @@ function reopen() {
     <input type="hidden" name="orgId" value="<%=ContactDetails.getOrgId()%>">
     <dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Modify';submit();"></dhv:permission>
     <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="<dhv:label name="global.button.Clone">Clone</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
-    <%--<dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.Move">Move</dhv:label>" onClick="javascript:check('moveContact','<%= OrgDetails.getId() %>','<%= ContactDetails.getId() %>','&filters=all|my|disabled','<%= ContactDetails.getPrimaryContact() %>')"></dhv:permission>--%>
+    <%--<dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.move">Move</dhv:label>" onClick="javascript:check('moveContact','<%= OrgDetails.getId() %>','<%= ContactDetails.getId() %>','&filters=all|my|disabled','<%= ContactDetails.getPrimaryContact() %>')"></dhv:permission>--%>
     <dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Delete_contact','320','200','yes','no');"></dhv:permission>
     <dhv:permission name="accounts-accounts-contacts-move-view"><input type="button" value="<dhv:label name="glpbal.button.move">Move</dhv:label>" onClick="javascript:popURLReturn('Contacts.do?command=MoveToAccount&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Move_contact','400','320','yes','yes');"/></dhv:permission>
     <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br>&nbsp;</dhv:permission>
@@ -277,7 +277,7 @@ function reopen() {
 <dhv:permission name="accounts-accounts-contacts-edit,accounts-accounts-contacts-delete"><br></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.modify">Modify</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Modify';submit();"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-add"><input type='button' value="<dhv:label name="global.button.Clone">Clone</dhv:label>" onClick="javascript:this.form.action='Contacts.do?command=Clone';submit();"></dhv:permission>
-<%--<dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.Move">Move</dhv:label>" onClick="javascript:check('moveContact','<%=OrgDetails.getId()%>','<%=ContactDetails.getId()%>','&filters=all|my|disabled','<%=ContactDetails.getPrimaryContact()%>')"></dhv:permission>--%>
+<%--<dhv:permission name="accounts-accounts-contacts-edit"><input type='button' value="<dhv:label name="global.button.move">Move</dhv:label>" onClick="javascript:check('moveContact','<%=OrgDetails.getId()%>','<%=ContactDetails.getId()%>','&filters=all|my|disabled','<%=ContactDetails.getPrimaryContact()%>')"></dhv:permission>--%>
 <dhv:permission name="accounts-accounts-contacts-delete"><input type='button' value="<dhv:label name="global.button.delete">Delete</dhv:label>" onClick="javascript:popURLReturn('Contacts.do?command=ConfirmDelete&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Delete_contact','320','200','yes','no');"></dhv:permission>
 <dhv:permission name="accounts-accounts-contacts-move-view"><input type="button" value="<dhv:label name="glpbal.button.move">Move</dhv:label>" onClick="javascript:popURLReturn('Contacts.do?command=MoveToAccount&orgId=<%=OrgDetails.getId()%>&id=<%=ContactDetails.getId()%>&popup=true','Contacts.do?command=View', 'Move_contact','400','320','yes','yes');"/></dhv:permission>
   </dhv:container>

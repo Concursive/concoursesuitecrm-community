@@ -15,11 +15,7 @@
  */
 package org.aspcfs.utils;
 
-import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.controller.ApplicationPrefs;
-
 import javax.net.ssl.*;
-import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -27,7 +23,6 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.StringTokenizer;
 
 /**
  *  Utilities for working with HTTP
@@ -201,48 +196,6 @@ public class HTTPUtils {
       System.err.println("HTTPUtils-> urlToPostscriptFile error: " + e.toString());
       return (1);
     }
-  }
-
-
-  /**
-   *  Adds a feature to the LinkParams attribute of the HTTPUtils class
-   *
-   *@param  request  The feature to be added to the LinkParams attribute
-   *@param  tmp      The feature to be added to the LinkParams attribute
-   *@return          Description of the Return Value
-   */
-  public static String addLinkParams(HttpServletRequest request, String tmp) {
-    String params = "";
-    StringTokenizer tokens = new StringTokenizer(tmp, "|");
-    while (tokens.hasMoreTokens()) {
-      String param = tokens.nextToken();
-      if (request.getParameter(param) != null) {
-        params += ("&" + param + "=" + request.getParameter(param));
-      }
-    }
-    return params;
-  }
-
-  public static String getLink(ActionContext context, String url) {
-    ApplicationPrefs prefs = (ApplicationPrefs) context.getServletContext().getAttribute("applicationPrefs");
-    boolean sslEnabled = "true".equals(prefs.get("ForceSSL"));
-    if (sslEnabled) {
-      return ("https://" + HTTPUtils.getServerUrl(context.getRequest()) + "/" + url);
-    } else {
-      return ("http://" + HTTPUtils.getServerUrl(context.getRequest()) + "/" + url);
-    }
-  }
-
-  /**
-   *  Returns the server's url that was specified in the request, excluding the
-   *  scheme
-   *
-   *@param  request  Description of the Parameter
-   *@return          The serverURL value
-   */
-  public static String getServerUrl(HttpServletRequest request) {
-    int port = request.getServerPort();
-    return (request.getServerName() + (port != 80 && port != 443 ? ":" + String.valueOf(port) : "") + request.getContextPath());
   }
 
 

@@ -27,7 +27,6 @@ import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.login.beans.UserBean;
 import org.aspcfs.modules.pipeline.base.*;
 import org.aspcfs.modules.pipeline.beans.OpportunityBean;
-import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.StringUtils;
 import org.aspcfs.utils.web.*;
 import org.jfree.chart.ChartFactory;
@@ -348,6 +347,11 @@ public final class Leads extends CFSModule {
     OpportunityHeader thisHeader = null;
     OpportunityComponentList componentList = null;
     addModuleBean(context, "View Opportunities", "View Opportunity Details");
+    String fromQuoteDetails = (String) context.getRequest().getParameter("fromQuoteDetails");
+    if (fromQuoteDetails != null && "true".equals(fromQuoteDetails)) {
+      context.getSession().removeAttribute("LeadsComponentListInfo");
+      context.getSession().removeAttribute("PipelineViewpointInfo");
+    }
     //Get Viewpoints if any
     ViewpointInfo viewpointInfo = this.getViewpointInfo(
         context, "PipelineViewpointInfo");
@@ -368,7 +372,7 @@ public final class Leads extends CFSModule {
     PagedListInfo componentListInfo = this.getPagedListInfo(
         context, "LeadsComponentListInfo");
     componentListInfo.setLink(
-        "Leads.do?command=DetailsOpp&headerId=" + headerId + HTTPUtils.addLinkParams(
+        "Leads.do?command=DetailsOpp&headerId=" + headerId + RequestUtils.addLinkParams(
             context.getRequest(), "viewSource"));
     try {
       db = this.getConnection(context);
@@ -494,13 +498,13 @@ public final class Leads extends CFSModule {
       htmlDialog.setTitle(systemStatus.getLabel("confirmdelete.title"));
       if (dependencies.size() == 0) {
         htmlDialog.setShowAndConfirm(false);
-        htmlDialog.setDeleteUrl("javascript:window.location.href='Leads.do?command=DeleteOpp&id=" + id + HTTPUtils.addLinkParams(
+        htmlDialog.setDeleteUrl("javascript:window.location.href='Leads.do?command=DeleteOpp&id=" + id + RequestUtils.addLinkParams(
                 context.getRequest(), "viewSource") + "'");
       } else if (dependencies.canDelete()) {
         dependencies.setSystemStatus(systemStatus);
         htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
         htmlDialog.setHeader(systemStatus.getLabel("confirmdelete.header"));
-        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='Leads.do?command=DeleteOpp&id=" + id + HTTPUtils.addLinkParams(
+        htmlDialog.addButton(systemStatus.getLabel("button.deleteAll"), "javascript:window.location.href='Leads.do?command=DeleteOpp&id=" + id + RequestUtils.addLinkParams(
                 context.getRequest(), "viewSource") + "'");
         htmlDialog.addButton(systemStatus.getLabel("button.cancel"), "javascript:parent.window.close()");
       } else {

@@ -7,43 +7,47 @@
 <jsp:useBean id="User" class="org.aspcfs.modules.login.beans.UserBean" scope="session"/>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/confirmDelete.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkInt.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkDate.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkCurrency.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popCalendar.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popLookupSelect.js"></script>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
 <%@ include file="../initPage.jsp" %>
 <script type="text/javascript">
   function checkForm(form) {
     var flag = true;
     var message = "";
-    if (document.forms['modifyProduct'].priceAmount.value == "") {
+    if (checkNullString(document.forms['modifyProduct'].priceAmount.value)) {
       message += label("check.quote.extendedprice.blank","The extended price can not be blank.\n");
       flag = false;
+    } else {
+      if(!checkRealNumber(document.forms['modifyProduct'].priceAmount.value)) {
+        message += label("check.number.invalid","- Please enter a valid Number\r\n");
+        flag = false;
+      }
     }
-    if (document.forms['modifyProduct'].quantity.value == "") {
+    if (checkNullString(document.forms['modifyProduct'].quantity.value)) {
       message += label("check.quote.quantity.blank","The quantity can not be blank.\n");
       flag = false;
+    } else {
+      if(!checkInt(document.forms['modifyProduct'].quantity.value)) {
+        message += label("check.number.invalid","- Please enter a valid Number\r\n");
+        flag = false;
+      }
     }
-    if (!checkNumber(document.forms['modifyProduct'].priceAmount.value)){
-      message += label("check.quote.extendedprice.invalid","The extended price is not a valid price.\n");
-      flag = false;
-    }
-    if (!checkNumber(document.forms['modifyProduct'].quantity.value)){
-      message += label("check.quote.quantity.invalid","The quantity is not a valid number.\n");
-      flag = false;
-    }
-    if (document.forms['modifyProduct'].estimatedDeliveryDate.value != "") {
+    if (!checkNullString(document.forms['modifyProduct'].estimatedDeliveryDate.value)) {
       if (!checkDate(document.forms['modifyProduct'].estimatedDeliveryDate.value)){
         message += label("check.quote.estdeldate.invalid","The estimated delivery date is not a valid date.\n");
         flag = false;
       }
     }
-    if (!flag) {
-      message += label("check.quote.valid.entries","\nPlease enter valid entries to continue");
-      alert(message);
+    if (flag == false) {
+      alert(label("check.form","Form could not be saved, please check the following:\r\n\r\n") + message);
+      return false;
     }
-    return flag;
+    return true;
   }
   
 </script>

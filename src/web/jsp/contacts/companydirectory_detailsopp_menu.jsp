@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
@@ -60,7 +60,7 @@
   }
   
   function deleteOpp() {
-    popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=' + thisContactId + '&id='  + thisCompId + '&popup=true<%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=ViewOpps&contactId=' + thisContactId, 'Delete_opp','320','200','yes','no');
+    popURLReturn('ExternalContactsOppComponents.do?command=ConfirmComponentDelete&contactId=' + thisContactId + '&id='  + thisCompId + '&popup=true<%= isPopup(request)?"&sourcePopup=true":"" %><%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=ViewOpps&contactId=' + thisContactId, 'Delete_opp','320','200','yes','no');
   }
   
 </script>

@@ -16,9 +16,9 @@
 package com.zeroio.iteam.base;
 
 import com.darkhorseventures.framework.actions.ActionContext;
-import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.Template;
 import org.aspcfs.utils.XMLUtils;
+import org.aspcfs.utils.web.RequestUtils;
 import org.w3c.dom.Element;
 
 import java.io.File;
@@ -60,7 +60,7 @@ public class NewsArticleEmail {
                 mappings, "map", "id", "projects.news.email.body")));
     messageBody.addParseElement("${news.intro}", thisArticle.getIntro());
     messageBody.addParseElement(
-        "${link}", HTTPUtils.getLink(
+        "${link}", RequestUtils.getLink(
             context, "ProjectManagementNews.do?command=Details&pid=" + thisArticle.getProjectId() + "&id=" + thisArticle.getId()));
     String param1 = messageBody.getValue("news.continued");
     if (thisArticle.hasMessage()) {

@@ -7,7 +7,24 @@
 <jsp:useBean id="categorySelect" class="org.aspcfs.utils.web.HtmlSelect" scope="request"/>
 <%@ include file="../initPage.jsp" %>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkRadioButton.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></script>
+<script language="JavaScript" TYPE="text/javascript" SRC="javascript/checkNumber.js"></script>
 <script language="JavaScript">
+  function checkForm(form) {
+    formTest = true;
+    message = "";
+    if (!checkNullString(form.searchcodeGroupId.value) && !checkNaturalNumber(form.searchcodeGroupId.value)) {
+      message += label("check.number.invalid","- Please enter a valid Number\r\n");
+      formTest = false;
+    }
+    if (formTest == false) {
+      alert(label("check.campaign.criteria","Criteria could not be processed, please check the following:\r\n\r\n") + message);
+      return false;
+    }
+    return true;
+  }
+  
+  
   function clearForm() {
     document.forms['searchQuote'].listFilter1.options.selectedIndex = 0;
     document.forms['searchQuote'].listFilter2.options.selectedIndex = 0;
@@ -20,7 +37,7 @@
   }
 </script>
 <body onLoad="javascript:document.forms['searchQuote'].searchcodeGroupId.focus();">
-<form name="searchQuote" action="Quotes.do?command=Search" method="post">
+<form name="searchQuote" action="Quotes.do?command=Search" method="post" onSubmit="javascript:return checkForm(this);">
 <%-- Trails --%>
 <table class="trails" cellspacing="0">
   <tr>

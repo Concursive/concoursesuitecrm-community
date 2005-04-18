@@ -24,6 +24,7 @@ import org.aspcfs.modules.contacts.base.CallResultList;
 import org.aspcfs.utils.HTTPUtils;
 import org.aspcfs.utils.web.LookupList;
 import org.aspcfs.utils.web.PagedListInfo;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -82,7 +83,7 @@ public final class AccountsCalls extends CFSModule {
     if (sectionId == null || pendingPagedListId.equals(sectionId)) {
       PagedListInfo callListInfo = this.getPagedListInfo(context, pendingPagedListId, "c.alertdate", null);
       callListInfo.setLink("AccountsCalls.do?command=View&orgId=" + orgId +
-          HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+          RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
       if (sectionId == null) {
         if (!callListInfo.getExpandedSelection()) {
           if (callListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {
@@ -110,7 +111,7 @@ public final class AccountsCalls extends CFSModule {
     if (sectionId == null || completedPagedListId.equals(sectionId)) {
       PagedListInfo completedCallListInfo = this.getPagedListInfo(context, completedPagedListId, "c.entered", "desc");
       completedCallListInfo.setLink("AccountsCalls.do?command=View&orgId=" + orgId +
-          HTTPUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
+          RequestUtils.addLinkParams(context.getRequest(), "popup|popupType|actionId"));
       if (sectionId == null) {
         if (!completedCallListInfo.getExpandedSelection()) {
           if (completedCallListInfo.getItemsPerPage() != MINIMIZED_ITEMS_PER_PAGE) {

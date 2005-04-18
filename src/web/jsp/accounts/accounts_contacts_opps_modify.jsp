@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.contacts.base.*,org.aspcfs.utils.web.*,com.zeroio.iteam.base.*" %>
@@ -22,6 +22,16 @@
 <jsp:useBean id="OpportunityHeader" class="org.aspcfs.modules.pipeline.base.OpportunityHeader" scope="request"/>
 <jsp:useBean id="OrgDetails" class="org.aspcfs.modules.accounts.base.Organization" scope="request"/> 
 <%@ include file="../initPage.jsp" %>
+<script type="text/javascript">
+  function reopenOpportunity(id) {
+    if (id == '<%= OpportunityHeader.getId() %>') {
+      scrollReload('AccountContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>');
+      return id;
+    } else {
+      return '<%= OpportunityHeader.getId() %>';
+    }
+  }
+</script>
 <body onLoad="javascript:document.modifyOpp.description.focus();">
 <form name="modifyOpp" action="AccountContactsOpps.do?command=UpdateOpp&contactId=<%= ContactDetails.getId() %>&auto-populate=true" method="post">
 <dhv:evaluate if="<%= !isPopup(request) %>">

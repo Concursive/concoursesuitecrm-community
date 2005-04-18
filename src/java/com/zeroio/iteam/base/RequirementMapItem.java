@@ -550,8 +550,11 @@ public class RequirementMapItem {
    *@exception  SQLException  Description of the Exception
    */
   public synchronized void remove(Connection db) throws SQLException {
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       PreparedStatement pst;
       ResultSet rs;
       //Get the current position of the item to remove if not known
@@ -596,11 +599,17 @@ public class RequirementMapItem {
         pst.execute();
         pst.close();
       }
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (Exception e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
   }
 

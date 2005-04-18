@@ -1307,8 +1307,11 @@ public class ServiceContract extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("Service Contract Id not specified.");
     }
+    boolean commit = db.getAutoCommit();
     try {
-      db.setAutoCommit(false);
+      if (commit) {
+        db.setAutoCommit(false);
+      }
       //Service Contracts have  tickets, assets, hours history related  related, so delete them first
       TicketList ticketList = new TicketList();
       ticketList.setServiceContractId(this.getId());
@@ -1325,13 +1328,19 @@ public class ServiceContract extends GenericBean {
       assetList = null;
 
       delete(db);
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
       e.printStackTrace(System.out);
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -1345,24 +1354,45 @@ public class ServiceContract extends GenericBean {
    */
   public void delete(Connection db) throws SQLException {
 
-    //Delete Service Contract Hours History
-    ServiceContractHoursList scHoursList = new ServiceContractHoursList();
-    scHoursList.setContractId(this.id);
-    scHoursList.buildList(db);
-    scHoursList.delete(db);
-    scHoursList = null;
-
-    //Delete Service Contract Products
-    ServiceContractProductList scProductList = new ServiceContractProductList();
-    scProductList.setContractId(this.id);
-    scProductList.buildList(db);
-    scProductList.delete(db);
-    scProductList = null;
-
-    Statement st = db.createStatement();
-    st.executeUpdate("DELETE FROM service_contract WHERE contract_id = " + this.getId());
-    st.close();
-
+    if (this.getId() == -1) {
+      throw new SQLException("Service Contract Id not specified.");
+    }
+    boolean commit = db.getAutoCommit();
+    try {
+      if (commit) {
+        db.setAutoCommit(false);
+      }
+      //Delete Service Contract Hours History
+      ServiceContractHoursList scHoursList = new ServiceContractHoursList();
+      scHoursList.setContractId(this.id);
+      scHoursList.buildList(db);
+      scHoursList.delete(db);
+      scHoursList = null;
+  
+      //Delete Service Contract Products
+      ServiceContractProductList scProductList = new ServiceContractProductList();
+      scProductList.setContractId(this.id);
+      scProductList.buildList(db);
+      scProductList.delete(db);
+      scProductList = null;
+  
+      Statement st = db.createStatement();
+      st.executeUpdate("DELETE FROM service_contract WHERE contract_id = " + this.getId());
+      st.close();
+      if (commit) {
+        db.commit();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace(System.out);
+      if (commit) {
+        db.rollback();
+      }
+      throw new SQLException(e.getMessage());
+    } finally {
+      if (commit) {
+        db.setAutoCommit(true);
+      }
+    }
   }
 
 

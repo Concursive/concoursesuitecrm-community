@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -73,6 +73,15 @@
         return selectAllOptions(document.opportunityForm.selectedList);
       }
     }
+  }
+}
+
+function reopenOpportunity(id) {
+  if (id == '<%= opportunityHeader.getId() %>') {
+    scrollReload('Opportunities.do?command=View&orgId=<%= OrgDetails.getOrgId() %><%= isPopup(request)?"&popup=true":"" %>');
+    return id;
+  } else {
+    return '<%= opportunityHeader.getId() %>';
   }
 }
 </script>

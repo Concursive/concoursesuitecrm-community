@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%
   Ticket thisTicket = (Ticket)request.getAttribute("TicketDetails");
@@ -23,37 +23,29 @@
 %>
 <table width="100%" border="0">
   <tr>
-    <td width="66%" align="left" valign="top" nowrap>
-      <table border="0">
-        <tr>
-          <td nowrap>
-            <strong><dhv:label name="quotes.quotes.header.status">Status:</dhv:label></strong>
-      <% if (thisTicket.getClosed() == null){ %>
-            <dhv:label name="quotes.open">Open</dhv:label>
-      <%}else{%>
-            <font color="red">Closed on
-            <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
-            </font>
-      <%}%>
-          </td>
-        </tr>
-        <dhv:evaluate if="<%= thisTicket.getContractId() > -1 %>">
-        <tr>
-          <td align="right" nowrap>
-            <strong><dhv:label name="account.ticket.hoursRemaining.colon">Hours Remaining:</dhv:label></strong>
-          </td>
-          <td nowrap>
-            <%= thisTicket.getTotalHoursRemaining() %>
-            <input type="hidden" name="totalHoursRemaining" value="<%= thisTicket.getTotalHoursRemaining() %>" />
-          </td>
-        </tr>
-        </dhv:evaluate>
-      </table>
-    </td>
-    <td width="33%" align="right" valign="top" nowrap>
+    <td colspan="2" align="right">
       <img src="images/icons/stock_print-16.gif" border="0" align="absmiddle" height="16" width="16"/>
       <a href="TroubleTickets.do?command=PrintReport&id=<%= thisTicket.getId() %>"><dhv:label name="accounts.tickets.print">Printable Ticket Form</dhv:label></a>
     </td>
   </tr>
+  <tr>
+    <td nowrap>
+      <strong><dhv:label name="quotes.quotes.header.status">Status:</dhv:label></strong>
+<% if (thisTicket.getClosed() == null){ %>
+      <dhv:label name="quotes.open">Open</dhv:label>
+<%}else{%>
+      <font color="red">Closed on
+      <zeroio:tz timestamp="<%= thisTicket.getClosed() %>" timeZone="<%= User.getTimeZone() %>" showTimeZone="true"/>
+      </font>
+<%}%>
+    </td>
+  <dhv:evaluate if="<%= thisTicket.getContractId() > -1 %>">
+    <td align="right" nowrap>
+      <strong><dhv:label name="account.ticket.hoursRemaining.colon">Hours Remaining:</dhv:label></strong>
+      <%= thisTicket.getTotalHoursRemaining() %>
+      <input type="hidden" name="totalHoursRemaining" value="<%= thisTicket.getTotalHoursRemaining() %>" />
+    </td>
+  </dhv:evaluate>
+  </tr>
 </table>
-
+<br />

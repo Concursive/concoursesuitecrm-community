@@ -89,7 +89,7 @@ public class SetupServer extends CFSModule {
               license.setEdition("Enterprise Edition");
               license.setText2(StringUtils.randomString(7, 7) + "-1");
             } else {
-              license.setEdition("Free Edition (5-seat binary)");
+              license.setEdition("Group Edition (5-seat binary)");
               license.setText2(StringUtils.randomString(7, 7) + "5");
             }
           }
@@ -135,7 +135,7 @@ public class SetupServer extends CFSModule {
           } else {
             //Send the license back as email
             license.setSystemStatus(this.getSystemStatus(context));
-            license.sendEmailRegistration();
+            license.sendEmailRegistration(context);
           }
         }
       } else {

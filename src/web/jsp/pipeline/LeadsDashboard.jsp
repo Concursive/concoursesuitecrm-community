@@ -33,6 +33,12 @@
 <%-- Read in the image map for the graph --%>
 <% String includePage = "../graphs/" + (String) request.getAttribute("GraphFileName") + ".map";%>          
 <jsp:include page="<%= includePage %>" flush="true"/>
+<script type="text/javascript">
+function reopenOpportunity(id) {
+  scrollReload('Leads.do?command=Dashboard');
+  return id;
+}
+</script>
 <form name="Dashboard" action="Leads.do?command=Dashboard" method=POST>
 <%-- Trails --%>
 <table class="trails" cellspacing="0">

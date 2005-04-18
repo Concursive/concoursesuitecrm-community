@@ -14,12 +14,13 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.communications.base.*,com.zeroio.iteam.base.*" %>
 <jsp:useBean id="Campaign" class="org.aspcfs.modules.communications.base.Campaign" scope="request"/>
 <%@ include file="../initPage.jsp" %>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/checkString.js"></SCRIPT>
 <script language="JavaScript">
   function checkFileForm(form) {
     if (form.dosubmit.value == "false") {
@@ -27,7 +28,7 @@
     }
     var formTest = true;
     var messageText = "";
-    if (form.subject.value == "") {
+    if (checkNullString(form.subject.value)) {
       messageText += label("Subject.required", "- Subject is required\r\n");
       formTest = false;
     }

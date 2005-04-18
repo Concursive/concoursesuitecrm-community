@@ -170,7 +170,7 @@ public final class Contacts extends CFSModule {
         }
       } else {
         if (isValid) {
-          resultCount = thisContact.update(db);
+          resultCount = thisContact.update(db, context);
         }
       }
       // see what happened with the insert/update
@@ -786,13 +786,13 @@ public final class Contacts extends CFSModule {
       thisContact.checkUserAccount(db);
       DependencyList dependencies = thisContact.processDependencies(db);
       dependencies.setSystemStatus(systemStatus);
-      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + dependencies.getHtmlString());
+      htmlDialog.addMessage(systemStatus.getLabel("confirmdelete.caution") + "\n" + thisContact.getHtmlString(dependencies, systemStatus));
       if (thisContact.getPrimaryContact()) {
         htmlDialog.setHeader(systemStatus.getLabel("accounts.contacts.contactIndividualAccount.title"));
         htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
         context.getSession().setAttribute("Dialog", htmlDialog);
         return ("ConfirmDeleteOK");
-      } else if (!dependencies.canDelete()) {
+      } else if (!thisContact.canMoveContact(dependencies)) {
         htmlDialog.setHeader(systemStatus.getLabel("accounts.contacts.unableToMoveHeader"));
         htmlDialog.addButton(systemStatus.getLabel("button.ok"), "javascript:parent.window.close()");
         context.getSession().setAttribute("Dialog", htmlDialog);

@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ page import="java.util.*,org.aspcfs.modules.mycfs.base.*,org.aspcfs.modules.contacts.base.*" %>
@@ -295,11 +295,10 @@
     <td>
     <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
-      <% if (!applicationPrefs.get("SYSTEM.COUNTRY").equals("UNITED STATES") && !applicationPrefs.get("SYSTEM.COUNTRY").equals("CANADA")) { %>
       <script type="text/javascript">
         update('address<%= acount %>country','<%= acount %>');
       </script>
-      <% } CountrySelect = new CountrySelect(); %>
+      <% CountrySelect = new CountrySelect(); %>
     </td>
   </tr>
   <tr>
@@ -370,11 +369,9 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\""); %>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <% if (!applicationPrefs.get("SYSTEM.COUNTRY").equals("UNITED STATES") && !applicationPrefs.get("SYSTEM.COUNTRY").equals("CANADA")) { %>
       <script type="text/javascript">
         update('address<%= acount %>country','<%= acount %>');
       </script>
-      <% } %> 
     </td>
   </tr>
 </table>

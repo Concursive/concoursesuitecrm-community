@@ -23,6 +23,7 @@ import org.aspcfs.modules.admin.base.User;
 import org.aspcfs.modules.admin.base.UserList;
 import org.aspcfs.modules.base.Import;
 import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.web.RequestUtils;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -242,7 +243,7 @@ public final class ProcessSystem extends CFSModule {
     if (thisFile.getName().endsWith(".jsp") &&
         !thisFile.getName().endsWith("_include.jsp") &&
         !thisFile.getName().endsWith("_menu.jsp")) {
-      String serverName = "http://" + HTTPUtils.getServerUrl(context.getRequest());
+      String serverName = "http://" + RequestUtils.getServerUrl(context.getRequest());
       String jsp = serverName + dir + thisFile.getName();
       try {
         URL url = new URL(jsp);

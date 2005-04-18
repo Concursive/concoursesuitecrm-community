@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <script language="javascript">
@@ -50,15 +50,15 @@
   
   //Menu link functions
   function details() {
-    window.location.href = 'ExternalContactsOpps.do?command=DetailsOpp&headerId=' + thisHeaderId + '&contactId=' + thisContactId + '<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href = 'ExternalContactsOpps.do?command=DetailsOpp&headerId=' + thisHeaderId + '&contactId=' + thisContactId + '<%= isPopup(request)?"&sourcePopup=true":"" %><%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
   function modify() {
-      window.location.href = 'ExternalContactsOpps.do?command=ModifyOpp&headerId=' + thisHeaderId + '&contactId=' + thisContactId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
+    window.location.href = 'ExternalContactsOpps.do?command=ModifyOpp&headerId=' + thisHeaderId + '&contactId=' + thisContactId + '&return=list<%= addLinkParams(request, "popup|popupType|actionId") %>';
   }
   
   function deleteOpp() {
-    popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=' + thisContactId + '&headerId=' + thisHeaderId + '&popup=true<%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=ViewOpps&contactId=' + thisContactId, 'Delete_opp','320','200','yes','no');
+    popURLReturn('ExternalContactsOpps.do?command=ConfirmDelete&contactId=' + thisContactId + '&headerId=' + thisHeaderId + '&popup=true<%= isPopup(request)?"&sourcePopup=true":"" %><%= addLinkParams(request, "popupType|actionId") %>','ExternalContactsOpps.do?command=ViewOpps&contactId=' + thisContactId, 'Delete_opp','320','200','yes','no');
   }
   
 </script>

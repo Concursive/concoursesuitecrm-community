@@ -15,16 +15,18 @@
  */
 package org.aspcfs.apps.transfer.writer.cfshttpxmlwriter;
 
-import org.aspcfs.apps.transfer.*;
-import java.util.*;
-import java.util.logging.*;
-import org.aspcfs.utils.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
+import org.aspcfs.apps.transfer.DataField;
+import org.aspcfs.apps.transfer.DataRecord;
+import org.aspcfs.apps.transfer.DataWriter;
+import org.aspcfs.utils.HTTPUtils;
+import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *  Writes data using an HTTP connection and passing objects as XML to a
@@ -56,7 +58,11 @@ public class CFSHttpXMLWriter implements DataWriter {
    *@param  tmp  The new url value
    */
   public void setUrl(String tmp) {
-    this.url = tmp;
+    if (tmp != null && tmp.indexOf("ProcessPacket.do") == -1) {
+      this.url = tmp + "/ProcessPacket.do";
+    } else {
+      this.url = tmp;
+    }
   }
 
 
@@ -229,7 +235,7 @@ public class CFSHttpXMLWriter implements DataWriter {
    *@return    The name value
    */
   public String getName() {
-    return "ASPCFS Web XML Data Writer";
+    return "Centric CRM Web XML Data Writer";
   }
 
 
@@ -239,7 +245,7 @@ public class CFSHttpXMLWriter implements DataWriter {
    *@return    The description value
    */
   public String getDescription() {
-    return "Writes data to ASPCFS using the XML HTTP Web API";
+    return "Writes data to Centric CRM using the XML HTTP Web API";
   }
 
 
@@ -260,6 +266,7 @@ public class CFSHttpXMLWriter implements DataWriter {
    */
   public boolean isConfigured() {
     if (url == null || id == null || code == null || systemId == -1) {
+      logger.info("Not configured correctly");
       return false;
     }
 
@@ -269,25 +276,36 @@ public class CFSHttpXMLWriter implements DataWriter {
 
     //Setup a new client id for this data transfer session
     if (clientId == -1) {
-      DataRecord clientRecord = new DataRecord();
-      clientRecord.setName("syncClient");
-      clientRecord.setAction("insert");
-      clientRecord.addField("id", "-1");
-      clientRecord.addField("type", "Java CFS Http XML Writer");
-      clientRecord.addField("version", String.valueOf(this.getVersion()));
-      this.save(clientRecord);
-
-      try {
-        System.out.println("CFSHttpXMLWriter - > " + lastResponse);
-        XMLUtils responseXML = new XMLUtils(lastResponse, true);
-        clientId = Integer.parseInt(XMLUtils.getNodeText(responseXML.getFirstElement("id")));
-        logger.info("CFSHttpXMLWriter-> Client ID: " + clientId);
-      } catch (Exception e) {
-        e.printStackTrace(System.err);
+      clientId = retrieveNewClientId();
+      if (clientId == -1) {
         return false;
       }
     }
     return true;
+  }
+
+  public int retrieveNewClientId() {
+    ignoreClientId = false;
+    if (!isConfigured()) {
+      return -1;
+    }
+    DataRecord clientRecord = new DataRecord();
+    clientRecord.setName("syncClient");
+    clientRecord.setAction("insert");
+    clientRecord.addField("id", "-1");
+    clientRecord.addField("type", "Java Centric CRM Http XML Writer");
+    clientRecord.addField("version", String.valueOf(this.getVersion()));
+    this.save(clientRecord);
+    try {
+      System.out.println("CFSHttpXMLWriter-> " + lastResponse);
+      XMLUtils responseXML = new XMLUtils(lastResponse, true);
+      clientId = (Integer.parseInt(XMLUtils.getNodeText(responseXML.getFirstElement("id"))));
+      ignoreClientId = true;
+      return clientId;
+    } catch (Exception e) {
+      e.printStackTrace(System.err);
+      return -1;
+    }
   }
 
 
@@ -342,33 +360,42 @@ public class CFSHttpXMLWriter implements DataWriter {
         auth.appendChild(authClientId);
       }
 
+      //Begin the transaction
+      Element trans = document.createElement("transaction");
+      trans.setAttribute("id", String.valueOf(++transactionCount));
+      app.appendChild(trans);
+
       //Process the records to be submitted
       Iterator dataRecordItems = transaction.iterator();
+      int recordCount = 0;
       while (dataRecordItems.hasNext()) {
+        ++recordCount;
         DataRecord record = (DataRecord) dataRecordItems.next();
-
-        //Begin the transaction
-        Element transaction = document.createElement("transaction");
-        transaction.setAttribute("id", String.valueOf(++transactionCount));
-        app.appendChild(transaction);
 
         //Add the meta node: fields that will be returned
         Element meta = document.createElement("meta");
-        transaction.appendChild(meta);
+        if (recordCount == 1) {
+          trans.appendChild(meta);
+        }
 
         //Add the object node
         Element object = document.createElement(record.getName());
         object.setAttribute("action", record.getAction());
-        transaction.appendChild(object);
+        if (record.getShareKey()) {
+          object.setAttribute("shareKey", "true");
+        }
+        trans.appendChild(object);
 
         Iterator fieldItems = record.iterator();
         while (fieldItems.hasNext()) {
           DataField thisField = (DataField) fieldItems.next();
 
           //Add the property to the meta node
-          Element property = document.createElement("property");
-          property.appendChild(document.createTextNode(thisField.getName()));
-          meta.appendChild(property);
+          if (recordCount == 1) {
+            Element property = document.createElement("property");
+            property.appendChild(document.createTextNode(thisField.getName()));
+            meta.appendChild(property);
+          }
 
           //Add the field to the object node
           Element field = null;
@@ -488,9 +515,9 @@ public class CFSHttpXMLWriter implements DataWriter {
          */
       }
       lastResponse = HTTPUtils.sendPacket(url, XMLUtils.toString(document));
-      System.out.println(lastResponse);
     } catch (Exception e) {
       e.printStackTrace(System.out);
+      lastResponse = "Exception: " + e.getMessage();
     }
     return true;
   }

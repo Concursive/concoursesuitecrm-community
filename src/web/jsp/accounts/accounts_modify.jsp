@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -685,7 +685,12 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
-      <% CountrySelect = new CountrySelect(); %>
+      <script type="text/javascript">
+        update('address<%= acount %>country','<%= acount %>');
+      </script>
+      <%
+        CountrySelect = new CountrySelect();
+       %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -768,7 +773,12 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <% CountrySelect = new CountrySelect(); %>
+      <script type="text/javascript">
+        update('address<%= acount %>country','<%= acount %>');
+      </script>
+      <%
+        CountrySelect = new CountrySelect();
+       %>
     </td>
   </tr>
   </dhv:evaluate>
@@ -853,7 +863,12 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country", thisAddress.getCountry()) %>
-      <% CountrySelect = new CountrySelect(); %>
+      <script type="text/javascript">
+        update('address<%= acount %>country','<%= acount %>');
+      </script>
+      <%
+        CountrySelect = new CountrySelect();
+       %>
     </td>
   </tr>
   <tr class="containerBody">
@@ -936,7 +951,12 @@
     <td>
       <% CountrySelect.setJsEvent("onChange=\"javascript:update('address" + acount + "country', '" + acount + "');\"");%>
       <%= CountrySelect.getHtml("address" + acount + "country",applicationPrefs.get("SYSTEM.COUNTRY")) %>
-      <% CountrySelect = new CountrySelect(); %>
+      <script type="text/javascript">
+        update('address<%= acount %>country','<%= acount %>');
+      </script>
+      <%
+        CountrySelect = new CountrySelect();
+       %>
     </td>
   </tr>
   </dhv:evaluate>

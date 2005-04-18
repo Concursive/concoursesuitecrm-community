@@ -723,9 +723,11 @@ public class UserList extends Vector implements SyncableList {
 
       if (thisUser.getEnabled() || (!thisUser.getEnabled() && !excludeDisabledIfUnselected) || (excludeDisabledIfUnselected && thisUser.getId() == defaultKey)) {
         if (thisUser.getExpires() == null || (thisUser.getExpires() != null && currentTime.before(thisUser.getExpires())) || ((thisUser.getExpires() != null && currentTime.after(thisUser.getExpires())) && !excludeExpiredIfUnselected) || (excludeExpiredIfUnselected && thisUser.getId() == defaultKey)) {
-          userListSelect.addItem(
-              thisUser.getId(),
-              elementText);
+          if (thisUser.getId() != 0) {
+            userListSelect.addItem(
+                thisUser.getId(),
+                elementText);
+          }
         }
       }
     }

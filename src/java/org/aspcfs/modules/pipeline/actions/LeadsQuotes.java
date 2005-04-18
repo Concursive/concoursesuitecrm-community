@@ -22,8 +22,8 @@ import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.accounts.base.Organization;
 import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.admin.base.User;
-import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.base.Constants;
+import org.aspcfs.modules.base.DependencyList;
 import org.aspcfs.modules.contacts.base.Contact;
 import org.aspcfs.modules.contacts.base.ContactList;
 import org.aspcfs.modules.orders.base.Order;
@@ -33,15 +33,12 @@ import org.aspcfs.modules.products.base.ProductCatalogList;
 import org.aspcfs.modules.products.base.ProductOptionList;
 import org.aspcfs.modules.products.base.ProductOptionValuesList;
 import org.aspcfs.modules.quotes.base.*;
-import org.aspcfs.utils.HTTPUtils;
-import org.aspcfs.utils.web.HtmlDialog;
-import org.aspcfs.utils.web.LookupList;
-import org.aspcfs.utils.web.PagedListInfo;
-import org.aspcfs.utils.web.ViewpointInfo;
+import org.aspcfs.utils.web.*;
 
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -78,7 +75,7 @@ public final class LeadsQuotes extends CFSModule {
     Connection db = null;
     QuoteList quotes = new QuoteList();
     PagedListInfo quoteListInfo = this.getPagedListInfo(context, "LeadsQuoteListInfo", "qe.group_id", "desc");
-    quoteListInfo.setLink("LeadsQuotes.do?command=QuoteList&headerId=" + headerId + HTTPUtils.addLinkParams(context.getRequest(), "viewSource"));
+    quoteListInfo.setLink("LeadsQuotes.do?command=QuoteList&headerId=" + headerId + RequestUtils.addLinkParams(context.getRequest(), "viewSource"));
     quotes.setPagedListInfo(quoteListInfo);
     try {
       db = this.getConnection(context);
@@ -794,6 +791,10 @@ public final class LeadsQuotes extends CFSModule {
       }
       if (contactList.getOrgId() != -1) {
         contactList.buildList(db);
+      } else {
+        HashMap errors = new HashMap();
+        errors.put("actionError", systemStatus.getLabel("object.validation.opportunities.quotes.noQuotesForGeneralContacts"));
+        processErrors(context, errors);
       }
       context.getRequest().setAttribute("contactList", contactList);
 

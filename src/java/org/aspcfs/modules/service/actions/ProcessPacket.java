@@ -15,23 +15,26 @@
  */
 package org.aspcfs.modules.service.actions;
 
-import org.aspcfs.modules.actions.CFSModule;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import com.darkhorseventures.framework.actions.*;
-import com.darkhorseventures.database.*;
-import java.sql.*;
-import java.util.*;
-import org.aspcfs.utils.*;
-import org.aspcfs.controller.*;
-import org.aspcfs.modules.service.base.*;
+import com.darkhorseventures.database.ConnectionElement;
+import com.darkhorseventures.database.ConnectionPool;
+import com.darkhorseventures.framework.actions.ActionContext;
+import org.aspcfs.controller.SecurityHook;
+import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.controller.objectHookManager.ObjectHookManager;
+import org.aspcfs.modules.actions.CFSModule;
 import org.aspcfs.modules.login.base.AuthenticationItem;
-import java.io.*;
-import javax.xml.parsers.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import java.lang.reflect.*;
+import org.aspcfs.modules.service.base.*;
+import org.aspcfs.utils.XMLUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  *  An HTTP connector for incoming XML packet requests. Requests must include
@@ -54,7 +57,6 @@ public final class ProcessPacket extends CFSModule {
    *@return          Description of the Returned Value
    */
   public String executeCommandDefault(ActionContext context) {
-    Exception errorMessage = null;
     TransactionStatusList statusMessages = new TransactionStatusList();
     Connection db = null;
     Connection dbLookup = null;
@@ -68,7 +70,7 @@ public final class ProcessPacket extends CFSModule {
       }
       //There should be an authentication node in the packet
       AuthenticationItem auth = new AuthenticationItem();
-      xml.populateObject(auth, xml.getFirstChild("authentication"));
+      XMLUtils.populateObject(auth, xml.getFirstChild("authentication"));
       encoding = auth.getEncoding();
 
       //Initialize the auth by getting the connection element
@@ -125,7 +127,7 @@ public final class ProcessPacket extends CFSModule {
 
         //Process the transactions
         LinkedList transactionList = new LinkedList();
-        xml.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
+        XMLUtils.getAllChildren(xml.getDocumentElement(), "transaction", transactionList);
         Iterator trans = transactionList.iterator();
         try {
           dbLookup.setAutoCommit(false);
@@ -173,7 +175,6 @@ public final class ProcessPacket extends CFSModule {
       }
     } catch (Exception e) {
       //The transaction usually catches errors, but not always
-      errorMessage = e;
       e.printStackTrace();
       TransactionStatus thisStatus = new TransactionStatus();
       thisStatus.setStatusCode(1);

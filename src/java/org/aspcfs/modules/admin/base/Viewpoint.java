@@ -419,8 +419,11 @@ public class Viewpoint extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   public boolean insert(Connection db) throws SQLException {
+    boolean commit = false;
     try {
-      db.setAutoCommit(false);
+      if ((commit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       StringBuffer sql = new StringBuffer();
       sql.append("INSERT INTO viewpoint ");
       sql.append("(user_id, vp_user_id, enteredby ");
@@ -456,12 +459,18 @@ public class Viewpoint extends GenericBean {
 
       id = DatabaseUtils.getCurrVal(db, "viewpoint_viewpoint_id_seq");
       insertPermissions(db);
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (Exception e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     return true;
   }
@@ -506,21 +515,30 @@ public class Viewpoint extends GenericBean {
    *@exception  SQLException  Description of the Exception
    */
   private void deletePermissions(Connection db) throws SQLException {
+    boolean commit = false;
     try {
       int i = 0;
-      db.setAutoCommit(false);
+      if ((commit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM viewpoint_permission " +
           "WHERE viewpoint_id = ? ");
       pst.setInt(++i, id);
       pst.execute();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
   }
 
@@ -593,11 +611,12 @@ public class Viewpoint extends GenericBean {
     if (this.getId() == -1) {
       throw new SQLException("ID was not specified");
     }
-
     int recordCount = 0;
-
+    boolean commit = false;
     try {
-      db.setAutoCommit(false);
+      if ((commit = db.getAutoCommit()) == true) {
+        db.setAutoCommit(false);
+      }
       deletePermissions(db);
       PreparedStatement pst = db.prepareStatement(
           "DELETE FROM viewpoint " +
@@ -605,12 +624,18 @@ public class Viewpoint extends GenericBean {
       pst.setInt(1, id);
       recordCount = pst.executeUpdate();
       pst.close();
-      db.commit();
+      if (commit) {
+        db.commit();
+      }
     } catch (SQLException e) {
-      db.rollback();
+      if (commit) {
+        db.rollback();
+      }
       throw new SQLException(e.getMessage());
     } finally {
-      db.setAutoCommit(true);
+      if (commit) {
+        db.setAutoCommit(true);
+      }
     }
     if (recordCount == 0) {
       return false;

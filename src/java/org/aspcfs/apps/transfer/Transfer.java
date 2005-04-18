@@ -1,10 +1,12 @@
 package org.aspcfs.apps.transfer;
 
-import java.util.*;
-import java.util.logging.*;
-import java.io.*;
-import org.aspcfs.utils.XMLUtils;
 import org.aspcfs.utils.StringUtils;
+import org.aspcfs.utils.XMLUtils;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.logging.Logger;
 
 /**
  *  Begins the process of migrating data from a DataReader to a DataWriter.
@@ -68,10 +70,10 @@ public class Transfer {
       XMLUtils xml = new XMLUtils(configFile);
 
       //Provide info about the config
-      logger.info("Description: " + xml.getNodeText(xml.getFirstElement(xml.getDocumentElement(), "description")).trim());
+      logger.info("Description: " + XMLUtils.getNodeText(XMLUtils.getFirstElement(xml.getDocumentElement(), "description")).trim());
 
       try {
-        String debug = xml.getNodeText(xml.getFirstElement(xml.getDocumentElement(), "debug"));
+        String debug = XMLUtils.getNodeText(XMLUtils.getFirstElement(xml.getDocumentElement(), "debug"));
         if (debug != null) {
           System.setProperty("DEBUG", debug);
         }
@@ -79,8 +81,8 @@ public class Transfer {
       }
 
       //Make sure the config has valid entries
-      String readerClass = (String) xml.getFirstElement(xml.getDocumentElement(), "reader").getAttribute("class");
-      String writerClass = (String) xml.getFirstElement(xml.getDocumentElement(), "writer").getAttribute("class");
+      String readerClass = (String) XMLUtils.getFirstElement(xml.getDocumentElement(), "reader").getAttribute("class");
+      String writerClass = (String) XMLUtils.getFirstElement(xml.getDocumentElement(), "writer").getAttribute("class");
 
       logger.info("Reader: " + readerClass);
       logger.info("Writer: " + writerClass);
@@ -90,7 +92,7 @@ public class Transfer {
 
         //Instantiate the reader
         Object reader = Class.forName(readerClass).newInstance();
-        HashMap invalidReaderProperties = xml.populateObject(reader, xml.getFirstElement(xml.getDocumentElement(), "reader"));
+        HashMap invalidReaderProperties = XMLUtils.populateObject(reader, XMLUtils.getFirstElement(xml.getDocumentElement(), "reader"));
         displayItems(invalidReaderProperties, "Invalid Reader Property");
         if (!validateHandler(reader)) {
           logger.info("Reader has not been configured");
@@ -98,7 +100,7 @@ public class Transfer {
 
           //Instantiate the writer
           Object writer = Class.forName(writerClass).newInstance();
-          HashMap invalidWriterProperties = xml.populateObject(writer, xml.getFirstElement(xml.getDocumentElement(), "writer"));
+          HashMap invalidWriterProperties = XMLUtils.populateObject(writer, XMLUtils.getFirstElement(xml.getDocumentElement(), "writer"));
           displayItems(invalidWriterProperties, "Invalid Writer Property");
           if (!validateHandler(writer)) {
             logger.info("Writer has not been configured");

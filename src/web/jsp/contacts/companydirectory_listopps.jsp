@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <%@ taglib uri="/WEB-INF/zeroio-taglib.tld" prefix="zeroio" %>
@@ -30,6 +30,9 @@
 <%@ include file="companydirectory_listopps_menu.jsp" %>
 <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript" SRC="javascript/spanDisplay.js"></SCRIPT>
 <script language="JavaScript" TYPE="text/javascript" SRC="javascript/popURL.js"></script>
+<%if (isPopup(request)) {%>
+<script language="JavaScript" type="text/javascript" src="javascript/scrollReload.js"></script>
+<%}%>
 <script language="JavaScript" type="text/javascript">
   <%-- Preload image rollovers for drop-down menu --%>
   loadImages('select');
@@ -41,6 +44,26 @@
       return '<%= ContactDetails.getId() %>';
     }
   }
+  
+  function reopenOnDelete(id) {
+    try {
+      if ('<%= isPopup(request) %>' != 'true') {
+        scrollReload('ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %>');
+      } else {
+        scrollReload('ExternalContactsOpps.do?command=ViewOpps&contactId=<%= ContactDetails.getId() %><%= isPopup(request)?"&popup=true":"" %>');
+        var oppId = -1;
+        try {
+        oppId = opener.reopenOpportunity(id);
+        } catch (oException) {
+        }
+        if (oppId != '-1') {
+          opener.reopen();
+        }
+      }
+    } catch (oException) {
+    }
+  }
+  
 </script>
 <dhv:evaluate if="<%= !isPopup(request) %>">
 <%-- Trails --%>

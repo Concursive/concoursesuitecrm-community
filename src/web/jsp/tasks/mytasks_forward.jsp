@@ -14,7 +14,7 @@
   - DAMAGES RELATING TO THE SOFTWARE.
   - 
   - Version: $Id$
-  - Description: 
+  - Description:
   --%>
 <%@ taglib uri="/WEB-INF/dhv-taglib.tld" prefix="dhv" %>
 <jsp:useBean id="TaskId" class="java.lang.String" scope="request"/>
@@ -30,11 +30,11 @@
 </table>
 <%-- End Trails --%>
 <form name="newMessageForm" action="MyTasksForward.do?command=SendMessage&actionSource=MyTasksForward&id=<%= TaskId %>" method="post" onSubmit="return sendMessage();">
-<input type="submit" value="<dhv:label name="button.send">Send</dhv:label>">
+<input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
 <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='MyTasks.do?command=ListTasks'"><br><br>
 <%@ include file="../newmessage.jsp" %>
 <br>
-<input type="submit" value="<dhv:label name="button.send">Send</dhv:label>">
+<input type="submit" value="<dhv:label name="global.button.send">Send</dhv:label>">
 <input type="button" value="<dhv:label name="global.button.cancel">Cancel</dhv:label>" onClick="javascript:window.location.href='MyTasks.do?command=ListTasks'">
 </form>
 

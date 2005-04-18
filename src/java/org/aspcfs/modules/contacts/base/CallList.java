@@ -766,7 +766,10 @@ public class CallList extends ArrayList {
     }
 
     if (allContactsInAccount) {
-      sqlFilter.append("AND c.org_id = ? ");
+      sqlFilter.append(
+        "AND c.contact_id IN ( SELECT contact_id " +
+        " FROM contact ct WHERE ct.org_id = ? ) "
+      );
     }
 
     if (hasAlertDate == true) {

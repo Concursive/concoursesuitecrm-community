@@ -19,8 +19,10 @@ import com.darkhorseventures.framework.actions.ActionContext;
 import org.aspcfs.controller.SystemStatus;
 import org.aspcfs.modules.servicecontracts.base.ServiceContractHours;
 import org.aspcfs.utils.web.LookupList;
+import org.aspcfs.utils.UserUtils;
 
 import java.sql.Connection;
+import java.text.NumberFormat;
 
 /**
  *  Description of the Class
@@ -49,8 +51,9 @@ public final class ServiceContractHoursAdjustor extends CFSModule {
       context.getRequest().setAttribute("adjustmentReasonList", adjustmentReasonList);
 
       if ("true".equals((String) context.getRequest().getParameter("finalsubmit"))) {
-        sch = new ServiceContractHours(); 
-        sch.setAdjustmentHours((String) context.getRequest().getParameter("adjustmentHours"));
+        sch = new ServiceContractHours();
+        NumberFormat nf = NumberFormat.getInstance(UserUtils.getUserLocale(context.getRequest()));
+        sch.setAdjustmentHours(nf.parse((String) context.getRequest().getParameter("adjustmentHours")).doubleValue());
         sch.setAdjustmentReason((String) context.getRequest().getParameter("adjustmentReason"));
         sch.setAdjustmentNotes((String) context.getRequest().getParameter("adjustmentNotes"));
         adjustmentDone = this.validateObject(context, db, sch);

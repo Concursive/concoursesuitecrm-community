@@ -749,6 +749,9 @@ public class ObjectValidator {
       if (view.getVpUserId() == -1) {
         addError(systemStatus, object, "Contact", REQUIRED_FIELD);
       }
+      if (view.getVpUserId() == view.getUserId()) {
+        addError(systemStatus, object, "Contact", "object.validation.ownViewpointNotAllowed");
+      }
     }
 
     //  RegistrationBean
