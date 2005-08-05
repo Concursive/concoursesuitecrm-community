@@ -13,11 +13,11 @@ if (bsh.args.length == 0) {
   print("The specified file will be sent to either 127.0.0.1 or the specified url");
   System.exit(0);
 }
-String filename = bsh.args[0];
+String filename = bsh.args[0].trim();
 
 String url = "http://127.0.0.1/ProcessPacket.do";
 if (bsh.args.length > 1) {
-  url = bsh.args[1];
+  url = bsh.args[1].trim();
 }
 
 

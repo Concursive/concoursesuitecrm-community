@@ -129,7 +129,7 @@ if (bsh.args.length == 0) {
 }
 
 // Check the specified file
-String fileName = bsh.args[0];
+String fileName = bsh.args[0].trim();
 File file = new File(fileName);
 if (!file.isFile()) {
   print("A dictionary was not specified.");
